@@ -1,4 +1,14 @@
-## Cập nhật lần cuối: 2026-10-02 (Điều Chỉnh Tốc Độ Hoạt Ảnh Nước & Ngẫu Nhiên Hóa Vạt Cỏ Cao Overworld)
+## Cập nhật lần cuối: 2026-10-02 (Khởi Tạo Git Repository & Đẩy Thành Công Lên GitHub)
+
+### 0.7. Khởi Tạo Git & Đẩy Thành Công Lên GitHub Remote:
+- **Repository Remote:** `https://github.com/Anchinlu/PokeOverworld.git`
+- **Nhánh chính (Branch):** `main`
+- **Trạng thái:**
+  - Khởi tạo `git init -b main`.
+  - Thiết lập `.gitignore` chuẩn hóa (loại trừ `node_modules`, `dist`, `scratch`, `__pycache__`, và các file tạm).
+  - Hoàn thành commit đầu tiên: `feat: initial commit - PokeOverworld GBA retro infinite terrain, Pokedex, water caustics, and organic flora` (Commit ID: `57fb19c7`).
+  - Đẩy thành công 100% lên remote: `git push -u origin main`.
+  - Cây thư mục làm việc sạch sẽ hoàn toàn (`working tree clean`).
 
 ### 0.6. Điều Chỉnh Tốc Độ Hoạt Ảnh Nước & Ngẫu Nhiên Hóa Vạt Cỏ Cao (Overworld Organic Tall Grass):
 - **Yêu cầu & Phản hồi từ người dùng:**
