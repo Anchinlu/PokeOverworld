@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pokemon-game.local/schema/pokemon.schema.json",
+  "title": "Pokemon Database",
+  "description": "Schema for Pokemon Gen 1 Database",
+  "type": "object",
+  "required": ["generation", "count", "source", "pokemon"],
+  "properties": {
+    "generation": { "type": "integer", "const": 1 },
+    "count": { "type": "integer", "minimum": 151 },
+    "source": { "type": "string" },
+    "pokemon": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["id", "name", "speciesKey", "types", "stats", "sprites"],
+        "properties": {
+          "id": { "type": "integer", "minimum": 1, "maximum": 151 },
+          "name": { "type": "string" },
+          "speciesKey": { "type": "string" },
+          "types": {
+            "type": "array",
+            "items": { "type": "string" },
+            "minItems": 1,
+            "maxItems": 2
+          },
+          "stats": {
+            "type": "object",
+            "required": ["hp", "attack", "defense", "spAtk", "spDef", "speed", "total"],
+            "properties": {
+              "hp": { "type": "integer", "minimum": 1 },
+              "attack": { "type": "integer", "minimum": 1 },
+              "defense": { "type": "integer", "minimum": 1 },
+              "spAtk": { "type": "integer", "minimum": 1 },
+              "spDef": { "type": "integer", "minimum": 1 },
+              "speed": { "type": "integer", "minimum": 1 },
+              "total": { "type": "integer", "minimum": 1 }
+            },
+            "additionalProperties": false
+          },
+          "sprites": {
+            "type": "object",
+            "required": ["follower", "front", "back", "icon"],
+            "properties": {
+              "follower": { "type": "string" },
+              "front": { "type": "string" },
+              "back": { "type": "string" },
+              "icon": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

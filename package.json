@@ -1,0 +1,31 @@
+{
+  "name": "pokemon-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Pokemon procedural world game monorepo",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev:web": "npm --workspace @pokemon/web run dev",
+    "build:web": "npm --workspace @pokemon/web run build",
+    "typecheck:web": "npm --workspace @pokemon/web run typecheck",
+    "test:web": "npm --workspace @pokemon/web run test",
+    "test": "npm run test:web",
+    "test:python": "python -m unittest discover tests",
+    "validate:schemas": "node scripts/validate-schemas.mjs",
+    "lint": "eslint .",
+    "format:check": "prettier --check \"**/*.{ts,js,mjs,json,html,css}\" --ignore-path .prettierignore",
+    "format": "prettier --write \"**/*.{ts,js,mjs,json,html,css}\" --ignore-path .prettierignore",
+    "ci": "npm run validate:schemas && npm run lint && npm run format:check && npm run typecheck:web && npm run test:web && npm run build:web"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.11.0",
+    "prettier": "^3.9.9",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.7"
+  }
+}

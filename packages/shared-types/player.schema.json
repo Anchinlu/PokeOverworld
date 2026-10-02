@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pokemon-game.local/schema/player.schema.json",
+  "title": "Player State",
+  "description": "Serializable player movement state shared by client and server.",
+  "type": "object",
+  "required": ["gx", "gy", "x", "y", "direction", "frame", "moving"],
+  "properties": {
+    "gx": { "type": "integer" },
+    "gy": { "type": "integer" },
+    "x": { "type": "number" },
+    "y": { "type": "number" },
+    "direction": { "type": "integer", "enum": [0, 1, 2, 3] },
+    "frame": { "type": "integer", "minimum": 0 },
+    "moving": { "type": "boolean" },
+    "targetGX": { "type": "integer" },
+    "targetGY": { "type": "integer" },
+    "stepProgress": { "type": "number", "minimum": 0, "maximum": 1 }
+  },
+  "additionalProperties": false
+}

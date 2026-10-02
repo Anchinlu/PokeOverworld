@@ -1,0 +1,16 @@
+{
+  "name": "@pokemon/game-data",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./constants.ts",
+      "default": "./constants.ts"
+    },
+    "./constants": "./constants.ts",
+    "./biomes.json": "./biomes.json",
+    "./encounters.json": "./encounters.json",
+    "./pokemon-db.json": "./pokemon-db.json"
+  }
+}

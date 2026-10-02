@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "regions": {
+    "VIRIDIAN_FOREST": {
+      "name": "Viridian Forest",
+      "roster": [
+        {
+          "speciesKey": "CATERPIE",
+          "rate": 45,
+          "behavior": "slow_bug",
+          "minLevel": 3,
+          "maxLevel": 6
+        },
+        {
+          "speciesKey": "KAKUNA",
+          "rate": 25,
+          "behavior": "dormant_cocoon",
+          "minLevel": 4,
+          "maxLevel": 6
+        },
+        {
+          "speciesKey": "PIDGEY",
+          "rate": 20,
+          "behavior": "skittish_bird",
+          "minLevel": 3,
+          "maxLevel": 5
+        },
+        {
+          "speciesKey": "SPEAROW",
+          "rate": 10,
+          "behavior": "aggressive_bird",
+          "minLevel": 5,
+          "maxLevel": 7
+        }
+      ]
+    },
+    "ROUTE_22": {
+      "name": "Route 22",
+      "roster": [
+        {
+          "speciesKey": "RATTATA",
+          "rate": 45,
+          "behavior": "curious_rodent",
+          "minLevel": 2,
+          "maxLevel": 4
+        },
+        {
+          "speciesKey": "SPEAROW",
+          "rate": 45,
+          "behavior": "aggressive_bird",
+          "minLevel": 3,
+          "maxLevel": 5
+        },
+        {
+          "speciesKey": "PIDGEY",
+          "rate": 10,
+          "behavior": "skittish_bird",
+          "minLevel": 2,
+          "maxLevel": 5
+        }
+      ]
+    },
+    "ROUTE_1": {
+      "name": "Route 1",
+      "roster": [
+        {
+          "speciesKey": "PIDGEY",
+          "rate": 50,
+          "behavior": "skittish_bird",
+          "minLevel": 2,
+          "maxLevel": 5
+        },
+        {
+          "speciesKey": "RATTATA",
+          "rate": 40,
+          "behavior": "curious_rodent",
+          "minLevel": 2,
+          "maxLevel": 4
+        },
+        {
+          "speciesKey": "CATERPIE",
+          "rate": 10,
+          "behavior": "slow_bug",
+          "minLevel": 2,
+          "maxLevel": 3
+        }
+      ]
+    }
+  }
+}

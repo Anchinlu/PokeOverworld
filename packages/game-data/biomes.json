@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "biomes": {
+    "mixed": {
+      "name": "Mixed Route & Coastal Cove",
+      "hasBeach": true,
+      "hasRoad": true,
+      "defaultTree": "vibrant"
+    },
+    "route": {
+      "name": "Inland Forest Route",
+      "hasBeach": false,
+      "hasRoad": true,
+      "defaultTree": "vibrant"
+    },
+    "coastal": {
+      "name": "Coastal Shoreline",
+      "hasBeach": true,
+      "hasRoad": true,
+      "defaultTree": "coastal"
+    },
+    "autumn": {
+      "name": "Autumn Ochre Valley",
+      "hasBeach": false,
+      "hasRoad": true,
+      "defaultTree": "autumn"
+    },
+    "forest": {
+      "name": "Deep Forest Sanctuary",
+      "hasBeach": false,
+      "hasRoad": true,
+      "defaultTree": "deep"
+    }
+  }
+}

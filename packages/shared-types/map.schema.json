@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pokemon-game.local/schema/map.schema.json",
+  "title": "Map Chunk",
+  "description": "Serializable contract for a deterministic 16x16 world chunk.",
+  "type": "object",
+  "required": [
+    "version",
+    "cx",
+    "cy",
+    "size",
+    "seed",
+    "terrainGrid",
+    "tileIdGrid",
+    "colliders",
+    "plants",
+    "tallGrass",
+    "berryBushes",
+    "wildPokemon"
+  ],
+  "properties": {
+    "version": { "type": "integer", "minimum": 1 },
+    "cx": { "type": "integer" },
+    "cy": { "type": "integer" },
+    "size": { "const": 16 },
+    "seed": { "type": "integer" },
+    "terrainGrid": {
+      "type": "array",
+      "minItems": 16,
+      "maxItems": 16,
+      "items": {
+        "type": "array",
+        "minItems": 16,
+        "maxItems": 16,
+        "items": { "type": "integer", "enum": [0, 1, 2, 3, 4, 5] }
+      }
+    },
+    "tileIdGrid": {
+      "type": "array",
+      "minItems": 16,
+      "maxItems": 16,
+      "items": {
+        "type": "array",
+        "minItems": 16,
+        "maxItems": 16,
+        "items": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "colliders": { "type": "array", "items": { "$ref": "#/$defs/collider" } },
+    "plants": { "type": "array", "items": { "$ref": "#/$defs/plant" } },
+    "tallGrass": { "type": "array", "items": { "$ref": "#/$defs/gridObject" } },
+    "berryBushes": { "type": "array", "items": { "$ref": "#/$defs/berryBush" } },
+    "wildPokemon": { "type": "array", "items": { "$ref": "#/$defs/wildPokemon" } }
+  },
+  "$defs": {
+    "point": {
+      "type": "object",
+      "required": ["gx", "gy"],
+      "properties": { "gx": { "type": "integer" }, "gy": { "type": "integer" } },
+      "additionalProperties": false
+    },
+    "gridObject": {
+      "type": "object",
+      "required": ["gx", "gy"],
+      "properties": {
+        "gx": { "type": "integer" },
+        "gy": { "type": "integer" },
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "collider": {
+      "type": "object",
+      "required": ["x", "y", "w", "h", "type"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "w": { "type": "number", "exclusiveMinimum": 0 },
+        "h": { "type": "number", "exclusiveMinimum": 0 },
+        "type": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "plant": {
+      "type": "object",
+      "required": ["gx", "gy", "type"],
+      "properties": {
+        "gx": { "type": "integer" },
+        "gy": { "type": "integer" },
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "type": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "berryBush": {
+      "type": "object",
+      "required": ["gx", "gy", "type", "stage"],
+      "properties": {
+        "gx": { "type": "integer" },
+        "gy": { "type": "integer" },
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "type": { "type": "string" },
+        "stage": { "type": "integer", "minimum": 0, "maximum": 3 }
+      },
+      "additionalProperties": false
+    },
+    "wildPokemon": {
+      "type": "object",
+      "required": ["gx", "gy", "speciesKey", "level"],
+      "properties": {
+        "gx": { "type": "integer" },
+        "gy": { "type": "integer" },
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "speciesKey": { "type": "string" },
+        "level": { "type": "integer", "minimum": 1 },
+        "direction": { "type": "integer", "minimum": 0, "maximum": 3 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

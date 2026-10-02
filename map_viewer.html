@@ -1,0 +1,3090 @@
+<!DOCTYPE html>
+<!--
+  LEGACY PROTOTYPE NOTICE:
+  This file (map_viewer.html) is the single-file monolithic prototype retained for visual cross-reference only.
+  The official codebase is modularized under apps/web/ and packages/.
+  Do NOT add new game logic or production features directly here.
+-->
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pokémon Chunk Map Engine & Camera Tracking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #07090e;
+      --overlay-bg: rgba(13, 17, 26, 0.72);
+      --overlay-border: rgba(255, 255, 255, 0.12);
+      --accent-color: #3b82f6;
+      --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --success-color: #10b981;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      user-select: none;
+      position: relative;
+    }
+
+    .canvas-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #07090e;
+    }
+
+    canvas#mapCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+
+    /* Bảng Overlay Trong Suốt Kiểm Thử */
+    .test-overlay {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      width: 320px;
+      max-height: calc(100vh - 32px);
+      background: var(--overlay-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--overlay-border);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow-y: auto;
+      transition: all 0.25s ease;
+    }
+
+    .test-overlay.collapsed {
+      width: auto;
+      max-width: 220px;
+      padding: 8px 14px;
+      border-radius: 30px;
+      background: rgba(13, 17, 26, 0.85);
+    }
+
+    .test-overlay.collapsed .overlay-body {
+      display: none;
+    }
+
+    .overlay-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      cursor: grab;
+      user-select: none;
+    }
+
+    .overlay-header:active {
+      cursor: grabbing;
+    }
+
+    .overlay-title {
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: -0.2px;
+    }
+
+    .overlay-title span {
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .badge-fixed {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      background: rgba(59, 130, 246, 0.2);
+      color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, 0.35);
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    .btn-toggle {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--overlay-border);
+      color: var(--text-muted);
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      transition: all 0.2s;
+    }
+
+    .btn-toggle:hover {
+      background: rgba(255, 255, 255, 0.16);
+      color: var(--text-main);
+    }
+
+    .overlay-body {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .control-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .control-row input, .control-row select {
+      flex: 1;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--overlay-border);
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      outline: none;
+    }
+
+    .control-row select {
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .btn-icon {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--overlay-border);
+      color: var(--text-main);
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .btn-icon:hover {
+      background: rgba(59, 130, 246, 0.2);
+      border-color: var(--accent-color);
+    }
+
+    .layers-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px 8px;
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--overlay-border);
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+    .checkbox-item:hover {
+      color: var(--text-main);
+    }
+
+    .checkbox-item input {
+      accent-color: var(--accent-color);
+      cursor: pointer;
+    }
+
+    .info-box {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--overlay-border);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 11px;
+    }
+
+    .info-line {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-muted);
+    }
+
+    .info-line span:last-child {
+      color: var(--text-main);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+    }
+
+    .actions-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .actions-row button {
+      flex: 1;
+      padding: 7px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+
+    .btn-action-primary {
+      background: var(--accent-gradient);
+      color: white;
+    }
+
+    .btn-action-primary:hover {
+      opacity: 0.9;
+    }
+
+    .btn-action-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--overlay-border);
+      color: var(--text-main);
+    }
+
+    .btn-action-secondary:hover {
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    /* Berry Growth Controls */
+    .berry-controls-box {
+      margin-top: 8px;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(168, 85, 247, 0.25);
+    }
+
+    .btn-berry-stage {
+      flex: 1;
+      padding: 4px 2px;
+      font-size: 10px;
+      font-weight: 600;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      background: rgba(30, 41, 59, 0.7);
+      color: #94a3b8;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-berry-stage:hover {
+      background: rgba(168, 85, 247, 0.25);
+      color: #fff;
+    }
+
+    .btn-berry-stage.active {
+      background: rgba(168, 85, 247, 0.45);
+      border-color: #c084fc;
+      color: #f3e8ff;
+      box-shadow: 0 0 10px rgba(168, 85, 247, 0.35);
+    }
+
+    /* Floating Berry Harvest Notification Toast */
+    .berry-toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.94);
+      border: 1px solid rgba(168, 85, 247, 0.6);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(168, 85, 247, 0.3);
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 600;
+      pointer-events: none;
+      z-index: 99999;
+      backdrop-filter: blur(10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fullscreen Map Canvas -->
+  <div class="canvas-wrapper">
+    <canvas id="mapCanvas" tabindex="0"></canvas>
+  </div>
+
+  <!-- Single Transparent Overlay for Testing -->
+  <div id="testOverlay" class="test-overlay">
+    <div class="overlay-header">
+      <div class="overlay-title">
+        <span>🎮 Pokémon Map</span>
+        <span class="badge-fixed">1.0x Cố định</span>
+      </div>
+      <button class="btn-toggle" id="btnToggleOverlay" title="Thu gọn / Mở rộng">✕</button>
+    </div>
+
+    <div class="overlay-body">
+      <!-- Seed & Biome -->
+      <div class="control-row">
+        <input type="number" id="inputSeed" value="101" title="Seed bản đồ">
+        <button class="btn-icon" id="btnRandomSeed" title="Đổi seed ngẫu nhiên">🎲 Đổi</button>
+        <select id="selectBiome" title="Hệ sinh thái">
+          <option value="mixed" selected>🌟 Hỗn hợp</option>
+          <option value="route">🌲 Nội địa</option>
+          <option value="coastal">🏖️ Bờ biển</option>
+          <option value="autumn">🍂 Lá thu</option>
+        </select>
+      </div>
+
+      <!-- Testing Layer Checkboxes -->
+      <div class="layers-grid">
+        <label class="checkbox-item">
+          <input type="checkbox" id="chkHills" checked> ⛰️ Núi / Đồi
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" id="chkRoad" checked> 🛣️ Đường mòn
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" id="chkBeach" checked> 🏖️ Bờ biển
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" id="chkTrees" checked> 🌲 Cây cối
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" id="chkChunkGrid" checked> 🔲 Ranh Chunk
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" id="chkCollision" checked> 🛑 Va chạm
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" id="chkHitbox"> 🎯 Hitbox
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" id="chkGrid"> 📐 Lưới 32px
+        </label>
+        <label class="checkbox-item" style="grid-column: span 2;">
+          <input type="checkbox" id="chkTallGrass" checked> 🌿 Bãi Cỏ Cao GBA (Tall Grass)
+        </label>
+        <label class="checkbox-item" style="grid-column: span 2;">
+          <input type="checkbox" id="chkPlants" checked> 🌸 Hoa & Cỏ hoa (Animated)
+        </label>
+        <label class="checkbox-item" style="grid-column: span 2;">
+          <input type="checkbox" id="chkBerries" checked> 🫐 Bụi Berry Dại (Chu kỳ lớn)
+        </label>
+        <label class="checkbox-item" style="grid-column: span 2;">
+          <input type="checkbox" id="chkHeatmap"> 🗺️ Bản đồ Heatmap ID
+        </label>
+      </div>
+
+      <!-- Berry Growth Cycle Controls -->
+      <div class="berry-controls-box">
+        <div class="control-row" style="margin-bottom: 6px; align-items: center;">
+          <span style="font-size: 11px; font-weight: 600; color: #c084fc;">⏱️ Chu kỳ Berry:</span>
+          <select id="selectBerryCycle" style="flex: 1; padding: 4px 6px; font-size: 11px; border-radius: 6px; background: rgba(30, 41, 59, 0.85); color: #fff; border: 1px solid rgba(255,255,255,0.18);">
+            <option value="60" selected>⚡ 1 phút (Test nhanh - 15s/giai đoạn)</option>
+            <option value="180">⏱️ 3 phút (45s/giai đoạn)</option>
+            <option value="600">⏱️ 10 phút (2.5m/giai đoạn)</option>
+            <option value="1800">🌳 30 phút (Chuẩn Pokémon)</option>
+          </select>
+        </div>
+        <div style="display: flex; gap: 4px;">
+          <button class="btn-berry-stage" data-stage="0" title="Ép xem Mầm non">🌱 Mầm</button>
+          <button class="btn-berry-stage" data-stage="1" title="Ép xem Cây non">🌿 Cây</button>
+          <button class="btn-berry-stage" data-stage="2" title="Ép xem Ra hoa">🌸 Hoa</button>
+          <button class="btn-berry-stage" data-stage="3" title="Ép xem Quả chín">🫐 Quả</button>
+          <button class="btn-berry-stage active" data-stage="auto" title="Tự động phát triển theo thời gian">🔄 Tự động</button>
+        </div>
+      </div>
+
+      <!-- Position & Testing Monitor -->
+      <div class="info-box">
+        <div class="info-line">
+          <span>Vị trí Red:</span>
+          <span id="lblPlayerPos">0, 0</span>
+        </div>
+        <div class="info-line">
+          <span>Chunk nạp:</span>
+          <span><span id="lblChunkPos">[0, 0]</span> (<span id="lblActiveChunks">0</span>)</span>
+        </div>
+        <div class="info-line">
+          <span>Trỏ chuột:</span>
+          <span><span id="insCoords">[0, 0]</span> | <span id="insTerrain">Đồng cỏ</span></span>
+        </div>
+        <div class="info-line">
+          <span>Mã Tile:</span>
+          <span id="insTileId">#101</span>
+        </div>
+        <div class="info-line" id="rowBerryInfo" style="display: none;">
+          <span style="color: #c084fc;">Berry trỏ:</span>
+          <span id="insBerryVal" style="color: #facc15; font-weight: 600;">-</span>
+        </div>
+
+        <!-- Hidden elements to preserve JS compatibility -->
+        <div style="display: none;">
+          <span id="insChunk"></span>
+          <span id="insTreeRule"></span>
+          <span id="lblCollisionStatus"></span>
+          <span id="lblFps">60</span>
+          <span id="lblZoom">1.0x</span>
+          <span id="lblZoomVal">1.0x</span>
+          <select id="selectWalkSpeed"><option value="classic" selected></option></select>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="actions-row">
+        <button class="btn-action-primary" id="btnRegenerate">⚡ Tải lại Map</button>
+        <button class="btn-action-secondary" id="btnResetPlayer">🚶 Gốc [0,0]</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="tiles_data.js"></script>
+
+  <script>
+    // --- DOM ELEMENT REFERENCES (Cached for 60 FPS performance) ---
+    const chkRoad = document.getElementById('chkRoad');
+    const chkHills = document.getElementById('chkHills');
+    const chkBeach = document.getElementById('chkBeach');
+    const chkTrees = document.getElementById('chkTrees');
+    const chkPlants = document.getElementById('chkPlants');
+    const chkBerries = document.getElementById('chkBerries');
+    const chkTallGrass = document.getElementById('chkTallGrass');
+    const chkCollision = document.getElementById('chkCollision');
+    const chkHeatmap = document.getElementById('chkHeatmap');
+    const chkChunkGrid = document.getElementById('chkChunkGrid');
+    const chkGrid = document.getElementById('chkGrid');
+    const chkHitbox = document.getElementById('chkHitbox');
+    const selectBiome = document.getElementById('selectBiome');
+    const selectWalkSpeed = document.getElementById('selectWalkSpeed');
+    const selectBerryCycle = document.getElementById('selectBerryCycle');
+    const inputSeed = document.getElementById('inputSeed');
+    const lblPlayerPos = document.getElementById('lblPlayerPos');
+    const lblChunkPos = document.getElementById('lblChunkPos');
+    const lblActiveChunks = document.getElementById('lblActiveChunks');
+    const lblCollisionStatus = document.getElementById('lblCollisionStatus');
+    let hudTick = 0;
+
+    // --- BERRY SYSTEM CONFIGURATION & ROSTER ---
+    const BERRY_ROSTER = [
+      { id: 'ORANBERRY', name: 'Oran Berry', viName: 'Quả Oran', color: '#3b82f6', desc: 'Hồi 10 HP thể lực' },
+      { id: 'CHERIBERRY', name: 'Cheri Berry', viName: 'Quả Cheri', color: '#ef4444', desc: 'Chữa tê liệt' },
+      { id: 'CHESTOBERRY', name: 'Chesto Berry', viName: 'Quả Chesto', color: '#8b5cf6', desc: 'Đánh thức buồn ngủ' },
+      { id: 'PECHABERRY', name: 'Pecha Berry', viName: 'Quả Pecha', color: '#ec4899', desc: 'Giải độc tính' },
+      { id: 'RAWSTBERRY', name: 'Rawst Berry', viName: 'Quả Rawst', color: '#06b6d4', desc: 'Làm dịu vết bỏng' },
+      { id: 'ASPEARBERRY', name: 'Aspear Berry', viName: 'Quả Aspear', color: '#eab308', desc: 'Làm tan băng đông' },
+      { id: 'LEPPABERRY', name: 'Leppa Berry', viName: 'Quả Leppa', color: '#f43f5e', desc: 'Hồi phục 10 điểm PP' },
+      { id: 'PERSIMBERRY', name: 'Persim Berry', viName: 'Quả Persim', color: '#f97316', desc: 'Xóa tan bối rối' },
+      { id: 'LUMBERRY', name: 'Lum Berry', viName: 'Quả Lum', color: '#84cc16', desc: 'Chữa mọi trạng thái xấu' },
+      { id: 'SITRUSBERRY', name: 'Sitrus Berry', viName: 'Quả Sitrus', color: '#facc15', desc: 'Hồi phục 25% máu' },
+      { id: 'RAZZBERRY', name: 'Razz Berry', viName: 'Quả Razz', color: '#e11d48', desc: 'Dễ thu phục Pokémon' },
+      { id: 'BLUKBERRY', name: 'Bluk Berry', viName: 'Quả Bluk', color: '#6366f1', desc: 'Làm bánh Poffin' },
+      { id: 'NANABBERRY', name: 'Nanab Berry', viName: 'Quả Nanab', color: '#f59e0b', desc: 'Làm dịu Pokémon' },
+      { id: 'WEPEARBERRY', name: 'Wepear Berry', viName: 'Quả Wepear', color: '#14b8a6', desc: 'Hương vị chua thanh' },
+      { id: 'PINAPBERRY', name: 'Pinap Berry', viName: 'Quả Pinap', color: '#eab308', desc: 'Nhân đôi kẹo thưởng' },
+      { id: 'MAGOBERRY', name: 'Mago Berry', viName: 'Quả Mago', color: '#d946ef', desc: 'Vị ngọt mọng nước' }
+    ];
+
+    const BERRY_STAGES = [
+      { stage: 0, name: 'Mầm non', enName: 'Sprout', icon: '🌱', desc: 'Mầm xanh vừa nhú khỏi lòng đất màu mỡ' },
+      { stage: 1, name: 'Cây non', enName: 'Growing', icon: '🌿', desc: 'Thân cành vươn cao, tán lá xanh tốt' },
+      { stage: 2, name: 'Ra hoa', enName: 'Bloom', icon: '🌸', desc: 'Hoa nở rực rỡ chuẩn bị kết quả' },
+      { stage: 3, name: 'Trái chín', enName: 'Ripe', icon: '🫐', desc: 'Quả mọng trĩu cành sẵn sàng thu hoạch!' }
+    ];
+
+    let berryCycleSeconds = 60; // Mặc định 60 giây (1 phút) theo yêu cầu test của user
+    let berryStageOverride = null; // null = Tự động theo thời gian thực, 0..3 = Ép thủ công để test
+    let berryToastTimer = null;
+
+    function showBerryToast(msg, color = '#c084fc') {
+      let toast = document.getElementById('berryToast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'berryToast';
+        toast.className = 'berry-toast';
+        document.body.appendChild(toast);
+      }
+      toast.innerText = msg;
+      toast.style.borderColor = color;
+      toast.style.display = 'block';
+      toast.style.opacity = '1';
+      if (berryToastTimer) clearTimeout(berryToastTimer);
+      berryToastTimer = setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => { toast.style.display = 'none'; }, 300);
+      }, 3500);
+    }
+
+    // --- TERRAIN ID CONSTANTS ---
+    const TERRAIN = {
+      EMPTY: 0,
+      GRASS: 1,       // Đồng cỏ (Nơi sinh cây cối, hoa cỏ)
+      ROAD: 2,        // Đường mòn đất (Lối đi lại, KHÔNG sinh cây)
+      BEACH_SAND: 3,  // Bãi cát biển (Ven biển, TUYỆT ĐỐI KHÔNG SINH CÂY)
+      OCEAN_WATER: 4, // Mặt nước biển
+      HILL: 5         // Vách núi / Đồi cao nguyên (Tự nhiên, không sinh cây trên rìa)
+    };
+
+    // Tile metadata lookup
+    const TILE_INFO = {
+      // Grass (101-105)
+      101: { name: 'grass_01', terrain: TERRAIN.GRASS, desc: 'Cỏ nền 2x2 (Góc trên trái)' },
+      102: { name: 'grass_02', terrain: TERRAIN.GRASS, desc: 'Cỏ nền 2x2 (Góc trên phải)' },
+      103: { name: 'grass_03', terrain: TERRAIN.GRASS, desc: 'Cỏ nền 2x2 (Góc dưới trái)' },
+      104: { name: 'grass_04', terrain: TERRAIN.GRASS, desc: 'Cỏ nền 2x2 (Góc dưới phải)' },
+      105: { name: 'grass_variant', terrain: TERRAIN.GRASS, desc: 'Cụm cỏ biến thể điểm xuyết' },
+
+      // Road (200-212)
+      200: { name: 'dirt_pure', terrain: TERRAIN.ROAD, desc: 'Đất thuần lòng đường' },
+      201: { name: 'path_edge_top', terrain: TERRAIN.ROAD, desc: 'Rìa đường trên' },
+      202: { name: 'path_edge_bot', terrain: TERRAIN.ROAD, desc: 'Rìa đường dưới' },
+      203: { name: 'path_edge_left', terrain: TERRAIN.ROAD, desc: 'Rìa đường trái' },
+      204: { name: 'path_edge_right', terrain: TERRAIN.ROAD, desc: 'Rìa đường phải' },
+      205: { name: 'path_edge_tl', terrain: TERRAIN.ROAD, desc: 'Góc ngoài đường trên-trái' },
+      206: { name: 'path_edge_tr', terrain: TERRAIN.ROAD, desc: 'Góc ngoài đường trên-phải' },
+      207: { name: 'path_edge_bl', terrain: TERRAIN.ROAD, desc: 'Góc ngoài đường dưới-trái' },
+      208: { name: 'path_edge_br', terrain: TERRAIN.ROAD, desc: 'Góc ngoài đường dưới-phải' },
+      209: { name: 'path_in_tl', terrain: TERRAIN.ROAD, desc: 'Góc trong bẻ hướng đường trên-trái' },
+      210: { name: 'path_in_tr', terrain: TERRAIN.ROAD, desc: 'Góc trong bẻ hướng đường trên-phải' },
+      211: { name: 'path_in_bl', terrain: TERRAIN.ROAD, desc: 'Góc trong bẻ hướng đường dưới-trái' },
+      212: { name: 'path_in_br', terrain: TERRAIN.ROAD, desc: 'Góc trong bẻ hướng đường dưới-phải' },
+
+      // Beach Sand (300-312)
+      300: { name: 'sand_pure', terrain: TERRAIN.BEACH_SAND, desc: 'Cát biển thuần (Vân sóng)' },
+      301: { name: 'sand_edge_top', terrain: TERRAIN.BEACH_SAND, desc: 'Rìa bờ cát trên' },
+      302: { name: 'sand_edge_bot', terrain: TERRAIN.BEACH_SAND, desc: 'Rìa bờ cát dưới' },
+      303: { name: 'sand_edge_left', terrain: TERRAIN.BEACH_SAND, desc: 'Rìa bờ cát trái' },
+      304: { name: 'sand_edge_right', terrain: TERRAIN.BEACH_SAND, desc: 'Rìa bờ cát phải' },
+      305: { name: 'sand_edge_tl', terrain: TERRAIN.BEACH_SAND, desc: 'Góc ngoài bờ cát trên-trái' },
+      306: { name: 'sand_edge_tr', terrain: TERRAIN.BEACH_SAND, desc: 'Góc ngoài bờ cát trên-phải' },
+      307: { name: 'sand_edge_bl', terrain: TERRAIN.BEACH_SAND, desc: 'Góc ngoài bờ cát dưới-trái' },
+      308: { name: 'sand_edge_br', terrain: TERRAIN.BEACH_SAND, desc: 'Góc ngoài bờ cát dưới-phải' },
+      309: { name: 'sand_in_tl', terrain: TERRAIN.BEACH_SAND, desc: 'Góc trong bẻ hướng bờ cát trên-trái' },
+      310: { name: 'sand_in_tr', terrain: TERRAIN.BEACH_SAND, desc: 'Góc trong bẻ hướng bờ cát trên-phải' },
+      311: { name: 'sand_in_bl', terrain: TERRAIN.BEACH_SAND, desc: 'Góc trong bẻ hướng bờ cát dưới-trái' },
+      312: { name: 'sand_in_br', terrain: TERRAIN.BEACH_SAND, desc: 'Góc trong bẻ hướng bờ cát dưới-phải' },
+
+      // Hill & Cliff (400-410)
+      400: { name: 'cliff_pure', terrain: TERRAIN.HILL, desc: 'Mặt cỏ cao nguyên phẳng' },
+      401: { name: 'cliff_top', terrain: TERRAIN.HILL, desc: 'Rìa đỉnh đồi trên' },
+      402: { name: 'cliff_bot', terrain: TERRAIN.HILL, desc: 'Vách đá chính diện phía dưới' },
+      403: { name: 'cliff_left', terrain: TERRAIN.HILL, desc: 'Vách đá sườn trái' },
+      404: { name: 'cliff_right', terrain: TERRAIN.HILL, desc: 'Vách đá sườn phải' },
+      405: { name: 'cliff_tl', terrain: TERRAIN.HILL, desc: 'Góc ngoài vách trên-trái' },
+      406: { name: 'cliff_tr', terrain: TERRAIN.HILL, desc: 'Góc ngoài vách trên-phải' },
+      407: { name: 'cliff_bl', terrain: TERRAIN.HILL, desc: 'Góc chân vách dưới-trái' },
+      408: { name: 'cliff_br', terrain: TERRAIN.HILL, desc: 'Góc chân vách dưới-phải' },
+      409: { name: 'cliff_in_tl', terrain: TERRAIN.HILL, desc: 'Góc bo trong trên-trái (Inner Corner)' },
+      410: { name: 'cliff_in_tr', terrain: TERRAIN.HILL, desc: 'Góc bo trong trên-phải (Inner Corner)' },
+      411: { name: 'cliff_in_bl', terrain: TERRAIN.HILL, desc: 'Góc bo trong dưới-trái (xoay 180 độ)' },
+      412: { name: 'cliff_in_br', terrain: TERRAIN.HILL, desc: 'Góc bo trong dưới-phải (xoay 180 độ)' },
+
+      // Tall Grass (610)
+      610: { name: 'tall_grass', terrain: TERRAIN.GRASS, desc: 'Bụi cỏ cao hoang dã GBA (Nơi gặp Pokémon)' }
+    };
+
+    // --- CHUNK CONSTANTS ---
+    const CHUNK_SIZE = 16;         // 16x16 ô tiles mỗi chunk
+    const TILE_SIZE = 32;          // 32x32 px mỗi tile
+    const CHUNK_PIXELS = CHUNK_SIZE * TILE_SIZE; // 512x512 px mỗi chunk
+    const SPAWN_RADIUS = 2;        // Bán kính nạp chunk xung quanh Red (5x5 = 25 chunks)
+
+    // Deterministic 2D PRNG
+    function seededHash(x, y, seed) {
+      let n = (Math.imul(x, 374761393) + Math.imul(y, 668265263) + Math.imul(seed, 962458823)) >>> 0;
+      n = Math.imul(n ^ (n >>> 13), 1274126177) >>> 0;
+      return ((n ^ (n >>> 16)) >>> 0) / 4294967296;
+    }
+
+    // --- CONTINUOUS WORLD GENERATION MATHEMATICS ---
+    function getCoastBoundary(gy, seed) {
+      return Math.round(18 + Math.sin(gy * 0.08 + (seed % 1000) * 0.1) * 6 + Math.cos(gy * 0.04) * 3);
+    }
+
+    function isSandTile(gx, gy, seed) {
+      if (!chkBeach || !chkBeach.checked) return false;
+      return gx >= getCoastBoundary(gy, seed);
+    }
+
+    function getSegmentCol(k, seed) {
+      const s = (seed % 1000) * 0.1;
+      const val = Math.sin(k * 0.45 + s) * 4 + Math.sin(k * 0.15) * 2;
+      return Math.round(val);
+    }
+
+    function getRoadCenterX(gy, seed) {
+      const H = 24;
+      const k = Math.floor(gy / H);
+      const yloc = gy - k * H;
+      const xk = getSegmentCol(k, seed);
+      const xkNext = getSegmentCol(k + 1, seed);
+
+      if (yloc < 18) {
+        return xk;
+      } else if (yloc < 21) {
+        return Math.round((xk + xkNext) / 2);
+      } else {
+        return xkNext;
+      }
+    }
+
+    function isRoadTile(gx, gy, seed) {
+      if (!chkRoad || !chkRoad.checked) return false;
+      if (isSandTile(gx, gy, seed)) return false;
+
+      const H = 24;
+      const k = Math.floor(gy / H);
+      const yloc = gy - k * H;
+      const xk = getSegmentCol(k, seed);
+      const xkNext = getSegmentCol(k + 1, seed);
+
+      // Tuyến đường quốc lộ chính chạy dọc Bắc - Nam gồm các đoạn thẳng dài và góc cua 90 độ dứt khoát
+      let onMain = false;
+      if (yloc < 18) {
+        onMain = Math.abs(gx - xk) <= 1;
+      } else if (yloc < 21) {
+        const minX = Math.min(xk, xkNext) - 1;
+        const maxX = Math.max(xk, xkNext) + 1;
+        onMain = (gx >= minX && gx <= maxX);
+      } else {
+        onMain = Math.abs(gx - xkNext) <= 1;
+      }
+      if (onMain) return true;
+
+      // Các nhánh đường nhánh Đông - Tây nối thẳng ra bờ cát biển mỗi 48 ô
+      const branchInterval = 48;
+      const branchRow = Math.floor(gy / branchInterval) * branchInterval + 10;
+      if (Math.abs(gy - branchRow) <= 1) {
+        const branchStart = getRoadCenterX(branchRow, seed);
+        const minCoast = Math.min(
+          getCoastBoundary(branchRow - 1, seed),
+          getCoastBoundary(branchRow, seed),
+          getCoastBoundary(branchRow + 1, seed)
+        );
+        const branchEnd = minCoast - 2;
+        if (gx >= branchStart && gx < branchEnd) return true;
+      }
+
+      return false;
+    }
+
+    function getSandTileKey(gx, gy, seed) {
+      const n  = isSandTile(gx, gy - 1, seed);
+      const s  = isSandTile(gx, gy + 1, seed);
+      const w  = isSandTile(gx - 1, gy, seed);
+      const e  = isSandTile(gx + 1, gy, seed);
+      const nw = isSandTile(gx - 1, gy - 1, seed);
+      const ne = isSandTile(gx + 1, gy - 1, seed);
+      const sw = isSandTile(gx - 1, gy + 1, seed);
+      const se = isSandTile(gx + 1, gy + 1, seed);
+
+      let key = 'pure', tid = 300;
+      if (!n && !w) { key = 'tl'; tid = 305; }
+      else if (!n && !e) { key = 'tr'; tid = 306; }
+      else if (!s && !w) { key = 'bl'; tid = 307; }
+      else if (!s && !e) { key = 'br'; tid = 308; }
+      else if (!n) { key = 'top'; tid = 301; }
+      else if (!s) { key = 'bot'; tid = 302; }
+      else if (!w) { key = 'left'; tid = 303; }
+      else if (!e) { key = 'right'; tid = 304; }
+      else if (n && s && w && e) {
+        if (!nw) { key = 'in_tl'; tid = 309; }
+        else if (!ne) { key = 'in_tr'; tid = 310; }
+        else if (!sw) { key = 'in_bl'; tid = 311; }
+        else if (!se) { key = 'in_br'; tid = 312; }
+        else { key = 'pure'; tid = 300; }
+      }
+      return { key, tid };
+    }
+
+    function getRoadTileKey(gx, gy, seed) {
+      const n  = isRoadTile(gx, gy - 1, seed);
+      const s  = isRoadTile(gx, gy + 1, seed);
+      const w  = isRoadTile(gx - 1, gy, seed);
+      const e  = isRoadTile(gx + 1, gy, seed);
+      const nw = isRoadTile(gx - 1, gy - 1, seed);
+      const ne = isRoadTile(gx + 1, gy - 1, seed);
+      const sw = isRoadTile(gx - 1, gy + 1, seed);
+      const se = isRoadTile(gx + 1, gy + 1, seed);
+
+      let key = 'pure', tid = 200;
+      if (!n && !w) { key = 'tl'; tid = 205; }
+      else if (!n && !e) { key = 'tr'; tid = 206; }
+      else if (!s && !w) { key = 'bl'; tid = 207; }
+      else if (!s && !e) { key = 'br'; tid = 208; }
+      else if (!n) { key = 'top'; tid = 201; }
+      else if (!s) { key = 'bot'; tid = 202; }
+      else if (!w) { key = 'left'; tid = 203; }
+      else if (!e) { key = 'right'; tid = 204; }
+      else if (n && s && w && e) {
+        if (!nw) { key = 'in_tl'; tid = 209; }
+        else if (!ne) { key = 'in_tr'; tid = 210; }
+        else if (!sw) { key = 'in_bl'; tid = 211; }
+        else if (!se) { key = 'in_br'; tid = 212; }
+        else { key = 'pure'; tid = 200; }
+      }
+      return { key, tid };
+    }
+
+    function isNearRoadOrSand(gx, gy, seed, dist = 2) {
+      for (let dy = -dist; dy <= dist; dy++) {
+        for (let dx = -dist; dx <= dist; dx++) {
+          if (isRoadTile(gx + dx, gy + dy, seed) || isSandTile(gx + dx, gy + dy, seed)) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+
+    const eastHillCache = new Map();
+    function canSpawnEastHill(kE, seed) {
+      const key = `${kE}_${seed}`;
+      if (eastHillCache.has(key)) return eastHillCache.get(key);
+      const gyStart = kE * 40 - 10 + 4;
+      const gyEnd   = kE * 40 - 10 + 28;
+      for (let gy = gyStart; gy <= gyEnd; gy++) {
+        for (let gx = 7; gx <= 16; gx++) {
+          if (isNearRoadOrSand(gx, gy, seed, 2)) {
+            eastHillCache.set(key, false);
+            return false;
+          }
+        }
+      }
+      eastHillCache.set(key, true);
+      return true;
+    }
+
+    const westMaxXCache = new Map();
+    function getWestMaxX(kW, seed) {
+      if (!chkRoad || !chkRoad.checked) return -8;
+      const key = `${kW}_${seed}`;
+      if (westMaxXCache.has(key)) return westMaxXCache.get(key);
+      const gyStart = kW * 32 + 3;
+      const gyEnd   = kW * 32 + 28;
+      let minRoadX = 999;
+      for (let gy = gyStart; gy <= gyEnd; gy++) {
+        const rx = getRoadCenterX(gy, seed) - 2;
+        if (rx < minRoadX) minRoadX = rx;
+      }
+      const res = Math.min(-8, minRoadX - 3);
+      westMaxXCache.set(key, res);
+      return res;
+    }
+
+    const hillTileCache = new Map();
+    function isHillTile(gx, gy, seed) {
+      if (!chkHills || !chkHills.checked) return false;
+      // Fast-exit bounding box: Núi Tây ở [-36..-8], Đồi Đông ở [8..16]. Ngoài khoảng này chắc chắn không có núi/đồi!
+      if (!((gx >= -36 && gx <= -8) || (gx >= 8 && gx <= 16))) return false;
+
+      const cacheKey = `${gx},${gy}_${seed}`;
+      if (hillTileCache.has(cacheKey)) return hillTileCache.get(cacheKey);
+
+      let result = false;
+      if (!isNearRoadOrSand(gx, gy, seed, 2)) {
+        // 1. Rặng núi đại cao nguyên phía Tây (chu kỳ 32 ô Y)
+        const kW = Math.floor(gy / 32);
+        const ylocW = gy - kW * 32;
+        const varW = Math.floor(seededHash(kW, 101, seed) * 4) % 4;
+        const maxReach = getWestMaxX(kW, seed);
+
+        let inWest = false;
+        if (varW === 0) {
+          // Dãy núi giật 3 cấp (Stepped Triple Plateau, bề rộng 20 -> 25 -> 28 ô)
+          const midX = Math.min(-11, maxReach - 2);
+          const topX = Math.min(-15, midX - 4);
+          if (ylocW >= 3 && ylocW <= 8)         inWest = (gx >= -36 && gx <= topX);
+          else if (ylocW >= 9 && ylocW <= 18)  inWest = (gx >= -36 && gx <= midX);
+          else if (ylocW >= 19 && ylocW <= 28) inWest = (gx >= -36 && gx <= maxReach);
+        } else if (varW === 1) {
+          // Thung lũng hõm sâu (Deep Alcove / Canyon Valley, lõm vào 8 ô)
+          const outerX = Math.min(-9, maxReach);
+          const innerX = outerX - 8;
+          if (ylocW >= 3 && ylocW <= 9)         inWest = (gx >= -36 && gx <= outerX);
+          else if (ylocW >= 10 && ylocW <= 19) inWest = (gx >= -36 && gx <= innerX);
+          else if (ylocW >= 20 && ylocW <= 28) inWest = (gx >= -36 && gx <= outerX);
+        } else if (varW === 2) {
+          // Mỏm núi nhô đôi (Twin Promontories, hai mũi núi vươn ra)
+          const baseX = Math.min(-14, maxReach - 5);
+          const hornX = maxReach;
+          if (ylocW >= 3 && ylocW <= 4)         inWest = (gx >= -36 && gx <= baseX);
+          else if (ylocW >= 5 && ylocW <= 11)  inWest = (gx >= -36 && gx <= hornX);
+          else if (ylocW >= 12 && ylocW <= 17) inWest = (gx >= -36 && gx <= baseX);
+          else if (ylocW >= 18 && ylocW <= 24) inWest = (gx >= -36 && gx <= hornX);
+          else if (ylocW >= 25 && ylocW <= 28) inWest = (gx >= -36 && gx <= baseX);
+        } else {
+          // Đại ngàn vách đá cao & Khe núi vượt (Continental Massif with Pass)
+          const massifX = Math.min(-10, maxReach);
+          if (ylocW >= 3 && ylocW <= 26) inWest = (gx >= -36 && gx <= massifX);
+        }
+
+        if (inWest) {
+          result = true;
+        } else {
+          // 2. Cụm đồi độc lập phía Đông (chu kỳ 40 ô Y)
+          const kE = Math.floor((gy + 10) / 40);
+          if (canSpawnEastHill(kE, seed)) {
+            const ylocE = (gy + 10) - kE * 40;
+            const varE = Math.floor(seededHash(kE, 202, seed) * 3);
+            if (varE === 0) {
+              // Cao nguyên bàn cờ vát góc (Grand Stepped Mesa, 9x17 ô)
+              if (ylocE >= 6 && ylocE <= 8)        result = (gx >= 9 && gx <= 13);
+              else if (ylocE >= 9 && ylocE <= 19)  result = (gx >= 8 && gx <= 14);
+              else if (ylocE >= 20 && ylocE <= 22) result = (gx >= 9 && gx <= 13);
+            } else if (varE === 1) {
+              // Đồi chữ L (L-Shaped Ridge, dài 19 ô)
+              if (ylocE >= 6 && ylocE <= 14)       result = (gx >= 8 && gx <= 12);
+              else if (ylocE >= 15 && ylocE <= 24) result = (gx >= 8 && gx <= 14);
+            } else if (varE === 2) {
+              // Cặp đồi đôi (Twin Hills)
+              if (ylocE >= 5 && ylocE <= 12)       result = (gx >= 8 && gx <= 13);
+              else if (ylocE >= 17 && ylocE <= 26) result = (gx >= 8 && gx <= 14);
+            }
+          }
+        }
+      }
+
+      hillTileCache.set(cacheKey, result);
+      return result;
+    }
+
+    function getCliffTileKey(gx, gy, seed) {
+      const n  = isHillTile(gx, gy - 1, seed);
+      const s  = isHillTile(gx, gy + 1, seed);
+      const w  = isHillTile(gx - 1, gy, seed);
+      const e  = isHillTile(gx + 1, gy, seed);
+      const nw = isHillTile(gx - 1, gy - 1, seed);
+      const ne = isHillTile(gx + 1, gy - 1, seed);
+      const sw = isHillTile(gx - 1, gy + 1, seed);
+      const se = isHillTile(gx + 1, gy + 1, seed);
+
+      let key = 'pure', tid = 400;
+      if (!n && !w) { key = 'tl'; tid = 405; }
+      else if (!n && !e) { key = 'tr'; tid = 406; }
+      else if (!s && !w) { key = 'bl'; tid = 407; }
+      else if (!s && !e) { key = 'br'; tid = 408; }
+      else if (!n) { key = 'top'; tid = 401; }
+      else if (!s) { key = 'bot'; tid = 402; }
+      else if (!w) { key = 'left'; tid = 403; }
+      else if (!e) { key = 'right'; tid = 404; }
+      else if (n && s && w && e) {
+        if (!nw) { key = 'in_bl'; tid = 411; }
+        else if (!ne) { key = 'in_br'; tid = 412; }
+        else if (!sw) { key = 'in_tr'; tid = 410; }
+        else if (!se) { key = 'in_tl'; tid = 409; }
+        else { key = 'pure'; tid = 400; }
+      }
+      return { key, tid };
+    }
+
+    function isValidTreePosGlobal(tx, ty, seed) {
+      const ts = TILE_SIZE;
+      const cStart = Math.floor((tx + 6) / ts);
+      const cEnd   = Math.floor((tx + 58) / ts);
+      const rStart = Math.floor((ty + 50) / ts);
+      const rEnd   = Math.floor((ty + 118) / ts);
+
+      let firstHill = null;
+      for (let r = rStart; r <= rEnd; r++) {
+        for (let c = cStart; c <= cEnd; c++) {
+          if (isRoadTile(c, r, seed) || isSandTile(c, r, seed)) {
+            return false;
+          }
+          const h = isHillTile(c, r, seed);
+          if (firstHill === null) {
+            firstHill = h;
+          } else if (h !== firstHill) {
+            return false;
+          }
+          if (h) {
+            const cliff = getCliffTileKey(c, r, seed);
+            if (cliff.key !== 'pure') {
+              return false;
+            }
+          }
+        }
+      }
+
+      const rootR  = Math.floor((ty + 112) / ts);
+      const rootC1 = Math.floor((tx + 18) / ts);
+      const rootC2 = Math.floor((tx + 46) / ts);
+
+      if (isRoadTile(rootC1, rootR, seed) || isSandTile(rootC1, rootR, seed)) return false;
+      if (isRoadTile(rootC2, rootR, seed) || isSandTile(rootC2, rootR, seed)) return false;
+
+      return true;
+    }
+
+    // --- CHUNK CLASS ---
+    class WorldChunk {
+      constructor(cx, cy, seed) {
+        this.cx = cx;
+        this.cy = cy;
+        this.seed = seed;
+        this.terrainGrid = Array.from({ length: CHUNK_SIZE }, () => Array(CHUNK_SIZE).fill(TERRAIN.GRASS));
+        this.tileIdGrid = Array.from({ length: CHUNK_SIZE }, () => Array(CHUNK_SIZE).fill(101));
+        this.trees = [];
+        this.colliders = [];
+        this.plants = [];
+        this.berryBushes = [];
+        this.tallGrass = [];
+        this.tallGrassSet = new Set();
+
+        this.groundCanvas = document.createElement('canvas');
+        this.groundCanvas.width = CHUNK_PIXELS;
+        this.groundCanvas.height = CHUNK_PIXELS;
+        this.groundCtx = this.groundCanvas.getContext('2d');
+
+        this.build();
+      }
+
+      build() {
+        const ts = TILE_SIZE;
+        const startGX = this.cx * CHUNK_SIZE;
+        const startGY = this.cy * CHUNK_SIZE;
+        const biome = selectBiome ? selectBiome.value : 'mixed';
+
+        // 1. Render nền mặt đất (Cỏ, Cát bờ biển, Đường mòn)
+        for (let ly = 0; ly < CHUNK_SIZE; ly++) {
+          for (let lx = 0; lx < CHUNK_SIZE; lx++) {
+            const gx = startGX + lx;
+            const gy = startGY + ly;
+            const px = lx * ts;
+            const py = ly * ts;
+
+            // Luôn vẽ cỏ nền 2x2 liền mạch bên dưới
+            const grassIdx = (((gy % 2) + 2) % 2) * 2 + (((gx % 2) + 2) % 2) + 1;
+            this.groundCtx.drawImage(loadedImages[`grass_${grassIdx}`], px, py);
+
+            let terrain = TERRAIN.GRASS;
+            let tid = 100 + grassIdx;
+
+            // Điểm xuyết hoa cỏ biến thể
+            if (seededHash(gx, gy, this.seed + 1) < 0.08) {
+              this.groundCtx.drawImage(loadedImages['grass_variant'], px, py);
+              tid = 105;
+            }
+
+            // Bãi cát ven biển
+            if (isSandTile(gx, gy, this.seed)) {
+              terrain = TERRAIN.BEACH_SAND;
+              const sandTile = getSandTileKey(gx, gy, this.seed);
+              this.groundCtx.drawImage(loadedImages[`sand_${sandTile.key}`], px, py);
+              tid = sandTile.tid;
+            }
+            // Đường mòn đất
+            else if (isRoadTile(gx, gy, this.seed)) {
+              terrain = TERRAIN.ROAD;
+              const roadTile = getRoadTileKey(gx, gy, this.seed);
+              this.groundCtx.drawImage(loadedImages[`path_${roadTile.key}`], px, py);
+              tid = roadTile.tid;
+            }
+            // Vách núi / Đồi cao nguyên
+            else if (isHillTile(gx, gy, this.seed)) {
+              terrain = TERRAIN.HILL;
+              const cliffTile = getCliffTileKey(gx, gy, this.seed);
+              this.groundCtx.drawImage(loadedImages[`cliff_${cliffTile.key}`], px, py);
+              tid = cliffTile.tid;
+            }
+
+            this.terrainGrid[ly][lx] = terrain;
+            this.tileIdGrid[ly][lx] = tid;
+          }
+        }
+
+        // 2. Sinh cây cối theo hệ sinh thái
+        if (chkTrees && chkTrees.checked) {
+          const numCandidates = 6;
+          for (let i = 0; i < numCandidates; i++) {
+            const randX = seededHash(this.cx * 100 + i, this.cy * 100 + i, this.seed + 2);
+            const randY = seededHash(this.cx * 100 + i, this.cy * 100 + i, this.seed + 3);
+
+            const lx = Math.floor(randX * (CHUNK_SIZE - 2)) + 1;
+            const ly = Math.floor(randY * (CHUNK_SIZE - 2)) + 1;
+            const gx = startGX + lx;
+            const gy = startGY + ly;
+
+            const tx = gx * ts - 16;
+            const ty = gy * ts - 86;
+
+            if (isValidTreePosGlobal(tx, ty, this.seed)) {
+              const rootR = Math.floor((ty + 112) / ts);
+              const rootC1 = Math.floor((tx + 20) / ts);
+
+              // Kiểm tra xem có gần cát biển không
+              let nearBeach = false;
+              for (let dr = -2; dr <= 2; dr++) {
+                for (let dc = -2; dc <= 2; dc++) {
+                  if (isSandTile(rootC1 + dc, rootR + dr, this.seed)) {
+                    nearBeach = true;
+                    break;
+                  }
+                }
+              }
+
+              let tType = 'tree_vibrant';
+              if (nearBeach) tType = 'tree_coastal';
+              else if (biome === 'autumn' || (biome === 'mixed' && rootC1 < 4 && rootR > 10)) tType = 'tree_autumn';
+              else if (biome === 'route') tType = (randX < 0.45) ? 'tree_vibrant' : 'tree_deep';
+
+              this.trees.push({ x: tx, y: ty, img: loadedImages[tType], w: 64, h: 118 });
+              this.colliders.push({ x: tx + 14, y: ty + 90, w: 36, h: 26 });
+            }
+          }
+
+          // Vẽ trước bóng đổ cây lên canvas mặt đất của chunk
+          this.groundCtx.save();
+          this.groundCtx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+          this.trees.forEach(t => {
+            const bx = t.x - startGX * ts + 32;
+            const by = t.y - startGY * ts + 112;
+            this.groundCtx.beginPath();
+            this.groundCtx.ellipse(bx, by, 20, 8, 0, 0, Math.PI * 2);
+            this.groundCtx.fill();
+          });
+          this.groundCtx.restore();
+        }
+
+        // 3. Sinh bụi cây Berry Dại (1 - 3 cây mỗi chunk: 50% 1 cây, 40% 2 cây, 10% 3 cây)
+        const berriesEnabled = !chkBerries || chkBerries.checked;
+        if (berriesEnabled) {
+          const quotaRoll = seededHash(this.cx, this.cy, this.seed + 999);
+          let quota = 1;
+          if (quotaRoll >= 0.90) quota = 3;      // 10% cơ hội có 3 cây
+          else if (quotaRoll >= 0.50) quota = 2; // 40% cơ hội có 2 cây
+          // Còn lại 50% cơ hội có 1 cây
+
+          // Chọn các góc phần tư khác nhau để cây phân tán đều, không dính chùm
+          const quadOrder = [0, 1, 2, 3];
+          for (let i = quadOrder.length - 1; i > 0; i--) {
+            const j = Math.floor(seededHash(this.cx * 10 + i, this.cy * 10 + i, this.seed + 888) * (i + 1));
+            const tmp = quadOrder[i];
+            quadOrder[i] = quadOrder[j];
+            quadOrder[j] = tmp;
+          }
+
+          let spawned = 0;
+          for (let qi = 0; qi < 4 && spawned < quota; qi++) {
+            const q = quadOrder[qi];
+            const qlx = (q % 2) * 8;
+            const qly = Math.floor(q / 2) * 8;
+
+            // Tọa độ ngẫu nhiên phân tán bên trong góc phần tư
+            const ox = 1 + Math.floor(seededHash(this.cx * 4 + q, this.cy * 4 + q, this.seed + 234) * 6);
+            const oy = 2 + Math.floor(seededHash(this.cx * 4 + q, this.cy * 4 + q, this.seed + 345) * 5);
+            const bLX = qlx + ox;
+            const bLY = qly + oy;
+
+            if (this.terrainGrid[bLY][bLX] === TERRAIN.GRASS && this.terrainGrid[bLY - 1][bLX] === TERRAIN.GRASS) {
+              const bgx = startGX + bLX;
+              const bgy = startGY + bLY;
+              const bpx = bgx * ts;
+              const bpy = bgy * ts - 32;
+
+              let collidesWithTree = false;
+              for (const c of this.colliders) {
+                if (bpx + 28 > c.x && bpx + 4 < c.x + c.w &&
+                    bpy + 60 > c.y && bpy + 30 < c.y + c.h) {
+                  collidesWithTree = true;
+                  break;
+                }
+              }
+
+              if (!collidesWithTree) {
+                const bTypeIdx = Math.floor(seededHash(bgx, bgy, this.seed + 123) * BERRY_ROSTER.length) % BERRY_ROSTER.length;
+                const berryType = BERRY_ROSTER[bTypeIdx];
+                const timeOffsetSec = seededHash(bgx, bgy, this.seed + 888) * berryCycleSeconds;
+                const plantedAt = Date.now() - (timeOffsetSec * 1000);
+                const phase = seededHash(bgx, bgy, 777) * 4;
+
+                const bush = {
+                  gx: bgx,
+                  gy: bgy,
+                  x: bpx,
+                  y: bpy,
+                  type: berryType,
+                  plantedAt: plantedAt,
+                  phase: phase
+                };
+                this.berryBushes.push(bush);
+
+                // Thêm hitbox va chạm ở gốc cây (Red không bước xuyên qua thân bụi)
+                this.colliders.push({
+                  x: bpx + 6,
+                  y: bgy * ts + 10,
+                  w: 20,
+                  h: 18,
+                  isBerry: true,
+                  berryRef: bush
+                });
+                spawned++;
+              }
+            }
+          }
+        }
+
+        // 4. Sinh bãi cỏ cao hoang dã GBA (Contiguous Tall Grass Patches with Stable Frequency)
+        const tallGrassEnabled = !chkTallGrass || chkTallGrass.checked;
+        this.tallGrass = [];
+        this.tallGrassSet = new Set();
+
+        if (tallGrassEnabled) {
+          // Tần suất xuất hiện dày đặc kiểu GBA:
+          // 30% có 4 bãi, 40% có 3 bãi, 30% có 2 bãi
+          const quotaRoll = seededHash(this.cx, this.cy, this.seed + 7771);
+          const quota = quotaRoll < 0.30 ? 4 : (quotaRoll < 0.70 ? 3 : 2);
+
+          // Danh sách các điểm neo tiềm năng phân bố đều khắp chunk
+          const candidateAnchors = [
+            [2, 2], [9, 2], [2, 9], [9, 9],
+            [5, 5], [3, 6], [8, 4], [4, 8],
+            [6, 2], [2, 5], [7, 7], [10, 6],
+            [1, 11], [7, 1], [11, 3], [5, 10]
+          ];
+
+          // Xáo trộn có trọng số theo seed của chunk
+          const sortedAnchors = candidateAnchors.sort((a, b) => {
+            const ha = seededHash(this.cx * 100 + a[0], this.cy * 100 + a[1], this.seed + 555);
+            const hb = seededHash(this.cx * 100 + b[0], this.cy * 100 + b[1], this.seed + 555);
+            return ha - hb;
+          });
+
+          const usedLXLY = new Set();
+          let patchesSpawned = 0;
+
+          for (const [alx, aly] of sortedAnchors) {
+            if (patchesSpawned >= quota) break;
+
+            // Kích thước bãi cỏ lớn hơn: 3-6 chiều rộng, 3-5 chiều cao
+            const pw = 3 + Math.floor(seededHash(this.cx * 10 + alx, this.cy * 10 + aly, this.seed + 111) * 4); // 3, 4, 5, 6
+            const ph = 3 + Math.floor(seededHash(this.cx * 10 + alx, this.cy * 10 + aly, this.seed + 222) * 3); // 3, 4, 5
+
+            const patchCandidate = [];
+
+            for (let dy = 0; dy < ph; dy++) {
+              for (let dx = 0; dx < pw; dx++) {
+                const lx = alx + dx;
+                const ly = aly + dy;
+
+                // Giữ bãi cỏ nằm gọn trong chunk an toàn (1..14)
+                if (lx < 1 || lx >= CHUNK_SIZE - 1 || ly < 1 || ly >= CHUNK_SIZE - 1) {
+                  continue;
+                }
+
+                const key = `${lx},${ly}`;
+                if (usedLXLY.has(key)) continue;
+
+                const gx = startGX + lx;
+                const gy = startGY + ly;
+                const px = gx * ts;
+                const py = gy * ts;
+
+                // Bãi cỏ chỉ mọc trên đất cỏ (TERRAIN.GRASS)
+                if (this.terrainGrid[ly][lx] !== TERRAIN.GRASS) continue;
+                if (isRoadTile(gx, gy, this.seed)) continue;
+                if (isSandTile(gx, gy, this.seed)) continue;
+                if (isHillTile(gx, gy, this.seed)) continue;
+
+                // Cách tim đường mòn chính ít nhất 2 ô để không lấn mép đi lại
+                const roadCenter = getRoadCenterX(gy, this.seed);
+                if (Math.abs(gx - roadCenter) <= 2) continue;
+
+                // Không đè lên gốc cây cối hoặc bụi Berry
+                let collides = false;
+                for (const c of this.colliders) {
+                  if (px + 26 > c.x && px + 6 < c.x + c.w &&
+                      py + 30 > c.y && py + 10 < c.y + c.h) {
+                    collides = true;
+                    break;
+                  }
+                }
+                if (collides) continue;
+
+                // Bo tròn góc tự nhiên theo phong cách GBA (organic rounded corners)
+                const isCorner = (dx === 0 || dx === pw - 1) && (dy === 0 || dy === ph - 1);
+                if (isCorner && (pw * ph > 9) && seededHash(gx, gy, this.seed + 333) < 0.45) {
+                  continue; // Khuyết góc nhẹ tạo cảm giác tự nhiên
+                }
+
+                patchCandidate.push({ lx, ly, gx, gy, px, py, dx, dy });
+              }
+            }
+
+            // Giảm ngưỡng tối thiểu xuống 5 ô để nhiều bãi hơn được chấp nhận
+            if (patchCandidate.length >= 5) {
+              const patchBasePhase = seededHash(this.cx * 50 + alx, this.cy * 50 + aly, 777) * Math.PI * 2;
+              for (const t of patchCandidate) {
+                usedLXLY.add(`${t.lx},${t.ly}`);
+                this.tallGrass.push({
+                  gx: t.gx,
+                  gy: t.gy,
+                  x: t.px,
+                  y: t.py,
+                  patchId: patchesSpawned,
+                  phase: patchBasePhase + (t.dx * 0.18 + t.dy * 0.12)
+                });
+                this.tallGrassSet.add(`${t.gx},${t.gy}`);
+              }
+              patchesSpawned++;
+            }
+          }
+        }
+
+        // 5. Sinh hoa dại & cỏ hoa hoạt ảnh đung đưa (Sub-Quadrant Even Scatter)
+        const plantsEnabled = !chkPlants || chkPlants.checked;
+        if (plantsEnabled) {
+          // Phân bố đều qua 4 góc phần tư (Sub-Quadrants 8x8) của chunk
+          const plantTypes = ['flower_red', 'flower_blue', 'flower_purple', 'flower_white', 'plant_sprout'];
+
+          for (let q = 0; q < 4; q++) {
+            const qlx = (q % 2) * 8;
+            const qly = Math.floor(q / 2) * 8;
+
+            // Bông chính trong góc phần tư (85% cơ hội xuất hiện)
+            const roll1 = seededHash(this.cx * 4 + q, this.cy * 4 + q, this.seed + 101);
+            if (roll1 < 0.85) {
+              const ox1 = 1 + Math.floor(seededHash(this.cx * 4 + q, this.cy * 4 + q, this.seed + 202) * 6);
+              const oy1 = 1 + Math.floor(seededHash(this.cx * 4 + q, this.cy * 4 + q, this.seed + 303) * 6);
+              const lx1 = qlx + ox1;
+              const ly1 = qly + oy1;
+
+              if (this.terrainGrid[ly1][lx1] === TERRAIN.GRASS) {
+                const gx1 = startGX + lx1;
+                const gy1 = startGY + ly1;
+                const px1 = gx1 * ts;
+                const py1 = gy1 * ts;
+
+                // Không mọc đè lên bãi cỏ cao hoang dã
+                const inTallGrass1 = this.tallGrassSet.has(`${gx1},${gy1}`);
+
+                // Kiểm tra không bị gốc cây cối/berry đè lên
+                let underTree1 = false;
+                for (const c of this.colliders) {
+                  if (px1 + 24 > c.x && px1 + 8 < c.x + c.w &&
+                      py1 + 28 > c.y && py1 + 12 < c.y + c.h) {
+                    underTree1 = true;
+                    break;
+                  }
+                }
+
+                if (!underTree1 && !inTallGrass1) {
+                  const typeIdx1 = Math.floor(seededHash(gx1, gy1, this.seed + 404) * 5) % 5;
+                  const phase1 = seededHash(gx1, gy1, 888) * 5;
+                  this.plants.push({
+                    gx: gx1, gy: gy1,
+                    x: px1, y: py1,
+                    type: plantTypes[typeIdx1],
+                    phase: phase1
+                  });
+
+                  // Bông thứ hai phụ trong cùng góc (45% cơ hội, cách xa ít nhất 3 ô để không dính sát)
+                  const roll2 = seededHash(gx1, gy1, this.seed + 505);
+                  if (roll2 < 0.45) {
+                    const ox2 = (ox1 + 3 + Math.floor(seededHash(gx1, gy1, this.seed + 606) * 3)) % 7 + 1;
+                    const oy2 = (oy1 + 3 + Math.floor(seededHash(gx1, gy1, this.seed + 707) * 3)) % 7 + 1;
+                    const lx2 = qlx + ox2;
+                    const ly2 = qly + oy2;
+
+                    if (this.terrainGrid[ly2][lx2] === TERRAIN.GRASS) {
+                      const gx2 = startGX + lx2;
+                      const gy2 = startGY + ly2;
+                      const px2 = gx2 * ts;
+                      const py2 = gy2 * ts;
+
+                      const inTallGrass2 = this.tallGrassSet.has(`${gx2},${gy2}`);
+                      let underTree2 = false;
+                      for (const c of this.colliders) {
+                        if (px2 + 24 > c.x && px2 + 8 < c.x + c.w &&
+                            py2 + 28 > c.y && py2 + 12 < c.y + c.h) {
+                          underTree2 = true;
+                          break;
+                        }
+                      }
+
+                      if (!underTree2 && !inTallGrass2) {
+                        const typeIdx2 = Math.floor(seededHash(gx2, gy2, this.seed + 808) * 5) % 5;
+                        const phase2 = seededHash(gx2, gy2, 888) * 5;
+                        this.plants.push({
+                          gx: gx2, gy: gy2,
+                          x: px2, y: py2,
+                          type: plantTypes[typeIdx2],
+                          phase: phase2
+                        });
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        // 6. Sinh Pokémon hoang dã theo Phân vùng Kanto (Kanto Regional Zones) — chuẩn PokémonDB
+        this.wildPokemon = [];
+
+        // Xác định phân vùng Kanto cho Chunk dựa trên địa lý và hạt giống
+        this.zone = getKantoZone(this.cx, this.cy, this.seed);
+        const WILD_ROSTER = this.zone.roster;
+        const totalRate = WILD_ROSTER.reduce((s, p) => s + p.rate, 0);
+
+        // Số lượng Pokémon xuất hiện mỗi chunk (1-3 con tuỳ tỉ lệ hạt giống)
+        const wildRoll = seededHash(this.cx, this.cy, this.seed + 8881);
+        const wildQuota = wildRoll < 0.35 ? 1 : (wildRoll < 0.75 ? 2 : 3);
+
+        for (let wi = 0; wi < wildQuota; wi++) {
+          // Chọn Pokémon theo weighted random của Zone
+          let pickRoll = seededHash(this.cx * 10 + wi, this.cy * 10 + wi, this.seed + 9001) * totalRate;
+          let chosen = WILD_ROSTER[0];
+          for (const p of WILD_ROSTER) {
+            pickRoll -= p.rate;
+            if (pickRoll <= 0) { chosen = p; break; }
+          }
+
+          // Ưu tiên tìm vị trí spawn gần hoặc ngay trên bụi cỏ cao
+          let spawnGX = null, spawnGY = null;
+          
+          // Thử tìm trong danh sách tallGrass của chunk trước
+          const tgRoll = seededHash(this.cx * 15 + wi, this.cy * 15 + wi, this.seed + 9040);
+          if (this.tallGrass && this.tallGrass.length > 0 && tgRoll < 0.70) {
+            const tgIdx = Math.floor(seededHash(this.cx * 15 + wi, this.cy * 15, this.seed + 9050) * this.tallGrass.length);
+            const tgCandidate = this.tallGrass[tgIdx];
+            if (tgCandidate) {
+              spawnGX = tgCandidate.gx;
+              spawnGY = tgCandidate.gy;
+            }
+          }
+
+          if (spawnGX === null) {
+            for (let attempt = 0; attempt < 25; attempt++) {
+              const lx = 2 + Math.floor(seededHash(this.cx * 20 + wi, this.cy * 20 + attempt, this.seed + 9100) * 12);
+              const ly = 2 + Math.floor(seededHash(this.cx * 20 + attempt, this.cy * 20 + wi, this.seed + 9200) * 12);
+              if (lx < 1 || lx >= CHUNK_SIZE - 1 || ly < 1 || ly >= CHUNK_SIZE - 1) continue;
+              if (this.terrainGrid[ly][lx] !== TERRAIN.GRASS) continue;
+
+              const gx = startGX + lx;
+              const gy = startGY + ly;
+              if (isRoadTile(gx, gy, this.seed)) continue;
+              if (isSandTile(gx, gy, this.seed)) continue;
+              if (isHillTile(gx, gy, this.seed)) continue;
+
+              const roadCenter = getRoadCenterX(gy, this.seed);
+              if (Math.abs(gx - roadCenter) <= 2) continue;
+
+              // Tránh va chạm với cây cối
+              const px = gx * ts, py = gy * ts;
+              let blocked = false;
+              for (const c of this.colliders) {
+                if (px + 26 > c.x && px + 6 < c.x + c.w && py + 30 > c.y && py + 10 < c.y + c.h) {
+                  blocked = true; break;
+                }
+              }
+              if (blocked) continue;
+
+              spawnGX = gx;
+              spawnGY = gy;
+              break;
+            }
+          }
+
+          if (spawnGX !== null) {
+            // Tốc độ di chuyển và thông số tập tính riêng biệt
+            let moveSpd = 1.5;
+            let idleBase = 2000;
+            let wRadius = 3;
+            if (chosen.behavior === 'curious_rodent') { moveSpd = 2.2; idleBase = 1200; wRadius = 4; }
+            if (chosen.behavior === 'skittish_bird')  { moveSpd = 1.8; idleBase = 1600; wRadius = 3; }
+            if (chosen.behavior === 'slow_bug')       { moveSpd = 0.8; idleBase = 3200; wRadius = 2; }
+            if (chosen.behavior === 'aggressive_bird'){ moveSpd = 2.0; idleBase = 1500; wRadius = 3; }
+            if (chosen.behavior === 'dormant_cocoon') { moveSpd = 0.4; idleBase = 9000; wRadius = 1; }
+
+            this.wildPokemon.push({
+              type: chosen,
+              zoneName: this.zone.name,
+              gx: spawnGX,
+              gy: spawnGY,
+              x: spawnGX * ts - 16,
+              y: spawnGY * ts - 32,
+              dir: Math.floor(seededHash(spawnGX, spawnGY, this.seed + 9300) * 4),
+              frame: 0,
+              isMoving: false,
+              fromX: spawnGX * ts - 16,
+              fromY: spawnGY * ts - 32,
+              targetX: spawnGX * ts - 16,
+              targetY: spawnGY * ts - 32,
+              targetGX: spawnGX,
+              targetGY: spawnGY,
+              stepProgress: 0,
+              // Tự nhiên AI & biểu cảm
+              moveSpeed: moveSpd,
+              idleTimer: Math.floor(seededHash(spawnGX, spawnGY, this.seed + 9400) * idleBase) + 800,
+              lastMoveTime: performance.now() + seededHash(spawnGX, spawnGY, this.seed + 9500) * 2000,
+              homeGX: spawnGX,
+              homeGY: spawnGY,
+              wanderRadius: wRadius,
+              chunkCx: this.cx,
+              chunkCy: this.cy,
+              seed: this.seed,
+              // Chuyển động từng nhịp
+              stepsRemaining: 0,
+              currentDir: 0,
+              // Hiệu ứng nhấp nhổm / Mổ thóc (Pecking / Bobbing)
+              bobY: 0,
+              peckTimer: 0,
+              isPecking: false,
+              // Bong bóng biểu cảm trên đầu
+              emote: null, // { type: '!' | '?' | 'sweat' | 'dots', timer: number, maxTime: number }
+              // Trạng thái tâm lý
+              state: 'idle', // 'idle' | 'walking' | 'curious' | 'fleeing' | 'alert'
+            });
+          }
+        }
+      }
+    }
+
+    // --- BẢNG PHÂN VÙNG KANTO GEN 1 (POKEMON DATABASE ENCOUNTER TABLES) ---
+    function getKantoZone(cx, cy, seed) {
+      // Phân chia vùng Kanto tự nhiên dựa vào tọa độ thế giới:
+      // 1. Phía bắc / Rừng rậm rạp: Viridian Forest (Caterpie, Kakuna, Pidgey, Spearow)
+      // 2. Phía đông / Gồ ghề: Route 22 (Rattata, Spearow, Pidgey)
+      // 3. Trung tâm / Đồng cỏ mở: Route 1 (Pidgey, Rattata, Caterpie hiếm)
+      const noise = seededHash(cx * 5, cy * 5, seed + 4321);
+      if (cy <= -2 || (noise < 0.32 && cy <= 1)) {
+        return {
+          id: 'VIRIDIAN_FOREST',
+          name: 'Viridian Forest (Kanto)',
+          roster: [
+            { key: 'wild_CATERPIE', name: 'Caterpie', rate: 45, behavior: 'slow_bug', rarity: 'Common', level: 'Lv 3-6' },
+            { key: 'wild_KAKUNA',   name: 'Kakuna',   rate: 25, behavior: 'dormant_cocoon', rarity: 'Uncommon', level: 'Lv 4-6' },
+            { key: 'wild_PIDGEY',   name: 'Pidgey',   rate: 20, behavior: 'skittish_bird', rarity: 'Uncommon', level: 'Lv 3-5' },
+            { key: 'wild_SPEAROW',  name: 'Spearow',  rate: 10, behavior: 'aggressive_bird', rarity: 'Rare', level: 'Lv 5-7' },
+          ]
+        };
+      } else if (cx >= 3 || noise > 0.68) {
+        return {
+          id: 'ROUTE_22',
+          name: 'Route 22 (Kanto)',
+          roster: [
+            { key: 'wild_RATTATA',  name: 'Rattata',  rate: 45, behavior: 'curious_rodent', rarity: 'Common', level: 'Lv 2-4' },
+            { key: 'wild_SPEAROW',  name: 'Spearow',  rate: 45, behavior: 'aggressive_bird', rarity: 'Common', level: 'Lv 3-5' },
+            { key: 'wild_PIDGEY',   name: 'Pidgey',   rate: 10, behavior: 'skittish_bird', rarity: 'Uncommon', level: 'Lv 2-5' },
+          ]
+        };
+      } else {
+        return {
+          id: 'ROUTE_1',
+          name: 'Route 1 (Kanto)',
+          roster: [
+            { key: 'wild_PIDGEY',   name: 'Pidgey',   rate: 50, behavior: 'skittish_bird', rarity: 'Common', level: 'Lv 2-5' },
+            { key: 'wild_RATTATA',  name: 'Rattata',  rate: 40, behavior: 'curious_rodent', rarity: 'Common', level: 'Lv 2-4' },
+            { key: 'wild_CATERPIE', name: 'Caterpie', rate: 10, behavior: 'slow_bug', rarity: 'Rare', level: 'Lv 2-3' },
+          ]
+        };
+      }
+    }
+
+    // --- HỆ THỐNG AI POKÉMON HOANG DÃ THÔNG MINH & TỰ NHIÊN ---
+    function updateWildPokemon(chunkManager, dtScale = 1.0) {
+      const now = performance.now();
+      const ts = TILE_SIZE;
+
+      for (const chunk of chunkManager.activeChunks) {
+        if (!chunk.wildPokemon) continue;
+        for (const wp of chunk.wildPokemon) {
+
+          // 1. Cập nhật bong bóng biểu cảm
+          if (wp.emote) {
+            wp.emote.timer -= 16.6 * dtScale;
+            if (wp.emote.timer <= 0) {
+              wp.emote = null;
+            }
+          }
+
+          // 2. Cập nhật hiệu ứng Idle sinh động (Pecking / Mổ thóc của chim)
+          if (!wp.isMoving) {
+            if (wp.isPecking) {
+              const elapsed = now - wp.peckStartTime;
+              if (elapsed < 350) {
+                // Nhấp đầu xuống 2 nhịp nhanh
+                wp.bobY = Math.sin((elapsed / 350) * Math.PI * 4) * 2.5;
+              } else {
+                wp.isPecking = false;
+                wp.bobY = 0;
+              }
+            } else {
+              wp.bobY = 0;
+            }
+          }
+
+          // 3. Xử lý khi đang di chuyển (Grid Step)
+          if (wp.isMoving) {
+            wp.stepProgress += wp.moveSpeed * dtScale;
+            const totalDist = 32;
+            const t = Math.min(wp.stepProgress / totalDist, 1);
+
+            wp.x = wp.fromX + (wp.targetX - wp.fromX) * t;
+            wp.y = wp.fromY + (wp.targetY - wp.fromY) * t;
+
+            // Nhún chân nhẹ theo bước đi tự nhiên
+            wp.bobY = -Math.sin(t * Math.PI) * 2;
+
+            // Animation frame bước đi 0→1→2→3
+            wp.frame = Math.floor(t * 4) % 4;
+
+            if (t >= 1) {
+              wp.gx = wp.targetGX;
+              wp.gy = wp.targetGY;
+              wp.x = wp.targetX;
+              wp.y = wp.targetY;
+              wp.isMoving = false;
+              wp.frame = 0;
+              wp.stepProgress = 0;
+              wp.bobY = 0;
+              wp.lastMoveTime = now;
+
+              // Nếu còn bước trong chuỗi di chuyển liên tục
+              if (wp.stepsRemaining > 0) {
+                wp.stepsRemaining--;
+                const tryResult = tryWildMove(wp, wp.currentDir, chunkManager);
+                if (tryResult) {
+                  startWildMove(wp, wp.currentDir, ts);
+                } else {
+                  wp.stepsRemaining = 0;
+                  wp.idleTimer = 600 + Math.random() * 1200;
+                }
+              } else {
+                // Kết thúc chuỗi bước
+                if (wp.state === 'fleeing') {
+                  wp.state = 'idle';
+                  wp.idleTimer = 800 + Math.random() * 1000;
+                } else {
+                  wp.idleTimer = 1000 + Math.random() * 2200;
+                }
+              }
+            }
+          } else {
+            // === TRẠNG THÁI IDLE: NHẬN THỨC MÔI TRƯỜNG & PHẢN ỨNG THÔNG MINH ===
+
+            // Đo khoảng cách tới Red (Player)
+            const dxP = player.gx - wp.gx;
+            const dyP = player.gy - wp.gy;
+            const distManhattan = Math.abs(dxP) + Math.abs(dyP);
+
+            // Nón tầm nhìn (Vision Cone): kiểm tra Red có nằm trước mặt Pokémon không
+            let isInVisionCone = false;
+            if (wp.dir === 0 && dyP > 0 && dyP <= 4 && Math.abs(dxP) <= 1) isInVisionCone = true; // nhìn xuống
+            if (wp.dir === 3 && dyP < 0 && Math.abs(dyP) <= 4 && Math.abs(dxP) <= 1) isInVisionCone = true; // nhìn lên
+            if (wp.dir === 1 && dxP < 0 && Math.abs(dxP) <= 4 && Math.abs(dyP) <= 1) isInVisionCone = true; // nhìn trái
+            if (wp.dir === 2 && dxP > 0 && dxP <= 4 && Math.abs(dyP) <= 1) isInVisionCone = true; // nhìn phải
+
+            const isPlayerDetected = isInVisionCone || (distManhattan <= 2);
+
+            // A. PHẢN ỨNG THEO ĐẶC TÍNH LOÀI
+            if (isPlayerDetected && wp.state !== 'fleeing') {
+
+              // 1. Pidgey (Chim nhát - Skittish Bird): Giật mình bay/nhảy lùi ra xa
+              if (wp.type.behavior === 'skittish_bird') {
+                if (!wp.emote || wp.emote.type !== '!') {
+                  wp.emote = { type: '!', timer: 1200, maxTime: 1200 };
+                }
+                const fleeDir = getFleeDirection(wp, player);
+                wp.state = 'fleeing';
+                wp.stepsRemaining = 2; // Chạy 3 bước liên tục
+                wp.currentDir = fleeDir;
+                wp.dir = fleeDir;
+                const ok = tryWildMove(wp, fleeDir, chunkManager);
+                if (ok) {
+                  startWildMove(wp, fleeDir, ts);
+                  continue;
+                }
+              }
+
+              // 2. Rattata (Chuột tò mò - Curious Rodent): Tò mò ngắm nhìn, quá gần thì phi trốn
+              else if (wp.type.behavior === 'curious_rodent') {
+                if (distManhattan <= 2) {
+                  // Quá gần -> hoảng sợ phi nhanh
+                  if (!wp.emote || wp.emote.type !== '!') {
+                    wp.emote = { type: '!', timer: 1000, maxTime: 1000 };
+                  }
+                  const fleeDir = getFleeDirection(wp, player);
+                  wp.state = 'fleeing';
+                  wp.stepsRemaining = 2;
+                  wp.currentDir = fleeDir;
+                  wp.dir = fleeDir;
+                  const ok = tryWildMove(wp, fleeDir, chunkManager);
+                  if (ok) {
+                    startWildMove(wp, fleeDir, ts);
+                    continue;
+                  }
+                } else if (wp.state !== 'curious') {
+                  // Cự ly vừa phải -> tò mò quay đầu nhìn
+                  wp.state = 'curious';
+                  wp.dir = getDirToward(wp, player);
+                  if (!wp.emote) {
+                    wp.emote = { type: '?', timer: 1400, maxTime: 1400 };
+                  }
+                  wp.lastMoveTime = now;
+                  wp.idleTimer = 1600;
+                  continue;
+                }
+              }
+
+              // 3. Spearow (Chim hung hăng - Aggressive Bird): Gườm gườm cảnh giác
+              else if (wp.type.behavior === 'aggressive_bird') {
+                if (distManhattan <= 2) {
+                  const fleeDir = getFleeDirection(wp, player);
+                  wp.state = 'fleeing';
+                  wp.stepsRemaining = 1;
+                  wp.currentDir = fleeDir;
+                  wp.dir = fleeDir;
+                  if (tryWildMove(wp, fleeDir, chunkManager)) {
+                    startWildMove(wp, fleeDir, ts);
+                    continue;
+                  }
+                } else {
+                  // Quay mặt nhìn cảnh giác
+                  wp.dir = getDirToward(wp, player);
+                  if (!wp.emote) {
+                    wp.emote = { type: '!', timer: 800, maxTime: 800 };
+                  }
+                  wp.lastMoveTime = now;
+                  wp.idleTimer = 1200;
+                  continue;
+                }
+              }
+
+              // 4. Caterpie (Sâu bò chậm - Slow Bug): Toát mồ hôi, cố bò vào bụi cỏ
+              else if (wp.type.behavior === 'slow_bug') {
+                if (!wp.emote) {
+                  wp.emote = { type: 'sweat', timer: 1500, maxTime: 1500 };
+                }
+              }
+
+              // 5. Kakuna (Kén tĩnh lặng - Dormant Cocoon): Bất động kiên cố
+              else if (wp.type.behavior === 'dormant_cocoon') {
+                if (!wp.emote && Math.random() < 0.3) {
+                  wp.emote = { type: 'dots', timer: 1200, maxTime: 1200 };
+                }
+              }
+            }
+
+            // B. HẾT THỜI GIAN NGHỈ -> THỰC HIỆN HÀNH ĐỘNG TỰ NHIÊN
+            if (now - wp.lastMoveTime > wp.idleTimer) {
+
+              // 1. Kakuna: 95% thời gian chỉ đứng yên
+              if (wp.type.behavior === 'dormant_cocoon') {
+                wp.lastMoveTime = now;
+                wp.idleTimer = 4000 + Math.random() * 6000;
+                if (Math.random() < 0.15) {
+                  wp.dir = Math.floor(Math.random() * 4); // thỉnh thoảng hơi đổi góc
+                }
+                continue;
+              }
+
+              // 2. Chim (Pidgey, Spearow): 35% cơ hội mổ thóc xuống đất (Pecking)
+              if ((wp.type.behavior === 'skittish_bird' || wp.type.behavior === 'aggressive_bird') && !wp.isPecking) {
+                if (Math.random() < 0.35) {
+                  wp.isPecking = true;
+                  wp.peckStartTime = now;
+                  wp.lastMoveTime = now;
+                  wp.idleTimer = 800 + Math.random() * 800;
+                  continue;
+                }
+              }
+
+              // 3. Ngó nghiêng xung quanh (Look Around): 25% cơ hội chỉ quay đầu
+              if (Math.random() < 0.25) {
+                wp.dir = Math.floor(Math.random() * 4);
+                wp.lastMoveTime = now;
+                wp.idleTimer = 600 + Math.random() * 1200;
+                continue;
+              }
+
+              // 4. Chọn hướng di chuyển tự nhiên:
+              // - Ưu tiên lùi về vùng home nếu đi quá xa
+              // - Ưu tiên lủi vào ô Cỏ Cao (Tall Grass Affinity)
+              let chosenDir = chooseNaturalDirection(wp, chunkManager);
+
+              if (chosenDir !== null) {
+                // Quyết định số bước đi liên tục (Pidgey/Rattata hay đi 2 bước)
+                const multiRoll = Math.random();
+                const totalSteps = (wp.type.behavior === 'curious_rodent' && multiRoll < 0.5) ? 2 :
+                                   (wp.type.behavior === 'skittish_bird' && multiRoll < 0.4) ? 2 : 1;
+
+                wp.stepsRemaining = totalSteps - 1;
+                wp.currentDir = chosenDir;
+                wp.dir = chosenDir;
+                startWildMove(wp, chosenDir, ts);
+              } else {
+                // Không đi được thì đổi hướng nhìn ngẫu nhiên
+                wp.dir = Math.floor(Math.random() * 4);
+                wp.lastMoveTime = now;
+                wp.idleTimer = 500 + Math.random() * 1000;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Helper: chọn hướng đi tự nhiên (Tập tính thích cỏ cao + Home tethering)
+    function chooseNaturalDirection(wp, chunkManager) {
+      const distFromHome = Math.abs(wp.gx - wp.homeGX) + Math.abs(wp.gy - wp.homeGY);
+      
+      // Nếu đi quá xa vùng ban đầu -> 75% ưu tiên quay về
+      if (distFromHome >= wp.wanderRadius && Math.random() < 0.75) {
+        const homeDir = getDirToward(wp, { gx: wp.homeGX, gy: wp.homeGY });
+        if (tryWildMove(wp, homeDir, chunkManager)) return homeDir;
+      }
+
+      // Đánh giá cả 4 hướng (0=DOWN, 1=LEFT, 2=RIGHT, 3=UP)
+      const validDirections = [];
+      const weights = [];
+
+      for (let dir = 0; dir < 4; dir++) {
+        if (tryWildMove(wp, dir, chunkManager)) {
+          validDirections.push(dir);
+
+          // Kiểm tra xem ô đích có cỏ cao (Tall Grass) không
+          const dxMap = [0, -1, 1, 0];
+          const dyMap = [1, 0, 0, -1];
+          const destGX = wp.gx + dxMap[dir];
+          const destGY = wp.gy + dyMap[dir];
+          const tile = chunkManager.getTileData(destGX, destGY);
+
+          // Nếu là ô cỏ cao, tăng trọng số lên gấp 4 lần để Pokémon thích lủi vào đó
+          let weight = 1;
+          if (tile && tile.tallGrass) {
+            weight = 4;
+          }
+          // Ưu tiên giữ cùng hướng đi cũ để bước đi mượt mà hơn
+          if (dir === wp.dir) {
+            weight += 1.5;
+          }
+          weights.push(weight);
+        }
+      }
+
+      if (validDirections.length === 0) return null;
+
+      // Chọn theo trọng số
+      const totalWeight = weights.reduce((s, w) => s + w, 0);
+      let rand = Math.random() * totalWeight;
+      for (let i = 0; i < validDirections.length; i++) {
+        rand -= weights[i];
+        if (rand <= 0) return validDirections[i];
+      }
+      return validDirections[0];
+    }
+
+    // Helper: tính hướng đi về phía target
+    function getDirToward(from, target) {
+      const dx = target.gx - from.gx;
+      const dy = target.gy - from.gy;
+      if (Math.abs(dx) > Math.abs(dy)) {
+        return dx > 0 ? 2 : 1; // RIGHT : LEFT
+      } else {
+        return dy > 0 ? 0 : 3; // DOWN : UP
+      }
+    }
+
+    // Helper: tính hướng chạy trốn khỏi target
+    function getFleeDirection(from, target) {
+      const dx = from.gx - target.gx;
+      const dy = from.gy - target.gy;
+      if (Math.abs(dx) >= Math.abs(dy)) {
+        return dx > 0 ? 2 : 1; // Chạy sang phải/trái
+      } else {
+        return dy > 0 ? 0 : 3; // Chạy xuống/lên
+      }
+    }
+
+    // Helper: kiểm tra có thể di chuyển ô đích
+    function tryWildMove(wp, dir, chunkManager) {
+      const dxMap = [0, -1, 1, 0];
+      const dyMap = [1, 0, 0, -1];
+      const newGX = wp.gx + dxMap[dir];
+      const newGY = wp.gy + dyMap[dir];
+
+      // Không đi vào vị trí người chơi hoặc Pikachu
+      if (newGX === player.gx && newGY === player.gy) return false;
+      if (player.isMoving && newGX === player.targetGX && newGY === player.targetGY) return false;
+      if (newGX === pika.gx && newGY === pika.gy) return false;
+
+      // Giới hạn bán kính lang thang quanh tổ
+      const distFromHome = Math.abs(newGX - wp.homeGX) + Math.abs(newGY - wp.homeGY);
+      if (distFromHome > wp.wanderRadius + 1) return false;
+
+      const chunk = chunkManager.getChunk(wp.chunkCx, wp.chunkCy);
+      const startGX = wp.chunkCx * CHUNK_SIZE;
+      const startGY = wp.chunkCy * CHUNK_SIZE;
+      const localX = newGX - startGX;
+      const localY = newGY - startGY;
+
+      if (localX < 0 || localX >= CHUNK_SIZE || localY < 0 || localY >= CHUNK_SIZE) return false;
+      if (!chunk.terrainGrid[localY] || chunk.terrainGrid[localY][localX] !== TERRAIN.GRASS) return false;
+      if (isRoadTile(newGX, newGY, wp.seed)) return false;
+      if (isSandTile(newGX, newGY, wp.seed)) return false;
+      if (isHillTile(newGX, newGY, wp.seed)) return false;
+
+      // Kiểm tra collider cây cối, đá
+      const px = newGX * TILE_SIZE, py = newGY * TILE_SIZE;
+      for (const c of chunk.colliders) {
+        if (px + 26 > c.x && px + 6 < c.x + c.w && py + 30 > c.y && py + 10 < c.y + c.h) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    // Helper: bắt đầu di chuyển
+    function startWildMove(wp, dir, ts) {
+      const dxMap = [0, -1, 1, 0];
+      const dyMap = [1, 0, 0, -1];
+      wp.isMoving = true;
+      wp.fromX = wp.x;
+      wp.fromY = wp.y;
+      wp.targetGX = wp.gx + dxMap[dir];
+      wp.targetGY = wp.gy + dyMap[dir];
+      wp.targetX = wp.targetGX * ts - 16;
+      wp.targetY = wp.targetGY * ts - 32;
+      wp.stepProgress = 0;
+      wp.dir = dir;
+    }
+
+    // --- CHUNK MANAGER ---
+    class ChunkManager {
+      constructor() {
+        this.cache = new Map();
+        this.activeChunks = [];
+        this.currentSeed = 101;
+        this.lastChunkX = null;
+        this.lastChunkY = null;
+      }
+
+      reset(seed) {
+        this.currentSeed = seed;
+        this.cache.clear();
+        this.activeChunks = [];
+        this.lastChunkX = null;
+        this.lastChunkY = null;
+      }
+
+      getChunk(cx, cy) {
+        const key = `${cx},${cy}`;
+        if (!this.cache.has(key)) {
+          this.cache.set(key, new WorldChunk(cx, cy, this.currentSeed));
+        }
+        return this.cache.get(key);
+      }
+
+      update(playerX, playerY) {
+        const pChunkX = Math.floor((playerX + 32) / CHUNK_PIXELS);
+        const pChunkY = Math.floor((playerY + 48) / CHUNK_PIXELS);
+
+        // Tránh tạo mới mảng activeChunks mỗi frame nếu người chơi vẫn ở trong cùng chunk
+        if (this.lastChunkX === pChunkX && this.lastChunkY === pChunkY && this.activeChunks.length > 0) {
+          return { pChunkX, pChunkY };
+        }
+
+        this.lastChunkX = pChunkX;
+        this.lastChunkY = pChunkY;
+        this.activeChunks = [];
+        for (let dy = -SPAWN_RADIUS; dy <= SPAWN_RADIUS; dy++) {
+          for (let dx = -SPAWN_RADIUS; dx <= SPAWN_RADIUS; dx++) {
+            const cx = pChunkX + dx;
+            const cy = pChunkY + dy;
+            this.activeChunks.push(this.getChunk(cx, cy));
+          }
+        }
+
+        // LRU Cache Eviction: Dọn dẹp các chunk ngoài bán kính tầm nhìn để chống rò rỉ RAM (Sửa Bug 8)
+        if (this.cache.size > 48) {
+          const maxDist = SPAWN_RADIUS + 2;
+          for (const [key, chunk] of this.cache.entries()) {
+            if (Math.abs(chunk.cx - pChunkX) > maxDist || Math.abs(chunk.cy - pChunkY) > maxDist) {
+              this.cache.delete(key);
+            }
+          }
+        }
+        return { pChunkX, pChunkY };
+      }
+
+      getTileData(gx, gy) {
+        const cx = Math.floor(gx / CHUNK_SIZE);
+        const cy = Math.floor(gy / CHUNK_SIZE);
+        const lx = ((gx % CHUNK_SIZE) + CHUNK_SIZE) % CHUNK_SIZE;
+        const ly = ((gy % CHUNK_SIZE) + CHUNK_SIZE) % CHUNK_SIZE;
+        const chunk = this.getChunk(cx, cy);
+        const plant = chunk.plants ? chunk.plants.find(p => p.gx === gx && p.gy === gy) : null;
+        const tallGrass = chunk.tallGrass ? chunk.tallGrass.find(tg => tg.gx === gx && tg.gy === gy) : null;
+        return {
+          cx, cy, lx, ly,
+          terrain: chunk.terrainGrid[ly][lx],
+          tileId: tallGrass ? 610 : chunk.tileIdGrid[ly][lx],
+          plant: plant ? plant.type : null,
+          tallGrass: tallGrass
+        };
+      }
+    }
+
+    // --- CAMERA CONTROLLER (Cố định 1.0x, cấm thu phóng) ---
+    const camera = {
+      x: 0,
+      y: 0,
+      targetX: 0,
+      targetY: 0,
+      zoom: 1.0,
+      smoothing: 0.12,
+
+      setZoom(z) {
+        this.zoom = 1.0; // Luôn cố định 1.0x
+      },
+
+      update(player) {
+        this.targetX = player.x + 32;
+        this.targetY = player.y + 48;
+        this.x += (this.targetX - this.x) * this.smoothing;
+        this.y += (this.targetY - this.y) * this.smoothing;
+      },
+
+      snap(player) {
+        this.targetX = player.x + 32;
+        this.targetY = player.y + 48;
+        this.x = this.targetX;
+        this.y = this.targetY;
+      }
+    };
+
+    // --- ENGINE INITIALIZATION ---
+    const canvas = document.getElementById('mapCanvas');
+    const ctx = canvas.getContext('2d');
+    const loadedImages = {};
+    const chunkManager = new ChunkManager();
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    // Characters - Chuẩn di chuyển theo ô (Grid-based Tile Movement)
+    const player = {
+      gx: 0, gy: 0,
+      x: 0, y: 0,
+      dir: 0, frame: 0,
+      isMoving: false,
+      fromX: 0, fromY: 0,
+      targetX: 0, targetY: 0,
+      targetGX: 0, targetGY: 0,
+      stepProgress: 0,
+      blocked: false
+    };
+
+    const pika = {
+      gx: 0, gy: -1,
+      x: 0, y: 0,
+      dir: 0, frame: 0,
+      isMoving: false,
+      fromX: 0, fromY: 0,
+      fromGX: 0, fromGY: -1,
+      targetX: 0, targetY: 0,
+      targetGX: 0, targetGY: 0,
+      stepProgress: 0,
+      isDodge: false
+    };
+
+    const keys = {};
+    const keyQueue = [];
+
+    function preloadAssets(callback) {
+      if (!TILE_ASSETS['tall_grass']) {
+        TILE_ASSETS['tall_grass'] = 'Graphics/Tilesets/Plant_Parts/tall_grass_strip.png';
+      }
+      // Bổ sung toàn bộ ảnh cây Berry từ Graphics/Tilesets/Bery/
+      BERRY_ROSTER.forEach(b => {
+        TILE_ASSETS[`berry_${b.id}`] = `Graphics/Tilesets/Bery/berrytree_${b.id}.png`;
+      });
+
+      const assetKeys = Object.keys(TILE_ASSETS);
+      let count = 0;
+      assetKeys.forEach(k => {
+        const img = new Image();
+        img.onload = () => {
+          count++;
+          if (count === assetKeys.length) callback();
+        };
+        img.onerror = () => {
+          console.warn(`Không thể nạp asset: ${TILE_ASSETS[k]}`);
+          count++;
+          if (count === assetKeys.length) callback();
+        };
+        img.src = TILE_ASSETS[k];
+        loadedImages[k] = img;
+      });
+    }
+
+    function resetWorld() {
+      eastHillCache.clear();
+      westMaxXCache.clear();
+      hillTileCache.clear();
+      const seed = parseInt(inputSeed ? inputSeed.value : 101) || 101;
+      chunkManager.reset(seed);
+
+      // Đặt Red ngay giữa con đường chính ở chunk [0, 0] theo chuẩn tọa độ ô (Grid tile)
+      const roadCenter = getRoadCenterX(0, seed);
+      player.gx = roadCenter;
+      player.gy = 0;
+      player.x = player.gx * TILE_SIZE - 16;
+      player.y = player.gy * TILE_SIZE - 32;
+      player.dir = 0; // Nhìn Xuống (South)
+      player.isMoving = false;
+      player.frame = 0;
+      player.stepProgress = 0;
+      player.blocked = false;
+
+      // Pikachu đứng ngay ô phía sau Red (ô Bắc: gy = -1)
+      pika.gx = player.gx;
+      pika.gy = player.gy - 1;
+      pika.x = pika.gx * TILE_SIZE - 16;
+      pika.y = pika.gy * TILE_SIZE - 32;
+      pika.dir = 0; // Nhìn Xuống (South)
+      pika.isMoving = false;
+      pika.frame = 0;
+      pika.stepProgress = 0;
+      pika.isDodge = false;
+
+      camera.snap(player);
+      chunkManager.update(player.x, player.y);
+    }
+
+    function canMoveToTile(gx, gy) {
+      if (!chkCollision || !chkCollision.checked) return true;
+
+      // Vách đá cao nguyên là chướng ngại vật tự nhiên
+      const seed = parseInt(inputSeed ? inputSeed.value : 101) || 101;
+      if (isHillTile(gx, gy, seed)) {
+        return false;
+      }
+
+      const testX = gx * TILE_SIZE - 16;
+      const testY = gy * TILE_SIZE - 32;
+      const pBox = {
+        x: testX + 22,
+        y: testY + 48,
+        w: 20,
+        h: 14
+      };
+
+      // Tối ưu hóa: Chỉ kiểm tra collider của chunk đích (và chunk liền kề nếu sát biên)
+      const targetCX = Math.floor(gx / CHUNK_SIZE);
+      const targetCY = Math.floor(gy / CHUNK_SIZE);
+      const cList = [chunkManager.getChunk(targetCX, targetCY)];
+
+      const lx = ((gx % CHUNK_SIZE) + CHUNK_SIZE) % CHUNK_SIZE;
+      const ly = ((gy % CHUNK_SIZE) + CHUNK_SIZE) % CHUNK_SIZE;
+      if (lx === 0) cList.push(chunkManager.getChunk(targetCX - 1, targetCY));
+      else if (lx === CHUNK_SIZE - 1) cList.push(chunkManager.getChunk(targetCX + 1, targetCY));
+      if (ly === 0) cList.push(chunkManager.getChunk(targetCX, targetCY - 1));
+      else if (ly === CHUNK_SIZE - 1) cList.push(chunkManager.getChunk(targetCX, targetCY + 1));
+
+      for (const chunk of cList) {
+        if (!chunk) continue;
+        for (const c of chunk.colliders) {
+          if (pBox.x < c.x + c.w &&
+              pBox.x + pBox.w > c.x &&
+              pBox.y < c.y + c.h &&
+              pBox.y + pBox.h > c.y) {
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+
+    // --- INPUT LISTENERS (4 hướng chính, cấm tuyệt đối đi chéo) ---
+    window.addEventListener('keydown', (e) => {
+      const k = e.key.toLowerCase();
+      if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'w', 'a', 's', 'd'].includes(k)) {
+        if (!keyQueue.includes(k)) keyQueue.push(k);
+        keys[k] = true;
+        e.preventDefault();
+      }
+      if (k === 'shift') {
+        keys['shift'] = true;
+      }
+      if ([' ', 'enter', 'e'].includes(k)) {
+        triggerBerryInteraction();
+        e.preventDefault();
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      const k = e.key.toLowerCase();
+      const idx = keyQueue.indexOf(k);
+      if (idx !== -1) keyQueue.splice(idx, 1);
+      keys[k] = false;
+      if (k === 'shift') {
+        keys['shift'] = false;
+      }
+    });
+
+    // Hàm lấy hướng điều khiển duy nhất (Cardinal Direction) - loại bỏ hoàn toàn đi chéo
+    function getRequestedDir() {
+      for (let i = keyQueue.length - 1; i >= 0; i--) {
+        const k = keyQueue[i];
+        if (k === 'arrowup' || k === 'w') return 3;    // Lên (North)
+        if (k === 'arrowdown' || k === 's') return 0;  // Xuống (South)
+        if (k === 'arrowleft' || k === 'a') return 1;  // Trái (West)
+        if (k === 'arrowright' || k === 'd') return 2; // Phải (East)
+      }
+      return null;
+    }
+
+    // Cố định camera 1x, vô hiệu hóa hoàn toàn thu phóng chuột và phím tắt trình duyệt
+    canvas.addEventListener('wheel', (e) => {
+      e.preventDefault();
+    }, { passive: false });
+
+    window.addEventListener('wheel', (e) => {
+      if (e.ctrlKey) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    window.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '-' || e.key === '=' || e.key === '0')) {
+        e.preventDefault();
+      }
+    });
+
+    // Hàm tính hoạt ảnh bước chân luân phiên chuẩn Pokémon:
+    // Mỗi ô là 1 bước chân hoàn chỉnh luân phiên nhịp nhàng:
+    // Step lẻ (Chân trái): 0 (Đứng) -> 1 (Chân trái vươn bước) -> 2 (Đứng chạm đất)
+    // Step chẵn (Chân phải): 2 (Đứng) -> 3 (Chân phải vươn bước) -> 0 (Đứng chạm đất)
+    function getStepFrame(stepCount, progress) {
+      if (stepCount % 2 === 1) {
+        if (progress < 0.2) return 0;
+        if (progress < 0.8) return 1;
+        return 2;
+      } else {
+        if (progress < 0.2) return 2;
+        if (progress < 0.8) return 3;
+        return 0;
+      }
+    }
+
+    // --- UPDATE LOOP (Grid-based Movement Engine) ---
+    function update(dtScale = 1.0) {
+      // 1. Nếu Red đang dừng trên ô, nhận lệnh để bắt đầu bước đi sang ô tiếp theo
+      if (!player.isMoving) {
+        const reqDir = getRequestedDir();
+        if (reqDir !== null) {
+          player.dir = reqDir;
+
+          let nextGX = player.gx;
+          let nextGY = player.gy;
+          if (reqDir === 0) nextGY += 1;      // Xuống
+          else if (reqDir === 1) nextGX -= 1; // Trái
+          else if (reqDir === 2) nextGX += 1; // Phải
+          else if (reqDir === 3) nextGY -= 1; // Lên
+
+          if (canMoveToTile(nextGX, nextGY)) {
+            player.stepCount = (player.stepCount || 0) + 1;
+            player.isMoving = true;
+            player.blocked = false;
+            player.fromX = player.gx * TILE_SIZE - 16;
+            player.fromY = player.gy * TILE_SIZE - 32;
+            player.targetGX = nextGX;
+            player.targetGY = nextGY;
+            player.targetX = nextGX * TILE_SIZE - 16;
+            player.targetY = nextGY * TILE_SIZE - 32;
+            player.stepProgress = 0;
+
+            // Kích hoạt Pikachu bước vào ô Red vừa rời đi
+            if (pika.gx !== player.gx || pika.gy !== player.gy) {
+              pika.stepCount = player.stepCount;
+              pika.isMoving = true;
+              pika.fromX = pika.gx * TILE_SIZE - 16;
+              pika.fromY = pika.gy * TILE_SIZE - 32;
+              pika.fromGX = pika.gx;
+              pika.fromGY = pika.gy;
+              pika.targetGX = player.gx;
+              pika.targetGY = player.gy;
+              pika.targetX = player.gx * TILE_SIZE - 16;
+              pika.targetY = player.gy * TILE_SIZE - 32;
+              pika.stepProgress = 0;
+
+              // Kiểm tra xem Red có quay đầu 180 độ bước vào ô Pikachu đang đứng không
+              pika.isDodge = (nextGX === pika.gx && nextGY === pika.gy);
+
+              // Định hướng Pikachu theo hướng bước sang ô của Red
+              const pdx = pika.targetGX - pika.gx;
+              const pdy = pika.targetGY - pika.gy;
+              if (pdx > 0) pika.dir = 2;      // Phải
+              else if (pdx < 0) pika.dir = 1; // Trái
+              else if (pdy > 0) pika.dir = 0; // Xuống
+              else if (pdy < 0) pika.dir = 3; // Lên
+            }
+          } else {
+            // Gặp chướng ngại vật (gốc cây): quay mặt nhìn vào vật thể, dừng bước
+            player.blocked = true;
+            player.frame = 0;
+            pika.frame = 0;
+          }
+        } else {
+          // Không có phím di chuyển: dừng lại chuẩn ô
+          player.blocked = false;
+          player.frame = 0;
+          pika.frame = 0;
+          pika.dir = player.dir;
+        }
+      }
+
+      // 2. Nội suy vị trí hiển thị khi đang bước từ ô này sang ô khác
+      if (player.isMoving) {
+        // Tốc độ di chuyển theo ô chuẩn Pokémon:
+        const speedSetting = document.getElementById('selectWalkSpeed')?.value || 'classic';
+        let baseStepPx = 2.0; // 16 frame / ô (Chuẩn Pokémon GBA, thong thả tự nhiên)
+        if (speedSetting === 'brisk') baseStepPx = 2.67; // 12 frame / ô
+        else if (speedSetting === 'run') baseStepPx = 4.0; // 8 frame / ô
+
+        // Giữ phím Shift kích hoạt Giày chạy (Running Shoes)
+        const isRunning = !!keys['shift'];
+        const stepPx = isRunning ? Math.min(baseStepPx * 1.8, 5.33) : baseStepPx;
+        player.stepProgress += (stepPx / TILE_SIZE) * dtScale;
+
+        if (player.stepProgress >= 1.0) {
+          // Hoàn thành trọn vẹn 1 ô
+          player.stepProgress = 1.0;
+          player.gx = player.targetGX;
+          player.gy = player.targetGY;
+          player.x = player.targetX;
+          player.y = player.targetY;
+          player.isMoving = false;
+          player.frame = 0;
+
+          if (pika.isMoving) {
+            pika.stepProgress = 1.0;
+            pika.gx = pika.targetGX;
+            pika.gy = pika.targetGY;
+            pika.x = pika.targetX;
+            pika.y = pika.targetY;
+            pika.isMoving = false;
+            pika.frame = 0;
+            pika.isDodge = false;
+          }
+        } else {
+          // Di chuyển mượt mà giữa 2 ô
+          player.x = player.fromX + (player.targetX - player.fromX) * player.stepProgress;
+          player.y = player.fromY + (player.targetY - player.fromY) * player.stepProgress;
+          player.frame = getStepFrame(player.stepCount, player.stepProgress);
+
+          if (pika.isMoving) {
+            pika.stepProgress = player.stepProgress;
+            let px = pika.fromX + (pika.targetX - pika.fromX) * pika.stepProgress;
+            let py = pika.fromY + (pika.targetY - pika.fromY) * pika.stepProgress;
+
+            // Nếu né khi Red quay đầu 180 độ, tạo đường vòng cung nhẹ sang bên tránh xuyên thấu
+            if (pika.isDodge) {
+              const arc = Math.sin(pika.stepProgress * Math.PI) * 10;
+              if (pika.targetGY !== pika.fromGY) px += arc;
+              else py -= arc;
+            }
+
+            pika.x = px;
+            pika.y = py;
+            pika.frame = getStepFrame(pika.stepCount, pika.stepProgress);
+          }
+        }
+      }
+
+      // 3. Camera bám mượt mà theo Red
+      camera.update(player);
+
+      // 4. Cập nhật các chunk xung quanh nhân vật
+      const { pChunkX, pChunkY } = chunkManager.update(player.x, player.y);
+
+      // 5. Cập nhật thông số HUD (Chỉ cập nhật định kỳ mỗi 6 frame để loại bỏ layout thrashing)
+      hudTick = (hudTick || 0) + 1;
+      if (hudTick % 6 === 0) {
+        if (lblPlayerPos) lblPlayerPos.innerText = `[${player.gx}, ${player.gy}] (${Math.round(player.x)}, ${Math.round(player.y)}px)`;
+        if (lblChunkPos) lblChunkPos.innerText = `[${pChunkX}, ${pChunkY}]`;
+        if (lblActiveChunks) lblActiveChunks.innerText = `${chunkManager.activeChunks.length} chunks`;
+
+        if (lblCollisionStatus) {
+          if (player.blocked) {
+            lblCollisionStatus.innerText = 'Bị cản trở (Gốc cây)';
+            lblCollisionStatus.className = 'badge danger';
+          } else {
+            lblCollisionStatus.innerText = player.isMoving ? 'Đang bước (Theo ô)' : 'Đứng yên (Chuẩn ô)';
+            lblCollisionStatus.className = 'badge success';
+          }
+        }
+      }
+
+      // 6. Cập nhật AI Pokémon hoang dã
+      updateWildPokemon(chunkManager, dtScale);
+    }
+
+    // --- RENDER LOOP ---
+    function render() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.save();
+      const viewW = canvas.width / camera.zoom;
+      const viewH = canvas.height / camera.zoom;
+
+      // Transform camera theo Red
+      ctx.scale(camera.zoom, camera.zoom);
+      ctx.translate(-Math.round(camera.x - viewW / 2), -Math.round(camera.y - viewH / 2));
+
+      // Frustum culling bounds
+      const minX = camera.x - viewW / 2 - 64;
+      const maxX = camera.x + viewW / 2 + 64;
+      const minY = camera.y - viewH / 2 - 128;
+      const maxY = camera.y + viewH / 2 + 64;
+
+      // 1. Vẽ mặt đất của các active chunks nhìn thấy
+      for (const chunk of chunkManager.activeChunks) {
+        const cPxX = chunk.cx * CHUNK_PIXELS;
+        const cPxY = chunk.cy * CHUNK_PIXELS;
+        if (cPxX + CHUNK_PIXELS >= minX && cPxX <= maxX &&
+            cPxY + CHUNK_PIXELS >= minY && cPxY <= maxY) {
+          ctx.drawImage(chunk.groundCanvas, cPxX, cPxY);
+        }
+      }
+
+      // 2. Chế độ Heatmap phân vùng ID (nếu bật)
+      if (chkHeatmap && chkHeatmap.checked) {
+        for (const chunk of chunkManager.activeChunks) {
+          const cPxX = chunk.cx * CHUNK_PIXELS;
+          const cPxY = chunk.cy * CHUNK_PIXELS;
+          for (let ly = 0; ly < CHUNK_SIZE; ly++) {
+            for (let lx = 0; lx < CHUNK_SIZE; lx++) {
+              const tid = chunk.terrainGrid[ly][lx];
+              if (tid === TERRAIN.GRASS) ctx.fillStyle = 'rgba(34, 197, 94, 0.55)';
+              else if (tid === TERRAIN.ROAD) ctx.fillStyle = 'rgba(234, 179, 8, 0.65)';
+              else if (tid === TERRAIN.BEACH_SAND) ctx.fillStyle = 'rgba(249, 115, 22, 0.65)';
+              else if (tid === TERRAIN.HILL) ctx.fillStyle = 'rgba(168, 85, 247, 0.65)';
+              ctx.fillRect(cPxX + lx * 32, cPxY + ly * 32, 32, 32);
+            }
+          }
+        }
+      }
+
+      // 2.4. Bãi cỏ cao hoang dã GBA (Animated Wild Tall Grass Patches)
+      const showTallGrass = !chkTallGrass || chkTallGrass.checked;
+      const imgTG = loadedImages['tall_grass'];
+      if (showTallGrass && imgTG) {
+        const animTime = performance.now();
+        for (const chunk of chunkManager.activeChunks) {
+          if (!chunk.tallGrass) continue;
+          const cPxX = chunk.cx * CHUNK_PIXELS;
+          const cPxY = chunk.cy * CHUNK_PIXELS;
+          if (cPxX + CHUNK_PIXELS < minX || cPxX > maxX ||
+              cPxY + CHUNK_PIXELS < minY || cPxY > maxY) {
+            continue;
+          }
+
+          for (const tg of chunk.tallGrass) {
+            if (tg.x + 32 >= minX && tg.x <= maxX && tg.y + 32 >= minY && tg.y <= maxY) {
+              const isSteppedOn = (player.gx === tg.gx && player.gy === tg.gy) ||
+                                  (player.isMoving && player.targetGX === tg.gx && player.targetGY === tg.gy) ||
+                                  (pika.gx === tg.gx && pika.gy === tg.gy) ||
+                                  (pika.isMoving && pika.targetGX === tg.gx && pika.targetGY === tg.gy);
+              let fIdx = 0;
+              if (isSteppedOn) {
+                // Rung đung đưa theo nhịp bước chân khi nhân vật bước vào cỏ
+                fIdx = Math.floor((animTime / 120) % 4) + 1;
+              } else {
+                // Gió thoảng đợt sóng nhịp nhàng chuẩn GBA: đa phần tĩnh (frame 0), thỉnh thoảng gợn sóng (frames 1..4)
+                const wave = Math.sin(animTime * 0.0016 + tg.phase);
+                if (wave > 0.45) {
+                  fIdx = Math.min(4, Math.floor(((wave - 0.45) / 0.55) * 4) + 1);
+                } else {
+                  fIdx = 0;
+                }
+              }
+
+              ctx.drawImage(
+                imgTG,
+                fIdx * 32, 0, 32, 32,
+                tg.x, tg.y, 32, 32
+              );
+            }
+          }
+        }
+      }
+
+      // 2.5. Hoạt ảnh thực vật & hoa dại đung đưa theo gió (Animated Wildflowers & Foliage)
+      const showPlants = !chkPlants || chkPlants.checked;
+      if (showPlants) {
+        const animTime = performance.now();
+        const frameDuration = 180; // Chu kỳ đung đưa ~180ms mỗi frame
+
+        for (const chunk of chunkManager.activeChunks) {
+          const cPxX = chunk.cx * CHUNK_PIXELS;
+          const cPxY = chunk.cy * CHUNK_PIXELS;
+          if (cPxX + CHUNK_PIXELS < minX || cPxX > maxX ||
+              cPxY + CHUNK_PIXELS < minY || cPxY > maxY) {
+            continue;
+          }
+
+          for (const p of chunk.plants) {
+            if (p.x + 32 >= minX && p.x <= maxX && p.y + 32 >= minY && p.y <= maxY) {
+              const img = loadedImages[p.type];
+              if (img) {
+                // Tính frame chuyển động riêng cho từng bông hoa/bụi cỏ (0 -> 4)
+                const fIdx = Math.floor((animTime / frameDuration + p.phase) % 5);
+                ctx.drawImage(
+                  img,
+                  fIdx * 32, 0, 32, 32,
+                  p.x, p.y, 32, 32
+                );
+              }
+            }
+          }
+        }
+      }
+
+      // 3. Hiển thị lưới Chunk 16x16 (Ranh giới chunk & Badge tọa độ)
+      if (chkChunkGrid && chkChunkGrid.checked) {
+        ctx.save();
+        for (const chunk of chunkManager.activeChunks) {
+          const cPxX = chunk.cx * CHUNK_PIXELS;
+          const cPxY = chunk.cy * CHUNK_PIXELS;
+
+          // Đường viền chunk màu cyan phát sáng
+          ctx.strokeStyle = 'rgba(56, 189, 248, 0.65)';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(cPxX + 1, cPxY + 1, CHUNK_PIXELS - 2, CHUNK_PIXELS - 2);
+
+          // Nhãn Badge Chunk [cx, cy]
+          ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+          ctx.fillRect(cPxX + 8, cPxY + 8, 92, 22);
+          ctx.strokeStyle = 'rgba(56, 189, 248, 0.5)';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(cPxX + 8, cPxY + 8, 92, 22);
+
+          ctx.fillStyle = '#38bdf8';
+          ctx.font = '600 11px "JetBrains Mono", monospace';
+          ctx.fillText(`Chunk [${chunk.cx},${chunk.cy}]`, cPxX + 14, cPxY + 23);
+        }
+        ctx.restore();
+      }
+
+      // 4. Lưới tile 32x32 px
+      if (chkGrid && chkGrid.checked) {
+        ctx.save();
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+        ctx.lineWidth = 1;
+        const startX = Math.floor(minX / 32) * 32;
+        const endX   = Math.ceil(maxX / 32) * 32;
+        const startY = Math.floor(minY / 32) * 32;
+        const endY   = Math.ceil(maxY / 32) * 32;
+
+        for (let x = startX; x <= endX; x += 32) {
+          ctx.beginPath();
+          ctx.moveTo(x + 0.5, startY);
+          ctx.lineTo(x + 0.5, endY);
+          ctx.stroke();
+        }
+        for (let y = startY; y <= endY; y += 32) {
+          ctx.beginPath();
+          ctx.moveTo(startX, y + 0.5);
+          ctx.lineTo(endX, y + 0.5);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      // 5. Bóng đổ nhân vật Red & Pikachu
+      ctx.save();
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+      ctx.beginPath();
+      ctx.ellipse(player.x + 32, player.y + 58, 12, 6, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(pika.x + 32, pika.y + 56, 10, 5, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // 6. Gom toàn bộ thực thể để sắp xếp Y-Sorting 2.5D
+      const renderList = [];
+
+      // Gom cây cối từ các chunk đang hiển thị
+      for (const chunk of chunkManager.activeChunks) {
+        for (const t of chunk.trees) {
+          if (t.x + 64 >= minX && t.x <= maxX && t.y + 118 >= minY && t.y <= maxY) {
+            renderList.push({
+              ySort: t.y + 112,
+              draw: () => ctx.drawImage(t.img, t.x, t.y)
+            });
+          }
+        }
+      }
+
+      // Gom bụi cây Berry Dại từ các chunk đang hiển thị
+      const showBerries = !chkBerries || chkBerries.checked;
+      if (showBerries) {
+        const now = Date.now();
+        const cycleMs = berryCycleSeconds * 1000;
+        const animTime = performance.now();
+
+        for (const chunk of chunkManager.activeChunks) {
+          if (!chunk.berryBushes) continue;
+          for (const bush of chunk.berryBushes) {
+            if (bush.x + 32 >= minX && bush.x <= maxX && bush.y + 64 >= minY && bush.y <= maxY) {
+              const elapsedMs = ((now - bush.plantedAt) % cycleMs + cycleMs) % cycleMs;
+              const progress = elapsedMs / cycleMs;
+              const stage = (berryStageOverride !== null) ? berryStageOverride : Math.min(3, Math.floor(progress * 4));
+              const swayCol = Math.floor((animTime / 220 + bush.phase) % 4);
+              const img = loadedImages[`berry_${bush.type.id}`];
+
+              renderList.push({
+                ySort: bush.gy * 32 + 16,
+                draw: () => {
+                  // Bóng đổ gốc cây
+                  ctx.save();
+                  ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
+                  ctx.beginPath();
+                  ctx.ellipse(bush.x + 16, bush.y + 60, 11, 5, 0, 0, Math.PI * 2);
+                  ctx.fill();
+                  ctx.restore();
+
+                  if (img) {
+                    ctx.drawImage(
+                      img,
+                      swayCol * 32, stage * 64, 32, 64,
+                      bush.x, bush.y, 32, 64
+                    );
+                  }
+
+                  // Quả chín mọng (Stage 3): Thêm ánh sáng lung linh
+                  if (stage === 3) {
+                    ctx.save();
+                    ctx.fillStyle = bush.type.color;
+                    ctx.shadowColor = bush.type.color;
+                    ctx.shadowBlur = 6;
+                    ctx.beginPath();
+                    ctx.arc(bush.x + 16, bush.y + 10, 2.5, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                  }
+                }
+              });
+            }
+          }
+        }
+      }
+
+    // Hàm vẽ bong bóng biểu cảm phong cách Pokémon (Alert, Curious, Sweat, Dots)
+    function drawWildEmote(ctx, cx, cy, emote) {
+      ctx.save();
+      const progress = 1 - (emote.timer / emote.maxTime);
+      const bounce = Math.sin(Math.min(progress * 3, 1) * Math.PI) * 5;
+      const by = cy - 14 - bounce;
+
+      // Viền và nền bong bóng tròn
+      ctx.fillStyle = '#ffffff';
+      ctx.strokeStyle = '#222222';
+      ctx.lineWidth = 1.5;
+
+      ctx.beginPath();
+      ctx.arc(cx, by, 7.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      // Mũi chỉ xuống đầu Pokémon
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.moveTo(cx - 2, by + 6.5);
+      ctx.lineTo(cx, by + 10.5);
+      ctx.lineTo(cx + 2, by + 6.5);
+      ctx.fill();
+      ctx.stroke();
+
+      // Phủ lại tâm bong bóng
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(cx, by, 6.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Biểu tượng cảm xúc
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      if (emote.type === '!') {
+        ctx.font = 'bold 11px sans-serif';
+        ctx.fillStyle = '#e74c3c';
+        ctx.fillText('!', cx, by);
+      } else if (emote.type === '?') {
+        ctx.font = 'bold 10px sans-serif';
+        ctx.fillStyle = '#2980b9';
+        ctx.fillText('?', cx, by);
+      } else if (emote.type === 'sweat') {
+        ctx.font = '10px sans-serif';
+        ctx.fillStyle = '#3498db';
+        ctx.fillText('💧', cx, by);
+      } else if (emote.type === 'dots') {
+        ctx.font = 'bold 9px sans-serif';
+        ctx.fillStyle = '#7f8c8d';
+        ctx.fillText('…', cx, by - 1);
+      }
+      ctx.restore();
+    }
+
+    // Wild Pokémon từ các chunk đang hiển thị
+    for (const chunk of chunkManager.activeChunks) {
+      if (!chunk.wildPokemon) continue;
+      for (const wp of chunk.wildPokemon) {
+        if (wp.x + 64 >= minX && wp.x <= maxX && wp.y + 64 >= minY && wp.y <= maxY) {
+          const wpRef = wp; // closure capture
+          // Bóng đổ
+          renderList.push({
+            ySort: wpRef.y + 56,
+            draw: () => {
+              ctx.save();
+              ctx.fillStyle = 'rgba(0, 0, 0, 0.30)';
+              ctx.beginPath();
+              ctx.ellipse(wpRef.x + 32, wpRef.y + 58, 10, 5, 0, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.restore();
+            }
+          });
+          // Sprite + Emote
+          renderList.push({
+            ySort: wpRef.y + 58,
+            draw: () => {
+              const img = loadedImages[wpRef.type.key];
+              if (img) {
+                const drawY = wpRef.y + (wpRef.bobY || 0);
+                ctx.drawImage(
+                  img,
+                  wpRef.frame * 64, wpRef.dir * 64, 64, 64,
+                  wpRef.x, drawY, 64, 64
+                );
+
+                // Vẽ bong bóng cảm xúc nếu có
+                if (wpRef.emote && wpRef.emote.timer > 0) {
+                  drawWildEmote(ctx, wpRef.x + 32, drawY + 14, wpRef.emote);
+                }
+              }
+            }
+          });
+        }
+      }
+    }
+
+      // Pikachu
+      renderList.push({
+        ySort: pika.y + 58,
+        draw: () => {
+          // Sprite sheet PIKACHU.png và trchar000.png có thứ tự 4 hàng đồng bộ:
+          // Row 0: DOWN, Row 1: LEFT, Row 2: RIGHT, Row 3: UP
+          ctx.drawImage(
+            loadedImages['char_pika_sheet'],
+            pika.frame * 64, pika.dir * 64, 64, 64,
+            pika.x, pika.y, 64, 64
+          );
+        }
+      });
+
+      // Red
+      renderList.push({
+        ySort: player.y + 60,
+        draw: () => {
+          // Red sprite sheet: Row 0=DOWN, Row 1=LEFT, Row 2=RIGHT, Row 3=UP
+          ctx.drawImage(
+            loadedImages['char_red_sheet'],
+            player.frame * 64, player.dir * 64, 64, 64,
+            player.x, player.y, 64, 64
+          );
+        }
+      });
+
+      // Hiệu ứng ngập chân trong bụi cỏ GBA (Tall Grass Foot Wading / Foreground Overlap)
+      if (showTallGrass && imgTG) {
+        for (const chunk of chunkManager.activeChunks) {
+          if (!chunk.tallGrass) continue;
+          for (const tg of chunk.tallGrass) {
+            const isRedHere = (player.gx === tg.gx && player.gy === tg.gy) ||
+                              (player.isMoving && player.targetGX === tg.gx && player.targetGY === tg.gy);
+            const isPikaHere = (pika.gx === tg.gx && pika.gy === tg.gy) ||
+                               (pika.isMoving && pika.targetGX === tg.gx && pika.targetGY === tg.gy);
+
+            // Kiểm tra xem có wild pokemon nào đứng trên ô cỏ cao này không
+            let isWildHere = false;
+            for (const wChunk of chunkManager.activeChunks) {
+              if (!wChunk.wildPokemon) continue;
+              for (const wp of wChunk.wildPokemon) {
+                if ((wp.gx === tg.gx && wp.gy === tg.gy) ||
+                    (wp.isMoving && wp.targetGX === tg.gx && wp.targetGY === tg.gy)) {
+                  isWildHere = true;
+                  break;
+                }
+              }
+              if (isWildHere) break;
+            }
+
+            if (isRedHere || isPikaHere || isWildHere) {
+              const tgY = tg.gy * 32 + 30; // Lớp ngọn cỏ phía trước che cẳng chân và giày
+              renderList.push({
+                ySort: tgY,
+                draw: () => {
+                  const animTime = performance.now();
+                  const isMovingAny = (isRedHere && player.isMoving) || (isPikaHere && pika.isMoving) || isWildHere;
+                  const fIdx = isMovingAny ? (Math.floor((animTime / 120) % 4) + 1) : 0;
+                  ctx.drawImage(
+                    imgTG,
+                    fIdx * 32, 0, 32, 32,
+                    tg.x, tg.y, 32, 32
+                  );
+                }
+              });
+            }
+          }
+        }
+      }
+
+      renderList.sort((a, b) => a.ySort - b.ySort);
+      renderList.forEach(item => item.draw());
+
+      // 7. Hitbox va chạm (nếu bật)
+      if (chkHitbox && chkHitbox.checked) {
+        ctx.save();
+        ctx.fillStyle = 'rgba(239, 68, 68, 0.4)';
+        ctx.strokeStyle = '#ef4444';
+        for (const chunk of chunkManager.activeChunks) {
+          for (const c of chunk.colliders) {
+            ctx.fillRect(c.x, c.y, c.w, c.h);
+            ctx.strokeRect(c.x, c.y, c.w, c.h);
+          }
+        }
+
+        ctx.fillStyle = 'rgba(59, 130, 246, 0.5)';
+        ctx.strokeStyle = '#3b82f6';
+        ctx.fillRect(player.x + 22, player.y + 48, 20, 14);
+        ctx.strokeRect(player.x + 22, player.y + 48, 20, 14);
+        ctx.restore();
+      }
+
+      ctx.restore();
+    }
+
+    // --- MOUSE INSPECTOR WITH WORLD COORDINATES ---
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const screenX = (e.clientX - rect.left) / camera.zoom;
+      const screenY = (e.clientY - rect.top) / camera.zoom;
+      const viewW = canvas.width / camera.zoom;
+      const viewH = canvas.height / camera.zoom;
+
+      const worldX = screenX + (camera.x - viewW / 2);
+      const worldY = screenY + (camera.y - viewH / 2);
+
+      const gx = Math.floor(worldX / 32);
+      const gy = Math.floor(worldY / 32);
+
+      const data = chunkManager.getTileData(gx, gy);
+      const info = TILE_INFO[data.tileId] || { name: 'unknown', desc: 'Không xác định' };
+
+      document.getElementById('insCoords').innerText = `[${gx}, ${gy}]`;
+      document.getElementById('insChunk').innerText = `[${data.cx}, ${data.cy}] (cục bộ [${data.lx}, ${data.ly}])`;
+
+      const insTerrain = document.getElementById('insTerrain');
+      const insTreeRule = document.getElementById('insTreeRule');
+
+      if (data.tallGrass) {
+        insTerrain.innerText = `Bụi cỏ cao hoang dã GBA (Bãi #${data.tallGrass.patchId + 1})`;
+        insTerrain.className = 'inspector-val grass';
+        insTreeRule.innerText = 'Cỏ cao (Tỷ lệ gặp Pokémon hoang dã)';
+        insTreeRule.className = 'inspector-val success';
+      } else if (data.terrain === TERRAIN.GRASS) {
+        insTerrain.innerText = 'Đồng cỏ (ID: 1)';
+        insTerrain.className = 'inspector-val grass';
+        insTreeRule.innerText = 'Cho phép mọc cây (Màu mỡ)';
+        insTreeRule.className = 'inspector-val success';
+      } else if (data.terrain === TERRAIN.ROAD) {
+        insTerrain.innerText = 'Đường mòn đất (ID: 2)';
+        insTerrain.className = 'inspector-val road';
+        insTreeRule.innerText = 'Bị cấm (Mặt đường nén)';
+        insTreeRule.className = 'inspector-val danger';
+      } else if (data.terrain === TERRAIN.BEACH_SAND) {
+        insTerrain.innerText = 'Bãi cát biển (ID: 3)';
+        insTerrain.className = 'inspector-val beach';
+        insTreeRule.innerText = 'Bị cấm (Cát biển không sinh cây)';
+        insTreeRule.className = 'inspector-val danger';
+      }
+
+      let plantText = '';
+      if (data.plant === 'flower_red') plantText = ' + 🌺 Hoa đỏ';
+      else if (data.plant === 'flower_blue') plantText = ' + 🌸 Hoa xanh';
+      else if (data.plant === 'flower_purple') plantText = ' + 🪻 Hoa tím';
+      else if (data.plant === 'flower_white') plantText = ' + 🌼 Hoa trắng';
+      else if (data.plant === 'plant_sprout') plantText = ' + 🌱 Mầm cỏ';
+
+      if (data.tallGrass) {
+        document.getElementById('insTileId').innerText = `#610 Cỏ cao GBA [Bãi ${data.tallGrass.patchId + 1}]${plantText}`;
+      } else {
+        document.getElementById('insTileId').innerText = `#${data.tileId} ${info.name}${plantText}`;
+      }
+
+      // Kiểm tra xem chuột có trỏ trúng bụi Berry nào không
+      let hoveredBush = null;
+      for (const chunk of chunkManager.activeChunks) {
+        if (!chunk.berryBushes) continue;
+        for (const b of chunk.berryBushes) {
+          if ((b.gx === gx && b.gy === gy) || (b.gx === gx && b.gy - 1 === gy)) {
+            hoveredBush = b;
+            break;
+          }
+        }
+        if (hoveredBush) break;
+      }
+
+      const rowBerryInfo = document.getElementById('rowBerryInfo');
+      const insBerryVal = document.getElementById('insBerryVal');
+      if (hoveredBush && rowBerryInfo && insBerryVal) {
+        const now = Date.now();
+        const cycleMs = berryCycleSeconds * 1000;
+        const elapsedMs = ((now - hoveredBush.plantedAt) % cycleMs + cycleMs) % cycleMs;
+        const progress = elapsedMs / cycleMs;
+        const stage = (berryStageOverride !== null) ? berryStageOverride : Math.min(3, Math.floor(progress * 4));
+        const stageInfo = BERRY_STAGES[stage];
+        const elapsedSec = Math.floor(elapsedMs / 1000);
+
+        rowBerryInfo.style.display = 'flex';
+        insBerryVal.innerText = `${hoveredBush.type.viName} [${stageInfo.icon} ${stageInfo.name}] (${elapsedSec}s/${berryCycleSeconds}s)`;
+        insBerryVal.style.color = hoveredBush.type.color;
+      } else if (rowBerryInfo) {
+        rowBerryInfo.style.display = 'none';
+      }
+    });
+
+    // --- TƯƠNG TÁC THU HOẠCH BERRY (Phím Space/Enter/E hoặc Click chuột) ---
+    function interactWithBerryBush(bush) {
+      const now = Date.now();
+      const cycleMs = berryCycleSeconds * 1000;
+      const elapsedMs = ((now - bush.plantedAt) % cycleMs + cycleMs) % cycleMs;
+      const progress = elapsedMs / cycleMs;
+      const stage = (berryStageOverride !== null) ? berryStageOverride : Math.min(3, Math.floor(progress * 4));
+
+      if (stage === 3) {
+        // Thu hoạch trái chín
+        const count = 2 + Math.floor(Math.random() * 3); // 2 - 4 quả
+        showBerryToast(`🫐 Tuyệt vời! Bạn đã hái được ${count} quả ${bush.type.viName} (${bush.type.name})! [${bush.type.desc}]`, bush.type.color);
+        // Tái sinh thành mầm non cho chu kỳ mới
+        bush.plantedAt = now;
+      } else {
+        const stageInfo = BERRY_STAGES[stage];
+        const stageDurationMs = cycleMs / 4;
+        const currentStageElapsedMs = elapsedMs % stageDurationMs;
+        const remainingStageSec = Math.ceil((stageDurationMs - currentStageElapsedMs) / 1000);
+        showBerryToast(`${stageInfo.icon} Bụi ${bush.type.viName} đang ở giai đoạn: ${stageInfo.name}. Còn ${remainingStageSec}s nữa sẽ lớn tiếp!`, '#38bdf8');
+      }
+    }
+
+    function triggerBerryInteraction() {
+      // Tìm bụi cây trước mặt Red hoặc ngay sát chân
+      let targetGX = player.gx;
+      let targetGY = player.gy;
+      if (player.dir === 0) targetGY += 1;      // Đang nhìn Xuống
+      else if (player.dir === 1) targetGX -= 1; // Đang nhìn Trái
+      else if (player.dir === 2) targetGX += 1; // Đang nhìn Phải
+      else if (player.dir === 3) targetGY -= 1; // Đang nhìn Lên
+
+      let foundBush = null;
+      for (const chunk of chunkManager.activeChunks) {
+        if (!chunk.berryBushes) continue;
+        for (const b of chunk.berryBushes) {
+          if ((b.gx === targetGX && b.gy === targetGY) ||
+              (b.gx === targetGX && b.gy - 1 === targetGY) ||
+              (Math.abs(b.gx - player.gx) <= 1 && Math.abs(b.gy - player.gy) <= 1)) {
+            foundBush = b;
+            break;
+          }
+        }
+        if (foundBush) break;
+      }
+
+      if (foundBush) {
+        interactWithBerryBush(foundBush);
+      }
+    }
+
+    canvas.addEventListener('click', (e) => {
+      canvas.focus();
+      const rect = canvas.getBoundingClientRect();
+      const screenX = (e.clientX - rect.left) / camera.zoom;
+      const screenY = (e.clientY - rect.top) / camera.zoom;
+      const viewW = canvas.width / camera.zoom;
+      const viewH = canvas.height / camera.zoom;
+      const worldX = screenX + (camera.x - viewW / 2);
+      const worldY = screenY + (camera.y - viewH / 2);
+      const clickGX = Math.floor(worldX / 32);
+      const clickGY = Math.floor(worldY / 32);
+
+      for (const chunk of chunkManager.activeChunks) {
+        if (!chunk.berryBushes) continue;
+        for (const b of chunk.berryBushes) {
+          if ((b.gx === clickGX && b.gy === clickGY) || (b.gx === clickGX && b.gy - 1 === clickGY)) {
+            interactWithBerryBush(b);
+            return;
+          }
+        }
+      }
+    });
+
+    let lastTime = performance.now();
+    let frameCount = 0;
+    let fpsTimer = 0;
+
+    function gameLoop(time) {
+      const dt = time - lastTime;
+      lastTime = time;
+      frameCount++;
+      fpsTimer += dt;
+      if (fpsTimer >= 1000) {
+        document.getElementById('lblFps').innerText = frameCount;
+        frameCount = 0;
+        fpsTimer = 0;
+      }
+
+      // Chuẩn hóa dtScale theo mốc 60 FPS (16.67ms/frame). Kẹp [0.1, 2.5] chống spike/giật lag
+      const dtScale = Math.min(Math.max((dt || 16.667) / (1000 / 60), 0.1), 2.5);
+
+      update(dtScale);
+      render();
+      requestAnimationFrame(gameLoop);
+    }
+
+    function applyPreset(seed, biome) {
+      document.getElementById('inputSeed').value = seed;
+      document.getElementById('selectBiome').value = biome;
+      resetWorld();
+    }
+
+    document.getElementById('btnRegenerate').addEventListener('click', resetWorld);
+    document.getElementById('btnResetPlayer').addEventListener('click', resetWorld);
+    document.getElementById('btnRandomSeed').addEventListener('click', () => {
+      document.getElementById('inputSeed').value = Math.floor(Math.random() * 89999 + 10000);
+      resetWorld();
+    });
+
+    document.getElementById('btnToggleOverlay').addEventListener('click', () => {
+      const overlay = document.getElementById('testOverlay');
+      overlay.classList.toggle('collapsed');
+      const isCollapsed = overlay.classList.contains('collapsed');
+      document.getElementById('btnToggleOverlay').innerText = isCollapsed ? '⚙️' : '✕';
+    });
+
+    // Kéo thả bảng overlay kiểm thử tự do trên màn hình
+    const overlayEl = document.getElementById('testOverlay');
+    const overlayHeader = overlayEl.querySelector('.overlay-header');
+    let isDraggingOverlay = false;
+    let dragStartX = 0, dragStartY = 0, initialLeft = 0, initialTop = 0;
+
+    overlayHeader.addEventListener('mousedown', (e) => {
+      if (e.target.closest('#btnToggleOverlay')) return;
+      isDraggingOverlay = true;
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+      const rect = overlayEl.getBoundingClientRect();
+      initialLeft = rect.left;
+      initialTop = rect.top;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDraggingOverlay) return;
+      const dx = e.clientX - dragStartX;
+      const dy = e.clientY - dragStartY;
+      const newX = Math.max(8, Math.min(window.innerWidth - overlayEl.offsetWidth - 8, initialLeft + dx));
+      const newY = Math.max(8, Math.min(window.innerHeight - overlayEl.offsetHeight - 8, initialTop + dy));
+      overlayEl.style.left = `${newX}px`;
+      overlayEl.style.top = `${newY}px`;
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDraggingOverlay = false;
+    });
+
+    ['selectBiome', 'chkRoad', 'chkBeach', 'chkHills', 'chkTrees', 'chkTallGrass', 'chkPlants', 'chkBerries', 'chkCollision', 'chkChunkGrid', 'chkGrid', 'chkHitbox', 'chkHeatmap'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('change', resetWorld);
+    });
+
+    // Lắng nghe thay đổi chu kỳ phát triển Berry
+    if (selectBerryCycle) {
+      selectBerryCycle.addEventListener('change', (e) => {
+        berryCycleSeconds = parseInt(e.target.value) || 60;
+        showBerryToast(`⏱️ Đã đặt chu kỳ Berry: ${berryCycleSeconds} giây (${(berryCycleSeconds / 60).toFixed(1)} phút / vòng đời)`, '#c084fc');
+      });
+    }
+
+    // Các nút ép xem nhanh giai đoạn phát triển Berry
+    document.querySelectorAll('.btn-berry-stage').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.btn-berry-stage').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const st = btn.dataset.stage;
+        if (st === 'auto') {
+          berryStageOverride = null;
+          showBerryToast('🔄 Chế độ Berry: Tự động phát triển theo thời gian thực', '#a855f7');
+        } else {
+          berryStageOverride = parseInt(st);
+          const stInfo = BERRY_STAGES[berryStageOverride];
+          showBerryToast(`⚡ Ép xem giai đoạn: ${stInfo.icon} ${stInfo.name} (${stInfo.desc})`, '#38bdf8');
+        }
+      });
+    });
+
+    preloadAssets(() => {
+      console.log('Pokémon Chunk Engine & Camera Initialized.');
+      resizeCanvas();
+      resetWorld();
+      requestAnimationFrame(gameLoop);
+    });
+  </script>
+</body>
+</html>

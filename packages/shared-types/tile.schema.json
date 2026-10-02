@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pokemon-game.local/schema/tile.schema.json",
+  "title": "Tile",
+  "description": "Shared tile registry entry for terrain and decorative assets.",
+  "type": "object",
+  "required": ["id", "key", "terrainId", "assetKey", "layer"],
+  "properties": {
+    "id": { "type": "integer", "minimum": 1 },
+    "key": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+    "terrainId": { "type": "integer", "enum": [0, 1, 2, 3, 4, 5] },
+    "assetKey": { "type": "string", "minLength": 1 },
+    "layer": { "type": "string", "enum": ["ground", "terrain", "object", "character", "effect"] },
+    "autotileMask": { "type": "integer", "minimum": 0, "maximum": 255 },
+    "walkable": { "type": "boolean" }
+  },
+  "additionalProperties": false
+}
