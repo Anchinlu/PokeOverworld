@@ -1,4 +1,5 @@
 import biomesData from '@pokemon/game-data/biomes.json';
+import { seededHash } from '../noise';
 import type { EcologySample } from './ecology-field';
 import {
   DENSE_FOREST_DENSITY_THRESHOLD,
@@ -75,4 +76,59 @@ export function getTreeTypeForEcology(sample: EcologySample, zone: EcologyZone):
     return BIOME_DEFAULT_TREES.autumn;
   }
   return BIOME_DEFAULT_TREES.neutral;
+}
+
+export interface FlowerClusterPalette {
+  primary: string[];
+  secondary: string[];
+}
+
+export const ZONE_FLOWER_PALETTES: Record<EcologyZone, FlowerClusterPalette> = {
+  wetland: {
+    primary: ['flower_white', 'flower_blue'],
+    secondary: ['flower_purple', 'plant_sprout'],
+  },
+  coast: {
+    primary: ['flower_white', 'flower_blue'],
+    secondary: ['plant_sprout'],
+  },
+  dryland: {
+    primary: ['flower_red', 'flower_purple'],
+    secondary: ['plant_sprout'],
+  },
+  dense_forest: {
+    primary: ['flower_blue', 'flower_purple'],
+    secondary: ['plant_sprout', 'flower_white'],
+  },
+  meadow: {
+    primary: ['flower_red', 'flower_white'],
+    secondary: ['flower_blue', 'plant_sprout'],
+  },
+  hill_edge: {
+    primary: ['flower_white', 'plant_sprout'],
+    secondary: ['flower_purple', 'flower_blue'],
+  },
+};
+
+/**
+ * Returns a flower/plant sprite type using cluster-based selection.
+ * Flowers form color clusters with 1-2 primary dominant colors and 0-2 secondary colors.
+ */
+export function getFlowerTypeForCluster(
+  zone: EcologyZone,
+  clusterX: number,
+  clusterY: number,
+  tileRoll: number,
+  seed: number
+): string {
+  const palette = ZONE_FLOWER_PALETTES[zone] || ZONE_FLOWER_PALETTES.meadow;
+  const clusterRoll = seededHash(clusterX, clusterY, seed + 0x3341);
+  const dominantFlower = palette.primary[Math.floor(clusterRoll * palette.primary.length)];
+
+  // 75% use dominant color in cluster, 25% secondary
+  if (tileRoll < 0.75 || palette.secondary.length === 0) {
+    return dominantFlower;
+  }
+  const secIndex = Math.floor(((tileRoll - 0.75) / 0.25) * palette.secondary.length);
+  return palette.secondary[Math.min(secIndex, palette.secondary.length - 1)];
 }

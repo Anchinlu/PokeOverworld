@@ -95,4 +95,24 @@ describe('Ecological Field & Regional Distribution (Step 1)', () => {
     );
     expect(meadowTree).toBe(BIOME_DEFAULT_TREES.neutral);
   });
+
+  it('clusters flowers by ecological zone palettes', async () => {
+    const { getFlowerTypeForCluster, ZONE_FLOWER_PALETTES } = await import(
+      '../src/maps/ecology/ecology-profile'
+    );
+
+    expect(ZONE_FLOWER_PALETTES.wetland.primary).toEqual(['flower_white', 'flower_blue']);
+    expect(ZONE_FLOWER_PALETTES.dryland.primary).toEqual(['flower_red', 'flower_purple']);
+    expect(ZONE_FLOWER_PALETTES.dense_forest.primary).toEqual(['flower_blue', 'flower_purple']);
+    expect(ZONE_FLOWER_PALETTES.meadow.primary).toEqual(['flower_red', 'flower_white']);
+
+    // Samples in wetland cluster should roll white or blue predominantly
+    const wetlandFlowers = new Set<string>();
+    for (let i = 0; i < 20; i++) {
+      const flower = getFlowerTypeForCluster('wetland', 0, 0, i / 25, 42);
+      wetlandFlowers.add(flower);
+    }
+    // At least one of primary flowers must be present
+    expect(wetlandFlowers.has('flower_white') || wetlandFlowers.has('flower_blue')).toBe(true);
+  });
 });

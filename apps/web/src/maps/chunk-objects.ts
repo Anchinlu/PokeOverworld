@@ -14,6 +14,7 @@ import {
   sampleEcology,
   getEcologyZone,
   getTreeTypeForEcology,
+  getFlowerTypeForCluster,
   TREE_MIN_CANDIDATES,
   TREE_MAX_CANDIDATES,
 } from './ecology';
@@ -210,7 +211,6 @@ export function generateChunkFoliage(
 ): PlantEntity[] {
   const startGX = cx * CHUNK_SIZE;
   const startGY = cy * CHUNK_SIZE;
-  const plantTypes = ['flower_red', 'flower_blue', 'flower_purple', 'flower_white', 'plant_sprout'];
   const plants: PlantEntity[] = [];
 
   // 1. Lowland Meadow & Grassland Flora
@@ -261,7 +261,10 @@ export function generateChunkFoliage(
             continue;
           }
 
-          const type = plantTypes[Math.floor(seededHash(gx, gy, seed + 808) * plantTypes.length)];
+          const sample = sampleEcology(gx, gy, seed);
+          const zone = getEcologyZone(sample);
+          const tileRoll = seededHash(gx, gy, seed + 808);
+          const type = getFlowerTypeForCluster(zone, cx * 2 + qx, cy * 2 + qy, tileRoll, seed);
           const phase = Math.floor(seededHash(gx, gy, seed + 888) * 5);
           plants.push({ gx, gy, x: px, y: py, type, phase });
         }
@@ -270,15 +273,6 @@ export function generateChunkFoliage(
   }
 
   // 2. Cliff & Hill Flora (Grass sprouts & Alpine wildflowers on flat interior cliff plateaus)
-  const cliffFloraTypes = [
-    'plant_sprout',
-    'plant_sprout',
-    'flower_white',
-    'flower_blue',
-    'flower_purple',
-    'flower_red',
-  ];
-
   for (let qy = 0; qy < 2; qy++) {
     for (let qx = 0; qx < 2; qx++) {
       for (let attempt = 0; attempt < 2; attempt++) {
@@ -322,10 +316,10 @@ export function generateChunkFoliage(
             const alreadyHasPlant = plants.some((p) => p.gx === gx && p.gy === gy);
 
             if (!blocked && !alreadyHasPlant) {
-              const type =
-                cliffFloraTypes[
-                  Math.floor(seededHash(gx, gy, seed + 818) * cliffFloraTypes.length)
-                ];
+              const sample = sampleEcology(gx, gy, seed);
+              const zone = getEcologyZone(sample);
+              const tileRoll = seededHash(gx, gy, seed + 818);
+              const type = getFlowerTypeForCluster(zone, cx * 2 + qx, cy * 2 + qy, tileRoll, seed);
               const phase = Math.floor(seededHash(gx, gy, seed + 899) * 5);
               plants.push({ gx, gy, x: px, y: py, type, phase });
             }
