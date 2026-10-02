@@ -20,6 +20,9 @@ describe('Ecological Field & Regional Distribution (Step 1)', () => {
     expect(sampleA.moisture).toBeLessThanOrEqual(1);
     expect(sampleA.density).toBeGreaterThanOrEqual(0);
     expect(sampleA.density).toBeLessThanOrEqual(1);
+
+    const val = sampleEcologicalNoise(10, 20, 12345, 0x2401);
+    expect(val).toBeCloseTo(0.676996, 5);
   });
 
   it('produces different samples when seed changes', () => {
