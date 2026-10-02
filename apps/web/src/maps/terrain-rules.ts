@@ -537,4 +537,3 @@ export function isNearCliffEdge(gx: number, gy: number, seed: number): boolean {
 
   return false;
 }
-

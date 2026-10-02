@@ -1,10 +1,5 @@
 import { seededHash } from '../noise';
-import {
-  isNearWater,
-  isHillTile,
-  isNearCliffEdge,
-  isSandTile,
-} from '../terrain-rules';
+import { isNearWater, isHillTile, isNearCliffEdge, isSandTile } from '../terrain-rules';
 import {
   ECOLOGY_FERTILITY_SALT,
   ECOLOGY_MOISTURE_SALT,

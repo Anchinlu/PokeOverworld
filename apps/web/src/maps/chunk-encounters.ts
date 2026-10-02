@@ -2,12 +2,7 @@ import { TILE_SIZE } from '@pokemon/game-data';
 import type { Collider, TerrainId } from '@pokemon/shared-types';
 import { pokemonCatalog, type EncounterDefinition } from '../data';
 import { seededHash } from './noise';
-import {
-  sampleEcology,
-  getEcologyZone,
-  LEVEL_SALT,
-  type EcologyZone,
-} from './ecology';
+import { sampleEcology, getEcologyZone, LEVEL_SALT, type EcologyZone } from './ecology';
 import type { TallGrassEntity, TreeEntity } from './chunk-objects';
 
 export interface EncounterContext {

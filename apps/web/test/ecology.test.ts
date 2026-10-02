@@ -66,43 +66,73 @@ describe('Ecological Field & Regional Distribution (Step 1)', () => {
   });
 
   it('determines tree types according to ecological rules and biomes.json defaults', async () => {
-    const { getTreeTypeForEcology, BIOME_DEFAULT_TREES } = await import(
-      '../src/maps/ecology/ecology-profile'
-    );
+    const { getTreeTypeForEcology, BIOME_DEFAULT_TREES } =
+      await import('../src/maps/ecology/ecology-profile');
 
     // Near sand or water -> coastal
     const coastTree = getTreeTypeForEcology(
-      { nearSand: true, nearWater: false, nearHill: false, density: 0.5, moisture: 0.5, fertility: 0.5, elevation: 0 },
+      {
+        nearSand: true,
+        nearWater: false,
+        nearHill: false,
+        density: 0.5,
+        moisture: 0.5,
+        fertility: 0.5,
+        elevation: 0,
+      },
       'coast'
     );
     expect(coastTree).toBe(BIOME_DEFAULT_TREES.coastal);
 
     // Dense forest -> deep
     const forestTree = getTreeTypeForEcology(
-      { nearSand: false, nearWater: false, nearHill: false, density: 0.85, moisture: 0.5, fertility: 0.5, elevation: 0 },
+      {
+        nearSand: false,
+        nearWater: false,
+        nearHill: false,
+        density: 0.85,
+        moisture: 0.5,
+        fertility: 0.5,
+        elevation: 0,
+      },
       'dense_forest'
     );
     expect(forestTree).toBe(BIOME_DEFAULT_TREES.forest);
 
     // Dryland -> autumn
     const dryTree = getTreeTypeForEcology(
-      { nearSand: false, nearWater: false, nearHill: false, density: 0.3, moisture: 0.2, fertility: 0.2, elevation: 0 },
+      {
+        nearSand: false,
+        nearWater: false,
+        nearHill: false,
+        density: 0.3,
+        moisture: 0.2,
+        fertility: 0.2,
+        elevation: 0,
+      },
       'dryland'
     );
     expect(dryTree).toBe(BIOME_DEFAULT_TREES.autumn);
 
     // Neutral meadow -> vibrant
     const meadowTree = getTreeTypeForEcology(
-      { nearSand: false, nearWater: false, nearHill: false, density: 0.5, moisture: 0.5, fertility: 0.5, elevation: 0 },
+      {
+        nearSand: false,
+        nearWater: false,
+        nearHill: false,
+        density: 0.5,
+        moisture: 0.5,
+        fertility: 0.5,
+        elevation: 0,
+      },
       'meadow'
     );
     expect(meadowTree).toBe(BIOME_DEFAULT_TREES.neutral);
   });
 
   it('clusters flowers by ecological zone palettes', async () => {
-    const { getFlowerTypeForCluster, ZONE_FLOWER_PALETTES } = await import(
-      '../src/maps/ecology/ecology-profile'
-    );
+    const { getFlowerTypeForCluster, ZONE_FLOWER_PALETTES } =
+      await import('../src/maps/ecology/ecology-profile');
 
     expect(ZONE_FLOWER_PALETTES.wetland.primary).toEqual(['flower_white', 'flower_blue']);
     expect(ZONE_FLOWER_PALETTES.dryland.primary).toEqual(['flower_red', 'flower_purple']);
@@ -199,7 +229,9 @@ describe('Ecological Field & Regional Distribution (Step 1)', () => {
       nearHill: false,
       timeOfDay: 'day',
     });
-    expect(forestRoster.some((r) => r.speciesKey === 'KAKUNA' || r.speciesKey === 'CATERPIE')).toBe(true);
+    expect(forestRoster.some((r) => r.speciesKey === 'KAKUNA' || r.speciesKey === 'CATERPIE')).toBe(
+      true
+    );
 
     const hillRoster = getRosterForContext({
       zone: 'hill_edge',
@@ -209,7 +241,9 @@ describe('Ecological Field & Regional Distribution (Step 1)', () => {
       nearHill: true,
       timeOfDay: 'day',
     });
-    expect(hillRoster.some((r) => r.speciesKey === 'SPEAROW' || r.speciesKey === 'RATTATA')).toBe(true);
+    expect(hillRoster.some((r) => r.speciesKey === 'SPEAROW' || r.speciesKey === 'RATTATA')).toBe(
+      true
+    );
 
     const meadowRoster = getRosterForContext({
       zone: 'meadow',

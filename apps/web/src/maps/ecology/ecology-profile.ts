@@ -14,13 +14,7 @@ export const BIOME_DEFAULT_TREES = {
   neutral: biomesData.biomes.route.defaultTree,
 };
 
-export type EcologyZone =
-  | 'coast'
-  | 'wetland'
-  | 'meadow'
-  | 'dryland'
-  | 'dense_forest'
-  | 'hill_edge';
+export type EcologyZone = 'coast' | 'wetland' | 'meadow' | 'dryland' | 'dense_forest' | 'hill_edge';
 
 /**
  * Classifies an ecology sample into an ecological zone.
@@ -54,13 +48,13 @@ export function getEcologyZone(sample: EcologySample): EcologyZone {
 }
 
 /**
-  * Determines the tree type based on ecological sample and zone.
-  * Rules per Section 5:
-  * - Near sand/water -> 'coastal'
-  * - density >= 0.68 -> 'deep'
-  * - moisture <= 0.30 or fertility <= 0.30 -> 'autumn'
-  * - Neutral meadow -> 'vibrant'
-  */
+ * Determines the tree type based on ecological sample and zone.
+ * Rules per Section 5:
+ * - Near sand/water -> 'coastal'
+ * - density >= 0.68 -> 'deep'
+ * - moisture <= 0.30 or fertility <= 0.30 -> 'autumn'
+ * - Neutral meadow -> 'vibrant'
+ */
 export function getTreeTypeForEcology(sample: EcologySample, zone: EcologyZone): string {
   if (sample.nearSand || sample.nearWater || zone === 'coast') {
     return BIOME_DEFAULT_TREES.coastal;
