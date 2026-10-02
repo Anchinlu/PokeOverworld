@@ -96,6 +96,18 @@ export class GameRenderer {
     if (this.options.showHeatmap) {
       this.debugRenderer.renderHeatmap(ctx, bounds, chunkManager);
     }
+    if (this.options.showEcologyMoisture) {
+      this.debugRenderer.renderEcologyMoisture(ctx, bounds, chunkManager);
+    }
+    if (this.options.showEcologyFertility) {
+      this.debugRenderer.renderEcologyFertility(ctx, bounds, chunkManager);
+    }
+    if (this.options.showEcologyDensity) {
+      this.debugRenderer.renderEcologyDensity(ctx, bounds, chunkManager);
+    }
+    if (this.options.showEcologyZone) {
+      this.debugRenderer.renderEcologyZone(ctx, bounds, chunkManager);
+    }
 
     // 3. Render Tall Grass Patches (Layer 0.5)
     if (this.options.showTallGrass) {

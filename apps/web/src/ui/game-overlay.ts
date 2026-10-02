@@ -89,6 +89,18 @@ export function createOverlayTemplate(): string {
         <label class="checkbox-item" style="grid-column: span 2;">
           <input type="checkbox" id="chkHeatmap"> 🗺️ Bản đồ Heatmap ID
         </label>
+        <label class="checkbox-item">
+          <input type="checkbox" id="chkEcologyMoisture"> 💧 Sinh thái: Độ ẩm
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" id="chkEcologyFertility"> 🌱 Sinh thái: Độ phì
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" id="chkEcologyDensity"> 🌲 Sinh thái: Mật độ
+        </label>
+        <label class="checkbox-item">
+          <input type="checkbox" id="chkEcologyZone"> 🗺️ Sinh thái: Vùng
+        </label>
       </div>
 
       <!-- Berry Growth Cycle Controls -->
@@ -128,6 +140,18 @@ export function createOverlayTemplate(): string {
         <div class="info-line">
           <span>Mã Tile:</span>
           <span id="insTileId">#101</span>
+        </div>
+        <div class="info-line">
+          <span>Vùng sinh thái:</span>
+          <span id="insEcologyZone">--</span>
+        </div>
+        <div class="info-line">
+          <span>M / F / D:</span>
+          <span id="insEcologyMFD">--</span>
+        </div>
+        <div class="info-line">
+          <span>Stats chunk:</span>
+          <span id="insChunkStats">--</span>
         </div>
         <div class="info-line" id="rowBerryInfo" style="display: none;">
           <span>Berry:</span>

@@ -2,6 +2,7 @@ import { TILE_SIZE, TERRAIN } from '@pokemon/game-data';
 import type { ViewportBounds } from '../core/camera';
 import type { Player } from '../entities/player';
 import type { ChunkManager } from '../maps/chunk-manager';
+import { sampleEcology, getEcologyZone } from '../maps/ecology';
 
 export class DebugRenderer {
   public renderHeatmap(
@@ -24,6 +25,129 @@ export class DebugRenderer {
           else if (tid === TERRAIN.BEACH_SAND) ctx.fillStyle = 'rgba(249, 115, 22, 0.45)';
           else if (tid === TERRAIN.HILL) ctx.fillStyle = 'rgba(239, 68, 68, 0.5)';
           else if (tid === TERRAIN.OCEAN_WATER) ctx.fillStyle = 'rgba(59, 130, 246, 0.5)';
+
+          ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+        }
+      }
+    }
+    ctx.restore();
+  }
+
+  public renderEcologyMoisture(
+    ctx: CanvasRenderingContext2D,
+    bounds: ViewportBounds,
+    chunkManager: ChunkManager
+  ): void {
+    ctx.save();
+    for (const chunk of chunkManager.activeChunks) {
+      for (let ly = 0; ly < 16; ly++) {
+        for (let lx = 0; lx < 16; lx++) {
+          const gx = chunk.cx * 16 + lx;
+          const gy = chunk.cy * 16 + ly;
+          const x = gx * TILE_SIZE;
+          const y = gy * TILE_SIZE;
+          if (x + 32 < bounds.minX || x > bounds.maxX || y + 32 < bounds.minY || y > bounds.maxY)
+            continue;
+
+          const sample = sampleEcology(gx, gy, chunkManager.currentSeed);
+          const m = sample.moisture;
+          // Interpolate from dry yellow (234, 179, 8) to wet blue (6, 182, 212)
+          const r = Math.round(234 * (1 - m) + 6 * m);
+          const g = Math.round(179 * (1 - m) + 182 * m);
+          const b = Math.round(8 * (1 - m) + 212 * m);
+          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.55)`;
+          ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+        }
+      }
+    }
+    ctx.restore();
+  }
+
+  public renderEcologyFertility(
+    ctx: CanvasRenderingContext2D,
+    bounds: ViewportBounds,
+    chunkManager: ChunkManager
+  ): void {
+    ctx.save();
+    for (const chunk of chunkManager.activeChunks) {
+      for (let ly = 0; ly < 16; ly++) {
+        for (let lx = 0; lx < 16; lx++) {
+          const gx = chunk.cx * 16 + lx;
+          const gy = chunk.cy * 16 + ly;
+          const x = gx * TILE_SIZE;
+          const y = gy * TILE_SIZE;
+          if (x + 32 < bounds.minX || x > bounds.maxX || y + 32 < bounds.minY || y > bounds.maxY)
+            continue;
+
+          const sample = sampleEcology(gx, gy, chunkManager.currentSeed);
+          const f = sample.fertility;
+          // Interpolate from low fertility ochre (217, 119, 6) to lush green (34, 197, 94)
+          const r = Math.round(217 * (1 - f) + 34 * f);
+          const g = Math.round(119 * (1 - f) + 197 * f);
+          const b = Math.round(6 * (1 - f) + 94 * f);
+          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.55)`;
+          ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+        }
+      }
+    }
+    ctx.restore();
+  }
+
+  public renderEcologyDensity(
+    ctx: CanvasRenderingContext2D,
+    bounds: ViewportBounds,
+    chunkManager: ChunkManager
+  ): void {
+    ctx.save();
+    for (const chunk of chunkManager.activeChunks) {
+      for (let ly = 0; ly < 16; ly++) {
+        for (let lx = 0; lx < 16; lx++) {
+          const gx = chunk.cx * 16 + lx;
+          const gy = chunk.cy * 16 + ly;
+          const x = gx * TILE_SIZE;
+          const y = gy * TILE_SIZE;
+          if (x + 32 < bounds.minX || x > bounds.maxX || y + 32 < bounds.minY || y > bounds.maxY)
+            continue;
+
+          const sample = sampleEcology(gx, gy, chunkManager.currentSeed);
+          const d = sample.density;
+          // Interpolate from sparse pale green (187, 247, 208) to deep pine green (20, 83, 45)
+          const r = Math.round(187 * (1 - d) + 20 * d);
+          const g = Math.round(247 * (1 - d) + 83 * d);
+          const b = Math.round(208 * (1 - d) + 45 * d);
+          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.55)`;
+          ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+        }
+      }
+    }
+    ctx.restore();
+  }
+
+  public renderEcologyZone(
+    ctx: CanvasRenderingContext2D,
+    bounds: ViewportBounds,
+    chunkManager: ChunkManager
+  ): void {
+    ctx.save();
+    for (const chunk of chunkManager.activeChunks) {
+      for (let ly = 0; ly < 16; ly++) {
+        for (let lx = 0; lx < 16; lx++) {
+          const gx = chunk.cx * 16 + lx;
+          const gy = chunk.cy * 16 + ly;
+          const x = gx * TILE_SIZE;
+          const y = gy * TILE_SIZE;
+          if (x + 32 < bounds.minX || x > bounds.maxX || y + 32 < bounds.minY || y > bounds.maxY)
+            continue;
+
+          const sample = sampleEcology(gx, gy, chunkManager.currentSeed);
+          const zone = getEcologyZone(sample);
+
+          if (zone === 'coast') ctx.fillStyle = 'rgba(245, 158, 11, 0.55)';
+          else if (zone === 'wetland') ctx.fillStyle = 'rgba(6, 182, 212, 0.55)';
+          else if (zone === 'meadow') ctx.fillStyle = 'rgba(34, 197, 94, 0.5)';
+          else if (zone === 'dryland') ctx.fillStyle = 'rgba(217, 119, 6, 0.55)';
+          else if (zone === 'dense_forest') ctx.fillStyle = 'rgba(21, 128, 61, 0.65)';
+          else if (zone === 'hill_edge') ctx.fillStyle = 'rgba(100, 116, 139, 0.6)';
 
           ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
         }

@@ -19,6 +19,10 @@ export interface RenderOptions {
   showBerries: boolean;
   showHeatmap: boolean;
   showWater: boolean;
+  showEcologyMoisture: boolean;
+  showEcologyFertility: boolean;
+  showEcologyDensity: boolean;
+  showEcologyZone: boolean;
 }
 
 export const DEFAULT_RENDER_OPTIONS: RenderOptions = {
@@ -35,6 +39,10 @@ export const DEFAULT_RENDER_OPTIONS: RenderOptions = {
   showBerries: true,
   showHeatmap: false,
   showWater: true,
+  showEcologyMoisture: false,
+  showEcologyFertility: false,
+  showEcologyDensity: false,
+  showEcologyZone: false,
 };
 
 export const TILE_KEY_BY_ID: Record<number, string> = {

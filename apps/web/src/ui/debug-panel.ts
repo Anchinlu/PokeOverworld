@@ -2,6 +2,7 @@ import { TERRAIN } from '@pokemon/game-data';
 import type { GameRenderer } from '../rendering';
 import type { ChunkManager, BerryBushEntity } from '../maps';
 import { BERRY_STAGES } from '../maps/berry-data';
+import { sampleEcology, getEcologyZone } from '../maps/ecology';
 
 export interface DebugPanelBindings {
   chkHills: HTMLInputElement;
@@ -16,6 +17,10 @@ export interface DebugPanelBindings {
   chkPlants: HTMLInputElement;
   chkBerries: HTMLInputElement;
   chkHeatmap: HTMLInputElement;
+  chkEcologyMoisture: HTMLInputElement;
+  chkEcologyFertility: HTMLInputElement;
+  chkEcologyDensity: HTMLInputElement;
+  chkEcologyZone: HTMLInputElement;
   inputSeed: HTMLInputElement;
   btnRandomSeed: HTMLButtonElement;
   btnRegenerate: HTMLButtonElement;
@@ -26,6 +31,9 @@ export interface DebugPanelBindings {
   insCoords: HTMLElement;
   insTerrain: HTMLElement;
   insTileId: HTMLElement;
+  insEcologyZone: HTMLElement;
+  insEcologyMFD: HTMLElement;
+  insChunkStats: HTMLElement;
   rowBerryInfo: HTMLElement | null;
   insBerryVal: HTMLElement | null;
   lblFps: HTMLElement;
@@ -45,6 +53,10 @@ export function getDebugPanelBindings(): DebugPanelBindings {
     chkPlants: document.querySelector<HTMLInputElement>('#chkPlants')!,
     chkBerries: document.querySelector<HTMLInputElement>('#chkBerries')!,
     chkHeatmap: document.querySelector<HTMLInputElement>('#chkHeatmap')!,
+    chkEcologyMoisture: document.querySelector<HTMLInputElement>('#chkEcologyMoisture')!,
+    chkEcologyFertility: document.querySelector<HTMLInputElement>('#chkEcologyFertility')!,
+    chkEcologyDensity: document.querySelector<HTMLInputElement>('#chkEcologyDensity')!,
+    chkEcologyZone: document.querySelector<HTMLInputElement>('#chkEcologyZone')!,
     inputSeed: document.querySelector<HTMLInputElement>('#inputSeed')!,
     btnRandomSeed: document.querySelector<HTMLButtonElement>('#btnRandomSeed')!,
     btnRegenerate: document.querySelector<HTMLButtonElement>('#btnRegenerate')!,
@@ -55,6 +67,9 @@ export function getDebugPanelBindings(): DebugPanelBindings {
     insCoords: document.querySelector<HTMLElement>('#insCoords')!,
     insTerrain: document.querySelector<HTMLElement>('#insTerrain')!,
     insTileId: document.querySelector<HTMLElement>('#insTileId')!,
+    insEcologyZone: document.querySelector<HTMLElement>('#insEcologyZone')!,
+    insEcologyMFD: document.querySelector<HTMLElement>('#insEcologyMFD')!,
+    insChunkStats: document.querySelector<HTMLElement>('#insChunkStats')!,
     rowBerryInfo: document.querySelector<HTMLElement>('#rowBerryInfo'),
     insBerryVal: document.querySelector<HTMLElement>('#insBerryVal'),
     lblFps: document.querySelector<HTMLElement>('#lblFps')!,
@@ -76,6 +91,10 @@ export function bindRenderOptions(renderer: GameRenderer, bindings: DebugPanelBi
       showPlants: bindings.chkPlants.checked,
       showBerries: bindings.chkBerries.checked,
       showHeatmap: bindings.chkHeatmap.checked,
+      showEcologyMoisture: bindings.chkEcologyMoisture.checked,
+      showEcologyFertility: bindings.chkEcologyFertility.checked,
+      showEcologyDensity: bindings.chkEcologyDensity.checked,
+      showEcologyZone: bindings.chkEcologyZone.checked,
     });
   }
 
@@ -92,6 +111,10 @@ export function bindRenderOptions(renderer: GameRenderer, bindings: DebugPanelBi
     bindings.chkPlants,
     bindings.chkBerries,
     bindings.chkHeatmap,
+    bindings.chkEcologyMoisture,
+    bindings.chkEcologyFertility,
+    bindings.chkEcologyDensity,
+    bindings.chkEcologyZone,
   ].forEach((chk) => chk?.addEventListener('change', sync));
 }
 
@@ -116,6 +139,22 @@ export function updateMouseInspector(
     ? 'Bụi cỏ cao GBA'
     : TERRAIN_NAMES[tile.terrain] || 'Chưa rõ';
   bindings.insTileId.innerText = `#${tile.tileId}`;
+
+  const sample = sampleEcology(gx, gy, chunkManager.currentSeed);
+  const zone = getEcologyZone(sample);
+  bindings.insEcologyZone.innerText = zone;
+  bindings.insEcologyMFD.innerText = `M: ${sample.moisture.toFixed(2)} | F: ${sample.fertility.toFixed(2)} | D: ${sample.density.toFixed(2)}`;
+
+  const cx = Math.floor(gx / 16);
+  const cy = Math.floor(gy / 16);
+  const currentChunk =
+    chunkManager.cache.get(`${cx},${cy}`) ||
+    chunkManager.activeChunks.find((c) => c.cx === cx && c.cy === cy);
+  if (currentChunk) {
+    bindings.insChunkStats.innerText = `🌲 ${currentChunk.trees?.length ?? 0} | 🌸 ${currentChunk.plants?.length ?? 0} | 🫐 ${currentChunk.berryBushes?.length ?? 0} | 🌿 ${currentChunk.tallGrass?.length ?? 0} | 🐾 ${currentChunk.wildPokemon?.length ?? 0}`;
+  } else {
+    bindings.insChunkStats.innerText = '--';
+  }
 
   // Find hovered berry bush
   let hoveredBush: BerryBushEntity | null = null;
