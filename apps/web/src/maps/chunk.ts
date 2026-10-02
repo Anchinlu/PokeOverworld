@@ -100,6 +100,14 @@ export class WorldChunk implements MapChunk {
     );
 
     // 6. Generate Wild Pokémon Spawns
-    this.wildPokemon = generateChunkWildPokemon(cx, cy, seed, this.terrainGrid, this.colliders);
+    this.wildPokemon = generateChunkWildPokemon(
+      cx,
+      cy,
+      seed,
+      this.terrainGrid,
+      this.colliders,
+      this.tallGrass,
+      this.trees
+    );
   }
 }
