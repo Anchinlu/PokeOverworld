@@ -1,4 +1,48 @@
-## Cập nhật lần cuối: 2026-10-02 (Khởi Tạo Git Repository & Đẩy Thành Công Lên GitHub)
+## Cập nhật lần cuối: 2026-10-02 (Triển Khai Hoàn Tất Đặc Tả Phân Bố Sinh Thái Theo Vùng)
+
+### 0.8. Triển Khai Hoàn Tất Đặc Tả Phân Bố Sinh Thái Theo Vùng (Regional Ecological Distribution System):
+- **Tài liệu đặc tả:** [BIOME_DISTRIBUTION_DEV_SPEC.md](file:///e:/Pokemon/docs/plans/BIOME_DISTRIBUTION_DEV_SPEC.md) (Chuyển trạng thái sang **Đã triển khai**).
+- **Mục tiêu hoàn thành:** Thay thế phân bố đồng đều bằng hệ sinh thái phân vùng tự nhiên, liên tục, tất định 100% (deterministic), không tạo đường biên (seams) giữa các chunk, bảo toàn 100% luật địa hình, tile ID và va chạm.
+- **Tiến trình triển khai qua 9 bước nghiêm ngặt (Section 12):**
+  1. **Trường sinh thái duy nhất (Single Ecological Field - Step 1):**
+     - Tạo module thuần dữ liệu [apps/web/src/maps/ecology/](file:///e:/Pokemon/apps/web/src/maps/ecology/).
+     - Sinh 2D value noise tần số thấp $f = 0.055$ nội suy bilinear smoothstep với salt riêng biệt: `ECOLOGY_FERTILITY_SALT (0x2401)`, `ECOLOGY_MOISTURE_SALT (0x2402)`, `ECOLOGY_DENSITY_SALT (0x2403)`.
+     - Phân loại 6 vùng sinh thái (`coast`, `wetland`, `meadow`, `dryland`, `dense_forest`, `hill_edge`).
+  2. **Debug Overlay (Step 2):**
+     - Bổ sung 4 chế độ heatmap trực quan: Độ ẩm (Moisture: vàng $\rightarrow$ xanh lam), Độ phì (Fertility: đất son $\rightarrow$ xanh tươi), Mật độ (Density: xanh nhạt $\rightarrow$ xanh thông đậm), Vùng sinh thái (Zone: phân màu sắc nét).
+     - Giám sát thời gian thực ô trỏ chuột (tọa độ toàn cầu, vùng sinh thái, chỉ số M/F/D) và thống kê chunk (số cây, hoa, berry, cỏ cao, Pokémon hoang dã).
+  3. **Phân bố cây cối (Trees - Step 3):**
+     - Số ứng viên biến thiên theo mật độ sinh thái $2 - 8$ cây/chunk.
+     - Đồng bộ `defaultTree` từ [biomes.json](file:///e:/Pokemon/packages/game-data/biomes.json): ven biển/nước $\rightarrow$ `coastal`, rừng rậm $\rightarrow$ `deep`, đất khô cằn/thu $\rightarrow$ `autumn`, đồng cỏ $\rightarrow$ `vibrant`.
+     - Giữ nguyên 100% kiểm tra chống đè giữa các cây và giữa 9 chunk lân cận.
+  4. **Cụm hoa sinh thái (Flower Clustering - Step 4):**
+     - Chia cụm theo seed góc phần tư, tạo các vạt hoa cùng tông màu thay vì rải ngẫu nhiên từng ô.
+     - Bảng màu ưu tiên: Wetland (trắng, xanh dương), Dryland (đỏ, tím), Dense Forest (xanh dương, tím), Meadow (đỏ, trắng).
+  5. **Chuẩn hóa Berry (Berry Metadata & Rarity/Habitat - Step 5):**
+     - Mở rộng [berry-data.ts](file:///e:/Pokemon/apps/web/src/maps/berry-data.ts) với `rarity` (common, uncommon, rare), `habitat` (wet, dry, neutral) và trọng số spawn.
+     - Lum & Sitrus là quả hiếm (Rare: weight 15 vs Common: 80-100).
+     - Chọn berry theo vùng sinh thái: Wetland ưu tiên quả wet, Dryland ưu tiên quả dry, Meadow/Forest ưu tiên neutral và common.
+  6. **Mật độ cỏ cao (Tall Grass Density - Step 6):**
+     - Điều chế số lượng vạt cỏ và kích thước theo công thức:
+       $$\text{tallGrassDensity} = \text{clamp}(\text{base} + m \cdot 0.4 + f \cdot 0.3 + d \cdot 0.3, 0.0, 1.0)$$
+     - Vùng khô cằn có ít cỏ hoặc quang đãng, vùng rừng ẩm có nhiều vạt cỏ rậm rạp.
+  7. **Ngữ cảnh Encounter & Level tất định (Encounters - Step 7):**
+     - Triển khai `EncounterContext`: `zone`, `onTallGrass`, `nearWater`, `nearTree`, `nearHill`, `timeOfDay`.
+     - Roster chọn trực tiếp từ [encounters.json](file:///e:/Pokemon/packages/game-data/encounters.json): Rừng rậm $\rightarrow$ `VIRIDIAN_FOREST`, vùng đồi/khô $\rightarrow$ `ROUTE_22`, đồng cỏ $\rightarrow$ `ROUTE_1`.
+     - Level sinh tất định bằng `seed + LEVEL_SALT (0x7331)` trong khoảng $[minLevel, maxLevel]$, tái tạo 100% khi nạp lại.
+  8. **Đồng bộ song song Python (Python Parity - Step 8):**
+     - Tạo module [map_generator/ecology.py](file:///e:/Pokemon/map_generator/ecology.py) với cùng salts, frequency và công thức toán học.
+     - Viết mới test suite [tests/test_ecology_parity.py](file:///e:/Pokemon/tests/test_ecology_parity.py) kiểm tra độ khớp số học chính xác đến từng chữ số thập phân giữa Python và TypeScript.
+  9. **Kiểm thử thống kê & CI (Statistical Tests & Production Build - Step 9):**
+     - Viết mới [apps/web/test/ecology-statistical.test.ts](file:///e:/Pokemon/apps/web/test/ecology-statistical.test.ts) kiểm tra 50 seeds $\times$ 81 chunks:
+       - Rừng rậm có mật độ cây cao hơn hẳn vùng khô cằn ($avg \ge 6.0$ vs $\le 4.5$).
+       - Wetland có tỷ lệ hoa xanh/trắng áp đảo hoa đỏ/tím.
+       - Berry hiếm chiếm dưới 10% tổng số quả spawn.
+       - Pokémon phân bố đúng theo ngữ cảnh sinh thái.
+     - Toàn bộ pipeline CI đạt chuẩn:
+       - Vitest: **34/34 tests PASS 100%**.
+       - Python: **12/12 tests PASS 100%**.
+       - Schema validation, ESLint, Prettier, TypeScript typecheck, Vite production build PASS 100%.
 
 ### 0.7. Khởi Tạo Git & Đẩy Thành Công Lên GitHub Remote:
 - **Repository Remote:** `https://github.com/Anchinlu/PokeOverworld.git`

@@ -1,6 +1,6 @@
 # Đặc tả phân bố sinh thái theo vùng
 
-**Trạng thái:** Kế hoạch, chưa triển khai  
+**Trạng thái:** Đã triển khai  
 **Đối tượng:** Frontend game runtime, map generator và QA  
 **Phạm vi:** Cây, hoa, Berry, cỏ cao và Pokémon hoang dã  
 **Không thuộc phạm vi:** Công thức terrain, tile ID, collider rules hiện có và địa hình nền
