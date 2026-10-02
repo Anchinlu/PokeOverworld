@@ -7,6 +7,7 @@ import {
   isHillTile,
   isValidTreePosGlobal,
   isNearWater,
+  isNearCliffEdge,
 } from './terrain-rules';
 import { BERRY_ROSTER } from './berry-data';
 
@@ -191,29 +192,7 @@ export function generateChunkTrees(
   return trees;
 }
 
-/**
- * Checks whether global tile (gx, gy) is on or directly bordering a cliff edge/rim.
- * A cliff tile is an edge if any of its 8 neighbors is NOT a hill.
- * A non-cliff tile is near a cliff edge if any of its 8 neighbors IS a hill.
- */
-export function isNearCliffEdge(gx: number, gy: number, seed: number): boolean {
-  const isSelfHill = isHillTile(gx, gy, seed);
-
-  for (let dy = -1; dy <= 1; dy++) {
-    for (let dx = -1; dx <= 1; dx++) {
-      if (dx === 0 && dy === 0) continue;
-      const isNeighborHill = isHillTile(gx + dx, gy + dy, seed);
-      if (isSelfHill && !isNeighborHill) {
-        return true;
-      }
-      if (!isSelfHill && isNeighborHill) {
-        return true;
-      }
-    }
-  }
-
-  return false;
-}
+export { isNearCliffEdge } from './terrain-rules';
 
 export function generateChunkFoliage(
   cx: number,

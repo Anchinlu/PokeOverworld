@@ -518,3 +518,23 @@ export function isNearWater(
   }
   return false;
 }
+
+export function isNearCliffEdge(gx: number, gy: number, seed: number): boolean {
+  const isSelfHill = isHillTile(gx, gy, seed);
+
+  for (let dy = -1; dy <= 1; dy++) {
+    for (let dx = -1; dx <= 1; dx++) {
+      if (dx === 0 && dy === 0) continue;
+      const isNeighborHill = isHillTile(gx + dx, gy + dy, seed);
+      if (isSelfHill && !isNeighborHill) {
+        return true;
+      }
+      if (!isSelfHill && isNeighborHill) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
