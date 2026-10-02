@@ -61,4 +61,38 @@ describe('Ecological Field & Regional Distribution (Step 1)', () => {
       }
     }
   });
+
+  it('determines tree types according to ecological rules and biomes.json defaults', async () => {
+    const { getTreeTypeForEcology, BIOME_DEFAULT_TREES } = await import(
+      '../src/maps/ecology/ecology-profile'
+    );
+
+    // Near sand or water -> coastal
+    const coastTree = getTreeTypeForEcology(
+      { nearSand: true, nearWater: false, nearHill: false, density: 0.5, moisture: 0.5, fertility: 0.5, elevation: 0 },
+      'coast'
+    );
+    expect(coastTree).toBe(BIOME_DEFAULT_TREES.coastal);
+
+    // Dense forest -> deep
+    const forestTree = getTreeTypeForEcology(
+      { nearSand: false, nearWater: false, nearHill: false, density: 0.85, moisture: 0.5, fertility: 0.5, elevation: 0 },
+      'dense_forest'
+    );
+    expect(forestTree).toBe(BIOME_DEFAULT_TREES.forest);
+
+    // Dryland -> autumn
+    const dryTree = getTreeTypeForEcology(
+      { nearSand: false, nearWater: false, nearHill: false, density: 0.3, moisture: 0.2, fertility: 0.2, elevation: 0 },
+      'dryland'
+    );
+    expect(dryTree).toBe(BIOME_DEFAULT_TREES.autumn);
+
+    // Neutral meadow -> vibrant
+    const meadowTree = getTreeTypeForEcology(
+      { nearSand: false, nearWater: false, nearHill: false, density: 0.5, moisture: 0.5, fertility: 0.5, elevation: 0 },
+      'meadow'
+    );
+    expect(meadowTree).toBe(BIOME_DEFAULT_TREES.neutral);
+  });
 });

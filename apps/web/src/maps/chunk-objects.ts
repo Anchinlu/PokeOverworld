@@ -10,6 +10,13 @@ import {
   isNearCliffEdge,
 } from './terrain-rules';
 import { BERRY_ROSTER } from './berry-data';
+import {
+  sampleEcology,
+  getEcologyZone,
+  getTreeTypeForEcology,
+  TREE_MIN_CANDIDATES,
+  TREE_MAX_CANDIDATES,
+} from './ecology';
 
 export interface TreeEntity {
   gx: number;
@@ -96,7 +103,12 @@ export function getChunkTreeLocations(
 
   const startGX = cx * CHUNK_SIZE;
   const startGY = cy * CHUNK_SIZE;
-  const numCandidates = 6;
+  const centerGX = startGX + 8;
+  const centerGY = startGY + 8;
+  const chunkEcology = sampleEcology(centerGX, centerGY, seed);
+  const numCandidates = Math.round(
+    TREE_MIN_CANDIDATES + chunkEcology.density * (TREE_MAX_CANDIDATES - TREE_MIN_CANDIDATES)
+  );
   const list: Array<{ x: number; y: number }> = [];
 
   for (let i = 0; i < numCandidates; i++) {
@@ -131,7 +143,12 @@ export function generateChunkTrees(
 ): TreeEntity[] {
   const startGX = cx * CHUNK_SIZE;
   const startGY = cy * CHUNK_SIZE;
-  const numCandidates = 6;
+  const centerGX = startGX + 8;
+  const centerGY = startGY + 8;
+  const chunkEcology = sampleEcology(centerGX, centerGY, seed);
+  const numCandidates = Math.round(
+    TREE_MIN_CANDIDATES + chunkEcology.density * (TREE_MAX_CANDIDATES - TREE_MIN_CANDIDATES)
+  );
   const trees: TreeEntity[] = [];
 
   for (let i = 0; i < numCandidates; i++) {
@@ -167,22 +184,9 @@ export function generateChunkTrees(
       }
       if (overlapsNeighbor) continue;
 
-      const rootR = Math.floor((ty + 112) / TILE_SIZE);
-      const rootC1 = Math.floor((tx + 20) / TILE_SIZE);
-
-      let nearBeach = false;
-      for (let dr = -2; dr <= 2; dr++) {
-        for (let dc = -2; dc <= 2; dc++) {
-          if (isSandTile(rootC1 + dc, rootR + dr, seed)) {
-            nearBeach = true;
-            break;
-          }
-        }
-      }
-
-      let tType = 'vibrant';
-      if (nearBeach) tType = 'coastal';
-      else if (randX < 0.45) tType = 'deep';
+      const sample = sampleEcology(gx, gy, seed);
+      const zone = getEcologyZone(sample);
+      const tType = getTreeTypeForEcology(sample, zone);
 
       trees.push({ gx, gy, x: tx, y: ty, type: tType });
       colliders.push({ x: tx + 14, y: ty + 90, w: 36, h: 26, type: 'tree' });
