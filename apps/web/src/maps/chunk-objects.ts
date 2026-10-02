@@ -9,7 +9,7 @@ import {
   isNearWater,
   isNearCliffEdge,
 } from './terrain-rules';
-import { BERRY_ROSTER } from './berry-data';
+import { pickBerryForEcology } from './berry-data';
 import {
   sampleEcology,
   getEcologyZone,
@@ -619,9 +619,10 @@ export function generateChunkBerryBushes(
         );
         if (collidesWithCollider) continue;
 
-        const bTypeIdx =
-          Math.floor(seededHash(bgx, bgy, seed + 123) * BERRY_ROSTER.length) % BERRY_ROSTER.length;
-        const berry = BERRY_ROSTER[bTypeIdx];
+        const sample = sampleEcology(bgx, bgy, seed);
+        const zone = getEcologyZone(sample);
+        const roll = seededHash(bgx, bgy, seed + 123);
+        const berry = pickBerryForEcology(zone, roll);
         const timeOffsetSec = seededHash(bgx, bgy, seed + 888) * 60;
         const phase = seededHash(bgx, bgy, 777) * 4;
 

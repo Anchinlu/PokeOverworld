@@ -115,4 +115,43 @@ describe('Ecological Field & Regional Distribution (Step 1)', () => {
     // At least one of primary flowers must be present
     expect(wetlandFlowers.has('flower_white') || wetlandFlowers.has('flower_blue')).toBe(true);
   });
+
+  it('selects berries adhering to rarity weights and habitat preferences', async () => {
+    const { pickBerryForEcology, BERRY_ROSTER } = await import('../src/maps/berry-data');
+
+    // All berries must have valid spawn metadata
+    for (const b of BERRY_ROSTER) {
+      expect(b.spawnProfile).toBeDefined();
+      expect(b.spawnProfile.weight).toBeGreaterThan(0);
+      expect(['common', 'uncommon', 'rare']).toContain(b.spawnProfile.rarity);
+      expect(['wet', 'dry', 'neutral']).toContain(b.spawnProfile.habitat);
+    }
+
+    // Over 1000 simulated rolls:
+    let rareCount = 0;
+    let wetCountInWetland = 0;
+    let dryCountInDryland = 0;
+    const trials = 1000;
+
+    for (let i = 0; i < trials; i++) {
+      const roll = i / trials;
+      const bMeadow = pickBerryForEcology('meadow', roll);
+      if (bMeadow.spawnProfile.rarity === 'rare') rareCount++;
+
+      const bWet = pickBerryForEcology('wetland', roll);
+      if (bWet.spawnProfile.habitat === 'wet') wetCountInWetland++;
+
+      const bDry = pickBerryForEcology('dryland', roll);
+      if (bDry.spawnProfile.habitat === 'dry') dryCountInDryland++;
+    }
+
+    // Rare berries should be < 10% of total spawns
+    expect(rareCount / trials).toBeLessThan(0.1);
+
+    // Wet berries in wetland should exceed 50%
+    expect(wetCountInWetland / trials).toBeGreaterThan(0.5);
+
+    // Dry berries in dryland should exceed 50%
+    expect(dryCountInDryland / trials).toBeGreaterThan(0.5);
+  });
 });
