@@ -1,6 +1,14 @@
 import type { TerrainId } from '@pokemon/shared-types';
 import { CHUNK_SIZE, TERRAIN, TILE_IDS } from '@pokemon/game-data';
-import { isSandTile, isRoadTile, isHillTile, isBridgeTile, isWaterTile } from './terrain-rules';
+import {
+  isSandTile,
+  isOceanTile,
+  getOceanTileId,
+  isRoadTile,
+  isHillTile,
+  isBridgeTile,
+  isWaterTile,
+} from './terrain-rules';
 import {
   getSandTileKey,
   getRoadTileKey,
@@ -46,6 +54,9 @@ export function generateChunkTerrain(
       } else if (isSandTile(gx, gy, seed, hasBeach)) {
         terrain = TERRAIN.BEACH_SAND;
         tileId = getSandTileKey(gx, gy, seed, hasBeach).tileId;
+      } else if (isOceanTile(gx, gy, seed, hasBeach)) {
+        terrain = TERRAIN.OCEAN_WATER;
+        tileId = getOceanTileId(gx, gy, seed, hasBeach);
       } else if (isBridgeTile(gx, gy, seed, hasRoad)) {
         terrain = TERRAIN.ROAD;
         tileId = TILE_IDS.bridge_wood_v;

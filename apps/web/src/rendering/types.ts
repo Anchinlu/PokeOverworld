@@ -112,4 +112,11 @@ export const TILE_KEY_BY_ID: Record<number, string> = {
   [TILE_IDS.water_in_br]: 'water_in_br',
   [TILE_IDS.bridge_wood_h]: 'bridge_wood_h',
   [TILE_IDS.bridge_wood_v]: 'bridge_wood_v',
+  // Ocean & Shoreline
+  [TILE_IDS.ocean_water]: 'ocean_anim_strip',
+  [TILE_IDS.shore_v]: 'shore_anim_vertical',
+  [TILE_IDS.shore_corner_in]: 'shore_anim_corner_in',
+  [TILE_IDS.shore_corner_out]: 'shore_anim_corner_out',
+  [TILE_IDS.shore_corner_in_flip]: 'shore_anim_corner_in_flip',
+  [TILE_IDS.shore_corner_out_flip]: 'shore_anim_corner_out_flip',
 };

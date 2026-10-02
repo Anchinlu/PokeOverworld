@@ -25,15 +25,50 @@ def seeded_hash(x: int, y: int, seed: int) -> float:
     return ((n ^ (n >> 16)) & 0xFFFFFFFF) / 4294967296.0
 
 
+BEACH_WIDTH = 5
+
+
 def get_coast_x(gy: int, seed: int) -> int:
     """Computes the continuous Eastern coastline boundary column for row gy."""
     return int(round(18 + math.sin(gy * 0.08 + seed * 0.1) * 6 + math.cos(gy * 0.04) * 3))
 
 
+def get_ocean_boundary(gy: int, seed: int) -> int:
+    return get_coast_x(gy, seed) + BEACH_WIDTH
+
+
 def is_sand_tile(gx: int, gy: int, seed: int, has_beach: bool = True) -> bool:
     if not has_beach:
         return False
-    return gx >= get_coast_x(gy, seed)
+    coast = get_coast_x(gy, seed)
+    return coast <= gx < coast + BEACH_WIDTH
+
+
+def is_ocean_tile(gx: int, gy: int, seed: int, has_beach: bool = True) -> bool:
+    if not has_beach:
+        return False
+    return gx >= get_coast_x(gy, seed) + BEACH_WIDTH
+
+
+def get_ocean_tile_id(gx: int, gy: int, seed: int, has_beach: bool = True) -> int:
+    if not has_beach:
+        return TILE_IDS["grass_01"]
+    ocean_boundary = get_coast_x(gy, seed) + BEACH_WIDTH
+    if gx > ocean_boundary:
+        return TILE_IDS["ocean_water"]
+    prev_ocean = get_coast_x(gy - 1, seed) + BEACH_WIDTH
+    next_ocean = get_coast_x(gy + 1, seed) + BEACH_WIDTH
+    if prev_ocean == ocean_boundary and next_ocean == ocean_boundary:
+        return TILE_IDS["shore_v"]
+    if next_ocean > ocean_boundary:
+        return TILE_IDS["shore_corner_in"]
+    if next_ocean < ocean_boundary:
+        return TILE_IDS["shore_corner_out"]
+    if prev_ocean < ocean_boundary:
+        return TILE_IDS["shore_corner_in_flip"]
+    if prev_ocean > ocean_boundary:
+        return TILE_IDS["shore_corner_out_flip"]
+    return TILE_IDS["shore_v"]
 
 
 def get_segment_col(k: int, seed: int) -> int:
@@ -103,14 +138,17 @@ def is_road_tile(gx: int, gy: int, seed: int, has_road: bool = True, has_beach: 
 
 
 def get_sand_autotile_key(gx: int, gy: int, seed: int, has_beach: bool = True) -> Tuple[str, int]:
-    n  = is_sand_tile(gx, gy - 1, seed, has_beach)
-    s  = is_sand_tile(gx, gy + 1, seed, has_beach)
-    w  = is_sand_tile(gx - 1, gy, seed, has_beach)
-    e  = is_sand_tile(gx + 1, gy, seed, has_beach)
-    nw = is_sand_tile(gx - 1, gy - 1, seed, has_beach)
-    ne = is_sand_tile(gx + 1, gy - 1, seed, has_beach)
-    sw = is_sand_tile(gx - 1, gy + 1, seed, has_beach)
-    se = is_sand_tile(gx + 1, gy + 1, seed, has_beach)
+    def is_sand_or_ocean(x: int, y: int) -> bool:
+        return is_sand_tile(x, y, seed, has_beach) or is_ocean_tile(x, y, seed, has_beach)
+
+    n  = is_sand_or_ocean(gx, gy - 1)
+    s  = is_sand_or_ocean(gx, gy + 1)
+    w  = is_sand_or_ocean(gx - 1, gy)
+    e  = is_sand_or_ocean(gx + 1, gy)
+    nw = is_sand_or_ocean(gx - 1, gy - 1)
+    ne = is_sand_or_ocean(gx + 1, gy - 1)
+    sw = is_sand_or_ocean(gx - 1, gy + 1)
+    se = is_sand_or_ocean(gx + 1, gy + 1)
 
     key = "pure"
     if not n and not w:   key = "tl"
@@ -335,7 +373,7 @@ def is_water_tile(gx: int, gy: int, seed: int, has_water: bool = True, has_road:
         return False
     if is_hill_tile(gx, gy, seed, has_hills, has_road, has_beach):
         return False
-    return is_river_tile(gx, gy, seed) or is_lake_tile(gx, gy, seed, has_road, has_beach, has_hills)
+    return is_ocean_tile(gx, gy, seed, has_beach) or is_river_tile(gx, gy, seed) or is_lake_tile(gx, gy, seed, has_road, has_beach, has_hills)
 
 
 def is_water_or_bridge(gx: int, gy: int, seed: int, has_water: bool = True, has_road: bool = True, has_beach: bool = True, has_hills: bool = True) -> bool:
@@ -345,7 +383,7 @@ def is_water_or_bridge(gx: int, gy: int, seed: int, has_water: bool = True, has_
         return False
     if is_hill_tile(gx, gy, seed, has_hills, has_road, has_beach):
         return False
-    return is_bridge_tile(gx, gy, seed, has_road) or is_river_tile(gx, gy, seed) or is_lake_tile(gx, gy, seed, has_road, has_beach, has_hills)
+    return is_ocean_tile(gx, gy, seed, has_beach) or is_bridge_tile(gx, gy, seed, has_road) or is_river_tile(gx, gy, seed) or is_lake_tile(gx, gy, seed, has_road, has_beach, has_hills)
 
 
 def is_near_water(gx: int, gy: int, seed: int, has_water: bool = True, has_road: bool = True, has_beach: bool = True, has_hills: bool = True, dist: int = 1) -> bool:
@@ -624,6 +662,19 @@ class MapChunk:
                     sand_key, sand_tid = get_sand_autotile_key(gx, gy, self.seed, self.has_beach)
                     self.ground_img.paste(self.tile_mgr.sand_tiles[sand_key], (px, py))
                     tid = sand_tid
+
+                # Check Ocean
+                elif is_ocean_tile(gx, gy, self.seed, self.has_beach):
+                    terrain = TERRAIN_OCEAN
+                    tid = get_ocean_tile_id(gx, gy, self.seed, self.has_beach)
+                    if tid == TILE_IDS["ocean_water"]:
+                        if hasattr(self.tile_mgr, "ocean_anim_strip") and self.tile_mgr.ocean_anim_strip:
+                            wf = self.tile_mgr.ocean_anim_strip.crop((0, 0, TILE_SIZE, TILE_SIZE))
+                            self.ground_img.paste(wf, (px, py))
+                    else:
+                        shore_img = getattr(self.tile_mgr, "shore_tiles", {}).get(tid)
+                        if shore_img:
+                            self.ground_img.paste(shore_img, (px, py))
 
                 # Check Bridge
                 elif is_bridge_tile(gx, gy, self.seed, self.has_road):

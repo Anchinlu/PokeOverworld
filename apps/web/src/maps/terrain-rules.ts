@@ -1,17 +1,59 @@
 import { seededHash } from './noise';
+import { TILE_IDS } from '@pokemon/game-data';
 
 /**
  * Continuous World Generation Mathematics
  * Computes coastlines, highway curvature, hill plateau shapes, and macro clearance.
  */
 
+export const BEACH_WIDTH = 5;
+
 export function getCoastBoundary(gy: number, seed: number): number {
   return Math.round(18 + Math.sin(gy * 0.08 + (seed % 1000) * 0.1) * 6 + Math.cos(gy * 0.04) * 3);
 }
 
+export function getOceanBoundary(gy: number, seed: number): number {
+  return getCoastBoundary(gy, seed) + BEACH_WIDTH;
+}
+
 export function isSandTile(gx: number, gy: number, seed: number, hasBeach = true): boolean {
   if (!hasBeach) return false;
-  return gx >= getCoastBoundary(gy, seed);
+  const coast = getCoastBoundary(gy, seed);
+  return gx >= coast && gx < coast + BEACH_WIDTH;
+}
+
+export function isOceanTile(gx: number, gy: number, seed: number, hasBeach = true): boolean {
+  if (!hasBeach) return false;
+  return gx >= getCoastBoundary(gy, seed) + BEACH_WIDTH;
+}
+
+export function getOceanTileId(gx: number, gy: number, seed: number, hasBeach = true): number {
+  if (!hasBeach) return TILE_IDS.grass_01;
+  const oceanBoundary = getCoastBoundary(gy, seed) + BEACH_WIDTH;
+  if (gx > oceanBoundary) {
+    return TILE_IDS.ocean_water;
+  }
+
+  // gx === oceanBoundary: shoreline wave animation
+  const prevOcean = getCoastBoundary(gy - 1, seed) + BEACH_WIDTH;
+  const nextOcean = getCoastBoundary(gy + 1, seed) + BEACH_WIDTH;
+
+  if (prevOcean === oceanBoundary && nextOcean === oceanBoundary) {
+    return TILE_IDS.shore_v;
+  }
+  if (nextOcean > oceanBoundary) {
+    return TILE_IDS.shore_corner_in;
+  }
+  if (nextOcean < oceanBoundary) {
+    return TILE_IDS.shore_corner_out;
+  }
+  if (prevOcean < oceanBoundary) {
+    return TILE_IDS.shore_corner_in_flip;
+  }
+  if (prevOcean > oceanBoundary) {
+    return TILE_IDS.shore_corner_out_flip;
+  }
+  return TILE_IDS.shore_v;
 }
 
 export function getSegmentCol(k: number, seed: number): number {
@@ -480,7 +522,11 @@ export function isWaterTile(
   if (isBridgeTile(gx, gy, seed, hasRoad)) return false;
   if (isSandTile(gx, gy, seed, hasBeach)) return false;
   if (isHillTile(gx, gy, seed, hasHills, hasRoad, hasBeach)) return false;
-  return isRiverTile(gx, gy, seed) || isLakeTile(gx, gy, seed, hasRoad, hasBeach, hasHills);
+  return (
+    isOceanTile(gx, gy, seed, hasBeach) ||
+    isRiverTile(gx, gy, seed) ||
+    isLakeTile(gx, gy, seed, hasRoad, hasBeach, hasHills)
+  );
 }
 
 export function isWaterOrBridge(
@@ -496,6 +542,7 @@ export function isWaterOrBridge(
   if (isSandTile(gx, gy, seed, hasBeach)) return false;
   if (isHillTile(gx, gy, seed, hasHills, hasRoad, hasBeach)) return false;
   return (
+    isOceanTile(gx, gy, seed, hasBeach) ||
     isBridgeTile(gx, gy, seed, hasRoad) ||
     isRiverTile(gx, gy, seed) ||
     isLakeTile(gx, gy, seed, hasRoad, hasBeach, hasHills)

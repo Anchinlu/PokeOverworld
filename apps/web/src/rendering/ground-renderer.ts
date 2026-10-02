@@ -68,6 +68,7 @@ export class GroundRenderer {
         const isRoad = tileId >= 200 && tileId < 300;
         const isCliff = tileId >= 400 && tileId < 500;
         const isWaterOrBridge = tileId >= 700 && tileId < 730;
+        const isOceanOrShore = tileId >= 730 && tileId <= 735;
 
         if (isWaterOrBridge && options.showWater) {
           // Clear ground grass so live animated caustic water waves ripple underneath
@@ -81,6 +82,9 @@ export class GroundRenderer {
               }
             }
           }
+        } else if (isOceanOrShore && options.showBeach && options.showWater) {
+          // Clear ground grass so live animated ocean water and crashing waves ripple in real-time
+          gCtx.clearRect(px, py, TILE_SIZE, TILE_SIZE);
         } else if (
           (isSand && options.showBeach) ||
           (isRoad && options.showRoad) ||
@@ -216,9 +220,14 @@ export class GroundRenderer {
     if (!options.showWater) return;
 
     const imgWater = this.loader.getImage('water_anim_strip');
-    if (!imgWater || !imgWater.complete) return;
+    const imgOcean = this.loader.getImage('ocean_anim_strip');
+    const imgShoreV = this.loader.getImage('shore_anim_vertical');
+    const imgShoreCin = this.loader.getImage('shore_anim_corner_in');
+    const imgShoreCout = this.loader.getImage('shore_anim_corner_out');
+    const imgShoreCinFlip = this.loader.getImage('shore_anim_corner_in_flip');
+    const imgShoreCoutFlip = this.loader.getImage('shore_anim_corner_out_flip');
 
-    // 8-frame animated caustic water surface (gentle 280ms per frame cycle)
+    // 8-frame animated caustic water & shore wave cycle (280ms per frame)
     const fIdx = Math.floor((now / 280) % 8);
     const sx = fIdx * TILE_SIZE;
 
@@ -229,7 +238,10 @@ export class GroundRenderer {
       for (let ly = 0; ly < 16; ly++) {
         for (let lx = 0; lx < 16; lx++) {
           const tileId = chunk.tileIdGrid[ly][lx];
+
+          // 1. Inland river / lake water (700..729)
           if (tileId >= 700 && tileId < 730) {
+            if (!imgWater || !imgWater.complete) continue;
             const px = (startGX + lx) * TILE_SIZE;
             const py = (startGY + ly) * TILE_SIZE;
 
@@ -243,6 +255,51 @@ export class GroundRenderer {
             }
 
             ctx.drawImage(imgWater, sx, 0, TILE_SIZE, TILE_SIZE, px, py, TILE_SIZE, TILE_SIZE);
+          }
+          // 2. Open ocean water (730)
+          else if (tileId === TILE_IDS.ocean_water && options.showBeach) {
+            if (!imgOcean || !imgOcean.complete) continue;
+            const px = (startGX + lx) * TILE_SIZE;
+            const py = (startGY + ly) * TILE_SIZE;
+
+            if (
+              px + TILE_SIZE < bounds.minX ||
+              px > bounds.maxX ||
+              py + TILE_SIZE < bounds.minY ||
+              py > bounds.maxY
+            ) {
+              continue;
+            }
+
+            ctx.drawImage(imgOcean, sx, 0, TILE_SIZE, TILE_SIZE, px, py, TILE_SIZE, TILE_SIZE);
+          }
+          // 3. Shoreline crashing waves (731..735)
+          else if (tileId >= 731 && tileId <= 735 && options.showBeach) {
+            let shoreImg = imgShoreV;
+            if (tileId === TILE_IDS.shore_corner_in) {
+              shoreImg = imgShoreCin;
+            } else if (tileId === TILE_IDS.shore_corner_out) {
+              shoreImg = imgShoreCout;
+            } else if (tileId === TILE_IDS.shore_corner_in_flip) {
+              shoreImg = imgShoreCinFlip ?? imgShoreCin;
+            } else if (tileId === TILE_IDS.shore_corner_out_flip) {
+              shoreImg = imgShoreCoutFlip ?? imgShoreCout;
+            }
+
+            if (!shoreImg || !shoreImg.complete) continue;
+            const px = (startGX + lx) * TILE_SIZE;
+            const py = (startGY + ly) * TILE_SIZE;
+
+            if (
+              px + TILE_SIZE < bounds.minX ||
+              px > bounds.maxX ||
+              py + TILE_SIZE < bounds.minY ||
+              py > bounds.maxY
+            ) {
+              continue;
+            }
+
+            ctx.drawImage(shoreImg, sx, 0, TILE_SIZE, TILE_SIZE, px, py, TILE_SIZE, TILE_SIZE);
           }
         }
       }

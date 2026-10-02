@@ -1,4 +1,37 @@
-## Cập nhật lần cuối: 2026-10-02 (Triển Khai Hoàn Tất Đặc Tả Phân Bố Sinh Thái Theo Vùng)
+## Cập nhật lần cuối: 2026-10-02 (Triển Khai Hoàn Tất Hoạt Ảnh Sóng Biển & Đại Dương Vô Tận)
+
+### 0.9. Triển Khai Hoàn Tất Hoạt Ảnh Sóng Biển & Đại Dương Vô Tận (Ocean & Shoreline Wave Animation):
+- **Yêu cầu người dùng:** Tích hợp 4 spritesheet hoạt ảnh nước biển (mép sóng vỗ bờ, mặt nước đại dương, các góc khúc quanh mép biển) với bố cục bãi cát 5 ô rồi tới mép biển có sóng dạt bờ, phía Đông ngoài khơi là đại dương vô tận.
+- **Tài nguyên Sprite & Hoạt ảnh:**
+  - `shore_anim_vertical.png` (256x32, 8 khung hình 32x32): Dải sóng biển cuộn dạt vào bờ cát bên trái và rút êm dịu sang phải.
+  - `ocean_anim_strip.png` (256x32, 8 khung hình 32x32): Mặt nước đại dương xanh thẫm với gợn sóng caustics tự nhiên.
+  - `shore_anim_corner_in.png` & `shore_anim_corner_out.png` (256x32, 8 khung hình): Khúc lượn bờ biển khi đường bờ chuyển hướng.
+  - `shore_anim_corner_in_flip.png` & `shore_anim_corner_out_flip.png`: Các góc đối xứng lượn bờ biển.
+  - Đăng ký đầy đủ vào [apps/web/public/assets/manifest.json](file:///e:/Pokemon/apps/web/public/assets/manifest.json).
+- **Quy tắc địa hình & Toán học liên tục (Continuous World Generation):**
+  - Bãi cát rộng cố định 5 ô: `BEACH_WIDTH = 5`.
+  - Mép biển tại `oceanBoundary = getCoastBoundary(gy, seed) + BEACH_WIDTH`.
+  - Bãi cát biển (`TERRAIN.BEACH_SAND`): `coast <= gx < oceanBoundary`.
+  - Đại dương vô tận (`TERRAIN.OCEAN_WATER`): `gx >= oceanBoundary`.
+  - Autotile cát: Mặt tiếp giáp giữa bãi cát và đại dương dùng `isSandOrOcean` để cát mép biển giữ nguyên chất cát vàng tinh khiết (`sand_pure`), không bị viền cỏ xanh xen lẫn.
+- **Hệ thống Renderer & Hoạt ảnh thời gian thực (Real-time Water Renderer):**
+  - [GroundRenderer](file:///e:/Pokemon/apps/web/src/rendering/ground-renderer.ts):
+    - Khử nền cỏ tĩnh tại vùng nước biển và mép sóng trên canvas tĩnh của chunk.
+    - Vẽ hoạt ảnh động tại `renderWaterTiles()` với nhịp 280ms/khung hình đồng bộ hoàn hảo với sông hồ.
+    - Mép biển (`gx === oceanBoundary`) vẽ dải sóng vỗ bờ dạt cát `shore_anim_vertical` / góc lượn.
+    - Đại dương ngoài khơi (`gx > oceanBoundary`) vẽ mặt nước caustics `ocean_anim_strip`.
+- **Luật va chạm (Collision):**
+  - Bãi cát biển (`TERRAIN.BEACH_SAND`) hoàn toàn đi bộ được (walkable).
+  - Mép sóng và đại dương (`TERRAIN.OCEAN_WATER`) có collider cản lại, chặn nhân vật đi bộ xuống biển theo đúng chuẩn game Pokémon GBA gốc.
+- **Đồng bộ song song Python & Viewer:**
+  - [map_generator/tiles.py](file:///e:/Pokemon/map_generator/tiles.py), [map_generator/chunk.py](file:///e:/Pokemon/map_generator/chunk.py) và [map_viewer.html](file:///e:/Pokemon/map_viewer.html) đều được cập nhật đồng bộ các tile ID 730..735 và công thức bãi cát + đại dương.
+- **Kiểm thử & CI:**
+  - Viết mới test suite [apps/web/test/ocean-beach.test.ts](file:///e:/Pokemon/apps/web/test/ocean-beach.test.ts) kiểm tra độ rộng bãi cát, vị trí mép sóng, tile ID và va chạm.
+  - Toàn bộ pipeline `npm run ci`:
+    - Schema validation: PASS (75 tile IDs & 100 assets match).
+    - ESLint, Prettier, TypeScript typecheck: PASS 100%.
+    - Vitest: **38/38 tests PASS 100%**.
+    - Vite production build: PASS 100%.
 
 ### 0.8. Triển Khai Hoàn Tất Đặc Tả Phân Bố Sinh Thái Theo Vùng (Regional Ecological Distribution System):
 - **Tài liệu đặc tả:** [BIOME_DISTRIBUTION_DEV_SPEC.md](file:///e:/Pokemon/docs/plans/BIOME_DISTRIBUTION_DEV_SPEC.md) (Chuyển trạng thái sang **Đã triển khai**).

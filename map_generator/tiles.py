@@ -32,7 +32,9 @@ TILE_IDS = {
     "water_pure": 700, "water_top": 701, "water_bot": 702, "water_left": 703, "water_right": 704,
     "water_tl": 705, "water_tr": 706, "water_bl": 707, "water_br": 708,
     "water_in_tl": 709, "water_in_tr": 710, "water_in_bl": 711, "water_in_br": 712,
-    "bridge_wood_h": 720, "bridge_wood_v": 721
+    "bridge_wood_h": 720, "bridge_wood_v": 721,
+    "ocean_water": 730, "shore_v": 731, "shore_corner_in": 732,
+    "shore_corner_out": 733, "shore_corner_in_flip": 734, "shore_corner_out_flip": 735
 }
 
 
@@ -177,4 +179,23 @@ class TileManager:
         strip_path = os.path.join(w_dir, "water_anim_strip.png")
         if os.path.exists(strip_path):
             self.water_anim_strip = Image.open(strip_path).convert("RGBA")
+
+        # 11. Ocean & Shore animations
+        assets_dir = os.path.join(self.base_dir, "apps", "web", "public", "assets")
+        self.ocean_anim_strip = None
+        ocean_path = os.path.join(assets_dir, "ocean_anim_strip.png")
+        if os.path.exists(ocean_path):
+            self.ocean_anim_strip = Image.open(ocean_path).convert("RGBA")
+
+        self.shore_tiles = {}
+        for s_key, tid in [
+            ("shore_anim_vertical", TILE_IDS["shore_v"]),
+            ("shore_anim_corner_in", TILE_IDS["shore_corner_in"]),
+            ("shore_anim_corner_out", TILE_IDS["shore_corner_out"]),
+            ("shore_anim_corner_in_flip", TILE_IDS["shore_corner_in_flip"]),
+            ("shore_anim_corner_out_flip", TILE_IDS["shore_corner_out_flip"]),
+        ]:
+            sp = os.path.join(assets_dir, f"{s_key}.png")
+            if os.path.exists(sp):
+                self.shore_tiles[tid] = Image.open(sp).convert("RGBA").crop((0, 0, self.ts, self.ts))
 

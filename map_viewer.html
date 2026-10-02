@@ -636,13 +636,21 @@
     }
 
     // --- CONTINUOUS WORLD GENERATION MATHEMATICS ---
+    const BEACH_WIDTH = 5;
+
     function getCoastBoundary(gy, seed) {
       return Math.round(18 + Math.sin(gy * 0.08 + (seed % 1000) * 0.1) * 6 + Math.cos(gy * 0.04) * 3);
     }
 
     function isSandTile(gx, gy, seed) {
       if (!chkBeach || !chkBeach.checked) return false;
-      return gx >= getCoastBoundary(gy, seed);
+      const coast = getCoastBoundary(gy, seed);
+      return gx >= coast && gx < coast + BEACH_WIDTH;
+    }
+
+    function isOceanTile(gx, gy, seed) {
+      if (!chkBeach || !chkBeach.checked) return false;
+      return gx >= getCoastBoundary(gy, seed) + BEACH_WIDTH;
     }
 
     function getSegmentCol(k, seed) {
@@ -708,14 +716,15 @@
     }
 
     function getSandTileKey(gx, gy, seed) {
-      const n  = isSandTile(gx, gy - 1, seed);
-      const s  = isSandTile(gx, gy + 1, seed);
-      const w  = isSandTile(gx - 1, gy, seed);
-      const e  = isSandTile(gx + 1, gy, seed);
-      const nw = isSandTile(gx - 1, gy - 1, seed);
-      const ne = isSandTile(gx + 1, gy - 1, seed);
-      const sw = isSandTile(gx - 1, gy + 1, seed);
-      const se = isSandTile(gx + 1, gy + 1, seed);
+      const isSandOrOcean = (x, y) => isSandTile(x, y, seed) || isOceanTile(x, y, seed);
+      const n  = isSandOrOcean(gx, gy - 1);
+      const s  = isSandOrOcean(gx, gy + 1);
+      const w  = isSandOrOcean(gx - 1, gy);
+      const e  = isSandOrOcean(gx + 1, gy);
+      const nw = isSandOrOcean(gx - 1, gy - 1);
+      const ne = isSandOrOcean(gx + 1, gy - 1);
+      const sw = isSandOrOcean(gx - 1, gy + 1);
+      const se = isSandOrOcean(gx + 1, gy + 1);
 
       let key = 'pure', tid = 300;
       if (!n && !w) { key = 'tl'; tid = 305; }
@@ -1011,6 +1020,14 @@
               const sandTile = getSandTileKey(gx, gy, this.seed);
               this.groundCtx.drawImage(loadedImages[`sand_${sandTile.key}`], px, py);
               tid = sandTile.tid;
+            }
+            // Đại dương / Mép biển
+            else if (isOceanTile(gx, gy, this.seed)) {
+              terrain = TERRAIN.OCEAN_WATER;
+              tid = 730;
+              if (loadedImages['ocean_anim_strip']) {
+                this.groundCtx.drawImage(loadedImages['ocean_anim_strip'], 0, 0, ts, ts, px, py, ts, ts);
+              }
             }
             // Đường mòn đất
             else if (isRoadTile(gx, gy, this.seed)) {

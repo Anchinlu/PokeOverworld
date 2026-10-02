@@ -1,5 +1,5 @@
 import { TILE_IDS } from '@pokemon/game-data';
-import { isSandTile, isRoadTile, isHillTile, isWaterOrBridge } from './terrain-rules';
+import { isSandTile, isOceanTile, isRoadTile, isHillTile, isWaterOrBridge } from './terrain-rules';
 import { seededHash } from './noise';
 
 export interface AutotileResult {
@@ -16,14 +16,17 @@ export function getSandTileKey(
   seed: number,
   hasBeach = true
 ): AutotileResult {
-  const n = isSandTile(gx, gy - 1, seed, hasBeach);
-  const s = isSandTile(gx, gy + 1, seed, hasBeach);
-  const w = isSandTile(gx - 1, gy, seed, hasBeach);
-  const e = isSandTile(gx + 1, gy, seed, hasBeach);
-  const nw = isSandTile(gx - 1, gy - 1, seed, hasBeach);
-  const ne = isSandTile(gx + 1, gy - 1, seed, hasBeach);
-  const sw = isSandTile(gx - 1, gy + 1, seed, hasBeach);
-  const se = isSandTile(gx + 1, gy + 1, seed, hasBeach);
+  const isSandOrOcean = (x: number, y: number) =>
+    isSandTile(x, y, seed, hasBeach) || isOceanTile(x, y, seed, hasBeach);
+
+  const n = isSandOrOcean(gx, gy - 1);
+  const s = isSandOrOcean(gx, gy + 1);
+  const w = isSandOrOcean(gx - 1, gy);
+  const e = isSandOrOcean(gx + 1, gy);
+  const nw = isSandOrOcean(gx - 1, gy - 1);
+  const ne = isSandOrOcean(gx + 1, gy - 1);
+  const sw = isSandOrOcean(gx - 1, gy + 1);
+  const se = isSandOrOcean(gx + 1, gy + 1);
 
   let key = 'pure';
   let tileId: number = TILE_IDS.sand_pure;

@@ -78,6 +78,12 @@ export const TILE_IDS = {
   water_in_br: 712,
   bridge_wood_h: 720,
   bridge_wood_v: 721,
+  ocean_water: 730,
+  shore_v: 731,
+  shore_corner_in: 732,
+  shore_corner_out: 733,
+  shore_corner_in_flip: 734,
+  shore_corner_out_flip: 735,
 } as const;
 
 export const CHUNK_SIZE = 16 as const;
