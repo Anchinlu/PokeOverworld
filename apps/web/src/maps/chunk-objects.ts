@@ -15,6 +15,7 @@ import {
   getEcologyZone,
   getTreeTypeForEcology,
   getFlowerTypeForCluster,
+  calculateTallGrassDensity,
   TREE_MIN_CANDIDATES,
   TREE_MAX_CANDIDATES,
 } from './ecology';
@@ -385,14 +386,24 @@ export function generateChunkTallGrass(
     return true;
   };
 
-  // 1. Lowland Meadow Tall Grass: Organic, Random Sizes, Varied Quantity per Chunk
+  // 1. Lowland Meadow Tall Grass: Density-modulated organic patches per Section 8.1
+  const centerGX = startGX + 8;
+  const centerGY = startGY + 8;
+  const chunkEcology = sampleEcology(centerGX, centerGY, seed);
+  const tallGrassDensity = calculateTallGrassDensity(chunkEcology);
+
   const qRoll = seededHash(cx, cy, seed + 909);
+  const effectiveDensity = tallGrassDensity * 0.7 + qRoll * 0.3;
   let numPatches = 0;
-  if (qRoll >= 0.2 && qRoll < 0.65) {
-    numPatches = 1; // 45% chance: 1 natural meadow patch
-  } else if (qRoll >= 0.65) {
-    numPatches = qRoll < 0.88 ? 2 : 3; // 35% chance: 2 or 3 scattered patches
-  } // 20% chance: 0 patches (scenic open meadow)
+  if (effectiveDensity < 0.25) {
+    numPatches = 0;
+  } else if (effectiveDensity < 0.55) {
+    numPatches = 1;
+  } else if (effectiveDensity < 0.8) {
+    numPatches = 2;
+  } else {
+    numPatches = 3;
+  }
 
   for (let p = 0; p < numPatches; p++) {
     const pSeed = seed + 1010 + p * 137;
