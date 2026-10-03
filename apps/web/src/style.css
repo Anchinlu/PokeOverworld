@@ -631,7 +631,7 @@ body {
 
 /* 1. Screen List (bg_list.png - 512x384) */
 .pokedex-screen-list {
-  background: url('/Graphics/Pokedex/bg_list.png?v=teal') no-repeat;
+  background: url('/Graphics/Pokedex/bg_list.png?v=clean_header') no-repeat;
   background-size: 512px 384px;
 }
 
