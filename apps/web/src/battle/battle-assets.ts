@@ -4,6 +4,7 @@
  */
 
 import type { BattleEnvironment } from './types';
+import { BATTLE_ASSETS } from '../assets';
 
 /** All preloaded images for the battle screen */
 export interface BattleAssets {
@@ -21,9 +22,6 @@ export interface BattleAssets {
   ball: HTMLImageElement;
 }
 
-// Asset path constants — single source of truth for battle graphics
-const BATTLE_GFX = '/Graphics/Battle';
-
 export function createBattleAssets(
   env: BattleEnvironment,
   frontSprite: string,
@@ -36,18 +34,18 @@ export function createBattleAssets(
   };
 
   return {
-    bg: load(`${BATTLE_GFX}/battlebg/${env.background}`),
-    enemyBase: load(`${BATTLE_GFX}/enemybase/${env.enemyBase}`),
-    playerBase: load(`${BATTLE_GFX}/playerbase/${env.playerBase}`),
+    bg: load(BATTLE_ASSETS.getBackground(env.background)),
+    enemyBase: load(BATTLE_ASSETS.getEnemyBase(env.enemyBase)),
+    playerBase: load(BATTLE_ASSETS.getPlayerBase(env.playerBase)),
     enemySprite: load(frontSprite),
     playerSprite: load(backSprite),
-    databoxEnemy: load(`${BATTLE_GFX}/databox_enermy.png`),
-    databoxPlayer: load(`${BATTLE_GFX}/databox_player.png`),
-    messageBox: load(`${BATTLE_GFX}/battleMessage.png`),
-    fightOverlay: load(`${BATTLE_GFX}/overlay_fight.png`),
-    cursorCommand: load(`${BATTLE_GFX}/cursor_command.png`),
-    overlayExp: load(`${BATTLE_GFX}/overlay_exp.png`),
-    ball: load(`${BATTLE_GFX}/ball00.png`),
+    databoxEnemy: load(BATTLE_ASSETS.databoxEnemy),
+    databoxPlayer: load(BATTLE_ASSETS.databoxPlayer),
+    messageBox: load(BATTLE_ASSETS.messageBox),
+    fightOverlay: load(BATTLE_ASSETS.fightOverlay),
+    cursorCommand: load(BATTLE_ASSETS.cursorCommand),
+    overlayExp: load(BATTLE_ASSETS.overlayExp),
+    ball: load(BATTLE_ASSETS.ball),
   };
 }
 

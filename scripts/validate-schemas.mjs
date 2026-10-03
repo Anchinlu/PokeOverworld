@@ -134,7 +134,10 @@ try {
     for (const [key, relPath] of manifestEntries) {
       // Clean leading slash for local fs path
       const cleanPath = relPath.startsWith('/') ? relPath.slice(1) : relPath;
-      const fullPath = path.join(ROOT, 'apps/web/public', cleanPath);
+      let fullPath = path.join(ROOT, 'apps/web/public', cleanPath);
+      if (!fs.existsSync(fullPath) && cleanPath.startsWith('Graphics/')) {
+        fullPath = path.join(ROOT, cleanPath);
+      }
       if (!fs.existsSync(fullPath)) {
         logFail(`Asset '${key}' points to missing file: ${cleanPath}`);
         missingAssets++;
@@ -143,7 +146,7 @@ try {
 
     if (missingAssets === 0) {
       logPass(
-        `All ${manifestEntries.length} manifest assets exist on disk in apps/web/public/assets`
+        `All ${manifestEntries.length} manifest assets exist on disk (public/assets & Graphics)`
       );
     }
 
@@ -160,6 +163,23 @@ try {
       'berry_CHERIBERRY',
       'berry_SITRUSBERRY',
       'berry_LUMBERRY',
+      'pokedex_tab_pokemon',
+      'pokedex_tab_moves',
+      'pokedex_tab_items',
+      'pokedex_icon_search',
+      'pokedex_icon_own',
+      'pokedex_icon_seen',
+      'pokedex_bg_list',
+      'pokedex_bg_info',
+      'move_machine_FIRE',
+      'move_machine_WATER',
+      'move_machine_GRASS',
+      'move_machine_ELECTRIC',
+      'move_category',
+      'pokemon_type_badges',
+      'battle_databox_player',
+      'battle_databox_enemy',
+      'menu_icon_pokedex',
     ];
     let missingKeys = 0;
     for (const rk of requiredKeys) {
@@ -169,7 +189,9 @@ try {
       }
     }
     if (missingKeys === 0) {
-      logPass(`All critical game sprites and berry trees are defined in manifest`);
+      logPass(
+        `All critical game sprites, berry trees, Pokédex, Moves, and Battle UI are defined in manifest`
+      );
     }
   }
 } catch (err) {

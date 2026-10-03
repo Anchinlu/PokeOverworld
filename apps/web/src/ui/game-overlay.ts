@@ -1,3 +1,5 @@
+import { MENU_ASSETS } from '../assets';
+
 export function createOverlayTemplate(): string {
   return `
   <!-- Fullscreen Canvas -->
@@ -7,22 +9,22 @@ export function createOverlayTemplate(): string {
 
   <!-- Top Right Navigation Bar (Using Graphics/Icons/Blank.png) -->
   <header id="topRightBar" class="top-right-bar" aria-label="Thanh menu chức năng">
-    <img src="/Graphics/Icons/Blank.png" class="menu-bar-blank" alt="Menu Bar" draggable="false" />
+    <img src="${MENU_ASSETS.barBlank}" class="menu-bar-blank" alt="Menu Bar" draggable="false" />
     <div class="menu-bar-content" id="menuBarContent">
       <button class="menu-bar-btn" id="btnMenuPokedex" title="Pokédex (Phím Q)" aria-label="Pokédex">
-        <img src="/Graphics/Icons/menuPokedex.png" alt="Pokédex" class="menu-bar-icon" />
+        <img src="${MENU_ASSETS.menuPokedex}" alt="Pokédex" class="menu-bar-icon" />
         <span class="menu-bar-text">Pokédex</span>
       </button>
       <button class="menu-bar-btn" id="btnMenuTrainer" title="Huấn luyện viên (Trainer Card)" aria-label="Trainer Card">
-        <img src="/Graphics/Icons/menuTrainer.png" alt="Hồ sơ" class="menu-bar-icon" />
+        <img src="${MENU_ASSETS.menuTrainer}" alt="Hồ sơ" class="menu-bar-icon" />
         <span class="menu-bar-text">Hồ sơ</span>
       </button>
       <button class="menu-bar-btn" id="btnMenuOptions" title="Tùy chọn cài đặt (Options)" aria-label="Cài đặt">
-        <img src="/Graphics/Icons/menuOptions.png" alt="Cài đặt" class="menu-bar-icon" />
+        <img src="${MENU_ASSETS.menuOptions}" alt="Cài đặt" class="menu-bar-icon" />
         <span class="menu-bar-text">Cài đặt</span>
       </button>
       <button class="menu-bar-btn" id="btnMenuQuit" title="Thoát / Thu gọn (Quit)" aria-label="Thoát">
-        <img src="/Graphics/Icons/menuQuit.png" alt="Thoát" class="menu-bar-icon" />
+        <img src="${MENU_ASSETS.menuQuit}" alt="Thoát" class="menu-bar-icon" />
         <span class="menu-bar-text">Thoát</span>
       </button>
     </div>

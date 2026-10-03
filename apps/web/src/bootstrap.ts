@@ -38,7 +38,7 @@ export async function bootstrap(): Promise<void> {
   resizeCanvas();
 
   // 3. Preload Assets
-  const assetLoader = new AssetLoader();
+  const assetLoader = AssetLoader.getDefault();
   try {
     await assetLoader.loadFromManifest('/assets/manifest.json', (loaded, total) => {
       const pct = Math.round((loaded / total) * 100);

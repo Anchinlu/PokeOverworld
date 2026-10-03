@@ -6,7 +6,21 @@
 export type ProgressCallback = (loaded: number, total: number, currentKey: string) => void;
 
 export class AssetLoader {
+  private static defaultInstance: AssetLoader | null = null;
+
+  public static getDefault(): AssetLoader {
+    if (!AssetLoader.defaultInstance) {
+      AssetLoader.defaultInstance = new AssetLoader();
+    }
+    return AssetLoader.defaultInstance;
+  }
+
+  public static setDefault(loader: AssetLoader): void {
+    AssetLoader.defaultInstance = loader;
+  }
+
   private images = new Map<string, HTMLImageElement>();
+  private manifest = new Map<string, string>();
   private loaded = false;
 
   public isLoaded(): boolean {
@@ -15,6 +29,14 @@ export class AssetLoader {
 
   public getImage(key: string): HTMLImageElement | undefined {
     return this.images.get(key);
+  }
+
+  public getAssetUrl(key: string): string | undefined {
+    return this.manifest.get(key);
+  }
+
+  public hasAsset(key: string): boolean {
+    return this.manifest.has(key);
   }
 
   /**
@@ -31,6 +53,9 @@ export class AssetLoader {
 
     const manifest: Record<string, string> = await res.json();
     const entries = Object.entries(manifest);
+    for (const [key, url] of entries) {
+      this.manifest.set(key, url);
+    }
     const total = entries.length;
     let loadedCount = 0;
 

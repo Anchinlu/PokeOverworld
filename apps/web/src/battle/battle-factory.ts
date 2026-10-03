@@ -3,6 +3,7 @@ import type { BattlerPokemon, BattleEnvironment } from './types';
 import { getMovesForSpecies } from './moves-db';
 import type { EcologyZone } from '../maps/ecology';
 import { defaultBattleRng, type BattleRng } from './battle-rng';
+import { POKEMON_ASSETS } from '../assets';
 
 function calculateHp(base: number, level: number): number {
   return Math.floor(((2 * base + 31) * level) / 100) + level + 10;
@@ -55,9 +56,9 @@ export function createBattler(
     status: 'none',
     sleepTurns: 0,
     moves,
-    frontSprite: `/Graphics/Pokemon/Front/${data.speciesKey}.png`,
-    backSprite: `/Graphics/Pokemon/Back/${data.speciesKey}.png`,
-    iconSprite: `/Graphics/Pokemon/Icons/${data.speciesKey}.png`,
+    frontSprite: POKEMON_ASSETS.getFrontSprite(data.speciesKey),
+    backSprite: POKEMON_ASSETS.getBackSprite(data.speciesKey),
+    iconSprite: POKEMON_ASSETS.getIconSprite(data.speciesKey),
     gender: isPlayer ? 'male' : rng.next() < 0.5 ? 'male' : 'female',
     isFainted: false,
     catchRate: data.catchRate ?? 45,

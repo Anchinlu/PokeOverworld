@@ -32,7 +32,7 @@ function serveGraphicsPlugin(): Plugin {
 }
 
 function emitLegacyGraphicsPlugin(): Plugin {
-  const directories = ['Fonts', 'Icons', 'Pokedex', 'Battle'];
+  const directories = ['Fonts', 'Icons', 'Pokedex', 'Battle', 'Items', 'Move'];
 
   return {
     name: 'emit-legacy-graphics',
@@ -63,6 +63,7 @@ function emitLegacyGraphicsPlugin(): Plugin {
         'Graphics/Pokedex/icon_slider.png',
         'Graphics/Pokedex/bg_info.png',
         'Graphics/Pokedex/overlay_info.png',
+        'Graphics/Move/status move/category.png',
       ];
 
       for (const relativePath of cssAssets) {
