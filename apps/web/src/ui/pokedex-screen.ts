@@ -400,7 +400,7 @@ export class PokedexUI {
           <!-- Integrated Search Bar in the top black header area -->
           <div class="pokedex-retro-search-bar" id="pokedexRetroSearchBar">
             <span class="pokedex-search-icon">🔍</span>
-            <input type="text" id="inputPokedexSearch" placeholder="Tìm theo tên hoặc số hiệu (VD: Pikachu, 25)..." autocomplete="off" />
+            <input type="text" id="inputPokedexSearch" placeholder="Tìm tên hoặc số hiệu..." autocomplete="off" />
             <button class="btn-clear-search" id="btnClearSearch" title="Xóa tìm kiếm">✕</button>
           </div>
 
