@@ -81,6 +81,7 @@ export class GameRenderer {
 
     ctx.save();
     camera.applyTransform(ctx, canvas.width, canvas.height);
+    ctx.imageSmoothingEnabled = false;
 
     const bounds = camera.getVisibleBounds(canvas.width, canvas.height);
 

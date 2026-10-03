@@ -10,6 +10,7 @@ import {
   isOceanTile,
   getLakePlacement,
 } from '../src/maps/terrain-rules';
+import { isInteriorFreshwater } from '../src/maps/chunk-objects';
 
 describe('Water Terrain, River, Lake & Bridge Systems', () => {
   it('generates water and bridge tiles deterministically', () => {
@@ -181,10 +182,19 @@ describe('Water Terrain, River, Lake & Bridge Systems', () => {
           const onLake = isLakeTile(flora.gx, flora.gy, seed);
           expect(onRiver || onLake).toBe(true);
 
-          // Strictly NOT on bridge, ocean, or dry land
-          expect(isBridgeTile(flora.gx, flora.gy, seed)).toBe(false);
-          expect(isOceanTile(flora.gx, flora.gy, seed)).toBe(false);
-          expect(isWaterTile(flora.gx, flora.gy, seed)).toBe(true);
+          // Strictly on interior freshwater (never on shorelines, banks, or bridge)
+          expect(isInteriorFreshwater(flora.gx, flora.gy, seed)).toBe(true);
+
+          // All 8 neighbor tiles must be water and not bridge
+          for (let dx = -1; dx <= 1; dx++) {
+            for (let dy = -1; dy <= 1; dy++) {
+              if (dx === 0 && dy === 0) continue;
+              const nx = flora.gx + dx;
+              const ny = flora.gy + dy;
+              expect(isBridgeTile(nx, ny, seed)).toBe(false);
+              expect(isWaterTile(nx, ny, seed)).toBe(true);
+            }
+          }
         }
       }
     }

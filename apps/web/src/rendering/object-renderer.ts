@@ -85,8 +85,8 @@ export class ObjectRenderer {
         ) {
           const img = this.loader.getImage(flora.type);
           if (img && img.complete) {
-            // Gentle sinusoidal aquatic bobbing on freshwater lake & river surfaces
-            const bobY = Math.sin(now / 450 + flora.phase) * 1.5;
+            // Crisp discrete aquatic bobbing on freshwater lake & river surfaces (integer pixels only, no subpixel blur)
+            const bobY = Math.round(Math.sin(now / 550 + flora.phase) * 1.2);
             list.push({
               ySort: flora.y + 12,
               draw: (ctx) => {
