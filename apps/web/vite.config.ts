@@ -50,6 +50,7 @@ function emitLegacyGraphicsPlugin(): Plugin {
       const cssAssets = [
         'Graphics/Fonts/power clear.ttf',
         'Graphics/Fonts/vt323.ttf',
+        'Graphics/Fonts/Tiny5-Regular.ttf',
         'Graphics/Pokedex/bg_list.png',
         'Graphics/Pokedex/bg_search_bar.png',
         'Graphics/Pokedex/icon_search_ball.png',
@@ -58,6 +59,7 @@ function emitLegacyGraphicsPlugin(): Plugin {
         'Graphics/Pokedex/tab_items.png',
         'Graphics/Pokedex/cursor_tab.png',
         'Graphics/Pokedex/cursor_list.png',
+        'Graphics/Pokedex/cursor_list_row.png',
         'Graphics/Pokedex/icon_slider.png',
         'Graphics/Pokedex/bg_info.png',
         'Graphics/Pokedex/overlay_info.png',
