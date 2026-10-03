@@ -1192,3 +1192,47 @@ body {
 .stat-row.rank-6 strong {
   color: #0e7490;
 }
+
+/* ==========================================================================
+   Battle Screen Overlay & Canvas Styling
+   ========================================================================== */
+.battle-screen-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: battleSwirlIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes battleSwirlIn {
+  0% {
+    opacity: 0;
+    transform: scale(1.15);
+    filter: brightness(3) contrast(1.5);
+  }
+  50% {
+    opacity: 0.9;
+    filter: brightness(2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: brightness(1) contrast(1);
+  }
+}
+
+.battle-canvas {
+  width: 768px;
+  height: 576px;
+  max-width: 95vw;
+  max-height: 90vh;
+  aspect-ratio: 4 / 3;
+  image-rendering: pixelated;
+  border-radius: 8px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 0 3px #1e293b, 0 0 30px rgba(56, 189, 248, 0.25);
+  background: #000000;
+  cursor: pointer;
+}

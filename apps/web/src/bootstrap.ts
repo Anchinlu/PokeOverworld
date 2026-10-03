@@ -81,6 +81,12 @@ export async function bootstrap(): Promise<void> {
     session.resetPlayer();
   });
 
+  const btnTestBattle = document.querySelector<HTMLButtonElement>('#btnTestBattle');
+  btnTestBattle?.addEventListener('click', () => {
+    session.startTestBattle();
+  });
+  (window as any).startBattle = () => session.startTestBattle();
+
   // Top Right Menu Bar Buttons
   const btnMenuPokedex = document.querySelector<HTMLButtonElement>('#btnMenuPokedex');
   const btnMenuTrainer = document.querySelector<HTMLButtonElement>('#btnMenuTrainer');

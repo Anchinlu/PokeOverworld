@@ -15,6 +15,7 @@ export type PokemonType =
   | 'Ghost'
   | 'Dragon'
   | 'Steel'
+  | 'Dark'
   | 'Fairy';
 
 export interface PokemonStats {

@@ -168,6 +168,9 @@ export function createOverlayTemplate(): string {
         <button class="btn-action-primary" id="btnRegenerate">⚡ Tải lại Map</button>
         <button class="btn-action-secondary" id="btnResetPlayer">🚶 Gốc [0,0]</button>
       </div>
+      <div class="actions-row" style="margin-top: 6px;">
+        <button class="btn-action-primary" id="btnTestBattle" style="background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 2px 8px rgba(239,68,68,0.4);">⚔️ Thử nghiệm Trận đấu</button>
+      </div>
     </div>
   </aside>
 

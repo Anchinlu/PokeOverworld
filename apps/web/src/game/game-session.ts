@@ -5,6 +5,10 @@ import { updateWildPokemon } from '../ai';
 import type { GameRenderer } from '../rendering';
 import type { BerryBushEntity } from '../maps/chunk';
 import { interactWithBerryBush } from '../ui/berry-panel';
+import { sampleEcology, getEcologyZone } from '../maps/ecology';
+import { isNearWater } from '../maps/terrain-rules';
+import { BattleScreen, createBattler, getBattleEnvironment } from '../battle';
+import { showBerryToast } from '../ui/toast';
 
 export class GameSession {
   public seed: number;
@@ -13,6 +17,8 @@ export class GameSession {
   public chunkManager: ChunkManager;
   public player: Player;
   public follower: Follower;
+  public isBattling = false;
+  private lastBattleEndTime = 0;
 
   constructor(initialSeed = 101) {
     this.seed = initialSeed;
@@ -27,6 +33,13 @@ export class GameSession {
   }
 
   public update(dtScale: number, collisionEnabled = true): { pChunkX: number; pChunkY: number } {
+    if (this.isBattling) {
+      return {
+        pChunkX: Math.floor(this.player.gx / 16),
+        pChunkY: Math.floor(this.player.gy / 16),
+      };
+    }
+
     const isRunning = this.input.isRunning();
 
     // 1. Update chunks around player
@@ -70,6 +83,11 @@ export class GameSession {
     }
     if (stepCompleted) {
       this.follower.completeStep();
+
+      // Check encounter collision when step completes
+      if (Date.now() - this.lastBattleEndTime > 1500) {
+        this.checkWildPokemonCollision();
+      }
     }
 
     // 4. Camera follows player
@@ -79,6 +97,63 @@ export class GameSession {
     updateWildPokemon(this.chunkManager, this.player, this.follower, dtScale);
 
     return { pChunkX, pChunkY };
+  }
+
+  private checkWildPokemonCollision(): void {
+    for (const chunk of this.chunkManager.activeChunks) {
+      if (!chunk.wildPokemon) continue;
+      for (const wp of chunk.wildPokemon) {
+        if (wp.gx === this.player.gx && wp.gy === this.player.gy) {
+          this.startWildBattle(wp, chunk);
+          return;
+        }
+      }
+    }
+  }
+
+  public startWildBattle(wp: any, chunk?: any): void {
+    if (this.isBattling) return;
+    this.isBattling = true;
+
+    const sample = sampleEcology(wp.gx, wp.gy, this.seed);
+    const zone = getEcologyZone(sample);
+    const nearWater = isNearWater(wp.gx, wp.gy, this.seed, 1);
+    const env = getBattleEnvironment(zone, nearWater);
+
+    const playerBattler = createBattler('PIKACHU', Math.max(5, wp.level + 2), true);
+    const wildBattler = createBattler(wp.speciesKey, wp.level, false);
+
+    new BattleScreen(playerBattler, wildBattler, env, (result) => {
+      this.isBattling = false;
+      this.lastBattleEndTime = Date.now();
+
+      if (result.outcome === 'caught' || result.outcome === 'victory') {
+        if (chunk && chunk.wildPokemon) {
+          const idx = chunk.wildPokemon.indexOf(wp);
+          if (idx !== -1) {
+            chunk.wildPokemon.splice(idx, 1);
+          }
+        }
+
+        if (result.outcome === 'caught') {
+          showBerryToast(`🎉 Đã thu phục thành công ${wildBattler.name}!`, '#22c55e');
+        } else {
+          showBerryToast(`⚔️ Đã đánh bại ${wildBattler.name}!`, '#38bdf8');
+        }
+      }
+    });
+  }
+
+  public startTestBattle(): void {
+    const testRoster = ['PIDGEY', 'RATTATA', 'CATERPIE', 'SPEAROW', 'BULBASAUR', 'CHARMANDER', 'SQUIRTLE'];
+    const randomSpecies = testRoster[Math.floor(Math.random() * testRoster.length)];
+    const mockWp = {
+      gx: this.player.gx,
+      gy: this.player.gy,
+      speciesKey: randomSpecies,
+      level: Math.floor(Math.random() * 4) + 3,
+    };
+    this.startWildBattle(mockWp);
   }
 
   public regenerate(seed?: number): void {
@@ -98,6 +173,20 @@ export class GameSession {
   }
 
   public interactAt(worldGX: number, worldGY: number, renderer: GameRenderer): void {
+    if (this.isBattling) return;
+
+    // 1. Check Wild Pokémon click
+    for (const chunk of this.chunkManager.activeChunks) {
+      if (!chunk.wildPokemon) continue;
+      for (const wp of chunk.wildPokemon) {
+        if (Math.abs(wp.gx - worldGX) <= 1 && Math.abs(wp.gy - worldGY) <= 1) {
+          this.startWildBattle(wp, chunk);
+          return;
+        }
+      }
+    }
+
+    // 2. Check Berry Bushes
     for (const chunk of this.chunkManager.activeChunks) {
       if (!chunk.berryBushes) continue;
       for (const b of chunk.berryBushes) {
@@ -110,6 +199,8 @@ export class GameSession {
   }
 
   public interactInFront(renderer: GameRenderer): void {
+    if (this.isBattling) return;
+
     let targetGX = this.player.gx;
     let targetGY = this.player.gy;
     if (this.player.direction === 0) targetGY += 1;
@@ -117,6 +208,21 @@ export class GameSession {
     else if (this.player.direction === 2) targetGX += 1;
     else if (this.player.direction === 3) targetGY -= 1;
 
+    // 1. Check Wild Pokémon in front
+    for (const chunk of this.chunkManager.activeChunks) {
+      if (!chunk.wildPokemon) continue;
+      for (const wp of chunk.wildPokemon) {
+        if (
+          (wp.gx === targetGX && wp.gy === targetGY) ||
+          (Math.abs(wp.gx - this.player.gx) <= 1 && Math.abs(wp.gy - this.player.gy) <= 1)
+        ) {
+          this.startWildBattle(wp, chunk);
+          return;
+        }
+      }
+    }
+
+    // 2. Check Berry Bush in front
     let foundBush: BerryBushEntity | null = null;
     for (const chunk of this.chunkManager.activeChunks) {
       if (!chunk.berryBushes) continue;
@@ -138,3 +244,4 @@ export class GameSession {
     }
   }
 }
+

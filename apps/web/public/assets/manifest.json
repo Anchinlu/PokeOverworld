@@ -111,5 +111,11 @@
   "water_lily_purple": "/assets/water_lily_purple.png",
   "water_lily_pink": "/assets/water_lily_pink.png",
   "water_lily_white": "/assets/water_lily_white.png",
-  "lake_anim_strip": "/assets/lake_anim_strip.png"
+  "lake_anim_strip": "/assets/lake_anim_strip.png",
+  "building_house_red": "/assets/building_house_red.png",
+  "building_pokecenter": "/assets/building_pokecenter.png",
+  "building_house_cottage": "/assets/building_house_cottage.png",
+  "building_house_flowers": "/assets/building_house_flowers.png",
+  "building_pokemart": "/assets/building_pokemart.png",
+  "building_signpost": "/assets/building_signpost.png"
 }
