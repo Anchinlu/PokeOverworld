@@ -1433,8 +1433,13 @@ export class PokedexUI {
       const catCol = document.createElement('div');
       catCol.className = 'im-col-cat';
       const catKey = (moveDb?.category || 'physical').toLowerCase();
-      const catLabel = catKey === 'special' ? 'Đ.B' : catKey === 'status' ? 'T.Th' : 'V.Lí';
-      catCol.innerHTML = `<span class="info-move-cat-badge ${catKey}">${catLabel}</span>`;
+      const catNames: Record<string, string> = {
+        physical: 'Vật lí',
+        special: 'Đặc biệt',
+        status: 'Trạng thái',
+      };
+      const catTitle = catNames[catKey] || 'Vật lí';
+      catCol.innerHTML = `<div class="info-move-cat-icon ${catKey}" title="${catTitle}"></div>`;
 
       const pwrCol = document.createElement('span');
       pwrCol.className = 'im-col-pwr';
