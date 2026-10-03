@@ -117,6 +117,7 @@ class TileManager:
             "vibrant": Image.open(os.path.join(t_dir, "tree_02_vibrant_green_raw.png")).convert("RGBA"),
             "coastal": Image.open(os.path.join(t_dir, "tree_03_coastal_teal_raw.png")).convert("RGBA"),
             "deep": Image.open(os.path.join(t_dir, "tree_04_deep_forest_raw.png")).convert("RGBA"),
+            "palm": Image.open(os.path.join(t_dir, "tree_palm.png")).convert("RGBA"),
         }
 
         # 5. Hill & Cliff Parts (11 tiles)

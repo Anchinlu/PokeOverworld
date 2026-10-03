@@ -7,9 +7,27 @@ import { TILE_IDS } from '@pokemon/game-data';
  */
 
 export const BEACH_WIDTH = 5;
+export const COAST_SEGMENT_HEIGHT = 24;
+
+export function getCoastSegmentCol(k: number, seed: number): number {
+  const s = (seed % 1000) * 0.1;
+  return Math.round(20 + Math.sin(k * 0.15 + s) * 4 + Math.cos(k * 0.08) * 2);
+}
 
 export function getCoastBoundary(gy: number, seed: number): number {
-  return Math.round(18 + Math.sin(gy * 0.08 + (seed % 1000) * 0.1) * 6 + Math.cos(gy * 0.04) * 3);
+  const H = COAST_SEGMENT_HEIGHT;
+  const k = Math.floor(gy / H);
+  const yloc = gy - k * H;
+  const xk = getCoastSegmentCol(k, seed);
+  const xkNext = getCoastSegmentCol(k + 1, seed);
+
+  if (yloc < H - 1 || xkNext === xk) {
+    return xk;
+  } else if (xkNext === xk - 1) {
+    return xk - 1;
+  } else {
+    return xk;
+  }
 }
 
 export function getOceanBoundary(gy: number, seed: number): number {
@@ -18,42 +36,68 @@ export function getOceanBoundary(gy: number, seed: number): number {
 
 export function isSandTile(gx: number, gy: number, seed: number, hasBeach = true): boolean {
   if (!hasBeach) return false;
-  const coast = getCoastBoundary(gy, seed);
-  return gx >= coast && gx < coast + BEACH_WIDTH;
+  const H = COAST_SEGMENT_HEIGHT;
+  const k = Math.floor(gy / H);
+  const yloc = gy - k * H;
+  const xk = getCoastSegmentCol(k, seed);
+  const xkNext = getCoastSegmentCol(k + 1, seed);
+  const ocean = xk + BEACH_WIDTH;
+  const nextOcean = xkNext + BEACH_WIDTH;
+
+  if (yloc < H - 1 || nextOcean === ocean) {
+    return gx >= xk && gx < ocean;
+  } else if (nextOcean === ocean - 1) {
+    return gx >= xk - 1 && gx < ocean - 1;
+  } else {
+    return gx >= xk && gx < ocean;
+  }
 }
 
 export function isOceanTile(gx: number, gy: number, seed: number, hasBeach = true): boolean {
   if (!hasBeach) return false;
-  return gx >= getCoastBoundary(gy, seed) + BEACH_WIDTH;
+  const H = COAST_SEGMENT_HEIGHT;
+  const k = Math.floor(gy / H);
+  const yloc = gy - k * H;
+  const xk = getCoastSegmentCol(k, seed);
+  const xkNext = getCoastSegmentCol(k + 1, seed);
+  const ocean = xk + BEACH_WIDTH;
+  const nextOcean = xkNext + BEACH_WIDTH;
+
+  if (yloc < H - 1 || nextOcean === ocean) {
+    return gx >= ocean;
+  } else if (nextOcean === ocean - 1) {
+    return gx >= ocean - 1;
+  } else {
+    return gx >= ocean;
+  }
 }
 
 export function getOceanTileId(gx: number, gy: number, seed: number, hasBeach = true): number {
   if (!hasBeach) return TILE_IDS.grass_01;
-  const oceanBoundary = getCoastBoundary(gy, seed) + BEACH_WIDTH;
-  if (gx > oceanBoundary) {
-    return TILE_IDS.ocean_water;
+  const H = COAST_SEGMENT_HEIGHT;
+  const k = Math.floor(gy / H);
+  const yloc = gy - k * H;
+  const xk = getCoastSegmentCol(k, seed);
+  const xkNext = getCoastSegmentCol(k + 1, seed);
+  const ocean = xk + BEACH_WIDTH;
+  const nextOcean = xkNext + BEACH_WIDTH;
+
+  if (yloc < H - 1 || nextOcean === ocean) {
+    if (gx === ocean) return TILE_IDS.shore_v;
+    if (gx > ocean) return TILE_IDS.ocean_water;
+  } else if (nextOcean === ocean - 1) {
+    // Step West: smooth 2-tile corner pair
+    if (gx === ocean - 1) return TILE_IDS.shore_corner_in;
+    if (gx === ocean) return TILE_IDS.shore_corner_out;
+    if (gx > ocean) return TILE_IDS.ocean_water;
+  } else {
+    // Step East: smooth 2-tile corner pair
+    if (gx === ocean) return TILE_IDS.shore_corner_in_flip;
+    if (gx === ocean + 1) return TILE_IDS.shore_corner_out_flip;
+    if (gx > ocean + 1) return TILE_IDS.ocean_water;
   }
 
-  // gx === oceanBoundary: shoreline wave animation
-  const prevOcean = getCoastBoundary(gy - 1, seed) + BEACH_WIDTH;
-  const nextOcean = getCoastBoundary(gy + 1, seed) + BEACH_WIDTH;
-
-  if (prevOcean === oceanBoundary && nextOcean === oceanBoundary) {
-    return TILE_IDS.shore_v;
-  }
-  if (nextOcean > oceanBoundary) {
-    return TILE_IDS.shore_corner_in;
-  }
-  if (nextOcean < oceanBoundary) {
-    return TILE_IDS.shore_corner_out;
-  }
-  if (prevOcean < oceanBoundary) {
-    return TILE_IDS.shore_corner_in_flip;
-  }
-  if (prevOcean > oceanBoundary) {
-    return TILE_IDS.shore_corner_out_flip;
-  }
-  return TILE_IDS.shore_v;
+  return TILE_IDS.ocean_water;
 }
 
 export function getSegmentCol(k: number, seed: number): number {
@@ -316,6 +360,25 @@ export function isValidTreePosGlobal(tx: number, ty: number, seed: number): bool
   if (isRoadTile(rootC1, rootR, seed) || isSandTile(rootC1, rootR, seed)) return false;
   if (isRoadTile(rootC2, rootR, seed) || isSandTile(rootC2, rootR, seed)) return false;
   if (isWaterOrBridge(rootC1, rootR, seed) || isWaterOrBridge(rootC2, rootR, seed)) return false;
+
+  return true;
+}
+
+/**
+ * Validates palm tree positioning on beach sand.
+ * - The trunk base tile (gx, gy) must be strictly on sand.
+ * - Must not be on water, ocean, road, bridge, or cliff.
+ */
+export function isValidPalmTreePosGlobal(gx: number, gy: number, seed: number): boolean {
+  if (!isSandTile(gx, gy, seed)) return false;
+  if (isOceanTile(gx, gy, seed)) return false;
+  if (isWaterOrBridge(gx, gy, seed)) return false;
+  if (isRoadTile(gx, gy, seed)) return false;
+  if (isHillTile(gx, gy, seed)) return false;
+  if (isNearWater(gx, gy, seed, 0)) return false;
+
+  const coastX = getCoastBoundary(gy, seed);
+  if (gx < coastX + 1 || gx > coastX + 3) return false;
 
   return true;
 }

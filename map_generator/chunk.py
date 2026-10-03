@@ -26,11 +26,28 @@ def seeded_hash(x: int, y: int, seed: int) -> float:
 
 
 BEACH_WIDTH = 5
+COAST_SEGMENT_HEIGHT = 24
+
+
+def get_coast_segment_col(k: int, seed: int) -> int:
+    s = (seed % 1000) * 0.1
+    return int(round(20 + math.sin(k * 0.15 + s) * 4 + math.cos(k * 0.08) * 2))
 
 
 def get_coast_x(gy: int, seed: int) -> int:
     """Computes the continuous Eastern coastline boundary column for row gy."""
-    return int(round(18 + math.sin(gy * 0.08 + seed * 0.1) * 6 + math.cos(gy * 0.04) * 3))
+    h = COAST_SEGMENT_HEIGHT
+    k = math.floor(gy / h)
+    yloc = gy - k * h
+    xk = get_coast_segment_col(k, seed)
+    xk_next = get_coast_segment_col(k + 1, seed)
+
+    if yloc < h - 1 or xk_next == xk:
+        return xk
+    elif xk_next == xk - 1:
+        return xk - 1
+    else:
+        return xk
 
 
 def get_ocean_boundary(gy: int, seed: int) -> int:
@@ -40,35 +57,74 @@ def get_ocean_boundary(gy: int, seed: int) -> int:
 def is_sand_tile(gx: int, gy: int, seed: int, has_beach: bool = True) -> bool:
     if not has_beach:
         return False
-    coast = get_coast_x(gy, seed)
-    return coast <= gx < coast + BEACH_WIDTH
+    h = COAST_SEGMENT_HEIGHT
+    k = math.floor(gy / h)
+    yloc = gy - k * h
+    xk = get_coast_segment_col(k, seed)
+    xk_next = get_coast_segment_col(k + 1, seed)
+    ocean = xk + BEACH_WIDTH
+    next_ocean = xk_next + BEACH_WIDTH
+
+    if yloc < h - 1 or next_ocean == ocean:
+        return xk <= gx < ocean
+    elif next_ocean == ocean - 1:
+        return (xk - 1) <= gx < (ocean - 1)
+    else:
+        return xk <= gx < ocean
 
 
 def is_ocean_tile(gx: int, gy: int, seed: int, has_beach: bool = True) -> bool:
     if not has_beach:
         return False
-    return gx >= get_coast_x(gy, seed) + BEACH_WIDTH
+    h = COAST_SEGMENT_HEIGHT
+    k = math.floor(gy / h)
+    yloc = gy - k * h
+    xk = get_coast_segment_col(k, seed)
+    xk_next = get_coast_segment_col(k + 1, seed)
+    ocean = xk + BEACH_WIDTH
+    next_ocean = xk_next + BEACH_WIDTH
+
+    if yloc < h - 1 or next_ocean == ocean:
+        return gx >= ocean
+    elif next_ocean == ocean - 1:
+        return gx >= ocean - 1
+    else:
+        return gx >= ocean
 
 
 def get_ocean_tile_id(gx: int, gy: int, seed: int, has_beach: bool = True) -> int:
     if not has_beach:
         return TILE_IDS["grass_01"]
-    ocean_boundary = get_coast_x(gy, seed) + BEACH_WIDTH
-    if gx > ocean_boundary:
-        return TILE_IDS["ocean_water"]
-    prev_ocean = get_coast_x(gy - 1, seed) + BEACH_WIDTH
-    next_ocean = get_coast_x(gy + 1, seed) + BEACH_WIDTH
-    if prev_ocean == ocean_boundary and next_ocean == ocean_boundary:
-        return TILE_IDS["shore_v"]
-    if next_ocean > ocean_boundary:
-        return TILE_IDS["shore_corner_in"]
-    if next_ocean < ocean_boundary:
-        return TILE_IDS["shore_corner_out"]
-    if prev_ocean < ocean_boundary:
-        return TILE_IDS["shore_corner_in_flip"]
-    if prev_ocean > ocean_boundary:
-        return TILE_IDS["shore_corner_out_flip"]
-    return TILE_IDS["shore_v"]
+    h = COAST_SEGMENT_HEIGHT
+    k = math.floor(gy / h)
+    yloc = gy - k * h
+    xk = get_coast_segment_col(k, seed)
+    xk_next = get_coast_segment_col(k + 1, seed)
+    ocean = xk + BEACH_WIDTH
+    next_ocean = xk_next + BEACH_WIDTH
+
+    if yloc < h - 1 or next_ocean == ocean:
+        if gx == ocean:
+            return TILE_IDS["shore_v"]
+        if gx > ocean:
+            return TILE_IDS["ocean_water"]
+    elif next_ocean == ocean - 1:
+        # Step West: smooth 2-tile corner pair
+        if gx == ocean - 1:
+            return TILE_IDS["shore_corner_in"]
+        if gx == ocean:
+            return TILE_IDS["shore_corner_out"]
+        if gx > ocean:
+            return TILE_IDS["ocean_water"]
+    else:
+        # Step East: smooth 2-tile corner pair
+        if gx == ocean:
+            return TILE_IDS["shore_corner_in_flip"]
+        if gx == ocean + 1:
+            return TILE_IDS["shore_corner_out_flip"]
+        if gx > ocean + 1:
+            return TILE_IDS["ocean_water"]
+    return TILE_IDS["ocean_water"]
 
 
 def get_segment_col(k: int, seed: int) -> int:

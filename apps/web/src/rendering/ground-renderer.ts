@@ -24,7 +24,7 @@ export class GroundRenderer {
     chunk: WorldChunk,
     options: RenderOptions
   ): HTMLCanvasElement {
-    const cacheKey = `${chunk.cx},${chunk.cy},${chunk.seed},${options.showHills},${options.showRoad},${options.showBeach},${options.showWater}`;
+    const cacheKey = `${chunk.cx},${chunk.cy},${chunk.seed},${options.showHills},${options.showRoad},${options.showBeach},${options.showWater},${options.showTrees}`;
     const cached = this.chunkCanvasCache.get(cacheKey);
     if (cached) return cached;
 
@@ -105,12 +105,21 @@ export class GroundRenderer {
     if (options.showTrees) {
       gCtx.save();
       gCtx.fillStyle = 'rgba(0, 0, 0, 0.28)';
+      const palmShadowImg = this.loader.getImage('tree_palm_shadow');
       for (const tree of chunk.trees) {
-        const bx = tree.x - startGX * TILE_SIZE + 32;
-        const by = tree.y - startGY * TILE_SIZE + 112;
-        gCtx.beginPath();
-        gCtx.ellipse(bx, by, 20, 8, 0, 0, Math.PI * 2);
-        gCtx.fill();
+        if (tree.type === 'palm') {
+          if (palmShadowImg && palmShadowImg.complete) {
+            const bx = tree.x - startGX * TILE_SIZE;
+            const by = tree.y - startGY * TILE_SIZE;
+            gCtx.drawImage(palmShadowImg, bx, by);
+          }
+        } else {
+          const bx = tree.x - startGX * TILE_SIZE + 32;
+          const by = tree.y - startGY * TILE_SIZE + 112;
+          gCtx.beginPath();
+          gCtx.ellipse(bx, by, 20, 8, 0, 0, Math.PI * 2);
+          gCtx.fill();
+        }
       }
       gCtx.restore();
     }

@@ -6,6 +6,7 @@ import {
   isRoadTile,
   isHillTile,
   isValidTreePosGlobal,
+  isValidPalmTreePosGlobal,
   isNearWater,
   isNearCliffEdge,
 } from './terrain-rules';
@@ -133,6 +134,26 @@ export function getChunkTreeLocations(
     }
   }
 
+  // 2. Beach Palm Trees (candidates along the sandy coastline)
+  for (let pi = 0; pi < 3; pi++) {
+    const prandX = seededHash(cx * 88 + pi, cy * 88 + pi, seed + 9010);
+    const prandY = seededHash(cx * 88 + pi, cy * 88 + pi, seed + 9020);
+    const plx = Math.floor(prandX * CHUNK_SIZE);
+    const ply = Math.floor(prandY * CHUNK_SIZE);
+    const pgx = startGX + plx;
+    const pgy = startGY + ply;
+
+    if (isValidPalmTreePosGlobal(pgx, pgy, seed)) {
+      const ptx = pgx * TILE_SIZE - 48;
+      const pty = pgy * TILE_SIZE - 119;
+
+      const overlaps = list.some((t) => isTreeOverlappingTree(ptx, pty, t.x, t.y));
+      if (!overlaps) {
+        list.push({ x: ptx, y: pty });
+      }
+    }
+  }
+
   chunkTreeLocsCache.set(key, list);
   return list;
 }
@@ -153,6 +174,7 @@ export function generateChunkTrees(
   );
   const trees: TreeEntity[] = [];
 
+  // 1. Inland Forest, Meadow & Mountain Trees
   for (let i = 0; i < numCandidates; i++) {
     const randX = seededHash(cx * 100 + i, cy * 100 + i, seed + 2);
     const randY = seededHash(cx * 100 + i, cy * 100 + i, seed + 3);
@@ -166,11 +188,11 @@ export function generateChunkTrees(
     const ty = gy * TILE_SIZE - 86;
 
     if (isValidTreePosGlobal(tx, ty, seed)) {
-      // 1. Prevent overlap with already placed trees in THIS chunk
+      // Prevent overlap with already placed trees in THIS chunk
       const overlapsInChunk = trees.some((t) => isTreeOverlappingTree(tx, ty, t.x, t.y));
       if (overlapsInChunk) continue;
 
-      // 2. Prevent overlap with trees in neighbor chunks
+      // Prevent overlap with trees in neighbor chunks
       let overlapsNeighbor = false;
       for (let dy = -1; dy <= 1; dy++) {
         for (let dx = -1; dx <= 1; dx++) {
@@ -192,6 +214,44 @@ export function generateChunkTrees(
 
       trees.push({ gx, gy, x: tx, y: ty, type: tType });
       colliders.push({ x: tx + 14, y: ty + 90, w: 36, h: 26, type: 'tree' });
+    }
+  }
+
+  // 2. Beach Palm Trees (1-2 candidates per chunk along coast)
+  for (let pi = 0; pi < 3; pi++) {
+    const prandX = seededHash(cx * 88 + pi, cy * 88 + pi, seed + 9010);
+    const prandY = seededHash(cx * 88 + pi, cy * 88 + pi, seed + 9020);
+    const plx = Math.floor(prandX * CHUNK_SIZE);
+    const ply = Math.floor(prandY * CHUNK_SIZE);
+    const pgx = startGX + plx;
+    const pgy = startGY + ply;
+
+    if (isValidPalmTreePosGlobal(pgx, pgy, seed)) {
+      const ptx = pgx * TILE_SIZE - 48;
+      const pty = pgy * TILE_SIZE - 119;
+
+      // Prevent overlap in this chunk
+      const overlapsInChunk = trees.some((t) => isTreeOverlappingTree(ptx, pty, t.x, t.y));
+      if (overlapsInChunk) continue;
+
+      // Prevent overlap with trees in neighbor chunks
+      let overlapsNeighbor = false;
+      for (let dy = -1; dy <= 1; dy++) {
+        for (let dx = -1; dx <= 1; dx++) {
+          if (dx === 0 && dy === 0) continue;
+          if (dy > 0 || (dy === 0 && dx > 0)) continue;
+          const nTrees = getChunkTreeLocations(cx + dx, cy + dy, seed);
+          if (nTrees.some((nt) => isTreeOverlappingTree(ptx, pty, nt.x, nt.y))) {
+            overlapsNeighbor = true;
+            break;
+          }
+        }
+        if (overlapsNeighbor) break;
+      }
+      if (overlapsNeighbor) continue;
+
+      trees.push({ gx: pgx, gy: pgy, x: ptx, y: pty, type: 'palm' });
+      colliders.push({ x: pgx * TILE_SIZE, y: pgy * TILE_SIZE + 6, w: 32, h: 26, type: 'tree' });
     }
   }
 

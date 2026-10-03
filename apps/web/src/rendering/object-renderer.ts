@@ -111,16 +111,21 @@ export class ObjectRenderer {
   ): void {
     for (const chunk of chunkManager.activeChunks) {
       for (const tree of chunk.trees) {
+        const isPalm = tree.type === 'palm';
+        const w = isPalm ? 128 : 64;
+        const h = isPalm ? 200 : 120;
+        const ySort = isPalm ? tree.y + 151 : tree.y + 112;
+
         if (
-          tree.x + 64 >= bounds.minX &&
+          tree.x + w >= bounds.minX &&
           tree.x <= bounds.maxX &&
-          tree.y + 120 >= bounds.minY &&
+          tree.y + h >= bounds.minY &&
           tree.y <= bounds.maxY
         ) {
           const img = this.loader.getImage(`tree_${tree.type}`);
           if (img && img.complete) {
             list.push({
-              ySort: tree.y + 112,
+              ySort,
               draw: (ctx) => {
                 ctx.drawImage(img, tree.x, tree.y);
               },
