@@ -499,9 +499,24 @@ export function isInteriorFreshwater(gx: number, gy: number, seed: number): bool
 }
 
 /**
+ * Helper to check if a tile is near a bridge structure.
+ * Leaves a minimum 2-tile clearance buffer from bridges so flora never crowds around bridge piers.
+ */
+function isNearBridgeStructure(gx: number, gy: number, seed: number, radius = 2): boolean {
+  for (let dx = -radius; dx <= radius; dx++) {
+    for (let dy = -radius; dy <= radius; dy++) {
+      if (isBridgeTile(gx + dx, gy + dy, seed)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+/**
  * Generates freshwater lake and river surface ecosystem (Water lilies, floating lotus pads).
- * Strictly spawns only on interior river and lake water tiles with at least 1 tile buffer from shores and bridges.
- * Employs candidate-based spatial clustering to ensure lakes and rivers have a rich, natural presence of aquatic flora.
+ * Strictly spawns only on interior river and lake water tiles with at least 1 tile buffer from shores and 2 tiles from bridges.
+ * Employs a global Poisson-cell grid (4x4 tiles) to ensure natural, well-spaced placement with zero overcrowding.
  */
 export function generateChunkWaterFlora(
   cx: number,
@@ -512,13 +527,14 @@ export function generateChunkWaterFlora(
   const startGY = cy * CHUNK_SIZE;
   const waterFlora: WaterFloraEntity[] = [];
 
-  // 1. Gather all candidate interior freshwater tiles strictly within this chunk
+  // 1. Gather all candidate interior freshwater tiles strictly within this chunk,
+  // excluding tiles too close to bridge structures (minimum 2-tile buffer)
   const candidates: { gx: number; gy: number }[] = [];
   for (let ly = 0; ly < CHUNK_SIZE; ly++) {
     for (let lx = 0; lx < CHUNK_SIZE; lx++) {
       const gx = startGX + lx;
       const gy = startGY + ly;
-      if (isInteriorFreshwater(gx, gy, seed)) {
+      if (isInteriorFreshwater(gx, gy, seed) && !isNearBridgeStructure(gx, gy, seed, 2)) {
         candidates.push({ gx, gy });
       }
     }
@@ -528,80 +544,77 @@ export function generateChunkWaterFlora(
     return waterFlora;
   }
 
-  const occupied = new Set<string>();
-
-  const addFlora = (gx: number, gy: number, type: string, phaseOffset = 0) => {
-    const key = `${gx},${gy}`;
-    if (occupied.has(key)) return;
-    occupied.add(key);
-
-    const px = gx * TILE_SIZE;
-    const py = gy * TILE_SIZE;
-    const basePhase = seededHash(gx, gy, seed + 2401) * Math.PI * 2;
-    waterFlora.push({
-      gx,
-      gy,
-      x: px,
-      y: py,
-      type,
-      phase: basePhase + phaseOffset,
-    });
-  };
-
-  // 2. Spawn primary roots across eligible freshwater tiles (~20% natural density)
+  // 2. Partition candidates into 4x4 spatial cells.
+  // Each 4x4 cell can host at most ONE flora entity, preventing clumping and chaining.
+  const cellMap = new Map<string, { gx: number; gy: number }[]>();
   for (const c of candidates) {
-    const rootRoll = seededHash(c.gx, c.gy, seed + 2001);
-    if (rootRoll < 0.20) {
-      const lilyRoll = seededHash(c.gx, c.gy, seed + 2301);
+    const cellX = Math.floor(c.gx / 4);
+    const cellY = Math.floor(c.gy / 4);
+    const cellKey = `${cellX},${cellY}`;
+    let list = cellMap.get(cellKey);
+    if (!list) {
+      list = [];
+      cellMap.set(cellKey, list);
+    }
+    list.push(c);
+  }
+
+  const placed: { gx: number; gy: number }[] = [];
+
+  // Sort cell keys deterministically
+  const sortedCellKeys = Array.from(cellMap.keys()).sort();
+
+  for (const cellKey of sortedCellKeys) {
+    const [cellXStr, cellYStr] = cellKey.split(',');
+    const cellX = parseInt(cellXStr, 10);
+    const cellY = parseInt(cellYStr, 10);
+    const cellCandidates = cellMap.get(cellKey)!;
+
+    // 40% spawn rate per eligible 4x4 water cell (tasteful, serene distribution)
+    const roll = seededHash(cellX, cellY, seed + 8001);
+    if (roll < 0.40 && cellCandidates.length > 0) {
+      // Pick candidate inside this cell
+      const pickIdx = Math.floor(seededHash(cellX, cellY, seed + 8101) * cellCandidates.length);
+      const chosen = cellCandidates[pickIdx];
+
+      // Minimum distance check: ensure at least 2 tiles clearance from any other placed flora
+      const tooClose = placed.some(
+        (p) => Math.abs(p.gx - chosen.gx) < 2 && Math.abs(p.gy - chosen.gy) < 2
+      );
+      if (tooClose) continue;
+
+      placed.push(chosen);
+
+      // Determine flower type (40% plain green pad, 60% colorful blooming lotuses/lilies)
+      const lilyRoll = seededHash(chosen.gx, chosen.gy, seed + 2301);
       let lilyType = 'water_lily_pad';
-      if (lilyRoll > 0.35) {
-        if (lilyRoll < 0.60) lilyType = 'water_lily_purple';
-        else if (lilyRoll < 0.80) lilyType = 'water_lily_pink';
+      if (lilyRoll > 0.40) {
+        if (lilyRoll < 0.65) lilyType = 'water_lily_pink';
+        else if (lilyRoll < 0.85) lilyType = 'water_lily_purple';
         else lilyType = 'water_lily_white';
       }
 
-      addFlora(c.gx, c.gy, lilyType);
-
-      // 3. Cluster companion pad (55% chance to spawn an adjacent companion pad)
-      const compRoll = seededHash(c.gx, c.gy, seed + 2501);
-      if (compRoll > 0.45) {
-        const dirs = [
-          { dx: 1, dy: 0 },
-          { dx: -1, dy: 0 },
-          { dx: 0, dy: 1 },
-          { dx: 0, dy: -1 },
-        ];
-        const dirIdx = Math.floor(seededHash(c.gx, c.gy, seed + 2701) * 4);
-        const { dx, dy } = dirs[dirIdx];
-        const cgx = c.gx + dx;
-        const cgy = c.gy + dy;
-
-        // Ensure companion tile is also in this chunk and is valid interior freshwater
-        if (
-          cgx >= startGX &&
-          cgx < startGX + CHUNK_SIZE &&
-          cgy >= startGY &&
-          cgy < startGY + CHUNK_SIZE &&
-          isInteriorFreshwater(cgx, cgy, seed)
-        ) {
-          let compType = 'water_lily_pad';
-          if (compRoll > 0.85) {
-            compType = 'water_lily_pink';
-          } else if (compRoll > 0.70) {
-            compType = 'water_lily_purple';
-          }
-          addFlora(cgx, cgy, compType, 1.2);
-        }
-      }
+      const px = chosen.gx * TILE_SIZE;
+      const py = chosen.gy * TILE_SIZE;
+      const phase = seededHash(chosen.gx, chosen.gy, seed + 2401) * Math.PI * 2;
+      waterFlora.push({
+        gx: chosen.gx,
+        gy: chosen.gy,
+        x: px,
+        y: py,
+        type: lilyType,
+        phase,
+      });
     }
   }
 
-  // 4. Guarantee at least 1 cluster if there is substantial water body (>= 3 interior tiles) but no roots spawned
-  if (waterFlora.length === 0 && candidates.length >= 3) {
+  // 3. Guarantee at least 1 flora if chunk contains substantial water body (>= 4 interior tiles)
+  // and no flora was rolled by chance
+  if (waterFlora.length === 0 && candidates.length >= 4) {
     let bestCandidate = candidates[0];
     let bestScore = 1;
     for (const c of candidates) {
-      const score = seededHash(c.gx, c.gy, seed + 2001);
+      const score = seededHash(c.gx, c.gy, seed + 8001);
       if (score < bestScore) {
         bestScore = score;
         bestCandidate = c;
@@ -609,8 +622,24 @@ export function generateChunkWaterFlora(
     }
 
     const lilyRoll = seededHash(bestCandidate.gx, bestCandidate.gy, seed + 2301);
-    const lilyType = lilyRoll > 0.5 ? 'water_lily_pink' : 'water_lily_pad';
-    addFlora(bestCandidate.gx, bestCandidate.gy, lilyType);
+    let lilyType = 'water_lily_pad';
+    if (lilyRoll > 0.40) {
+      if (lilyRoll < 0.65) lilyType = 'water_lily_pink';
+      else if (lilyRoll < 0.85) lilyType = 'water_lily_purple';
+      else lilyType = 'water_lily_white';
+    }
+
+    const px = bestCandidate.gx * TILE_SIZE;
+    const py = bestCandidate.gy * TILE_SIZE;
+    const phase = seededHash(bestCandidate.gx, bestCandidate.gy, seed + 2401) * Math.PI * 2;
+    waterFlora.push({
+      gx: bestCandidate.gx,
+      gy: bestCandidate.gy,
+      x: px,
+      y: py,
+      type: lilyType,
+      phase,
+    });
   }
 
   return waterFlora;
