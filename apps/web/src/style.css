@@ -1397,6 +1397,48 @@ body {
    MOVES & ITEMS DEX PANELS (Chiêu thức & Vật phẩm)
    ============================================================ */
 
+/* Move Left Header (Title Box in top left) */
+.move-left-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+.move-header-name-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
+}
+
+.move-header-title-vi {
+  font-family: 'Tiny5', 'Power Clear', 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.move-header-title-en {
+  font-family: 'Tiny5', 'Power Clear', sans-serif;
+  font-size: 8.5px;
+  font-weight: 600;
+  color: #64748b;
+  line-height: 1;
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
 /* Move Preview Card */
 .move-preview-box {
   display: flex;
@@ -1508,7 +1550,7 @@ body {
   font-family: 'Tiny5', 'Power Clear', sans-serif;
   font-size: 8.5px;
   font-weight: 700;
-  color: #14d6cb;
+  color: #0891b2;
   letter-spacing: 0.5px;
   margin-bottom: 3px;
 }
@@ -1517,9 +1559,18 @@ body {
   font-family: 'Tiny5', 'Power Clear', sans-serif;
   font-size: 11px;
   line-height: 1.25;
-  color: #f1f5f9;
+  color: #0f172a;
   overflow-y: auto;
   max-height: 44px;
+}
+
+.move-desc-content::-webkit-scrollbar {
+  width: 3px;
+}
+
+.move-desc-content::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 2px;
 }
 
 /* Move Row in 7-item List */

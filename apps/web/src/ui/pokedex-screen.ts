@@ -468,8 +468,11 @@ export class PokedexUI {
 
           <!-- Moves Left Panel (Display when Chiêu thức tab is active) -->
           <div class="list-left-panel" id="panelMoves" style="display: none;">
-            <div class="list-left-header" id="moveLeftHeader">
-              <span class="list-header-title" id="moveLeftTitle">Súng Phun Lửa</span>
+            <div class="list-left-header move-left-header" id="moveLeftHeader">
+              <div class="move-header-name-group">
+                <span class="move-header-title-vi" id="moveLeftTitleVi">Súng Phun Lửa</span>
+                <span class="move-header-title-en" id="moveLeftTitleEn">Flamethrower</span>
+              </div>
             </div>
 
             <div class="list-preview-box move-preview-box" id="movePreviewBox">
@@ -1040,13 +1043,21 @@ export class PokedexUI {
     if (!this.rootModal) return;
     const current = this.filteredMoves[this.selectedMoveIndex];
 
-    const titleEl = this.rootModal.querySelector<HTMLElement>('#moveLeftTitle');
-    if (titleEl) {
+    const titleViEl = this.rootModal.querySelector<HTMLElement>('#moveLeftTitleVi');
+    const titleEnEl = this.rootModal.querySelector<HTMLElement>('#moveLeftTitleEn');
+    if (titleViEl) {
       if (current) {
-        titleEl.innerText = current.nameVi || current.nameEn || current.name;
-        titleEl.title = `${current.nameEn || current.name} (${current.type})`;
+        titleViEl.innerText = current.nameVi || current.nameEn || current.name;
+        titleViEl.title = `${current.nameEn || current.name} (${current.type})`;
       } else {
-        titleEl.innerText = 'Không tìm thấy chiêu thức';
+        titleViEl.innerText = 'Không tìm thấy chiêu thức';
+      }
+    }
+    if (titleEnEl) {
+      if (current) {
+        titleEnEl.innerText = current.nameEn || current.name;
+      } else {
+        titleEnEl.innerText = '';
       }
     }
 
