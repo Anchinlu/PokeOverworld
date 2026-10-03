@@ -1,6 +1,12 @@
-import type { PokemonType, PokemonStats } from '@pokemon/shared-types';
+import type {
+  PokemonType,
+  PokemonStats,
+  MoveCategory,
+  MoveStatChange,
+  MoveStatusEffect,
+} from '@pokemon/shared-types';
 
-export type MoveCategory = 'physical' | 'special' | 'status';
+export type { MoveCategory, MoveStatChange, MoveStatusEffect };
 
 export interface BattleMove {
   id: string;
@@ -12,6 +18,25 @@ export interface BattleMove {
   pp: number;
   maxPp: number;
   description: string;
+  descriptionEn?: string;
+  priority?: number;
+  statChanges?: MoveStatChange[];
+  statusEffect?: MoveStatusEffect;
+  healPercent?: number;
+  highCrit?: boolean;
+}
+
+export type StatusCondition =
+  'none' | 'paralysis' | 'burn' | 'poison' | 'toxic' | 'sleep' | 'freeze';
+
+export interface StatStages {
+  attack: number;
+  defense: number;
+  spAtk: number;
+  spDef: number;
+  speed: number;
+  accuracy: number;
+  evasion: number;
 }
 
 export interface BattlerPokemon {
@@ -23,6 +48,9 @@ export interface BattlerPokemon {
   currentHp: number;
   maxHp: number;
   stats: PokemonStats;
+  statStages?: StatStages;
+  status?: StatusCondition;
+  sleepTurns?: number;
   moves: BattleMove[];
   frontSprite: string;
   backSprite: string;

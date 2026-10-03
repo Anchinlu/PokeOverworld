@@ -61,3 +61,41 @@ export interface PokemonDatabase {
   source: string;
   pokemon: Record<string, PokemonSpeciesData>;
 }
+
+export type MoveCategory = 'physical' | 'special' | 'status';
+
+export interface MoveStatChange {
+  stat: 'attack' | 'defense' | 'spAtk' | 'spDef' | 'speed' | 'accuracy' | 'evasion';
+  stages: number;
+  target: 'self' | 'opponent';
+  chance?: number;
+}
+
+export interface MoveStatusEffect {
+  condition: 'paralysis' | 'burn' | 'poison' | 'toxic' | 'sleep' | 'freeze';
+  target: 'self' | 'opponent';
+  chance: number;
+}
+
+export interface MoveData {
+  id: string;
+  name: string;
+  type: PokemonType;
+  category: MoveCategory;
+  power: number;
+  accuracy: number;
+  pp: number;
+  maxPp: number;
+  description: string;
+  descriptionEn?: string;
+  priority?: number;
+  statChanges?: MoveStatChange[];
+  statusEffect?: MoveStatusEffect;
+  healPercent?: number;
+  highCrit?: boolean;
+}
+
+export interface MovesDatabase {
+  count: number;
+  moves: Record<string, MoveData>;
+}

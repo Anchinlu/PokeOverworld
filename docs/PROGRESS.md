@@ -473,3 +473,18 @@
 - Chỉ chạy `npm run desktop:build` khi cần kiểm tra installer hoặc gửi bản preview cho người khác.
 - Sau khi sửa asset/build pipeline, phải chạy lại `npm run ci` và `npm run desktop:build`.
 - Không commit `apps/desktop/src-tauri/target/` hoặc các file sinh trong `apps/web/public/Graphics/`.
+
+### 16. Hệ thống Chiêu thức (Moves Database & Battle Move Mechanics) — Đã hoàn thành bước logic
+
+- **Database chiêu thức toàn diện ([packages/game-data/moves-db.json](file:///e:/Pokemon/packages/game-data/moves-db.json)):**
+  - Trích xuất và xây dựng cơ sở dữ liệu với hơn 950 chiêu thức Pokémon chuẩn quốc tế từ pokemondb.net.
+  - Toàn bộ mô tả chiêu thức đã được biên dịch sang **tiếng Việt chuẩn thuật ngữ Pokémon** (Tấn công, Phòng thủ, Chí mạng, Tê liệt, Bỏng, Nhiễm độc, Ru ngủ, v.v.).
+  - Cung cấp đầy đủ thông số: ID, Tên, Hệ (18 Types), Phân loại (Physical / Special / Status), Sát thương (Power), Độ chính xác (Accuracy), Điểm năng lượng (PP / Max PP).
+  - Tích hợp hiệu ứng chuyên sâu: Thay đổi chỉ số (Stat stages -6 đến +6), Hiệu ứng trạng thái bất lợi (Paralysis, Burn, Poison, Sleep, Freeze), Hồi phục HP (Recover, Roost, Soft-Boiled), Tỉ lệ đòn chí mạng cao (High crit) và Độ ưu tiên lượt đánh (Priority như Quick Attack).
+- **Nâng cấp Battle Engine ([apps/web/src/battle/battle-engine.ts](file:///e:/Pokemon/apps/web/src/battle/battle-engine.ts)):**
+  - Kiểm tra độ chính xác (Accuracy check) và né đòn (Evasion stages) — các chiêu thức có thể trượt mục tiêu nếu roll ngẫu nhiên không đạt.
+  - Áp dụng thay đổi bậc chỉ số theo công thức chuẩn Gen 3-9: nhân hệ số từ 0.25x (-6) đến 4.0x (+6).
+  - Trạng thái bất lợi: Bỏng giảm 50% Tấn công vật lý, Tê liệt giảm 50% Tốc độ và 25% cơ hội mất lượt, Đóng băng và Ngủ vô hiệu hóa đòn đánh cho đến khi tỉnh/rã băng.
+  - Cơ chế thứ tự tấn công (`getFirstAttacker`): So sánh theo Độ ưu tiên chiêu thức (Priority) trước, sau đó so sánh Tốc độ thực tế sau khi tính bậc chỉ số và trạng thái tê liệt.
+- **Kiểm thử:** Đã bổ sung bộ test chuyên sâu cho chiêu thức và logic chiến đấu tại [apps/web/test/battle.test.ts](file:///e:/Pokemon/apps/web/test/battle.test.ts), 69/69 tests đạt 100%, CI pass.
+

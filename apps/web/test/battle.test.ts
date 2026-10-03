@@ -138,4 +138,55 @@ describe('Wild Pokémon Battle System', () => {
     const mountainEnv = getBattleEnvironment('hill_edge', false);
     expect(mountainEnv.background).toBe('Mountain.png');
   });
+
+  it('loads comprehensive moves database with Vietnamese descriptions and accurate move effects', async () => {
+    const { MOVES_DB } = await import('../src/battle/moves-db');
+    expect(Object.keys(MOVES_DB).length).toBeGreaterThan(900);
+
+    const tackle = MOVES_DB['tackle'];
+    expect(tackle.name).toBe('Tackle');
+    expect(tackle.description).toContain('Lao toàn bộ cơ thể');
+
+    const thunderWave = MOVES_DB['thunder_wave'];
+    expect(thunderWave.statusEffect?.condition).toBe('paralysis');
+
+    const swordsDance = MOVES_DB['swords_dance'];
+    expect(swordsDance.statChanges?.[0]?.stat).toBe('attack');
+    expect(swordsDance.statChanges?.[0]?.stages).toBe(2);
+  });
+
+  it('correctly executes stat-changing moves, healing, and priority ordering in BattleEngine', async () => {
+    const { MOVES_DB } = await import('../src/battle/moves-db');
+    const player = createBattler('PIKACHU', 20, true);
+    const enemy = createBattler('BULBASAUR', 20, false);
+    const env = getBattleEnvironment('meadow', false);
+    const engine = new BattleEngine(player, enemy, env);
+
+    // 1. Stat modification: Swords Dance (+2 Attack)
+    const sd = MOVES_DB['swords_dance'];
+    engine.executeAttack(player, enemy, sd);
+    expect(player.statStages?.attack).toBe(2);
+
+    // 2. Stat modification on opponent: Growl (-1 Attack)
+    const growl = MOVES_DB['growl'];
+    engine.executeAttack(player, enemy, growl);
+    expect(enemy.statStages?.attack).toBe(-1);
+
+    // 3. Status effect: Thunder Wave
+    const tw = MOVES_DB['thunder_wave'];
+    engine.executeAttack(player, enemy, tw);
+    expect(enemy.status).toBe('paralysis');
+
+    // 4. Healing move: Recover
+    player.currentHp = 10;
+    const recover = MOVES_DB['recover'];
+    engine.executeAttack(player, enemy, recover);
+    expect(player.currentHp).toBeGreaterThan(10);
+
+    // 5. Priority ordering: Quick Attack (+1 Priority) vs normal move
+    const qa = MOVES_DB['quick_attack'];
+    const tackle = MOVES_DB['tackle'];
+    expect(engine.getFirstAttacker(qa, tackle)).toBe('player');
+    expect(engine.getFirstAttacker(tackle, qa)).toBe('enemy');
+  });
 });

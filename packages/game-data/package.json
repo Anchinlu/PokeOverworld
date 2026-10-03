@@ -11,6 +11,7 @@
     "./constants": "./constants.ts",
     "./biomes.json": "./biomes.json",
     "./encounters.json": "./encounters.json",
-    "./pokemon-db.json": "./pokemon-db.json"
+    "./pokemon-db.json": "./pokemon-db.json",
+    "./moves-db.json": "./moves-db.json"
   }
 }
