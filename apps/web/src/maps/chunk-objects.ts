@@ -9,12 +9,17 @@ import {
   isValidPalmTreePosGlobal,
   isNearWater,
   isNearCliffEdge,
-  isRiverTile,
-  isLakeTile,
   isBridgeTile,
   isOceanTile,
   isWaterTile,
 } from './terrain-rules';
+import {
+  isVillageArea,
+  isVillageBuildingTile,
+  isBuildingRoofOrFootprint,
+  getVillageBuildingsForChunk,
+  getVillageGardenPlantsForChunk,
+} from './village-rules';
 import { pickBerryForEcology } from './berry-data';
 import {
   sampleEcology,
@@ -65,6 +70,21 @@ export interface BerryBushEntity {
   stage: 0 | 1 | 2 | 3;
   plantedAt: number;
   phase: number;
+}
+
+export interface BuildingEntity {
+  id: string;
+  type: string;
+  gx: number;
+  gy: number;
+  renderX: number;
+  renderY: number;
+  spriteWidth: number;
+  spriteHeight: number;
+  ySort: number;
+  doorGX: number;
+  doorGY: number;
+  doorWidthTiles?: number;
 }
 
 /**
@@ -266,6 +286,80 @@ export function generateChunkTrees(
 
 export { isNearCliffEdge } from './terrain-rules';
 
+export function generateChunkBuildings(
+  cx: number,
+  cy: number,
+  seed: number,
+  colliders: Collider[]
+): BuildingEntity[] {
+  const buildings = getVillageBuildingsForChunk(cx, cy, seed);
+  const entities: BuildingEntity[] = [];
+
+  const chunkStartGX = cx * CHUNK_SIZE;
+  const chunkEndGX = chunkStartGX + CHUNK_SIZE;
+  const chunkStartGY = cy * CHUNK_SIZE;
+  const chunkEndGY = chunkStartGY + CHUNK_SIZE;
+
+  for (const b of buildings) {
+    entities.push({
+      id: b.id,
+      type: b.type,
+      gx: b.gx,
+      gy: b.gy,
+      renderX: b.renderX,
+      renderY: b.renderY,
+      spriteWidth: b.spriteWidth,
+      spriteHeight: b.spriteHeight,
+      ySort: b.ySort,
+      doorGX: b.doorGX,
+      doorGY: b.doorGY,
+      doorWidthTiles: b.doorWidthTiles ?? 1,
+    });
+
+    const doorWidth = b.doorWidthTiles ?? 1;
+
+    // Add solid colliders for building footprint tiles belonging to this chunk
+    for (let dy = 0; dy < b.heightTiles; dy++) {
+      for (let dx = 0; dx < b.widthTiles; dx++) {
+        const tx = b.gx + dx;
+        const ty = b.gy + dy;
+
+        // Leave door tile(s) open for smooth player approach (signposts have no door)
+        if (
+          b.type !== 'signpost' &&
+          ty === b.doorGY &&
+          tx >= b.doorGX &&
+          tx < b.doorGX + doorWidth
+        ) {
+          continue;
+        }
+
+        if (tx >= chunkStartGX && tx < chunkEndGX && ty >= chunkStartGY && ty < chunkEndGY) {
+          if (b.type === 'signpost') {
+            colliders.push({
+              x: tx * TILE_SIZE + 6,
+              y: ty * TILE_SIZE + 10,
+              w: 20,
+              h: 18,
+              type: 'building',
+            });
+          } else {
+            colliders.push({
+              x: tx * TILE_SIZE,
+              y: ty * TILE_SIZE,
+              w: TILE_SIZE,
+              h: TILE_SIZE,
+              type: 'building',
+            });
+          }
+        }
+      }
+    }
+  }
+
+  return entities;
+}
+
 export function generateChunkFoliage(
   cx: number,
   cy: number,
@@ -280,6 +374,19 @@ export function generateChunkFoliage(
   const startGY = cy * CHUNK_SIZE;
   const plants: PlantEntity[] = [];
 
+  // 0. Curated Town Garden Landscaping
+  const townGardenPlants = getVillageGardenPlantsForChunk(cx, cy, seed);
+  for (const gp of townGardenPlants) {
+    plants.push({
+      gx: gp.gx,
+      gy: gp.gy,
+      x: gp.gx * TILE_SIZE,
+      y: gp.gy * TILE_SIZE,
+      type: gp.type,
+      phase: Math.floor(seededHash(gp.gx, gp.gy, seed + 888) * 5),
+    });
+  }
+
   // 1. Lowland Meadow & Grassland Flora
   for (let qy = 0; qy < 2; qy++) {
     for (let qx = 0; qx < 2; qx++) {
@@ -292,8 +399,14 @@ export function generateChunkFoliage(
           const gx = startGX + lx;
           const gy = startGY + ly;
 
-          // STRICT: Prevent flowers/sprouts from spawning right at cliff base/rim or water edge
-          if (isNearCliffEdge(gx, gy, seed) || isNearWater(gx, gy, seed, 1)) {
+          // STRICT: Prevent flowers/sprouts from spawning right at cliff base/rim, water edge, roads, or building footprints
+          if (
+            isNearCliffEdge(gx, gy, seed) ||
+            isNearWater(gx, gy, seed, 1) ||
+            isRoadTile(gx, gy, seed) ||
+            isVillageBuildingTile(gx, gy, seed, 1) ||
+            isBuildingRoofOrFootprint(gx, gy, seed, 1)
+          ) {
             continue;
           }
 
@@ -412,7 +525,16 @@ export function generateChunkFoliage(
         terrainGrid[ly]?.[lx] === TERRAIN.HILL && tileIdGrid[ly]?.[lx] === TILE_IDS.cliff_pure;
 
       if (isGrass || isHillFlat) {
-        if (isNearCliffEdge(gx, gy, seed) || isNearWater(gx, gy, seed, 1)) continue;
+        if (
+          isNearCliffEdge(gx, gy, seed) ||
+          isNearWater(gx, gy, seed, 1) ||
+          isRoadTile(gx, gy, seed) ||
+          isVillageBuildingTile(gx, gy, seed, 1) ||
+          isBuildingRoofOrFootprint(gx, gy, seed, 1) ||
+          isVillageArea(gx, gy, seed, 0)
+        ) {
+          continue;
+        }
         if (tallGrass.some((tg) => tg.gx === gx && tg.gy === gy)) continue;
         if (berryBushes.some((b) => Math.abs(b.gx - gx) <= 1 && Math.abs(b.gy - gy) <= 1)) continue;
         if (plants.some((p) => Math.abs(p.gx - gx) <= 1 && Math.abs(p.gy - gy) <= 1)) continue;
@@ -672,7 +794,7 @@ export function generateChunkTallGrass(
       if (isNearCliffEdge(gx, gy, seed)) return false;
     } else {
       if (terrainGrid[ly]?.[lx] !== TERRAIN.GRASS) return false;
-      if (isNearCliffEdge(gx, gy, seed) || isNearWater(gx, gy, seed, 1)) return false;
+      if (isNearCliffEdge(gx, gy, seed) || isNearWater(gx, gy, seed, 1) || isVillageArea(gx, gy, seed)) return false;
       if (isRoadTile(gx, gy, seed) || isSandTile(gx, gy, seed)) return false;
     }
 
@@ -890,10 +1012,12 @@ export function generateChunkBerryBushes(
           isSandTile(bgx, bgy, seed) ||
           isHillTile(bgx, bgy, seed) ||
           isNearWater(bgx, bgy, seed, 1) ||
+          isVillageArea(bgx, bgy, seed) ||
           isRoadTile(bgx, bgy - 1, seed) ||
           isSandTile(bgx, bgy - 1, seed) ||
           isHillTile(bgx, bgy - 1, seed) ||
-          isNearWater(bgx, bgy - 1, seed, 1)
+          isNearWater(bgx, bgy - 1, seed, 1) ||
+          isVillageArea(bgx, bgy - 1, seed)
         ) {
           continue;
         }

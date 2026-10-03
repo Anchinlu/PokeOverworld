@@ -162,6 +162,39 @@ export class ObjectRenderer {
     }
   }
 
+  public collectBuildings(
+    bounds: ViewportBounds,
+    chunkManager: ChunkManager,
+    list: RenderItem[]
+  ): void {
+    const seenIds = new Set<string>();
+
+    for (const chunk of chunkManager.activeChunks) {
+      if (!chunk.buildings) continue;
+      for (const b of chunk.buildings) {
+        if (seenIds.has(b.id)) continue;
+        seenIds.add(b.id);
+
+        if (
+          b.renderX + b.spriteWidth >= bounds.minX &&
+          b.renderX <= bounds.maxX &&
+          b.renderY + b.spriteHeight >= bounds.minY &&
+          b.renderY <= bounds.maxY
+        ) {
+          const img = this.loader.getImage(`building_${b.type}`);
+          if (img && img.complete) {
+            list.push({
+              ySort: b.ySort,
+              draw: (ctx) => {
+                ctx.drawImage(img, b.renderX, b.renderY);
+              },
+            });
+          }
+        }
+      }
+    }
+  }
+
   public collectTrees(
     bounds: ViewportBounds,
     chunkManager: ChunkManager,

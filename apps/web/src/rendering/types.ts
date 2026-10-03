@@ -19,6 +19,7 @@ export interface RenderOptions {
   showBerries: boolean;
   showHeatmap: boolean;
   showWater: boolean;
+  showVillages: boolean;
   showEcologyMoisture: boolean;
   showEcologyFertility: boolean;
   showEcologyDensity: boolean;
@@ -39,6 +40,7 @@ export const DEFAULT_RENDER_OPTIONS: RenderOptions = {
   showBerries: true,
   showHeatmap: false,
   showWater: true,
+  showVillages: true,
   showEcologyMoisture: false,
   showEcologyFertility: false,
   showEcologyDensity: false,

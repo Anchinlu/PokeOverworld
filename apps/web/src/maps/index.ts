@@ -5,3 +5,4 @@ export * from './chunk';
 export * from './chunk-manager';
 export * from './berry-data';
 export * from './ecology';
+export * from './village-rules';

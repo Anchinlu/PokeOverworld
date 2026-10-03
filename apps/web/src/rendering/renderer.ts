@@ -155,6 +155,11 @@ export class GameRenderer {
       this.objectRenderer.collectTrees(bounds, chunkManager, renderList);
     }
 
+    // Village Buildings
+    if (this.options.showVillages) {
+      this.objectRenderer.collectBuildings(bounds, chunkManager, renderList);
+    }
+
     // Shadows
     this.characterRenderer.collectShadows(player, follower, renderList);
 

@@ -6,17 +6,20 @@ import {
   generateChunkTallGrass,
   generateChunkBerryBushes,
   generateChunkWaterFlora,
+  generateChunkBuildings,
   type TreeEntity,
   type PlantEntity,
   type TallGrassEntity,
   type BerryBushEntity,
   type WaterFloraEntity,
+  type BuildingEntity,
 } from './chunk-objects';
 import { generateChunkWildPokemon, type WildPokemonEntity } from './chunk-encounters';
 
 export * from './chunk-terrain';
 export * from './chunk-objects';
 export * from './chunk-encounters';
+export * from './village-rules';
 
 export class WorldChunk implements MapChunk {
   public readonly version = 1;
@@ -30,6 +33,7 @@ export class WorldChunk implements MapChunk {
   public colliders: Collider[] = [];
 
   public trees: TreeEntity[] = [];
+  public buildings: BuildingEntity[] = [];
   public plants: PlantEntity[] = [];
   public tallGrass: TallGrassEntity[] = [];
   public berryBushes: BerryBushEntity[] = [];
@@ -62,6 +66,9 @@ export class WorldChunk implements MapChunk {
     );
     this.terrainGrid = terrainGrid;
     this.tileIdGrid = tileIdGrid;
+
+    // 1.5. Generate Village Buildings and Colliders (before trees/plants)
+    this.buildings = generateChunkBuildings(cx, cy, seed, this.colliders);
 
     // 2. Generate Trees & Natural Colliders
     if (hasTrees) {

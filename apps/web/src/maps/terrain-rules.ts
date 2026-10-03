@@ -1,5 +1,10 @@
 import { seededHash } from './noise';
 import { TILE_IDS } from '@pokemon/game-data';
+import {
+  isVillagePathTile,
+  isVillageBuildingTile,
+  isTreeClippingBuilding,
+} from './village-rules';
 
 /**
  * Continuous World Generation Mathematics
@@ -165,6 +170,9 @@ export function isRoadTile(
     if (gx >= branchStart && gx < branchEnd) return true;
   }
 
+  // Village plaza and walkways
+  if (isVillagePathTile(gx, gy, seed)) return true;
+
   return false;
 }
 
@@ -323,6 +331,10 @@ export function isHillTile(
  * Prevents trees from spawning onto highways or cliff edges.
  */
 export function isValidTreePosGlobal(tx: number, ty: number, seed: number): boolean {
+  if (isTreeClippingBuilding(tx, ty, seed)) {
+    return false;
+  }
+
   const ts = 32;
   const cStart = Math.floor((tx + 6) / ts);
   const cEnd = Math.floor((tx + 58) / ts);
@@ -332,7 +344,7 @@ export function isValidTreePosGlobal(tx: number, ty: number, seed: number): bool
   let firstHill: boolean | null = null;
   for (let r = rStart; r <= rEnd; r++) {
     for (let c = cStart; c <= cEnd; c++) {
-      if (isRoadTile(c, r, seed) || isSandTile(c, r, seed)) {
+      if (isRoadTile(c, r, seed) || isSandTile(c, r, seed) || isVillageBuildingTile(c, r, seed, 1)) {
         return false;
       }
       const h = isHillTile(c, r, seed);
