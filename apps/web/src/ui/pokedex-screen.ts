@@ -395,18 +395,17 @@ export class PokedexUI {
 
     backdrop.innerHTML = `
       <div class="pokedex-retro-wrapper" id="pokedexRetroWrapper">
-        <!-- Close Button (Classic Retro) -->
-        <button class="pokedex-retro-close" id="btnPokedexRetroClose" title="Đóng Pokédex (Esc)">✕</button>
-
-        <!-- Search Bar Header -->
-        <div class="pokedex-retro-search-bar" id="pokedexRetroSearchBar">
-          <span class="pokedex-search-icon">🔍</span>
-          <input type="text" id="inputPokedexSearch" placeholder="Tìm theo tên hoặc số hiệu (VD: Pikachu, 25)..." autocomplete="off" />
-          <button class="btn-clear-search" id="btnClearSearch" title="Xóa tìm kiếm">✕</button>
-        </div>
-
         <!-- 1. Screen List (bg_list.png - 512x384) -->
         <div class="pokedex-screen pokedex-screen-list" id="pokedexScreenList">
+          <!-- Integrated Search Bar in the top black header area -->
+          <div class="pokedex-retro-search-bar" id="pokedexRetroSearchBar">
+            <span class="pokedex-search-icon">🔍</span>
+            <input type="text" id="inputPokedexSearch" placeholder="Tìm theo tên hoặc số hiệu (VD: Pikachu, 25)..." autocomplete="off" />
+            <button class="btn-clear-search" id="btnClearSearch" title="Xóa tìm kiếm">✕</button>
+          </div>
+
+          <!-- Integrated Close Button in the top black header area -->
+          <button class="pokedex-retro-close" id="btnPokedexRetroClose" title="Đóng Pokédex (Esc)">✕</button>
           <!-- Top Left Card: No. & Name (x: 28..195, y: 54..81) -->
           <div class="list-left-header" id="listLeftHeader">
             <img src="/Graphics/Pokedex/icon_own.png" class="list-own-icon" alt="Caught" />
