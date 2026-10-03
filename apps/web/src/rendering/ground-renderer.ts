@@ -248,7 +248,7 @@ export class GroundRenderer {
   ): void {
     if (!options.showWater) return;
 
-    const imgWater = this.loader.getImage('water_anim_strip');
+    const imgRiver = this.loader.getImage('river_anim_strip');
     const imgLake = this.loader.getImage('lake_anim_strip');
     const imgOcean = this.loader.getImage('ocean_anim_strip');
     const imgShoreV = this.loader.getImage('shore_anim_vertical');
@@ -274,7 +274,7 @@ export class GroundRenderer {
             const gx = startGX + lx;
             const gy = startGY + ly;
             const isLake = isLakeTile(gx, gy, chunk.seed);
-            const imgToUse = isLake && imgLake && imgLake.complete ? imgLake : imgWater;
+            const imgToUse = isLake && imgLake && imgLake.complete ? imgLake : imgRiver;
             if (!imgToUse || !imgToUse.complete) continue;
             const px = gx * TILE_SIZE;
             const py = gy * TILE_SIZE;

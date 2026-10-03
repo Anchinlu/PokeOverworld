@@ -177,9 +177,12 @@ class TileManager:
             bp = os.path.join(w_dir, f"{b_key}.png")
             if os.path.exists(bp):
                 self.water_tiles[b_key] = Image.open(bp).convert("RGBA")
-        strip_path = os.path.join(w_dir, "water_anim_strip.png")
+        strip_path = os.path.join(w_dir, "river_anim_strip.png")
         if os.path.exists(strip_path):
             self.water_anim_strip = Image.open(strip_path).convert("RGBA")
+        lake_strip_path = os.path.join(w_dir, "lake_anim_strip.png")
+        if os.path.exists(lake_strip_path):
+            self.lake_anim_strip = Image.open(lake_strip_path).convert("RGBA")
 
         # 11. Ocean & Shore animations
         assets_dir = os.path.join(self.base_dir, "apps", "web", "public", "assets")
