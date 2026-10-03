@@ -1,4 +1,10 @@
-export { filterPokemon } from './pokedex-filter';
-export { getPokedexEntries, getPokemonById } from './pokedex-data';
-export { PokedexState } from './pokedex-state';
-export type { PokedexViewMode } from './pokedex-state';
+export * from './pokedex-data';
+export * from './pokedex-filter';
+export * from './pokedex-state';
+export * from './pokedex-evolution';
+export * from './pokedex-habitat';
+export * from './pokedex-sprite';
+export * from './pokedex-moves';
+export * from './pokedex-items';
+export * from './pokedex-view';
+export * from './pokedex-controller';
