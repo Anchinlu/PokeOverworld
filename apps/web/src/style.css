@@ -1025,39 +1025,61 @@ body {
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 4px;
-  background: rgba(15, 23, 42, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 4px;
-  padding: 2px 4px;
+  gap: 14px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  height: 24px;
   z-index: 10;
 }
 
 .info-mode-tab {
+  position: relative;
   background: transparent;
-  border: 1px solid transparent;
-  border-radius: 3px;
+  border: none;
   color: #cbd5e1;
   font-family: 'Tiny5', 'VT323', sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 400;
-  padding: 1px 8px 3px 8px;
+  height: 22px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  flex-shrink: 0;
   cursor: pointer;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
-  transition: all 0.15s ease;
-  line-height: 1.2;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+  transition:
+    opacity 0.15s ease,
+    color 0.15s ease;
+  user-select: none;
+  line-height: 1;
+  box-sizing: border-box;
 }
 
 .info-mode-tab:hover {
   color: #ffffff;
-  background: rgba(255, 255, 255, 0.15);
 }
 
 .info-mode-tab.active {
-  background: #2563eb;
-  border-color: #60a5fa;
   color: #ffffff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+/* Red Square Cursor Bracket framing the active info mode tab */
+.info-mode-tab.active::after {
+  content: '';
+  position: absolute;
+  inset: -2px -6px;
+  border-style: solid;
+  border-width: 9px;
+  border-image-source: url('/Graphics/Pokedex/cursor_tab.png');
+  border-image-slice: 18 fill;
+  border-image-width: 9px;
+  border-image-repeat: stretch;
+  image-rendering: pixelated;
+  pointer-events: none;
+  animation: tabCursorPulse 1.2s ease-in-out infinite alternate;
 }
 
 .info-tab-title {
