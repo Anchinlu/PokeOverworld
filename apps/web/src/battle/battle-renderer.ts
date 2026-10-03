@@ -35,7 +35,7 @@ export class BattleRenderer {
     this.drawEnemyBattler(ctx, state);
     this.drawPlayerBattler(ctx, state);
     this.drawBallThrow(ctx, state);
-    this.renderEnemyDatabox(ctx, 0, 11, state);
+    this.renderEnemyDatabox(ctx, 0, 1, state);
     this.renderPlayerDatabox(ctx, 252, 197, state);
     this.renderBottomPanel(ctx, state);
   }
@@ -189,25 +189,25 @@ export class BattleRenderer {
 
     // Type Badges
     if (player.types.length > 0) {
-      TypeBadgeRenderer.drawTypeIcon(ctx, player.types[0], 280, 202, 0.75);
+      TypeBadgeRenderer.drawTypeIcon(ctx, player.types[0], dx + 28, dy + 15, 0.75);
     }
     if (player.types.length > 1) {
-      TypeBadgeRenderer.drawTypeIcon(ctx, player.types[1], 280, 226, 0.75);
+      TypeBadgeRenderer.drawTypeIcon(ctx, player.types[1], dx + 28, dy + 39, 0.75);
     }
 
     // Name
     ctx.font = 'bold 16px "Power Clear", "VT323", monospace, sans-serif';
-    this.drawTextWithOutline(ctx, player.name, 310, 218, '#ffffff', '#000000', 3);
+    this.drawTextWithOutline(ctx, player.name, dx + 58, dy + 31, '#ffffff', '#000000', 3);
 
     // Gender symbol
     const genderSymbol = player.gender === 'male' ? '♂' : player.gender === 'female' ? '♀' : '';
     const genderColor = player.gender === 'male' ? '#3b82f6' : '#ef4444';
     if (genderSymbol) {
-      this.drawTextWithOutline(ctx, genderSymbol, 428, 218, genderColor, '#000000', 3);
+      this.drawTextWithOutline(ctx, genderSymbol, dx + 176, dy + 31, genderColor, '#000000', 3);
     }
 
     // Level
-    this.drawTextWithOutline(ctx, `Lv.${player.level}`, 444, 218, '#ffffff', '#000000', 3);
+    this.drawTextWithOutline(ctx, `Lv.${player.level}`, dx + 192, dy + 31, '#ffffff', '#000000', 3);
 
     // HP Bar
     this.drawHpBar(ctx, dx + 136, dy + 40, 96, 6, state.playerHpPct);
