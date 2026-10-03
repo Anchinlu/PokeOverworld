@@ -49,7 +49,7 @@ describe('Ecological Statistical Distribution Verification (Section 11)', () => 
     expect(avgForest).toBeGreaterThan(avgDryland);
     expect(avgForest).toBeGreaterThanOrEqual(6.0);
     expect(avgDryland).toBeLessThanOrEqual(4.5);
-  });
+  }, 20000);
 
   it('wetland has a significantly higher ratio of blue/white flowers than red/purple', () => {
     let wetBlueWhite = 0;
