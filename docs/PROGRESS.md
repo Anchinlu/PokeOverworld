@@ -1,4 +1,27 @@
-## Cập nhật lần cuối: 2026-10-02 (Triển Khai Hoàn Tất Hoạt Ảnh Sóng Biển & Đại Dương Vô Tận)
+## Cập nhật lần cuối: 2026-10-03 (Triển Khai Làng Mạc Procedural & Tối Ưu Hitbox Pixel-Perfect)
+
+### 0.10. Triển Khai Hệ Thống Làng Mạc (Procedural Village Generation) & Tối Ưu Hitbox Pixel-Perfect:
+- **Yêu cầu & Định hướng người dùng:**
+  - Sinh làng mạc tự nhiên dọc đại lộ theo chu kỳ `VILLAGE_CYCLE_HEIGHT = 96`.
+  - Bố trí hợp lý, thoáng đãng, không gập khuôn; đường đi nối liền mạch và quanh co, không tạo ngõ cụt dọc giữa các vách nhà; tránh xếp chồng nhà thẳng hàng làm mái nhà dưới che cửa nhà trên.
+  - Mỗi ngôi làng cơ bản luôn có: 1 Trung tâm Pokémon (`pokecenter`), 1 Cửa hàng PokéShop (`pokemart`), và 1 biển báo (`signpost`) đặt ngay sát cạnh bên phải PokéMart.
+  - Nhà dân (`house_red`, `house_cottage`, `house_flowers`) phân bố theo quy mô (Tier 0: Hamlet, Tier 1: Town, Tier 2: City) với sân vườn, hoa cỏ và cây bóng mát tự nhiên xung quanh.
+  - **Hitbox Pixel-Perfect:** Khắc phục triệt để lỗi hitbox bị lệch lên mái nhà hoặc lệch khỏi chân tường. Đo đạc chính xác chân tường tiếp đất thực tế và vị trí cửa ra vào của từng công trình, đảm bảo cửa mở (walkable) và tường bao cản bước chính xác từng pixel.
+- **Tài nguyên công trình tích hợp ([manifest.json](file:///e:/Pokemon/apps/web/public/assets/manifest.json)):**
+  - `building_pokecenter.png` (256x311, 7x3 ô footprint va chạm, cửa kính trượt trung tâm tại dx=3, dy=2).
+  - `building_pokemart.png` (129x133, 4x2 ô footprint va chạm, cửa cuốn tại dx=1, dy=1).
+  - `building_house_red.png` (256x337, 6x3 ô footprint va chạm, cửa hiên tam giác tại dx=4, dy=2).
+  - `building_house_cottage.png` (192x243, 6x2 ô footprint va chạm, cửa gỗ tại dx=1, dy=1).
+  - `building_house_flowers.png` (192x319, 6x2 ô footprint va chạm, cửa chính tại dx=3, dy=1).
+  - `building_signpost.png` (68x124, 1x1 ô chân cột tại dx=0, dy=0, va chạm cột gỗ 20x18).
+- **Quy hoạch & Mạng lưới đường xá (Organic Street Network):**
+  - Trục đại lộ chính nối từ cao tốc chạy ngang qua trung tâm làng.
+  - Phân khu thương mại phía Nam (PokéCenter & PokéMart) có thềm đi bộ rộng nối thẳng cửa 2 công trình.
+  - Phân khu dân cư phía Bắc có lối đi vào tận thềm cửa từng căn nhà, kết nối qua sân hoa trung tâm.
+  - Đảo cỏ xanh trung tâm ("đảo cỏ") có hoa chuông tím (`flower_purple_bell`) và hoa xanh trang trí.
+- **Độ tin cậy & Kiểm thử:**
+  - Viết mới test suite [apps/web/test/village.test.ts](file:///e:/Pokemon/apps/web/test/village.test.ts) (7/7 tests pass).
+  - Toàn bộ 55 unit tests PASS 100%. Build production hoàn tất không lỗi.
 
 ### 0.9. Triển Khai Hoàn Tất Hoạt Ảnh Sóng Biển & Đại Dương Vô Tận (Ocean & Shoreline Wave Animation):
 - **Yêu cầu người dùng:** Tích hợp 4 spritesheet hoạt ảnh nước biển (mép sóng vỗ bờ, mặt nước đại dương, các góc khúc quanh mép biển) với bố cục bãi cát 5 ô rồi tới mép biển có sóng dạt bờ, phía Đông ngoài khơi là đại dương vô tận.
@@ -364,7 +387,22 @@
       - `npm run ci`: Đạt 100% (Parity 6 terrains / 54 tiles, ESLint, Prettier, TypeScript typecheck, Vitest 11/11 tests, Vite production bundle).
       - Python unit tests: Đạt 7/7 tests (2.6s).
 
+### 14. Tách Module BattleScreen theo MVC (DEV_GUARDRAILS §2.1 & §9):
+
+    - **Vấn đề:** `battle-screen.ts` (784 dòng) là God File vừa render canvas, vừa xử lý input, vừa quản lý state, vừa tạo DOM.
+    - **Giải pháp — Phân rã 4 module mới + 1 façade nhẹ:**
+      - `battle-state.ts`: Pure state container (HP%, mode, typing, message queue). Không DOM, không canvas.
+      - `battle-assets.ts`: Preload images, asset path constants. Single source of truth cho battle graphics paths.
+      - `battle-renderer.ts`: Canvas drawing logic (databox, HP bar, sprites, bottom panel). Chỉ đọc state, không mutate.
+      - `battle-controller.ts`: Input handling (click, mousemove), typing intervals, game actions (attack, throw ball, flee).
+      - `battle-screen.ts`: Thin façade (~100 dòng) — chỉ tạo DOM, wire modules, chạy game loop, teardown.
+    - **API giữ nguyên:** `BattleScreen` class và `BattleScreenResult` interface không đổi — `game-session.ts` import không cần sửa.
+    - **Kết quả kiểm thử:**
+      - TypeScript typecheck: PASS 100% (0 errors).
+      - Vite production build: PASS 100%.
+
 ### Bước tiếp theo
 
 - Tiếp tục hoàn thiện tách nốt `PokemonSpriteAnimator` sang `pokedex-sprite.ts` và DOM template sang `pokedex-view.ts` để thu gọn hoàn toàn `pokedex-screen.ts`.
 - Chuẩn hóa Asset Resolution (Bước 2) trước khi tiến hành khởi tạo `apps/server`.
+
