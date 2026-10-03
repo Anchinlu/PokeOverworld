@@ -637,20 +637,65 @@
 
     // --- CONTINUOUS WORLD GENERATION MATHEMATICS ---
     const BEACH_WIDTH = 5;
+    const COAST_SEGMENT_HEIGHT = 24;
+
+    function getCoastSegmentCol(k, seed) {
+      const s = (seed % 1000) * 0.1;
+      return Math.round(20 + Math.sin(k * 0.15 + s) * 4 + Math.cos(k * 0.08) * 2);
+    }
 
     function getCoastBoundary(gy, seed) {
-      return Math.round(18 + Math.sin(gy * 0.08 + (seed % 1000) * 0.1) * 6 + Math.cos(gy * 0.04) * 3);
+      const H = COAST_SEGMENT_HEIGHT;
+      const k = Math.floor(gy / H);
+      const yloc = gy - k * H;
+      const xk = getCoastSegmentCol(k, seed);
+      const xkNext = getCoastSegmentCol(k + 1, seed);
+
+      if (yloc < H - 1 || xkNext === xk) {
+        return xk;
+      } else if (xkNext === xk - 1) {
+        return xk - 1;
+      } else {
+        return xk;
+      }
     }
 
     function isSandTile(gx, gy, seed) {
       if (!chkBeach || !chkBeach.checked) return false;
-      const coast = getCoastBoundary(gy, seed);
-      return gx >= coast && gx < coast + BEACH_WIDTH;
+      const H = COAST_SEGMENT_HEIGHT;
+      const k = Math.floor(gy / H);
+      const yloc = gy - k * H;
+      const xk = getCoastSegmentCol(k, seed);
+      const xkNext = getCoastSegmentCol(k + 1, seed);
+      const ocean = xk + BEACH_WIDTH;
+      const nextOcean = xkNext + BEACH_WIDTH;
+
+      if (yloc < H - 1 || nextOcean === ocean) {
+        return gx >= xk && gx < ocean;
+      } else if (nextOcean === ocean - 1) {
+        return gx >= xk - 1 && gx < ocean - 1;
+      } else {
+        return gx >= xk && gx < ocean;
+      }
     }
 
     function isOceanTile(gx, gy, seed) {
       if (!chkBeach || !chkBeach.checked) return false;
-      return gx >= getCoastBoundary(gy, seed) + BEACH_WIDTH;
+      const H = COAST_SEGMENT_HEIGHT;
+      const k = Math.floor(gy / H);
+      const yloc = gy - k * H;
+      const xk = getCoastSegmentCol(k, seed);
+      const xkNext = getCoastSegmentCol(k + 1, seed);
+      const ocean = xk + BEACH_WIDTH;
+      const nextOcean = xkNext + BEACH_WIDTH;
+
+      if (yloc < H - 1 || nextOcean === ocean) {
+        return gx >= ocean;
+      } else if (nextOcean === ocean - 1) {
+        return gx >= ocean - 1;
+      } else {
+        return gx >= ocean;
+      }
     }
 
     function getSegmentCol(k, seed) {

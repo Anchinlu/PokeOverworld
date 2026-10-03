@@ -106,5 +106,9 @@
   "shore_anim_corner_in": "/assets/shore_anim_corner_in.png",
   "shore_anim_corner_out": "/assets/shore_anim_corner_out.png",
   "shore_anim_corner_in_flip": "/assets/shore_anim_corner_in_flip.png",
-  "shore_anim_corner_out_flip": "/assets/shore_anim_corner_out_flip.png"
+  "shore_anim_corner_out_flip": "/assets/shore_anim_corner_out_flip.png",
+  "water_lily_pad": "/assets/water_lily_pad.png",
+  "water_lily_purple": "/assets/water_lily_purple.png",
+  "water_lily_pink": "/assets/water_lily_pink.png",
+  "water_lily_white": "/assets/water_lily_white.png"
 }

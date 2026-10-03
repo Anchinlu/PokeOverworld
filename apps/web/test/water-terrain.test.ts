@@ -7,6 +7,7 @@ import {
   isBridgeTile,
   isRiverTile,
   isLakeTile,
+  isOceanTile,
   getLakePlacement,
 } from '../src/maps/terrain-rules';
 
@@ -146,4 +147,50 @@ describe('Water Terrain, River, Lake & Bridge Systems', () => {
     // Should generate multiple distinct variants (small, medium, large, elongated)
     expect(variantsFound.size).toBeGreaterThanOrEqual(3);
   });
+
+  it('generates freshwater flora (water lilies & lotus pads) deterministically and exclusively on river and lake water', () => {
+    const seed = 12345;
+    const validFloraTypes = new Set([
+      'water_lily_pad',
+      'water_lily_purple',
+      'water_lily_pink',
+      'water_lily_white',
+    ]);
+
+    let totalWaterFlora = 0;
+
+    for (let cx = -3; cx <= 3; cx++) {
+      for (let cy = 0; cy <= 6; cy++) {
+        const chunk1 = new WorldChunk(cx, cy, seed);
+        const chunk2 = new WorldChunk(cx, cy, seed);
+
+        // Deterministic check
+        expect(chunk1.waterFlora).toEqual(chunk2.waterFlora);
+
+        for (const flora of chunk1.waterFlora) {
+          totalWaterFlora++;
+
+          // Must have valid type and float phase
+          expect(validFloraTypes.has(flora.type)).toBe(true);
+          expect(typeof flora.phase).toBe('number');
+          expect(flora.x).toBe(flora.gx * 32);
+          expect(flora.y).toBe(flora.gy * 32);
+
+          // Strictly on freshwater (river or lake)
+          const onRiver = isRiverTile(flora.gx, flora.gy, seed);
+          const onLake = isLakeTile(flora.gx, flora.gy, seed);
+          expect(onRiver || onLake).toBe(true);
+
+          // Strictly NOT on bridge, ocean, or dry land
+          expect(isBridgeTile(flora.gx, flora.gy, seed)).toBe(false);
+          expect(isOceanTile(flora.gx, flora.gy, seed)).toBe(false);
+          expect(isWaterTile(flora.gx, flora.gy, seed)).toBe(true);
+        }
+      }
+    }
+
+    // Over 49 chunks including the Grand River and multiple lake zones, water flora should be populated
+    expect(totalWaterFlora).toBeGreaterThan(0);
+  });
 });
+

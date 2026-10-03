@@ -9,6 +9,11 @@ import {
   isValidPalmTreePosGlobal,
   isNearWater,
   isNearCliffEdge,
+  isRiverTile,
+  isLakeTile,
+  isBridgeTile,
+  isOceanTile,
+  isWaterTile,
 } from './terrain-rules';
 import { pickBerryForEcology } from './berry-data';
 import {
@@ -461,6 +466,82 @@ export function generateChunkFoliage(
   }
 
   return plants;
+}
+
+export interface WaterFloraEntity {
+  gx: number;
+  gy: number;
+  x: number;
+  y: number;
+  type: string;
+  phase: number;
+}
+
+/**
+ * Generates freshwater lake and river surface ecosystem (Water lilies, floating lotus pads).
+ * Strictly spawns only on inland river and lake water tiles, never on bridges, ocean, or land.
+ */
+export function generateChunkWaterFlora(
+  cx: number,
+  cy: number,
+  seed: number
+): WaterFloraEntity[] {
+  const startGX = cx * CHUNK_SIZE;
+  const startGY = cy * CHUNK_SIZE;
+  const waterFlora: WaterFloraEntity[] = [];
+
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const roll = seededHash(cx * 23 + attempt, cy * 23 + attempt, seed + 2001);
+    if (roll < 0.65) {
+      const lx =
+        Math.floor(seededHash(cx * 27 + attempt, cy * 27 + attempt, seed + 2101) * CHUNK_SIZE);
+      const ly =
+        Math.floor(seededHash(cx * 29 + attempt, cy * 29 + attempt, seed + 2201) * CHUNK_SIZE);
+      const gx = startGX + lx;
+      const gy = startGY + ly;
+
+      const isFreshwater = isWaterTile(gx, gy, seed) && !isOceanTile(gx, gy, seed);
+
+      if (isFreshwater) {
+        if (waterFlora.some((p) => p.gx === gx && p.gy === gy)) continue;
+
+        const lilyRoll = seededHash(gx, gy, seed + 2301);
+        let lilyType = 'water_lily_pad';
+        if (lilyRoll > 0.40) {
+          if (lilyRoll < 0.60) lilyType = 'water_lily_purple';
+          else if (lilyRoll < 0.80) lilyType = 'water_lily_pink';
+          else lilyType = 'water_lily_white';
+        }
+
+        const px = gx * TILE_SIZE;
+        const py = gy * TILE_SIZE;
+        const phase = seededHash(gx, gy, seed + 2401) * Math.PI * 2;
+        waterFlora.push({ gx, gy, x: px, y: py, type: lilyType, phase });
+
+        // Cluster effect: 40% chance of a companion pad nearby
+        const clusterRoll = seededHash(gx, gy, seed + 2501);
+        if (clusterRoll > 0.60) {
+          const cdx = clusterRoll > 0.80 ? 1 : -1;
+          const cgx = gx + cdx;
+          const cgy = gy;
+          const isCompFreshwater = isWaterTile(cgx, cgy, seed) && !isOceanTile(cgx, cgy, seed);
+          if (isCompFreshwater && !waterFlora.some((p) => p.gx === cgx && p.gy === cgy)) {
+            const compType = clusterRoll > 0.85 ? 'water_lily_pink' : 'water_lily_pad';
+            waterFlora.push({
+              gx: cgx,
+              gy: cgy,
+              x: cgx * TILE_SIZE,
+              y: cgy * TILE_SIZE,
+              type: compType,
+              phase: phase + 1.2,
+            });
+          }
+        }
+      }
+    }
+  }
+
+  return waterFlora;
 }
 
 export function generateChunkTallGrass(

@@ -132,6 +132,11 @@ export class GameRenderer {
       this.objectRenderer.collectFoliage(bounds, chunkManager, now, renderList);
     }
 
+    // Freshwater Surface Flora (Water Lilies & Floating Pads)
+    if (this.options.showWater && this.options.showPlants) {
+      this.objectRenderer.collectWaterFlora(bounds, chunkManager, now, renderList);
+    }
+
     // Berry Bushes
     if (this.options.showBerries) {
       this.objectRenderer.collectBerryBushes(

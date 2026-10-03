@@ -5,10 +5,12 @@ import {
   generateChunkFoliage,
   generateChunkTallGrass,
   generateChunkBerryBushes,
+  generateChunkWaterFlora,
   type TreeEntity,
   type PlantEntity,
   type TallGrassEntity,
   type BerryBushEntity,
+  type WaterFloraEntity,
 } from './chunk-objects';
 import { generateChunkWildPokemon, type WildPokemonEntity } from './chunk-encounters';
 
@@ -32,6 +34,7 @@ export class WorldChunk implements MapChunk {
   public tallGrass: TallGrassEntity[] = [];
   public berryBushes: BerryBushEntity[] = [];
   public wildPokemon: WildPokemonEntity[] = [];
+  public waterFlora: WaterFloraEntity[] = [];
 
   constructor(
     cx: number,
@@ -98,6 +101,11 @@ export class WorldChunk implements MapChunk {
       this.berryBushes,
       this.colliders
     );
+
+    // 5.5. Generate Freshwater Flora (Water lilies & lotus pads on lakes and rivers)
+    if (hasWater) {
+      this.waterFlora = generateChunkWaterFlora(cx, cy, seed);
+    }
 
     // 6. Generate Wild Pokémon Spawns
     this.wildPokemon = generateChunkWildPokemon(

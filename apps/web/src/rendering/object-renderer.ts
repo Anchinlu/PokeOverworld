@@ -68,6 +68,37 @@ export class ObjectRenderer {
     }
   }
 
+  public collectWaterFlora(
+    bounds: ViewportBounds,
+    chunkManager: ChunkManager,
+    now: number,
+    list: RenderItem[]
+  ): void {
+    for (const chunk of chunkManager.activeChunks) {
+      if (!chunk.waterFlora || chunk.waterFlora.length === 0) continue;
+      for (const flora of chunk.waterFlora) {
+        if (
+          flora.x + 32 >= bounds.minX &&
+          flora.x <= bounds.maxX &&
+          flora.y + 32 >= bounds.minY &&
+          flora.y <= bounds.maxY
+        ) {
+          const img = this.loader.getImage(flora.type);
+          if (img && img.complete) {
+            // Gentle sinusoidal aquatic bobbing on freshwater lake & river surfaces
+            const bobY = Math.sin(now / 450 + flora.phase) * 1.5;
+            list.push({
+              ySort: flora.y + 12,
+              draw: (ctx) => {
+                ctx.drawImage(img, flora.x, flora.y + bobY);
+              },
+            });
+          }
+        }
+      }
+    }
+  }
+
   public collectBerryBushes(
     bounds: ViewportBounds,
     chunkManager: ChunkManager,
