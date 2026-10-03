@@ -501,6 +501,7 @@ export function isInteriorFreshwater(gx: number, gy: number, seed: number): bool
 /**
  * Generates freshwater lake and river surface ecosystem (Water lilies, floating lotus pads).
  * Strictly spawns only on interior river and lake water tiles with at least 1 tile buffer from shores and bridges.
+ * Employs candidate-based spatial clustering to ensure lakes and rivers have a rich, natural presence of aquatic flora.
  */
 export function generateChunkWaterFlora(
   cx: number,
@@ -511,52 +512,105 @@ export function generateChunkWaterFlora(
   const startGY = cy * CHUNK_SIZE;
   const waterFlora: WaterFloraEntity[] = [];
 
-  for (let attempt = 0; attempt < 4; attempt++) {
-    const roll = seededHash(cx * 23 + attempt, cy * 23 + attempt, seed + 2001);
-    if (roll < 0.70) {
-      const lx =
-        Math.floor(seededHash(cx * 27 + attempt, cy * 27 + attempt, seed + 2101) * CHUNK_SIZE);
-      const ly =
-        Math.floor(seededHash(cx * 29 + attempt, cy * 29 + attempt, seed + 2201) * CHUNK_SIZE);
+  // 1. Gather all candidate interior freshwater tiles strictly within this chunk
+  const candidates: { gx: number; gy: number }[] = [];
+  for (let ly = 0; ly < CHUNK_SIZE; ly++) {
+    for (let lx = 0; lx < CHUNK_SIZE; lx++) {
       const gx = startGX + lx;
       const gy = startGY + ly;
-
       if (isInteriorFreshwater(gx, gy, seed)) {
-        if (waterFlora.some((p) => p.gx === gx && p.gy === gy)) continue;
+        candidates.push({ gx, gy });
+      }
+    }
+  }
 
-        const lilyRoll = seededHash(gx, gy, seed + 2301);
-        let lilyType = 'water_lily_pad';
-        if (lilyRoll > 0.40) {
-          if (lilyRoll < 0.60) lilyType = 'water_lily_purple';
-          else if (lilyRoll < 0.80) lilyType = 'water_lily_pink';
-          else lilyType = 'water_lily_white';
-        }
+  if (candidates.length === 0) {
+    return waterFlora;
+  }
 
-        const px = gx * TILE_SIZE;
-        const py = gy * TILE_SIZE;
-        const phase = seededHash(gx, gy, seed + 2401) * Math.PI * 2;
-        waterFlora.push({ gx, gy, x: px, y: py, type: lilyType, phase });
+  const occupied = new Set<string>();
 
-        // Cluster effect: 40% chance of a companion pad nearby in interior freshwater
-        const clusterRoll = seededHash(gx, gy, seed + 2501);
-        if (clusterRoll > 0.60) {
-          const cdx = clusterRoll > 0.80 ? 1 : -1;
-          const cgx = gx + cdx;
-          const cgy = gy;
-          if (isInteriorFreshwater(cgx, cgy, seed) && !waterFlora.some((p) => p.gx === cgx && p.gy === cgy)) {
-            const compType = clusterRoll > 0.85 ? 'water_lily_pink' : 'water_lily_pad';
-            waterFlora.push({
-              gx: cgx,
-              gy: cgy,
-              x: cgx * TILE_SIZE,
-              y: cgy * TILE_SIZE,
-              type: compType,
-              phase: phase + 1.2,
-            });
+  const addFlora = (gx: number, gy: number, type: string, phaseOffset = 0) => {
+    const key = `${gx},${gy}`;
+    if (occupied.has(key)) return;
+    occupied.add(key);
+
+    const px = gx * TILE_SIZE;
+    const py = gy * TILE_SIZE;
+    const basePhase = seededHash(gx, gy, seed + 2401) * Math.PI * 2;
+    waterFlora.push({
+      gx,
+      gy,
+      x: px,
+      y: py,
+      type,
+      phase: basePhase + phaseOffset,
+    });
+  };
+
+  // 2. Spawn primary roots across eligible freshwater tiles (~20% natural density)
+  for (const c of candidates) {
+    const rootRoll = seededHash(c.gx, c.gy, seed + 2001);
+    if (rootRoll < 0.20) {
+      const lilyRoll = seededHash(c.gx, c.gy, seed + 2301);
+      let lilyType = 'water_lily_pad';
+      if (lilyRoll > 0.35) {
+        if (lilyRoll < 0.60) lilyType = 'water_lily_purple';
+        else if (lilyRoll < 0.80) lilyType = 'water_lily_pink';
+        else lilyType = 'water_lily_white';
+      }
+
+      addFlora(c.gx, c.gy, lilyType);
+
+      // 3. Cluster companion pad (55% chance to spawn an adjacent companion pad)
+      const compRoll = seededHash(c.gx, c.gy, seed + 2501);
+      if (compRoll > 0.45) {
+        const dirs = [
+          { dx: 1, dy: 0 },
+          { dx: -1, dy: 0 },
+          { dx: 0, dy: 1 },
+          { dx: 0, dy: -1 },
+        ];
+        const dirIdx = Math.floor(seededHash(c.gx, c.gy, seed + 2701) * 4);
+        const { dx, dy } = dirs[dirIdx];
+        const cgx = c.gx + dx;
+        const cgy = c.gy + dy;
+
+        // Ensure companion tile is also in this chunk and is valid interior freshwater
+        if (
+          cgx >= startGX &&
+          cgx < startGX + CHUNK_SIZE &&
+          cgy >= startGY &&
+          cgy < startGY + CHUNK_SIZE &&
+          isInteriorFreshwater(cgx, cgy, seed)
+        ) {
+          let compType = 'water_lily_pad';
+          if (compRoll > 0.85) {
+            compType = 'water_lily_pink';
+          } else if (compRoll > 0.70) {
+            compType = 'water_lily_purple';
           }
+          addFlora(cgx, cgy, compType, 1.2);
         }
       }
     }
+  }
+
+  // 4. Guarantee at least 1 cluster if there is substantial water body (>= 3 interior tiles) but no roots spawned
+  if (waterFlora.length === 0 && candidates.length >= 3) {
+    let bestCandidate = candidates[0];
+    let bestScore = 1;
+    for (const c of candidates) {
+      const score = seededHash(c.gx, c.gy, seed + 2001);
+      if (score < bestScore) {
+        bestScore = score;
+        bestCandidate = c;
+      }
+    }
+
+    const lilyRoll = seededHash(bestCandidate.gx, bestCandidate.gy, seed + 2301);
+    const lilyType = lilyRoll > 0.5 ? 'water_lily_pink' : 'water_lily_pad';
+    addFlora(bestCandidate.gx, bestCandidate.gy, lilyType);
   }
 
   return waterFlora;

@@ -199,8 +199,26 @@ describe('Water Terrain, River, Lake & Bridge Systems', () => {
       }
     }
 
-    // Over 49 chunks including the Grand River and multiple lake zones, water flora should be populated
-    expect(totalWaterFlora).toBeGreaterThan(0);
+    // Over 49 chunks including the Grand River and multiple lake zones, water flora should be richly populated
+    expect(totalWaterFlora).toBeGreaterThan(25);
+  });
+
+  it('reliably generates water flora in lake bodies with interior freshwater', () => {
+    const seeds = [101, 777, 12345];
+    for (const seed of seeds) {
+      let lakeFloraFound = 0;
+      for (let cy = 0; cy <= 4; cy++) {
+        for (let cx = -3; cx <= 3; cx++) {
+          const chunk = new WorldChunk(cx, cy, seed);
+          for (const f of chunk.waterFlora) {
+            if (isLakeTile(f.gx, f.gy, seed)) {
+              lakeFloraFound++;
+            }
+          }
+        }
+      }
+      expect(lakeFloraFound).toBeGreaterThanOrEqual(1);
+    }
   });
 });
 
