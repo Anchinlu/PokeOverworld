@@ -11,6 +11,10 @@
     - Nút bấm trực quan `btnToggleFullscreen` trên giao diện điều khiển chẩn đoán.
     - Giữ nguyên tỉ lệ hiển thị pixelated crisp-edges của game canvas, UI responsive theo viewport mà không làm méo hình.
   - Đổi tiền tố hiển thị cấp độ trong trận đấu từ `Nv.` sang `Lv.` theo đúng chuẩn quốc tế.
+  - Cập nhật spritesheet nút chiến đấu mới ([Graphics/Battle/cursor_command.png](file:///e:/Pokemon/Graphics/Battle/cursor_command.png)):
+    - Thiết kế lại sắc nét với icon pixel-art độc đáo: FIGHT (Ngôi sao phát sáng), POKÉMON (Pokéball), BAG (Ba lô thám hiểm), RUN (Giày chạy viền tia sét), CALL, BALL, ROCK, BAIT, CANCEL.
+    - Phân tách 2 trạng thái: Cột trái (Hover/Active - viền sáng và hiệu ứng lấp lánh sparkle), Cột phải (Normal/Idle - đổ bóng êm dịu).
+    - Tách nền đen thành trong suốt pixel-perfect để bo góc kim loại hiển thị tự nhiên trên nền thanh chiến đấu.
   - Bộ scripts thực thi trong monorepo:
     - `npm run desktop:dev`: Khởi động cửa sổ desktop Tauri kèm Vite dev server tự động.
     - `npm run desktop:build`: Build production web bundle rồi biên dịch bản phát hành Windows độc lập.
@@ -438,3 +442,34 @@
 - Tiếp tục hoàn thiện tách nốt `PokemonSpriteAnimator` sang `pokedex-sprite.ts` và DOM template sang `pokedex-view.ts` để thu gọn hoàn toàn `pokedex-screen.ts`.
 - Chuẩn hóa Asset Resolution (Bước 2) trước khi tiến hành khởi tạo `apps/server`.
 
+### 15. Desktop Preview bằng Tauri v2 — Đã hoàn thành bản Windows Preview
+
+- Đã tích hợp Tauri v2 tại [apps/desktop/](../apps/desktop/) làm desktop shell độc lập cho `apps/web`.
+- Người dùng không cần mở Chrome hoặc chạy trình duyệt riêng khi dùng bản installer.
+- Chế độ phát triển hằng ngày:
+
+  ```powershell
+  npm run desktop:dev
+  ```
+
+  Lệnh này mở cửa sổ Tauri và dùng Vite hot reload; không cần đóng gói lại sau mỗi lần sửa code.
+- Chế độ tạo bản độc lập:
+
+  ```powershell
+  npm run desktop:build
+  ```
+
+- Đã xác nhận build release binary và installer NSIS Windows thành công:
+  `apps/desktop/src-tauri/target/release/bundle/nsis/PokeOverworld_0.1.0_x64-setup.exe`.
+- Tauri bundle hiện giới hạn target Windows preview là `nsis`; MSI chưa bật vì WiX `light.exe` lỗi trên môi trường hiện tại.
+- Fullscreen hỗ trợ nút UI, phím `F11` và thoát bằng `Esc`; test desktop shell đạt.
+- Vite build đã emit các legacy Graphics cần thiết vào `dist/Graphics`, gồm Fonts, Icons, Pokedex, Battle và sprite Front/Back/Icon của 151 Pokémon.
+- Đã thêm ignore cho `target/` và `src-tauri/gen/`, đồng thời ngăn ESLint quét artifact Rust sinh tự động.
+- Kiểm thử sau tích hợp: schema validation đạt, CI đạt, web tests `67/67` đạt, production web build đạt.
+
+### Quy ước dev sau khi có Desktop Preview
+
+- Sửa code hằng ngày: dùng `npm run desktop:dev`.
+- Chỉ chạy `npm run desktop:build` khi cần kiểm tra installer hoặc gửi bản preview cho người khác.
+- Sau khi sửa asset/build pipeline, phải chạy lại `npm run ci` và `npm run desktop:build`.
+- Không commit `apps/desktop/src-tauri/target/` hoặc các file sinh trong `apps/web/public/Graphics/`.

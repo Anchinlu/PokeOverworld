@@ -31,8 +31,89 @@ function serveGraphicsPlugin(): Plugin {
   };
 }
 
+function emitLegacyGraphicsPlugin(): Plugin {
+  const directories = ['Fonts', 'Icons', 'Pokedex', 'Battle'];
+
+  return {
+    name: 'emit-legacy-graphics',
+    apply: 'build',
+    resolveId(source) {
+      if (!source.startsWith('/Graphics/')) return null;
+
+      const relativePath = decodeURIComponent(source.split('?')[0].slice(1));
+      const absolutePath = path.resolve(__dirname, '../../', relativePath);
+      return fs.existsSync(absolutePath) ? absolutePath : null;
+    },
+    buildStart() {
+      const projectRoot = path.resolve(__dirname, '../../');
+      const publicRoot = path.resolve(__dirname, 'public');
+      const cssAssets = [
+        'Graphics/Fonts/power clear.ttf',
+        'Graphics/Fonts/vt323.ttf',
+        'Graphics/Pokedex/bg_list.png',
+        'Graphics/Pokedex/cursor_list.png',
+        'Graphics/Pokedex/icon_slider.png',
+        'Graphics/Pokedex/bg_info.png',
+        'Graphics/Pokedex/overlay_info.png',
+      ];
+
+      for (const relativePath of cssAssets) {
+        const source = path.resolve(projectRoot, relativePath);
+        if (!fs.existsSync(source)) continue;
+        const target = path.resolve(publicRoot, relativePath);
+        fs.mkdirSync(path.dirname(target), { recursive: true });
+        fs.copyFileSync(source, target);
+      }
+    },
+    generateBundle() {
+      const projectRoot = path.resolve(__dirname, '../../');
+      const files = new Set<string>();
+
+      for (const directory of directories) {
+        const root = path.resolve(projectRoot, 'Graphics', directory);
+        if (!fs.existsSync(root)) continue;
+
+        const visit = (current: string): void => {
+          for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
+            const absolutePath = path.join(current, entry.name);
+            if (entry.isDirectory()) {
+              visit(absolutePath);
+              continue;
+            }
+
+            files.add(path.relative(projectRoot, absolutePath));
+          }
+        };
+
+        visit(root);
+      }
+
+      const databasePath = path.resolve(projectRoot, 'packages/game-data/pokemon-db.json');
+      const database = JSON.parse(fs.readFileSync(databasePath, 'utf8')) as {
+        pokemon: Record<string, { sprites: Record<string, string> }>;
+      };
+      for (const pokemon of Object.values(database.pokemon)) {
+        for (const spritePath of Object.values(pokemon.sprites)) {
+          if (spritePath.startsWith('Graphics/')) files.add(spritePath);
+        }
+      }
+      files.add('Graphics/Pokemon/Icons type/types.png');
+
+      for (const relativePath of files) {
+        const absolutePath = path.resolve(projectRoot, relativePath);
+        if (!fs.existsSync(absolutePath) || !fs.statSync(absolutePath).isFile()) continue;
+        this.emitFile({
+          type: 'asset',
+          fileName: relativePath.split(path.sep).join('/'),
+          source: fs.readFileSync(absolutePath),
+        });
+      }
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [serveGraphicsPlugin()],
+  plugins: [serveGraphicsPlugin(), emitLegacyGraphicsPlugin()],
   server: {
     port: 5173,
     strictPort: true,

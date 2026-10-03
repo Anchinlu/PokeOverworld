@@ -6,6 +6,8 @@ export default [
     ignores: [
       '**/node_modules/**',
       '**/dist/**',
+      '**/target/**',
+      '**/src-tauri/gen/**',
       '**/.system_generated/**',
       'tiles_data.js',
       'map_viewer.html',
