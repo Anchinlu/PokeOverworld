@@ -48,9 +48,23 @@
               "icon": { "type": "string" }
             },
             "additionalProperties": false
+          },
+          "moves": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["level", "moveId"],
+              "properties": {
+                "level": { "type": "integer", "minimum": 1 },
+                "moveId": { "type": "string" },
+                "nameEn": { "type": "string" },
+                "nameVi": { "type": "string" },
+                "type": { "type": "string" }
+              }
+            }
           }
         },
-        "additionalProperties": false
+        "additionalProperties": true
       }
     }
   },

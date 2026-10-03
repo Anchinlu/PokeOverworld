@@ -326,6 +326,7 @@ export class PokedexUI {
 
   private readonly visibleCount = 7;
   private viewMode: 'list' | 'info' = 'list';
+  private infoSubTab: 'bio' | 'moves' = 'bio';
   private isOpen = false;
   private readonly state = new PokedexState();
 
@@ -544,7 +545,10 @@ export class PokedexUI {
           <!-- Top Tab Navigation Bar (advancedInfoBar.png - 512x32) -->
           <div class="info-top-bar">
             <button class="info-tab-btn" id="btnInfoBack">◀ Danh sách</button>
-            <span class="info-tab-title">Thông tin Pokémon</span>
+            <div class="info-mode-nav" id="infoModeNav">
+              <button class="info-mode-tab active" id="btnInfoTabBio" data-tab="bio">Chỉ số & Sinh học</button>
+              <button class="info-mode-tab" id="btnInfoTabMoves" data-tab="moves">Chiêu thức học được</button>
+            </div>
             <button class="info-tab-btn" id="btnInfoClose">Đóng [✕]</button>
           </div>
 
@@ -585,7 +589,8 @@ export class PokedexUI {
 
           <!-- Bottom: Info & Stats (y: 242..365px, x: 36..475px) -->
           <div class="info-bottom-box">
-            <div class="info-bottom-split">
+            <!-- 1. Bio & Stats View -->
+            <div class="info-bottom-split" id="infoTabContentBio">
               <!-- Left: Pokemon Research Info -->
               <div class="info-research-col">
                 <div class="research-title">THÔNG TIN</div>
@@ -625,6 +630,20 @@ export class PokedexUI {
                 <div class="stat-row"><span class="stat-k">SPD</span><div class="stat-bar"><div class="stat-fill" id="barSpd"></div></div><strong id="statSpd">90</strong></div>
               </div>
             </div>
+
+            <!-- 2. Learnset Moves View -->
+            <div class="info-moves-content" id="infoTabContentMoves" style="display: none;">
+              <div class="info-moves-header-row">
+                <span class="im-col-lvl">CẤP</span>
+                <span class="im-col-name">CHIÊU THỨC</span>
+                <span class="im-col-type">HỆ</span>
+                <span class="im-col-cat">LOẠI</span>
+                <span class="im-col-pwr">LỰC</span>
+                <span class="im-col-acc">CX</span>
+                <span class="im-col-pp">PP</span>
+              </div>
+              <div class="info-moves-list" id="infoMovesList"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -649,6 +668,12 @@ export class PokedexUI {
     backdrop.querySelector('#btnInfoBack')?.addEventListener('click', () => {
       this.viewMode = 'list';
       this.render();
+    });
+    backdrop.querySelector('#btnInfoTabBio')?.addEventListener('click', () => {
+      this.switchInfoSubTab('bio');
+    });
+    backdrop.querySelector('#btnInfoTabMoves')?.addEventListener('click', () => {
+      this.switchInfoSubTab('moves');
     });
     backdrop.querySelector('#btnOpenDetailFromMenu')?.addEventListener('click', () => {
       this.viewMode = 'info';
@@ -766,11 +791,24 @@ export class PokedexUI {
           e.preventDefault();
         }
       } else if (this.viewMode === 'info') {
-        if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        if (e.key === 'ArrowLeft') {
           this.navigatePokemon(-1);
           e.preventDefault();
-        } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        } else if (e.key === 'ArrowRight') {
           this.navigatePokemon(1);
+          e.preventDefault();
+        } else if (e.key === 'Tab') {
+          this.switchInfoSubTab(this.infoSubTab === 'bio' ? 'moves' : 'bio');
+          e.preventDefault();
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+          if (this.infoSubTab === 'moves') {
+            const listEl = this.rootModal?.querySelector<HTMLElement>('#infoMovesList');
+            if (listEl) {
+              listEl.scrollTop += e.key === 'ArrowUp' ? -26 : 26;
+            }
+          } else {
+            this.navigatePokemon(e.key === 'ArrowUp' ? -1 : 1);
+          }
           e.preventDefault();
         } else if (e.key === 'Backspace') {
           this.viewMode = 'list';
@@ -1325,6 +1363,101 @@ export class PokedexUI {
     updateStat('statSpAtk', 'barSpAtk', stats.spAtk);
     updateStat('statSpDef', 'barSpDef', stats.spDef);
     updateStat('statSpd', 'barSpd', stats.speed);
+
+    // Render level-up moves for this Pokémon and apply current active sub tab
+    this.renderInfoMoves(current);
+    this.switchInfoSubTab(this.infoSubTab);
+  }
+
+  private switchInfoSubTab(subTab: 'bio' | 'moves'): void {
+    this.infoSubTab = subTab;
+    if (!this.rootModal) return;
+    const btnBio = this.rootModal.querySelector('#btnInfoTabBio');
+    const btnMoves = this.rootModal.querySelector('#btnInfoTabMoves');
+    const contentBio = this.rootModal.querySelector<HTMLElement>('#infoTabContentBio');
+    const contentMoves = this.rootModal.querySelector<HTMLElement>('#infoTabContentMoves');
+
+    if (btnBio) btnBio.classList.toggle('active', subTab === 'bio');
+    if (btnMoves) btnMoves.classList.toggle('active', subTab === 'moves');
+    if (contentBio) contentBio.style.display = subTab === 'bio' ? 'flex' : 'none';
+    if (contentMoves) contentMoves.style.display = subTab === 'moves' ? 'flex' : 'none';
+  }
+
+  private renderInfoMoves(pokemon: PokemonSpeciesData): void {
+    if (!this.rootModal) return;
+    const container = this.rootModal.querySelector<HTMLElement>('#infoMovesList');
+    if (!container) return;
+
+    container.innerHTML = '';
+    const moves = pokemon.moves || [];
+    if (moves.length === 0) {
+      container.innerHTML =
+        '<div class="info-moves-empty">Chưa có dữ liệu chiêu thức theo cấp cho Pokémon này.</div>';
+      return;
+    }
+
+    moves.forEach((m) => {
+      const moveDb = MOVES_DB[m.moveId];
+      const row = document.createElement('div');
+      row.className = 'info-move-row';
+      const desc =
+        moveDb?.description || moveDb?.descriptionEn || 'Không có mô tả cho chiêu thức này.';
+      row.title = `${m.nameVi} (${m.nameEn}) - Cấp độ: ${m.level}\n${desc}`;
+
+      const lvlEl = document.createElement('span');
+      lvlEl.className = 'im-col-lvl';
+      lvlEl.innerText = m.level === 1 ? 'Lv. 1' : `Lv. ${m.level}`;
+
+      const nameGroup = document.createElement('div');
+      nameGroup.className = 'im-col-name';
+
+      const nameVi = document.createElement('span');
+      nameVi.className = 'info-move-name-vi';
+      nameVi.innerText = m.nameVi || m.nameEn;
+
+      const nameEn = document.createElement('span');
+      nameEn.className = 'info-move-name-en';
+      nameEn.innerText = m.nameEn;
+
+      nameGroup.appendChild(nameVi);
+      nameGroup.appendChild(nameEn);
+
+      const typeCol = document.createElement('div');
+      typeCol.className = 'im-col-type';
+      const badgeCanvas = document.createElement('canvas');
+      badgeCanvas.className = 'info-move-type-badge';
+      const typeIdx = TYPE_INDICES[m.type] ?? 0;
+      TypeBadgeRenderer.renderBadge(badgeCanvas, typeIdx);
+      typeCol.appendChild(badgeCanvas);
+
+      const catCol = document.createElement('div');
+      catCol.className = 'im-col-cat';
+      const catKey = (moveDb?.category || 'physical').toLowerCase();
+      const catLabel = catKey === 'special' ? 'Đ.B' : catKey === 'status' ? 'T.Th' : 'V.Lí';
+      catCol.innerHTML = `<span class="info-move-cat-badge ${catKey}">${catLabel}</span>`;
+
+      const pwrCol = document.createElement('span');
+      pwrCol.className = 'im-col-pwr';
+      pwrCol.innerText = moveDb && moveDb.power > 0 ? String(moveDb.power) : '—';
+
+      const accCol = document.createElement('span');
+      accCol.className = 'im-col-acc';
+      accCol.innerText = moveDb && moveDb.accuracy > 0 ? `${moveDb.accuracy}%` : '—';
+
+      const ppCol = document.createElement('span');
+      ppCol.className = 'im-col-pp';
+      ppCol.innerText = moveDb ? String(moveDb.pp) : '—';
+
+      row.appendChild(lvlEl);
+      row.appendChild(nameGroup);
+      row.appendChild(typeCol);
+      row.appendChild(catCol);
+      row.appendChild(pwrCol);
+      row.appendChild(accCol);
+      row.appendChild(ppCol);
+
+      container.appendChild(row);
+    });
   }
 }
 

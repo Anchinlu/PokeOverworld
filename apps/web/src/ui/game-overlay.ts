@@ -9,7 +9,7 @@ export function createOverlayTemplate(): string {
   <header id="topRightBar" class="top-right-bar" aria-label="Thanh menu chức năng">
     <img src="/Graphics/Icons/Blank.png" class="menu-bar-blank" alt="Menu Bar" draggable="false" />
     <div class="menu-bar-content" id="menuBarContent">
-      <button class="menu-bar-btn" id="btnMenuPokedex" title="Pokédex (Phím D)" aria-label="Pokédex">
+      <button class="menu-bar-btn" id="btnMenuPokedex" title="Pokédex (Phím Q)" aria-label="Pokédex">
         <img src="/Graphics/Icons/menuPokedex.png" alt="Pokédex" class="menu-bar-icon" />
         <span class="menu-bar-text">Pokédex</span>
       </button>

@@ -53,6 +53,15 @@ export interface PokemonSpeciesData {
   evYield?: string;
   eggGroups?: string;
   genderRatio?: string;
+  moves?: PokemonLearnMove[];
+}
+
+export interface PokemonLearnMove {
+  level: number;
+  moveId: string;
+  nameEn: string;
+  nameVi: string;
+  type: string;
 }
 
 export interface PokemonDatabase {

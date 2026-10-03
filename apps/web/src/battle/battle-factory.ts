@@ -32,7 +32,7 @@ export function createBattler(
     total: data.stats.total,
   };
 
-  const moves = getMovesForSpecies(data.speciesKey, data.types);
+  const moves = getMovesForSpecies(data.speciesKey, data.types, level);
 
   return {
     id: data.id,

@@ -1019,6 +1019,43 @@ body {
   opacity: 0.8;
 }
 
+.info-mode-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+
+.info-mode-tab {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  color: #94a3b8;
+  font-family: 'Power Clear', 'VT323', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 8px;
+  cursor: pointer;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  transition: all 0.15s ease;
+}
+
+.info-mode-tab:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.info-mode-tab.active {
+  background: #2563eb;
+  border-color: #60a5fa;
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
 .info-tab-title {
   font-family: 'VT323', monospace;
   font-size: 16px;
@@ -1344,6 +1381,200 @@ body {
 }
 .stat-row.rank-6 strong {
   color: #0e7490;
+}
+
+/* 3. Pokémon Detail - Level-up Moves (Learnset) Table */
+.info-moves-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  font-family: 'Power Clear', 'Outfit', sans-serif;
+}
+
+.info-moves-header-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(30, 41, 59, 0.95);
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.04em;
+  margin-bottom: 3px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.info-moves-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-right: 2px;
+  box-sizing: border-box;
+}
+
+.info-moves-list::-webkit-scrollbar {
+  width: 5px;
+}
+.info-moves-list::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+}
+.info-moves-list::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.6);
+  border-radius: 3px;
+}
+.info-moves-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.9);
+}
+
+.info-move-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  border-radius: 3px;
+  padding: 2px 6px;
+  font-size: 11px;
+  color: #0f172a;
+  box-sizing: border-box;
+  transition: background 0.1s ease;
+  cursor: default;
+}
+
+.info-move-row:hover {
+  background: #ffffff;
+  border-color: #3b82f6;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.info-move-row .im-col-lvl,
+.info-moves-header-row .im-col-lvl {
+  width: 44px;
+  flex-shrink: 0;
+  font-weight: 700;
+  color: #2563eb;
+  font-family: 'VT323', monospace;
+  font-size: 13px;
+}
+
+.info-move-row .im-col-name,
+.info-moves-header-row .im-col-name {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.info-move-name-vi {
+  font-weight: 700;
+  color: #0f172a;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.1;
+}
+
+.info-move-name-en {
+  font-size: 9px;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1;
+}
+
+.info-move-row .im-col-type,
+.info-moves-header-row .im-col-type {
+  width: 46px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.info-move-type-badge {
+  width: 44px;
+  height: 19px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.info-move-row .im-col-cat,
+.info-moves-header-row .im-col-cat {
+  width: 32px;
+  flex-shrink: 0;
+  text-align: center;
+  font-size: 10px;
+}
+
+.info-move-cat-badge {
+  display: inline-block;
+  padding: 1px 3px;
+  border-radius: 2px;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+}
+.info-move-cat-badge.physical {
+  background: #ea580c;
+  color: #ffffff;
+}
+.info-move-cat-badge.special {
+  background: #2563eb;
+  color: #ffffff;
+}
+.info-move-cat-badge.status {
+  background: #64748b;
+  color: #ffffff;
+}
+
+.info-move-row .im-col-pwr,
+.info-moves-header-row .im-col-pwr {
+  width: 36px;
+  flex-shrink: 0;
+  text-align: center;
+  font-family: 'VT323', monospace;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.info-move-row .im-col-acc,
+.info-moves-header-row .im-col-acc {
+  width: 36px;
+  flex-shrink: 0;
+  text-align: center;
+  font-family: 'VT323', monospace;
+  font-size: 12px;
+}
+
+.info-move-row .im-col-pp,
+.info-moves-header-row .im-col-pp {
+  width: 32px;
+  flex-shrink: 0;
+  text-align: center;
+  font-family: 'VT323', monospace;
+  font-size: 12px;
+}
+
+.info-moves-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #64748b;
+  font-size: 12px;
+  font-style: italic;
 }
 
 /* ==========================================================================

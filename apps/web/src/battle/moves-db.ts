@@ -1,10 +1,18 @@
-import type { PokemonType } from '@pokemon/shared-types';
+import type { PokemonType, PokemonLearnMove, PokemonSpeciesData } from '@pokemon/shared-types';
 import type { BattleMove } from './types';
 import rawMovesData from '@pokemon/game-data/moves-db.json';
+import rawPokemonData from '@pokemon/game-data/pokemon-db.json';
 
 export const MOVES_DB: Record<string, BattleMove> = (
   rawMovesData as { moves: Record<string, BattleMove> }
 ).moves;
+
+const speciesMovesMap = new Map<string, PokemonLearnMove[]>();
+for (const p of Object.values(rawPokemonData.pokemon as Record<string, PokemonSpeciesData>)) {
+  if (p.speciesKey && p.moves) {
+    speciesMovesMap.set(p.speciesKey.toUpperCase(), p.moves);
+  }
+}
 
 export const SPECIES_MOVESETS: Record<string, string[]> = {
   PIKACHU: ['thunderbolt', 'quick_attack', 'iron_tail', 'thunder_shock'],
@@ -20,8 +28,30 @@ export const SPECIES_MOVESETS: Record<string, string[]> = {
   SQUIRTLE: ['water_gun', 'tackle', 'tail_whip', 'bubble'],
 };
 
-export function getMovesForSpecies(speciesKey: string, types: PokemonType[]): BattleMove[] {
-  const moveIds = SPECIES_MOVESETS[speciesKey.toUpperCase()];
+export function getMovesForSpecies(
+  speciesKey: string,
+  types: PokemonType[],
+  level: number = 50
+): BattleMove[] {
+  const normKey = speciesKey.replace(/^wild_/i, '').toUpperCase();
+  const learnset = speciesMovesMap.get(normKey);
+
+  if (learnset && learnset.length > 0) {
+    const eligible = learnset.filter((m) => m.level <= level);
+    const pool = eligible.length > 0 ? eligible : learnset.slice(0, 4);
+    const chosen = pool.slice(-4);
+
+    const resolved = chosen
+      .map((entry) => MOVES_DB[entry.moveId])
+      .filter((m): m is BattleMove => Boolean(m))
+      .map((m) => ({ ...m }));
+
+    if (resolved.length > 0) {
+      return resolved;
+    }
+  }
+
+  const moveIds = SPECIES_MOVESETS[normKey];
   if (moveIds && moveIds.length > 0) {
     return moveIds
       .map((id) => MOVES_DB[id])

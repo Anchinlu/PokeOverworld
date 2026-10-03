@@ -172,7 +172,7 @@ export async function bootstrap(): Promise<void> {
       return;
     }
 
-    if (e.code === 'KeyD') {
+    if (e.code === 'KeyQ') {
       togglePokedex();
       e.preventDefault();
       return;
