@@ -80,6 +80,8 @@ export interface MoveStatusEffect {
 export interface MoveData {
   id: string;
   name: string;
+  nameEn?: string;
+  nameVi?: string;
   type: PokemonType;
   category: MoveCategory;
   power: number;

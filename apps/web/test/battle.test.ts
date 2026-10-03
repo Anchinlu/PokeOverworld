@@ -23,7 +23,9 @@ describe('Wild Pokémon Battle System', () => {
     expect(pidgey.name).toBe('Pidgey');
     expect(pidgey.level).toBe(3);
     expect(pidgey.frontSprite).toContain('PIDGEY.png');
-    expect(pidgey.moves.some((m) => m.name === 'Gust' || m.name === 'Tackle')).toBe(true);
+    expect(pidgey.moves.some((m) => m.name.includes('Gust') || m.name.includes('Tackle'))).toBe(
+      true
+    );
   });
 
   it('correctly maps all 18 types and ??? to indices in types_ico.png (24x28 per icon)', () => {
@@ -144,7 +146,9 @@ describe('Wild Pokémon Battle System', () => {
     expect(Object.keys(MOVES_DB).length).toBeGreaterThan(900);
 
     const tackle = MOVES_DB['tackle'];
-    expect(tackle.name).toBe('Tackle');
+    expect(tackle.name).toBe('Tackle (Va Chạm)');
+    expect(tackle.nameEn).toBe('Tackle');
+    expect(tackle.nameVi).toBe('Va Chạm');
     expect(tackle.description).toContain('Lao toàn bộ cơ thể');
 
     const thunderWave = MOVES_DB['thunder_wave'];

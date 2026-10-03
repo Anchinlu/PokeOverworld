@@ -11,6 +11,8 @@ export type { MoveCategory, MoveStatChange, MoveStatusEffect };
 export interface BattleMove {
   id: string;
   name: string;
+  nameEn?: string;
+  nameVi?: string;
   type: PokemonType;
   category: MoveCategory;
   power: number;
