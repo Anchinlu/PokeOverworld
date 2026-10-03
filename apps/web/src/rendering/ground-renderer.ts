@@ -6,6 +6,7 @@ import type { ChunkManager } from '../maps/chunk-manager';
 import type { WorldChunk } from '../maps/chunk';
 import type { AssetLoader } from './asset-loader';
 import { seededHash } from '../maps/noise';
+import { isLakeTile } from '../maps/terrain-rules';
 import { TILE_KEY_BY_ID, type RenderOptions } from './types';
 
 export class GroundRenderer {
@@ -248,6 +249,7 @@ export class GroundRenderer {
     if (!options.showWater) return;
 
     const imgWater = this.loader.getImage('water_anim_strip');
+    const imgLake = this.loader.getImage('lake_anim_strip');
     const imgOcean = this.loader.getImage('ocean_anim_strip');
     const imgShoreV = this.loader.getImage('shore_anim_vertical');
     const imgShoreCin = this.loader.getImage('shore_anim_corner_in');
@@ -269,9 +271,13 @@ export class GroundRenderer {
 
           // 1. Inland river / lake water (700..729)
           if (tileId >= 700 && tileId < 730) {
-            if (!imgWater || !imgWater.complete) continue;
-            const px = (startGX + lx) * TILE_SIZE;
-            const py = (startGY + ly) * TILE_SIZE;
+            const gx = startGX + lx;
+            const gy = startGY + ly;
+            const isLake = isLakeTile(gx, gy, chunk.seed);
+            const imgToUse = isLake && imgLake && imgLake.complete ? imgLake : imgWater;
+            if (!imgToUse || !imgToUse.complete) continue;
+            const px = gx * TILE_SIZE;
+            const py = gy * TILE_SIZE;
 
             if (
               px + TILE_SIZE < bounds.minX ||
@@ -282,7 +288,7 @@ export class GroundRenderer {
               continue;
             }
 
-            ctx.drawImage(imgWater, sx, 0, TILE_SIZE, TILE_SIZE, px, py, TILE_SIZE, TILE_SIZE);
+            ctx.drawImage(imgToUse, sx, 0, TILE_SIZE, TILE_SIZE, px, py, TILE_SIZE, TILE_SIZE);
           }
           // 2. Open ocean water (730)
           else if (tileId === TILE_IDS.ocean_water && options.showBeach) {
