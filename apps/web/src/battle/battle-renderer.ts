@@ -35,7 +35,7 @@ export class BattleRenderer {
     this.drawEnemyBattler(ctx, state);
     this.drawPlayerBattler(ctx, state);
     this.drawBallThrow(ctx, state);
-    this.renderEnemyDatabox(ctx, 0, 41, state);
+    this.renderEnemyDatabox(ctx, 0, 11, state);
     this.renderPlayerDatabox(ctx, 252, 197, state);
     this.renderBottomPanel(ctx, state);
   }
@@ -148,24 +148,24 @@ export class BattleRenderer {
 
     // Name
     ctx.font = 'bold 16px "Power Clear", "VT323", monospace, sans-serif';
-    this.drawTextWithOutline(ctx, enemy.name, dx + 8, dy + 21, '#ffffff', '#000000', 3);
+    this.drawTextWithOutline(ctx, enemy.name, dx + 8, dy + 31, '#ffffff', '#000000', 3);
 
     // Gender symbol
     const genderSymbol = enemy.gender === 'male' ? '♂' : enemy.gender === 'female' ? '♀' : '';
     const genderColor = enemy.gender === 'male' ? '#3b82f6' : '#ef4444';
     if (genderSymbol) {
-      this.drawTextWithOutline(ctx, genderSymbol, dx + 126, dy + 21, genderColor, '#000000', 3);
+      this.drawTextWithOutline(ctx, genderSymbol, dx + 126, dy + 31, genderColor, '#000000', 3);
     }
 
     // Level
-    this.drawTextWithOutline(ctx, `Lv.${enemy.level}`, dx + 142, dy + 21, '#ffffff', '#000000', 3);
+    this.drawTextWithOutline(ctx, `Lv.${enemy.level}`, dx + 142, dy + 31, '#ffffff', '#000000', 3);
 
     // Type Badges
     if (enemy.types.length > 0) {
-      TypeBadgeRenderer.drawTypeIcon(ctx, enemy.types[0], 217, 43, 0.75);
+      TypeBadgeRenderer.drawTypeIcon(ctx, enemy.types[0], dx + 217, dy + 12, 0.75);
     }
     if (enemy.types.length > 1) {
-      TypeBadgeRenderer.drawTypeIcon(ctx, enemy.types[1], 217, 67, 0.75);
+      TypeBadgeRenderer.drawTypeIcon(ctx, enemy.types[1], dx + 217, dy + 36, 0.75);
     }
 
     // HP Bar
@@ -294,23 +294,23 @@ export class BattleRenderer {
       3
     );
 
-    // 4 Action Buttons from cursor_command.png
+    // 4 Action Buttons from cursor_command.png (126x42 per button, 1:1 pixel crispness)
     if (isLoaded(this.assets.cursorCommand)) {
       // FIGHT (Top-Left): Row 0
-      const fightSx = state.hoveredCommandIdx === 0 ? 0 : 130;
-      ctx.drawImage(this.assets.cursorCommand, fightSx, 0, 130, 46, 252, 296, 126, 42);
+      const fightSx = state.hoveredCommandIdx === 0 ? 0 : 126;
+      ctx.drawImage(this.assets.cursorCommand, fightSx, 0, 126, 42, 252, 296, 126, 42);
 
-      // BAG (Top-Right): Row 2 (y=92)
-      const bagSx = state.hoveredCommandIdx === 1 ? 0 : 130;
-      ctx.drawImage(this.assets.cursorCommand, bagSx, 92, 130, 46, 381, 296, 126, 42);
+      // BAG (Top-Right): Row 2 (y=84)
+      const bagSx = state.hoveredCommandIdx === 1 ? 0 : 126;
+      ctx.drawImage(this.assets.cursorCommand, bagSx, 84, 126, 42, 381, 296, 126, 42);
 
-      // POKÉMON (Bottom-Left): Row 1 (y=46)
-      const pokeSx = state.hoveredCommandIdx === 2 ? 0 : 130;
-      ctx.drawImage(this.assets.cursorCommand, pokeSx, 46, 130, 46, 252, 339, 126, 42);
+      // POKÉMON (Bottom-Left): Row 1 (y=42)
+      const pokeSx = state.hoveredCommandIdx === 2 ? 0 : 126;
+      ctx.drawImage(this.assets.cursorCommand, pokeSx, 42, 126, 42, 252, 339, 126, 42);
 
-      // RUN (Bottom-Right): Row 3 (y=138)
-      const runSx = state.hoveredCommandIdx === 3 ? 0 : 130;
-      ctx.drawImage(this.assets.cursorCommand, runSx, 138, 130, 46, 381, 339, 126, 42);
+      // RUN (Bottom-Right): Row 3 (y=126)
+      const runSx = state.hoveredCommandIdx === 3 ? 0 : 126;
+      ctx.drawImage(this.assets.cursorCommand, runSx, 126, 126, 42, 381, 339, 126, 42);
     } else {
       // Fallback pill buttons
       this.drawPillButton(ctx, 252, 296, 126, 42, '#dc2626', state.hoveredCommandIdx === 0);
