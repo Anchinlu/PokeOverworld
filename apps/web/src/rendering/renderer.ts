@@ -92,6 +92,11 @@ export class GameRenderer {
     // 1. Render Pre-baked Ground Tiles (Layer 0)
     this.groundRenderer.renderGroundTiles(ctx, bounds, chunkManager, this.options);
 
+    // 1.5. Render Tree & Palm Shadows seamlessly across chunk boundaries (Layer 0.1)
+    if (this.options.showTrees) {
+      this.groundRenderer.renderTreeShadows(ctx, bounds, chunkManager);
+    }
+
     // 2. Render Heatmap if enabled
     if (this.options.showHeatmap) {
       this.debugRenderer.renderHeatmap(ctx, bounds, chunkManager);

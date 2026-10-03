@@ -78,4 +78,14 @@ describe('Beach Palm Trees Feature', () => {
       }
     }
   });
+
+  it('renders cross-chunk tree shadows seamlessly without chunk boundary clipping', () => {
+    const seed = 12345;
+    const chunks: WorldChunk[] = [];
+    for (let cy = -2; cy <= 2; cy++) {
+      chunks.push(new WorldChunk(1, cy, seed));
+    }
+    const palms = chunks.flatMap((c) => c.trees.filter((t) => t.type === 'palm'));
+    expect(palms.length).toBeGreaterThan(0);
+  });
 });

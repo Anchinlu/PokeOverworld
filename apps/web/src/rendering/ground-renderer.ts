@@ -24,7 +24,7 @@ export class GroundRenderer {
     chunk: WorldChunk,
     options: RenderOptions
   ): HTMLCanvasElement {
-    const cacheKey = `${chunk.cx},${chunk.cy},${chunk.seed},${options.showHills},${options.showRoad},${options.showBeach},${options.showWater},${options.showTrees}`;
+    const cacheKey = `${chunk.cx},${chunk.cy},${chunk.seed},${options.showHills},${options.showRoad},${options.showBeach},${options.showWater}`;
     const cached = this.chunkCanvasCache.get(cacheKey);
     if (cached) return cached;
 
@@ -101,31 +101,50 @@ export class GroundRenderer {
       }
     }
 
-    // 3. PRE-BAKE TREE SHADOWS INTO CHUNK CANVAS
-    if (options.showTrees) {
-      gCtx.save();
-      gCtx.fillStyle = 'rgba(0, 0, 0, 0.28)';
-      const palmShadowImg = this.loader.getImage('tree_palm_shadow');
-      for (const tree of chunk.trees) {
-        if (tree.type === 'palm') {
-          if (palmShadowImg && palmShadowImg.complete) {
-            const bx = tree.x - startGX * TILE_SIZE;
-            const by = tree.y - startGY * TILE_SIZE;
-            gCtx.drawImage(palmShadowImg, bx, by);
-          }
-        } else {
-          const bx = tree.x - startGX * TILE_SIZE + 32;
-          const by = tree.y - startGY * TILE_SIZE + 112;
-          gCtx.beginPath();
-          gCtx.ellipse(bx, by, 20, 8, 0, 0, Math.PI * 2);
-          gCtx.fill();
-        }
-      }
-      gCtx.restore();
-    }
-
     this.chunkCanvasCache.set(cacheKey, offscreen);
     return offscreen;
+  }
+
+  /**
+   * Renders tree and palm shadows seamlessly across chunk boundaries.
+   * Draws directly to camera viewport canvas to prevent rectangular edge clipping.
+   */
+  public renderTreeShadows(
+    ctx: CanvasRenderingContext2D,
+    bounds: ViewportBounds,
+    chunkManager: ChunkManager
+  ): void {
+    ctx.save();
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
+    const palmShadowImg = this.loader.getImage('tree_palm_shadow');
+
+    for (const chunk of chunkManager.activeChunks) {
+      for (const tree of chunk.trees) {
+        const isPalm = tree.type === 'palm';
+        const w = isPalm ? 128 : 64;
+        const h = isPalm ? 200 : 120;
+
+        if (
+          tree.x + w < bounds.minX ||
+          tree.x > bounds.maxX ||
+          tree.y + h < bounds.minY ||
+          tree.y > bounds.maxY
+        ) {
+          continue;
+        }
+
+        if (isPalm) {
+          if (palmShadowImg && palmShadowImg.complete) {
+            ctx.drawImage(palmShadowImg, tree.x, tree.y);
+          }
+        } else {
+          ctx.beginPath();
+          ctx.ellipse(tree.x + 32, tree.y + 112, 20, 8, 0, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+    ctx.restore();
   }
 
   public renderGroundTiles(
