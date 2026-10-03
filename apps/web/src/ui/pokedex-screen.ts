@@ -397,6 +397,22 @@ export class PokedexUI {
       <div class="pokedex-retro-wrapper" id="pokedexRetroWrapper">
         <!-- 1. Screen List (bg_list.png - 512x384) -->
         <div class="pokedex-screen pokedex-screen-list" id="pokedexScreenList">
+          <!-- Left Header Navigation Tabs (Pokémon, Chiêu thức, Vật phẩm) -->
+          <div class="pokedex-header-nav-tabs" id="pokedexHeaderNavTabs">
+            <button class="pokedex-nav-tab active" data-tab="pokemon" id="tabPokemon" title="Danh lục Pokémon">
+              <img src="/Graphics/Pokedex/tab_pokemon.png" class="pokedex-tab-icon" alt="Pokémon" />
+              <span class="pokedex-tab-label">Pokémon</span>
+            </button>
+            <button class="pokedex-nav-tab" data-tab="moves" id="tabMoves" title="Danh lục Chiêu thức">
+              <img src="/Graphics/Pokedex/tab_moves.png" class="pokedex-tab-icon" alt="Chiêu thức" />
+              <span class="pokedex-tab-label">Chiêu thức</span>
+            </button>
+            <button class="pokedex-nav-tab" data-tab="items" id="tabItems" title="Danh lục Vật phẩm">
+              <img src="/Graphics/Pokedex/tab_items.png" class="pokedex-tab-icon" alt="Vật phẩm" />
+              <span class="pokedex-tab-label">Vật phẩm</span>
+            </button>
+          </div>
+
           <!-- Integrated Search Bar in the top black header area -->
           <div class="pokedex-retro-search-bar" id="pokedexRetroSearchBar">
             <img src="/Graphics/Pokedex/icon_search_ball.png" class="pokedex-search-icon-img" alt="Tìm kiếm" />
@@ -589,6 +605,15 @@ export class PokedexUI {
       searchInput.value = '';
       this.filterPokemon('');
       searchInput.focus();
+    });
+
+    // Navigation Tabs (Pokemon, Moves, Items)
+    const navTabs = backdrop.querySelectorAll<HTMLButtonElement>('.pokedex-nav-tab');
+    navTabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        navTabs.forEach((t) => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
     });
 
     // Mouse wheel on list
