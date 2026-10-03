@@ -480,8 +480,17 @@ export class PokedexUI {
                 <img id="moveMachineImg" class="move-machine-img" src="/Graphics/Move/item move/machine_FIRE.png" alt="TM Disc" />
               </div>
               <div class="move-badges-row">
-                <canvas id="moveTypeCanvas" class="list-type-badge"></canvas>
-                <div id="moveCategoryBadge" class="move-category-badge special" title="Đặc biệt"></div>
+                <div class="move-badge-col">
+                  <div class="move-badge-scaled-wrapper">
+                    <canvas id="moveTypeCanvas" class="list-type-badge"></canvas>
+                  </div>
+                </div>
+                <div class="move-badge-col">
+                  <div class="move-badge-scaled-wrapper">
+                    <div id="moveCategoryBadge" class="move-category-badge special" title="Đặc biệt"></div>
+                  </div>
+                  <span class="move-category-label special" id="moveCategoryLabel">Đặc biệt</span>
+                </div>
               </div>
               <div class="move-specs-grid">
                 <div class="move-spec-pill">
@@ -1074,15 +1083,21 @@ export class PokedexUI {
     }
 
     const moveCatBadge = this.rootModal.querySelector<HTMLElement>('#moveCategoryBadge');
+    const moveCatLabel = this.rootModal.querySelector<HTMLElement>('#moveCategoryLabel');
     if (moveCatBadge && current) {
       const catKey = (current.category || 'physical').toLowerCase();
       moveCatBadge.className = `move-category-badge ${catKey}`;
-      const catLabels: Record<string, string> = {
-        physical: 'Vật lý (Physical)',
-        special: 'Đặc biệt (Special)',
-        status: 'Biến đổi (Status)',
+      const catNames: Record<string, string> = {
+        physical: 'Vật lí',
+        special: 'Đặc biệt',
+        status: 'Trạng thái',
       };
-      moveCatBadge.title = catLabels[catKey] ?? current.category;
+      const labelText = catNames[catKey] ?? 'Vật lí';
+      moveCatBadge.title = labelText;
+      if (moveCatLabel) {
+        moveCatLabel.className = `move-category-label ${catKey}`;
+        moveCatLabel.innerText = labelText;
+      }
     }
 
     const movePower = this.rootModal.querySelector<HTMLElement>('#movePower');
