@@ -56,6 +56,7 @@ function emitLegacyGraphicsPlugin(): Plugin {
         'Graphics/Pokedex/tab_pokemon.png',
         'Graphics/Pokedex/tab_moves.png',
         'Graphics/Pokedex/tab_items.png',
+        'Graphics/Pokedex/cursor_tab.png',
         'Graphics/Pokedex/cursor_list.png',
         'Graphics/Pokedex/icon_slider.png',
         'Graphics/Pokedex/bg_info.png',
