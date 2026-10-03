@@ -2,6 +2,8 @@ import type { PokemonSpeciesData } from '@pokemon/shared-types';
 import { filterPokemon } from './pokedex/pokedex-filter';
 import { getPokedexEntries } from './pokedex/pokedex-data';
 import { PokedexState } from './pokedex/pokedex-state';
+import { MOVES_DB } from '../battle/moves-db';
+import type { BattleMove } from '../battle/types';
 
 // Type indices in Graphics/Pokedex/icon_types.png (18 types, 32px height each)
 const TYPE_INDICES: Record<string, number> = {
@@ -311,10 +313,17 @@ export class PokedexUI {
   private listAnimator: PokemonSpriteAnimator | null = null;
   private infoAnimator: PokemonSpriteAnimator | null = null;
 
+  private currentTab: 'pokemon' | 'moves' | 'items' = 'pokemon';
   private allPokemon: PokemonSpeciesData[] = [];
   private filteredPokemon: PokemonSpeciesData[] = [];
   private selectedIndex = 0;
   private scrollOffset = 0;
+
+  private allMoves: BattleMove[] = [];
+  private filteredMoves: BattleMove[] = [];
+  private selectedMoveIndex = 0;
+  private movesScrollOffset = 0;
+
   private readonly visibleCount = 7;
   private viewMode: 'list' | 'info' = 'list';
   private isOpen = false;
@@ -323,6 +332,8 @@ export class PokedexUI {
   private constructor() {
     this.allPokemon = getPokedexEntries();
     this.filteredPokemon = [...this.allPokemon];
+    this.allMoves = Object.values(MOVES_DB);
+    this.filteredMoves = [...this.allMoves];
   }
 
   public static getInstance(): PokedexUI {
@@ -422,33 +433,88 @@ export class PokedexUI {
 
           <!-- Integrated Close Button in the top black header area -->
           <button class="pokedex-retro-close" id="btnPokedexRetroClose" title="Đóng Pokédex (Esc)">✕</button>
-          <!-- Top Left Card: No. & Name (x: 28..195, y: 54..81) -->
-          <div class="list-left-header" id="listLeftHeader">
-            <img src="/Graphics/Pokedex/icon_own.png" class="list-own-icon" alt="Caught" />
-            <span class="list-header-title" id="listLeftTitle">No. 001 Bulbasaur</span>
-          </div>
-
-          <!-- Middle Left: Sprite Canvas Preview on Watermark Grid (x: 10..223, y: 88..304) -->
-          <div class="list-preview-box" id="listPreviewBox" title="Nhấn để xem chi tiết (Enter)">
-            <canvas id="canvasListSprite" class="pokedex-canvas-sprite list-sprite-canvas"></canvas>
-            <div class="list-pokemon-types" id="listPokemonTypes"></div>
-          </div>
-
-          <!-- Bottom Left Card: Seen & Caught Counters (x: 24..199, y: 310..369) -->
-          <div class="list-counters-box">
-            <div class="counter-row">
-              <div class="counter-left-group">
-                <img src="/Graphics/Pokedex/icon_seen.png" class="counter-mini-icon" alt="Seen" />
-                <span class="counter-label">ĐÃ THẤY</span>
-              </div>
-              <strong class="counter-value" id="countSeen">151</strong>
+          <!-- Left Panels Container -->
+          <div class="list-left-panel" id="panelPokemon">
+            <!-- Top Left Card: No. & Name (x: 28..195, y: 54..81) -->
+            <div class="list-left-header" id="listLeftHeader">
+              <img src="/Graphics/Pokedex/icon_own.png" class="list-own-icon" alt="Caught" />
+              <span class="list-header-title" id="listLeftTitle">No. 001 Bulbasaur</span>
             </div>
-            <div class="counter-row">
-              <div class="counter-left-group">
-                <img src="/Graphics/Pokedex/icon_own.png" class="counter-mini-icon" alt="Caught" />
-                <span class="counter-label">ĐÃ BẮT</span>
+
+            <!-- Middle Left: Sprite Canvas Preview on Watermark Grid (x: 10..223, y: 88..304) -->
+            <div class="list-preview-box" id="listPreviewBox" title="Nhấn để xem chi tiết (Enter)">
+              <canvas id="canvasListSprite" class="pokedex-canvas-sprite list-sprite-canvas"></canvas>
+              <div class="list-pokemon-types" id="listPokemonTypes"></div>
+            </div>
+
+            <!-- Bottom Left Card: Seen & Caught Counters (x: 24..199, y: 310..369) -->
+            <div class="list-counters-box" id="listCountersBox">
+              <div class="counter-row">
+                <div class="counter-left-group">
+                  <img src="/Graphics/Pokedex/icon_seen.png" class="counter-mini-icon" alt="Seen" />
+                  <span class="counter-label">ĐÃ THẤY</span>
+                </div>
+                <strong class="counter-value" id="countSeen">151</strong>
               </div>
-              <strong class="counter-value" id="countCaught">151</strong>
+              <div class="counter-row">
+                <div class="counter-left-group">
+                  <img src="/Graphics/Pokedex/icon_own.png" class="counter-mini-icon" alt="Caught" />
+                  <span class="counter-label">ĐÃ BẮT</span>
+                </div>
+                <strong class="counter-value" id="countCaught">151</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Moves Left Panel (Display when Chiêu thức tab is active) -->
+          <div class="list-left-panel" id="panelMoves" style="display: none;">
+            <div class="list-left-header" id="moveLeftHeader">
+              <span class="list-header-title" id="moveLeftTitle">Súng Phun Lửa</span>
+            </div>
+
+            <div class="list-preview-box move-preview-box" id="movePreviewBox">
+              <div class="move-disc-wrapper">
+                <img id="moveMachineImg" class="move-machine-img" src="/Graphics/Move/item move/machine_FIRE.png" alt="TM Disc" />
+              </div>
+              <div class="move-badges-row">
+                <canvas id="moveTypeCanvas" class="list-type-badge"></canvas>
+                <div id="moveCategoryBadge" class="move-category-badge special" title="Đặc biệt"></div>
+              </div>
+              <div class="move-specs-grid">
+                <div class="move-spec-pill">
+                  <span class="spec-k">UY LỰC</span>
+                  <strong class="spec-v" id="movePower">90</strong>
+                </div>
+                <div class="move-spec-pill">
+                  <span class="spec-k">CHÍNH XÁC</span>
+                  <strong class="spec-v" id="moveAccuracy">100%</strong>
+                </div>
+                <div class="move-spec-pill">
+                  <span class="spec-k">ĐIỂM PP</span>
+                  <strong class="spec-v" id="movePP">15/15</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="list-counters-box move-desc-box" id="moveDescBox">
+              <div class="move-desc-title">HIỆU ỨNG CHIÊU THỨC</div>
+              <div class="move-desc-content" id="moveDescContent">
+                Bắn ra ngọn lửa dữ dội thiêu đốt mục tiêu.
+              </div>
+            </div>
+          </div>
+
+          <!-- Items Left Panel (Display when Vật phẩm tab is active) -->
+          <div class="list-left-panel" id="panelItems" style="display: none;">
+            <div class="list-left-header">
+              <span class="list-header-title">Túi Đồ & Vật Phẩm</span>
+            </div>
+            <div class="list-preview-box items-preview-box">
+              <img src="/Graphics/Pokedex/tab_items.png" class="items-big-icon" alt="Items" />
+              <div class="items-empty-notice">Hệ thống danh mục Vật phẩm đang được đồng bộ dữ liệu.</div>
+            </div>
+            <div class="list-counters-box items-desc-box">
+              <div class="items-desc-text">Bạn có thể chọn tab Pokémon hoặc Chiêu thức để tra cứu ngay!</div>
             </div>
           </div>
 
@@ -458,11 +524,6 @@ export class PokedexUI {
           <!-- Right Scrollbar Slider (x: 478, y: 72..351, height: 279px) -->
           <div class="list-slider-track" id="listSliderTrack">
             <div class="list-slider-handle" id="listSliderHandle"></div>
-          </div>
-
-          <!-- Bottom Action Hint -->
-          <div class="list-bottom-hint">
-            <span>[Enter] Xem chi tiết</span> | <span>[▲/▼] Di chuyển</span> | <span>[Esc] Đóng</span>
           </div>
         </div>
 
@@ -598,12 +659,20 @@ export class PokedexUI {
     const clearBtn = backdrop.querySelector<HTMLButtonElement>('#btnClearSearch')!;
 
     searchInput.addEventListener('input', () => {
-      this.filterPokemon(searchInput.value);
+      if (this.currentTab === 'pokemon') {
+        this.filterPokemon(searchInput.value);
+      } else if (this.currentTab === 'moves') {
+        this.filterMoves(searchInput.value);
+      }
     });
 
     clearBtn.addEventListener('click', () => {
       searchInput.value = '';
-      this.filterPokemon('');
+      if (this.currentTab === 'pokemon') {
+        this.filterPokemon('');
+      } else if (this.currentTab === 'moves') {
+        this.filterMoves('');
+      }
       searchInput.focus();
     });
 
@@ -611,8 +680,10 @@ export class PokedexUI {
     const navTabs = backdrop.querySelectorAll<HTMLButtonElement>('.pokedex-nav-tab');
     navTabs.forEach((tab) => {
       tab.addEventListener('click', () => {
-        navTabs.forEach((t) => t.classList.remove('active'));
-        tab.classList.add('active');
+        const tabKey = tab.dataset.tab as 'pokemon' | 'moves' | 'items';
+        if (tabKey) {
+          this.switchTab(tabKey);
+        }
       });
     });
 
@@ -635,9 +706,15 @@ export class PokedexUI {
       const mouseEv = e as MouseEvent;
       const rect = sliderTrack.getBoundingClientRect();
       const clickRatio = Math.max(0, Math.min(1, (mouseEv.clientY - rect.top) / rect.height));
-      const maxScroll = Math.max(0, this.filteredPokemon.length - this.visibleCount);
-      this.scrollOffset = Math.round(clickRatio * maxScroll);
-      this.renderListItems();
+      if (this.currentTab === 'pokemon') {
+        const maxScroll = Math.max(0, this.filteredPokemon.length - this.visibleCount);
+        this.scrollOffset = Math.round(clickRatio * maxScroll);
+        this.renderListItems();
+      } else if (this.currentTab === 'moves') {
+        const maxScroll = Math.max(0, this.filteredMoves.length - this.visibleCount);
+        this.movesScrollOffset = Math.round(clickRatio * maxScroll);
+        this.renderMoveListItems();
+      }
     });
 
     // Global Key Listener for Pokédex navigation
@@ -669,8 +746,8 @@ export class PokedexUI {
           this.moveSelection(this.visibleCount);
           e.preventDefault();
         } else if (e.key === 'Enter' || e.code === 'Space') {
-          // Open info screen
-          if (this.filteredPokemon.length > 0) {
+          // Open info screen (only in pokemon tab)
+          if (this.currentTab === 'pokemon' && this.filteredPokemon.length > 0) {
             this.viewMode = 'info';
             this.render();
           }
@@ -699,6 +776,54 @@ export class PokedexUI {
     });
   }
 
+  private switchTab(tab: 'pokemon' | 'moves' | 'items'): void {
+    if (this.currentTab === tab) return;
+    this.currentTab = tab;
+
+    if (this.rootModal) {
+      const navTabs = this.rootModal.querySelectorAll<HTMLButtonElement>('.pokedex-nav-tab');
+      navTabs.forEach((t) => {
+        if (t.dataset.tab === tab) {
+          t.classList.add('active');
+        } else {
+          t.classList.remove('active');
+        }
+      });
+
+      const panelPokemon = this.rootModal.querySelector<HTMLElement>('#panelPokemon');
+      const panelMoves = this.rootModal.querySelector<HTMLElement>('#panelMoves');
+      const panelItems = this.rootModal.querySelector<HTMLElement>('#panelItems');
+      const searchInput = this.rootModal.querySelector<HTMLInputElement>('#inputPokedexSearch');
+
+      if (panelPokemon) panelPokemon.style.display = tab === 'pokemon' ? 'block' : 'none';
+      if (panelMoves) panelMoves.style.display = tab === 'moves' ? 'block' : 'none';
+      if (panelItems) panelItems.style.display = tab === 'items' ? 'block' : 'none';
+
+      if (searchInput) {
+        searchInput.value = '';
+        if (tab === 'pokemon') {
+          searchInput.placeholder = 'Tìm tên hoặc số hiệu...';
+          this.filterPokemon('');
+        } else if (tab === 'moves') {
+          searchInput.placeholder = 'Tìm chiêu thức (VD: Lửa, Surf, Tackle)...';
+          this.filterMoves('');
+        } else {
+          searchInput.placeholder = 'Tìm vật phẩm...';
+        }
+      }
+    }
+
+    if (tab === 'pokemon') {
+      this.render();
+    } else if (tab === 'moves') {
+      this.selectedMoveIndex = 0;
+      this.movesScrollOffset = 0;
+      this.renderMovesList();
+    } else {
+      this.renderItemsList();
+    }
+  }
+
   private filterPokemon(query: string): void {
     this.state.query = query;
     this.filteredPokemon = filterPokemon(this.allPokemon, query);
@@ -708,22 +833,59 @@ export class PokedexUI {
     this.render();
   }
 
+  private filterMoves(query: string): void {
+    const q = query.trim().toLowerCase();
+    if (!q) {
+      this.filteredMoves = [...this.allMoves];
+    } else {
+      this.filteredMoves = this.allMoves.filter((m) => {
+        const nameVi = (m.nameVi || '').toLowerCase();
+        const nameEn = (m.nameEn || m.name || '').toLowerCase();
+        const type = (m.type || '').toLowerCase();
+        const cat = (m.category || '').toLowerCase();
+        return nameVi.includes(q) || nameEn.includes(q) || type.includes(q) || cat.includes(q);
+      });
+    }
+    this.selectedMoveIndex = 0;
+    this.movesScrollOffset = 0;
+    this.renderMovesList();
+  }
+
   private scrollList(delta: number): void {
-    const maxScroll = Math.max(0, this.filteredPokemon.length - this.visibleCount);
-    this.scrollOffset = Math.max(0, Math.min(maxScroll, this.scrollOffset + delta));
-    this.renderListItems();
+    if (this.currentTab === 'pokemon') {
+      const maxScroll = Math.max(0, this.filteredPokemon.length - this.visibleCount);
+      this.scrollOffset = Math.max(0, Math.min(maxScroll, this.scrollOffset + delta));
+      this.renderListItems();
+    } else if (this.currentTab === 'moves') {
+      const maxScroll = Math.max(0, this.filteredMoves.length - this.visibleCount);
+      this.movesScrollOffset = Math.max(0, Math.min(maxScroll, this.movesScrollOffset + delta));
+      this.renderMoveListItems();
+    }
   }
 
   private moveSelection(delta: number): void {
-    if (this.filteredPokemon.length === 0) return;
-    const newIdx = Math.max(
-      0,
-      Math.min(this.filteredPokemon.length - 1, this.selectedIndex + delta)
-    );
-    if (newIdx !== this.selectedIndex) {
-      this.selectedIndex = newIdx;
-      this.ensureSelectionVisible();
-      this.render();
+    if (this.currentTab === 'pokemon') {
+      if (this.filteredPokemon.length === 0) return;
+      const newIdx = Math.max(
+        0,
+        Math.min(this.filteredPokemon.length - 1, this.selectedIndex + delta)
+      );
+      if (newIdx !== this.selectedIndex) {
+        this.selectedIndex = newIdx;
+        this.ensureSelectionVisible();
+        this.render();
+      }
+    } else if (this.currentTab === 'moves') {
+      if (this.filteredMoves.length === 0) return;
+      const newIdx = Math.max(
+        0,
+        Math.min(this.filteredMoves.length - 1, this.selectedMoveIndex + delta)
+      );
+      if (newIdx !== this.selectedMoveIndex) {
+        this.selectedMoveIndex = newIdx;
+        this.ensureMoveSelectionVisible();
+        this.renderMovesList();
+      }
     }
   }
 
@@ -732,6 +894,14 @@ export class PokedexUI {
       this.scrollOffset = this.selectedIndex;
     } else if (this.selectedIndex >= this.scrollOffset + this.visibleCount) {
       this.scrollOffset = this.selectedIndex - this.visibleCount + 1;
+    }
+  }
+
+  private ensureMoveSelectionVisible(): void {
+    if (this.selectedMoveIndex < this.movesScrollOffset) {
+      this.movesScrollOffset = this.selectedMoveIndex;
+    } else if (this.selectedMoveIndex >= this.movesScrollOffset + this.visibleCount) {
+      this.movesScrollOffset = this.selectedMoveIndex - this.visibleCount + 1;
     }
   }
 
@@ -753,7 +923,13 @@ export class PokedexUI {
       screenList.style.display = 'block';
       screenInfo.style.display = 'none';
       this.infoAnimator?.stop();
-      this.renderList();
+      if (this.currentTab === 'pokemon') {
+        this.renderList();
+      } else if (this.currentTab === 'moves') {
+        this.renderMovesList();
+      } else {
+        this.renderItemsList();
+      }
     } else {
       screenList.style.display = 'none';
       screenInfo.style.display = 'block';
@@ -857,6 +1033,165 @@ export class PokedexUI {
       const handleHeight = 30;
       const topPx = ratio * (trackHeight - handleHeight);
       handle.style.top = `${topPx}px`;
+    }
+  }
+
+  private renderMovesList(): void {
+    if (!this.rootModal) return;
+    const current = this.filteredMoves[this.selectedMoveIndex];
+
+    const titleEl = this.rootModal.querySelector<HTMLElement>('#moveLeftTitle');
+    if (titleEl) {
+      if (current) {
+        titleEl.innerText = current.nameVi || current.nameEn || current.name;
+        titleEl.title = `${current.nameEn || current.name} (${current.type})`;
+      } else {
+        titleEl.innerText = 'Không tìm thấy chiêu thức';
+      }
+    }
+
+    const machineImg = this.rootModal.querySelector<HTMLImageElement>('#moveMachineImg');
+    if (machineImg && current) {
+      machineImg.src = `/Graphics/Move/item move/machine_${current.type.toUpperCase()}.png`;
+      machineImg.alt = `${current.type} TM`;
+    }
+
+    const moveTypeCanvas = this.rootModal.querySelector<HTMLCanvasElement>('#moveTypeCanvas');
+    if (moveTypeCanvas && current) {
+      const typeIdx = TYPE_INDICES[current.type] ?? 0;
+      TypeBadgeRenderer.renderBadge(moveTypeCanvas, typeIdx);
+    }
+
+    const moveCatBadge = this.rootModal.querySelector<HTMLElement>('#moveCategoryBadge');
+    if (moveCatBadge && current) {
+      const catKey = (current.category || 'physical').toLowerCase();
+      moveCatBadge.className = `move-category-badge ${catKey}`;
+      const catLabels: Record<string, string> = {
+        physical: 'Vật lý (Physical)',
+        special: 'Đặc biệt (Special)',
+        status: 'Biến đổi (Status)',
+      };
+      moveCatBadge.title = catLabels[catKey] ?? current.category;
+    }
+
+    const movePower = this.rootModal.querySelector<HTMLElement>('#movePower');
+    if (movePower) {
+      movePower.innerText = current ? (current.power > 0 ? String(current.power) : '—') : '—';
+    }
+
+    const moveAccuracy = this.rootModal.querySelector<HTMLElement>('#moveAccuracy');
+    if (moveAccuracy) {
+      moveAccuracy.innerText = current
+        ? current.accuracy > 0
+          ? `${current.accuracy}%`
+          : '—'
+        : '—';
+    }
+
+    const movePP = this.rootModal.querySelector<HTMLElement>('#movePP');
+    if (movePP) {
+      movePP.innerText = current ? `${current.pp}/${current.maxPp || current.pp}` : '—';
+    }
+
+    const moveDesc = this.rootModal.querySelector<HTMLElement>('#moveDescContent');
+    if (moveDesc) {
+      moveDesc.innerText = current
+        ? current.description || current.descriptionEn || 'Không có mô tả cho chiêu thức này.'
+        : 'Không tìm thấy chiêu thức nào phù hợp.';
+    }
+
+    this.renderMoveListItems();
+  }
+
+  private renderMoveListItems(): void {
+    if (!this.rootModal) return;
+    const container = this.rootModal.querySelector<HTMLElement>('#listItemsContainer');
+    if (!container) return;
+
+    container.innerHTML = '';
+    const visibleItems = this.filteredMoves.slice(
+      this.movesScrollOffset,
+      this.movesScrollOffset + this.visibleCount
+    );
+
+    visibleItems.forEach((move, idx) => {
+      const realIndex = this.movesScrollOffset + idx;
+      const isSelected = realIndex === this.selectedMoveIndex;
+
+      const itemEl = document.createElement('div');
+      itemEl.className = `pokedex-list-row move-list-row ${isSelected ? 'selected' : ''}`;
+      itemEl.dataset.index = String(realIndex);
+
+      const discImg = document.createElement('img');
+      discImg.className = 'move-row-disc';
+      discImg.src = `/Graphics/Move/item move/machine_${move.type.toUpperCase()}.png`;
+      discImg.alt = move.type;
+
+      const nameGroup = document.createElement('div');
+      nameGroup.className = 'move-row-name-group';
+
+      const nameVi = document.createElement('span');
+      nameVi.className = 'move-row-name-vi';
+      nameVi.innerText = move.nameVi || move.nameEn || move.name;
+
+      const nameEn = document.createElement('span');
+      nameEn.className = 'move-row-name-en';
+      nameEn.innerText = move.nameEn || move.name;
+
+      nameGroup.appendChild(nameVi);
+      nameGroup.appendChild(nameEn);
+
+      const badgeCanvas = document.createElement('canvas');
+      badgeCanvas.className = 'list-type-badge move-row-type-badge';
+      const typeIdx = TYPE_INDICES[move.type] ?? 0;
+      TypeBadgeRenderer.renderBadge(badgeCanvas, typeIdx);
+
+      const statsEl = document.createElement('div');
+      statsEl.className = 'move-row-stats';
+      const pwrStr = move.power > 0 ? String(move.power) : '—';
+      statsEl.innerHTML = `<span>PWR ${pwrStr}</span><span>PP ${move.pp}</span>`;
+
+      itemEl.appendChild(discImg);
+      itemEl.appendChild(nameGroup);
+      itemEl.appendChild(badgeCanvas);
+      itemEl.appendChild(statsEl);
+
+      itemEl.addEventListener('click', () => {
+        this.selectedMoveIndex = realIndex;
+        this.renderMovesList();
+      });
+
+      container.appendChild(itemEl);
+    });
+
+    // Update slider handle position
+    const handle = this.rootModal.querySelector<HTMLElement>('#listSliderHandle');
+    if (handle) {
+      const maxScroll = Math.max(1, this.filteredMoves.length - this.visibleCount);
+      const ratio = Math.max(0, Math.min(1, this.movesScrollOffset / maxScroll));
+      const trackHeight = 279;
+      const handleHeight = 30;
+      const topPx = ratio * (trackHeight - handleHeight);
+      handle.style.top = `${topPx}px`;
+    }
+  }
+
+  private renderItemsList(): void {
+    if (!this.rootModal) return;
+    const container = this.rootModal.querySelector<HTMLElement>('#listItemsContainer');
+    if (!container) return;
+
+    container.innerHTML = `
+      <div class="items-list-notice">
+        <img src="/Graphics/Pokedex/tab_items.png" class="items-notice-icon" alt="Items" />
+        <span class="items-notice-text">Danh mục Vật phẩm đang được đồng bộ dữ liệu</span>
+        <span class="items-notice-sub">Vui lòng chọn tab Pokémon hoặc Chiêu thức để tra cứu</span>
+      </div>
+    `;
+
+    const handle = this.rootModal.querySelector<HTMLElement>('#listSliderHandle');
+    if (handle) {
+      handle.style.top = '0px';
     }
   }
 
