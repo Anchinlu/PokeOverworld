@@ -8,7 +8,6 @@ import type { BattlerPokemon, BattleMove } from './types';
 import type { BattleState } from './battle-state';
 import { BattleEngine } from './battle-engine';
 
-
 /** Callback when the battle ends */
 export type BattleEndCallback = (result: {
   outcome: 'caught' | 'victory' | 'fled' | 'defeated';

@@ -1,0 +1,10 @@
+{
+  "name": "@pokemon/desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "PokeOverworld desktop preview shell powered by Tauri v2",
+  "scripts": {
+    "dev": "tauri dev",
+    "build": "tauri build"
+  }
+}

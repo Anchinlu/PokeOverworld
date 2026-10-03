@@ -12,6 +12,7 @@ import {
   togglePokedex,
   isPokedexOpen,
 } from './ui';
+import { initDesktopShell } from './shell/desktop';
 
 export async function bootstrap(): Promise<void> {
   const app = document.querySelector<HTMLDivElement>('#app');
@@ -22,6 +23,7 @@ export async function bootstrap(): Promise<void> {
   // 1. Scaffold UI
   app.innerHTML = createOverlayTemplate();
   bindOverlayToggle();
+  initDesktopShell();
 
   const canvas = document.querySelector<HTMLCanvasElement>('#gameCanvas')!;
   const loadingOverlay = document.querySelector<HTMLDivElement>('#loadingOverlay');

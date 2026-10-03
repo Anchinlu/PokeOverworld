@@ -222,6 +222,31 @@ body {
   border-radius: 6px;
   font-weight: 600;
 }
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-fullscreen {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--overlay-border);
+  color: var(--text-muted);
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+
+.btn-fullscreen:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: var(--text-main);
+}
 
 .btn-toggle {
   background: rgba(255, 255, 255, 0.08);
@@ -1232,7 +1257,10 @@ body {
   aspect-ratio: 4 / 3;
   image-rendering: pixelated;
   border-radius: 8px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 0 3px #1e293b, 0 0 30px rgba(56, 189, 248, 0.25);
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.8),
+    0 0 0 3px #1e293b,
+    0 0 30px rgba(56, 189, 248, 0.25);
   background: #000000;
   cursor: pointer;
 }

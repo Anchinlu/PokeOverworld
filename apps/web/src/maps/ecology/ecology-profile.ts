@@ -132,7 +132,12 @@ export function getFlowerTypeForCluster(
  */
 export const ZONE_NATURAL_SHRUBS: Record<EcologyZone, string[]> = {
   meadow: ['bush_flowering_white', 'flower_purple_bell', 'nature_tree_stump', 'nature_fallen_log'],
-  dense_forest: ['bush_cone_forest', 'nature_fallen_log', 'nature_tree_stump', 'bush_flowering_white'],
+  dense_forest: [
+    'bush_cone_forest',
+    'nature_fallen_log',
+    'nature_tree_stump',
+    'bush_flowering_white',
+  ],
   wetland: ['flower_purple_bell', 'nature_fallen_log', 'bush_cone_forest'],
   dryland: ['bush_cone_autumn', 'nature_tree_stump'],
   hill_edge: ['bush_cone_autumn', 'nature_tree_stump', 'bush_flowering_white'],

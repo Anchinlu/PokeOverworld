@@ -7,6 +7,9 @@ node_modules/
 dist/
 build/
 *.tsbuildinfo
+target/
+**/target/
+**/src-tauri/gen/
 
 # Environment & Local Configuration
 .env

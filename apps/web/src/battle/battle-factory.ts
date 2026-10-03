@@ -18,7 +18,8 @@ export function createBattler(
   isPlayer = false,
   rng: BattleRng = defaultBattleRng
 ): BattlerPokemon {
-  const data = pokemonCatalog.getBySpeciesKey(speciesKey) ?? pokemonCatalog.getBySpeciesKey('PIKACHU')!;
+  const data =
+    pokemonCatalog.getBySpeciesKey(speciesKey) ?? pokemonCatalog.getBySpeciesKey('PIKACHU')!;
   const maxHp = calculateHp(data.stats.hp, level);
 
   const stats = {

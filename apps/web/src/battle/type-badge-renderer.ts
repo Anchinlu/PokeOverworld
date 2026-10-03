@@ -38,32 +38,12 @@ export class TypeBadgeRenderer {
 
     if (TypeBadgeRenderer.isLoaded && TypeBadgeRenderer.img) {
       ctx.imageSmoothingEnabled = false;
-      ctx.drawImage(
-        TypeBadgeRenderer.img,
-        sx,
-        sy,
-        sw,
-        sh,
-        dx,
-        dy,
-        sw * scale,
-        sh * scale
-      );
+      ctx.drawImage(TypeBadgeRenderer.img, sx, sy, sw, sh, dx, dy, sw * scale, sh * scale);
     } else {
       TypeBadgeRenderer.pendingCallbacks.push(() => {
         if (TypeBadgeRenderer.img) {
           ctx.imageSmoothingEnabled = false;
-          ctx.drawImage(
-            TypeBadgeRenderer.img,
-            sx,
-            sy,
-            sw,
-            sh,
-            dx,
-            dy,
-            sw * scale,
-            sh * scale
-          );
+          ctx.drawImage(TypeBadgeRenderer.img, sx, sy, sw, sh, dx, dy, sw * scale, sh * scale);
         }
       });
     }

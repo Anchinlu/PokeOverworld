@@ -53,7 +53,11 @@ export class BattleScreen {
     this.state.targetPlayerHpPct = this.state.playerHpPct;
 
     // 3. Assets
-    const assets = createBattleAssets(environment, wildPokemon.frontSprite, playerPokemon.backSprite);
+    const assets = createBattleAssets(
+      environment,
+      wildPokemon.frontSprite,
+      playerPokemon.backSprite
+    );
     TypeBadgeRenderer.init();
 
     // 4. DOM

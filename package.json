@@ -19,10 +19,13 @@
     "lint": "eslint .",
     "format:check": "prettier --check \"**/*.{ts,js,mjs,json,html,css}\" --ignore-path .prettierignore",
     "format": "prettier --write \"**/*.{ts,js,mjs,json,html,css}\" --ignore-path .prettierignore",
+    "desktop:dev": "npm --workspace @pokemon/desktop run dev",
+    "desktop:build": "npm --workspace @pokemon/desktop run build",
     "ci": "npm run validate:schemas && npm run lint && npm run format:check && npm run typecheck:web && npm run test:web && npm run build:web"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@tauri-apps/cli": "^2.12.1",
     "eslint": "^10.11.0",
     "prettier": "^3.9.9",
     "typescript": "^5.7.3",

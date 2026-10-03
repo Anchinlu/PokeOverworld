@@ -1,10 +1,6 @@
 import { seededHash } from './noise';
 import { TILE_IDS } from '@pokemon/game-data';
-import {
-  isVillagePathTile,
-  isVillageBuildingTile,
-  isTreeClippingBuilding,
-} from './village-rules';
+import { isVillagePathTile, isVillageBuildingTile, isTreeClippingBuilding } from './village-rules';
 
 /**
  * Continuous World Generation Mathematics
@@ -344,7 +340,11 @@ export function isValidTreePosGlobal(tx: number, ty: number, seed: number): bool
   let firstHill: boolean | null = null;
   for (let r = rStart; r <= rEnd; r++) {
     for (let c = cStart; c <= cEnd; c++) {
-      if (isRoadTile(c, r, seed) || isSandTile(c, r, seed) || isVillageBuildingTile(c, r, seed, 1)) {
+      if (
+        isRoadTile(c, r, seed) ||
+        isSandTile(c, r, seed) ||
+        isVillageBuildingTile(c, r, seed, 1)
+      ) {
         return false;
       }
       const h = isHillTile(c, r, seed);

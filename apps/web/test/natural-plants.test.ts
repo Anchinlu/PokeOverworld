@@ -34,7 +34,12 @@ describe('Natural Plants Taxonomy & Ecology Feature', () => {
 
     const allPlants = chunks.flatMap((c) => c.plants);
     const naturalShrubs = allPlants.filter((p) =>
-      ['bush_flowering_white', 'bush_cone_autumn', 'bush_cone_forest', 'flower_purple_bell'].includes(p.type)
+      [
+        'bush_flowering_white',
+        'bush_cone_autumn',
+        'bush_cone_forest',
+        'flower_purple_bell',
+      ].includes(p.type)
     );
 
     expect(naturalShrubs.length).toBeGreaterThan(0);
@@ -53,30 +58,22 @@ describe('Natural Plants Taxonomy & Ecology Feature', () => {
     for (const chunk of chunks) {
       for (const plant of chunk.plants) {
         if (plant.type === 'bush_flowering_white') {
-          const col = chunk.colliders.find(
-            (c) => c.x === plant.x + 18 && c.y === plant.y + 40
-          );
+          const col = chunk.colliders.find((c) => c.x === plant.x + 18 && c.y === plant.y + 40);
           expect(col).toBeDefined();
           expect(col!.w).toBe(28);
           expect(col!.h).toBe(20);
         } else if (plant.type === 'bush_cone_autumn' || plant.type === 'bush_cone_forest') {
-          const col = chunk.colliders.find(
-            (c) => c.x === plant.x + 6 && c.y === plant.y + 44
-          );
+          const col = chunk.colliders.find((c) => c.x === plant.x + 6 && c.y === plant.y + 44);
           expect(col).toBeDefined();
           expect(col!.w).toBe(20);
           expect(col!.h).toBe(18);
         } else if (plant.type === 'nature_tree_stump') {
-          const col = chunk.colliders.find(
-            (c) => c.x === plant.x + 4 && c.y === plant.y + 8
-          );
+          const col = chunk.colliders.find((c) => c.x === plant.x + 4 && c.y === plant.y + 8);
           expect(col).toBeDefined();
           expect(col!.w).toBe(24);
           expect(col!.h).toBe(22);
         } else if (plant.type === 'nature_fallen_log') {
-          const col = chunk.colliders.find(
-            (c) => c.x === plant.x + 4 && c.y === plant.y + 8
-          );
+          const col = chunk.colliders.find((c) => c.x === plant.x + 4 && c.y === plant.y + 8);
           expect(col).toBeDefined();
           expect(col!.w).toBe(56);
           expect(col!.h).toBe(22);

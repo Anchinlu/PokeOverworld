@@ -5,6 +5,10 @@ tiles_data.js
 map_viewer.html
 scratch/
 package-lock.json
+target/
+**/target/**
+apps/desktop/src-tauri/target/**
+apps/desktop/src-tauri/gen/**
 *.log
 *.png
 *.py

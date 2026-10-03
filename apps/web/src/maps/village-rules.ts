@@ -10,12 +10,7 @@ import {
 } from './terrain-rules';
 
 export type BuildingType =
-  | 'house_red'
-  | 'pokecenter'
-  | 'house_cottage'
-  | 'house_flowers'
-  | 'pokemart'
-  | 'signpost';
+  'house_red' | 'pokecenter' | 'house_cottage' | 'house_flowers' | 'pokemart' | 'signpost';
 
 export interface BuildingSpec {
   widthTiles: number;
@@ -169,14 +164,12 @@ function canPlaceBuilding(
 
   // Check overlap with existing buildings (including 1-tile gap)
   for (const b of existingBuildings) {
-    if (
-      !(
-        gx + widthTiles <= b.gx ||
-        gx >= b.gx + b.widthTiles ||
-        gy + heightTiles <= b.gy ||
-        gy >= b.gy + b.heightTiles
-      )
-    ) {
+    if (!(
+      gx + widthTiles <= b.gx ||
+      gx >= b.gx + b.widthTiles ||
+      gy + heightTiles <= b.gy ||
+      gy >= b.gy + b.heightTiles
+    )) {
       return false;
     }
   }
@@ -235,7 +228,11 @@ export function getVillagePlacement(k: number, seed: number): VillagePlacement |
   }
 }
 
-function computeVillagePlacement(k: number, seed: number, cacheKey: string): VillagePlacement | null {
+function computeVillagePlacement(
+  k: number,
+  seed: number,
+  cacheKey: string
+): VillagePlacement | null {
   // Midpoint between rivers (rivers are at k * 96 + 48)
   const baseY = k * VILLAGE_CYCLE_HEIGHT;
   const roadX = getRoadCenterX(baseY, seed);
@@ -252,15 +249,11 @@ function computeVillagePlacement(k: number, seed: number, cacheKey: string): Vil
 
   // Tier of town: 0 = small hamlet, 1 = medium town, 2 = grand city
   const tier = (k === 0 ? 0 : Math.abs(k) % 3) as 0 | 1 | 2;
-  const villageNames = [
-    'Twinleaf Hamlet',
-    'Verdant Town',
-    'Floaroma City',
-  ];
+  const villageNames = ['Twinleaf Hamlet', 'Verdant Town', 'Floaroma City'];
   const name = villageNames[tier];
 
   // Try East side first, then West side
-  const sides: Array<'east' | 'west'> = (k % 2 === 0) ? ['east', 'west'] : ['west', 'east'];
+  const sides: Array<'east' | 'west'> = k % 2 === 0 ? ['east', 'west'] : ['west', 'east'];
 
   for (const side of sides) {
     const buildings: BuildingPlacement[] = [];
@@ -611,7 +604,12 @@ export function isVillageBuildingTile(gx: number, gy: number, seed: number, buff
 /**
  * Checks if a tile is covered by any building's roof or solid footprint.
  */
-export function isBuildingRoofOrFootprint(gx: number, gy: number, seed: number, buffer = 0): boolean {
+export function isBuildingRoofOrFootprint(
+  gx: number,
+  gy: number,
+  seed: number,
+  buffer = 0
+): boolean {
   if (isResolvingVillage) return false;
   const k = Math.round(gy / VILLAGE_CYCLE_HEIGHT);
   for (let dk = -1; dk <= 1; dk++) {
@@ -654,7 +652,12 @@ export function isTreeClippingBuilding(tx: number, ty: number, seed: number): bo
       const bTop = b.renderY - 16;
       const bBottom = (b.gy + b.heightTiles) * 32 + 32;
 
-      const overlap = !(treeRight <= bLeft || treeLeft >= bRight || treeBottom <= bTop || treeTop >= bBottom);
+      const overlap = !(
+        treeRight <= bLeft ||
+        treeLeft >= bRight ||
+        treeBottom <= bTop ||
+        treeTop >= bBottom
+      );
       if (overlap) return true;
     }
   }

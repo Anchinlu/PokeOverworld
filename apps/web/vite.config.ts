@@ -39,6 +39,9 @@ export default defineConfig({
     fs: {
       allow: ['../..'],
     },
+    watch: {
+      ignored: ['**/src-tauri/**'],
+    },
   },
   build: {
     sourcemap: true,

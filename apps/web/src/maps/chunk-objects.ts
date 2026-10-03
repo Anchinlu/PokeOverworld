@@ -512,11 +512,15 @@ export function generateChunkFoliage(
   // 3. Natural Shrubs, Flowering Bushes & Conical Accent Flora (0-2 prominent plants per chunk)
   for (let attempt = 0; attempt < 2; attempt++) {
     const roll = seededHash(cx * 15 + attempt, cy * 15 + attempt, seed + 1205);
-    if (roll < 0.70) {
+    if (roll < 0.7) {
       const lx =
-        Math.floor(seededHash(cx * 17 + attempt, cy * 17 + attempt, seed + 1305) * (CHUNK_SIZE - 2)) + 1;
+        Math.floor(
+          seededHash(cx * 17 + attempt, cy * 17 + attempt, seed + 1305) * (CHUNK_SIZE - 2)
+        ) + 1;
       const ly =
-        Math.floor(seededHash(cx * 19 + attempt, cy * 19 + attempt, seed + 1405) * (CHUNK_SIZE - 2)) + 1;
+        Math.floor(
+          seededHash(cx * 19 + attempt, cy * 19 + attempt, seed + 1405) * (CHUNK_SIZE - 2)
+        ) + 1;
       const gx = startGX + lx;
       const gy = startGY + ly;
 
@@ -640,11 +644,7 @@ function isNearBridgeStructure(gx: number, gy: number, seed: number, radius = 2)
  * Strictly spawns only on interior river and lake water tiles with at least 1 tile buffer from shores and 2 tiles from bridges.
  * Employs a global Poisson-cell grid (4x4 tiles) to ensure natural, well-spaced placement with zero overcrowding.
  */
-export function generateChunkWaterFlora(
-  cx: number,
-  cy: number,
-  seed: number
-): WaterFloraEntity[] {
+export function generateChunkWaterFlora(cx: number, cy: number, seed: number): WaterFloraEntity[] {
   const startGX = cx * CHUNK_SIZE;
   const startGY = cy * CHUNK_SIZE;
   const waterFlora: WaterFloraEntity[] = [];
@@ -694,7 +694,7 @@ export function generateChunkWaterFlora(
 
     // 40% spawn rate per eligible 4x4 water cell (tasteful, serene distribution)
     const roll = seededHash(cellX, cellY, seed + 8001);
-    if (roll < 0.40 && cellCandidates.length > 0) {
+    if (roll < 0.4 && cellCandidates.length > 0) {
       // Pick candidate inside this cell
       const pickIdx = Math.floor(seededHash(cellX, cellY, seed + 8101) * cellCandidates.length);
       const chosen = cellCandidates[pickIdx];
@@ -710,7 +710,7 @@ export function generateChunkWaterFlora(
       // Determine flower type (40% plain green pad, 60% colorful blooming lotuses/lilies)
       const lilyRoll = seededHash(chosen.gx, chosen.gy, seed + 2301);
       let lilyType = 'water_lily_pad';
-      if (lilyRoll > 0.40) {
+      if (lilyRoll > 0.4) {
         if (lilyRoll < 0.65) lilyType = 'water_lily_pink';
         else if (lilyRoll < 0.85) lilyType = 'water_lily_purple';
         else lilyType = 'water_lily_white';
@@ -745,7 +745,7 @@ export function generateChunkWaterFlora(
 
     const lilyRoll = seededHash(bestCandidate.gx, bestCandidate.gy, seed + 2301);
     let lilyType = 'water_lily_pad';
-    if (lilyRoll > 0.40) {
+    if (lilyRoll > 0.4) {
       if (lilyRoll < 0.65) lilyType = 'water_lily_pink';
       else if (lilyRoll < 0.85) lilyType = 'water_lily_purple';
       else lilyType = 'water_lily_white';
@@ -794,7 +794,12 @@ export function generateChunkTallGrass(
       if (isNearCliffEdge(gx, gy, seed)) return false;
     } else {
       if (terrainGrid[ly]?.[lx] !== TERRAIN.GRASS) return false;
-      if (isNearCliffEdge(gx, gy, seed) || isNearWater(gx, gy, seed, 1) || isVillageArea(gx, gy, seed)) return false;
+      if (
+        isNearCliffEdge(gx, gy, seed) ||
+        isNearWater(gx, gy, seed, 1) ||
+        isVillageArea(gx, gy, seed)
+      )
+        return false;
       if (isRoadTile(gx, gy, seed) || isSandTile(gx, gy, seed)) return false;
     }
 

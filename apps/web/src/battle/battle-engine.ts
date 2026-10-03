@@ -38,7 +38,11 @@ export class BattleEngine {
     this.message = `A wild ${enemyPokemon.name} appeared!`;
   }
 
-  public executeAttack(attacker: BattlerPokemon, defender: BattlerPokemon, move: BattleMove): TurnResult {
+  public executeAttack(
+    attacker: BattlerPokemon,
+    defender: BattlerPokemon,
+    move: BattleMove
+  ): TurnResult {
     if (move.pp > 0) {
       move.pp--;
     }
@@ -174,7 +178,7 @@ export class BattleEngine {
     const pSpeed = this.playerPokemon.stats.speed;
     const eSpeed = this.enemyPokemon.stats.speed;
     if (pSpeed >= eSpeed) return true;
-    const odds = Math.floor(((pSpeed * 128) / eSpeed) + 30);
+    const odds = Math.floor((pSpeed * 128) / eSpeed + 30);
     return this.rng.nextInt(0, 255) < odds;
   }
 }

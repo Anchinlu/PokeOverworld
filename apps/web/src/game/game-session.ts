@@ -145,7 +145,15 @@ export class GameSession {
   }
 
   public startTestBattle(): void {
-    const testRoster = ['PIDGEY', 'RATTATA', 'CATERPIE', 'SPEAROW', 'BULBASAUR', 'CHARMANDER', 'SQUIRTLE'];
+    const testRoster = [
+      'PIDGEY',
+      'RATTATA',
+      'CATERPIE',
+      'SPEAROW',
+      'BULBASAUR',
+      'CHARMANDER',
+      'SQUIRTLE',
+    ];
     const randomSpecies = testRoster[Math.floor(Math.random() * testRoster.length)];
     const mockWp = {
       gx: this.player.gx,
@@ -244,4 +252,3 @@ export class GameSession {
     }
   }
 }
-

@@ -50,9 +50,7 @@ describe('Beach Palm Trees Feature', () => {
     for (const chunk of chunks) {
       const palms = chunk.trees.filter((t) => t.type === 'palm');
       for (const palm of palms) {
-        const collider = chunk.colliders.find(
-          (c) => c.type === 'tree' && c.x === palm.gx * 32
-        );
+        const collider = chunk.colliders.find((c) => c.type === 'tree' && c.x === palm.gx * 32);
         expect(collider).toBeDefined();
         expect(collider!.w).toBe(32);
         expect(collider!.h).toBe(26);

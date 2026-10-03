@@ -1,6 +1,38 @@
-## Cập nhật lần cuối: 2026-10-03 (Triển Khai Làng Mạc Procedural & Tối Ưu Hitbox Pixel-Perfect)
+## Cập nhật lần cuối: 2026-10-03 (Triển Khai Desktop Preview Độc Lập bằng Tauri v2 & Tối Ưu Toàn Màn Hình)
 
-### 0.10. Triển Khai Hệ Thống Làng Mạc (Procedural Village Generation) & Tối Ưu Hitbox Pixel-Perfect:
+### 0.11. Triển Khai Desktop Preview Bằng Tauri v2 & Shell Toàn Màn Hình:
+- **Trạng thái:** Preview / Thử nghiệm Desktop độc lập (Không phải production release backend).
+- **Mục tiêu đạt được:**
+  - Khởi tạo kiến trúc Desktop Shell độc lập tại [apps/desktop/src-tauri](file:///e:/Pokemon/apps/desktop/src-tauri) sử dụng Tauri v2.
+  - Không thay đổi bất kỳ domain/battle/map logic nào; tách biệt hoàn toàn shell desktop với core web application.
+  - Hỗ trợ toàn màn hình (Fullscreen):
+    - Phím tắt `F11` chuyển đổi toàn màn hình.
+    - Phím tắt `Esc` thoát toàn màn hình (an toàn, không xung đột khi mở modal/Pokédex).
+    - Nút bấm trực quan `btnToggleFullscreen` trên giao diện điều khiển chẩn đoán.
+    - Giữ nguyên tỉ lệ hiển thị pixelated crisp-edges của game canvas, UI responsive theo viewport mà không làm méo hình.
+  - Đổi tiền tố hiển thị cấp độ trong trận đấu từ `Nv.` sang `Lv.` theo đúng chuẩn quốc tế.
+  - Bộ scripts thực thi trong monorepo:
+    - `npm run desktop:dev`: Khởi động cửa sổ desktop Tauri kèm Vite dev server tự động.
+    - `npm run desktop:build`: Build production web bundle rồi biên dịch bản phát hành Windows độc lập.
+- **Kết quả Build Windows Release:**
+  - `apps/desktop/src-tauri/target/release/pokeoverworld-desktop.exe`
+  - Bundle MSI: `PokeOverworld_0.1.0_x64_en-US.msi` (3.16 MiB)
+  - Bundle NSIS: `PokeOverworld_0.1.0_x64-setup.exe` (2.20 MiB)
+- **Biên bản Asset Warnings còn tồn tại trong production build:**
+  - `/Graphics/Fonts/power clear.ttf` (Font power clear dùng runtime CSS)
+  - `/Graphics/Fonts/vt323.ttf` (Font retro 8-bit dùng runtime CSS)
+  - `/Graphics/Pokedex/bg_list.png?v=teal` (Texture Pokédex)
+  - `/Graphics/Pokedex/cursor_list.png?v=teal`
+  - `/Graphics/Pokedex/icon_slider.png?v=teal`
+  - `/Graphics/Pokedex/bg_info.png?v=teal`
+  - `/Graphics/Pokedex/advancedInfoBar.png`
+  - *Định hướng kế tiếp:* Triển khai Asset Resolver chuẩn hóa các đường dẫn runtime này vào `public/assets` hoặc import tĩnh qua Vite trong phase hoàn thiện asset pipeline.
+- **Kiểm thử & CI:**
+  - Test suite mới [apps/web/test/desktop-shell.test.ts](file:///e:/Pokemon/apps/web/test/desktop-shell.test.ts) (5/5 tests pass).
+  - Toàn bộ 13 test suites (67 tests) Vitest PASS 100%.
+  - 12 Python unittests PASS 100%.
+  - Pipeline `npm run ci` PASS 100% (Validate schemas, ESLint, Prettier, TypeScript, Vitest, Vite build).
+
 - **Yêu cầu & Định hướng người dùng:**
   - Sinh làng mạc tự nhiên dọc đại lộ theo chu kỳ `VILLAGE_CYCLE_HEIGHT = 96`.
   - Bố trí hợp lý, thoáng đãng, không gập khuôn; đường đi nối liền mạch và quanh co, không tạo ngõ cụt dọc giữa các vách nhà; tránh xếp chồng nhà thẳng hàng làm mái nhà dưới che cửa nhà trên.

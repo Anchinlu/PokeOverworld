@@ -415,7 +415,8 @@ export class BattleRenderer {
     const fillW = Math.max(0, Math.round(bw * pct));
     if (fillW > 0) {
       let fillColor = '#22c55e'; // Green >= 50%
-      if (pct < 0.2) fillColor = '#ef4444'; // Red < 20%
+      if (pct < 0.2)
+        fillColor = '#ef4444'; // Red < 20%
       else if (pct < 0.5) fillColor = '#eab308'; // Yellow 20-50%
 
       ctx.fillStyle = fillColor;
@@ -471,6 +472,14 @@ export class BattleRenderer {
     // PP
     ctx.font = '11px "Power Clear", monospace';
     const ppColor = move.pp > 0 ? '#cbd5e1' : '#f87171';
-    this.drawTextWithOutline(ctx, `PP ${move.pp}/${move.maxPp}`, x + 36, y + 31, ppColor, '#000000', 2);
+    this.drawTextWithOutline(
+      ctx,
+      `PP ${move.pp}/${move.maxPp}`,
+      x + 36,
+      y + 31,
+      ppColor,
+      '#000000',
+      2
+    );
   }
 }

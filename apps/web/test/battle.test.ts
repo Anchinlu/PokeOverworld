@@ -28,9 +28,25 @@ describe('Wild Pokémon Battle System', () => {
 
   it('correctly maps all 18 types and ??? to indices in types_ico.png (24x28 per icon)', () => {
     const types = [
-      'Normal', 'Fighting', 'Flying', 'Poison', 'Ground', 'Rock',
-      'Bug', 'Ghost', 'Steel', '???', 'Fire', 'Water',
-      'Grass', 'Electric', 'Psychic', 'Ice', 'Dragon', 'Dark', 'Fairy'
+      'Normal',
+      'Fighting',
+      'Flying',
+      'Poison',
+      'Ground',
+      'Rock',
+      'Bug',
+      'Ghost',
+      'Steel',
+      '???',
+      'Fire',
+      'Water',
+      'Grass',
+      'Electric',
+      'Psychic',
+      'Ice',
+      'Dragon',
+      'Dark',
+      'Fairy',
     ];
 
     for (const t of types) {
@@ -74,8 +90,10 @@ describe('Wild Pokémon Battle System', () => {
     const firstWild = createBattler('PIDGEY', 3, true);
     const secondPlayer = createBattler('PIKACHU', 10, true);
     const secondWild = createBattler('PIDGEY', 3, true);
-    const moveA = firstPlayer.moves.find((move) => move.id === 'thunderbolt') ?? firstPlayer.moves[0];
-    const moveB = secondPlayer.moves.find((move) => move.id === 'thunderbolt') ?? secondPlayer.moves[0];
+    const moveA =
+      firstPlayer.moves.find((move) => move.id === 'thunderbolt') ?? firstPlayer.moves[0];
+    const moveB =
+      secondPlayer.moves.find((move) => move.id === 'thunderbolt') ?? secondPlayer.moves[0];
     const first = new BattleEngine(
       firstPlayer,
       firstWild,

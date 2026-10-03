@@ -42,11 +42,7 @@ export class ObjectRenderer {
           const img = this.loader.getImage(plant.type);
           if (img && img.complete) {
             if (isStaticNatural) {
-              const ySort = isWhiteBush
-                ? plant.y + 56
-                : isTall
-                ? plant.y + 58
-                : plant.y + 26;
+              const ySort = isWhiteBush ? plant.y + 56 : isTall ? plant.y + 58 : plant.y + 26;
               list.push({
                 ySort,
                 draw: (ctx) => {

@@ -35,7 +35,10 @@ export function createOverlayTemplate(): string {
         <span>🎮 Pokémon Map</span>
         <span class="badge-fixed">1.0x Cố định</span>
       </div>
-      <button class="btn-toggle" id="btnToggleOverlay" title="Thu gọn / Mở rộng">✕</button>
+      <div class="header-actions">
+        <button class="btn-fullscreen" id="btnToggleFullscreen" title="Toàn màn hình (F11)">⛶</button>
+        <button class="btn-toggle" id="btnToggleOverlay" title="Thu gọn / Mở rộng">✕</button>
+      </div>
     </header>
 
     <div class="overlay-body">
