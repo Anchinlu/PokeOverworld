@@ -20,13 +20,17 @@ export class ObjectRenderer {
   ): void {
     for (const chunk of chunkManager.activeChunks) {
       for (const plant of chunk.plants) {
+        const isLog = plant.type === 'nature_fallen_log';
         const isWhiteBush = plant.type === 'bush_flowering_white';
+        const isStump = plant.type === 'nature_tree_stump';
         const isTall =
           isWhiteBush ||
           plant.type === 'bush_cone_autumn' ||
           plant.type === 'bush_cone_forest' ||
           plant.type === 'flower_purple_bell';
-        const w = isWhiteBush ? 64 : 32;
+        const isStaticNatural = isTall || isLog || isStump;
+
+        const w = isWhiteBush || isLog ? 64 : 32;
         const h = isTall ? 64 : 32;
 
         if (
@@ -37,8 +41,12 @@ export class ObjectRenderer {
         ) {
           const img = this.loader.getImage(plant.type);
           if (img && img.complete) {
-            if (isTall) {
-              const ySort = isWhiteBush ? plant.y + 56 : plant.y + 58;
+            if (isStaticNatural) {
+              const ySort = isWhiteBush
+                ? plant.y + 56
+                : isTall
+                ? plant.y + 58
+                : plant.y + 26;
               list.push({
                 ySort,
                 draw: (ctx) => {

@@ -415,25 +415,46 @@ export function generateChunkFoliage(
         const sample = sampleEcology(gx, gy, seed);
         const zone = getEcologyZone(sample);
         const shrubRoll = seededHash(gx, gy, seed + 1505);
-        const type = getNaturalShrubForZone(zone, shrubRoll);
+        let type = getNaturalShrubForZone(zone, shrubRoll);
+
+        const isLog = type === 'nature_fallen_log';
+        if (isLog && lx + 1 >= CHUNK_SIZE) {
+          type = 'nature_tree_stump';
+        }
 
         const isWhiteBush = type === 'bush_flowering_white';
-        const px = isWhiteBush ? gx * TILE_SIZE - 16 : gx * TILE_SIZE;
-        const py = gy * TILE_SIZE - 32;
+        const isStump = type === 'nature_tree_stump';
+        const isLogNow = type === 'nature_fallen_log';
+
+        let px = gx * TILE_SIZE;
+        let py = gy * TILE_SIZE - 32;
+
+        if (isWhiteBush) {
+          px = gx * TILE_SIZE - 16;
+          py = gy * TILE_SIZE - 32;
+        } else if (isStump || isLogNow) {
+          px = gx * TILE_SIZE;
+          py = gy * TILE_SIZE;
+        }
 
         // Check collision clearance with trees or other solids
+        const checkW = isLogNow ? 60 : isWhiteBush ? 40 : 24;
         const blocked = colliders.some(
-          (c) => px + 24 > c.x && px + 8 < c.x + c.w && py + 56 > c.y && py + 32 < c.y + c.h
+          (c) => px + checkW > c.x && px + 4 < c.x + c.w && py + 28 > c.y && py + 4 < c.y + c.h
         );
         if (blocked) continue;
 
         plants.push({ gx, gy, x: px, y: py, type, phase: attempt });
 
-        // Add solid colliders for shrubs/trees (flowers remain walkable)
+        // Add solid colliders / hitboxes
         if (isWhiteBush) {
           colliders.push({ x: px + 18, y: py + 40, w: 28, h: 20, type: 'tree' });
         } else if (type === 'bush_cone_autumn' || type === 'bush_cone_forest') {
           colliders.push({ x: px + 6, y: py + 44, w: 20, h: 18, type: 'tree' });
+        } else if (isStump) {
+          colliders.push({ x: px + 4, y: py + 8, w: 24, h: 22, type: 'tree' });
+        } else if (isLogNow) {
+          colliders.push({ x: px + 4, y: py + 8, w: 56, h: 22, type: 'tree' });
         }
       }
     }

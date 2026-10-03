@@ -66,6 +66,20 @@ describe('Natural Plants Taxonomy & Ecology Feature', () => {
           expect(col).toBeDefined();
           expect(col!.w).toBe(20);
           expect(col!.h).toBe(18);
+        } else if (plant.type === 'nature_tree_stump') {
+          const col = chunk.colliders.find(
+            (c) => c.x === plant.x + 4 && c.y === plant.y + 8
+          );
+          expect(col).toBeDefined();
+          expect(col!.w).toBe(24);
+          expect(col!.h).toBe(22);
+        } else if (plant.type === 'nature_fallen_log') {
+          const col = chunk.colliders.find(
+            (c) => c.x === plant.x + 4 && c.y === plant.y + 8
+          );
+          expect(col).toBeDefined();
+          expect(col!.w).toBe(56);
+          expect(col!.h).toBe(22);
         }
       }
     }

@@ -27,6 +27,8 @@
   "grass_3": "/assets/grass_3.png",
   "grass_4": "/assets/grass_4.png",
   "grass_variant": "/assets/grass_variant.png",
+  "nature_fallen_log": "/assets/nature_fallen_log.png",
+  "nature_tree_stump": "/assets/nature_tree_stump.png",
   "path_bl": "/assets/path_bl.png",
   "path_bot": "/assets/path_bot.png",
   "path_br": "/assets/path_br.png",
