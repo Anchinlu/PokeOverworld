@@ -1,6 +1,9 @@
 {
   "char_pika_sheet": "/assets/char_pika_sheet.png",
   "char_red_sheet": "/assets/char_red_sheet.png",
+  "bush_cone_autumn": "/assets/bush_cone_autumn.png",
+  "bush_cone_forest": "/assets/bush_cone_forest.png",
+  "bush_flowering_white": "/assets/bush_flowering_white.png",
   "cliff_bl": "/assets/cliff_bl.png",
   "cliff_bot": "/assets/cliff_bot.png",
   "cliff_br": "/assets/cliff_br.png",
@@ -16,6 +19,7 @@
   "cliff_tr": "/assets/cliff_tr.png",
   "flower_blue": "/assets/flower_blue.png",
   "flower_purple": "/assets/flower_purple.png",
+  "flower_purple_bell": "/assets/flower_purple_bell.png",
   "flower_red": "/assets/flower_red.png",
   "flower_white": "/assets/flower_white.png",
   "grass_1": "/assets/grass_1.png",

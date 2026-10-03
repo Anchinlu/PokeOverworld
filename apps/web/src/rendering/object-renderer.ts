@@ -20,21 +20,40 @@ export class ObjectRenderer {
   ): void {
     for (const chunk of chunkManager.activeChunks) {
       for (const plant of chunk.plants) {
+        const isWhiteBush = plant.type === 'bush_flowering_white';
+        const isTall =
+          isWhiteBush ||
+          plant.type === 'bush_cone_autumn' ||
+          plant.type === 'bush_cone_forest' ||
+          plant.type === 'flower_purple_bell';
+        const w = isWhiteBush ? 64 : 32;
+        const h = isTall ? 64 : 32;
+
         if (
-          plant.x + 32 >= bounds.minX &&
+          plant.x + w >= bounds.minX &&
           plant.x <= bounds.maxX &&
-          plant.y + 32 >= bounds.minY &&
+          plant.y + h >= bounds.minY &&
           plant.y <= bounds.maxY
         ) {
           const img = this.loader.getImage(plant.type);
           if (img && img.complete) {
-            const frame = Math.floor((now / 180 + plant.phase) % 5);
-            list.push({
-              ySort: plant.y + 16,
-              draw: (ctx) => {
-                ctx.drawImage(img, frame * 32, 0, 32, 32, plant.x, plant.y, 32, 32);
-              },
-            });
+            if (isTall) {
+              const ySort = isWhiteBush ? plant.y + 56 : plant.y + 58;
+              list.push({
+                ySort,
+                draw: (ctx) => {
+                  ctx.drawImage(img, plant.x, plant.y);
+                },
+              });
+            } else {
+              const frame = Math.floor((now / 180 + plant.phase) % 5);
+              list.push({
+                ySort: plant.y + 16,
+                draw: (ctx) => {
+                  ctx.drawImage(img, frame * 32, 0, 32, 32, plant.x, plant.y, 32, 32);
+                },
+              });
+            }
           }
         }
       }

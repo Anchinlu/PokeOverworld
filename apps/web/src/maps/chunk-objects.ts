@@ -16,6 +16,7 @@ import {
   getEcologyZone,
   getTreeTypeForEcology,
   getFlowerTypeForCluster,
+  getNaturalShrubForZone,
   calculateTallGrassDensity,
   TREE_MIN_CANDIDATES,
   TREE_MAX_CANDIDATES,
@@ -385,6 +386,54 @@ export function generateChunkFoliage(
               plants.push({ gx, gy, x: px, y: py, type, phase });
             }
           }
+        }
+      }
+    }
+  }
+
+  // 3. Natural Shrubs, Flowering Bushes & Conical Accent Flora (0-2 prominent plants per chunk)
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const roll = seededHash(cx * 15 + attempt, cy * 15 + attempt, seed + 1205);
+    if (roll < 0.70) {
+      const lx =
+        Math.floor(seededHash(cx * 17 + attempt, cy * 17 + attempt, seed + 1305) * (CHUNK_SIZE - 2)) + 1;
+      const ly =
+        Math.floor(seededHash(cx * 19 + attempt, cy * 19 + attempt, seed + 1405) * (CHUNK_SIZE - 2)) + 1;
+      const gx = startGX + lx;
+      const gy = startGY + ly;
+
+      const isGrass = terrainGrid[ly]?.[lx] === TERRAIN.GRASS;
+      const isHillFlat =
+        terrainGrid[ly]?.[lx] === TERRAIN.HILL && tileIdGrid[ly]?.[lx] === TILE_IDS.cliff_pure;
+
+      if (isGrass || isHillFlat) {
+        if (isNearCliffEdge(gx, gy, seed) || isNearWater(gx, gy, seed, 1)) continue;
+        if (tallGrass.some((tg) => tg.gx === gx && tg.gy === gy)) continue;
+        if (berryBushes.some((b) => Math.abs(b.gx - gx) <= 1 && Math.abs(b.gy - gy) <= 1)) continue;
+        if (plants.some((p) => Math.abs(p.gx - gx) <= 1 && Math.abs(p.gy - gy) <= 1)) continue;
+
+        const sample = sampleEcology(gx, gy, seed);
+        const zone = getEcologyZone(sample);
+        const shrubRoll = seededHash(gx, gy, seed + 1505);
+        const type = getNaturalShrubForZone(zone, shrubRoll);
+
+        const isWhiteBush = type === 'bush_flowering_white';
+        const px = isWhiteBush ? gx * TILE_SIZE - 16 : gx * TILE_SIZE;
+        const py = gy * TILE_SIZE - 32;
+
+        // Check collision clearance with trees or other solids
+        const blocked = colliders.some(
+          (c) => px + 24 > c.x && px + 8 < c.x + c.w && py + 56 > c.y && py + 32 < c.y + c.h
+        );
+        if (blocked) continue;
+
+        plants.push({ gx, gy, x: px, y: py, type, phase: attempt });
+
+        // Add solid colliders for shrubs/trees (flowers remain walkable)
+        if (isWhiteBush) {
+          colliders.push({ x: px + 18, y: py + 40, w: 28, h: 20, type: 'tree' });
+        } else if (type === 'bush_cone_autumn' || type === 'bush_cone_forest') {
+          colliders.push({ x: px + 6, y: py + 44, w: 20, h: 18, type: 'tree' });
         }
       }
     }

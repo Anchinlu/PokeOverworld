@@ -126,3 +126,20 @@ export function getFlowerTypeForCluster(
   const secIndex = Math.floor(((tileRoll - 0.75) / 0.25) * palette.secondary.length);
   return palette.secondary[Math.min(secIndex, palette.secondary.length - 1)];
 }
+
+/**
+ * Natural Shrubs, Flowering Bushes & Conical Accent Flora Taxonomy
+ */
+export const ZONE_NATURAL_SHRUBS: Record<EcologyZone, string[]> = {
+  meadow: ['bush_flowering_white', 'flower_purple_bell'],
+  dense_forest: ['bush_cone_forest', 'bush_flowering_white'],
+  wetland: ['flower_purple_bell', 'bush_cone_forest'],
+  dryland: ['bush_cone_autumn'],
+  hill_edge: ['bush_cone_autumn', 'bush_flowering_white'],
+  coast: ['flower_purple_bell'],
+};
+
+export function getNaturalShrubForZone(zone: EcologyZone, roll: number): string {
+  const pool = ZONE_NATURAL_SHRUBS[zone] || ZONE_NATURAL_SHRUBS.meadow;
+  return pool[Math.floor(roll * pool.length)];
+}
