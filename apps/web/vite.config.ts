@@ -52,6 +52,7 @@ function emitLegacyGraphicsPlugin(): Plugin {
         'Graphics/Fonts/vt323.ttf',
         'Graphics/Pokedex/bg_list.png',
         'Graphics/Pokedex/bg_search_bar.png',
+        'Graphics/Pokedex/icon_search_ball.png',
         'Graphics/Pokedex/cursor_list.png',
         'Graphics/Pokedex/icon_slider.png',
         'Graphics/Pokedex/bg_info.png',

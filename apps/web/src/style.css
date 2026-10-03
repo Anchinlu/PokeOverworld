@@ -589,11 +589,13 @@ body {
   filter: drop-shadow(0 0 5px rgba(20, 214, 203, 0.75));
 }
 
-.pokedex-search-icon {
-  font-size: 10px;
-  line-height: 1;
+.pokedex-search-icon-img {
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  flex-shrink: 0;
   user-select: none;
-  opacity: 0.75;
 }
 
 .pokedex-retro-search-bar input {
