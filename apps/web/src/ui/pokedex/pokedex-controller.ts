@@ -9,6 +9,7 @@ import { filterItems } from './pokedex-items';
 import { PokemonSpriteAnimator } from './pokedex-sprite';
 import { PokedexState, type PokedexInfoSubTab, type PokedexTab } from './pokedex-state';
 import { PokedexView } from './pokedex-view';
+import { pokemonCryPlayer } from './pokemon-cry';
 
 export class PokedexController {
   public readonly state = new PokedexState();
@@ -67,6 +68,10 @@ export class PokedexController {
     // Open detail from preview box
     els.listPreviewBox.addEventListener('click', () => {
       if (this.state.currentTab === 'pokemon' && this.filteredPokemon.length > 0) {
+        const current = this.filteredPokemon[this.state.selectedIndex];
+        if (current?.sprites?.cry) {
+          pokemonCryPlayer.play(current.sprites.cry);
+        }
         this.state.viewMode = 'info';
         this.render();
       }
@@ -304,6 +309,10 @@ export class PokedexController {
     this.state.selectedIndex =
       (this.state.selectedIndex + delta + this.filteredPokemon.length) %
       this.filteredPokemon.length;
+
+    // Don't play cry when navigating - can be jarring
+    // User can click sprite to play if they want
+
     this.ensureSelectionVisible();
     this.render();
   }
@@ -442,10 +451,19 @@ export class PokedexController {
       this.state.visibleCount,
       (idx) => {
         this.state.selectedIndex = idx;
+        // Play cry when selecting Pokemon from list (single click)
+        const current = this.filteredPokemon[idx];
+        if (current?.sprites?.cry) {
+          pokemonCryPlayer.play(current.sprites.cry);
+        }
         this.render();
       },
       (idx) => {
         this.state.selectedIndex = idx;
+        const current = this.filteredPokemon[idx];
+        if (current?.sprites?.cry) {
+          pokemonCryPlayer.play(current.sprites.cry);
+        }
         this.state.viewMode = 'info';
         this.render();
       }
@@ -506,6 +524,20 @@ export class PokedexController {
 
     if (current.sprites.front) {
       this.infoAnimator?.load(`/${current.sprites.front}`);
+    }
+
+    // Add click listener to sprite box and canvas to play cry
+    const canvas = this.view.elements?.canvasInfoSprite;
+    const spriteBox = canvas?.parentElement;
+    const targetElement = spriteBox || canvas;
+
+    if (targetElement && current.sprites.cry) {
+      targetElement.style.cursor = 'pointer';
+      targetElement.title = `Nhấn để nghe tiếng kêu của ${current.name} (Cry)`;
+      targetElement.onclick = (e) => {
+        e.stopPropagation();
+        pokemonCryPlayer.play(current.sprites.cry);
+      };
     }
 
     this.view.setInfoSubTab(this.state.infoSubTab);

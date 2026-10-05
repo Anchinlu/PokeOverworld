@@ -7,11 +7,19 @@
 import type { BattlerPokemon, BattleMove } from './types';
 import type { BattleState } from './battle-state';
 import { BattleEngine } from './battle-engine';
+import { getHoveredCommandIndex, type BattleRenderer } from './battle-renderer';
+import { PartyScreen } from '../ui/party-screen';
+import { BagScreen } from '../ui/bag-screen';
+import type { ItemDef } from '../data/items-db';
+import type { PartyPokemon } from '../domain/party/party-state';
+import { partyPokemonToBattler } from '../domain/party/party-state';
+import { partyService } from '../domain/party/party-service';
 
 /** Callback when the battle ends */
 export type BattleEndCallback = (result: {
   outcome: 'caught' | 'victory' | 'fled' | 'defeated';
   caughtPokemon?: BattlerPokemon;
+  activePlayerPokemon?: BattlerPokemon;
 }) => void;
 
 export class BattleController {
@@ -19,6 +27,7 @@ export class BattleController {
   private engine: BattleEngine;
   private canvas: HTMLCanvasElement;
   private onEnd: BattleEndCallback;
+  private renderer?: BattleRenderer;
   private typingTimer: ReturnType<typeof setInterval> | null = null;
 
   // Bound event handlers (for cleanup)
@@ -29,12 +38,14 @@ export class BattleController {
     state: BattleState,
     engine: BattleEngine,
     canvas: HTMLCanvasElement,
-    onEnd: BattleEndCallback
+    onEnd: BattleEndCallback,
+    renderer?: BattleRenderer
   ) {
     this.state = state;
     this.engine = engine;
     this.canvas = canvas;
     this.onEnd = onEnd;
+    this.renderer = renderer;
 
     this.boundClick = (e) => this.handleClick(e);
     this.boundMouseMove = (e) => this.handleMouseMove(e);
@@ -110,17 +121,33 @@ export class BattleController {
   }
 
   private handleMouseMove(e: MouseEvent): void {
-    if (this.state.uiMode !== 'command') return;
     const { x, y } = this.getCanvasCoords(e);
 
-    if (x >= 252 && x <= 378 && y >= 296 && y <= 338) {
-      this.state.hoveredCommandIdx = 0; // FIGHT
-    } else if (x >= 381 && x <= 507 && y >= 296 && y <= 338) {
-      this.state.hoveredCommandIdx = 1; // BAG
-    } else if (x >= 252 && x <= 378 && y >= 339 && y <= 381) {
-      this.state.hoveredCommandIdx = 2; // POKEMON
-    } else if (x >= 381 && x <= 507 && y >= 339 && y <= 381) {
-      this.state.hoveredCommandIdx = 3; // RUN
+    if (this.state.uiMode === 'command') {
+      this.state.hoveredCommandIdx = getHoveredCommandIndex(x, y);
+      return;
+    }
+
+    if (this.state.uiMode === 'moves') {
+      if (x >= 12 && x <= 202 && y >= 296 && y <= 334) {
+        this.state.hoveredMoveIdx = 0;
+        this.state.hoveredCancel = false;
+      } else if (x >= 206 && x <= 396 && y >= 296 && y <= 334) {
+        this.state.hoveredMoveIdx = 1;
+        this.state.hoveredCancel = false;
+      } else if (x >= 12 && x <= 202 && y >= 336 && y <= 374) {
+        this.state.hoveredMoveIdx = 2;
+        this.state.hoveredCancel = false;
+      } else if (x >= 206 && x <= 396 && y >= 336 && y <= 374) {
+        this.state.hoveredMoveIdx = 3;
+        this.state.hoveredCancel = false;
+      } else if (x >= 398 && x <= 508 && y >= 300 && y <= 376) {
+        this.state.hoveredCancel = true;
+        this.state.hoveredMoveIdx = -1;
+      } else {
+        this.state.hoveredMoveIdx = -1;
+        this.state.hoveredCancel = false;
+      }
     }
   }
 
@@ -148,33 +175,77 @@ export class BattleController {
   }
 
   private handleCommandClick(x: number, y: number): void {
-    if (x >= 252 && x <= 378 && y >= 296 && y <= 338) {
+    const idx = getHoveredCommandIndex(x, y);
+    if (idx === 0) {
       this.state.hoveredCommandIdx = 0;
       this.state.uiMode = 'moves';
-    } else if (x >= 381 && x <= 507 && y >= 296 && y <= 338) {
+    } else if (idx === 1) {
       this.state.hoveredCommandIdx = 1;
-      this.state.uiMode = 'bag';
-    } else if (x >= 252 && x <= 378 && y >= 339 && y <= 381) {
+      this.handleBagCommand();
+    } else if (idx === 2) {
       this.state.hoveredCommandIdx = 2;
-      this.queueMessage(`${this.engine.playerPokemon.name} is ready for battle!`, 'command');
-    } else if (x >= 381 && x <= 507 && y >= 339 && y <= 381) {
+      this.handlePokemonCommand();
+    } else if (idx === 3) {
       this.state.hoveredCommandIdx = 3;
       this.handleRun();
     }
   }
 
+  private handleBagCommand(): void {
+    BagScreen.getInstance().openForBattleUse(
+      (entry) => {
+        const item = entry.item;
+        const pocket = entry.pocketIndex;
+        if (pocket === 2 || item.category === 'pokeball') {
+          this.handleThrowBall(item);
+        } else {
+          this.handleUseMedicineInBattle(item);
+        }
+      },
+      () => {
+        this.state.uiMode = 'command';
+      }
+    );
+  }
+
+  private handleUseMedicineInBattle(item: ItemDef): void {
+    const player = this.engine.playerPokemon;
+    let healAmount = 20;
+    if (item.id === 'SUPERPOTION') healAmount = 50;
+    else if (item.id === 'HYPERPOTION') healAmount = 200;
+    else if (item.id === 'MAXPOTION' || item.id === 'FULLRESTORE') healAmount = player.maxHp;
+
+    const oldHp = player.currentHp;
+    player.currentHp = Math.min(player.maxHp, player.currentHp + healAmount);
+    const recovered = player.currentHp - oldHp;
+    this.state.targetPlayerHpPct = player.currentHp / player.maxHp;
+
+    this.state.uiMode = 'message';
+    this.queueMessage(
+      `Đã dùng ${item.name}! ${player.name} hồi phục ${recovered} HP!`,
+      'message',
+      () => {
+        setTimeout(() => {
+          this.handleEnemyTurn();
+        }, 400);
+      }
+    );
+  }
+
   private handleMovesClick(x: number, y: number): void {
-    // Back button
-    if (x >= 380 && y >= 320) {
+    // Cancel button (right column: 398..508, 296..380)
+    if (x >= 398 && y >= 296 && y <= 380) {
       this.state.uiMode = 'command';
+      this.state.hoveredMoveIdx = -1;
+      this.state.hoveredCancel = false;
       return;
     }
 
     let selectedMoveIdx = -1;
-    if (x >= 20 && x <= 180 && y >= 295 && y <= 335) selectedMoveIdx = 0;
-    else if (x >= 190 && x <= 350 && y >= 295 && y <= 335) selectedMoveIdx = 1;
-    else if (x >= 20 && x <= 180 && y >= 340 && y <= 380) selectedMoveIdx = 2;
-    else if (x >= 190 && x <= 350 && y >= 340 && y <= 380) selectedMoveIdx = 3;
+    if (x >= 12 && x <= 202 && y >= 296 && y <= 334) selectedMoveIdx = 0;
+    else if (x >= 206 && x <= 396 && y >= 296 && y <= 334) selectedMoveIdx = 1;
+    else if (x >= 12 && x <= 202 && y >= 336 && y <= 374) selectedMoveIdx = 2;
+    else if (x >= 206 && x <= 396 && y >= 336 && y <= 374) selectedMoveIdx = 3;
 
     if (selectedMoveIdx >= 0 && selectedMoveIdx < this.engine.playerPokemon.moves.length) {
       const move = this.engine.playerPokemon.moves[selectedMoveIdx];
@@ -197,15 +268,23 @@ export class BattleController {
     const player = this.engine.playerPokemon;
     const enemy = this.engine.enemyPokemon;
 
+    // Start player attack forward lunge
+    this.state.startPlayerAttack(() => {
+      // On impact: trigger enemy hit reaction (knockback jitter & hurt flash)
+      this.state.startEnemyHit();
+    });
+
     const result = this.engine.executeAttack(player, enemy, move);
-    this.state.enemyHurtFlash = 12;
     this.state.targetEnemyHpPct = enemy.currentHp / enemy.maxHp;
 
     this.queueMessage(result.message, 'message', () => {
       if (result.defenderFainted) {
-        this.queueMessage(`The wild ${enemy.name} fainted!`, 'message', () => {
-          this.queueMessage(`${player.name} gained ${enemy.level * 35} EXP!`, 'end', () => {
-            this.endBattle('victory');
+        // Trigger wild Pokemon faint sequence: red flash -> pure white -> top-to-bottom particle dissolve
+        this.state.startEnemyFaint(() => {
+          this.queueMessage(`The wild ${enemy.name} fainted!`, 'message', () => {
+            this.queueMessage(`${player.name} gained ${enemy.level * 35} EXP!`, 'end', () => {
+              this.endBattle('victory');
+            });
           });
         });
       } else {
@@ -221,14 +300,30 @@ export class BattleController {
     const player = this.engine.playerPokemon;
     const enemyMove = this.engine.getEnemyAction();
 
+    // Start enemy attack forward lunge
+    this.state.startEnemyAttack(() => {
+      // On impact: trigger player hit reaction (knockback jitter & hurt flash)
+      this.state.startPlayerHit();
+    });
+
     const result = this.engine.executeAttack(enemy, player, enemyMove);
-    this.state.playerHurtFlash = 12;
     this.state.targetPlayerHpPct = player.currentHp / player.maxHp;
 
     this.queueMessage(result.message, 'message', () => {
       if (result.defenderFainted) {
-        this.queueMessage(`${player.name} fainted!`, 'end', () => {
-          this.endBattle('defeated');
+        // Trigger player Pokemon faint sequence: white energy -> shrinks down into base -> disappears
+        this.state.startPlayerFaint(() => {
+          partyService.syncBattleResult(this.engine.playerPokemon, 0);
+          const hasAlive = partyService.getParty().some((p) => p.currentHp > 0 && !p.isFainted);
+          if (hasAlive) {
+            this.queueMessage(`${player.name} fainted!`, 'message', () => {
+              this.handleForceSwitch();
+            });
+          } else {
+            this.queueMessage(`${player.name} fainted!`, 'end', () => {
+              this.endBattle('defeated');
+            });
+          }
         });
       } else {
         this.state.uiMode = 'command';
@@ -236,17 +331,20 @@ export class BattleController {
     });
   }
 
-  private handleThrowBall(): void {
-    if (this.engine.ballsCount <= 0) {
-      this.queueMessage('You have no Poké Balls left!', 'command');
-      return;
-    }
+  private handleThrowBall(item?: ItemDef): void {
+    const ballName = item?.name || 'Poké Ball';
+    let multiplier = 1.0;
+    if (item?.id === 'GREATBALL') multiplier = 1.5;
+    else if (item?.id === 'ULTRABALL') multiplier = 2.0;
+    else if (item?.id === 'MASTERBALL') multiplier = 999.0;
+    else if (item?.id === 'QUICKBALL') multiplier = 4.0;
+    else if (item?.id === 'DUSKBALL' || item?.id === 'NETBALL') multiplier = 3.0;
 
     this.state.uiMode = 'message';
     this.state.isThrowingBall = true;
 
-    this.queueMessage(`Red used one Poké Ball!`, 'message', () => {
-      const catchRes = this.engine.tryCatchPokemon();
+    this.queueMessage(`Huấn luyện viên đã ném ${ballName}!`, 'message', () => {
+      const catchRes = this.engine.tryCatchPokemon(multiplier, ballName);
 
       let shakeCount = 0;
       const shakeInterval = setInterval(() => {
@@ -285,12 +383,86 @@ export class BattleController {
     }
   }
 
+  private handlePokemonCommand(): void {
+    PartyScreen.getInstance().openForBattleSelect({
+      currentBattlerUid: this.engine.playerPokemon.uid,
+      onSelect: (selectedPk) => {
+        this.handleSwitchPokemon(selectedPk);
+      },
+      onCancel: () => {
+        this.state.uiMode = 'command';
+      },
+    });
+  }
+
+  private handleSwitchPokemon(selectedPk: PartyPokemon): void {
+    // 1. Sync current active battler back into party
+    partyService.syncBattleResult(this.engine.playerPokemon, 0);
+
+    // 2. Prepare new battler from selected party member
+    const newBattler = partyPokemonToBattler(selectedPk);
+
+    this.state.uiMode = 'message';
+    const oldName = this.engine.playerPokemon.name;
+    this.queueMessage(`${oldName}, quay lại!`, 'message', () => {
+      // 3. Switch battler in engine & update renderer
+      this.engine.switchPlayerPokemon(newBattler);
+      if (this.renderer) {
+        this.renderer.updatePlayerSprite(newBattler.backSprite);
+        this.renderer.updatePlayerBall(newBattler.pokeball ?? 'POKEBALL');
+      }
+      this.state.playerHpPct = newBattler.currentHp / newBattler.maxHp;
+      this.state.targetPlayerHpPct = this.state.playerHpPct;
+      this.state.playerHurtFlash = 0;
+      this.state.startPlayerSendOut();
+
+      this.queueMessage(`Tiến lên! ${newBattler.name}!`, 'message', () => {
+        // Switching takes the player's turn action -> enemy executes turn
+        setTimeout(() => {
+          this.handleEnemyTurn();
+        }, 400);
+      });
+    });
+  }
+
+  private handleForceSwitch(): void {
+    PartyScreen.getInstance().openForBattleSelect({
+      currentBattlerUid: this.engine.playerPokemon.uid,
+      onSelect: (selectedPk) => {
+        const newBattler = partyPokemonToBattler(selectedPk);
+        this.engine.switchPlayerPokemon(newBattler);
+        if (this.renderer) {
+          this.renderer.updatePlayerSprite(newBattler.backSprite);
+          this.renderer.updatePlayerBall(newBattler.pokeball ?? 'POKEBALL');
+        }
+        this.state.playerHpPct = newBattler.currentHp / newBattler.maxHp;
+        this.state.targetPlayerHpPct = this.state.playerHpPct;
+        this.state.playerHurtFlash = 0;
+        this.state.startPlayerSendOut();
+
+        this.queueMessage(`Tiến lên! ${newBattler.name}!`, 'command');
+      },
+      onCancel: () => {
+        const hasAlive = partyService.getParty().some((p) => p.currentHp > 0 && !p.isFainted);
+        if (hasAlive) {
+          setTimeout(() => this.handleForceSwitch(), 100);
+        } else {
+          this.endBattle('defeated');
+        }
+      },
+    });
+  }
+
   private endBattle(
     outcome: 'caught' | 'victory' | 'fled' | 'defeated',
     caughtPokemon?: BattlerPokemon
   ): void {
     this.state.isRunning = false;
     this.destroy();
-    this.onEnd({ outcome, caughtPokemon });
+    this.onEnd({
+      outcome,
+      caughtPokemon,
+      activePlayerPokemon: this.engine.playerPokemon,
+    });
   }
 }

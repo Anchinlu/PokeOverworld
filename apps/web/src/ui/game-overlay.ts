@@ -15,6 +15,14 @@ export function createOverlayTemplate(): string {
         <img src="${MENU_ASSETS.menuPokedex}" alt="Pokédex" class="menu-bar-icon" />
         <span class="menu-bar-text">Pokédex</span>
       </button>
+      <button class="menu-bar-btn" id="btnMenuParty" title="Đội hình Pokémon (Phím P)" aria-label="Đội hình">
+        <img src="${MENU_ASSETS.menuPokemon}" alt="Đội hình" class="menu-bar-icon" />
+        <span class="menu-bar-text">Đội hình</span>
+      </button>
+      <button class="menu-bar-btn" id="btnMenuBag" title="Túi đồ (Phím B)" aria-label="Túi đồ">
+        <img src="${MENU_ASSETS.menuBag}" alt="Túi đồ" class="menu-bar-icon" />
+        <span class="menu-bar-text">Túi đồ</span>
+      </button>
       <button class="menu-bar-btn" id="btnMenuTrainer" title="Huấn luyện viên (Trainer Card)" aria-label="Trainer Card">
         <img src="${MENU_ASSETS.menuTrainer}" alt="Hồ sơ" class="menu-bar-icon" />
         <span class="menu-bar-text">Hồ sơ</span>
@@ -173,8 +181,57 @@ export function createOverlayTemplate(): string {
         <button class="btn-action-primary" id="btnRegenerate">⚡ Tải lại Map</button>
         <button class="btn-action-secondary" id="btnResetPlayer">🚶 Gốc [0,0]</button>
       </div>
-      <div class="actions-row" style="margin-top: 6px;">
-        <button class="btn-action-primary" id="btnTestBattle" style="background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 2px 8px rgba(239,68,68,0.4);">⚔️ Thử nghiệm Trận đấu</button>
+      <div class="actions-row" style="margin-top: 6px; display: flex; gap: 6px;">
+        <button class="btn-action-primary" id="btnTestBattle" style="flex: 1; background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 2px 8px rgba(239,68,68,0.4);">⚔️ Đấu Thử</button>
+        <select id="selectBattleOverlay" style="flex: 1.2; padding: 4px 6px; font-size: 11px; border-radius: 6px; background: rgba(30, 41, 59, 0.85); color: #fff; border: 1px solid rgba(255,255,255,0.18);" title="Chọn tiền cảnh chiến đấu">
+          <option value="auto">🌿 Tự động theo map</option>
+          <option value="grass_tall">🌾 Cỏ cao (Tall Grass)</option>
+          <option value="grass_field">🌱 Cỏ thấp (Field Grass)</option>
+          <option value="water_rough">🌊 Sóng lớn (Rough Sea)</option>
+          <option value="water_calm">💧 Nước êm (Calm Water)</option>
+          <option value="sand_dunes">🏜️ Cồn cát (Sand Dunes)</option>
+          <option value="mountain_rocks">🪨 Mỏm đá (Mountain Rocks)</option>
+        </select>
+      </div>
+
+      <!-- Party / Pokemon Debug & Test Section -->
+      <div class="party-debug-box" style="margin-top: 6px; padding: 10px; border-radius: var(--radius-sm); background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(59, 130, 246, 0.35); display: flex; flex-direction: column; gap: 8px;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <span style="font-size: 11px; font-weight: 700; color: #60a5fa;">🐾 Bổ sung Pokémon Đội hình:</span>
+          <span id="lblPartyCount" style="font-size: 11px; font-family: monospace; color: #93c5fd; background: rgba(59,130,246,0.2); padding: 2px 6px; border-radius: 4px;">1 / 6</span>
+        </div>
+
+        <!-- Species & Level Pickers -->
+        <div class="control-row" style="display: flex; gap: 6px;">
+          <select id="selectPartySpecies" style="flex: 1; padding: 4px 6px; font-size: 11px; border-radius: 6px; background: rgba(30, 41, 59, 0.85); color: #fff; border: 1px solid rgba(255,255,255,0.18);">
+            <!-- Populated dynamically via bootstrap.ts -->
+          </select>
+          <input type="number" id="inputPartyLevel" min="1" max="100" value="25" style="width: 52px; padding: 4px; font-size: 11px; text-align: center; border-radius: 6px; background: rgba(30, 41, 59, 0.85); color: #fff; border: 1px solid rgba(255,255,255,0.18);" title="Cấp độ (1-100)">
+        </div>
+
+        <!-- Action Row 1: Add Selected / Add Random -->
+        <div class="actions-row">
+          <button class="btn-action-primary" id="btnAddPartyPokemon" style="background: linear-gradient(135deg, #3b82f6, #2563eb); font-size: 11px; padding: 5px 8px;">➕ Thêm vào đội</button>
+          <button class="btn-action-secondary" id="btnAddRandomPartyPokemon" style="font-size: 11px; padding: 5px 8px;">🎲 Ngẫu nhiên</button>
+        </div>
+
+        <!-- Action Row 2: Fill 6 / Reset -->
+        <div class="actions-row">
+          <button class="btn-action-primary" id="btnFillPartyPokemon" style="background: linear-gradient(135deg, #10b981, #059669); font-size: 11px; padding: 5px 8px;">⚡ Đầy 6 Slot</button>
+          <button class="btn-action-secondary" id="btnResetPartyPokemon" style="font-size: 11px; padding: 5px 8px;">🗑️ Reset đội hình</button>
+        </div>
+      </div>
+
+      <!-- Bag Debug Section -->
+      <div class="bag-debug-box" style="margin-top: 6px; padding: 10px; border-radius: var(--radius-sm); background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(168, 85, 247, 0.35); display: flex; flex-direction: column; gap: 6px;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <span style="font-size: 11px; font-weight: 700; color: #c084fc;">🎒 Kiểm thử Túi đồ:</span>
+          <button id="btnOpenBagDirect" class="btn-action-primary" style="font-size: 10px; padding: 2px 8px; background: linear-gradient(135deg, #a855f7, #7c3aed);">Mở túi (B)</button>
+        </div>
+        <div class="actions-row">
+          <button class="btn-action-secondary" id="btnAddStarterItems" style="font-size: 10px; padding: 4px 6px;">🎁 Nhận bộ mẫu 8 túi</button>
+          <button class="btn-action-secondary" id="btnAddAllBalls" style="font-size: 10px; padding: 4px 6px;">⚾ Full Bóng bắt</button>
+        </div>
       </div>
     </div>
   </aside>

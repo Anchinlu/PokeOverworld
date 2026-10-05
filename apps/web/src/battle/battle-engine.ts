@@ -34,6 +34,10 @@ export function getAccuracyMultiplier(accStage: number, evaStage: number): numbe
   return diff >= 0 ? (3 + diff) / 3 : 3 / (3 - diff);
 }
 
+export function getMoveDisplayName(move: BattleMove): string {
+  return (move.nameVi || move.name).replace(/^[^(]+\(([^)]+)\)$/, '$1').trim();
+}
+
 export class BattleEngine {
   public playerPokemon: BattlerPokemon;
   public enemyPokemon: BattlerPokemon;
@@ -46,7 +50,7 @@ export class BattleEngine {
     playerPokemon: BattlerPokemon,
     enemyPokemon: BattlerPokemon,
     environment: BattleEnvironment,
-    private readonly rng: BattleRng = defaultBattleRng
+    public readonly rng: BattleRng = defaultBattleRng
   ) {
     this.playerPokemon = playerPokemon;
     this.enemyPokemon = enemyPokemon;
@@ -55,6 +59,11 @@ export class BattleEngine {
 
     this.ensureBattlerState(this.playerPokemon);
     this.ensureBattlerState(this.enemyPokemon);
+  }
+
+  public switchPlayerPokemon(newPokemon: BattlerPokemon): void {
+    this.playerPokemon = newPokemon;
+    this.ensureBattlerState(this.playerPokemon);
   }
 
   private ensureBattlerState(battler: BattlerPokemon): void {
@@ -193,10 +202,11 @@ export class BattleEngine {
         }
       }
 
-      const mainMsg = `${attacker.name} used ${move.name}!${extraMsg || ' It affected the battle!'}`;
+      const moveDisplayName = getMoveDisplayName(move);
+      const mainMsg = `${attacker.name} used ${moveDisplayName}!${extraMsg || ' It affected the battle!'}`;
       return {
         attackerName: attacker.name,
-        moveName: move.name,
+        moveName: moveDisplayName,
         damage: 0,
         typeEffectiveness: 1.0,
         isCritical: false,
@@ -255,14 +265,15 @@ export class BattleEngine {
 
     const critText = isCrit ? ' A critical hit!' : '';
 
+    const moveDisplayName = getMoveDisplayName(move);
     return {
       attackerName: attacker.name,
-      moveName: move.name,
+      moveName: moveDisplayName,
       damage,
       typeEffectiveness: typeEff,
       isCritical: isCrit,
       defenderFainted,
-      message: `${attacker.name} used ${move.name}!${effText}${critText}`,
+      message: `${attacker.name} used ${moveDisplayName}!${effText}${critText}`,
     };
   }
 
@@ -293,29 +304,33 @@ export class BattleEngine {
     return moves[idx];
   }
 
-  public tryCatchPokemon(): CatchResult {
-    if (this.ballsCount <= 0) {
+  public tryCatchPokemon(
+    ballMultiplier: number = 1.0,
+    ballName: string = 'Poké Ball'
+  ): CatchResult {
+    if (this.ballsCount > 0) {
+      this.ballsCount--;
+    }
+
+    if (ballMultiplier >= 255) {
       return {
-        caught: false,
-        shakes: 0,
-        message: 'You have no Poké Balls left!',
+        caught: true,
+        shakes: 3,
+        message: `Bắt được rồi! Đã thu phục ${this.enemyPokemon.name} bằng ${ballName}!`,
       };
     }
 
-    this.ballsCount--;
-
-    // Gen 3/4 catch rate calculation
+    // Gen 3/4 catch rate calculation with ballMultiplier
     const maxHp = this.enemyPokemon.maxHp;
     const curHp = Math.max(1, this.enemyPokemon.currentHp);
     const rate = this.enemyPokemon.catchRate;
-    // Poke Ball multiplier = 1.0
-    const a = Math.floor(((3 * maxHp - 2 * curHp) * rate) / (3 * maxHp));
+    const a = Math.floor(((3 * maxHp - 2 * curHp) * rate * ballMultiplier) / (3 * maxHp));
 
     if (a >= 255) {
       return {
         caught: true,
         shakes: 3,
-        message: `Gotcha! ${this.enemyPokemon.name} was caught!`,
+        message: `Bắt được rồi! Đã thu phục ${this.enemyPokemon.name}!`,
       };
     }
 
@@ -334,21 +349,21 @@ export class BattleEngine {
       return {
         caught: true,
         shakes: 3,
-        message: `Gotcha! ${this.enemyPokemon.name} was caught!`,
+        message: `Bắt được rồi! Đã thu phục ${this.enemyPokemon.name}!`,
       };
     }
 
     const escapeMessages = [
-      'Oh no! The Pokémon broke free!',
-      'Aww! It appeared to be caught!',
-      'Aargh! Almost had it!',
-      'Gah! It was so close, too!',
+      `Ôi không! ${this.enemyPokemon.name} đã thoát ra!`,
+      `Tiếc quá! Tưởng như đã bắt được rồi!`,
+      `Suýt chút nữa là bắt được rồi!`,
+      `Chết tiệt! Đã ở rất gần rồi!`,
     ];
 
     return {
       caught: false,
       shakes,
-      message: escapeMessages[shakes],
+      message: escapeMessages[shakes] || escapeMessages[0],
     };
   }
 

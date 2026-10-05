@@ -33,7 +33,7 @@ export class RandomService {
   /**
    * Returns a random element from an array.
    */
-  public choice<T>(items: T[]): T {
+  public choice<T>(items: readonly T[]): T {
     if (items.length === 0) {
       throw new Error('Cannot choose from empty array.');
     }

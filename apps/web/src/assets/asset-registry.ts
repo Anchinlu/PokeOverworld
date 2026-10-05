@@ -28,8 +28,7 @@ export type ManifestAssetKey =
   | 'battle_databox_player'
   | 'battle_databox_enemy'
   | 'battle_message'
-  | 'battle_fight_overlay'
-  | 'battle_cursor_command'
+  | 'battle_command_buttons'
   | 'battle_overlay_exp'
   | 'battle_ball'
   | 'menu_bar_blank'
@@ -136,6 +135,36 @@ export const POKEMON_ASSETS = {
   },
 } as const;
 
+export function normalizeBallKey(name?: string): string {
+  if (!name) return 'POKEBALL';
+  const clean = name.toUpperCase().replace(/[^A-Z]/g, '');
+  if (clean.includes('GREAT')) return 'GREATBALL';
+  if (clean.includes('ULTRA')) return 'ULTRABALL';
+  if (clean.includes('MASTER')) return 'MASTERBALL';
+  if (clean.includes('SAFARI')) return 'SAFARIBALL';
+  if (clean.includes('NET')) return 'NETBALL';
+  if (clean.includes('DIVE')) return 'DIVEBALL';
+  if (clean.includes('NEST')) return 'NESTBALL';
+  if (clean.includes('REPEAT')) return 'REPEATBALL';
+  if (clean.includes('TIMER')) return 'TIMERBALL';
+  if (clean.includes('LUXURY')) return 'LUXURYBALL';
+  if (clean.includes('PREMIER')) return 'PREMIERBALL';
+  if (clean.includes('DUSK')) return 'DUSKBALL';
+  if (clean.includes('HEAL')) return 'HEALBALL';
+  if (clean.includes('QUICK')) return 'QUICKBALL';
+  if (clean.includes('FAST')) return 'FASTBALL';
+  if (clean.includes('LEVEL')) return 'LEVELBALL';
+  if (clean.includes('LURE')) return 'LUREBALL';
+  if (clean.includes('HEAVY')) return 'HEAVYBALL';
+  if (clean.includes('LOVE')) return 'LOVEBALL';
+  if (clean.includes('FRIEND')) return 'FRIENDBALL';
+  if (clean.includes('MOON')) return 'MOONBALL';
+  if (clean.includes('SPORT')) return 'SPORTBALL';
+  if (clean.includes('BEAST')) return 'BEASTBALL';
+  if (clean.includes('DREAM')) return 'DREAMBALL';
+  return 'POKEBALL';
+}
+
 export const BATTLE_ASSETS = {
   get databoxEnemy(): string {
     return resolveAsset('battle_databox_enemy', '/Graphics/Battle/databox_enermy.png');
@@ -144,19 +173,45 @@ export const BATTLE_ASSETS = {
     return resolveAsset('battle_databox_player', '/Graphics/Battle/databox_player.png');
   },
   get messageBox(): string {
-    return resolveAsset('battle_message', '/Graphics/Battle/battleMessage.png');
+    return resolveAsset('battle_message', '/Graphics/Battle/overlay_message_3.png');
   },
-  get fightOverlay(): string {
-    return resolveAsset('battle_fight_overlay', '/Graphics/Battle/overlay_fight.png');
+  get fightButtons(): string {
+    return resolveAsset('battle_fight_buttons', '/Graphics/Battle/battleFightButtons.png');
+  },
+  get commandButtons(): string {
+    return resolveAsset('battle_command_buttons', '/Graphics/Battle/command_buttons.png');
   },
   get cursorCommand(): string {
-    return resolveAsset('battle_cursor_command', '/Graphics/Battle/cursor_command.png');
+    return this.commandButtons;
   },
   get overlayExp(): string {
     return resolveAsset('battle_overlay_exp', '/Graphics/Battle/overlay_exp.png');
   },
   get ball(): string {
     return resolveAsset('battle_ball', '/Graphics/Battle/ball00.png');
+  },
+  getBall: (ballType: string = 'POKEBALL'): string => {
+    const key = normalizeBallKey(ballType);
+    return resolveAsset(`battle_ball_${key}`, `/Graphics/Battle animations/ball_${key}.png`);
+  },
+  getBallOpen: (ballType: string = 'POKEBALL'): string => {
+    const key = normalizeBallKey(ballType);
+    return resolveAsset(
+      `battle_ball_${key}_open`,
+      `/Graphics/Battle animations/ball_${key}_open.png`
+    );
+  },
+  get ballBurstRay(): string {
+    return resolveAsset('battle_ballBurst_ray', '/Graphics/Battle animations/ballBurst_ray.png');
+  },
+  get ballBurstParticle(): string {
+    return resolveAsset(
+      'battle_ballBurst_particle',
+      '/Graphics/Battle animations/ballBurst_particle.png'
+    );
+  },
+  get ballBurstRing(): string {
+    return resolveAsset('battle_ballBurst_ring', '/Graphics/Battle animations/ballBurst_ring1.png');
   },
   getBackground: (bg: string): string => {
     return resolveAsset(`battle_bg_${bg}`, `/Graphics/Battle/battlebg/${bg}`);
@@ -167,6 +222,9 @@ export const BATTLE_ASSETS = {
   getPlayerBase: (base: string): string => {
     return resolveAsset(`battle_player_base_${base}`, `/Graphics/Battle/playerbase/${base}`);
   },
+  getForegroundOverlay: (overlay: string): string => {
+    return resolveAsset(`battle_overlay_${overlay}`, `/Graphics/Battle/overlay/${overlay}.png`);
+  },
 } as const;
 
 export const MENU_ASSETS = {
@@ -175,6 +233,12 @@ export const MENU_ASSETS = {
   },
   get menuPokedex(): string {
     return resolveAsset('menu_icon_pokedex', '/Graphics/Icons/menuPokedex.png');
+  },
+  get menuPokemon(): string {
+    return resolveAsset('menu_icon_pokemon', '/Graphics/Icons/menuPokemon.png');
+  },
+  get menuBag(): string {
+    return resolveAsset('menu_bag', '/Graphics/Icons/menuBag.png');
   },
   get menuTrainer(): string {
     return resolveAsset('menu_icon_trainer', '/Graphics/Icons/menuTrainer.png');
@@ -210,5 +274,74 @@ export const ITEM_ASSETS = {
     const clean = spritePath.replace(/^\//, '');
     const key = `item_${clean.replace(/[\/\.]/g, '_')}`;
     return resolveAsset(key, `/${clean}`);
+  },
+} as const;
+
+export const PARTY_ASSETS = {
+  get bg(): string {
+    return resolveAsset('party_bg', '/Graphics/Party/partybg.PNG');
+  },
+  get ball(): string {
+    return resolveAsset('party_ball', '/Graphics/Party/partyBall.PNG');
+  },
+  get ballSel(): string {
+    return resolveAsset('party_ball_sel', '/Graphics/Party/partyBallSel.PNG');
+  },
+  get panelRound(): string {
+    return resolveAsset('party_panel_round', '/Graphics/Party/partyPanelRound.png');
+  },
+  get panelRoundSel(): string {
+    return resolveAsset('party_panel_round_sel', '/Graphics/Party/partyPanelRoundSel.png');
+  },
+  get panelRoundFnt(): string {
+    return resolveAsset('party_panel_round_fnt', '/Graphics/Party/partyPanelRoundFnt.png');
+  },
+  get panelRoundSwap(): string {
+    return resolveAsset('party_panel_round_swap', '/Graphics/Party/partyPanelRoundSwap.png');
+  },
+  get panelRect(): string {
+    return resolveAsset('party_panel_rect', '/Graphics/Party/partyPanelRect.png');
+  },
+  get panelRectSel(): string {
+    return resolveAsset('party_panel_rect_sel', '/Graphics/Party/partyPanelRectSel.png');
+  },
+  get panelRectFnt(): string {
+    return resolveAsset('party_panel_rect_fnt', '/Graphics/Party/partyPanelRectFnt.png');
+  },
+  get panelRectSwap(): string {
+    return resolveAsset('party_panel_rect_swap', '/Graphics/Party/partyPanelRectSwap.png');
+  },
+  get cancel(): string {
+    return resolveAsset('party_cancel', '/Graphics/Party/partyCancel.png');
+  },
+  get cancelSel(): string {
+    return resolveAsset('party_cancel_sel', '/Graphics/Party/partyCancelSel.png');
+  },
+  get hpBar(): string {
+    return resolveAsset('party_hp_bar', '/Graphics/Party/partyHP.png');
+  },
+  get statuses(): string {
+    return resolveAsset('party_statuses', '/Graphics/Party/statuses.PNG');
+  },
+  get panelBlank(): string {
+    return resolveAsset('party_panel_blank', '/Graphics/Party/partyPanelBlank.png');
+  },
+  get battlerGender(): string {
+    return resolveAsset('party_battler_gender', '/Graphics/Party/battler_gender.png');
+  },
+} as const;
+
+export const BAG_ASSETS = {
+  get bg(): string {
+    return resolveAsset('bag_bg', '/Graphics/Bag/ui2.png');
+  },
+  get bagIcon(): string {
+    return resolveAsset('bag_icon', '/Graphics/Bag/bag icon.png');
+  },
+  get pocketIcons(): string {
+    return resolveAsset('bag_pocket_icons', '/Graphics/Bag/icon_pocket.png');
+  },
+  get panelRectDesel(): string {
+    return resolveAsset('bag_panel_rect_desel', '/Graphics/Bag/ptpanel_rect_desel.png');
   },
 } as const;

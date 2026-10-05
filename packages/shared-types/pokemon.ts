@@ -33,6 +33,7 @@ export interface PokemonSprites {
   front: string;
   back: string;
   icon: string;
+  cry?: string;
 }
 
 export interface PokemonSpeciesData {

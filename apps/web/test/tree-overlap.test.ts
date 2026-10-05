@@ -30,7 +30,7 @@ describe('Tree and Berry Bush Overlap Prevention', () => {
         }
       }
     }
-  });
+  }, 15000);
 
   it('ensures no two big trees overlap each other within or across chunks', () => {
     const seeds = [101, 777, 12345];

@@ -11,8 +11,33 @@ import {
   showBerryToast,
   togglePokedex,
   isPokedexOpen,
+  togglePartyScreen,
+  isPartyScreenOpen,
+  initPartyScreen,
+  toggleBagScreen,
+  openBagScreen,
+  isBagScreenOpen,
+  initBagScreen,
 } from './ui';
 import { initDesktopShell } from './shell/desktop';
+import type { Direction } from '@pokemon/shared-types';
+import {
+  partyService,
+  playerService,
+  inventoryService,
+  saveGameRepository,
+  createPartyPokemon,
+  type SaveGameData,
+} from './domain';
+import { pokemonCatalog } from './data';
+
+declare global {
+  interface Window {
+    startBattle: (overlay?: string) => void;
+    saveGame: () => SaveGameData;
+    loadGame: () => SaveGameData | null;
+  }
+}
 
 export async function bootstrap(): Promise<void> {
   const app = document.querySelector<HTMLDivElement>('#app');
@@ -46,6 +71,16 @@ export async function bootstrap(): Promise<void> {
         loadingText.innerText = `Đang nạp dữ liệu đồ họa Pokémon... (${pct}%)`;
       }
     });
+
+    try {
+      await Promise.all([
+        document.fonts.load('16px "Power Green Narrow"'),
+        document.fonts.load('16px "Power Red and Blue"'),
+        document.fonts.load('16px "Tiny5"'),
+      ]);
+    } catch {
+      // Font preload fallback
+    }
   } catch (err) {
     console.warn('Asset loading warning, falling back to procedural textures:', err);
   }
@@ -84,13 +119,142 @@ export async function bootstrap(): Promise<void> {
   });
 
   const btnTestBattle = document.querySelector<HTMLButtonElement>('#btnTestBattle');
+  const selectBattleOverlay = document.querySelector<HTMLSelectElement>('#selectBattleOverlay');
   btnTestBattle?.addEventListener('click', () => {
-    session.startTestBattle();
+    const overlay = selectBattleOverlay?.value || 'auto';
+    session.startTestBattle(overlay);
   });
-  (window as any).startBattle = () => session.startTestBattle();
+  window.startBattle = (overlay?: string) => {
+    const chosen = overlay || selectBattleOverlay?.value || 'auto';
+    session.startTestBattle(chosen);
+  };
+  window.saveGame = () => {
+    const res = saveGameRepository.save('slot_1', {
+      position: {
+        gx: session.player.gx,
+        gy: session.player.gy,
+        direction: session.player.direction,
+      },
+    });
+    showBerryToast(`💾 Đã lưu tiến trình game (Slot 1)!`, '#22c55e');
+    return res;
+  };
+  window.loadGame = () => {
+    const data = saveGameRepository.load('slot_1');
+    if (data) {
+      if (data.world?.position) {
+        const dir = (data.world.position.direction ?? 0) as Direction;
+        session.player.snapTo(data.world.position.gx, data.world.position.gy, dir);
+      }
+      showBerryToast(`📂 Đã nạp lại dữ liệu lưu game!`, '#38bdf8');
+    } else {
+      showBerryToast(`⚠️ Không tìm thấy bản lưu game nào!`, '#ef4444');
+    }
+    return data;
+  };
+
+  // --- Party Debug & Testing Controls (Map Overlay) ---
+  const selectPartySpecies = document.querySelector<HTMLSelectElement>('#selectPartySpecies');
+  const inputPartyLevel = document.querySelector<HTMLInputElement>('#inputPartyLevel');
+  const lblPartyCount = document.querySelector<HTMLElement>('#lblPartyCount');
+  const btnAddPartyPokemon = document.querySelector<HTMLButtonElement>('#btnAddPartyPokemon');
+  const btnAddRandomPartyPokemon = document.querySelector<HTMLButtonElement>(
+    '#btnAddRandomPartyPokemon'
+  );
+  const btnFillPartyPokemon = document.querySelector<HTMLButtonElement>('#btnFillPartyPokemon');
+  const btnResetPartyPokemon = document.querySelector<HTMLButtonElement>('#btnResetPartyPokemon');
+
+  if (selectPartySpecies) {
+    const allSpecies = [...pokemonCatalog.getAll()].sort((a, b) => a.id - b.id);
+    selectPartySpecies.innerHTML = allSpecies
+      .map(
+        (p) =>
+          `<option value="${p.speciesKey}" ${p.speciesKey === 'CHARIZARD' ? 'selected' : ''}>#${String(p.id).padStart(3, '0')} ${p.name}</option>`
+      )
+      .join('');
+  }
+
+  const updatePartyCountLabel = () => {
+    if (lblPartyCount) {
+      const size = partyService.getPartySize();
+      lblPartyCount.innerText = `${size} / 6`;
+      lblPartyCount.style.color = size >= 6 ? '#f87171' : '#93c5fd';
+    }
+  };
+  updatePartyCountLabel();
+  partyService.subscribe(updatePartyCountLabel);
+
+  btnAddPartyPokemon?.addEventListener('click', () => {
+    if (partyService.isPartyFull()) {
+      showBerryToast('⚠️ Đội hình đã đầy (tối đa 6 Pokémon)! Hãy xóa bớt hoặc reset.', '#ef4444');
+      return;
+    }
+    const speciesKey = selectPartySpecies?.value || 'PIKACHU';
+    const level = Math.max(1, Math.min(100, parseInt(inputPartyLevel?.value || '25', 10) || 25));
+    const newPk = createPartyPokemon(speciesKey, level);
+    partyService.addPokemon(newPk);
+    showBerryToast(`🎉 Đã thêm ${newPk.name} (Lv.${newPk.level}) vào đội hình!`, '#22c55e');
+  });
+
+  btnAddRandomPartyPokemon?.addEventListener('click', () => {
+    if (partyService.isPartyFull()) {
+      showBerryToast('⚠️ Đội hình đã đầy (tối đa 6 Pokémon)!', '#ef4444');
+      return;
+    }
+    const all = pokemonCatalog.getAll();
+    const randomSpecies = defaultRng.choice(all);
+    const randomLevel = defaultRng.nextInt(5, 50);
+    const newPk = createPartyPokemon(randomSpecies.speciesKey, randomLevel);
+    partyService.addPokemon(newPk);
+    showBerryToast(`🎲 Đã thêm ngẫu nhiên ${newPk.name} (Lv.${newPk.level})!`, '#38bdf8');
+  });
+
+  btnFillPartyPokemon?.addEventListener('click', () => {
+    if (partyService.isPartyFull()) {
+      showBerryToast('⚠️ Đội hình đã có đủ 6 Pokémon rồi!', '#f59e0b');
+      return;
+    }
+    const showcaseKeys = [
+      'CHARIZARD',
+      'BLASTOISE',
+      'VENUSAUR',
+      'GENGAR',
+      'DRAGONITE',
+      'LUCARIO',
+      'EEVEE',
+      'SNORLAX',
+      'GYARADOS',
+    ];
+    let addedCount = 0;
+    while (!partyService.isPartyFull()) {
+      const currentKeys = partyService.getParty().map((p) => p.speciesKey);
+      const candidates = showcaseKeys.filter((k) => !currentKeys.includes(k));
+      const chosenKey =
+        candidates.length > 0
+          ? defaultRng.choice(candidates)
+          : defaultRng.choice(pokemonCatalog.getAll()).speciesKey;
+      const level = defaultRng.nextInt(20, 50);
+      partyService.addPokemon(createPartyPokemon(chosenKey, level));
+      addedCount++;
+    }
+    showBerryToast(`⚡ Đã bổ sung thêm ${addedCount} Pokémon để đủ 6 Slot!`, '#10b981');
+  });
+
+  btnResetPartyPokemon?.addEventListener('click', () => {
+    partyService.reset();
+    showBerryToast('🗑️ Đã đặt lại đội hình (chỉ giữ Pikachu Lv.5)!', '#eab308');
+  });
+
+  // Initialize Party & Bag Screens
+  initPartyScreen((newLeader) => {
+    showBerryToast(`👑 ${newLeader.name} đang dẫn đầu đội hình!`, '#38bdf8');
+  });
+  initBagScreen();
 
   // Top Right Menu Bar Buttons
   const btnMenuPokedex = document.querySelector<HTMLButtonElement>('#btnMenuPokedex');
+  const btnMenuParty = document.querySelector<HTMLButtonElement>('#btnMenuParty');
+  const btnMenuBag = document.querySelector<HTMLButtonElement>('#btnMenuBag');
   const btnMenuTrainer = document.querySelector<HTMLButtonElement>('#btnMenuTrainer');
   const btnMenuOptions = document.querySelector<HTMLButtonElement>('#btnMenuOptions');
   const btnMenuQuit = document.querySelector<HTMLButtonElement>('#btnMenuQuit');
@@ -99,9 +263,81 @@ export async function bootstrap(): Promise<void> {
     togglePokedex();
   });
 
+  btnMenuParty?.addEventListener('click', () => {
+    togglePartyScreen();
+  });
+
+  btnMenuBag?.addEventListener('click', () => {
+    toggleBagScreen();
+  });
+
+  // Bag Debug Overlay Buttons
+  const btnOpenBagDirect = document.querySelector<HTMLButtonElement>('#btnOpenBagDirect');
+  const btnAddStarterItems = document.querySelector<HTMLButtonElement>('#btnAddStarterItems');
+  const btnAddAllBalls = document.querySelector<HTMLButtonElement>('#btnAddAllBalls');
+
+  btnOpenBagDirect?.addEventListener('click', () => {
+    openBagScreen();
+  });
+
+  btnAddStarterItems?.addEventListener('click', () => {
+    const starterItems: Record<string, number> = {
+      POKEBALL: 25,
+      GREATBALL: 15,
+      ULTRABALL: 10,
+      MASTERBALL: 2,
+      POTION: 15,
+      SUPERPOTION: 10,
+      HYPERPOTION: 5,
+      MAXPOTION: 3,
+      REVIVE: 10,
+      MAXREVIVE: 3,
+      FULLRESTORE: 5,
+      RARECANDY: 10,
+      ORANBERRY: 20,
+      SITRUSBERRY: 15,
+      LUMBERRY: 10,
+      TM01: 1,
+      TM13: 1,
+      TM24: 1,
+      HM01: 1,
+      HM02: 1,
+      XATTACK: 10,
+      XDEFEND: 10,
+      XSPEED: 10,
+      BICYCLE: 1,
+      TOWNMAP: 1,
+      OLDROD: 1,
+      SUPERROD: 1,
+      RUNNINGSHOES: 1,
+    };
+    for (const [id, count] of Object.entries(starterItems)) {
+      inventoryService.addItem(id, count);
+    }
+    showBerryToast('🎒 Đã thêm bộ vật phẩm khởi đầu đầy đủ vào tất cả 8 ngăn túi!', '#10b981');
+  });
+
+  btnAddAllBalls?.addEventListener('click', () => {
+    const balls = [
+      'POKEBALL',
+      'GREATBALL',
+      'ULTRABALL',
+      'MASTERBALL',
+      'QUICKBALL',
+      'DUSKBALL',
+      'NETBALL',
+    ];
+    for (const b of balls) {
+      inventoryService.addItem(b, 50);
+    }
+    showBerryToast('⚾ Đã bổ sung 50x các loại Bóng Poké vào túi!', '#38bdf8');
+  });
+
   btnMenuTrainer?.addEventListener('click', () => {
+    const profile = playerService.getProfile();
+    const leader = partyService.getLeader();
     showBerryToast(
-      `👤 Huấn luyện viên: Red | Vị trí: [${session.player.gx}, ${session.player.gy}] | Đang theo sau: Pikachu`,
+      `👤 HLV: ${profile.name} | Tiền: $${profile.money} | Đội hình: ${partyService.getPartySize()}/6 (${leader?.name ?? 'Trống'})`,
       '#38bdf8'
     );
   });
@@ -178,7 +414,19 @@ export async function bootstrap(): Promise<void> {
       return;
     }
 
-    if (isPokedexOpen()) {
+    if (e.code === 'KeyP') {
+      togglePartyScreen();
+      e.preventDefault();
+      return;
+    }
+
+    if (e.code === 'KeyB') {
+      toggleBagScreen();
+      e.preventDefault();
+      return;
+    }
+
+    if (isPokedexOpen() || isPartyScreenOpen() || isBagScreenOpen()) {
       return;
     }
 

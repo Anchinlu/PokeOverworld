@@ -8,6 +8,7 @@ function serveGraphicsPlugin(): Plugin {
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
         const rawUrl = req.url?.split('?')[0];
+        // Serve Graphics files
         if (rawUrl && rawUrl.startsWith('/Graphics/')) {
           const decoded = decodeURIComponent(rawUrl.slice(1));
           const filePath = path.resolve(__dirname, '../../', decoded);
@@ -25,6 +26,29 @@ function serveGraphicsPlugin(): Plugin {
             return;
           }
         }
+        // Serve Audio files
+        if (rawUrl && rawUrl.startsWith('/Audio/')) {
+          const decoded = decodeURIComponent(rawUrl.slice(1));
+          const filePath = path.resolve(__dirname, '../../', decoded);
+          if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+            const stat = fs.statSync(filePath);
+            const ext = path.extname(filePath).toLowerCase();
+            const mime =
+              ext === '.ogg'
+                ? 'audio/ogg'
+                : ext === '.wav'
+                  ? 'audio/wav'
+                  : ext === '.mp3'
+                    ? 'audio/mpeg'
+                    : 'application/octet-stream';
+            res.setHeader('Content-Type', mime);
+            res.setHeader('Content-Length', stat.size);
+            res.setHeader('Accept-Ranges', 'bytes');
+            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+            fs.createReadStream(filePath).pipe(res);
+            return;
+          }
+        }
         next();
       });
     },
@@ -32,7 +56,17 @@ function serveGraphicsPlugin(): Plugin {
 }
 
 function emitLegacyGraphicsPlugin(): Plugin {
-  const directories = ['Fonts', 'Icons', 'Pokedex', 'Battle', 'Items', 'Move'];
+  const directories = [
+    'Fonts',
+    'Icons',
+    'Pokedex',
+    'Battle',
+    'Battle animations',
+    'Items',
+    'Move',
+    'Party',
+    'Bag',
+  ];
 
   return {
     name: 'emit-legacy-graphics',
@@ -48,6 +82,8 @@ function emitLegacyGraphicsPlugin(): Plugin {
       const projectRoot = path.resolve(__dirname, '../../');
       const publicRoot = path.resolve(__dirname, 'public');
       const cssAssets = [
+        'Graphics/Fonts/power green narrow.ttf',
+        'Graphics/Fonts/power red and blue.ttf',
         'Graphics/Fonts/power clear.ttf',
         'Graphics/Fonts/vt323.ttf',
         'Graphics/Fonts/Tiny5-Regular.ttf',
@@ -104,8 +140,21 @@ function emitLegacyGraphicsPlugin(): Plugin {
       for (const pokemon of Object.values(database.pokemon)) {
         for (const spritePath of Object.values(pokemon.sprites)) {
           if (spritePath.startsWith('Graphics/')) files.add(spritePath);
+          // Add cry audio files
+          if (spritePath.startsWith('Audio/')) files.add(spritePath);
         }
       }
+
+      // Add battle music files
+      const audioBattleDir = path.resolve(projectRoot, 'Audio/Battle');
+      if (fs.existsSync(audioBattleDir)) {
+        for (const entry of fs.readdirSync(audioBattleDir, { withFileTypes: true })) {
+          if (entry.isFile()) {
+            files.add(`Audio/Battle/${entry.name}`);
+          }
+        }
+      }
+
       files.add('Graphics/Pokemon/Icons type/types.png');
 
       for (const relativePath of files) {
@@ -135,5 +184,31 @@ export default defineConfig({
   },
   build: {
     sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          const normalized = id.replace(/\\/g, '/');
+          if (normalized.includes('pokemon-db.json')) {
+            return 'pokemon-data';
+          }
+          if (normalized.includes('moves-db.json') || normalized.includes('/battle/moves-db')) {
+            return 'moves-data';
+          }
+          if (normalized.includes('items-db.json') || normalized.includes('/data/items-db')) {
+            return 'items-data';
+          }
+          if (
+            normalized.includes('/src/battle/') ||
+            normalized.includes('party-screen') ||
+            normalized.includes('bag-screen')
+          ) {
+            return 'gameplay-ui';
+          }
+          if (normalized.includes('/pokedex')) {
+            return 'pokedex';
+          }
+        },
+      },
+    },
   },
 });

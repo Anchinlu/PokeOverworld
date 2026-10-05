@@ -3,12 +3,16 @@ import { Player, Follower } from '../entities';
 import { ChunkManager, getRoadCenterX } from '../maps';
 import { updateWildPokemon } from '../ai';
 import type { GameRenderer } from '../rendering';
-import type { BerryBushEntity } from '../maps/chunk';
+import type { BerryBushEntity, WildPokemonEntity, WorldChunk } from '../maps/chunk';
 import { interactWithBerryBush } from '../ui/berry-panel';
 import { sampleEcology, getEcologyZone } from '../maps/ecology';
 import { isNearWater } from '../maps/terrain-rules';
 import { BattleScreen, createBattler, getBattleEnvironment } from '../battle';
 import { showBerryToast } from '../ui/toast';
+import { playEncounterTransition } from '../ui/encounter-transition';
+import { battleBgmPlayer } from '../audio';
+import { partyService, playerService, partyPokemonToBattler, createPartyPokemon } from '../domain';
+import { defaultRng } from '../core/rng';
 
 export class GameSession {
   public seed: number;
@@ -111,40 +115,104 @@ export class GameSession {
     }
   }
 
-  public startWildBattle(wp: any, chunk?: any): void {
+  public startWildBattle(
+    wp: Pick<WildPokemonEntity, 'gx' | 'gy' | 'speciesKey' | 'level'> & Partial<WildPokemonEntity>,
+    chunk?: WorldChunk,
+    overlayOverride?: string
+  ): void {
     if (this.isBattling) return;
     this.isBattling = true;
 
-    const sample = sampleEcology(wp.gx, wp.gy, this.seed);
-    const zone = getEcologyZone(sample);
-    const nearWater = isNearWater(wp.gx, wp.gy, this.seed, 1);
-    const env = getBattleEnvironment(zone, nearWater);
+    // Freeze player movement immediately
+    this.player.isMoving = false;
 
-    const playerBattler = createBattler('PIKACHU', Math.max(5, wp.level + 2), true);
-    const wildBattler = createBattler(wp.speciesKey, wp.level, false);
+    // Start wild battle BGM immediately upon encounter
+    battleBgmPlayer.playWildBattleBgm();
 
-    new BattleScreen(playerBattler, wildBattler, env, (result) => {
-      this.isBattling = false;
-      this.lastBattleEndTime = Date.now();
+    // Play Iris Pokéball Encounter Transition with Screen Shake
+    playEncounterTransition({
+      onComplete: () => {
+        const sample = sampleEcology(wp.gx, wp.gy, this.seed);
+        const zone = getEcologyZone(sample);
+        const nearWater = isNearWater(wp.gx, wp.gy, this.seed, 1);
+        const inTallGrass =
+          chunk?.tallGrass?.some(
+            (tg) =>
+              (tg.gx === wp.gx && tg.gy === wp.gy) ||
+              (tg.gx === this.player.gx && tg.gy === this.player.gy)
+          ) ?? false;
+        const env = getBattleEnvironment(zone, nearWater, inTallGrass);
+        if (overlayOverride && overlayOverride !== 'auto') {
+          env.foregroundOverlay = overlayOverride;
+        }
 
-      if (result.outcome === 'caught' || result.outcome === 'victory') {
-        if (chunk && chunk.wildPokemon) {
-          const idx = chunk.wildPokemon.indexOf(wp);
-          if (idx !== -1) {
-            chunk.wildPokemon.splice(idx, 1);
+        // 1. Get first alive Pokémon in Party
+        let activePk = partyService.getFirstAlivePokemon();
+        if (!activePk) {
+          partyService.healAll();
+          activePk = partyService.getLeader()!;
+          showBerryToast('Đội hình đã được hồi phục để sẵn sàng chiến đấu!', '#38bdf8');
+        }
+
+        const playerBattler = partyPokemonToBattler(activePk);
+        const wildBattler = createBattler(wp.speciesKey, wp.level, false);
+
+        new BattleScreen(playerBattler, wildBattler, env, (result) => {
+          this.isBattling = false;
+          this.lastBattleEndTime = Date.now();
+
+          // Sync battle HP, PP, and EXP back into party
+          const finalBattler = result.activePlayerPokemon ?? playerBattler;
+          const expGained = result.outcome === 'victory' ? wildBattler.level * 18 : 0;
+          const { leveledUp, newLevel } = partyService.syncBattleResult(finalBattler, expGained);
+
+          if (result.outcome === 'caught') {
+            const caughtPk = createPartyPokemon(wildBattler.speciesKey, wildBattler.level);
+            caughtPk.currentHp = Math.max(1, wildBattler.currentHp);
+            const added = partyService.addPokemon(caughtPk);
+            playerService.incrementCaught();
+            if (added) {
+              showBerryToast(
+                `🎉 Đã thu phục thành công ${wildBattler.name} và thêm vào Đội hình (${partyService.getPartySize()}/6)!`,
+                '#22c55e'
+              );
+            } else {
+              showBerryToast(
+                `🎉 Đã thu phục thành công ${wildBattler.name}! (Đội hình đã đầy 6/6)`,
+                '#eab308'
+              );
+            }
+          } else if (result.outcome === 'victory') {
+            if (leveledUp) {
+              showBerryToast(
+                `⚔️ Chiến thắng! ${playerBattler.name} đã lên cấp ${newLevel}!`,
+                '#facc15'
+              );
+            } else {
+              showBerryToast(`⚔️ Đã đánh bại ${wildBattler.name}! (+${expGained} EXP)`, '#38bdf8');
+            }
+          } else if (result.outcome === 'defeated') {
+            showBerryToast(`💥 ${playerBattler.name} đã ngất xỉu!`, '#ef4444');
           }
-        }
 
-        if (result.outcome === 'caught') {
-          showBerryToast(`🎉 Đã thu phục thành công ${wildBattler.name}!`, '#22c55e');
-        } else {
-          showBerryToast(`⚔️ Đã đánh bại ${wildBattler.name}!`, '#38bdf8');
-        }
-      }
+          if (result.outcome === 'caught' || result.outcome === 'victory') {
+            if (chunk && chunk.wildPokemon) {
+              const idx = chunk.wildPokemon.findIndex(
+                (p) =>
+                  p === (wp as unknown) ||
+                  (p.gx === wp.gx && p.gy === wp.gy && p.speciesKey === wp.speciesKey)
+              );
+              if (idx !== -1) {
+                chunk.wildPokemon.splice(idx, 1);
+              }
+            }
+          }
+        });
+      },
     });
   }
 
-  public startTestBattle(): void {
+  public startTestBattle(overlayOverride?: string): void {
     const testRoster = [
       'PIDGEY',
       'RATTATA',
@@ -154,14 +222,19 @@ export class GameSession {
       'CHARMANDER',
       'SQUIRTLE',
     ];
-    const randomSpecies = testRoster[Math.floor(Math.random() * testRoster.length)];
-    const mockWp = {
+    const randomSpecies = defaultRng.choice(testRoster);
+    const mockWp: Pick<WildPokemonEntity, 'gx' | 'gy' | 'speciesKey' | 'level'> &
+      Partial<WildPokemonEntity> = {
       gx: this.player.gx,
       gy: this.player.gy,
       speciesKey: randomSpecies,
-      level: Math.floor(Math.random() * 4) + 3,
+      level: defaultRng.nextInt(3, 6),
     };
-    this.startWildBattle(mockWp);
+    const chunk = this.chunkManager.getChunk(
+      Math.floor(this.player.gx / 16),
+      Math.floor(this.player.gy / 16)
+    );
+    this.startWildBattle(mockWp, chunk, overlayOverride);
   }
 
   public regenerate(seed?: number): void {

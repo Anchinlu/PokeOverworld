@@ -4,28 +4,37 @@
  */
 
 import type { BattleEnvironment } from './types';
-import { BATTLE_ASSETS } from '../assets';
+import { BATTLE_ASSETS, MOVE_ASSETS } from '../assets';
 
 /** All preloaded images for the battle screen */
 export interface BattleAssets {
   bg: HTMLImageElement;
   enemyBase: HTMLImageElement;
   playerBase: HTMLImageElement;
+  foregroundOverlay?: HTMLImageElement;
+  overlayKey?: string;
   enemySprite: HTMLImageElement;
   playerSprite: HTMLImageElement;
   databoxEnemy: HTMLImageElement;
   databoxPlayer: HTMLImageElement;
   messageBox: HTMLImageElement;
-  fightOverlay: HTMLImageElement;
+  fightButtons: HTMLImageElement;
+  categoryIcon: HTMLImageElement;
+  commandButtons: HTMLImageElement;
   cursorCommand: HTMLImageElement;
   overlayExp: HTMLImageElement;
   ball: HTMLImageElement;
+  ballOpen: HTMLImageElement;
+  ballBurstRay: HTMLImageElement;
+  ballBurstParticle: HTMLImageElement;
+  ballBurstRing: HTMLImageElement;
 }
 
 export function createBattleAssets(
   env: BattleEnvironment,
   frontSprite: string,
-  backSprite: string
+  backSprite: string,
+  ballType: string = 'POKEBALL'
 ): BattleAssets {
   const load = (src: string): HTMLImageElement => {
     const img = new Image();
@@ -37,15 +46,25 @@ export function createBattleAssets(
     bg: load(BATTLE_ASSETS.getBackground(env.background)),
     enemyBase: load(BATTLE_ASSETS.getEnemyBase(env.enemyBase)),
     playerBase: load(BATTLE_ASSETS.getPlayerBase(env.playerBase)),
+    foregroundOverlay: env.foregroundOverlay
+      ? load(BATTLE_ASSETS.getForegroundOverlay(env.foregroundOverlay))
+      : undefined,
+    overlayKey: env.foregroundOverlay,
     enemySprite: load(frontSprite),
     playerSprite: load(backSprite),
     databoxEnemy: load(BATTLE_ASSETS.databoxEnemy),
     databoxPlayer: load(BATTLE_ASSETS.databoxPlayer),
     messageBox: load(BATTLE_ASSETS.messageBox),
-    fightOverlay: load(BATTLE_ASSETS.fightOverlay),
-    cursorCommand: load(BATTLE_ASSETS.cursorCommand),
+    fightButtons: load(BATTLE_ASSETS.fightButtons),
+    categoryIcon: load(MOVE_ASSETS.categoryIcon),
+    commandButtons: load(BATTLE_ASSETS.commandButtons),
+    cursorCommand: load(BATTLE_ASSETS.commandButtons),
     overlayExp: load(BATTLE_ASSETS.overlayExp),
-    ball: load(BATTLE_ASSETS.ball),
+    ball: load(BATTLE_ASSETS.getBall(ballType)),
+    ballOpen: load(BATTLE_ASSETS.getBallOpen(ballType)),
+    ballBurstRay: load(BATTLE_ASSETS.ballBurstRay),
+    ballBurstParticle: load(BATTLE_ASSETS.ballBurstParticle),
+    ballBurstRing: load(BATTLE_ASSETS.ballBurstRing),
   };
 }
 

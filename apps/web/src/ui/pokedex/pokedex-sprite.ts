@@ -156,7 +156,8 @@ export class PokemonSpriteAnimator {
 
         const contentCenterX = (minX + maxX) / 2.0;
         const contentBottomY = maxY;
-        const scale = Math.min(1.6, Math.max(1.0, 85 / this.frameHeight));
+        // Option 3: Preserve exact 1:1 original pixel art size without fractional stretching
+        const scale = 1.0;
         const groundY = this.options.groundY ?? 128;
 
         this.destW = Math.round(this.frameWidth * scale);

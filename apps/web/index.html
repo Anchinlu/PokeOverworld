@@ -7,9 +7,49 @@
     <title>Pokémon World</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Tiny5&family=VT323&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preload" href="/Graphics/Fonts/vt323.ttf" as="font" type="font/ttf" crossorigin />
+    <link
+      rel="preload"
+      href="/Graphics/Fonts/power%20green%20narrow.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/Graphics/Fonts/power%20red%20and%20blue.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/Graphics/Fonts/Tiny5-Regular.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
   </head>
   <body>
+    <!-- Hidden element forcing browser layout engine to load pixel fonts immediately for canvas -->
+    <div
+      style="
+        font-family: 'VT323', 'Power Green Narrow', 'Power Red and Blue', 'Tiny5', monospace;
+        position: absolute;
+        left: -9999px;
+        top: -9999px;
+        visibility: hidden;
+        pointer-events: none;
+      "
+      aria-hidden="true"
+    >
+      Preload VT323 Power Green Narrow Power Red and Blue Tiny5
+      ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789Đđấơư
+    </div>
     <main id="app" aria-label="Pokémon World"></main>
     <script type="module" src="/src/main.ts"></script>
   </body>

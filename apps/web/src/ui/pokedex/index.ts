@@ -8,3 +8,4 @@ export * from './pokedex-moves';
 export * from './pokedex-items';
 export * from './pokedex-view';
 export * from './pokedex-controller';
+export * from './pokemon-cry';

@@ -59,20 +59,27 @@ export function createBattler(
     frontSprite: POKEMON_ASSETS.getFrontSprite(data.speciesKey),
     backSprite: POKEMON_ASSETS.getBackSprite(data.speciesKey),
     iconSprite: POKEMON_ASSETS.getIconSprite(data.speciesKey),
+    cry: data.sprites?.cry,
     gender: isPlayer ? 'male' : rng.next() < 0.5 ? 'male' : 'female',
     isFainted: false,
     catchRate: data.catchRate ?? 45,
     exp: 0,
     maxExp: level * level * 10,
+    pokeball: 'POKEBALL',
   };
 }
 
-export function getBattleEnvironment(zone: EcologyZone, isNearWater = false): BattleEnvironment {
+export function getBattleEnvironment(
+  zone: EcologyZone,
+  isNearWater = false,
+  inTallGrass = false
+): BattleEnvironment {
   if (isNearWater || zone === 'wetland') {
     return {
       background: 'Water.png',
       enemyBase: 'Water.png',
       playerBase: 'Water.png',
+      foregroundOverlay: 'water_rough',
     };
   }
 
@@ -82,18 +89,21 @@ export function getBattleEnvironment(zone: EcologyZone, isNearWater = false): Ba
         background: 'Forest.png',
         enemyBase: 'ForestGrass.png',
         playerBase: 'ForestGrass.png',
+        foregroundOverlay: 'grass_tall',
       };
     case 'hill_edge':
       return {
         background: 'Mountain.png',
         enemyBase: 'MountainGrass.png',
         playerBase: 'MountainGrass.png',
+        foregroundOverlay: 'mountain_rocks',
       };
     case 'dryland':
       return {
         background: 'Field.png',
         enemyBase: 'FieldDirt.png',
         playerBase: 'FieldDirt.png',
+        foregroundOverlay: 'sand_dunes',
       };
     case 'meadow':
     default:
@@ -101,6 +111,7 @@ export function getBattleEnvironment(zone: EcologyZone, isNearWater = false): Ba
         background: 'Field.png',
         enemyBase: 'FieldGrass.png',
         playerBase: 'FieldGrass.png',
+        foregroundOverlay: inTallGrass ? 'grass_tall' : 'grass_field',
       };
   }
 }

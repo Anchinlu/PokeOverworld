@@ -4,6 +4,7 @@ import {
   getBattleEnvironment,
   getTypeEffectiveness,
   BattleEngine,
+  BattleState,
   SeededBattleRng,
   TYPE_ICO_INDICES,
 } from '../src/battle';
@@ -192,5 +193,47 @@ describe('Wild Pokémon Battle System', () => {
     const tackle = MOVES_DB['tackle'];
     expect(engine.getFirstAttacker(qa, tackle)).toBe('player');
     expect(engine.getFirstAttacker(tackle, qa)).toBe('enemy');
+  });
+
+  it('maps battle environments and assigns correct foreground clutter overlays', () => {
+    // Water
+    const waterEnv = getBattleEnvironment('wetland', true);
+    expect(waterEnv.foregroundOverlay).toBe('water_rough');
+
+    // Dense Forest
+    const forestEnv = getBattleEnvironment('dense_forest', false);
+    expect(forestEnv.foregroundOverlay).toBe('grass_tall');
+
+    // Meadow in tall grass vs short grass
+    const meadowTall = getBattleEnvironment('meadow', false, true);
+    expect(meadowTall.foregroundOverlay).toBe('grass_tall');
+
+    const meadowShort = getBattleEnvironment('meadow', false, false);
+    expect(meadowShort.foregroundOverlay).toBe('grass_field');
+
+    // Dryland / Desert
+    const dryEnv = getBattleEnvironment('dryland', false);
+    expect(dryEnv.foregroundOverlay).toBe('sand_dunes');
+
+    // Hill edge / Mountains
+    const hillEnv = getBattleEnvironment('hill_edge', false);
+    expect(hillEnv.foregroundOverlay).toBe('mountain_rocks');
+  });
+
+  it('updates screen shake deterministically with SeededBattleRng in BattleState', () => {
+    const stateA = new BattleState(new SeededBattleRng(9999));
+    const stateB = new BattleState(new SeededBattleRng(9999));
+
+    stateA.screenShakeTimer = 5;
+    stateA.screenShakeAmp = 4;
+    stateB.screenShakeTimer = 5;
+    stateB.screenShakeAmp = 4;
+
+    stateA.updateTick();
+    stateB.updateTick();
+
+    expect(stateA.screenShakeX).toBe(stateB.screenShakeX);
+    expect(stateA.screenShakeY).toBe(stateB.screenShakeY);
+    expect(stateA.screenShakeAmp).toBe(stateB.screenShakeAmp);
   });
 });

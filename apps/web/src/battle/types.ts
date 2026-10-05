@@ -42,6 +42,7 @@ export interface StatStages {
 }
 
 export interface BattlerPokemon {
+  uid?: string;
   id: number;
   name: string;
   speciesKey: string;
@@ -57,11 +58,13 @@ export interface BattlerPokemon {
   frontSprite: string;
   backSprite: string;
   iconSprite: string;
+  cry?: string;
   gender: 'male' | 'female' | 'genderless';
   isFainted: boolean;
   catchRate: number;
   exp: number;
   maxExp: number;
+  pokeball?: string;
 }
 
 export type BattlePhase =
@@ -83,4 +86,5 @@ export interface BattleEnvironment {
   background: string;
   enemyBase: string;
   playerBase: string;
+  foregroundOverlay?: string;
 }
