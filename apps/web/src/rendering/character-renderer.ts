@@ -13,15 +13,52 @@ export class CharacterRenderer {
   }
 
   public collectShadows(player: Player, follower: Follower, list: RenderItem[]): void {
-    list.push({
-      ySort: follower.y + 55,
-      draw: (ctx) => {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.30)';
-        ctx.beginPath();
-        ctx.ellipse(follower.x + 32, follower.y + 56, 10, 5, 0, 0, Math.PI * 2);
-        ctx.fill();
-      },
-    });
+    if (follower.visible) {
+      list.push({
+        ySort: follower.y + 55,
+        draw: (ctx) => {
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.30)';
+          ctx.beginPath();
+          ctx.ellipse(follower.x + 32, follower.y + 56, 10, 5, 0, 0, Math.PI * 2);
+          ctx.fill();
+
+          if (follower.isShiny) {
+            const now = Date.now();
+            const pulse = 0.5 + 0.5 * Math.sin(now * 0.005 + follower.gx * 3);
+            const glowRadius = 14 + pulse * 6;
+            const auraGrad = ctx.createRadialGradient(
+              follower.x + 32,
+              follower.y + 56,
+              2,
+              follower.x + 32,
+              follower.y + 56,
+              glowRadius
+            );
+            auraGrad.addColorStop(
+              0,
+              `rgba(253, 224, 71, ${(0.45 + pulse * 0.25).toFixed(2)})`
+            );
+            auraGrad.addColorStop(
+              0.6,
+              `rgba(234, 179, 8, ${(0.2 + pulse * 0.15).toFixed(2)})`
+            );
+            auraGrad.addColorStop(1, 'rgba(234, 179, 8, 0)');
+            ctx.fillStyle = auraGrad;
+            ctx.beginPath();
+            ctx.ellipse(
+              follower.x + 32,
+              follower.y + 56,
+              glowRadius * 1.2,
+              glowRadius * 0.6,
+              0,
+              0,
+              Math.PI * 2
+            );
+            ctx.fill();
+          }
+        },
+      });
+    }
 
     list.push({
       ySort: player.y + 57,
@@ -35,7 +72,12 @@ export class CharacterRenderer {
   }
 
   public collectFollower(follower: Follower, list: RenderItem[]): void {
-    const img = this.loader.getImage('char_pika_sheet');
+    if (!follower.visible) return;
+
+    const wildImg = this.getWildSprite(follower.speciesKey, follower.isShiny);
+    const pikaImg = this.loader.getImage('char_pika_sheet');
+    const img = (wildImg && wildImg.complete && wildImg.naturalWidth > 0) ? wildImg : pikaImg;
+
     list.push({
       ySort: follower.y + 56,
       draw: (ctx) => {
@@ -51,6 +93,10 @@ export class CharacterRenderer {
             64,
             64
           );
+        }
+
+        if (follower.isShiny) {
+          this.drawOverworldShinySparkles(ctx, follower.x + 32, follower.y + 28, 42);
         }
       },
     });
@@ -81,12 +127,13 @@ export class CharacterRenderer {
   private wildSpriteCache = new Map<string, HTMLImageElement>();
 
   private getWildSprite(speciesKey: string, isShiny = false): HTMLImageElement | undefined {
-    const cacheKey = `${speciesKey}_${isShiny ? 'shiny' : 'normal'}`;
+    const keyUpper = speciesKey.toUpperCase();
+    const cacheKey = `${keyUpper}_${isShiny ? 'shiny' : 'normal'}`;
     let img = this.wildSpriteCache.get(cacheKey);
     if (!img) {
       img = new Image();
       const folder = isShiny ? 'Followers shiny' : 'Followers';
-      img.src = `/Graphics/Characters/${folder}/${speciesKey}.png`;
+      img.src = `/Graphics/Characters/${folder}/${keyUpper}.png`;
       this.wildSpriteCache.set(cacheKey, img);
     }
     return img.complete && img.naturalWidth > 0 ? img : undefined;

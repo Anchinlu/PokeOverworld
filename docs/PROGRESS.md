@@ -1,4 +1,39 @@
-## Cập nhật lần cuối: 2026-10-07 (Tinh Gọn Menu Party & Nâng Cấp Giao Diện Xem Thông Tin Pixel Art)
+## Cập nhật lần cuối: 2026-10-07 (Gọi Follower Pokémon Từ Party Map HUD)
+
+### 0.53. Điều Chỉnh Tương Tác Party Map HUD: Triệu Hồi Pokémon Đi Theo (Follower) Thay Vì Chuyển Sang Màn Hình Party:
+
+- **Trạng thái:** Đã hoàn thành 100% theo yêu cầu của người dùng.
+- **Yêu cầu người dùng:** Điều chỉnh lại tương tác khi nhấp vào thẻ Pokémon trên Party Map HUD (`#partyMapHud`): không chuyển sang màn hình Party (`PartyScreen`) nữa, mà dùng hành động nhấp chuột để gọi ra Pokémon đó đi theo sau lưng nhân vật (Follower Pokémon) ngoài bản đồ thế giới mở (Overworld).
+- **Chi tiết đã thực hiện:**
+  1. **Loại Bỏ Mở Party Screen Khỏi Party Map HUD ([party-map-hud.ts](file:///e:/Pokemon/apps/web/src/ui/party-map-hud.ts)):**
+     - Gỡ bỏ hoàn toàn `togglePartyScreen()` khi click vào các thẻ Pokémon trên thanh HUD mép phải bản đồ.
+     - Thay thế bằng callback `onFollowerSelect(pokemon, slotIndex)` truyền qua phương thức `setFollowerHandler` hoặc hàm `initPartyMapHud(...)`.
+  2. **Nâng Cấp Thực Thể Follower Hỗ Trợ Đa Loài & Shiny ([follower.ts](file:///e:/Pokemon/apps/web/src/entities/follower.ts)):**
+     - Bổ sung các thuộc tính `speciesKey`, `isShiny`, `nickname`, `visible` vào thực thể `Follower`.
+     - Thêm phương thức `setPokemon(speciesKey, isShiny, nickname)` cho phép chuyển đổi tức thì loài Pokémon đang đi theo.
+  3. **Đồ Họa & Hoạt Ảnh Follower Động ([character-renderer.ts](file:///e:/Pokemon/apps/web/src/rendering/character-renderer.ts)):**
+     - Nâng cấp `collectFollower(...)` tự động nạp spritesheet $256 \times 256\text{ px}$ (lưới $4 \times 4$ frame $64 \times 64$) trực tiếp từ thư mục `Graphics/Characters/Followers/${speciesKey}.png` (hoặc `Followers shiny/` nếu là dạng Shiny).
+     - Khi Pokémon đi theo là dạng Shiny:
+       - Hiệu ứng vầng hào quang vàng óng ánh (Radial Glow Aura) dưới bóng chân xoay nhịp nhàng theo thời gian thực.
+       - Cụm 4 ngôi sao vàng óng xoay tròn lấp lánh quanh thân (`drawOverworldShinySparkles`).
+  4. **Quản Lý Trạng Thái Follower Trong Party ([party-service.ts](file:///e:/Pokemon/apps/web/src/domain/party/party-service.ts)):**
+     - Thêm các phương thức `getActiveFollowerUid()`, `setActiveFollowerUid(uid)`, `getActiveFollower()`.
+     - Mặc định khi khởi động game, Pokémon đầu tiên trong đội hình được chỉ định làm Follower đồng bộ.
+  5. **Âm Thanh & Thông Báo Sinh Động ([battle-se.ts](file:///e:/Pokemon/apps/web/src/audio/battle-se.ts), [bootstrap.ts](file:///e:/Pokemon/apps/web/src/bootstrap.ts)):**
+     - Xây dựng phương thức `playFollowerSummon(speciesKey, isShiny)`: phát âm thanh mở bóng `Battle recall.ogg`, tiếp nối là tiếng kêu Cry của loài Pokémon từ `Audio/Cries/${speciesKey}.ogg`, và tiếng chuông lấp lánh `Shiny sparkle.ogg` nếu là Shiny.
+     - Khi nhấp vào thẻ Pokémon trên Party Map HUD:
+       - Nếu Pokémon bị ngất (`isFainted` hoặc `currentHp <= 0`): Hiển thị Toast cảnh báo `⚠️ [Tên] đã kiệt sức, không thể đi theo bạn!`.
+       - Nếu con đó đang đi theo: Phát tiếng kêu vui vẻ và hiển thị `💖 [Tên] đang vui vẻ đi theo bạn!`.
+       - Nếu chọn con mới: Chuyển đổi Follower ngay tức thì trên bản đồ, phát âm thanh và hiển thị Toast `✨ Đã gọi [Tên] (Lv.X) đi theo bạn!`.
+  6. **Hiệu Ứng Trực Quan Trên Party Map HUD ([party-map-hud.ts](file:///e:/Pokemon/apps/web/src/ui/party-map-hud.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Thẻ của Pokémon đang đi theo được gán lớp `.is-following` với hiệu ứng viền phát sáng cyan neon (`drop-shadow(0 0 6px rgba(0, 240, 255, 0.75))`) và hơi dịch nhẹ sang trái.
+     - Hiển thị huy hiệu pixelated `🐾 ĐANG THEO` tại góc trên thẻ.
+     - Tooltip chuyển thành: `[Tên] (Lv.X) - HP: A/B [🐾 Đang đi theo bạn]` (hoặc `[Bấm để gọi đi theo]`).
+  7. **Kiểm Thử & Đảm Bảo Tính Toàn Vẹn ([party-map-hud.test.ts](file:///e:/Pokemon/apps/web/test/party-map-hud.test.ts)):**
+     - Bổ sung test kiểm tra sự kiện click kích hoạt `onFollowerSelect` và kiểm tra hiển thị trạng thái `is-following`.
+     - Toàn bộ 16 tệp kiểm thử (128 tests) và TypeScript check (`npm run typecheck:web`) đều đạt kết quả PASS 100%.
+
+---
 
 ### 0.52. Tinh Gọn Menu Party Screen & Đồng Bộ Toàn Diện Màn Hình Xem Thông Tin Theo PC Storage (Party Summary Modal):
 

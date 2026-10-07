@@ -139,6 +139,23 @@ export class BattleSePlayer {
   public playShinyAppear(): void {
     this.playSound('Audio/SE/shiny-pokemon.mp3', 0.95);
   }
+
+  /**
+   * Sound effect when summoning a Follower Pokémon to the overworld:
+   * Pokéball open pop sound + Pokémon species cry (+ Shiny sparkle if shiny).
+   */
+  public playFollowerSummon(speciesKey: string, isShiny = false): void {
+    this.playSound('Audio/SE/Battle recall.ogg', 0.8);
+    const cleanKey = speciesKey.toUpperCase().replace(/[^A-Z0-9_]/g, '');
+    setTimeout(() => {
+      this.playSound(`Audio/Cries/${cleanKey}.ogg`, 0.85);
+    }, 100);
+    if (isShiny) {
+      setTimeout(() => {
+        this.playSound('Audio/SE/Shiny sparkle.ogg', 0.7);
+      }, 220);
+    }
+  }
 }
 
 export const battleSePlayer = BattleSePlayer.getInstance();

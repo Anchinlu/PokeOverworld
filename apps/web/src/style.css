@@ -5784,6 +5784,36 @@ body {
   filter: grayscale(0.6) brightness(0.8);
 }
 
+.party-hud-card.is-following {
+  filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.75)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.65));
+  transform: translateX(-4px);
+}
+
+.party-hud-card.is-following:hover:not(.empty) {
+  transform: translateX(-6px) scale(1.02);
+  filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.95)) drop-shadow(0 4px 12px rgba(0, 0, 0, 0.75));
+}
+
+.hud-card-following-tag {
+  position: absolute;
+  left: 6px;
+  top: -4px;
+  z-index: 5;
+  background: linear-gradient(135deg, #0284c7, #0369a1);
+  border: 1px solid #38bdf8;
+  color: #f0f9ff;
+  font-family: 'Power Clear', 'VT323', monospace;
+  font-size: 8px;
+  font-weight: 800;
+  line-height: 1;
+  padding: 1px 4px;
+  border-radius: 3px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6), 0 0 6px rgba(56, 189, 248, 0.6);
+  pointer-events: none;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
 /* Pokemon Icon Sprite Wrapper (Left slanted angle) */
 .hud-card-sprite-wrap {
   position: absolute;

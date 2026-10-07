@@ -32,6 +32,7 @@ import {
   type SaveGameData,
 } from './domain';
 import { pokemonCatalog } from './data';
+import { battleSePlayer } from './audio/battle-se';
 
 declare global {
   interface Window {
@@ -280,7 +281,53 @@ export async function bootstrap(): Promise<void> {
     showBerryToast(`👑 ${newLeader.name} đang dẫn đầu đội hình!`, '#38bdf8');
   });
   initBagScreen();
-  initPartyMapHud();
+
+  // Synchronize initial overworld follower with active party follower
+  const starterFollower = partyService.getActiveFollower() || partyService.getLeader();
+  if (starterFollower) {
+    session.follower.setPokemon(
+      starterFollower.speciesKey,
+      !!starterFollower.isShiny,
+      starterFollower.nickname || starterFollower.name
+    );
+    session.follower.visible = true;
+    partyService.setActiveFollowerUid(starterFollower.uid);
+  }
+
+  // Party Map HUD: Clicking a card summons the Pokémon to follow the player on the map
+  initPartyMapHud((pokemon) => {
+    if (pokemon.isFainted || pokemon.currentHp <= 0) {
+      showBerryToast(
+        `⚠️ ${pokemon.nickname || pokemon.name} đã kiệt sức, không thể đi theo bạn!`,
+        '#ef4444'
+      );
+      return;
+    }
+
+    const currentFollower = partyService.getActiveFollower();
+    if (currentFollower && currentFollower.uid === pokemon.uid && session.follower.visible) {
+      battleSePlayer.playFollowerSummon(pokemon.speciesKey, !!pokemon.isShiny);
+      showBerryToast(`💖 ${pokemon.nickname || pokemon.name} đang vui vẻ đi theo bạn!`, '#38bdf8');
+      return;
+    }
+
+    partyService.setActiveFollowerUid(pokemon.uid);
+    session.follower.setPokemon(
+      pokemon.speciesKey,
+      !!pokemon.isShiny,
+      pokemon.nickname || pokemon.name
+    );
+    session.follower.visible = true;
+
+    battleSePlayer.playFollowerSummon(pokemon.speciesKey, !!pokemon.isShiny);
+
+    showBerryToast(
+      pokemon.isShiny
+        ? `✨ Đã gọi Pokémon Shiny ${pokemon.nickname || pokemon.name} (Lv.${pokemon.level}) đi theo bạn!`
+        : `✨ Đã gọi ${pokemon.nickname || pokemon.name} (Lv.${pokemon.level}) đi theo bạn!`,
+      pokemon.isShiny ? '#f59e0b' : '#38bdf8'
+    );
+  });
 
   // Top Right Menu Bar Buttons
   const btnMenuPokedex = document.querySelector<HTMLButtonElement>('#btnMenuPokedex');

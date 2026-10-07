@@ -17,7 +17,6 @@
 import { partyService } from '../domain/party/party-service';
 import type { PartyPokemon } from '../domain/party/party-state';
 import { PARTY_ASSETS, POKEMON_ASSETS } from '../assets';
-import { togglePartyScreen } from './party-screen';
 
 export class PartyMapHud {
   private static instance: PartyMapHud | null = null;
@@ -27,10 +26,15 @@ export class PartyMapHud {
   private isCollapsed = false;
   private isVisible = true;
   private unsubscribe?: () => void;
+  private onFollowerSelect?: (pokemon: PartyPokemon, slotIndex: number) => void;
 
   private constructor() {
     this.createDom();
     this.subscribeParty();
+  }
+
+  public setFollowerHandler(handler: (pokemon: PartyPokemon, slotIndex: number) => void): void {
+    this.onFollowerSelect = handler;
   }
 
   public static getInstance(): PartyMapHud {
@@ -107,13 +111,15 @@ export class PartyMapHud {
     if (!this.listEl) return;
 
     const party = partyService.getParty();
+    const activeFollowerUid = partyService.getActiveFollowerUid();
     this.listEl.innerHTML = '';
 
     // Render up to 6 slots
     for (let slot = 0; slot < 6; slot++) {
       const pk = party[slot] as PartyPokemon | undefined;
+      const isFollowing = !!pk && activeFollowerUid === pk.uid;
       const cardEl = document.createElement('div');
-      cardEl.className = `party-hud-card ${pk ? 'member' : 'empty'} ${pk?.isShiny ? 'is-shiny' : ''} ${pk?.isFainted || (pk && pk.currentHp <= 0) ? 'is-fainted' : ''}`;
+      cardEl.className = `party-hud-card ${pk ? 'member' : 'empty'} ${pk?.isShiny ? 'is-shiny' : ''} ${pk?.isFainted || (pk && pk.currentHp <= 0) ? 'is-fainted' : ''} ${isFollowing ? 'is-following' : ''}`;
       cardEl.dataset.slotIndex = String(slot);
       cardEl.style.backgroundImage = `url('${PARTY_ASSETS.databoxNormal}')`;
 
@@ -125,9 +131,12 @@ export class PartyMapHud {
 
         const expPct = pk.maxExp > 0 ? Math.max(0, Math.min(100, (pk.exp / pk.maxExp) * 100)) : 0;
 
-        cardEl.title = `${pk.nickname || pk.name} (Lv.${pk.level}) - HP: ${pk.currentHp}/${pk.maxHp} [Bấm để mở Đội hình]`;
+        cardEl.title = `${pk.nickname || pk.name} (Lv.${pk.level}) - HP: ${pk.currentHp}/${pk.maxHp} ${isFollowing ? '[🐾 Đang đi theo bạn]' : '[Bấm để gọi đi theo]'}`;
 
         cardEl.innerHTML = `
+          <!-- Following indicator badge -->
+          ${isFollowing ? '<span class="hud-card-following-tag" title="Đang đi theo bạn">🐾 ĐANG THEO</span>' : ''}
+
           <!-- Pokemon Mini Icon (Left slanted side) -->
           <div class="hud-card-sprite-wrap">
             <img src="${iconUrl}" class="hud-card-pk-icon" alt="${pk.name}" />
@@ -187,8 +196,11 @@ export class PartyMapHud {
           </div>
         `;
 
-        cardEl.addEventListener('click', () => {
-          togglePartyScreen();
+        cardEl.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (this.onFollowerSelect) {
+            this.onFollowerSelect(pk, slot);
+          }
         });
       } else {
         // Empty slot frame
@@ -212,9 +224,18 @@ export class PartyMapHud {
       this.containerEl.parentNode.removeChild(this.containerEl);
       this.containerEl = null;
     }
+    this.listEl = null;
+    this.toggleBtn = null;
+    PartyMapHud.instance = null;
   }
 }
 
-export function initPartyMapHud(): PartyMapHud {
-  return PartyMapHud.getInstance();
+export function initPartyMapHud(
+  onFollowerSelect?: (pokemon: PartyPokemon, slotIndex: number) => void
+): PartyMapHud {
+  const instance = PartyMapHud.getInstance();
+  if (onFollowerSelect) {
+    instance.setFollowerHandler(onFollowerSelect);
+  }
+  return instance;
 }

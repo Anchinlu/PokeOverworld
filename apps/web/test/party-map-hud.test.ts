@@ -7,7 +7,29 @@ import { createPartyPokemon } from '../src/domain/party/party-state';
 class MockElement {
   public id: string = '';
   public className: string = '';
-  public innerHTML: string = '';
+  private _innerHTML: string = '';
+  public get innerHTML(): string {
+    return this._innerHTML;
+  }
+  public set innerHTML(val: string) {
+    this._innerHTML = val;
+    if (val === '') {
+      this.children = [];
+      return;
+    }
+    if (val.includes('btnTogglePartyMapHud') && !this.querySelector('#btnTogglePartyMapHud')) {
+      const btn = new MockElement('BUTTON');
+      btn.id = 'btnTogglePartyMapHud';
+      btn.className = 'party-map-hud-toggle';
+      this.appendChild(btn);
+    }
+    if (val.includes('partyMapHudList') && !this.querySelector('#partyMapHudList')) {
+      const list = new MockElement('DIV');
+      list.id = 'partyMapHudList';
+      list.className = 'party-map-hud-list';
+      this.appendChild(list);
+    }
+  }
   public textContent: string = '';
   public title: string = '';
   public style: Record<string, string> = {};
@@ -164,5 +186,41 @@ describe('Overworld Map Party HUD (databox_normal.png)', () => {
 
     // Destroy
     expect(() => hud.destroy()).not.toThrow();
+  });
+
+  it('triggers onFollowerSelect callback when clicking a Pokémon card and applies is-following class', () => {
+    const onSelect = vi.fn();
+    hud.setFollowerHandler(onSelect);
+
+    const charizard = createPartyPokemon('CHARIZARD', 36);
+    partyService.addPokemon(charizard);
+
+    hud.render();
+
+    const listEl = mockBody.querySelector('#partyMapHudList');
+    expect(listEl).not.toBeNull();
+    const cards = listEl!.children;
+    expect(cards.length).toBe(6);
+
+    // Click slot 0
+    const slot0 = cards[0];
+    const clickListeners = slot0.eventListeners['click'];
+    expect(clickListeners).toBeDefined();
+    expect(clickListeners.length).toBeGreaterThan(0);
+
+    const mockEvent = { stopPropagation: vi.fn() };
+    clickListeners[0](mockEvent);
+
+    expect(mockEvent.stopPropagation).toHaveBeenCalled();
+    expect(onSelect).toHaveBeenCalledTimes(1);
+    expect(onSelect).toHaveBeenCalledWith(expect.objectContaining({ speciesKey: 'PIKACHU' }), 0);
+
+    // Test following state: set active follower to Charizard
+    partyService.setActiveFollowerUid(charizard.uid);
+    hud.render();
+
+    const updatedSlot1 = listEl!.children[1];
+    expect(updatedSlot1.classList.contains('is-following')).toBe(true);
+    expect(updatedSlot1.title).toContain('Đang đi theo bạn');
   });
 });

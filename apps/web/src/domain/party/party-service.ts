@@ -18,6 +18,8 @@ export class PartyService {
   private state: PartyState;
   private listeners: Set<(state: PartyState) => void> = new Set();
 
+  private activeFollowerUid: string | null = null;
+
   constructor(initialParty?: PartyPokemon[]) {
     const loadedParty = this.loadFromStorage();
     this.state = {
@@ -25,6 +27,7 @@ export class PartyService {
       selectedIndex: 0,
       swapSourceIndex: null,
     };
+    this.activeFollowerUid = this.state.pokemon[0]?.uid ?? null;
   }
 
   public getState(): Readonly<PartyState> {
@@ -52,6 +55,37 @@ export class PartyService {
    */
   public getLeader(): PartyPokemon | null {
     return this.state.pokemon[0] ?? null;
+  }
+
+  /**
+   * Gets the active follower Pokémon UID.
+   */
+  public getActiveFollowerUid(): string | null {
+    if (this.activeFollowerUid) {
+      const exists = this.state.pokemon.some((p) => p.uid === this.activeFollowerUid);
+      if (exists) return this.activeFollowerUid;
+    }
+    return this.state.pokemon[0]?.uid ?? null;
+  }
+
+  /**
+   * Sets the active follower Pokémon UID and notifies listeners.
+   */
+  public setActiveFollowerUid(uid: string | null): void {
+    this.activeFollowerUid = uid;
+    this.notify();
+  }
+
+  /**
+   * Returns the Pokémon currently designated as the overworld follower.
+   */
+  public getActiveFollower(): PartyPokemon | null {
+    const uid = this.getActiveFollowerUid();
+    if (uid) {
+      const found = this.state.pokemon.find((p) => p.uid === uid);
+      if (found) return found;
+    }
+    return this.getLeader();
   }
 
   /**
@@ -367,6 +401,7 @@ export class PartyService {
     this.state.pokemon = createDefaultParty();
     this.state.selectedIndex = 0;
     this.state.swapSourceIndex = null;
+    this.activeFollowerUid = this.state.pokemon[0]?.uid ?? null;
     this.notify();
   }
 }

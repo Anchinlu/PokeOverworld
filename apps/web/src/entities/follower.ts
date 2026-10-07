@@ -24,8 +24,30 @@ export class Follower {
   public targetGY = 0;
   public stepProgress = 0;
 
-  constructor(initialGX = 0, initialGY = -1, initialDir: Direction = 0) {
+  public speciesKey = 'PIKACHU';
+  public isShiny = false;
+  public nickname = 'Pikachu';
+  public visible = true;
+
+  constructor(
+    initialGX = 0,
+    initialGY = -1,
+    initialDir: Direction = 0,
+    speciesKey = 'PIKACHU',
+    isShiny = false,
+    nickname?: string
+  ) {
+    this.speciesKey = speciesKey.toUpperCase();
+    this.isShiny = isShiny;
+    this.nickname = nickname || speciesKey;
     this.snapTo(initialGX, initialGY, initialDir);
+  }
+
+  public setPokemon(speciesKey: string, isShiny = false, nickname?: string): void {
+    this.speciesKey = speciesKey.toUpperCase();
+    this.isShiny = isShiny;
+    this.nickname = nickname || speciesKey;
+    this.visible = true;
   }
 
   public snapTo(gx: number, gy: number, dir?: Direction): void {
