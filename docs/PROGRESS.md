@@ -18,7 +18,7 @@
        - Rãnh máu HP: Căn chỉnh tọa độ pixel khớp tuyệt đối với rãnh HP trên thẻ `databox_normal.png`, tự động đổi màu theo tỉ lệ (xanh >50%, vàng >20%, đỏ $\le 20\%$).
        - Hiển thị chỉ số máu số (`${pk.currentHp}/${pk.maxHp}`) hoặc nhãn `FNT` màu đỏ nếu Pokémon ngất xỉu.
        - Rãnh kinh nghiệm EXP: Căn chỉnh ở rãnh đáy hiển thị % EXP lên cấp tiếp theo.
-       - Huy hiệu vương miện 👑 nhận diện Pokémon dẫn đầu (Leader/Slot 0).
+       - Đã loại bỏ hoàn toàn icon vương miện leader theo yêu cầu để giữ giao diện đồng nhất, tối giản và sạch sẽ.
      - Hỗ trợ nút toggle thu gọn / mở rộng (`party-map-hud-toggle`) trượt mượt mà sang phải khi người chơi cần toàn cảnh bản đồ; khi thu gọn, nút toggle được đẩy ra ngoài thêm 30px (`calc(100% - 46px)`) và danh sách thẻ tự động mờ dần không che khuất nút.
      - Bấm vào bất kỳ thẻ Pokémon nào để mở nhanh màn hình Quản lý đội hình (`togglePartyScreen()`).
      - Tự động đồng bộ hóa thời gian thực với `partyService.subscribe(...)` mỗi khi có thay đổi (hồi máu, đổi chỗ, bắt mới, v.v.).

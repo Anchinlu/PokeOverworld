@@ -113,7 +113,7 @@ export class PartyMapHud {
     for (let slot = 0; slot < 6; slot++) {
       const pk = party[slot] as PartyPokemon | undefined;
       const cardEl = document.createElement('div');
-      cardEl.className = `party-hud-card ${pk ? (slot === 0 ? 'leader' : 'member') : 'empty'} ${pk?.isShiny ? 'is-shiny' : ''} ${pk?.isFainted || (pk && pk.currentHp <= 0) ? 'is-fainted' : ''}`;
+      cardEl.className = `party-hud-card ${pk ? 'member' : 'empty'} ${pk?.isShiny ? 'is-shiny' : ''} ${pk?.isFainted || (pk && pk.currentHp <= 0) ? 'is-fainted' : ''}`;
       cardEl.dataset.slotIndex = String(slot);
       cardEl.style.backgroundImage = `url('${PARTY_ASSETS.databoxNormal}')`;
 
@@ -148,21 +148,23 @@ export class PartyMapHud {
           <!-- Level indicator -->
           <span class="hud-card-level">Lv.${pk.level}</span>
 
-          <!-- Header info: Name, Gender, Shiny badge -->
+          <!-- Header info: Name on left, Badges (Shiny + Gender) aligned to right -->
           <div class="hud-card-header">
             <span class="hud-card-name">${pk.nickname || pk.name}</span>
-            ${
-              pk.isShiny
-                ? `<img src="${POKEMON_ASSETS.shinyIcon}" class="hud-card-shiny-icon" alt="Shiny" title="Shiny Pokémon" />`
-                : ''
-            }
-            ${
-              pk.gender === 'male'
-                ? '<span class="hud-card-gender male" title="Đực">♂</span>'
-                : pk.gender === 'female'
-                  ? '<span class="hud-card-gender female" title="Cái">♀</span>'
+            <div class="hud-card-badges">
+              ${
+                pk.isShiny
+                  ? `<img src="${POKEMON_ASSETS.shinyIcon}" class="hud-card-shiny-icon" alt="Shiny" title="Shiny Pokémon" />`
                   : ''
-            }
+              }
+              ${
+                pk.gender === 'male'
+                  ? '<span class="hud-card-gender male" title="Đực">♂</span>'
+                  : pk.gender === 'female'
+                    ? '<span class="hud-card-gender female" title="Cái">♀</span>'
+                    : ''
+              }
+            </div>
           </div>
 
           <!-- HP Groove Fill (Maps to databox_normal.png HP groove) -->

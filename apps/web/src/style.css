@@ -5877,19 +5877,6 @@ body {
   filter: drop-shadow(0 4px 12px rgba(0, 240, 255, 0.45));
 }
 
-.party-hud-card.leader {
-  filter: drop-shadow(0 2px 8px rgba(0, 240, 255, 0.5));
-}
-
-.party-hud-card.leader::after {
-  content: '👑';
-  position: absolute;
-  top: -6px;
-  left: 2px;
-  font-size: 11px;
-  filter: drop-shadow(0 1px 2px #000);
-}
-
 .party-hud-card.empty {
   opacity: 0.25;
   filter: grayscale(0.85);
@@ -5934,15 +5921,16 @@ body {
   letter-spacing: 0.5px;
 }
 
-/* Header Row: Name + Shiny Star + Gender */
+/* Header Row: Name on Left, Badges (Shiny + Gender) strictly aligned to Right */
 .hud-card-header {
   position: absolute;
   left: 60px;
   top: 9px;
-  right: 12px;
+  right: 18px;
   display: flex;
   align-items: center;
-  gap: 4px;
+  justify-content: space-between;
+  gap: 6px;
   overflow: hidden;
 }
 
@@ -5955,7 +5943,18 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 95px;
+  flex: 1;
+  min-width: 0;
+}
+
+.hud-card-badges {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+  margin-left: auto;
+  min-width: 30px;
 }
 
 .hud-card-shiny-icon {
@@ -5971,6 +5970,9 @@ body {
   font-size: 11px;
   font-weight: 900;
   flex-shrink: 0;
+  line-height: 1;
+  width: 10px;
+  text-align: center;
 }
 
 .hud-card-gender.male {
