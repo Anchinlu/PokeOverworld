@@ -136,13 +136,31 @@ export class PartyScreen {
 
         <!-- Context Action Popup (Đổi chỗ, Đưa lên đầu, Xem tóm tắt, Hồi máu, Ra trận) -->
         <div class="party-action-menu" id="partyActionMenu" style="display: none;">
-          <div class="party-action-title" id="partyActionTitle">Tùy chọn Pokémon</div>
-          <button class="party-action-btn" id="btnActionSendOut" style="display: none; background: linear-gradient(135deg, #10b981, #059669); color: #ffffff; font-weight: 700;">⚔️ Ra chiến đấu</button>
-          <button class="party-action-btn" id="btnActionSwap">🔄 Đổi vị trí</button>
-          <button class="party-action-btn" id="btnActionLeader">👑 Đưa lên đầu (Leader)</button>
-          <button class="party-action-btn" id="btnActionSummary">📊 Xem thông tin</button>
-          <button class="party-action-btn" id="btnActionHeal">💊 Dùng Potion hồi máu</button>
-          <button class="party-action-btn cancel" id="btnActionDismiss">✕ Đóng</button>
+          <div class="party-action-title" id="partyActionTitle">TÙY CHỌN</div>
+          <button class="party-action-btn action-sendout" id="btnActionSendOut" style="display: none;">
+            <span class="action-btn-arrow">▶</span>
+            <span class="action-btn-text">Ra chiến đấu</span>
+          </button>
+          <button class="party-action-btn" id="btnActionSwap">
+            <span class="action-btn-arrow">▶</span>
+            <span class="action-btn-text">Đổi vị trí</span>
+          </button>
+          <button class="party-action-btn" id="btnActionLeader">
+            <span class="action-btn-arrow">▶</span>
+            <span class="action-btn-text">Đưa lên đầu</span>
+          </button>
+          <button class="party-action-btn" id="btnActionSummary">
+            <span class="action-btn-arrow">▶</span>
+            <span class="action-btn-text">Xem thông tin</span>
+          </button>
+          <button class="party-action-btn" id="btnActionHeal">
+            <span class="action-btn-arrow">▶</span>
+            <span class="action-btn-text">Hồi phục HP</span>
+          </button>
+          <button class="party-action-btn cancel" id="btnActionDismiss">
+            <span class="action-btn-arrow">▶</span>
+            <span class="action-btn-text">Đóng</span>
+          </button>
         </div>
 
         <!-- Summary Modal Sub-screen -->

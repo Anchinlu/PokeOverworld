@@ -1,4 +1,22 @@
-## Cập nhật lần cuối: 2026-10-07 (UI HUD Đội Hình 6 Pokémon Mép Phải Trên Map)
+## Cập nhật lần cuối: 2026-10-07 (Pixel Art Hóa Menu Party Screen)
+
+### 0.51. Pixel Art Hóa Menu Hành Động & Giao Diện Trong Party Screen (Party Action Menu):
+
+- **Trạng thái:** Đã hoàn thành 100% việc chuyển đổi giao diện popup tùy chọn hành động Pokémon trong Party Screen từ phong cách web phẳng hiện đại sang chuẩn Pixel Art cổ điển (GBA / Pokémon Essentials).
+- **Chi tiết đã thực hiện:**
+  1. **Khung Popup Chuẩn Pixel Bevel ([style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Loại bỏ góc bo tròn (`border-radius: 0`), thay bằng khung hộp pixel đa tầng: `border: 3px solid #000000`, viền bevel `inset 2px 2px 0 #475569, inset -2px -2px 0 #0f172a` và viền ngoài cyan neon mảnh.
+     - Tiêu đề Pokémon được đặt trong thanh banner pixel nền tối `#0b1120`, chữ cyan sáng nét có đổ bóng pixel.
+  2. **Loại Bỏ Emoji, Sử Dụng Con Trỏ Pixel Retro ([party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Gỡ bỏ toàn bộ emoji unicode (🔄, 👑, 📊, 💊, ✕) khỏi các nút hành động.
+     - Thay bằng con trỏ pixel `▶` kinh điển của dòng game Pokémon: hiển thị màu xám bạc ở trạng thái bình thường và đổi sang màu vàng rực (`#facc15`) đồng thời trượt nhẹ sang phải khi rê chuột/focus vào nút.
+     - Các nút lệnh (Đổi vị trí, Đưa lên đầu, Xem thông tin, Hồi phục HP, Ra chiến đấu, Đóng) được tạo khối bevel pixel nổi `inset 1px 1px 0 #475569`, font chữ pixel `Power Clear / VT323` sắc nét.
+  3. **Đồng Bộ Giao Diện Xem Chi Tiết ([style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Chuyển đổi `.summary-card`, nút đóng và các thẻ hệ (type badges) sang phong cách pixelated vuông vức đồng bộ.
+  4. **Kiểm Thử & Đảm Bảo Tính Toàn Vẹn:**
+     - Toàn bộ 16 tệp kiểm thử (127 tests) và typecheck đều PASS 100%.
+
+---
 
 ### 0.50. Tích Hợp UI HUD Đội Hình 6 Pokémon Dọc Mép Phải Trên Bản Đồ (Party Map HUD):
 
