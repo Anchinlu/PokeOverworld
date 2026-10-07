@@ -1,23 +1,26 @@
 ## Cập nhật lần cuối: 2026-10-07 (Tinh Gọn Menu Party & Nâng Cấp Giao Diện Xem Thông Tin Pixel Art)
 
-### 0.52. Tinh Gọn Menu Party Screen & Nâng Cấp Toàn Diện Màn Hình Xem Thông Tin (Party Summary Modal):
+### 0.52. Tinh Gọn Menu Party Screen & Đồng Bộ Toàn Diện Màn Hình Xem Thông Tin Theo PC Storage (Party Summary Modal):
 
-- **Trạng thái:** Đã hoàn thành 100% việc tinh gọn menu hành động Pokémon trong Party Screen và nâng cấp giao diện màn hình Xem thông tin Pokémon (`#partySummaryModal`) sang chuẩn Pixel Art cổ điển (GBA / Pokémon Essentials).
+- **Trạng thái:** Đã hoàn thành 100% việc tinh gọn menu hành động Pokémon trong Party Screen và đồng bộ hóa giao diện màn hình Xem thông tin Pokémon (`#partySummaryModal`) sang layout chuẩn cao cấp của PC Storage Screen (`#storageSummaryModal`).
 - **Chi tiết đã thực hiện:**
   1. **Tinh Gọn Menu Hành Động ([party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts)):**
      - Loại bỏ 2 nút: **"Đưa lên đầu"** (`#btnActionLeader`) và **"Hồi phục HP"** (`#btnActionHeal`).
      - Người chơi có thể đổi Pokémon lên vị trí dẫn đầu tự nhiên thông qua nút "Đổi vị trí" vào slot 1.
      - Menu hành động giờ đây chỉ giữ lại các tùy chọn chuẩn mực, tinh gọn: *Ra chiến đấu* (khi chọn đấu sĩ), *Đổi vị trí*, *Xem thông tin*, và *Đóng*.
-  2. **Nâng Cấp Màn Hình Xem Thông Tin Chuẩn Pixel Art ([party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
-     - **Header sắc nét:** Biểu tượng Pokéball mini, Tên/Nickname, Huy hiệu Cấp độ (`Lv.X`), Ký hiệu Giới tính (♂ xanh / ♀ đỏ), Biểu tượng Shiny lấp lánh (nếu là dạng Shiny), và nút `✕ ĐÓNG` pixel bevel đỏ retro.
-     - **Cột Trái (Hồ Sơ & Ngoại Hình):**
-       - Khung hoạt ảnh Sprite Pokémon động đa khung hình (`PokemonSpriteAnimator`) trên nền sàn đấu gradient pixelated tối.
-       - Bộ huy hiệu hệ (Type Badges) chuẩn màu sắc 18 hệ Pokémon (Normal, Fire, Water, Grass, Electric, Ice, Fighting, Poison, Ground, Flying, Psychic, Bug, Rock, Ghost, Dragon, Dark, Steel, Fairy) có viền bevel nổi.
-       - Hộp thông tin phụ (Metadata): Loại Pokéball đã bắt, Vật phẩm nắm giữ (Held item), Cấp độ khi thu phục.
-       - Thanh kinh nghiệm (EXP Bar): Rãnh đo % EXP lên cấp tiếp theo với màu cyan sáng `#06b6d4` và chỉ số số chính xác.
-     - **Cột Phải (Chỉ Số Chiến Đấu & 4 Ô Chiêu Thức):**
-       - **Bảng Chỉ Số Chiến Đấu (Battle Stats):** Hiển thị đầy đủ 6 chỉ số (HP, Tấn công, Phòng thủ, TC Đặc biệt, PT Đặc biệt, Tốc độ) kèm hệ thống thanh đo màu trực quan (Stat Bars) có tỉ lệ chuẩn max stat, đổi màu HP theo ngưỡng an toàn/nguy cấp.
-       - **Lưới Chiêu Thức Chuẩn 4 Ô (4 Move Slots):** Bố cục 4 slot đóng khung pixel; mỗi slot chiêu thức hiển thị tên chiêu thức (in đậm), huy hiệu hệ thu nhỏ, PP hiện tại/tối đa (đổi màu vàng/đỏ khi sắp cạn hoặc hết PP), Uy lực (Power), Độ chính xác (Accuracy); các ô chưa học hiển thị trạng thái `― Trống ―`.
+  2. **Đồng Bộ Giao Diện Xem Thông Tin Theo Chuẩn PC Storage ([party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - **Bố cục 2 Panel Rộng Rãi (`.summary-modal-inner`):** Tỉ lệ $780 \times 415\text{ px}$ chuẩn sắc nét, phủ toàn màn hình với hiệu ứng làm mờ nền hiện đại.
+     - **Panel Bên Trái (`.summary-card` - Thông Tin, Chỉ Số & Chiêu Thức):**
+       - **Header:** Huy hiệu tiêu đề `CHI TIẾT POKÉMON`, Tên/Nickname, Cấp độ `Lv.X`, Ký hiệu Giới tính (`♂`/`♀`), và Biểu tượng `shiny.png` lấp lánh (nếu là dạng Shiny).
+       - **Cột Sprite & Metadata:** Khung hoạt ảnh sprite Pokémon động (`PokemonSpriteAnimator`), huy hiệu hệ lấy trực tiếp từ sprite sheet `types_ico.png`, hộp thông tin bóng bắt, cấp khi bắt, điểm kinh nghiệm và thanh tiến trình EXP bar.
+       - **Bảng Chỉ Số Chiến Đấu (Battle Stats):** Đầy đủ 6 chỉ số (HP, Tấn công, Phòng thủ, Công ĐB, Thủ ĐB, Tốc độ) kèm hệ thống thanh đo màu trực quan (`stat-bar-track` & `stat-bar-fill`) có tỉ lệ chuẩn, HP tự đổi màu theo ngưỡng máu.
+       - **4 Ô Chiêu Thức Trang Bị:** Vẽ trực tiếp trên canvas bằng đồ họa nút chiến đấu `/Graphics/Battle/battleFightButtons.png` chuẩn GBA Pokémon. Hỗ trợ cơ chế kéo thả con trỏ (Pointer-based drag & drop) để sắp xếp vị trí các chiêu thức một cách trực quan.
+     - **Panel Bên Phải (`.summary-pool-panel` - Kho Chiêu Thức Khả Dụng):**
+       - Hiển thị danh sách toàn bộ các chiêu thức Pokémon có thể học theo cấp độ (`≤ Lv.X`) tra cứu tự động từ cơ sở dữ liệu `getAvailableLevelUpMoves`.
+       - Đánh dấu các chiêu đang trang bị (`.equipped`), cho phép người chơi kéo thả bất kỳ chiêu thức nào từ kho sang 4 ô bên trái để học hoặc thay thế chiêu thức ngay trong Party Screen!
+       - Nút đóng `✕ ĐÓNG` pixel bevel đỏ retro tại góc trên bên phải.
+     - **Popup Chi Tiết Chiêu Thức (`#partyMoveDetailPopup`):**
+       - Khi người chơi nhấp chuột vào bất kỳ chiêu thức nào (ở 4 ô trang bị hoặc ở kho chiêu thức), một thẻ popup GBA pixel art sẽ hiển thị đầy đủ: Tên tiếng Việt, Tên tiếng Anh, Biểu tượng hệ, Thể loại (Vật Lý / Đặc Biệt / Trạng Thái), Sức mạnh (Power), Độ chính xác (Accuracy), Điểm PP, và Mô tả chiêu thức.
   3. **Kiểm Thử & Đảm Bảo Tính Toàn Vẹn:**
      - Toàn bộ pipeline typecheck (`npm run typecheck:web`) và bộ test Vitest (16 files, 127 tests) đều PASS 100%.
 

@@ -4,16 +4,65 @@
  */
 
 import { partyService } from '../domain/party/party-service';
+import { pcStorageService } from '../domain/pc/pc-storage-service';
 import type { PartyPokemon } from '../domain/party/party-state';
 import { PARTY_ASSETS, POKEMON_ASSETS } from '../assets';
 import { showBerryToast } from './toast';
 import { PokemonSpriteAnimator } from './pokedex';
+import { getAvailableLevelUpMoves, MOVES_DB } from '../battle/moves-db';
+import { TYPE_ICO_INDICES } from '../battle/type-chart';
+import type { BattleMove } from '../battle/types';
+import { battleSePlayer } from '../audio';
 
 export interface BattleSelectOptions {
   currentBattlerUid?: string;
   onSelect: (selectedPk: PartyPokemon) => void;
   onCancel?: () => void;
 }
+
+const STORAGE_TYPE_INDICES: Record<string, number> = {
+  normal: 0,
+  fighting: 1,
+  flying: 2,
+  poison: 3,
+  ground: 4,
+  rock: 5,
+  bug: 6,
+  ghost: 7,
+  steel: 8,
+  '???': 9,
+  fire: 10,
+  water: 11,
+  grass: 12,
+  electric: 13,
+  psychic: 14,
+  ice: 15,
+  dragon: 16,
+  dark: 17,
+  fairy: 18,
+};
+
+const TYPE_NAME_VI: Record<string, string> = {
+  normal: 'THƯỜNG',
+  fighting: 'GIÁC ĐẤU',
+  flying: 'BAY',
+  poison: 'ĐỘC',
+  ground: 'ĐẤT',
+  rock: 'ĐÁ',
+  bug: 'CÔN TRÙNG',
+  ghost: 'MA',
+  steel: 'THÉP',
+  '???': '???',
+  fire: 'LỬA',
+  water: 'NƯỚC',
+  grass: 'CỎ',
+  electric: 'ĐIỆN',
+  psychic: 'SIÊU LINH',
+  ice: 'BĂNG',
+  dragon: 'RỒNG',
+  dark: 'BÓNG TỐI',
+  fairy: 'TIÊN',
+};
 
 export class PartyScreen {
   private static instance: PartyScreen | null = null;
@@ -24,6 +73,18 @@ export class PartyScreen {
   private activeMenuIndex: number | null = null;
   private summaryPokemon: PartyPokemon | null = null;
   private summaryAnimator: PokemonSpriteAnimator | null = null;
+  private fightButtonsImg: HTMLImageElement | null = null;
+  private activeMoveDrag: {
+    source: 'active' | 'pool';
+    move: BattleMove;
+    slotIndex?: number;
+    startX: number;
+    startY: number;
+    sourceEl: HTMLElement;
+    isDragging: boolean;
+  } | null = null;
+  private moveDragGhostEl: HTMLElement | null = null;
+  private currentHoverMoveSlot: HTMLElement | null = null;
   private battleSelectOptions: BattleSelectOptions | null = null;
   private onLeaderChangeCallback?: (newLeader: PartyPokemon) => void;
 
@@ -83,8 +144,7 @@ export class PartyScreen {
     this.battleSelectOptions = null;
     this.swapSourceIndex = null;
     this.activeMenuIndex = null;
-    this.summaryPokemon = null;
-    this.summaryAnimator?.stop();
+    this.closeSummaryModal();
     if (this.backdropEl) {
       this.backdropEl.style.display = 'none';
     }
@@ -153,131 +213,163 @@ export class PartyScreen {
             <span class="action-btn-text">Đóng</span>
           </button>
         </div>
+      </div>
 
-        <!-- Summary Modal Sub-screen (Authentic GBA / Essentials Pixel Art) -->
-        <div class="party-summary-modal" id="partySummaryModal" style="display: none;">
+      <!-- Detail Summary Modal (100% Matching PC Storage Layout) -->
+      <div class="storage-summary-modal" id="partySummaryModal" style="display: none;">
+        <div class="summary-modal-inner">
+          <!-- Left: Main Pokémon Summary (Spacious Layout) -->
           <div class="summary-card">
-            <!-- Header: Ball, Name, Level, Gender, Shiny, Close -->
             <div class="summary-header">
-              <div class="summary-header-left">
-                <img src="${PARTY_ASSETS.ball}" class="summary-header-ball" alt="Ball" />
-                <span id="summaryPkName" class="summary-pk-name">Pikachu</span>
-                <span id="summaryPkLevel" class="summary-pk-level">Lv.5</span>
-                <span id="summaryPkGender" class="summary-pk-gender">♂</span>
-                <span id="summaryPkShiny" class="summary-pk-shiny" style="display: none;">
-                  <img src="${POKEMON_ASSETS.shinyIcon}" class="summary-shiny-icon" alt="Shiny" />
-                </span>
+              <div class="summary-header-info">
+                <span class="summary-title-badge">CHI TIẾT POKÉMON</span>
+                <span class="summary-name" id="partySummaryName">Pikachu Lv.25</span>
+                <span class="summary-gender" id="partySummaryGender">♂</span>
               </div>
-              <button class="summary-btn-close" id="btnSummaryClose" title="Đóng (Esc)">
-                <span class="summary-close-icon">✕</span> ĐÓNG
-              </button>
             </div>
-
-            <!-- Body: Left Column (Profile & Meta) + Right Column (Stats & Moves) -->
             <div class="summary-body">
-              <!-- Left Column: Sprite, Types, Info Box, EXP Bar -->
-              <div class="summary-left-col">
-                <div class="summary-sprite-frame">
-                  <canvas id="summaryPkSprite" class="summary-pk-sprite" width="96" height="96"></canvas>
+              <div class="summary-left">
+                <div class="summary-sprite-wrap">
+                  <canvas id="partySummarySprite" class="summary-sprite" width="100" height="100"></canvas>
                 </div>
-                <div id="summaryPkTypes" class="summary-pk-types">
-                  <!-- Badges hệ -->
-                </div>
-                <div class="summary-info-box">
-                  <div class="summary-info-row">
-                    <span class="info-lbl">Bóng bắt:</span>
-                    <span id="summaryBallName" class="info-val">POKÉ BALL</span>
+                <div id="partySummaryTypes" class="summary-types"></div>
+                <div class="summary-meta-box">
+                  <div class="summary-meta-row">
+                    <span class="meta-label">Bắt bằng:</span>
+                    <span class="meta-val" id="partySummaryBall">POKEBALL</span>
                   </div>
-                  <div class="summary-info-row">
-                    <span class="info-lbl">Vật phẩm:</span>
-                    <span id="summaryHeldItem" class="info-val">Không có</span>
+                  <div class="summary-meta-row">
+                    <span class="meta-label">Cấp khi bắt:</span>
+                    <span class="meta-val" id="partySummaryCaughtLv">Lv.5</span>
                   </div>
-                  <div class="summary-info-row">
-                    <span class="info-lbl">Bắt ở cấp:</span>
-                    <span id="summaryCaughtLv" class="info-val">Lv.5</span>
-                  </div>
-                </div>
-
-                <!-- EXP Bar -->
-                <div class="summary-exp-box">
-                  <div class="summary-exp-labels">
-                    <span class="exp-title">EXP</span>
-                    <span id="summaryExpText" class="exp-nums">0 / 250</span>
+                  <div class="summary-meta-row">
+                    <span class="meta-label">Kinh nghiệm:</span>
+                    <span class="meta-val" id="partySummaryExp">120 / 350</span>
                   </div>
                   <div class="summary-exp-bar-track">
-                    <div id="summaryExpBarFill" class="summary-exp-bar-fill" style="width: 0%;"></div>
+                    <div class="summary-exp-bar-fill" id="partySummaryExpBar" style="width: 30%;"></div>
                   </div>
                 </div>
               </div>
-
-              <!-- Right Column: Stats Table + 4 Move Slots -->
-              <div class="summary-right-col">
-                <!-- Battle Stats Section -->
-                <div class="summary-section-box summary-stats-section">
-                  <div class="summary-section-title">
-                    <span class="title-icon">⚔</span> CHỈ SỐ CHIẾN ĐẤU
-                  </div>
-                  <div class="summary-stats-list">
+              <div class="summary-right">
+                <div class="summary-section">
+                  <div class="summary-section-title">CHỈ SỐ CHIẾN ĐẤU</div>
+                  <div class="summary-stats-table">
                     <!-- HP -->
                     <div class="summary-stat-row">
-                      <span class="stat-name">HP</span>
-                      <span id="summaryHp" class="stat-val">20/20</span>
+                      <span class="stat-label">HP</span>
                       <div class="stat-bar-track">
-                        <div id="summaryHpBar" class="stat-bar-fill hp" style="width: 100%;"></div>
+                        <div class="stat-bar-fill hp" id="partyStatBarHp" style="width: 90%;"></div>
                       </div>
+                      <span class="stat-val hp-val" id="partySummaryHp">50 / 50</span>
                     </div>
-                    <!-- Attack -->
+                    <!-- Tấn công -->
                     <div class="summary-stat-row">
-                      <span class="stat-name">Tấn công</span>
-                      <span id="summaryAtk" class="stat-val">12</span>
+                      <span class="stat-label">Tấn công</span>
                       <div class="stat-bar-track">
-                        <div id="summaryAtkBar" class="stat-bar-fill atk" style="width: 20%;"></div>
+                        <div class="stat-bar-fill atk" id="partyStatBarAtk" style="width: 35%;"></div>
                       </div>
+                      <span class="stat-val" id="partySummaryAtk">55</span>
                     </div>
-                    <!-- Defense -->
+                    <!-- Phòng thủ -->
                     <div class="summary-stat-row">
-                      <span class="stat-name">Phòng thủ</span>
-                      <span id="summaryDef" class="stat-val">10</span>
+                      <span class="stat-label">Phòng thủ</span>
                       <div class="stat-bar-track">
-                        <div id="summaryDefBar" class="stat-bar-fill def" style="width: 18%;"></div>
+                        <div class="stat-bar-fill def" id="partyStatBarDef" style="width: 25%;"></div>
                       </div>
+                      <span class="stat-val" id="partySummaryDef">40</span>
                     </div>
-                    <!-- Sp. Atk -->
+                    <!-- Công ĐB -->
                     <div class="summary-stat-row">
-                      <span class="stat-name">TC Đ.Biệt</span>
-                      <span id="summarySpAtk" class="stat-val">14</span>
+                      <span class="stat-label">Công ĐB</span>
                       <div class="stat-bar-track">
-                        <div id="summarySpAtkBar" class="stat-bar-fill spatk" style="width: 22%;"></div>
+                        <div class="stat-bar-fill spatk" id="partyStatBarSpAtk" style="width: 30%;"></div>
                       </div>
+                      <span class="stat-val" id="partySummarySpAtk">50</span>
                     </div>
-                    <!-- Sp. Def -->
+                    <!-- Thủ ĐB -->
                     <div class="summary-stat-row">
-                      <span class="stat-name">PT Đ.Biệt</span>
-                      <span id="summarySpDef" class="stat-val">11</span>
+                      <span class="stat-label">Thủ ĐB</span>
                       <div class="stat-bar-track">
-                        <div id="summarySpDefBar" class="stat-bar-fill spdef" style="width: 19%;"></div>
+                        <div class="stat-bar-fill spdef" id="partyStatBarSpDef" style="width: 30%;"></div>
                       </div>
+                      <span class="stat-val" id="partySummarySpDef">50</span>
                     </div>
-                    <!-- Speed -->
+                    <!-- Tốc độ -->
                     <div class="summary-stat-row">
-                      <span class="stat-name">Tốc độ</span>
-                      <span id="summarySpd" class="stat-val">15</span>
+                      <span class="stat-label">Tốc độ</span>
                       <div class="stat-bar-track">
-                        <div id="summarySpdBar" class="stat-bar-fill spd" style="width: 25%;"></div>
+                        <div class="stat-bar-fill speed" id="partyStatBarSpeed" style="width: 60%;"></div>
                       </div>
+                      <span class="stat-val" id="partySummarySpeed">90</span>
                     </div>
                   </div>
                 </div>
+                <div class="summary-section summary-moves-section">
+                  <div class="summary-section-header">
+                    <span class="summary-section-title">CHIÊU THỨC TRANG BỊ</span>
+                    <span class="summary-hint-badge">Kéo thả để sắp xếp</span>
+                  </div>
+                  <div class="summary-moves-grid" id="partySummaryMoves"></div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-                <!-- 4 Moves Section -->
-                <div class="summary-section-box summary-moves-section">
-                  <div class="summary-section-title">
-                    <span class="title-icon">✦</span> CHIÊU THỨC (4 Ô)
-                  </div>
-                  <div class="summary-moves-grid" id="summaryMovesList">
-                    <!-- Rendered dynamically (4 slots) -->
-                  </div>
-                </div>
+          <!-- Right: Dedicated Move Pool Rectangle Panel -->
+          <div class="summary-pool-panel" id="partySummaryPoolPanel">
+            <div class="pool-panel-header">
+              <div class="pool-panel-title-wrap">
+                <span class="pool-title-badge">KHO CHIÊU THỨC</span>
+                <span class="pool-level-cap">≤ Lv.<span id="partySummaryPoolLv">25</span></span>
+              </div>
+              <button class="summary-btn-close" id="btnPartySummaryClose" title="Đóng bảng chi tiết (Esc)">✕ ĐÓNG</button>
+            </div>
+            <div class="pool-panel-hint">
+              <span>Kéo thả để trang bị • Nhấp để xem thông tin chi tiết</span>
+            </div>
+            <div class="summary-move-pool" id="partySummaryMovePool"></div>
+          </div>
+        </div>
+
+        <!-- Move Detail Popup Card (Centered Overlay on Summary Modal) -->
+        <div class="storage-move-detail-popup" id="partyMoveDetailPopup" style="display: none;">
+          <div class="move-detail-card">
+            <div class="move-detail-header">
+              <div class="move-detail-title-group">
+                <span class="move-detail-name-vi" id="partyMoveDetailNameVi">Tia Sét</span>
+                <span class="move-detail-name-en" id="partyMoveDetailNameEn">(Thunderbolt)</span>
+              </div>
+              <button class="move-detail-close-btn" id="btnPartyMoveDetailClose" title="Đóng bảng chi tiết (Esc)">✕</button>
+            </div>
+            <div class="move-detail-badges">
+              <div class="move-detail-type-badge" id="partyMoveDetailTypeBadge">
+                <span class="storage-type-icon" id="partyMoveDetailTypeIcon"></span>
+                <span class="type-name" id="partyMoveDetailTypeName">ĐIỆN</span>
+              </div>
+              <div class="move-detail-category-wrap" id="partyMoveDetailCategoryWrap">
+                <span class="move-detail-category-icon special" id="partyMoveDetailCategoryIcon" title="Đặc Biệt"></span>
+                <span class="move-detail-category-text special" id="partyMoveDetailCategoryText">ĐẶC BIỆT</span>
+              </div>
+            </div>
+            <div class="move-detail-stats-grid">
+              <div class="move-detail-stat-box">
+                <span class="stat-box-label">SỨC MẠNH</span>
+                <span class="stat-box-val power" id="partyMoveDetailPower">90</span>
+              </div>
+              <div class="move-detail-stat-box">
+                <span class="stat-box-label">CHÍNH XÁC</span>
+                <span class="stat-box-val acc" id="partyMoveDetailAcc">100%</span>
+              </div>
+              <div class="move-detail-stat-box">
+                <span class="stat-box-label">ĐIỂM PP</span>
+                <span class="stat-box-val pp" id="partyMoveDetailPp">15 / 15</span>
+              </div>
+            </div>
+            <div class="move-detail-desc-box">
+              <div class="move-detail-desc-label">MÔ TẢ CHIÊU THỨC</div>
+              <div class="move-detail-desc-text" id="partyMoveDetailDesc">
+                Tấn công kẻ địch bằng dòng điện mạnh mẽ. Có cơ hội làm tê liệt đối thủ.
               </div>
             </div>
           </div>
@@ -359,12 +451,15 @@ export class PartyScreen {
     });
 
     // Summary Close Button
-    const btnSummaryClose = this.backdropEl.querySelector('#btnSummaryClose');
+    const btnSummaryClose = this.backdropEl.querySelector('#btnPartySummaryClose');
     btnSummaryClose?.addEventListener('click', () => {
-      this.summaryAnimator?.stop();
-      this.summaryPokemon = null;
-      const modal = this.backdropEl?.querySelector<HTMLElement>('#partySummaryModal');
-      if (modal) modal.style.display = 'none';
+      this.closeSummaryModal();
+    });
+
+    // Move Detail Close Button
+    const btnMoveDetailClose = this.backdropEl.querySelector('#btnPartyMoveDetailClose');
+    btnMoveDetailClose?.addEventListener('click', () => {
+      this.hideMoveDetailPopup();
     });
 
     // Close on backdrop click outside wrapper
@@ -379,11 +474,14 @@ export class PartyScreen {
       if (!this.isOpen) return;
 
       if (e.code === 'Escape' || e.code === 'KeyP') {
+        const movePopup = this.backdropEl?.querySelector<HTMLElement>('#partyMoveDetailPopup');
+        if (movePopup && movePopup.style.display !== 'none') {
+          this.hideMoveDetailPopup();
+          e.preventDefault();
+          return;
+        }
         if (this.summaryPokemon) {
-          this.summaryAnimator?.stop();
-          this.summaryPokemon = null;
-          const modal = this.backdropEl?.querySelector<HTMLElement>('#partySummaryModal');
-          if (modal) modal.style.display = 'none';
+          this.closeSummaryModal();
           e.preventDefault();
           return;
         }
@@ -696,150 +794,542 @@ export class PartyScreen {
     this.render();
   }
 
-  private showSummary(pk: PartyPokemon): void {
+  private showSummary(pokemon: PartyPokemon): void {
     if (!this.backdropEl) return;
-    this.summaryPokemon = pk;
+    this.summaryPokemon = pokemon;
 
-    const modal = this.backdropEl.querySelector<HTMLElement>('#partySummaryModal');
+    const modal = this.backdropEl.querySelector('#partySummaryModal') as HTMLElement;
     if (!modal) return;
 
-    // Header info: Name, Level, Gender, Shiny badge
-    const nameEl = modal.querySelector('#summaryPkName');
+    const nameEl = modal.querySelector('#partySummaryName');
+    const genderEl = modal.querySelector('#partySummaryGender');
+    const spriteCanvas = modal.querySelector('#partySummarySprite') as HTMLCanvasElement;
+    const typesEl = modal.querySelector('#partySummaryTypes');
+    const hpEl = modal.querySelector('#partySummaryHp');
+    const atkEl = modal.querySelector('#partySummaryAtk');
+    const defEl = modal.querySelector('#partySummaryDef');
+    const spAtkEl = modal.querySelector('#partySummarySpAtk');
+    const spDefEl = modal.querySelector('#partySummarySpDef');
+    const speedEl = modal.querySelector('#partySummarySpeed');
+
+    const barHp = modal.querySelector('#partyStatBarHp') as HTMLElement;
+    const barAtk = modal.querySelector('#partyStatBarAtk') as HTMLElement;
+    const barDef = modal.querySelector('#partyStatBarDef') as HTMLElement;
+    const barSpAtk = modal.querySelector('#partyStatBarSpAtk') as HTMLElement;
+    const barSpDef = modal.querySelector('#partyStatBarSpDef') as HTMLElement;
+    const barSpeed = modal.querySelector('#partyStatBarSpeed') as HTMLElement;
+
+    const ballEl = modal.querySelector('#partySummaryBall');
+    const caughtLvEl = modal.querySelector('#partySummaryCaughtLv');
+    const expEl = modal.querySelector('#partySummaryExp');
+    const expBar = modal.querySelector('#partySummaryExpBar') as HTMLElement;
+
     if (nameEl) {
-      nameEl.textContent = pk.nickname ? `${pk.nickname} (${pk.name})` : pk.name;
+      nameEl.innerHTML = `${pokemon.nickname || pokemon.name} Lv.${pokemon.level}${pokemon.isShiny ? ` <img class="summary-shiny-icon" src="${POKEMON_ASSETS.shinyIcon}" alt="Shiny" title="Shiny Pokémon" />` : ''}`;
     }
-    const levelEl = modal.querySelector('#summaryPkLevel');
-    if (levelEl) {
-      levelEl.textContent = `Lv.${pk.level}`;
-    }
-    const genderEl = modal.querySelector<HTMLElement>('#summaryPkGender');
     if (genderEl) {
-      if (pk.gender === 'male') {
-        genderEl.textContent = '♂';
-        genderEl.className = 'summary-pk-gender male';
-        genderEl.style.display = 'inline';
-      } else if (pk.gender === 'female') {
-        genderEl.textContent = '♀';
-        genderEl.className = 'summary-pk-gender female';
-        genderEl.style.display = 'inline';
-      } else {
-        genderEl.textContent = '';
-        genderEl.style.display = 'none';
-      }
-    }
-    const shinyEl = modal.querySelector<HTMLElement>('#summaryPkShiny');
-    if (shinyEl) {
-      shinyEl.style.display = pk.isShiny ? 'inline-flex' : 'none';
+      genderEl.textContent =
+        pokemon.gender === 'male' ? '♂' : pokemon.gender === 'female' ? '♀' : '';
+      genderEl.className = `summary-gender ${pokemon.gender}`;
     }
 
-    // Sprite Animation
-    const spriteCanvas = modal.querySelector<HTMLCanvasElement>('#summaryPkSprite');
     if (spriteCanvas) {
       if (!this.summaryAnimator) {
         this.summaryAnimator = new PokemonSpriteAnimator(spriteCanvas);
       }
-      this.summaryAnimator.load(POKEMON_ASSETS.getFrontSprite(pk.speciesKey, pk.isShiny));
+      this.summaryAnimator.load(POKEMON_ASSETS.getFrontSprite(pokemon.speciesKey, pokemon.isShiny));
     }
 
-    // Type Badges
-    const typesEl = modal.querySelector<HTMLElement>('#summaryPkTypes');
     if (typesEl) {
-      typesEl.innerHTML = pk.types
-        .map((t) => `<span class="summary-type-tag type-${t.toLowerCase()}">${t.toUpperCase()}</span>`)
+      const typesHtml = pokemon.types
+        .map((t) => {
+          const key = t.toLowerCase();
+          const idx = STORAGE_TYPE_INDICES[key] ?? 0;
+          const posY = -(idx * 28);
+          return `<span class="storage-type-icon" title="${t}" style="background-position: 0 ${posY}px;"></span>`;
+        })
         .join('');
+      typesEl.innerHTML = `<span style="margin-right: 4px;">Hệ:</span><div class="preview-types-wrap">${typesHtml}</div>`;
     }
 
-    // Metadata Box (Bóng bắt, Vật phẩm mang, Bắt ở cấp)
-    const ballEl = modal.querySelector('#summaryBallName');
-    if (ballEl) {
-      const rawBall = pk.ballCaught || 'pokeball';
-      const cleanBall = rawBall.replace(/^item_/i, '').replace(/_/g, ' ').toUpperCase();
-      ballEl.textContent = cleanBall.includes('BALL') ? cleanBall : `${cleanBall} BALL`;
+    // Stats values and visual stat bars
+    if (hpEl) hpEl.textContent = `${pokemon.currentHp} / ${pokemon.maxHp}`;
+    if (atkEl) atkEl.textContent = String(pokemon.stats.attack);
+    if (defEl) defEl.textContent = String(pokemon.stats.defense);
+    if (spAtkEl) spAtkEl.textContent = String(pokemon.stats.spAtk);
+    if (spDefEl) spDefEl.textContent = String(pokemon.stats.spDef);
+    if (speedEl) speedEl.textContent = String(pokemon.stats.speed);
+
+    const getStatPercent = (val: number) =>
+      Math.min(100, Math.max(8, Math.round((val / 160) * 100)));
+    const hpRatio = Math.min(
+      100,
+      Math.max(0, Math.round((pokemon.currentHp / Math.max(1, pokemon.maxHp)) * 100))
+    );
+
+    if (barHp) {
+      barHp.style.width = `${hpRatio}%`;
+      barHp.style.backgroundColor = hpRatio > 50 ? '#22c55e' : hpRatio > 20 ? '#eab308' : '#ef4444';
     }
-    const itemEl = modal.querySelector('#summaryHeldItem');
-    if (itemEl) {
-      itemEl.textContent = pk.heldItem || 'Không có';
-    }
-    const caughtLvEl = modal.querySelector('#summaryCaughtLv');
-    if (caughtLvEl) {
-      caughtLvEl.textContent = `Lv.${pk.caughtLevel || pk.level}`;
+    if (barAtk) barAtk.style.width = `${getStatPercent(pokemon.stats.attack)}%`;
+    if (barDef) barDef.style.width = `${getStatPercent(pokemon.stats.defense)}%`;
+    if (barSpAtk) barSpAtk.style.width = `${getStatPercent(pokemon.stats.spAtk)}%`;
+    if (barSpDef) barSpDef.style.width = `${getStatPercent(pokemon.stats.spDef)}%`;
+    if (barSpeed) barSpeed.style.width = `${getStatPercent(pokemon.stats.speed)}%`;
+
+    if (ballEl) ballEl.textContent = pokemon.ballCaught || 'POKEBALL';
+    if (caughtLvEl) caughtLvEl.textContent = `Lv.${pokemon.caughtLevel || pokemon.level}`;
+    if (expEl) expEl.textContent = `${pokemon.exp} / ${pokemon.maxExp}`;
+    if (expBar) {
+      const expPercent = Math.min(
+        100,
+        Math.max(0, Math.round((pokemon.exp / Math.max(1, pokemon.maxExp)) * 100))
+      );
+      expBar.style.width = `${expPercent}%`;
     }
 
-    // EXP Bar (Track & Fill)
-    const expTextEl = modal.querySelector('#summaryExpText');
-    if (expTextEl) {
-      expTextEl.textContent = `${pk.exp} / ${pk.maxExp}`;
-    }
-    const expBarFill = modal.querySelector<HTMLElement>('#summaryExpBarFill');
-    if (expBarFill) {
-      const expPct = Math.max(0, Math.min(100, Math.round((pk.exp / Math.max(1, pk.maxExp)) * 100)));
-      expBarFill.style.width = `${expPct}%`;
-    }
-
-    // Stats Table & Visual Stat Bars
-    // Reference standard max for non-legendary scaled bars is ~180
-    const maxReferenceStat = 180;
-    const hpPct = Math.max(0, Math.min(100, (pk.currentHp / pk.maxHp) * 100));
-    const hpColor = hpPct > 50 ? '#22c55e' : hpPct > 20 ? '#eab308' : '#ef4444';
-
-    modal.querySelector('#summaryHp')!.textContent = `${pk.currentHp}/${pk.maxHp}`;
-    const hpBar = modal.querySelector<HTMLElement>('#summaryHpBar');
-    if (hpBar) {
-      hpBar.style.width = `${hpPct}%`;
-      hpBar.style.backgroundColor = hpColor;
-    }
-
-    const setStat = (valId: string, barId: string, val: number) => {
-      const valEl = modal.querySelector(valId);
-      if (valEl) valEl.textContent = String(val);
-      const barEl = modal.querySelector<HTMLElement>(barId);
-      if (barEl) {
-        const pct = Math.max(5, Math.min(100, Math.round((val / maxReferenceStat) * 100)));
-        barEl.style.width = `${pct}%`;
-      }
-    };
-
-    setStat('#summaryAtk', '#summaryAtkBar', pk.stats.attack);
-    setStat('#summaryDef', '#summaryDefBar', pk.stats.defense);
-    setStat('#summarySpAtk', '#summarySpAtkBar', pk.stats.spAtk);
-    setStat('#summarySpDef', '#summarySpDefBar', pk.stats.spDef);
-    setStat('#summarySpd', '#summarySpdBar', pk.stats.speed);
-
-    // Moves Grid: Exactly 4 slots rendered with authentic info
-    const movesList = modal.querySelector<HTMLElement>('#summaryMovesList');
-    if (movesList) {
-      let movesHtml = '';
-      for (let i = 0; i < 4; i++) {
-        const m = pk.moves[i];
-        if (m) {
-          const moveName = m.nameVi || m.name;
-          const ppColor =
-            m.pp === 0 ? '#ef4444' : m.pp <= Math.ceil(m.maxPp * 0.25) ? '#eab308' : '#38bdf8';
-          movesHtml += `
-            <div class="summary-move-card">
-              <div class="smc-top">
-                <span class="smc-name" title="${moveName}">${moveName}</span>
-                <span class="summary-type-tag smc-type-tag type-${m.type.toLowerCase()}">${m.type.toUpperCase()}</span>
-              </div>
-              <div class="smc-details">
-                <span class="smc-pp" style="color: ${ppColor}">PP ${m.pp}/${m.maxPp}</span>
-                <span class="smc-stat">Uy lực: <b>${m.power > 0 ? m.power : '—'}</b></span>
-                <span class="smc-stat">CX: <b>${m.accuracy > 0 ? m.accuracy + '%' : '—'}</b></span>
-              </div>
-            </div>
-          `;
-        } else {
-          movesHtml += `
-            <div class="summary-move-card empty">
-              <span class="smc-empty-label">― Trống ―</span>
-            </div>
-          `;
-        }
-      }
-      movesList.innerHTML = movesHtml;
-    }
+    // Render active moves and level-up move pool
+    this.renderSummaryMoves(pokemon);
 
     modal.style.display = 'flex';
+  }
+
+  private getFightButtonsImg(): HTMLImageElement {
+    if (!this.fightButtonsImg) {
+      const img = new Image();
+      img.src = '/Graphics/Battle/battleFightButtons.png';
+      this.fightButtonsImg = img;
+    }
+    return this.fightButtonsImg;
+  }
+
+  private renderMoveButton(canvas: HTMLCanvasElement, move: BattleMove, isHovered = false): void {
+    canvas.width = 244;
+    canvas.height = 44;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.imageSmoothingEnabled = false;
+
+    const img = this.getFightButtonsImg();
+    const typeKey = move.type
+      ? move.type.charAt(0).toUpperCase() + move.type.slice(1).toLowerCase()
+      : 'Normal';
+    const typeIdx = TYPE_ICO_INDICES[typeKey] ?? 0;
+    const sx = isHovered ? 244 : 0;
+    const sy = typeIdx * 44;
+
+    const draw = () => {
+      ctx.clearRect(0, 0, 244, 44);
+      if (img.complete && img.naturalWidth > 0) {
+        ctx.drawImage(img, sx, sy, 244, 44, 0, 0, 244, 44);
+      } else {
+        ctx.fillStyle = isHovered ? '#38bdf8' : '#1e293b';
+        ctx.fillRect(0, 0, 244, 44);
+      }
+
+      // Draw Move Name
+      const displayName = (move.nameVi || move.name).replace(/^[^(]+\(([^)]+)\)$/, '$1').trim();
+      let fontSize = 20;
+      ctx.font = `bold ${fontSize}px "VT323", monospace`;
+      while (ctx.measureText(displayName).width > 140 && fontSize > 13) {
+        fontSize--;
+        ctx.font = `bold ${fontSize}px "VT323", monospace`;
+      }
+      ctx.fillStyle = '#ffffff';
+      ctx.shadowColor = '#000000';
+      ctx.shadowOffsetX = 1;
+      ctx.shadowOffsetY = 1;
+      ctx.shadowBlur = 0;
+      ctx.textAlign = 'left';
+      ctx.fillText(displayName, 38, 28);
+
+      // Draw PP
+      ctx.font = '16px "VT323", monospace';
+      ctx.fillStyle = '#cbd5e1';
+      ctx.textAlign = 'right';
+      ctx.fillText(`PP ${move.pp}/${move.maxPp}`, 236, 28);
+    };
+
+    if (img.complete && img.naturalWidth > 0) {
+      draw();
+    } else {
+      draw();
+      img.onload = () => {
+        if (canvas.isConnected) {
+          draw();
+        }
+      };
+    }
+  }
+
+  private renderSummaryMoves(pokemon: PartyPokemon): void {
+    const modal = this.backdropEl?.querySelector('#partySummaryModal') as HTMLElement;
+    if (!modal) return;
+
+    const movesEl = modal.querySelector('#partySummaryMoves');
+    const poolEl = modal.querySelector('#partySummaryMovePool');
+    const poolLvEl = modal.querySelector('#partySummaryPoolLv');
+    if (poolLvEl) poolLvEl.textContent = String(pokemon.level);
+
+    // 1. Render Active 4 Slots using battleFightButtons.png
+    if (movesEl) {
+      movesEl.innerHTML = '';
+      for (let i = 0; i < 4; i++) {
+        const move = pokemon.moves[i];
+        const slotEl = document.createElement('div');
+        slotEl.className = 'summary-move-slot';
+        slotEl.dataset.slotIndex = String(i);
+
+        if (move) {
+          const canvas = document.createElement('canvas');
+          canvas.className = 'move-fight-canvas';
+          this.renderMoveButton(canvas, move, false);
+
+          canvas.addEventListener('mouseenter', () => this.renderMoveButton(canvas, move, true));
+          canvas.addEventListener('mouseleave', () => this.renderMoveButton(canvas, move, false));
+
+          slotEl.appendChild(canvas);
+
+          this.attachMovePointerDrag(slotEl, 'active', move, i, pokemon);
+        } else {
+          slotEl.classList.add('empty');
+          slotEl.innerHTML = `<span class="move-slot-empty">+ Ô trống</span>`;
+        }
+
+        movesEl.appendChild(slotEl);
+      }
+    }
+
+    // 2. Render Level-up Move Pool
+    if (poolEl) {
+      poolEl.innerHTML = '';
+      const pool = getAvailableLevelUpMoves(pokemon.speciesKey, pokemon.level);
+
+      if (pool.length === 0) {
+        poolEl.innerHTML = `<div class="pool-empty">Không có chiêu thức nào khả dụng ở cấp này.</div>`;
+        return;
+      }
+
+      for (const entry of pool) {
+        const isEquipped = pokemon.moves.some((m) => m.id === entry.move.id);
+        const cardEl = document.createElement('div');
+        cardEl.className = `summary-pool-card ${isEquipped ? 'equipped' : ''}`;
+
+        const lvBadge = document.createElement('span');
+        lvBadge.className = 'pool-lv-badge';
+        lvBadge.textContent = `Lv.${entry.level}`;
+
+        const canvas = document.createElement('canvas');
+        canvas.className = 'pool-fight-canvas';
+        this.renderMoveButton(canvas, entry.move, false);
+
+        canvas.addEventListener('mouseenter', () =>
+          this.renderMoveButton(canvas, entry.move, true)
+        );
+        canvas.addEventListener('mouseleave', () =>
+          this.renderMoveButton(canvas, entry.move, false)
+        );
+
+        cardEl.appendChild(lvBadge);
+        cardEl.appendChild(canvas);
+
+        cardEl.title = `Kéo thả vào ô chiêu thức bên trái để trang bị ${entry.move.nameVi || entry.move.name}`;
+
+        this.attachMovePointerDrag(cardEl, 'pool', entry.move, undefined, pokemon);
+
+        poolEl.appendChild(cardEl);
+      }
+    }
+  }
+
+  private attachMovePointerDrag(
+    el: HTMLElement,
+    source: 'active' | 'pool',
+    move: BattleMove,
+    slotIndex: number | undefined,
+    pokemon: PartyPokemon
+  ): void {
+    el.addEventListener('pointerdown', (downEv: PointerEvent) => {
+      if (downEv.button !== 0) return;
+
+      this.activeMoveDrag = {
+        source,
+        move,
+        slotIndex,
+        startX: downEv.clientX,
+        startY: downEv.clientY,
+        sourceEl: el,
+        isDragging: false,
+      };
+
+      const onPointerMove = (moveEv: PointerEvent) => {
+        if (!this.activeMoveDrag) return;
+        const dx = moveEv.clientX - this.activeMoveDrag.startX;
+        const dy = moveEv.clientY - this.activeMoveDrag.startY;
+
+        if (!this.activeMoveDrag.isDragging && Math.hypot(dx, dy) > 4) {
+          this.activeMoveDrag.isDragging = true;
+          this.activeMoveDrag.sourceEl.classList.add('dragging');
+          this.createMoveDragGhost(this.activeMoveDrag.move, moveEv.clientX, moveEv.clientY);
+        }
+
+        if (this.activeMoveDrag.isDragging) {
+          this.updateMoveDragGhost(moveEv.clientX, moveEv.clientY);
+          this.updateMoveDragHover(moveEv.clientX, moveEv.clientY);
+        }
+      };
+
+      const onPointerUp = (upEv: PointerEvent) => {
+        window.removeEventListener('pointermove', onPointerMove);
+        window.removeEventListener('pointerup', onPointerUp);
+        window.removeEventListener('pointercancel', onPointerUp);
+
+        if (!this.activeMoveDrag) return;
+
+        if (this.activeMoveDrag.isDragging) {
+          this.activeMoveDrag.sourceEl.classList.remove('dragging');
+          this.removeMoveDragGhost();
+          this.clearMoveDragOver();
+
+          const targetEl = document.elementFromPoint(upEv.clientX, upEv.clientY);
+          const targetSlot = targetEl?.closest('.summary-move-slot') as HTMLElement | null;
+          if (targetSlot) {
+            const targetIdx = parseInt(targetSlot.dataset.slotIndex || '0', 10);
+            this.executeMoveDrop(pokemon, targetIdx, this.activeMoveDrag);
+          }
+        } else {
+          // Nhấp chuột (Click không kéo): Mở bảng chi tiết chiêu thức từ database
+          this.showMoveDetailPopup(this.activeMoveDrag.move);
+        }
+
+        this.activeMoveDrag = null;
+      };
+
+      window.addEventListener('pointermove', onPointerMove);
+      window.addEventListener('pointerup', onPointerUp);
+      window.addEventListener('pointercancel', onPointerUp);
+    });
+  }
+
+  private createMoveDragGhost(move: BattleMove, x: number, y: number): void {
+    this.removeMoveDragGhost();
+    const ghost = document.createElement('div');
+    ghost.className = 'move-drag-ghost';
+    const canvas = document.createElement('canvas');
+    canvas.className = 'move-fight-canvas';
+    this.renderMoveButton(canvas, move, true);
+    ghost.appendChild(canvas);
+    ghost.style.left = `${x}px`;
+    ghost.style.top = `${y}px`;
+    document.body.appendChild(ghost);
+    this.moveDragGhostEl = ghost;
+  }
+
+  private updateMoveDragGhost(x: number, y: number): void {
+    if (this.moveDragGhostEl) {
+      this.moveDragGhostEl.style.left = `${x}px`;
+      this.moveDragGhostEl.style.top = `${y}px`;
+    }
+  }
+
+  private removeMoveDragGhost(): void {
+    if (this.moveDragGhostEl) {
+      this.moveDragGhostEl.remove();
+      this.moveDragGhostEl = null;
+    }
+  }
+
+  private updateMoveDragHover(x: number, y: number): void {
+    const el = document.elementFromPoint(x, y);
+    const targetSlot = el?.closest('.summary-move-slot') as HTMLElement | null;
+
+    if (targetSlot !== this.currentHoverMoveSlot) {
+      if (this.currentHoverMoveSlot) {
+        this.currentHoverMoveSlot.classList.remove('drag-over');
+      }
+      this.currentHoverMoveSlot = targetSlot;
+      if (this.currentHoverMoveSlot) {
+        this.currentHoverMoveSlot.classList.add('drag-over');
+      }
+    }
+  }
+
+  private clearMoveDragOver(): void {
+    if (this.currentHoverMoveSlot) {
+      this.currentHoverMoveSlot.classList.remove('drag-over');
+      this.currentHoverMoveSlot = null;
+    }
+    if (this.backdropEl) {
+      this.backdropEl.querySelectorAll('.summary-move-slot.drag-over').forEach((s) => {
+        s.classList.remove('drag-over');
+      });
+    }
+  }
+
+  private executeMoveDrop(
+    pokemon: PartyPokemon,
+    targetSlotIndex: number,
+    dragData: { source: 'active' | 'pool'; move: BattleMove; slotIndex?: number }
+  ): void {
+    const targetPokemon = this.summaryPokemon ?? pokemon;
+    const { source, move, slotIndex: sourceSlotIndex } = dragData;
+
+    if (source === 'active' && sourceSlotIndex !== undefined) {
+      if (sourceSlotIndex === targetSlotIndex) return;
+      // Swap active moves
+      const newMoves = [...targetPokemon.moves];
+      const sourceMove = newMoves[sourceSlotIndex];
+      const targetMove = newMoves[targetSlotIndex];
+      if (sourceMove) {
+        if (targetMove) {
+          newMoves[sourceSlotIndex] = targetMove;
+          newMoves[targetSlotIndex] = sourceMove;
+        } else {
+          newMoves.splice(sourceSlotIndex, 1);
+          newMoves.splice(targetSlotIndex, 0, sourceMove);
+        }
+        this.setPokemonMoves(targetPokemon, newMoves.filter(Boolean));
+      }
+    } else if (source === 'pool') {
+      const newMoves = [...targetPokemon.moves];
+      const existingIdx = newMoves.findIndex((m) => m.id === move.id);
+      if (existingIdx !== -1) {
+        // Already equipped: swap positions
+        const temp = newMoves[targetSlotIndex];
+        newMoves[targetSlotIndex] = newMoves[existingIdx];
+        if (temp) {
+          newMoves[existingIdx] = temp;
+        } else {
+          newMoves.splice(existingIdx, 1);
+        }
+      } else {
+        // Not yet equipped: replace or add
+        if (targetSlotIndex < newMoves.length) {
+          newMoves[targetSlotIndex] = { ...move };
+        } else {
+          newMoves.push({ ...move });
+        }
+      }
+      this.setPokemonMoves(targetPokemon, newMoves.filter(Boolean));
+    }
+  }
+
+  private setPokemonMoves(pokemon: PartyPokemon, newMoves: BattleMove[]): void {
+    pokemon.moves = [...newMoves];
+    partyService.updatePokemonMoves(pokemon.uid, newMoves);
+    pcStorageService.updatePokemonMoves(pokemon.uid, newMoves);
+    battleSePlayer.playPcAccess();
+    const updatedName = newMoves[newMoves.length - 1]?.nameVi || 'mới';
+    showBerryToast(`✨ Đã trang bị chiêu [${updatedName}] cho ${pokemon.name}!`, '#22c55e');
+    this.renderSummaryMoves(pokemon);
+  }
+
+  private showMoveDetailPopup(move: BattleMove): void {
+    if (!this.backdropEl) return;
+    const popup = this.backdropEl.querySelector('#partyMoveDetailPopup') as HTMLElement;
+    if (!popup) return;
+
+    // Get move data with database fallback
+    const dbMove = MOVES_DB[move.id] || move;
+
+    const nameViEl = popup.querySelector('#partyMoveDetailNameVi');
+    const nameEnEl = popup.querySelector('#partyMoveDetailNameEn');
+    const typeIconEl = popup.querySelector('#partyMoveDetailTypeIcon') as HTMLElement;
+    const typeNameEl = popup.querySelector('#partyMoveDetailTypeName');
+    const catIconEl = popup.querySelector('#partyMoveDetailCategoryIcon') as HTMLElement;
+    const catTextEl = popup.querySelector('#partyMoveDetailCategoryText');
+    const powerEl = popup.querySelector('#partyMoveDetailPower');
+    const accEl = popup.querySelector('#partyMoveDetailAcc');
+    const ppEl = popup.querySelector('#partyMoveDetailPp');
+    const descEl = popup.querySelector('#partyMoveDetailDesc');
+
+    // Names
+    const viName = dbMove.nameVi || dbMove.name.replace(/\s*\([^)]*\)/, '') || move.name;
+    const enName = dbMove.nameEn || (dbMove.name.match(/\(([^)]+)\)/)?.[1] ?? '');
+    if (nameViEl) nameViEl.textContent = viName;
+    if (nameEnEl) nameEnEl.textContent = enName ? `(${enName})` : '';
+
+    // Type
+    const typeKey = (dbMove.type || 'normal').toLowerCase();
+    const typeIdx = STORAGE_TYPE_INDICES[typeKey] ?? 0;
+    const posY = -(typeIdx * 28);
+    if (typeIconEl) {
+      typeIconEl.style.backgroundPosition = `0 ${posY}px`;
+      typeIconEl.title = dbMove.type;
+    }
+    if (typeNameEl) {
+      typeNameEl.textContent = TYPE_NAME_VI[typeKey] || dbMove.type.toUpperCase();
+    }
+
+    // Category (Vật Lý / Đặc Biệt / Trạng Thái)
+    const cat = dbMove.category || 'physical';
+    if (catIconEl) {
+      catIconEl.className = `move-detail-category-icon ${cat}`;
+      catIconEl.title =
+        cat === 'physical' ? 'Vật Lý' : cat === 'special' ? 'Đặc Biệt' : 'Trạng Thái';
+    }
+    if (catTextEl) {
+      catTextEl.className = `move-detail-category-text ${cat}`;
+      if (cat === 'physical') {
+        catTextEl.textContent = 'VẬT LÝ';
+      } else if (cat === 'special') {
+        catTextEl.textContent = 'ĐẶC BIỆT';
+      } else {
+        catTextEl.textContent = 'TRẠNG THÁI';
+      }
+    }
+
+    // Power
+    if (powerEl) {
+      if (dbMove.category === 'status' || !dbMove.power || dbMove.power === 0) {
+        powerEl.textContent = '--';
+      } else {
+        powerEl.textContent = String(dbMove.power);
+      }
+    }
+
+    // Accuracy
+    if (accEl) {
+      if (!dbMove.accuracy || dbMove.accuracy === 0) {
+        accEl.textContent = '--';
+      } else {
+        accEl.textContent = `${dbMove.accuracy}%`;
+      }
+    }
+
+    // PP
+    if (ppEl) {
+      const curPp = move.pp !== undefined ? move.pp : (dbMove.pp ?? 20);
+      const maxPp = dbMove.maxPp || move.maxPp || dbMove.pp || 20;
+      ppEl.textContent = `${curPp} / ${maxPp}`;
+    }
+
+    // Description from database
+    if (descEl) {
+      const desc =
+        dbMove.description || move.description || 'Chưa có thông tin mô tả cho chiêu thức này.';
+      descEl.textContent = desc;
+    }
+
+    battleSePlayer.playPcAccess();
+    popup.style.display = 'flex';
+  }
+
+  private hideMoveDetailPopup(): void {
+    if (!this.backdropEl) return;
+    const popup = this.backdropEl.querySelector('#partyMoveDetailPopup') as HTMLElement;
+    if (popup) popup.style.display = 'none';
+  }
+
+  private closeSummaryModal(): void {
+    this.hideMoveDetailPopup();
+    this.removeMoveDragGhost();
+    this.clearMoveDragOver();
+    this.activeMoveDrag = null;
+    this.summaryAnimator?.stop();
+    this.summaryPokemon = null;
+    const modal = this.backdropEl?.querySelector('#partySummaryModal') as HTMLElement;
+    if (modal) modal.style.display = 'none';
   }
 }
 
