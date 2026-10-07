@@ -1,19 +1,17 @@
-## Cập nhật lần cuối: 2026-10-07 (Bổ Sung Hiệu Ứng Bling-Bling Lấp Lánh Cho Icon Pokémon Shiny)
+## Cập nhật lần cuối: 2026-10-07 (Tinh Chỉnh Hiệu Ứng Sao Lấp Lánh Cho Icon Pokémon Shiny)
 
-### 0.49. Bổ Sung Hiệu Ứng Bling-Bling Lấp Lánh Cho Phần Icon Pokémon Shiny:
+### 0.49. Tinh Chỉnh Hiệu Ứng Sao Lấp Lánh (Sparkle Twinkle Stars) Cho Icon Pokémon Shiny:
 
-- **Trạng thái:** Đã hoàn thành 100% việc tích hợp hiệu ứng thị giác Bling-Bling lấp lánh (sparkle pulse, golden halo aura & star glints) cho cả icon biểu tượng sao đỏ Shiny lẫn mini sprite icon của các Pokémon Shiny trên toàn bộ hệ thống giao diện: Đội hình (Party Screen), Kho lưu trữ PC (Storage Screen) và Trận đấu (Battle Databox).
+- **Trạng thái:** Đã hoàn thành 100% việc tinh chỉnh hiệu ứng thị giác theo yêu cầu: Bỏ hoạt ảnh co giãn của biểu tượng sao đỏ và loại bỏ hào quang phát quang (aura glow), chỉ giữ lại các ngôi sao nhỏ lấp lánh (sparkle twinkle stars) nhấp nháy tinh tế quanh icon Pokémon Shiny.
 - **Chi tiết đã thực hiện:**
-  1. **Hiệu Ứng Bling-Bling Cho Icon Biểu Tượng Sao Đỏ ([style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
-     - Tạo keyframe `@keyframes shinyStarBling`: kết hợp nhịp thở scale $1.0 \leftrightarrow 1.22$, dao động góc xoay $-7^\circ \leftrightarrow +5^\circ$, độ sáng bừng sáng tăng $1.4\times$ và chuỗi bóng đổ hào quang phát sáng vàng kim/đỏ ruby (`drop-shadow`).
-     - Áp dụng đồng bộ cho toàn bộ icon biểu tượng trên mọi giao diện: `.ps-shiny-icon`, `.party-slot-shiny-icon`, `.storage-grid-shiny-icon`, `.preview-shiny-icon`, `.summary-shiny-icon`.
-  2. **Hào Quang & Bụi Sao Cho Mini Sprite Icon Pokémon Shiny ([party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts), [storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
-     - Tự động gắn class `.is-shiny` vào các ô slot chứa Pokémon Shiny trong màn hình Party Screen và PC Storage (Box grid & Party column).
-     - Keyframe `@keyframes shinyPokemonIconAura`: tỏa vầng hào quang vàng hổ phách nhịp nhàng quanh khung icon của Pokémon Shiny.
-     - Keyframe `@keyframes shinySparkleGlint`: hạt sao 4 cánh màu bạch kim/vàng kim `✦` lấp lánh chớp lóe định kỳ ở góc trên của icon Pokémon.
-     - Keyframe `@keyframes shinySlotGlow`: viền ô slot lưới trong PC Storage phát sáng vàng hổ phách lung linh nổi bật.
-  3. **Hiệu Ứng Bling-Bling Trên Canvas Databox Trận Đấu ([battle-renderer.ts](file:///e:/Pokemon/apps/web/src/battle/battle-renderer.ts)):**
-     - Xây dựng phương thức `drawBlingShinyIcon`: tích hợp nhịp thở phóng to/thu nhỏ động theo thời gian thực (`performance.now()`), hào quang vàng hổ phách tỏa tròn (`shadowColor` & `shadowBlur`), độ nghiêng dao động nhẹ và tia chớp sao 4 cánh màu trắng tinh khôi chớp tắt luân phiên ở góc biểu tượng cạnh cấp độ `Lv.X` của Pokémon.
+  1. **Biểu Tượng Sao Đỏ Chuẩn Tĩnh ([style.css](file:///e:/Pokemon/apps/web/src/style.css), [battle-renderer.ts](file:///e:/Pokemon/apps/web/src/battle/battle-renderer.ts)):**
+     - Loại bỏ toàn bộ animation co giãn, lắc lư và hào quang trên các icon biểu tượng sao đỏ (`shiny.png`). Biểu tượng sao đỏ hiển thị sắc nét, cố định và tự nhiên trên mọi giao diện: Party Screen, PC Storage và Canvas Databox trong trận đấu.
+  2. **Loại Bỏ Hào Quang & Viền Phát Quang ([style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Gỡ bỏ `shinyPokemonIconAura` (filter drop-shadow tỏa sáng quanh sprite) và `shinySlotGlow` (viền ô phát sáng).
+  3. **Hiệu Ứng Các Ngôi Sao Lấp Lánh Tinh Tế ([style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Tạo 2 keyframe `@keyframes sparkleTwinkleA` và `@keyframes sparkleTwinkleB`.
+     - Đặt 2 ngôi sao 4 cánh `✦` (màu vàng kim `#fef08a` và trắng bạc `#ffffff`) tại 2 góc đối xứng của mini sprite icon Pokémon Shiny (trên màn hình Party Screen và PC Storage).
+     - Hai ngôi sao chớp tắt luân phiên so le nhịp nhàng, tạo hiệu ứng bling-bling lấp lánh thanh lịch, chuẩn mực và bắt mắt mà không làm rối mắt.
   4. **Kiểm Thử & Đảm Bảo Tính Toàn Vẹn:**
      - Toàn bộ pipeline typecheck (`npm run typecheck:web`) và bộ kiểm thử Vitest (15 files, 124 tests) đều PASS 100%.
 
