@@ -4,7 +4,6 @@
  */
 
 import { partyService } from '../domain/party/party-service';
-import { playerService } from '../domain/player/player-service';
 import type { PartyPokemon } from '../domain/party/party-state';
 import { PARTY_ASSETS, POKEMON_ASSETS } from '../assets';
 import { showBerryToast } from './toast';
@@ -134,7 +133,7 @@ export class PartyScreen {
           <span class="party-cancel-text">THOÁT</span>
         </button>
 
-        <!-- Context Action Popup (Đổi chỗ, Đưa lên đầu, Xem tóm tắt, Hồi máu, Ra trận) -->
+        <!-- Context Action Popup (Đổi chỗ, Xem tóm tắt, Ra trận) -->
         <div class="party-action-menu" id="partyActionMenu" style="display: none;">
           <div class="party-action-title" id="partyActionTitle">TÙY CHỌN</div>
           <button class="party-action-btn action-sendout" id="btnActionSendOut" style="display: none;">
@@ -145,17 +144,9 @@ export class PartyScreen {
             <span class="action-btn-arrow">▶</span>
             <span class="action-btn-text">Đổi vị trí</span>
           </button>
-          <button class="party-action-btn" id="btnActionLeader">
-            <span class="action-btn-arrow">▶</span>
-            <span class="action-btn-text">Đưa lên đầu</span>
-          </button>
           <button class="party-action-btn" id="btnActionSummary">
             <span class="action-btn-arrow">▶</span>
             <span class="action-btn-text">Xem thông tin</span>
-          </button>
-          <button class="party-action-btn" id="btnActionHeal">
-            <span class="action-btn-arrow">▶</span>
-            <span class="action-btn-text">Hồi phục HP</span>
           </button>
           <button class="party-action-btn cancel" id="btnActionDismiss">
             <span class="action-btn-arrow">▶</span>
@@ -163,28 +154,130 @@ export class PartyScreen {
           </button>
         </div>
 
-        <!-- Summary Modal Sub-screen -->
+        <!-- Summary Modal Sub-screen (Authentic GBA / Essentials Pixel Art) -->
         <div class="party-summary-modal" id="partySummaryModal" style="display: none;">
           <div class="summary-card">
+            <!-- Header: Ball, Name, Level, Gender, Shiny, Close -->
             <div class="summary-header">
-              <span id="summaryPkName">Pikachu Lv.5</span>
-              <button class="summary-btn-close" id="btnSummaryClose">✕</button>
-            </div>
-            <div class="summary-body">
-              <div class="summary-left-col">
-                <canvas id="summaryPkSprite" class="summary-pk-sprite" width="80" height="80"></canvas>
-                <div id="summaryPkTypes" class="summary-pk-types"></div>
-                <div class="summary-stat-row">HP: <span id="summaryHp">20 / 20</span></div>
-                <div class="summary-stat-row">Tấn công: <span id="summaryAtk">12</span></div>
-                <div class="summary-stat-row">Phòng thủ: <span id="summaryDef">10</span></div>
-                <div class="summary-stat-row">Tấn công ĐB: <span id="summarySpAtk">14</span></div>
-                <div class="summary-stat-row">Phòng thủ ĐB: <span id="summarySpDef">11</span></div>
-                <div class="summary-stat-row">Tốc độ: <span id="summarySpd">15</span></div>
-                <div class="summary-stat-row">Kinh nghiệm: <span id="summaryExp">0 / 250</span></div>
+              <div class="summary-header-left">
+                <img src="${PARTY_ASSETS.ball}" class="summary-header-ball" alt="Ball" />
+                <span id="summaryPkName" class="summary-pk-name">Pikachu</span>
+                <span id="summaryPkLevel" class="summary-pk-level">Lv.5</span>
+                <span id="summaryPkGender" class="summary-pk-gender">♂</span>
+                <span id="summaryPkShiny" class="summary-pk-shiny" style="display: none;">
+                  <img src="${POKEMON_ASSETS.shinyIcon}" class="summary-shiny-icon" alt="Shiny" />
+                </span>
               </div>
+              <button class="summary-btn-close" id="btnSummaryClose" title="Đóng (Esc)">
+                <span class="summary-close-icon">✕</span> ĐÓNG
+              </button>
+            </div>
+
+            <!-- Body: Left Column (Profile & Meta) + Right Column (Stats & Moves) -->
+            <div class="summary-body">
+              <!-- Left Column: Sprite, Types, Info Box, EXP Bar -->
+              <div class="summary-left-col">
+                <div class="summary-sprite-frame">
+                  <canvas id="summaryPkSprite" class="summary-pk-sprite" width="96" height="96"></canvas>
+                </div>
+                <div id="summaryPkTypes" class="summary-pk-types">
+                  <!-- Badges hệ -->
+                </div>
+                <div class="summary-info-box">
+                  <div class="summary-info-row">
+                    <span class="info-lbl">Bóng bắt:</span>
+                    <span id="summaryBallName" class="info-val">POKÉ BALL</span>
+                  </div>
+                  <div class="summary-info-row">
+                    <span class="info-lbl">Vật phẩm:</span>
+                    <span id="summaryHeldItem" class="info-val">Không có</span>
+                  </div>
+                  <div class="summary-info-row">
+                    <span class="info-lbl">Bắt ở cấp:</span>
+                    <span id="summaryCaughtLv" class="info-val">Lv.5</span>
+                  </div>
+                </div>
+
+                <!-- EXP Bar -->
+                <div class="summary-exp-box">
+                  <div class="summary-exp-labels">
+                    <span class="exp-title">EXP</span>
+                    <span id="summaryExpText" class="exp-nums">0 / 250</span>
+                  </div>
+                  <div class="summary-exp-bar-track">
+                    <div id="summaryExpBarFill" class="summary-exp-bar-fill" style="width: 0%;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right Column: Stats Table + 4 Move Slots -->
               <div class="summary-right-col">
-                <div class="summary-moves-header">CHIÊU THỨC SỞ HỮU</div>
-                <div class="summary-moves-list" id="summaryMovesList"></div>
+                <!-- Battle Stats Section -->
+                <div class="summary-section-box summary-stats-section">
+                  <div class="summary-section-title">
+                    <span class="title-icon">⚔</span> CHỈ SỐ CHIẾN ĐẤU
+                  </div>
+                  <div class="summary-stats-list">
+                    <!-- HP -->
+                    <div class="summary-stat-row">
+                      <span class="stat-name">HP</span>
+                      <span id="summaryHp" class="stat-val">20/20</span>
+                      <div class="stat-bar-track">
+                        <div id="summaryHpBar" class="stat-bar-fill hp" style="width: 100%;"></div>
+                      </div>
+                    </div>
+                    <!-- Attack -->
+                    <div class="summary-stat-row">
+                      <span class="stat-name">Tấn công</span>
+                      <span id="summaryAtk" class="stat-val">12</span>
+                      <div class="stat-bar-track">
+                        <div id="summaryAtkBar" class="stat-bar-fill atk" style="width: 20%;"></div>
+                      </div>
+                    </div>
+                    <!-- Defense -->
+                    <div class="summary-stat-row">
+                      <span class="stat-name">Phòng thủ</span>
+                      <span id="summaryDef" class="stat-val">10</span>
+                      <div class="stat-bar-track">
+                        <div id="summaryDefBar" class="stat-bar-fill def" style="width: 18%;"></div>
+                      </div>
+                    </div>
+                    <!-- Sp. Atk -->
+                    <div class="summary-stat-row">
+                      <span class="stat-name">TC Đ.Biệt</span>
+                      <span id="summarySpAtk" class="stat-val">14</span>
+                      <div class="stat-bar-track">
+                        <div id="summarySpAtkBar" class="stat-bar-fill spatk" style="width: 22%;"></div>
+                      </div>
+                    </div>
+                    <!-- Sp. Def -->
+                    <div class="summary-stat-row">
+                      <span class="stat-name">PT Đ.Biệt</span>
+                      <span id="summarySpDef" class="stat-val">11</span>
+                      <div class="stat-bar-track">
+                        <div id="summarySpDefBar" class="stat-bar-fill spdef" style="width: 19%;"></div>
+                      </div>
+                    </div>
+                    <!-- Speed -->
+                    <div class="summary-stat-row">
+                      <span class="stat-name">Tốc độ</span>
+                      <span id="summarySpd" class="stat-val">15</span>
+                      <div class="stat-bar-track">
+                        <div id="summarySpdBar" class="stat-bar-fill spd" style="width: 25%;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 4 Moves Section -->
+                <div class="summary-section-box summary-moves-section">
+                  <div class="summary-section-title">
+                    <span class="title-icon">✦</span> CHIÊU THỨC (4 Ô)
+                  </div>
+                  <div class="summary-moves-grid" id="summaryMovesList">
+                    <!-- Rendered dynamically (4 slots) -->
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -214,9 +307,7 @@ export class PartyScreen {
     // Action Menu Buttons
     const btnSendOut = this.backdropEl.querySelector('#btnActionSendOut');
     const btnSwap = this.backdropEl.querySelector('#btnActionSwap');
-    const btnLeader = this.backdropEl.querySelector('#btnActionLeader');
     const btnSummary = this.backdropEl.querySelector('#btnActionSummary');
-    const btnHeal = this.backdropEl.querySelector('#btnActionHeal');
     const btnDismiss = this.backdropEl.querySelector('#btnActionDismiss');
 
     btnSendOut?.addEventListener('click', () => {
@@ -251,46 +342,11 @@ export class PartyScreen {
       }
     });
 
-    btnLeader?.addEventListener('click', () => {
-      if (this.activeMenuIndex !== null) {
-        partyService.setLeader(this.activeMenuIndex);
-        const newLeader = partyService.getLeader();
-        if (newLeader && this.onLeaderChangeCallback) {
-          this.onLeaderChangeCallback(newLeader);
-        }
-        showBerryToast(`👑 Đã đưa ${newLeader?.name} lên vị trí dẫn đầu!`, '#38bdf8');
-        this.activeMenuIndex = null;
-        this.render();
-      }
-    });
-
     btnSummary?.addEventListener('click', () => {
       if (this.activeMenuIndex !== null) {
         const pk = partyService.getPokemon(this.activeMenuIndex);
         if (pk) {
           this.showSummary(pk);
-        }
-        this.activeMenuIndex = null;
-        this.render();
-      }
-    });
-
-    btnHeal?.addEventListener('click', () => {
-      if (this.activeMenuIndex !== null) {
-        const pk = partyService.getPokemon(this.activeMenuIndex);
-        if (pk) {
-          if (pk.currentHp >= pk.maxHp && pk.status === 'none') {
-            showBerryToast(`💚 ${pk.name} hiện đang hoàn toàn khỏe mạnh!`, '#22c55e');
-          } else if (playerService.hasItem('potion', 1)) {
-            playerService.removeItem('potion', 1);
-            partyService.healPokemon(this.activeMenuIndex, 20);
-            partyService.cureStatus(this.activeMenuIndex);
-            showBerryToast(`🧪 Đã dùng Potion hồi 20 HP cho ${pk.name}!`, '#22c55e');
-          } else {
-            // Free emergency heal if no potion
-            partyService.healPokemon(this.activeMenuIndex);
-            showBerryToast(`✨ Đã sơ cứu hồi phục hoàn toàn cho ${pk.name}!`, '#38bdf8');
-          }
         }
         this.activeMenuIndex = null;
         this.render();
@@ -589,19 +645,13 @@ export class PartyScreen {
 
         const btnSendOut = actionMenu.querySelector<HTMLElement>('#btnActionSendOut');
         const btnSwap = actionMenu.querySelector<HTMLElement>('#btnActionSwap');
-        const btnLeader = actionMenu.querySelector<HTMLElement>('#btnActionLeader');
-        const btnHeal = actionMenu.querySelector<HTMLElement>('#btnActionHeal');
 
         if (this.battleSelectOptions) {
-          if (btnSendOut) btnSendOut.style.display = 'block';
+          if (btnSendOut) btnSendOut.style.display = 'flex';
           if (btnSwap) btnSwap.style.display = 'none';
-          if (btnLeader) btnLeader.style.display = 'none';
-          if (btnHeal) btnHeal.style.display = 'none';
         } else {
           if (btnSendOut) btnSendOut.style.display = 'none';
-          if (btnSwap) btnSwap.style.display = 'block';
-          if (btnLeader) btnLeader.style.display = 'block';
-          if (btnHeal) btnHeal.style.display = 'block';
+          if (btnSwap) btnSwap.style.display = 'flex';
         }
 
         actionMenu.style.display = 'flex';
@@ -653,11 +703,37 @@ export class PartyScreen {
     const modal = this.backdropEl.querySelector<HTMLElement>('#partySummaryModal');
     if (!modal) return;
 
+    // Header info: Name, Level, Gender, Shiny badge
     const nameEl = modal.querySelector('#summaryPkName');
     if (nameEl) {
-      nameEl.innerHTML = `${pk.nickname || pk.name} Lv.${pk.level}${pk.isShiny ? ` <img src="${POKEMON_ASSETS.shinyIcon}" class="summary-shiny-icon" alt="Shiny" title="Shiny Pokémon" />` : ''}`;
+      nameEl.textContent = pk.nickname ? `${pk.nickname} (${pk.name})` : pk.name;
     }
-    const spriteCanvas = modal.querySelector<HTMLCanvasElement>('#summaryPkSprite')!;
+    const levelEl = modal.querySelector('#summaryPkLevel');
+    if (levelEl) {
+      levelEl.textContent = `Lv.${pk.level}`;
+    }
+    const genderEl = modal.querySelector<HTMLElement>('#summaryPkGender');
+    if (genderEl) {
+      if (pk.gender === 'male') {
+        genderEl.textContent = '♂';
+        genderEl.className = 'summary-pk-gender male';
+        genderEl.style.display = 'inline';
+      } else if (pk.gender === 'female') {
+        genderEl.textContent = '♀';
+        genderEl.className = 'summary-pk-gender female';
+        genderEl.style.display = 'inline';
+      } else {
+        genderEl.textContent = '';
+        genderEl.style.display = 'none';
+      }
+    }
+    const shinyEl = modal.querySelector<HTMLElement>('#summaryPkShiny');
+    if (shinyEl) {
+      shinyEl.style.display = pk.isShiny ? 'inline-flex' : 'none';
+    }
+
+    // Sprite Animation
+    const spriteCanvas = modal.querySelector<HTMLCanvasElement>('#summaryPkSprite');
     if (spriteCanvas) {
       if (!this.summaryAnimator) {
         this.summaryAnimator = new PokemonSpriteAnimator(spriteCanvas);
@@ -665,38 +741,103 @@ export class PartyScreen {
       this.summaryAnimator.load(POKEMON_ASSETS.getFrontSprite(pk.speciesKey, pk.isShiny));
     }
 
-    const typesEl = modal.querySelector<HTMLElement>('#summaryPkTypes')!;
-    typesEl.innerHTML = pk.types
-      .map((t) => `<span class="summary-type-tag ${t.toLowerCase()}">${t}</span>`)
-      .join(' ');
+    // Type Badges
+    const typesEl = modal.querySelector<HTMLElement>('#summaryPkTypes');
+    if (typesEl) {
+      typesEl.innerHTML = pk.types
+        .map((t) => `<span class="summary-type-tag type-${t.toLowerCase()}">${t.toUpperCase()}</span>`)
+        .join('');
+    }
 
-    modal.querySelector('#summaryHp')!.textContent = `${pk.currentHp} / ${pk.maxHp}`;
-    modal.querySelector('#summaryAtk')!.textContent = String(pk.stats.attack);
-    modal.querySelector('#summaryDef')!.textContent = String(pk.stats.defense);
-    modal.querySelector('#summarySpAtk')!.textContent = String(pk.stats.spAtk);
-    modal.querySelector('#summarySpDef')!.textContent = String(pk.stats.spDef);
-    modal.querySelector('#summarySpd')!.textContent = String(pk.stats.speed);
-    modal.querySelector('#summaryExp')!.textContent = `${pk.exp} / ${pk.maxExp}`;
+    // Metadata Box (Bóng bắt, Vật phẩm mang, Bắt ở cấp)
+    const ballEl = modal.querySelector('#summaryBallName');
+    if (ballEl) {
+      const rawBall = pk.ballCaught || 'pokeball';
+      const cleanBall = rawBall.replace(/^item_/i, '').replace(/_/g, ' ').toUpperCase();
+      ballEl.textContent = cleanBall.includes('BALL') ? cleanBall : `${cleanBall} BALL`;
+    }
+    const itemEl = modal.querySelector('#summaryHeldItem');
+    if (itemEl) {
+      itemEl.textContent = pk.heldItem || 'Không có';
+    }
+    const caughtLvEl = modal.querySelector('#summaryCaughtLv');
+    if (caughtLvEl) {
+      caughtLvEl.textContent = `Lv.${pk.caughtLevel || pk.level}`;
+    }
 
-    const movesList = modal.querySelector<HTMLElement>('#summaryMovesList')!;
-    movesList.innerHTML = pk.moves
-      .map(
-        (m) => `
-        <div class="summary-move-card">
-          <div class="smc-header">
-            <span class="smc-name">${m.nameVi || m.name}</span>
-            <span class="smc-type ${m.type.toLowerCase()}">${m.type}</span>
-          </div>
-          <div class="smc-stats">
-            <span>PP: ${m.pp}/${m.maxPp}</span>
-            <span>Uy lực: ${m.power > 0 ? m.power : '—'}</span>
-            <span>Chính xác: ${m.accuracy > 0 ? m.accuracy + '%' : '—'}</span>
-          </div>
-          <div class="smc-desc">${m.description || 'Không có mô tả.'}</div>
-        </div>
-      `
-      )
-      .join('');
+    // EXP Bar (Track & Fill)
+    const expTextEl = modal.querySelector('#summaryExpText');
+    if (expTextEl) {
+      expTextEl.textContent = `${pk.exp} / ${pk.maxExp}`;
+    }
+    const expBarFill = modal.querySelector<HTMLElement>('#summaryExpBarFill');
+    if (expBarFill) {
+      const expPct = Math.max(0, Math.min(100, Math.round((pk.exp / Math.max(1, pk.maxExp)) * 100)));
+      expBarFill.style.width = `${expPct}%`;
+    }
+
+    // Stats Table & Visual Stat Bars
+    // Reference standard max for non-legendary scaled bars is ~180
+    const maxReferenceStat = 180;
+    const hpPct = Math.max(0, Math.min(100, (pk.currentHp / pk.maxHp) * 100));
+    const hpColor = hpPct > 50 ? '#22c55e' : hpPct > 20 ? '#eab308' : '#ef4444';
+
+    modal.querySelector('#summaryHp')!.textContent = `${pk.currentHp}/${pk.maxHp}`;
+    const hpBar = modal.querySelector<HTMLElement>('#summaryHpBar');
+    if (hpBar) {
+      hpBar.style.width = `${hpPct}%`;
+      hpBar.style.backgroundColor = hpColor;
+    }
+
+    const setStat = (valId: string, barId: string, val: number) => {
+      const valEl = modal.querySelector(valId);
+      if (valEl) valEl.textContent = String(val);
+      const barEl = modal.querySelector<HTMLElement>(barId);
+      if (barEl) {
+        const pct = Math.max(5, Math.min(100, Math.round((val / maxReferenceStat) * 100)));
+        barEl.style.width = `${pct}%`;
+      }
+    };
+
+    setStat('#summaryAtk', '#summaryAtkBar', pk.stats.attack);
+    setStat('#summaryDef', '#summaryDefBar', pk.stats.defense);
+    setStat('#summarySpAtk', '#summarySpAtkBar', pk.stats.spAtk);
+    setStat('#summarySpDef', '#summarySpDefBar', pk.stats.spDef);
+    setStat('#summarySpd', '#summarySpdBar', pk.stats.speed);
+
+    // Moves Grid: Exactly 4 slots rendered with authentic info
+    const movesList = modal.querySelector<HTMLElement>('#summaryMovesList');
+    if (movesList) {
+      let movesHtml = '';
+      for (let i = 0; i < 4; i++) {
+        const m = pk.moves[i];
+        if (m) {
+          const moveName = m.nameVi || m.name;
+          const ppColor =
+            m.pp === 0 ? '#ef4444' : m.pp <= Math.ceil(m.maxPp * 0.25) ? '#eab308' : '#38bdf8';
+          movesHtml += `
+            <div class="summary-move-card">
+              <div class="smc-top">
+                <span class="smc-name" title="${moveName}">${moveName}</span>
+                <span class="summary-type-tag smc-type-tag type-${m.type.toLowerCase()}">${m.type.toUpperCase()}</span>
+              </div>
+              <div class="smc-details">
+                <span class="smc-pp" style="color: ${ppColor}">PP ${m.pp}/${m.maxPp}</span>
+                <span class="smc-stat">Uy lực: <b>${m.power > 0 ? m.power : '—'}</b></span>
+                <span class="smc-stat">CX: <b>${m.accuracy > 0 ? m.accuracy + '%' : '—'}</b></span>
+              </div>
+            </div>
+          `;
+        } else {
+          movesHtml += `
+            <div class="summary-move-card empty">
+              <span class="smc-empty-label">― Trống ―</span>
+            </div>
+          `;
+        }
+      }
+      movesList.innerHTML = movesHtml;
+    }
 
     modal.style.display = 'flex';
   }

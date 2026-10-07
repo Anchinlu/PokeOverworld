@@ -1,4 +1,27 @@
-## Cập nhật lần cuối: 2026-10-07 (Pixel Art Hóa Menu Party Screen)
+## Cập nhật lần cuối: 2026-10-07 (Tinh Gọn Menu Party & Nâng Cấp Giao Diện Xem Thông Tin Pixel Art)
+
+### 0.52. Tinh Gọn Menu Party Screen & Nâng Cấp Toàn Diện Màn Hình Xem Thông Tin (Party Summary Modal):
+
+- **Trạng thái:** Đã hoàn thành 100% việc tinh gọn menu hành động Pokémon trong Party Screen và nâng cấp giao diện màn hình Xem thông tin Pokémon (`#partySummaryModal`) sang chuẩn Pixel Art cổ điển (GBA / Pokémon Essentials).
+- **Chi tiết đã thực hiện:**
+  1. **Tinh Gọn Menu Hành Động ([party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts)):**
+     - Loại bỏ 2 nút: **"Đưa lên đầu"** (`#btnActionLeader`) và **"Hồi phục HP"** (`#btnActionHeal`).
+     - Người chơi có thể đổi Pokémon lên vị trí dẫn đầu tự nhiên thông qua nút "Đổi vị trí" vào slot 1.
+     - Menu hành động giờ đây chỉ giữ lại các tùy chọn chuẩn mực, tinh gọn: *Ra chiến đấu* (khi chọn đấu sĩ), *Đổi vị trí*, *Xem thông tin*, và *Đóng*.
+  2. **Nâng Cấp Màn Hình Xem Thông Tin Chuẩn Pixel Art ([party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - **Header sắc nét:** Biểu tượng Pokéball mini, Tên/Nickname, Huy hiệu Cấp độ (`Lv.X`), Ký hiệu Giới tính (♂ xanh / ♀ đỏ), Biểu tượng Shiny lấp lánh (nếu là dạng Shiny), và nút `✕ ĐÓNG` pixel bevel đỏ retro.
+     - **Cột Trái (Hồ Sơ & Ngoại Hình):**
+       - Khung hoạt ảnh Sprite Pokémon động đa khung hình (`PokemonSpriteAnimator`) trên nền sàn đấu gradient pixelated tối.
+       - Bộ huy hiệu hệ (Type Badges) chuẩn màu sắc 18 hệ Pokémon (Normal, Fire, Water, Grass, Electric, Ice, Fighting, Poison, Ground, Flying, Psychic, Bug, Rock, Ghost, Dragon, Dark, Steel, Fairy) có viền bevel nổi.
+       - Hộp thông tin phụ (Metadata): Loại Pokéball đã bắt, Vật phẩm nắm giữ (Held item), Cấp độ khi thu phục.
+       - Thanh kinh nghiệm (EXP Bar): Rãnh đo % EXP lên cấp tiếp theo với màu cyan sáng `#06b6d4` và chỉ số số chính xác.
+     - **Cột Phải (Chỉ Số Chiến Đấu & 4 Ô Chiêu Thức):**
+       - **Bảng Chỉ Số Chiến Đấu (Battle Stats):** Hiển thị đầy đủ 6 chỉ số (HP, Tấn công, Phòng thủ, TC Đặc biệt, PT Đặc biệt, Tốc độ) kèm hệ thống thanh đo màu trực quan (Stat Bars) có tỉ lệ chuẩn max stat, đổi màu HP theo ngưỡng an toàn/nguy cấp.
+       - **Lưới Chiêu Thức Chuẩn 4 Ô (4 Move Slots):** Bố cục 4 slot đóng khung pixel; mỗi slot chiêu thức hiển thị tên chiêu thức (in đậm), huy hiệu hệ thu nhỏ, PP hiện tại/tối đa (đổi màu vàng/đỏ khi sắp cạn hoặc hết PP), Uy lực (Power), Độ chính xác (Accuracy); các ô chưa học hiển thị trạng thái `― Trống ―`.
+  3. **Kiểm Thử & Đảm Bảo Tính Toàn Vẹn:**
+     - Toàn bộ pipeline typecheck (`npm run typecheck:web`) và bộ test Vitest (16 files, 127 tests) đều PASS 100%.
+
+---
 
 ### 0.51. Pixel Art Hóa Menu Hành Động & Giao Diện Trong Party Screen (Party Action Menu):
 
