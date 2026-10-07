@@ -4,7 +4,7 @@
  */
 
 import type { BattleEnvironment } from './types';
-import { BATTLE_ASSETS, MOVE_ASSETS } from '../assets';
+import { BATTLE_ASSETS, MOVE_ASSETS, POKEMON_ASSETS } from '../assets';
 
 /** All preloaded images for the battle screen */
 export interface BattleAssets {
@@ -32,6 +32,7 @@ export interface BattleAssets {
   ballBurstRay: HTMLImageElement;
   ballBurstParticle: HTMLImageElement;
   ballBurstRing: HTMLImageElement;
+  shinyIcon: HTMLImageElement;
 }
 
 export function createBattleAssets(
@@ -73,6 +74,7 @@ export function createBattleAssets(
     ballBurstRay: load(BATTLE_ASSETS.ballBurstRay),
     ballBurstParticle: load(BATTLE_ASSETS.ballBurstParticle),
     ballBurstRing: load(BATTLE_ASSETS.ballBurstRing),
+    shinyIcon: load(POKEMON_ASSETS.shinyIcon),
   };
 }
 

@@ -1,4 +1,28 @@
-## Cập nhật lần cuối: 2026-10-07 (Bổ Sung Bộ Chọn Dạng Thường / Shiny Vào Bảng Debug & Tích Hợp UI Kiểm Thử)
+## Cập nhật lần cuối: 2026-10-07 (Tích Hợp Biểu Tượng Chuẩn shiny.png Cho Toàn Bộ Hệ Thống Hiển Thị)
+
+### 0.47. Sử Dụng Biểu Tượng Đồ Họa Chuẩn `shiny.png` Cho Pokémon Shiny:
+
+- **Trạng thái:** Đã hoàn thành 100% việc tích hợp tệp ảnh biểu tượng chuẩn [shiny.png](file:///e:/Pokemon/Graphics/Pokemon/shiny.png) ($24 \times 24\text{ px}$) thay thế cho ký tự sao văn bản trên toàn bộ các giao diện: Trận đấu (Battle Databox), Đội hình (Party Screen), và Kho lưu trữ PC (Storage Screen).
+- **Chi tiết đã thực hiện:**
+  1. **Đăng Ký & Đóng Gói Asset ([asset-registry.ts](file:///e:/Pokemon/apps/web/src/assets/asset-registry.ts), [vite.config.ts](file:///e:/Pokemon/apps/web/vite.config.ts)):**
+     - Đăng ký `pokemon_shiny_icon` trỏ về `/Graphics/Pokemon/shiny.png` trong `POKEMON_ASSETS.shinyIcon`.
+     - Thêm `Graphics/Pokemon/shiny.png` vào danh sách emit asset của plugin Rollup build trong `vite.config.ts`.
+  2. **Giao Diện Trận Đấu ([battle-text-overlay.ts](file:///e:/Pokemon/apps/web/src/battle/battle-text-overlay.ts), [battle-renderer.ts](file:///e:/Pokemon/apps/web/src/battle/battle-renderer.ts), [battle-assets.ts](file:///e:/Pokemon/apps/web/src/battle/battle-assets.ts)):**
+     - Đặt thẻ ảnh `bho-enemy-shiny` và `bho-player-shiny` trong Databox HTML overlay của cả địch và người chơi, tự động hiển thị biểu tượng `shiny.png` khi đấu sĩ là dạng Shiny.
+     - Tải và vẽ `shinyIcon` trên cả Canvas databox renderer cạnh cấp độ Pokémon.
+  3. **Giao Diện Đội Hình ([party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts)):**
+     - Thay thế ký hiệu sao text trong `.ps-name-row` bằng ảnh `<img src="${POKEMON_ASSETS.shinyIcon}" class="ps-shiny-icon" />`.
+     - Cập nhật modal xem chi tiết tóm tắt (#partySummaryModal) hiển thị ảnh biểu tượng `shiny.png` cạnh tên Pokémon.
+  4. **Giao Diện Kho Lưu Trữ PC ([storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts)):**
+     - Ô slot đội hình PC: Hiển thị `party-slot-shiny-icon` cạnh tên Pokémon.
+     - Ô lưới kho Box PC: Đặt huy hiệu góc nhỏ `storage-grid-shiny-icon` tại góc trên của ô slot chứa Pokémon Shiny.
+     - Bảng xem trước Selection Preview và modal chi tiết Summary Modal: Hiển thị icon `shiny.png` đồng bộ.
+  5. **Tạo Kiểu CSS Chuyên Nghiệp ([style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Cấu hình pixel-art sắc nét (`image-rendering: pixelated; crisp-edges;`), hiệu ứng đổ bóng mờ phát sáng nhẹ `drop-shadow(0 0 2px rgba(239, 68, 68, 0.8))`.
+  6. **Kiểm Thử & Xác Thực:**
+     - Toàn bộ pipeline typecheck (`npm run typecheck:web`) và bộ test Vitest (14 files, 120 tests) đều PASS 100%.
+
+---
 
 ### 0.46. Bổ Sung Bộ Chọn Dạng Thường / Shiny Vào Bảng Debug & Đồng Bộ UI:
 

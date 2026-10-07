@@ -922,6 +922,12 @@ export class BattleRenderer {
     // Level
     this.drawTextWithOutline(ctx, `Lv.${enemy.level}`, 142, 31, '#ffffff');
 
+    // Shiny Icon
+    if (enemy.isShiny && isLoaded(this.assets.shinyIcon)) {
+      const lvTextW = ctx.measureText(`Lv.${enemy.level}`).width;
+      ctx.drawImage(this.assets.shinyIcon, 142 + lvTextW + 4, 18, 14, 14);
+    }
+
     // Type Badges (Horizontal in the black tab under HP bar, enlarged by 20%)
     const typeScale = 0.6;
     const typeIconW = 24 * typeScale;
@@ -1006,6 +1012,12 @@ export class BattleRenderer {
 
     // Level
     this.drawTextWithOutline(ctx, `Lv.${player.level}`, dx + 192, dy + 31, '#ffffff', '#000000', 1);
+
+    // Shiny Icon
+    if (player.isShiny && isLoaded(this.assets.shinyIcon)) {
+      const lvTextW = ctx.measureText(`Lv.${player.level}`).width;
+      ctx.drawImage(this.assets.shinyIcon, dx + 192 + lvTextW + 4, dy + 18, 14, 14);
+    }
 
     // HP Bar
     this.drawHpBar(ctx, dx + 136, dy + 40, 96, 6, state.playerHpPct, state.ghostPlayerHpPct);

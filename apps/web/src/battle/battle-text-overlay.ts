@@ -15,6 +15,7 @@ export class BattleTextOverlay {
   private enemyNameEl: HTMLSpanElement;
   private enemyGenderEl: HTMLSpanElement;
   private enemyLevelEl: HTMLSpanElement;
+  private enemyShinyEl: HTMLImageElement;
 
   // Player databox
   private playerBox: HTMLDivElement;
@@ -22,6 +23,7 @@ export class BattleTextOverlay {
   private playerGenderEl: HTMLSpanElement;
   private playerLevelEl: HTMLSpanElement;
   private playerHpEl: HTMLSpanElement;
+  private playerShinyEl: HTMLImageElement;
 
   // Bottom panel modes
   private messageModeEl: HTMLDivElement;
@@ -62,9 +64,16 @@ export class BattleTextOverlay {
     this.enemyGenderEl.className = 'bho-enemy-gender bho-text-shadow';
     this.enemyLevelEl = document.createElement('span');
     this.enemyLevelEl.className = 'bho-enemy-level bho-text-shadow';
+    this.enemyShinyEl = document.createElement('img');
+    this.enemyShinyEl.className = 'bho-enemy-shiny';
+    this.enemyShinyEl.src = '/Graphics/Pokemon/shiny.png';
+    this.enemyShinyEl.alt = 'Shiny';
+    this.enemyShinyEl.title = 'Shiny Pokémon';
+    this.enemyShinyEl.style.display = 'none';
     this.enemyBox.appendChild(this.enemyNameEl);
     this.enemyBox.appendChild(this.enemyGenderEl);
     this.enemyBox.appendChild(this.enemyLevelEl);
+    this.enemyBox.appendChild(this.enemyShinyEl);
     this.root.appendChild(this.enemyBox);
 
     // 2. Player Databox
@@ -78,10 +87,17 @@ export class BattleTextOverlay {
     this.playerLevelEl.className = 'bho-player-level bho-text-shadow';
     this.playerHpEl = document.createElement('span');
     this.playerHpEl.className = 'bho-player-hp bho-text-shadow';
+    this.playerShinyEl = document.createElement('img');
+    this.playerShinyEl.className = 'bho-player-shiny';
+    this.playerShinyEl.src = '/Graphics/Pokemon/shiny.png';
+    this.playerShinyEl.alt = 'Shiny';
+    this.playerShinyEl.title = 'Shiny Pokémon';
+    this.playerShinyEl.style.display = 'none';
     this.playerBox.appendChild(this.playerNameEl);
     this.playerBox.appendChild(this.playerGenderEl);
     this.playerBox.appendChild(this.playerLevelEl);
     this.playerBox.appendChild(this.playerHpEl);
+    this.playerBox.appendChild(this.playerShinyEl);
     this.root.appendChild(this.playerBox);
 
     // 3. Bottom Panel Container
@@ -190,6 +206,7 @@ export class BattleTextOverlay {
     this.enemyGenderEl.textContent = eGenderSymbol;
     this.enemyGenderEl.style.color = enemy.gender === 'male' ? '#3b82f6' : '#ef4444';
     this.enemyLevelEl.textContent = `Lv.${enemy.level}`;
+    this.enemyShinyEl.style.display = enemy.isShiny ? 'inline-block' : 'none';
 
     // 2. Player Databox
     this.playerNameEl.textContent = player.name;
@@ -197,6 +214,7 @@ export class BattleTextOverlay {
     this.playerGenderEl.textContent = pGenderSymbol;
     this.playerGenderEl.style.color = player.gender === 'male' ? '#3b82f6' : '#ef4444';
     this.playerLevelEl.textContent = `Lv.${player.level}`;
+    this.playerShinyEl.style.display = player.isShiny ? 'inline-block' : 'none';
 
     const displayHp = Math.round(state.playerHpPct * player.maxHp);
     if (this.lastPlayerHp !== displayHp || this.lastPlayerMaxHp !== player.maxHp) {

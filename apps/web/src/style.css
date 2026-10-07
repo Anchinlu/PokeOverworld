@@ -1906,6 +1906,18 @@ body {
   white-space: nowrap;
 }
 
+.bho-enemy-shiny {
+  position: absolute;
+  left: 73%;
+  top: 18%;
+  width: clamp(14px, 2.5cqw, 20px);
+  height: clamp(14px, 2.5cqw, 20px);
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(0 0 2px rgba(239, 68, 68, 0.8));
+}
+
 /* --- 2. Player Databox --- */
 .bho-player-box {
   position: absolute;
@@ -1940,6 +1952,18 @@ body {
   font-size: clamp(14px, 2.8cqw, 25px);
   line-height: 1;
   white-space: nowrap;
+}
+
+.bho-player-shiny {
+  position: absolute;
+  left: 89%;
+  top: calc(18% + 8px);
+  width: clamp(14px, 2.5cqw, 20px);
+  height: clamp(14px, 2.5cqw, 20px);
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(0 0 2px rgba(239, 68, 68, 0.8));
 }
 
 .bho-player-hp {
@@ -2861,6 +2885,19 @@ body {
   top: 21px;
   pointer-events: none;
   z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ps-shiny-icon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 2px rgba(239, 68, 68, 0.8));
 }
 
 .ps-pk-name {
@@ -3160,6 +3197,19 @@ body {
   font-family: 'VT323', monospace;
   font-size: 22px;
   color: #38bdf8;
+  display: flex;
+  align-items: center;
+}
+
+.summary-shiny-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  vertical-align: middle;
+  margin-left: 6px;
+  filter: drop-shadow(0 0 2px rgba(239, 68, 68, 0.8));
 }
 
 .summary-btn-close {
@@ -4069,6 +4119,19 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.party-slot-shiny-icon {
+  width: 12px;
+  height: 12px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 2px rgba(239, 68, 68, 0.8));
 }
 
 .party-slot-level {
@@ -4248,6 +4311,20 @@ body {
   animation: pulse-held 1s infinite alternate;
 }
 
+.storage-grid-shiny-icon {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  pointer-events: none;
+  z-index: 2;
+  filter: drop-shadow(0 0 2px rgba(239, 68, 68, 0.8));
+}
+
 .storage-grid-icon-wrap {
   width: 44px;
   height: 44px;
@@ -4414,6 +4491,19 @@ body {
   color: #38bdf8;
   letter-spacing: 0.5px;
   text-shadow: 1px 1px 0 #000;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.preview-shiny-icon {
+  width: 15px;
+  height: 15px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  vertical-align: middle;
+  filter: drop-shadow(0 0 2px rgba(239, 68, 68, 0.8));
 }
 
 .preview-badge {
@@ -4856,6 +4946,9 @@ body {
   text-shadow:
     1px 1px 0 #000,
     -1px -1px 0 #000;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .summary-gender {

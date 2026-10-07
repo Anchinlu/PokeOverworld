@@ -37,6 +37,7 @@ export type ManifestAssetKey =
   | 'menu_icon_trainer'
   | 'menu_icon_options'
   | 'menu_icon_quit'
+  | 'pokemon_shiny_icon'
   | (string & {});
 
 /**
@@ -139,6 +140,9 @@ export const POKEMON_ASSETS = {
     const folder = isShiny ? 'Icons shiny' : 'Icons';
     const key = isShiny ? `pokemon_icon_shiny_${speciesKey}` : `pokemon_icon_${speciesKey}`;
     return resolveAsset(key, `/Graphics/Pokemon/${folder}/${speciesKey}.png`);
+  },
+  get shinyIcon(): string {
+    return resolveAsset('pokemon_shiny_icon', '/Graphics/Pokemon/shiny.png');
   },
 } as const;
 

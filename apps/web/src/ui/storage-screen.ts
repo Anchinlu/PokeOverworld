@@ -805,7 +805,7 @@ export class StorageScreen {
           </div>
           <div class="party-slot-details">
             <div class="party-slot-top-row">
-              <span class="party-slot-name">${pk.nickname || pk.name}</span>
+              <span class="party-slot-name">${pk.nickname || pk.name}${pk.isShiny ? ` <img class="party-slot-shiny-icon" src="${POKEMON_ASSETS.shinyIcon}" alt="Shiny" title="Shiny Pokémon" />` : ''}</span>
               <span class="party-slot-level">Lv.${pk.level}</span>
             </div>
             <div class="party-slot-hp-row">
@@ -881,6 +881,7 @@ export class StorageScreen {
           <div class="storage-grid-icon-wrap">
             <img class="storage-grid-icon" src="${iconUrl}" alt="${pk.name}" draggable="false" />
           </div>
+          ${pk.isShiny ? `<img class="storage-grid-shiny-icon" src="${POKEMON_ASSETS.shinyIcon}" alt="Shiny" title="Shiny Pokémon" draggable="false" />` : ''}
           <span class="storage-grid-badge">Lv.${pk.level}</span>
         `;
 
@@ -1068,7 +1069,7 @@ export class StorageScreen {
       .join('');
 
     infoEl.innerHTML = `
-      <span class="preview-name">${pokemon.nickname || pokemon.name}${pokemon.isShiny ? ' <span style="color: #facc15; font-size: 13px;" title="Shiny Pokémon">★</span>' : ''}</span>
+      <span class="preview-name">${pokemon.nickname || pokemon.name}${pokemon.isShiny ? ` <img class="preview-shiny-icon" src="${POKEMON_ASSETS.shinyIcon}" alt="Shiny" title="Shiny Pokémon" />` : ''}</span>
       <span class="preview-badge">Lv.${pokemon.level}</span>
       <div class="preview-types-wrap">${typesHtml}</div>
       <span class="preview-badge hp">HP: ${hpStr}</span>
@@ -1192,7 +1193,7 @@ export class StorageScreen {
     const expBar = modal.querySelector('#storageSummaryExpBar') as HTMLElement;
 
     if (nameEl)
-      nameEl.textContent = `${pokemon.nickname || pokemon.name} Lv.${pokemon.level}${pokemon.isShiny ? ' ★' : ''}`;
+      nameEl.innerHTML = `${pokemon.nickname || pokemon.name} Lv.${pokemon.level}${pokemon.isShiny ? ` <img class="summary-shiny-icon" src="${POKEMON_ASSETS.shinyIcon}" alt="Shiny" title="Shiny Pokémon" />` : ''}`;
     if (genderEl) {
       genderEl.textContent =
         pokemon.gender === 'male' ? '♂' : pokemon.gender === 'female' ? '♀' : '';

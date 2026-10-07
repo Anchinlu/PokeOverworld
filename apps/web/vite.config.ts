@@ -163,6 +163,7 @@ function emitLegacyGraphicsPlugin(): Plugin {
       }
 
       files.add('Graphics/Pokemon/Icons type/types.png');
+      files.add('Graphics/Pokemon/shiny.png');
 
       for (const relativePath of files) {
         const absolutePath = path.resolve(projectRoot, relativePath);
