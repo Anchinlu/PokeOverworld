@@ -5802,8 +5802,8 @@ body {
    ========================================================================== */
 .party-map-hud {
   position: fixed;
-  top: 68px;
-  right: 12px;
+  top: 168px;
+  right: -8px;
   z-index: 90;
   display: flex;
   align-items: flex-start;
@@ -5813,7 +5813,12 @@ body {
 }
 
 .party-map-hud.collapsed {
-  transform: translateX(calc(100% - 24px));
+  transform: translateX(calc(100% - 46px));
+}
+
+.party-map-hud.collapsed .party-map-hud-list {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .party-map-hud-toggle {
@@ -5850,6 +5855,7 @@ body {
   flex-direction: column;
   gap: 5px;
   pointer-events: auto;
+  transition: opacity 0.25s ease;
 }
 
 .party-hud-card {

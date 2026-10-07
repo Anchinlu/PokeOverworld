@@ -19,14 +19,14 @@
        - Hiển thị chỉ số máu số (`${pk.currentHp}/${pk.maxHp}`) hoặc nhãn `FNT` màu đỏ nếu Pokémon ngất xỉu.
        - Rãnh kinh nghiệm EXP: Căn chỉnh ở rãnh đáy hiển thị % EXP lên cấp tiếp theo.
        - Huy hiệu vương miện 👑 nhận diện Pokémon dẫn đầu (Leader/Slot 0).
-     - Hỗ trợ nút toggle thu gọn / mở rộng (`party-map-hud-toggle`) trượt mượt mà sang phải khi người chơi cần toàn cảnh bản đồ.
+     - Hỗ trợ nút toggle thu gọn / mở rộng (`party-map-hud-toggle`) trượt mượt mà sang phải khi người chơi cần toàn cảnh bản đồ; khi thu gọn, nút toggle được đẩy ra ngoài thêm 30px (`calc(100% - 46px)`) và danh sách thẻ tự động mờ dần không che khuất nút.
      - Bấm vào bất kỳ thẻ Pokémon nào để mở nhanh màn hình Quản lý đội hình (`togglePartyScreen()`).
      - Tự động đồng bộ hóa thời gian thực với `partyService.subscribe(...)` mỗi khi có thay đổi (hồi máu, đổi chỗ, bắt mới, v.v.).
   3. **Tạo Mẫu Giao Diện & Khởi Tạo Bootstrap ([bootstrap.ts](file:///e:/Pokemon/apps/web/src/bootstrap.ts), [ui/index.ts](file:///e:/Pokemon/apps/web/src/ui/index.ts)):**
      - Export `PartyMapHud` và hàm `initPartyMapHud()` trong `apps/web/src/ui/index.ts`.
      - Khởi tạo `initPartyMapHud()` tự động ngay khi boot ứng dụng trong `apps/web/src/bootstrap.ts`.
   4. **Kiểu Dáng Pixel-Art CSS Hoàn Chỉnh ([style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
-     - Định vị `right: 12px; top: 68px; z-index: 90;` bên dưới thanh Menu bar góc trên bên phải.
+     - Định vị `right: -8px; top: 168px; z-index: 90;` (dịch sang phải 20px giúp ôm khít cạnh màn hình không bị hở, và hạ thấp xuống 168px để cách xa thanh Menu Bar trên cùng tạo khoảng không gian thoáng đãng).
      - Hiệu ứng tương tác hover trượt nhẹ sang trái và viền cyan neon tinh tế.
   5. **Kiểm Thử Tự Động & Đảm Bảo Tính Toàn Vẹn ([party-map-hud.test.ts](file:///e:/Pokemon/apps/web/test/party-map-hud.test.ts)):**
      - Bổ sung bộ kiểm thử đơn vị cho `PartyMapHud`: kiểm tra khởi tạo 6 slot, render dữ liệu máu/cấp độ/tên, kích hoạt biểu tượng Shiny và cụm 5 sao, tính năng thu gọn/mở rộng, và phản hồi sự kiện từ partyService.
