@@ -478,7 +478,7 @@ export class PartyScreen {
       }
 
       const slotEl = document.createElement('div');
-      slotEl.className = `party-slot ${isLeader ? 'leader' : 'sub'} ${isSelected ? 'selected' : ''} ${isSwapping ? 'swapping' : ''} ${isFainted ? 'fainted' : ''} ${!pk ? 'empty' : ''}`;
+      slotEl.className = `party-slot ${isLeader ? 'leader' : 'sub'} ${isSelected ? 'selected' : ''} ${isSwapping ? 'swapping' : ''} ${isFainted ? 'fainted' : ''} ${!pk ? 'empty' : ''} ${pk?.isShiny ? 'is-shiny' : ''}`;
       slotEl.dataset.slotIndex = String(slot);
       slotEl.style.backgroundImage = `url('${panelBg}')`;
 

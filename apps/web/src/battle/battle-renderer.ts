@@ -883,6 +883,57 @@ export class BattleRenderer {
     }
   }
 
+  /**
+   * Draws the shiny icon with vibrant bling-bling pulsation, golden-ruby halo glow,
+   * subtle tilt oscillation, and periodic white sparkle cross glints.
+   */
+  private drawBlingShinyIcon(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    size = 14
+  ): void {
+    if (!isLoaded(this.assets.shinyIcon)) return;
+    const now = performance.now();
+    // Breathing pulse scale 0.95 -> 1.15
+    const pulse = 1.0 + 0.12 * Math.sin(now / 180);
+    // Dynamic golden-amber halo glow
+    const glowBlur = 3 + 2.5 * Math.sin(now / 220);
+    // Gentle tilt oscillation
+    const rot = 0.08 * Math.sin(now / 350);
+
+    ctx.save();
+    ctx.translate(x + size / 2, y + size / 2);
+    ctx.scale(pulse, pulse);
+    ctx.rotate(rot);
+
+    ctx.shadowColor = 'rgba(251, 191, 36, 0.95)';
+    ctx.shadowBlur = glowBlur;
+    ctx.drawImage(this.assets.shinyIcon, -size / 2, -size / 2, size, size);
+
+    // Periodic star sparkle glint at top-right corner
+    const glintPhase = (now % 1500) / 1500;
+    if (glintPhase > 0.7 && glintPhase < 0.95) {
+      const glintScale = Math.sin(((glintPhase - 0.7) / 0.25) * Math.PI);
+      const glintX = size / 2 - 2;
+      const glintY = -size / 2 + 2;
+      const rayLen = 4 * glintScale;
+
+      ctx.shadowColor = '#ffffff';
+      ctx.shadowBlur = 4;
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      // 4-point cross glint
+      ctx.moveTo(glintX, glintY - rayLen);
+      ctx.lineTo(glintX, glintY + rayLen);
+      ctx.moveTo(glintX - rayLen, glintY);
+      ctx.lineTo(glintX + rayLen, glintY);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
   // ---- Enemy Databox ----
 
   renderEnemyDatabox(
@@ -930,10 +981,10 @@ export class BattleRenderer {
     // Level
     this.drawTextWithOutline(ctx, `Lv.${enemy.level}`, 142, 31, '#ffffff');
 
-    // Shiny Icon
-    if (enemy.isShiny && isLoaded(this.assets.shinyIcon)) {
+    // Shiny Icon (Bling-Bling animated)
+    if (enemy.isShiny) {
       const lvTextW = ctx.measureText(`Lv.${enemy.level}`).width;
-      ctx.drawImage(this.assets.shinyIcon, 142 + lvTextW + 4, 18, 14, 14);
+      this.drawBlingShinyIcon(ctx, 142 + lvTextW + 4, 18, 14);
     }
 
     // Type Badges (Horizontal in the black tab under HP bar, enlarged by 20%)
@@ -1021,10 +1072,10 @@ export class BattleRenderer {
     // Level
     this.drawTextWithOutline(ctx, `Lv.${player.level}`, dx + 192, dy + 31, '#ffffff', '#000000', 1);
 
-    // Shiny Icon
-    if (player.isShiny && isLoaded(this.assets.shinyIcon)) {
+    // Shiny Icon (Bling-Bling animated)
+    if (player.isShiny) {
       const lvTextW = ctx.measureText(`Lv.${player.level}`).width;
-      ctx.drawImage(this.assets.shinyIcon, dx + 192 + lvTextW + 4, dy + 18, 14, 14);
+      this.drawBlingShinyIcon(ctx, dx + 192 + lvTextW + 4, dy + 18, 14);
     }
 
     // HP Bar

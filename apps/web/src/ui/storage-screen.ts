@@ -794,6 +794,7 @@ export class StorageScreen {
       if (isHeld) slotEl.classList.add('held');
 
       if (pk) {
+        if (pk.isShiny) slotEl.classList.add('is-shiny');
         const iconUrl = POKEMON_ASSETS.getIconSprite(pk.speciesKey, pk.isShiny);
         const hpPct = Math.max(0, Math.min(100, Math.round((pk.currentHp / pk.maxHp) * 100)));
         const hpColor = hpPct > 50 ? '#22c55e' : hpPct > 20 ? '#eab308' : '#ef4444';
@@ -876,6 +877,7 @@ export class StorageScreen {
       if (isHeld) slotEl.classList.add('held');
 
       if (pk) {
+        if (pk.isShiny) slotEl.classList.add('is-shiny');
         const iconUrl = POKEMON_ASSETS.getIconSprite(pk.speciesKey, pk.isShiny);
         slotEl.innerHTML = `
           <div class="storage-grid-icon-wrap">
