@@ -10,6 +10,7 @@ import {
   createDefaultParty,
 } from './party-state';
 import type { BattleMove, BattlerPokemon } from '../../battle/types';
+import { pokemonCatalog } from '../../data';
 
 const STORAGE_KEY = 'pokemon_player_party_v1';
 
@@ -231,13 +232,12 @@ export class PartyService {
     battler: BattlerPokemon,
     expGained = 0
   ): { leveledUp: boolean; newLevel: number } {
-    // Find the matching pokemon by UID or fallback to species and level
+    // Find the matching pokemon strictly by UID or fallback to species and level without arbitrary pokemon[0] overwrite
     const partyMember =
+      (battler.uid ? this.state.pokemon.find((p) => p.uid === battler.uid) : null) ??
       this.state.pokemon.find(
-        (p) =>
-          (battler.uid && p.uid === battler.uid) ||
-          (p.speciesKey === battler.speciesKey && p.level === battler.level)
-      ) ?? this.state.pokemon[0];
+        (p) => p.speciesKey === battler.speciesKey && p.level === battler.level
+      );
 
     if (!partyMember) {
       return { leveledUp: false, newLevel: 0 };
@@ -264,10 +264,37 @@ export class PartyService {
         partyMember.maxExp = partyMember.level * partyMember.level * 10;
         leveledUp = true;
 
-        // Recalculate stats on level up
-        const baseHp = partyMember.stats.hp;
-        partyMember.maxHp += Math.floor((2 * baseHp) / 100) + 1;
-        partyMember.currentHp = Math.min(partyMember.maxHp, partyMember.currentHp + 2);
+        // Recalculate ALL stats on level up based on species base stats
+        const speciesData = pokemonCatalog.getBySpeciesKey(partyMember.speciesKey);
+        const baseStats = speciesData?.stats ?? {
+          hp: 45,
+          attack: 49,
+          defense: 49,
+          spAtk: 65,
+          spDef: 65,
+          speed: 45,
+          total: 318,
+        };
+
+        const oldMaxHp = partyMember.maxHp;
+        const newMaxHp =
+          Math.floor(((2 * baseStats.hp + 31) * partyMember.level) / 100) + partyMember.level + 10;
+        partyMember.maxHp = newMaxHp;
+        partyMember.stats.hp = newMaxHp;
+        partyMember.stats.attack =
+          Math.floor(((2 * baseStats.attack + 31) * partyMember.level) / 100) + 5;
+        partyMember.stats.defense =
+          Math.floor(((2 * baseStats.defense + 31) * partyMember.level) / 100) + 5;
+        partyMember.stats.spAtk =
+          Math.floor(((2 * baseStats.spAtk + 31) * partyMember.level) / 100) + 5;
+        partyMember.stats.spDef =
+          Math.floor(((2 * baseStats.spDef + 31) * partyMember.level) / 100) + 5;
+        partyMember.stats.speed =
+          Math.floor(((2 * baseStats.speed + 31) * partyMember.level) / 100) + 5;
+
+        // Heal the extra HP gained from leveling up
+        const hpDiff = Math.max(1, newMaxHp - oldMaxHp);
+        partyMember.currentHp = Math.min(newMaxHp, partyMember.currentHp + hpDiff);
       }
     }
 

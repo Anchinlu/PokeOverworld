@@ -10,6 +10,8 @@ export interface TurnResult {
   isCritical: boolean;
   isMiss?: boolean;
   defenderFainted: boolean;
+  attackerFainted?: boolean;
+  hitsCount?: number;
   message: string;
   statChangeMessage?: string;
   statusEffectMessage?: string;
@@ -27,6 +29,35 @@ export interface EndTurnResult {
   defenderFainted: boolean;
   message: string;
 }
+
+export const NEVER_MISS_MOVE_IDS = new Set([
+  'swift',
+  'aerial_ace',
+  'faint_attack',
+  'shadow_punch',
+  'shock_wave',
+  'magical_leaf',
+  'aura_sphere',
+  'magnet_bomb',
+  'clear_smog',
+  'disarming_voice',
+  'vital_throw',
+  'struggle',
+]);
+
+export const STRUGGLE_MOVE: BattleMove = {
+  id: 'struggle',
+  name: 'Struggle (Vùng Vẫy)',
+  nameVi: 'Vùng Vẫy',
+  nameEn: 'Struggle',
+  type: 'Normal',
+  category: 'physical',
+  power: 50,
+  accuracy: 0,
+  pp: 1,
+  maxPp: 1,
+  description: 'Vùng vẫy khi hết chiêu thức, gây sát thương và chịu phản đòn 25% máu tối đa.',
+};
 
 /** Official Pokémon stat stage multipliers (-6 to +6) */
 export function getStatMultiplier(stage: number): number {
@@ -137,6 +168,8 @@ export class BattleEngine {
     };
   }
 
+  public fleeAttempts: number = 0;
+
   public executeAttack(
     attacker: BattlerPokemon,
     defender: BattlerPokemon,
@@ -145,7 +178,7 @@ export class BattleEngine {
     this.ensureBattlerState(attacker);
     this.ensureBattlerState(defender);
 
-    if (move.pp <= 0) {
+    if (move.id !== 'struggle' && move.pp <= 0) {
       return {
         attackerName: attacker.name,
         moveName: move.name,
@@ -156,9 +189,8 @@ export class BattleEngine {
         message: `${attacker.name} tried to use ${getMoveDisplayName(move)}, but it has no PP left!`,
       };
     }
-    move.pp--;
 
-    // 1. Status hindrance check (Sleep, Freeze, Paralysis)
+    // 1. Status hindrance check (Sleep, Freeze, Paralysis) - DO NOT deduct PP if unable to move
     let statusPrefix = '';
     if (attacker.status === 'sleep') {
       if ((attacker.sleepTurns ?? 0) > 0) {
@@ -209,11 +241,32 @@ export class BattleEngine {
       }
     }
 
+    // Deduct PP only when attacker is able to act (Struggle does not deduct PP)
+    if (move.id !== 'struggle') {
+      move.pp = Math.max(0, move.pp - 1);
+    }
+
     // 2. Accuracy / Evasion Check
+    // Self-targeted status moves and never-miss moves ignore accuracy/evasion check
+    const isSelfTargetMove =
+      move.category === 'status' &&
+      (move.id === 'rest' ||
+        (move.healPercent !== undefined && move.healPercent > 0) ||
+        (move.statChanges !== undefined &&
+          move.statChanges.length > 0 &&
+          move.statChanges.every((sc) => sc.target === 'self')) ||
+        (move.statusEffect !== undefined && move.statusEffect.target === 'self'));
+
+    const isNeverMiss =
+      isSelfTargetMove ||
+      NEVER_MISS_MOVE_IDS.has(move.id) ||
+      move.accuracy <= 0 ||
+      move.id === 'struggle';
+
     const accStage = attacker.statStages!.accuracy;
     const evaStage = defender.statStages!.evasion;
     const requiresAccCheck =
-      move.accuracy > 0 && (move.accuracy < 100 || accStage !== 0 || evaStage !== 0);
+      !isNeverMiss && (move.accuracy < 100 || accStage !== 0 || evaStage !== 0);
 
     if (requiresAccCheck) {
       const accMult = getAccuracyMultiplier(accStage, evaStage);
@@ -221,19 +274,35 @@ export class BattleEngine {
       if (this.rng.next() * 100 > effectiveAcc) {
         return {
           attackerName: attacker.name,
-          moveName: move.name,
+          moveName: getMoveDisplayName(move),
           damage: 0,
           typeEffectiveness: 1.0,
           isCritical: false,
           isMiss: true,
           defenderFainted: false,
-          message: `${attacker.name} used ${move.name}! But it missed!`,
+          message: `${attacker.name} used ${getMoveDisplayName(move)}! But it missed!`,
         };
       }
     }
 
     // 3. Status move handling
     if (move.category === 'status') {
+      // Type immunity check for opponent-targeted status moves (e.g. Thunder Wave vs Ground)
+      if (!isSelfTargetMove) {
+        const typeEff = getTypeEffectiveness(move.type, defender.types);
+        if (typeEff === 0) {
+          return {
+            attackerName: attacker.name,
+            moveName: getMoveDisplayName(move),
+            damage: 0,
+            typeEffectiveness: 0,
+            isCritical: false,
+            defenderFainted: false,
+            message: `${statusPrefix}${attacker.name} used ${getMoveDisplayName(move)}! It had no effect on ${defender.name}!`,
+          };
+        }
+      }
+
       let extraMsg = '';
 
       // Healing & Rest logic
@@ -308,76 +377,235 @@ export class BattleEngine {
     }
 
     // 4. Damaging attack handling
-    const typeEff = getTypeEffectiveness(move.type, defender.types);
+    const isStruggle = move.id === 'struggle';
+    const typeEff = isStruggle ? 1.0 : getTypeEffectiveness(move.type, defender.types);
+
     if (typeEff === 0) {
       return {
         attackerName: attacker.name,
-        moveName: move.name,
+        moveName: getMoveDisplayName(move),
         damage: 0,
         typeEffectiveness: 0,
         isCritical: false,
         defenderFainted: false,
-        message: `${statusPrefix}${attacker.name} used ${move.name}! It had no effect on ${defender.name}!`,
+        message: `${statusPrefix}${attacker.name} used ${getMoveDisplayName(move)}! It had no effect on ${defender.name}!`,
       };
     }
 
-    const isSpecial = move.category === 'special';
-    const rawAtk = isSpecial ? attacker.stats.spAtk : attacker.stats.attack;
-    const rawDef = isSpecial ? defender.stats.spDef : defender.stats.defense;
+    let damage = 0;
+    let isCrit = false;
+    let effText = '';
+    let secMsg = '';
+    let hitsCount = 1;
 
-    const atkStage = isSpecial ? attacker.statStages!.spAtk : attacker.statStages!.attack;
-    const defStage = isSpecial ? defender.statStages!.spDef : defender.statStages!.defense;
+    // A. Special fixed-damage or unique calculation moves
+    const moveId = move.id.toLowerCase();
+    if (moveId === 'seismic_toss' || moveId === 'night_shade') {
+      damage = Math.max(1, attacker.level);
+    } else if (moveId === 'dragon_rage') {
+      damage = 40;
+    } else if (moveId === 'sonic_boom') {
+      damage = 20;
+    } else if (moveId === 'super_fang' || moveId === 'natures_madness') {
+      damage = Math.max(1, Math.floor(defender.currentHp / 2));
+    } else if (moveId === 'endeavor') {
+      if (attacker.currentHp < defender.currentHp) {
+        damage = defender.currentHp - attacker.currentHp;
+      } else {
+        return {
+          attackerName: attacker.name,
+          moveName: getMoveDisplayName(move),
+          damage: 0,
+          typeEffectiveness: 1.0,
+          isCritical: false,
+          defenderFainted: false,
+          message: `${statusPrefix}${attacker.name} used ${getMoveDisplayName(move)}! But it failed!`,
+        };
+      }
+    } else if (moveId === 'psywave') {
+      const factor = 0.5 + this.rng.next() * 1.0;
+      damage = Math.max(1, Math.floor(attacker.level * factor));
+    } else if (
+      moveId === 'fissure' ||
+      moveId === 'guillotine' ||
+      moveId === 'horn_drill' ||
+      moveId === 'sheer_cold'
+    ) {
+      if (attacker.level < defender.level) {
+        return {
+          attackerName: attacker.name,
+          moveName: getMoveDisplayName(move),
+          damage: 0,
+          typeEffectiveness: 1.0,
+          isCritical: false,
+          isMiss: true,
+          defenderFainted: false,
+          message: `${statusPrefix}${attacker.name} used ${getMoveDisplayName(move)}! But it failed!`,
+        };
+      }
+      const ohkoAcc = 30 + (attacker.level - defender.level);
+      if (this.rng.next() * 100 > ohkoAcc) {
+        return {
+          attackerName: attacker.name,
+          moveName: getMoveDisplayName(move),
+          damage: 0,
+          typeEffectiveness: 1.0,
+          isCritical: false,
+          isMiss: true,
+          defenderFainted: false,
+          message: `${statusPrefix}${attacker.name} used ${getMoveDisplayName(move)}! But it missed!`,
+        };
+      }
+      damage = defender.currentHp;
+      secMsg += " It's a one-hit KO!";
+    } else {
+      // B. Standard damage calculation with Gen 7 official floor rule
+      let effectivePower = move.power;
 
-    let atk = rawAtk * getStatMultiplier(atkStage);
-    if (!isSpecial && attacker.status === 'burn') {
-      atk *= 0.5; // Burn halves physical attack
+      // Dynamic power moves
+      if (moveId === 'flail' || moveId === 'reversal') {
+        const hpRatio = attacker.currentHp / Math.max(1, attacker.maxHp);
+        if (hpRatio < 0.0417) effectivePower = 200;
+        else if (hpRatio < 0.1042) effectivePower = 150;
+        else if (hpRatio < 0.2083) effectivePower = 100;
+        else if (hpRatio < 0.3542) effectivePower = 80;
+        else if (hpRatio < 0.6875) effectivePower = 40;
+        else effectivePower = 20;
+      }
+
+      const isSpecial = move.category === 'special';
+      const rawAtk = isSpecial ? attacker.stats.spAtk : attacker.stats.attack;
+      const rawDef = isSpecial ? defender.stats.spDef : defender.stats.defense;
+
+      const atkStage = isSpecial ? attacker.statStages!.spAtk : attacker.statStages!.attack;
+      const defStage = isSpecial ? defender.statStages!.spDef : defender.statStages!.defense;
+
+      let atk = rawAtk * getStatMultiplier(atkStage);
+      if (!isSpecial && attacker.status === 'burn') {
+        atk *= 0.5; // Burn halves physical attack
+      }
+      const def = Math.max(1, rawDef * getStatMultiplier(defStage));
+
+      const stab = !isStruggle && attacker.types.includes(move.type) ? 1.5 : 1.0;
+      // Gen 7 official critical threshold (Stage 0: 1/24 ~4.17%, Stage 1: 1/8 12.5%)
+      const critThreshold = move.highCrit ? 1 / 8 : 1 / 24;
+      isCrit = this.rng.next() < critThreshold;
+      const critMult = isCrit ? 1.5 : 1.0;
+      const randomFactor = 0.85 + this.rng.next() * 0.15;
+
+      // Gen 7 official floor: Math.floor(2 * L / 5) + 2
+      const levelFactor = Math.floor((2 * attacker.level) / 5) + 2;
+      const baseDmg = Math.floor((levelFactor * effectivePower * (atk / def)) / 50) + 2;
+      damage = Math.max(1, Math.floor(baseDmg * stab * typeEff * critMult * randomFactor));
+
+      // Multi-hit moves handling
+      const isMultiHit2to5 = [
+        'fury_swipes',
+        'double_slap',
+        'comet_punch',
+        'bullet_seed',
+        'pin_missile',
+        'rock_blast',
+        'tail_slap',
+        'water_shuriken',
+        'icicle_spear',
+        'arm_thrust',
+        'bone_rush',
+        'spike_cannon',
+        'barrage',
+      ].includes(moveId);
+      const isMultiHit2 = [
+        'double_kick',
+        'twineedle',
+        'bonemerang',
+        'dual_chop',
+        'gear_grind',
+      ].includes(moveId);
+
+      if (isMultiHit2to5 || isMultiHit2) {
+        let maxHits = 2;
+        if (isMultiHit2to5) {
+          const roll = this.rng.next();
+          if (roll < 0.35) maxHits = 2;
+          else if (roll < 0.7) maxHits = 3;
+          else if (roll < 0.85) maxHits = 4;
+          else maxHits = 5;
+        }
+
+        let totalDmg = damage;
+        let hits = 1;
+        let simDefenderHp = defender.currentHp - damage;
+
+        for (let i = 2; i <= maxHits; i++) {
+          if (simDefenderHp <= 0) break;
+          const hitRandom = 0.85 + this.rng.next() * 0.15;
+          const hitDmg = Math.max(1, Math.floor(baseDmg * stab * typeEff * critMult * hitRandom));
+          totalDmg += hitDmg;
+          simDefenderHp -= hitDmg;
+          hits++;
+        }
+        damage = totalDmg;
+        hitsCount = hits;
+        secMsg += ` Hit ${hits} time(s)!`;
+      }
+
+      if (typeEff > 1.5) effText = ' It was super effective!';
+      else if (typeEff < 0.8) effText = ' It was not very effective...';
+
+      if (isCrit) effText += ' A critical hit!';
     }
-    const def = Math.max(1, rawDef * getStatMultiplier(defStage));
 
-    const stab = attacker.types.includes(move.type) ? 1.5 : 1.0;
-    const critRate = move.highCrit ? 0.25 : 0.08;
-    const isCrit = this.rng.next() < critRate;
-    const critMult = isCrit ? 1.5 : 1.0;
-    const randomFactor = 0.85 + this.rng.next() * 0.15;
-
-    const baseDmg = Math.floor(
-      (((2 * attacker.level) / 5 + 2) * move.power * (atk / def)) / 50 + 2
-    );
-    const damage = Math.max(1, Math.floor(baseDmg * stab * typeEff * critMult * randomFactor));
-
+    // Apply damage and calculate actual damage dealt (capped at defender's current HP)
+    const prevDefenderHp = defender.currentHp;
     defender.currentHp = Math.max(0, defender.currentHp - damage);
+    const actualDamage = prevDefenderHp - defender.currentHp;
     const defenderFainted = defender.currentHp <= 0;
     if (defenderFainted) {
       defender.isFainted = true;
     }
 
-    let effText = '';
-    if (typeEff > 1.5) effText = ' It was super effective!';
-    else if (typeEff < 0.8) effText = ' It was not very effective...';
+    // Fire moves thaw frozen defender if damage is dealt
+    if (defender.status === 'freeze' && move.type === 'Fire' && actualDamage > 0) {
+      defender.status = 'none';
+      secMsg += ` ${defender.name} thawed out!`;
+    }
 
-    const critText = isCrit ? ' A critical hit!' : '';
+    let attackerFainted = false;
 
-    let secMsg = '';
-
-    // Drain effect (Absorb, Giga Drain, Leech Life, Drain Punch, etc.)
+    // Drain effect (capped to actual damage dealt)
     if (move.drainPercent && move.drainPercent > 0) {
-      const drained = Math.max(1, Math.floor(damage * move.drainPercent));
+      const drained = Math.max(1, Math.floor(actualDamage * move.drainPercent));
       attacker.currentHp = Math.min(attacker.maxHp, attacker.currentHp + drained);
       secMsg += ` ${defender.name} had its energy drained!`;
     }
 
-    // Recoil effect (Take Down, Double-Edge, Brave Bird, etc.)
-    if (move.recoilPercent && move.recoilPercent > 0) {
-      const recoil = Math.max(1, Math.floor(damage * move.recoilPercent));
+    // Recoil effect (capped to actual damage dealt, except Struggle which is 25% of max HP)
+    if (isStruggle) {
+      const recoil = Math.max(1, Math.floor(attacker.maxHp * 0.25));
       attacker.currentHp = Math.max(0, attacker.currentHp - recoil);
       secMsg += ` ${attacker.name} is hit with recoil!`;
       if (attacker.currentHp <= 0) {
         attacker.isFainted = true;
+        attackerFainted = true;
       }
+    } else if (move.recoilPercent && move.recoilPercent > 0) {
+      const recoil = Math.max(1, Math.floor(actualDamage * move.recoilPercent));
+      attacker.currentHp = Math.max(0, attacker.currentHp - recoil);
+      secMsg += ` ${attacker.name} is hit with recoil!`;
+      if (attacker.currentHp <= 0) {
+        attacker.isFainted = true;
+        attackerFainted = true;
+      }
+    } else if (moveId === 'explosion' || moveId === 'self_destruct') {
+      attacker.currentHp = 0;
+      attacker.isFainted = true;
+      attackerFainted = true;
+      secMsg += ` ${attacker.name} fainted!`;
     }
 
+    // Secondary effects on surviving defender
     if (!defenderFainted) {
-      // Secondary status effect on damaging moves
+      // Secondary status effect
       if (move.statusEffect) {
         const target = move.statusEffect.target === 'self' ? attacker : defender;
         const chance = Math.max(0, Math.min(1, move.statusEffect.chance));
@@ -390,7 +618,7 @@ export class BattleEngine {
         }
       }
 
-      // Secondary stat changes on damaging moves
+      // Secondary stat changes
       if (move.statChanges && move.statChanges.length > 0) {
         for (const sc of move.statChanges) {
           const chance = Math.max(0, Math.min(1, sc.chance ?? 1));
@@ -417,7 +645,9 @@ export class BattleEngine {
       typeEffectiveness: typeEff,
       isCritical: isCrit,
       defenderFainted,
-      message: `${statusPrefix}${attacker.name} used ${moveDisplayName}!${effText}${critText}${secMsg}`,
+      attackerFainted,
+      hitsCount,
+      message: `${statusPrefix}${attacker.name} used ${moveDisplayName}!${effText}${secMsg}`,
     };
   }
 
@@ -438,14 +668,22 @@ export class BattleEngine {
       getStatMultiplier(this.enemyPokemon.statStages?.speed ?? 0) *
       (this.enemyPokemon.status === 'paralysis' ? 0.5 : 1.0);
 
-    return pSpeed >= eSpeed ? 'player' : 'enemy';
+    if (pSpeed === eSpeed) {
+      // 50/50 random speed tie
+      return this.rng.next() < 0.5 ? 'player' : 'enemy';
+    }
+
+    return pSpeed > eSpeed ? 'player' : 'enemy';
   }
 
   public getEnemyAction(): BattleMove {
     const validMoves = this.enemyPokemon.moves.filter((m) => m.pp > 0);
-    const moves = validMoves.length > 0 ? validMoves : this.enemyPokemon.moves;
-    const idx = this.rng.nextInt(0, moves.length - 1);
-    return moves[idx];
+    if (validMoves.length > 0) {
+      const idx = this.rng.nextInt(0, validMoves.length - 1);
+      return validMoves[idx];
+    }
+    // All moves depleted: Struggle
+    return STRUGGLE_MOVE;
   }
 
   public tryCatchPokemon(
@@ -464,11 +702,26 @@ export class BattleEngine {
       };
     }
 
-    // Gen 3/4 catch rate calculation with ballMultiplier
+    // Status condition catch bonus: Sleep/Freeze x2.0, Paralysis/Poison/Burn x1.5
+    let statusBonus = 1.0;
+    if (this.enemyPokemon.status === 'sleep' || this.enemyPokemon.status === 'freeze') {
+      statusBonus = 2.0;
+    } else if (
+      this.enemyPokemon.status === 'paralysis' ||
+      this.enemyPokemon.status === 'poison' ||
+      this.enemyPokemon.status === 'toxic' ||
+      this.enemyPokemon.status === 'burn'
+    ) {
+      statusBonus = 1.5;
+    }
+
+    // Official catch rate formula with ballMultiplier & statusBonus
     const maxHp = this.enemyPokemon.maxHp;
     const curHp = Math.max(1, this.enemyPokemon.currentHp);
     const rate = this.enemyPokemon.catchRate;
-    const a = Math.floor(((3 * maxHp - 2 * curHp) * rate * ballMultiplier) / (3 * maxHp));
+    const a = Math.floor(
+      ((3 * maxHp - 2 * curHp) * rate * ballMultiplier * statusBonus) / (3 * maxHp)
+    );
 
     if (a >= 255) {
       return {
@@ -478,7 +731,8 @@ export class BattleEngine {
       };
     }
 
-    const b = Math.floor(65536 / Math.pow(255 / Math.max(1, a), 0.1875));
+    // Gen 3/4/7 standard fourth root (power 0.25)
+    const b = Math.floor(65536 / Math.pow(255 / Math.max(1, a), 0.25));
     let shakes = 0;
     for (let i = 0; i < 3; i++) {
       const roll = this.rng.nextInt(0, 65535);
@@ -515,7 +769,9 @@ export class BattleEngine {
     const pSpeed = this.playerPokemon.stats.speed;
     const eSpeed = this.enemyPokemon.stats.speed;
     if (pSpeed >= eSpeed) return true;
-    const odds = Math.floor((pSpeed * 128) / eSpeed + 30);
-    return this.rng.nextInt(0, 255) < odds;
+
+    this.fleeAttempts++;
+    const odds = Math.floor((pSpeed * 128) / eSpeed + 30 * this.fleeAttempts) % 256;
+    return odds >= 255 || this.rng.nextInt(0, 255) < odds;
   }
 }

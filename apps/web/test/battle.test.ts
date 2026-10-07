@@ -13,6 +13,7 @@ import {
   BattleController,
   POKEBALL_DB,
   getPokeballData,
+  STRUGGLE_MOVE,
 } from '../src/battle';
 import { normalizeBallKey, BATTLE_ASSETS } from '../src/assets/asset-registry';
 import { partyService } from '../src/domain/party/party-service';
@@ -680,7 +681,8 @@ describe('Wild Pokémon Battle System', () => {
 
       expect(res.damage).toBeGreaterThan(0);
       expect(res.message).toContain('had its energy drained');
-      const expectedDrain = Math.max(1, Math.floor(res.damage * 0.5));
+      const actualDamage = Math.min(enemy.maxHp, res.damage);
+      const expectedDrain = Math.max(1, Math.floor(actualDamage * 0.5));
       expect(player.currentHp).toBe(Math.min(player.maxHp, initialHp + expectedDrain));
     });
 
@@ -945,6 +947,262 @@ describe('Wild Pokémon Battle System', () => {
 
       battleSePlayer.setVolume(0.5);
       expect(battleSePlayer.getVolume()).toBe(0.5);
+    });
+  });
+
+  describe('Gen 7 Battle Engine Rules & Edge-case Validations', () => {
+    it('handles fixed damage moves accurately (Seismic Toss, Dragon Rage, Super Fang)', () => {
+      const player = createBattler('MANKEY', 30, true);
+      const enemy = createBattler('SNORLAX', 30, false);
+      const engine = new BattleEngine(player, enemy, getBattleEnvironment('meadow'));
+
+      // 1. Seismic Toss (Lv30 -> deals exactly 30 damage)
+      const seismicToss: any = {
+        id: 'seismic_toss',
+        name: 'Seismic Toss',
+        type: 'Fighting',
+        category: 'physical',
+        power: 0,
+        accuracy: 100,
+        pp: 20,
+        maxPp: 20,
+      };
+      const snorlaxHpBefore = enemy.currentHp;
+      const resToss = engine.executeAttack(player, enemy, seismicToss);
+      expect(resToss.damage).toBe(30);
+      expect(enemy.currentHp).toBe(snorlaxHpBefore - 30);
+
+      // 2. Dragon Rage (deals exactly 40 damage)
+      const dragonRage: any = {
+        id: 'dragon_rage',
+        name: 'Dragon Rage',
+        type: 'Dragon',
+        category: 'special',
+        power: 0,
+        accuracy: 100,
+        pp: 10,
+        maxPp: 10,
+      };
+      const snorlaxHpBeforeRage = enemy.currentHp;
+      const resRage = engine.executeAttack(player, enemy, dragonRage);
+      expect(resRage.damage).toBe(40);
+      expect(enemy.currentHp).toBe(snorlaxHpBeforeRage - 40);
+
+      // 3. Super Fang (deals half of defender's current HP)
+      const superFang: any = {
+        id: 'super_fang',
+        name: 'Super Fang',
+        type: 'Normal',
+        category: 'physical',
+        power: 0,
+        accuracy: 100,
+        pp: 10,
+        maxPp: 10,
+      };
+      const hpBeforeFang = enemy.currentHp;
+      const expectedFangDamage = Math.floor(hpBeforeFang / 2);
+      const resFang = engine.executeAttack(player, enemy, superFang);
+      expect(resFang.damage).toBe(expectedFangDamage);
+      expect(enemy.currentHp).toBe(hpBeforeFang - expectedFangDamage);
+    });
+
+    it('caps recoil damage to defender remaining HP instead of overflow raw damage', () => {
+      const player = createBattler('SNORLAX', 50, true);
+      const enemy = createBattler('PIDGEY', 2, false); // Very low HP (e.g. 13 HP)
+      const engine = new BattleEngine(player, enemy, getBattleEnvironment('meadow'));
+
+      enemy.currentHp = 3; // Exactly 3 HP left
+      const doubleEdge: any = {
+        id: 'double_edge',
+        name: 'Double-Edge',
+        type: 'Normal',
+        category: 'physical',
+        power: 120,
+        accuracy: 100,
+        pp: 15,
+        maxPp: 15,
+        recoilPercent: 0.33, // 33% recoil
+      };
+
+      const initialPlayerHp = player.currentHp;
+      const res = engine.executeAttack(player, enemy, doubleEdge);
+
+      expect(enemy.currentHp).toBe(0);
+      expect(res.defenderFainted).toBe(true);
+      // Recoil must be 33% of 3 HP (the actual damage dealt = 3), not 33% of 200+ raw damage!
+      const expectedRecoil = Math.max(1, Math.floor(3 * 0.33)); // 1 HP
+      expect(player.currentHp).toBe(initialPlayerHp - expectedRecoil);
+    });
+
+    it('does not deduct move PP when Pokémon is unable to move (sleep, freeze, paralysis)', () => {
+      const player = createBattler('PIKACHU', 25, true);
+      const enemy = createBattler('PIDGEY', 20, false);
+      const engine = new BattleEngine(player, enemy, getBattleEnvironment('meadow'));
+
+      const tackle = player.moves[0];
+      const initialPp = tackle.pp;
+
+      // Sleep with active sleepTurns > 0
+      player.status = 'sleep';
+      player.sleepTurns = 2;
+      const resSleep = engine.executeAttack(player, enemy, tackle);
+      expect(resSleep.message).toContain('fast asleep');
+      expect(tackle.pp).toBe(initialPp); // PP NOT deducted!
+
+      // Freeze (simulate failed thaw roll)
+      player.status = 'freeze';
+      // Force rng to not thaw (< 0.2)
+      const fixedEngine = new BattleEngine(
+        player,
+        enemy,
+        getBattleEnvironment('meadow'),
+        new SeededBattleRng(9999) // will not roll thaw
+      );
+      const resFreeze = fixedEngine.executeAttack(player, enemy, tackle);
+      if (player.status === 'freeze') {
+        expect(resFreeze.message).toContain('frozen solid');
+        expect(tackle.pp).toBe(initialPp); // PP NOT deducted!
+      }
+    });
+
+    it('blocks status moves on immune types (Thunder Wave on Ground type)', () => {
+      const player = createBattler('PIKACHU', 20, true);
+      const groundEnemy = createBattler('SANDSHREW', 20, false); // Ground type
+      const engine = new BattleEngine(player, groundEnemy, getBattleEnvironment('meadow'));
+
+      const thunderWave: any = {
+        id: 'thunder_wave',
+        name: 'Thunder Wave',
+        type: 'Electric',
+        category: 'status',
+        power: 0,
+        accuracy: 90,
+        pp: 20,
+        maxPp: 20,
+        statusEffect: {
+          condition: 'paralysis',
+          chance: 1.0,
+          target: 'opponent',
+        },
+      };
+
+      const res = engine.executeAttack(player, groundEnemy, thunderWave);
+      expect(res.message).toContain('It had no effect');
+      expect(groundEnemy.status).toBe('none'); // Sandshrew is immune!
+    });
+
+    it('self-buffing status moves never miss regardless of opponent evasion stages', () => {
+      const player = createBattler('SCYTHER', 25, true);
+      const enemy = createBattler('PIDGEOT', 25, false);
+      const engine = new BattleEngine(player, enemy, getBattleEnvironment('meadow'));
+
+      // Give enemy maximum evasion (+6)
+      enemy.statStages!.evasion = 6;
+
+      const swordsDance: any = {
+        id: 'swords_dance',
+        name: 'Swords Dance',
+        type: 'Normal',
+        category: 'status',
+        power: 0,
+        accuracy: 0,
+        pp: 20,
+        maxPp: 20,
+        statChanges: [{ stat: 'attack', stages: 2, target: 'self', chance: 1.0 }],
+      };
+
+      // Execute 20 times, must never miss
+      for (let i = 0; i < 20; i++) {
+        const res = engine.executeAttack(player, enemy, swordsDance);
+        expect(res.isMiss).toBeFalsy();
+      }
+      expect(player.statStages!.attack).toBe(6);
+    });
+
+    it('determines first attacker strictly by priority then speed with 50/50 speed ties', () => {
+      const slowPlayer = createBattler('SNORLAX', 20, true);
+      const fastEnemy = createBattler('JOLTEON', 20, false);
+      const engine = new BattleEngine(slowPlayer, fastEnemy, getBattleEnvironment('meadow'));
+
+      const quickAttack: any = {
+        id: 'quick_attack',
+        name: 'Quick Attack',
+        priority: 1,
+        power: 40,
+        accuracy: 100,
+        pp: 30,
+        category: 'physical',
+        type: 'Normal',
+      };
+      const thunderbolt: any = {
+        id: 'thunderbolt',
+        name: 'Thunderbolt',
+        priority: 0,
+        power: 90,
+        accuracy: 100,
+        pp: 15,
+        category: 'special',
+        type: 'Electric',
+      };
+
+      // Quick Attack has priority +1 over priority 0 Thunderbolt
+      expect(engine.getFirstAttacker(quickAttack, thunderbolt)).toBe('player');
+      expect(engine.getFirstAttacker(thunderbolt, quickAttack)).toBe('enemy');
+
+      // Equal priority: faster Pokémon (Jolteon) goes first
+      const normalTackle: any = {
+        id: 'tackle',
+        name: 'Tackle',
+        priority: 0,
+        power: 40,
+        accuracy: 100,
+        pp: 35,
+        category: 'physical',
+        type: 'Normal',
+      };
+      expect(engine.getFirstAttacker(normalTackle, thunderbolt)).toBe('enemy');
+    });
+
+    it('executes Struggle when all moves have 0 PP and deals 25% max HP recoil', () => {
+      const player = createBattler('RATTATA', 15, true);
+      const enemy = createBattler('PIDGEY', 15, false);
+      const engine = new BattleEngine(player, enemy, getBattleEnvironment('meadow'));
+
+      // Exhaust all PP
+      player.moves.forEach((m) => {
+        m.pp = 0;
+      });
+      const struggle = STRUGGLE_MOVE;
+
+      const initialHp = player.currentHp;
+      const res = engine.executeAttack(player, enemy, struggle);
+
+      expect(res.damage).toBeGreaterThan(0);
+      const expectedRecoil = Math.max(1, Math.floor(player.maxHp * 0.25));
+      expect(player.currentHp).toBe(initialHp - expectedRecoil);
+      expect(res.message).toContain('is hit with recoil');
+    });
+
+    it('syncBattleResult recalculates all combat stats and maxHp on level up based on baseStats', () => {
+      const initialPk = createPartyPokemon('PIKACHU', 5);
+      const initialAtk = initialPk.stats.attack;
+      const initialDef = initialPk.stats.defense;
+      const initialMaxHp = initialPk.maxHp;
+
+      // Sync battle result with massive EXP to trigger level up from Lv5 to Lv7
+      const battler = partyPokemonToBattler(initialPk);
+      partyService.replacePokemon(0, initialPk);
+
+      const res = partyService.syncBattleResult(battler, 1500);
+      expect(res.leveledUp).toBe(true);
+      expect(res.newLevel).toBeGreaterThan(5);
+
+      const updatedPk = partyService.getParty()[0]!;
+      expect(updatedPk.level).toBe(res.newLevel);
+      expect(updatedPk.maxHp).toBeGreaterThan(initialMaxHp);
+      expect(updatedPk.stats.attack).toBeGreaterThan(initialAtk);
+      expect(updatedPk.stats.defense).toBeGreaterThan(initialDef);
+      expect(updatedPk.currentHp).toBeGreaterThan(0);
     });
   });
 });

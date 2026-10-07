@@ -866,7 +866,7 @@
       "description": "Gives the user's held item to the target.",
       "descriptionEn": "Gives the user's held item to the target.",
       "nameEn": "Bestow",
-      "nameVi": "Bestow"
+      "nameVi": "Ban Tặng"
     },
     "bide": {
       "id": "bide",
@@ -958,7 +958,7 @@
       "description": "Dark type Z-Move.",
       "descriptionEn": "Dark type Z-Move.",
       "nameEn": "Black Hole Eclipse",
-      "nameVi": "Black Hole Eclipse"
+      "nameVi": "Hố Đen Che Khuất"
     },
     "blast_burn": {
       "id": "blast_burn",
@@ -1011,7 +1011,7 @@
         "chance": 0.3
       },
       "nameEn": "Blazing Torque",
-      "nameVi": "Blazing Torque"
+      "nameVi": "Vòng Xoay Bốc Cháy"
     },
     "bleakwind_storm": {
       "id": "bleakwind_storm",
@@ -1058,7 +1058,7 @@
       "description": "Opponent cannot flee or switch.",
       "descriptionEn": "Opponent cannot flee or switch.",
       "nameEn": "Block",
-      "nameVi": "Block"
+      "nameVi": "Chặn Đường"
     },
     "blood_moon": {
       "id": "blood_moon",
@@ -1105,7 +1105,7 @@
         "chance": 0.3
       },
       "nameEn": "Blue Flare",
-      "nameVi": "Blue Flare"
+      "nameVi": "Lửa Xanh"
     },
     "body_press": {
       "id": "body_press",
@@ -1246,7 +1246,7 @@
         "chance": 0.3
       },
       "nameEn": "Bounce",
-      "nameVi": "Bounce"
+      "nameVi": "Nhảy Bật"
     },
     "bouncy_bubble": {
       "id": "bouncy_bubble",
@@ -1304,7 +1304,7 @@
       "description": "Hits multiple opponents and lowers their attack.",
       "descriptionEn": "Hits multiple opponents and lowers their attack.",
       "nameEn": "Breaking Swipe",
-      "nameVi": "Breaking Swipe"
+      "nameVi": "Quất Đuôi Phá Kích"
     },
     "breakneck_blitz": {
       "id": "breakneck_blitz",
@@ -1318,7 +1318,7 @@
       "description": "Normal type Z-Move.",
       "descriptionEn": "Normal type Z-Move.",
       "nameEn": "Breakneck Blitz",
-      "nameVi": "Breakneck Blitz"
+      "nameVi": "Đột Kích Xé Gió"
     },
     "brick_break": {
       "id": "brick_break",
@@ -1458,7 +1458,7 @@
         }
       ],
       "nameEn": "Bulldoze",
-      "nameVi": "Bulldoze"
+      "nameVi": "San Phẳng"
     },
     "bullet_punch": {
       "id": "bullet_punch",
@@ -1501,7 +1501,7 @@
       "description": "To inflict massive damage, the user burns itself out. After using this move, the user will no longer be Fire type.",
       "descriptionEn": "To inflict massive damage, the user burns itself out. After using this move, the user will no longer be Fire type.",
       "nameEn": "Burn Up",
-      "nameVi": "Burn Up"
+      "nameVi": "Thiêu Rụi"
     },
     "burning_bulwark": {
       "id": "burning_bulwark",
@@ -1515,7 +1515,7 @@
       "description": "Kỹ năng hỗ trợ hệ Fire gây hiệu ứng trên sân đấu.",
       "descriptionEn": "",
       "nameEn": "Burning Bulwark",
-      "nameVi": "Burning Bulwark"
+      "nameVi": "Pháo Đài Rực Lửa"
     },
     "burning_jealousy": {
       "id": "burning_jealousy",
@@ -1543,7 +1543,7 @@
       "description": "Paralyzes the opponent.",
       "descriptionEn": "Paralyzes the opponent.",
       "nameEn": "Buzzy Buzz",
-      "nameVi": "Buzzy Buzz"
+      "nameVi": "Tê Giật Bzz"
     },
     "calm_mind": {
       "id": "calm_mind",
@@ -1571,7 +1571,7 @@
       "description": "Changes user's type according to the location.",
       "descriptionEn": "Changes user's type according to the location.",
       "nameEn": "Camouflage",
-      "nameVi": "Camouflage"
+      "nameVi": "Ngụy Trang"
     },
     "captivate": {
       "id": "captivate",
@@ -1585,7 +1585,7 @@
       "description": "Sharply Làm giảm chỉ số Special Tấn công if opposite gender của đối phương.",
       "descriptionEn": "Sharply lowers opponent's Special Attack if opposite gender.",
       "nameEn": "Captivate",
-      "nameVi": "Captivate"
+      "nameVi": "Quyến Rũ"
     },
     "catastropika": {
       "id": "catastropika",
@@ -1599,7 +1599,7 @@
       "description": "Pikachu-exclusive Z-Move.",
       "descriptionEn": "Pikachu-exclusive Z-Move.",
       "nameEn": "Catastropika",
-      "nameVi": "Catastropika"
+      "nameVi": "Sấm Sét Hủy Diệt"
     },
     "ceaseless_edge": {
       "id": "ceaseless_edge",
@@ -1739,7 +1739,7 @@
       "description": "Bỏ qua mọi chỉ số tăng giảm của đối phương khi tính sát thương.",
       "descriptionEn": "Ignores opponent's stat changes.",
       "nameEn": "Chip Away",
-      "nameVi": "Chip Away"
+      "nameVi": "Tỉa Bào"
     },
     "chloroblast": {
       "id": "chloroblast",
@@ -1823,7 +1823,7 @@
       "description": "Kommo-o exclusive Z-Move.",
       "descriptionEn": "Kommo-o exclusive Z-Move.",
       "nameEn": "Clangorous Soulblaze",
-      "nameVi": "Clangorous Soulblaze"
+      "nameVi": "Hồn Rồng Rực Lửa"
     },
     "clear_smog": {
       "id": "clear_smog",
@@ -1947,7 +1947,7 @@
       "description": "Deals more damage to the opponent that last inflicted damage on it.",
       "descriptionEn": "Deals more damage to the opponent that last inflicted damage on it.",
       "nameEn": "Comeuppance",
-      "nameVi": "Comeuppance"
+      "nameVi": "Trừng Phạt Trả Đũa"
     },
     "confide": {
       "id": "confide",
@@ -1961,7 +1961,7 @@
       "description": "Làm giảm Tấn công Đặc biệt của đối phương (-1 bậc).",
       "descriptionEn": "Lowers opponent's Special Attack.",
       "nameEn": "Confide",
-      "nameVi": "Confide"
+      "nameVi": "Bộc Bạch"
     },
     "confuse_ray": {
       "id": "confuse_ray",
@@ -2045,7 +2045,7 @@
       "description": "User changes type to become resistant to opponent's last move.",
       "descriptionEn": "User changes type to become resistant to opponent's last move.",
       "nameEn": "Conversion 2",
-      "nameVi": "Conversion 2"
+      "nameVi": "Chuyển Hệ 2"
     },
     "copycat": {
       "id": "copycat",
@@ -2059,7 +2059,7 @@
       "description": "Copies opponent's last move.",
       "descriptionEn": "Copies opponent's last move.",
       "nameEn": "Copycat",
-      "nameVi": "Copycat"
+      "nameVi": "Bắt Chước"
     },
     "core_enforcer": {
       "id": "core_enforcer",
@@ -2073,7 +2073,7 @@
       "description": "Suppresses the target's ability if the target has already moved.",
       "descriptionEn": "Suppresses the target's ability if the target has already moved.",
       "nameEn": "Core Enforcer",
-      "nameVi": "Core Enforcer"
+      "nameVi": "Phán Quyết Lõi"
     },
     "corkscrew_crash": {
       "id": "corkscrew_crash",
@@ -2496,7 +2496,7 @@
       "descriptionEn": "Protects the user, but may fail if used consecutively.",
       "priority": 4,
       "nameEn": "Detect",
-      "nameVi": "Detect"
+      "nameVi": "Thấu Thị"
     },
     "devastating_drake": {
       "id": "devastating_drake",
@@ -2510,7 +2510,7 @@
       "description": "Dragon type Z-Move.",
       "descriptionEn": "Dragon type Z-Move.",
       "nameEn": "Devastating Drake",
-      "nameVi": "Devastating Drake"
+      "nameVi": "Rồng Thần Hủy Diệt"
     },
     "diamond_storm": {
       "id": "diamond_storm",
@@ -2618,7 +2618,7 @@
       "description": "Dives underwater on first turn, attacks on second turn.",
       "descriptionEn": "Dives underwater on first turn, attacks on second turn.",
       "nameEn": "Dive",
-      "nameVi": "Dive"
+      "nameVi": "Lặn Sâu"
     },
     "dizzy_punch": {
       "id": "dizzy_punch",
@@ -3047,7 +3047,7 @@
         }
       ],
       "nameEn": "Drum Beating",
-      "nameVi": "Drum Beating"
+      "nameVi": "Đánh Trống"
     },
     "dual_chop": {
       "id": "dual_chop",
@@ -3075,7 +3075,7 @@
       "description": "The user slams the target with its wings. The target is hit twice in a row.",
       "descriptionEn": "The user slams the target with its wings. The target is hit twice in a row.",
       "nameEn": "Dual Wingbeat",
-      "nameVi": "Dual Wingbeat"
+      "nameVi": "Đập Cánh Đôi"
     },
     "dynamax_cannon": {
       "id": "dynamax_cannon",
@@ -3292,7 +3292,7 @@
       "description": "Opponent cannot use items.",
       "descriptionEn": "Opponent cannot use items.",
       "nameEn": "Embargo",
-      "nameVi": "Embargo"
+      "nameVi": "Cấm Vận"
     },
     "ember": {
       "id": "ember",
@@ -3339,7 +3339,7 @@
       "description": "Reduces opponent's HP to same as user's.",
       "descriptionEn": "Reduces opponent's HP to same as user's.",
       "nameEn": "Endeavor",
-      "nameVi": "Endeavor"
+      "nameVi": "Nỗ Lực Tột Cùng"
     },
     "endure": {
       "id": "endure",
@@ -3353,7 +3353,7 @@
       "description": "Always left with at least 1 HP, but may fail if used consecutively.",
       "descriptionEn": "Always left with at least 1 HP, but may fail if used consecutively.",
       "nameEn": "Endure",
-      "nameVi": "Endure"
+      "nameVi": "Kiên Cường"
     },
     "energy_ball": {
       "id": "energy_ball",
@@ -3395,7 +3395,7 @@
       "description": "Stronger when the user's HP is higher.",
       "descriptionEn": "Stronger when the user's HP is higher.",
       "nameEn": "Eruption",
-      "nameVi": "Eruption"
+      "nameVi": "Núi Lửa Phun Trào"
     },
     "esper_wing": {
       "id": "esper_wing",
@@ -3431,7 +3431,7 @@
       "description": "User can't move on the next turn.",
       "descriptionEn": "User can't move on the next turn.",
       "nameEn": "Eternabeam",
-      "nameVi": "Eternabeam"
+      "nameVi": "Chùm Tia Vô Cực"
     },
     "expanding_force": {
       "id": "expanding_force",
@@ -3473,7 +3473,7 @@
       "description": "Có cơ hội khiến đối phương nao núng không thể ra đòn.",
       "descriptionEn": "May cause flinching.",
       "nameEn": "Extrasensory",
-      "nameVi": "Extrasensory"
+      "nameVi": "Ngoại Cảm"
     },
     "extreme_evoboost": {
       "id": "extreme_evoboost",
@@ -3487,7 +3487,7 @@
       "description": "Eevee-exclusive Z-Move. Sharply raises all stats.",
       "descriptionEn": "Eevee-exclusive Z-Move. Sharply raises all stats.",
       "nameEn": "Extreme Evoboost",
-      "nameVi": "Extreme Evoboost"
+      "nameVi": "Tiến Hóa Cực Đại"
     },
     "extreme_speed": {
       "id": "extreme_speed",
@@ -3516,7 +3516,7 @@
       "description": "Power doubles if user is burned, poisoned, or paralyzed.",
       "descriptionEn": "Power doubles if user is burned, poisoned, or paralyzed.",
       "nameEn": "Facade",
-      "nameVi": "Facade"
+      "nameVi": "Vờ Mạnh Mẽ"
     },
     "fairy_lock": {
       "id": "fairy_lock",
@@ -4026,7 +4026,7 @@
       "description": "Confuses opponent, but raises its Special Tấn công.",
       "descriptionEn": "Confuses opponent, but raises its Special Attack.",
       "nameEn": "Flatter",
-      "nameVi": "Flatter"
+      "nameVi": "Nịnh Hót"
     },
     "fleur_cannon": {
       "id": "fleur_cannon",
@@ -4082,7 +4082,7 @@
       "description": "Có cơ hội khiến đối phương nao núng không thể ra đòn.",
       "descriptionEn": "May cause flinching.",
       "nameEn": "Floaty Fall",
-      "nameVi": "Floaty Fall"
+      "nameVi": "Rơi Lơ Lửng"
     },
     "floral_healing": {
       "id": "floral_healing",
@@ -4227,7 +4227,7 @@
         "chance": 0.3
       },
       "nameEn": "Force Palm",
-      "nameVi": "Force Palm"
+      "nameVi": "Chưởng Lực"
     },
     "foresight": {
       "id": "foresight",
@@ -4241,7 +4241,7 @@
       "description": "Resets opponent's Evasiveness, and allows Normal- and Fighting-type attacks to hit Ghosts.",
       "descriptionEn": "Resets opponent's Evasiveness, and allows Normal- and Fighting-type attacks to hit Ghosts.",
       "nameEn": "Foresight",
-      "nameVi": "Foresight"
+      "nameVi": "Nhìn Thấu"
     },
     "forests_curse": {
       "id": "forests_curse",
@@ -4326,7 +4326,7 @@
         "chance": 0.1
       },
       "nameEn": "Freezing Glare",
-      "nameVi": "Freezing Glare"
+      "nameVi": "Cái Nhìn Băng Giá"
     },
     "freezy_frost": {
       "id": "freezy_frost",
@@ -4382,7 +4382,7 @@
       "description": "Power decreases with higher Friendship.",
       "descriptionEn": "Power decreases with higher Friendship.",
       "nameEn": "Frustration",
-      "nameVi": "Frustration"
+      "nameVi": "Căm Phẫn"
     },
     "fury_attack": {
       "id": "fury_attack",
@@ -4452,7 +4452,7 @@
       "description": "Power increases if Fusion Bolt is used in the same turn.",
       "descriptionEn": "Power increases if Fusion Bolt is used in the same turn.",
       "nameEn": "Fusion Flare",
-      "nameVi": "Fusion Flare"
+      "nameVi": "Hợp Lực Lửa"
     },
     "future_sight": {
       "id": "future_sight",
@@ -4466,7 +4466,7 @@
       "description": "Damage occurs 2 turns later.",
       "descriptionEn": "Damage occurs 2 turns later.",
       "nameEn": "Future Sight",
-      "nameVi": "Future Sight"
+      "nameVi": "Tầm Nhìn Tương Lai"
     },
     "g_max_befuddle": {
       "id": "g_max_befuddle",
@@ -4564,7 +4564,7 @@
       "description": "Rillaboom-exclusive G-Max Move. Ignores target's ability.",
       "descriptionEn": "Rillaboom-exclusive G-Max Move. Ignores target's ability.",
       "nameEn": "G-Max Drum Solo",
-      "nameVi": "G-Max Drum Solo"
+      "nameVi": "G-Max Độc Tấu Trống"
     },
     "g_max_finale": {
       "id": "g_max_finale",
@@ -4648,7 +4648,7 @@
       "description": "Inteleon-exclusive G-Max Move. Ignores target's ability.",
       "descriptionEn": "Inteleon-exclusive G-Max Move. Ignores target's ability.",
       "nameEn": "G-Max Hydrosnipe",
-      "nameVi": "G-Max Hydrosnipe"
+      "nameVi": "G-Max Bắn Tỉa Nước"
     },
     "g_max_malodor": {
       "id": "g_max_malodor",
@@ -4718,7 +4718,7 @@
       "description": "Snorlax-exclusive G-Max Move. Recycles Berries.",
       "descriptionEn": "Snorlax-exclusive G-Max Move. Recycles Berries.",
       "nameEn": "G-Max Replenish",
-      "nameVi": "G-Max Replenish"
+      "nameVi": "G-Max Bổ Sung Quả"
     },
     "g_max_resonance": {
       "id": "g_max_resonance",
@@ -4872,7 +4872,7 @@
       "description": "Venusaur-exclusive G-Max Move. Damages non-Grass types for 4 turns.",
       "descriptionEn": "Venusaur-exclusive G-Max Move. Damages non-Grass types for 4 turns.",
       "nameEn": "G-Max Vine Lash",
-      "nameVi": "G-Max Vine Lash"
+      "nameVi": "G-Max Quất Dây Leo"
     },
     "g_max_volcalith": {
       "id": "g_max_volcalith",
@@ -4886,7 +4886,7 @@
       "description": "Coalossal-exclusive G-Max Move. Deals damage for 4 turns.",
       "descriptionEn": "Coalossal-exclusive G-Max Move. Deals damage for 4 turns.",
       "nameEn": "G-Max Volcalith",
-      "nameVi": "G-Max Volcalith"
+      "nameVi": "G-Max Đá Núi Lửa"
     },
     "g_max_volt_crash": {
       "id": "g_max_volt_crash",
@@ -5055,7 +5055,7 @@
       "description": "Electric type Z-Move.",
       "descriptionEn": "Electric type Z-Move.",
       "nameEn": "Gigavolt Havoc",
-      "nameVi": "Gigavolt Havoc"
+      "nameVi": "Bão Điện Tỷ Volt"
     },
     "glacial_lance": {
       "id": "glacial_lance",
@@ -5137,7 +5137,7 @@
       "description": "Reduces damage from Special attacks.",
       "descriptionEn": "Reduces damage from Special attacks.",
       "nameEn": "Glitzy Glow",
-      "nameVi": "Glitzy Glow"
+      "nameVi": "Ánh Sáng Lung Linh"
     },
     "grass_knot": {
       "id": "grass_knot",
@@ -5333,7 +5333,7 @@
       "description": "Tapu-exclusive Z-move. Cuts opponent's HP by 75%.",
       "descriptionEn": "Tapu-exclusive Z-move. Cuts opponent's HP by 75%.",
       "nameEn": "Guardian of Alola",
-      "nameVi": "Guardian of Alola"
+      "nameVi": "Hộ Thần Alola"
     },
     "guillotine": {
       "id": "guillotine",
@@ -5744,7 +5744,7 @@
       "description": "The user fiercely attacks the target using its entire body.",
       "descriptionEn": "The user fiercely attacks the target using its entire body.",
       "nameEn": "High Horsepower",
-      "nameVi": "High Horsepower"
+      "nameVi": "Mã Lực Siêu Đẳng"
     },
     "high_jump_kick": {
       "id": "high_jump_kick",
@@ -5941,7 +5941,7 @@
       "description": "Water type Z-Move.",
       "descriptionEn": "Water type Z-Move.",
       "nameEn": "Hydro Vortex",
-      "nameVi": "Hydro Vortex"
+      "nameVi": "Xoáy Nước Khổng Lồ"
     },
     "hyper_beam": {
       "id": "hyper_beam",
@@ -6235,7 +6235,7 @@
       "description": "Opponent is unable to use moves that the user also knows.",
       "descriptionEn": "Opponent is unable to use moves that the user also knows.",
       "nameEn": "Imprison",
-      "nameVi": "Imprison"
+      "nameVi": "Phong Ấn"
     },
     "incinerate": {
       "id": "incinerate",
@@ -6291,7 +6291,7 @@
       "description": "Fire type Z-Move.",
       "descriptionEn": "Fire type Z-Move.",
       "nameEn": "Inferno Overdrive",
-      "nameVi": "Inferno Overdrive"
+      "nameVi": "Hỏa Ngục Cuồng Bạo"
     },
     "infestation": {
       "id": "infestation",
@@ -6305,7 +6305,7 @@
       "description": "Traps opponent, damaging them for 4-5 turns.",
       "descriptionEn": "Traps opponent, damaging them for 4-5 turns.",
       "nameEn": "Infestation",
-      "nameVi": "Infestation"
+      "nameVi": "Quấy Nhiễu Bầy Bọ"
     },
     "ingrain": {
       "id": "ingrain",
@@ -6319,7 +6319,7 @@
       "description": "User restores HP each turn. User cannot escape/switch.",
       "descriptionEn": "User restores HP each turn. User cannot escape/switch.",
       "nameEn": "Ingrain",
-      "nameVi": "Ingrain"
+      "nameVi": "Cắm Rễ"
     },
     "instruct": {
       "id": "instruct",
@@ -6411,7 +6411,7 @@
       "descriptionEn": "High critical hit ratio. Type changes based on form.",
       "highCrit": true,
       "nameEn": "Ivy Cudgel",
-      "nameVi": "Ivy Cudgel"
+      "nameVi": "Trượng Cây Thường Xuân"
     },
     "jaw_lock": {
       "id": "jaw_lock",
@@ -6573,7 +6573,7 @@
       "description": "Đòn tấn công vật lý hệ Ground đánh vào đối phương.",
       "descriptionEn": "",
       "nameEn": "Land's Wrath",
-      "nameVi": "Land's Wrath"
+      "nameVi": "Cơn Thịnh Nộ Đại Địa"
     },
     "laser_focus": {
       "id": "laser_focus",
@@ -6601,7 +6601,7 @@
       "description": "Double power if stats were lowered during the turn.",
       "descriptionEn": "Double power if stats were lowered during the turn.",
       "nameEn": "Lash Out",
-      "nameVi": "Lash Out"
+      "nameVi": "Trút Giận"
     },
     "last_resort": {
       "id": "last_resort",
@@ -6629,7 +6629,7 @@
       "description": "Damages increases the more party Pokémon have been defeated.",
       "descriptionEn": "Damages increases the more party Pokémon have been defeated.",
       "nameEn": "Last Respects",
-      "nameVi": "Last Respects"
+      "nameVi": "Tưởng Niệm Cuối Cùng"
     },
     "lava_plume": {
       "id": "lava_plume",
@@ -6769,7 +6769,7 @@
       "description": "Mimikyu-exclusive Z-Move.",
       "descriptionEn": "Mimikyu-exclusive Z-Move.",
       "nameEn": "Let's Snuggle Forever",
-      "nameVi": "Let's Snuggle Forever"
+      "nameVi": "Mãi Mãi Bên Nhau"
     },
     "lick": {
       "id": "lick",
@@ -6936,7 +6936,7 @@
       "description": "Opponent cannot land critical hits for 5 turns.",
       "descriptionEn": "Opponent cannot land critical hits for 5 turns.",
       "nameEn": "Lucky Chant",
-      "nameVi": "Lucky Chant"
+      "nameVi": "Bài Ca May Mắn"
     },
     "lumina_crash": {
       "id": "lumina_crash",
@@ -7091,7 +7091,7 @@
       "description": "May confuse the opponent.",
       "descriptionEn": "May confuse the opponent.",
       "nameEn": "Magical Torque",
-      "nameVi": "Magical Torque"
+      "nameVi": "Vòng Xoay Ma Thuật"
     },
     "magma_storm": {
       "id": "magma_storm",
@@ -7161,7 +7161,7 @@
       "description": "Hits with random power.",
       "descriptionEn": "Hits with random power.",
       "nameEn": "Magnitude",
-      "nameVi": "Magnitude"
+      "nameVi": "Địa Chấn"
     },
     "make_it_rain": {
       "id": "make_it_rain",
@@ -7189,7 +7189,7 @@
       "description": "Incineroar-exclusive Z-Move.",
       "descriptionEn": "Incineroar-exclusive Z-Move.",
       "nameEn": "Malicious Moonsault",
-      "nameVi": "Malicious Moonsault"
+      "nameVi": "Nhào Lộn Tà Ác"
     },
     "malignant_chain": {
       "id": "malignant_chain",
@@ -7241,7 +7241,7 @@
         "chance": 0.3
       },
       "nameEn": "Matcha Gotcha",
-      "nameVi": "Matcha Gotcha"
+      "nameVi": "Trà Xanh Bỏng Rát"
     },
     "max_airstream": {
       "id": "max_airstream",
@@ -7255,7 +7255,7 @@
       "description": "Flying type Dynamax move. Raises the team's Tốc độ.",
       "descriptionEn": "Flying type Dynamax move. Raises the team's Speed.",
       "nameEn": "Max Airstream",
-      "nameVi": "Max Airstream"
+      "nameVi": "Max Luồng Gió"
     },
     "max_darkness": {
       "id": "max_darkness",
@@ -7283,7 +7283,7 @@
       "description": "Fire type Dynamax move. Summons harsh sunlight.",
       "descriptionEn": "Fire type Dynamax move. Summons harsh sunlight.",
       "nameEn": "Max Flare",
-      "nameVi": "Max Flare"
+      "nameVi": "Max Lửa Đỏ"
     },
     "max_flutterby": {
       "id": "max_flutterby",
@@ -7297,7 +7297,7 @@
       "description": "Bug type Dynamax move. Lowers the target's Special Tấn công.",
       "descriptionEn": "Bug type Dynamax move. Lowers the target's Special Attack.",
       "nameEn": "Max Flutterby",
-      "nameVi": "Max Flutterby"
+      "nameVi": "Max Côn Trùng"
     },
     "max_geyser": {
       "id": "max_geyser",
@@ -7311,7 +7311,7 @@
       "description": "Water type Dynamax move. Summons heavy rain.",
       "descriptionEn": "Water type Dynamax move. Summons heavy rain.",
       "nameEn": "Max Geyser",
-      "nameVi": "Max Geyser"
+      "nameVi": "Max Mạch Nước"
     },
     "max_guard": {
       "id": "max_guard",
@@ -7339,7 +7339,7 @@
       "description": "Ice type Dynamax move. Summons hail.",
       "descriptionEn": "Ice type Dynamax move. Summons hail.",
       "nameEn": "Max Hailstorm",
-      "nameVi": "Max Hailstorm"
+      "nameVi": "Max Bão Tuyết"
     },
     "max_knuckle": {
       "id": "max_knuckle",
@@ -7353,7 +7353,7 @@
       "description": "Fighting type Dynamax move. Increases the team's Tấn công.",
       "descriptionEn": "Fighting type Dynamax move. Increases the team's Attack.",
       "nameEn": "Max Knuckle",
-      "nameVi": "Max Knuckle"
+      "nameVi": "Max Quyền Cước"
     },
     "max_lightning": {
       "id": "max_lightning",
@@ -7367,7 +7367,7 @@
       "description": "Electric type Dynamax move. Summons Electric Terrain.",
       "descriptionEn": "Electric type Dynamax move. Summons Electric Terrain.",
       "nameEn": "Max Lightning",
-      "nameVi": "Max Lightning"
+      "nameVi": "Max Tia Chớp"
     },
     "max_mindstorm": {
       "id": "max_mindstorm",
@@ -7381,7 +7381,7 @@
       "description": "Psychic type Dynamax move. Summons Psychic Terrain.",
       "descriptionEn": "Psychic type Dynamax move. Summons Psychic Terrain.",
       "nameEn": "Max Mindstorm",
-      "nameVi": "Max Mindstorm"
+      "nameVi": "Max Bão Tâm Linh"
     },
     "max_ooze": {
       "id": "max_ooze",
@@ -7395,7 +7395,7 @@
       "description": "Poison type Dynamax move. Increases the team's Special Tấn công.",
       "descriptionEn": "Poison type Dynamax move. Increases the team's Special Attack.",
       "nameEn": "Max Ooze",
-      "nameVi": "Max Ooze"
+      "nameVi": "Max Độc Dịch"
     },
     "max_overgrowth": {
       "id": "max_overgrowth",
@@ -7409,7 +7409,7 @@
       "description": "Grass type Dynamax move. Summons Grassy Terrain.",
       "descriptionEn": "Grass type Dynamax move. Summons Grassy Terrain.",
       "nameEn": "Max Overgrowth",
-      "nameVi": "Max Overgrowth"
+      "nameVi": "Max Dây Leo"
     },
     "max_phantasm": {
       "id": "max_phantasm",
@@ -7423,7 +7423,7 @@
       "description": "Ghost type Dynamax move. Lowers the target's Phòng thủ.",
       "descriptionEn": "Ghost type Dynamax move. Lowers the target's Defense.",
       "nameEn": "Max Phantasm",
-      "nameVi": "Max Phantasm"
+      "nameVi": "Max U Linh"
     },
     "max_quake": {
       "id": "max_quake",
@@ -7437,7 +7437,7 @@
       "description": "Ground type Dynamax move. Increases the team's Special Phòng thủ.",
       "descriptionEn": "Ground type Dynamax move. Increases the team's Special Defense.",
       "nameEn": "Max Quake",
-      "nameVi": "Max Quake"
+      "nameVi": "Max Động Đất"
     },
     "max_rockfall": {
       "id": "max_rockfall",
@@ -7451,7 +7451,7 @@
       "description": "Rock type Dynamax move. Summons a sandstorm.",
       "descriptionEn": "Rock type Dynamax move. Summons a sandstorm.",
       "nameEn": "Max Rockfall",
-      "nameVi": "Max Rockfall"
+      "nameVi": "Max Mưa Đá Rơi"
     },
     "max_starfall": {
       "id": "max_starfall",
@@ -7465,7 +7465,7 @@
       "description": "Fairy type Dynamax move. Summons Misty Terrain.",
       "descriptionEn": "Fairy type Dynamax move. Summons Misty Terrain.",
       "nameEn": "Max Starfall",
-      "nameVi": "Max Starfall"
+      "nameVi": "Max Ánh Sao Rơi"
     },
     "max_steelspike": {
       "id": "max_steelspike",
@@ -7479,7 +7479,7 @@
       "description": "Steel type Dynamax move. Raises the team's Phòng thủ.",
       "descriptionEn": "Steel type Dynamax move. Raises the team's Defense.",
       "nameEn": "Max Steelspike",
-      "nameVi": "Max Steelspike"
+      "nameVi": "Max Gai Thép"
     },
     "max_strike": {
       "id": "max_strike",
@@ -7507,7 +7507,7 @@
       "description": "Dragon type Dynamax move. Lowers the target's Tấn công.",
       "descriptionEn": "Dragon type Dynamax move. Lowers the target's Attack.",
       "nameEn": "Max Wyrmwind",
-      "nameVi": "Max Wyrmwind"
+      "nameVi": "Max Gió Rồng"
     },
     "me_first": {
       "id": "me_first",
@@ -7613,7 +7613,7 @@
       "description": "Đòn tấn công vật lý hệ Bug đánh vào đối phương.",
       "descriptionEn": "",
       "nameEn": "Megahorn",
-      "nameVi": "Megahorn"
+      "nameVi": "Đại Giác Kích"
     },
     "memento": {
       "id": "memento",
@@ -7648,7 +7648,7 @@
       "description": "Lunala-exclusive Z-Move.",
       "descriptionEn": "Lunala-exclusive Z-Move.",
       "nameEn": "Menacing Moonraze Maelstrom",
-      "nameVi": "Menacing Moonraze Maelstrom"
+      "nameVi": "Xoáy Trăng Đe Dọa"
     },
     "metal_burst": {
       "id": "metal_burst",
@@ -7775,7 +7775,7 @@
       "descriptionEn": "User recovers half its max HP.",
       "healPercent": 0.5,
       "nameEn": "Milk Drink",
-      "nameVi": "Milk Drink"
+      "nameVi": "Uống Sữa"
     },
     "mimic": {
       "id": "mimic",
@@ -8121,7 +8121,7 @@
       "description": "Type matches Memory item held.",
       "descriptionEn": "Type matches Memory item held.",
       "nameEn": "Multi-Attack",
-      "nameVi": "Multi-Attack"
+      "nameVi": "Đa Đòn Tấn Công"
     },
     "mystical_fire": {
       "id": "mystical_fire",
@@ -8212,7 +8212,7 @@
       "description": "Halves the foe's HP.",
       "descriptionEn": "Halves the foe's HP.",
       "nameEn": "Nature's Madness",
-      "nameVi": "Nature's Madness"
+      "nameVi": "Cuồng Nộ Thiên Nhiên"
     },
     "needle_arm": {
       "id": "needle_arm",
@@ -8394,7 +8394,7 @@
       "description": "Protects the user and sharply lowers Defence on contact.",
       "descriptionEn": "Protects the user and sharply lowers Defence on contact.",
       "nameEn": "Obstruct",
-      "nameVi": "Obstruct"
+      "nameVi": "Chặn Đứng"
     },
     "oceanic_operetta": {
       "id": "oceanic_operetta",
@@ -8408,7 +8408,7 @@
       "description": "Primarina-exclusive Z-Move.",
       "descriptionEn": "Primarina-exclusive Z-Move.",
       "nameEn": "Oceanic Operetta",
-      "nameVi": "Oceanic Operetta"
+      "nameVi": "Khúc Ca Đại Dương"
     },
     "octazooka": {
       "id": "octazooka",
@@ -8717,7 +8717,7 @@
       "description": "Power increases when player's bond is stronger.",
       "descriptionEn": "Power increases when player's bond is stronger.",
       "nameEn": "Pika Papow",
-      "nameVi": "Pika Papow"
+      "nameVi": "Pika Sấm Giật"
     },
     "pin_missile": {
       "id": "pin_missile",
@@ -8745,7 +8745,7 @@
       "description": "Changes Normal-type moves to Electric-type moves.",
       "descriptionEn": "Changes Normal-type moves to Electric-type moves.",
       "nameEn": "Plasma Fists",
-      "nameVi": "Plasma Fists"
+      "nameVi": "Nắm Đấm Plasma"
     },
     "play_nice": {
       "id": "play_nice",
@@ -8766,7 +8766,7 @@
         }
       ],
       "nameEn": "Play Nice",
-      "nameVi": "Play Nice"
+      "nameVi": "Giảng Hòa"
     },
     "play_rough": {
       "id": "play_rough",
@@ -8794,7 +8794,7 @@
       "description": "If the opponent is holding a berry, its effect is stolen by user.",
       "descriptionEn": "If the opponent is holding a berry, its effect is stolen by user.",
       "nameEn": "Pluck",
-      "nameVi": "Pluck"
+      "nameVi": "Mổ Cướp"
     },
     "poison_fang": {
       "id": "poison_fang",
@@ -8967,7 +8967,7 @@
         }
       ],
       "nameEn": "Pounce",
-      "nameVi": "Pounce"
+      "nameVi": "Chồm Vồ"
     },
     "pound": {
       "id": "pound",
@@ -9154,7 +9154,7 @@
       "description": "Either deals damage or heals.",
       "descriptionEn": "Either deals damage or heals.",
       "nameEn": "Present",
-      "nameVi": "Present"
+      "nameVi": "Tặng Quà"
     },
     "prismatic_laser": {
       "id": "prismatic_laser",
@@ -9211,7 +9211,7 @@
       "description": "Power increases on Electric Terrain.",
       "descriptionEn": "Power increases on Electric Terrain.",
       "nameEn": "Psyblade",
-      "nameVi": "Psyblade"
+      "nameVi": "Kiếm Ngoại Cảm"
     },
     "psych_up": {
       "id": "psych_up",
@@ -9225,7 +9225,7 @@
       "description": "Copies the opponent's stat changes.",
       "descriptionEn": "Copies the opponent's stat changes.",
       "nameEn": "Psych Up",
-      "nameVi": "Psych Up"
+      "nameVi": "Khích Lệ Tâm Trí"
     },
     "psychic": {
       "id": "psychic",
@@ -9582,7 +9582,7 @@
       "description": "Type depends on the user’s form. Breaks through Reflect and Light Screen barriers.",
       "descriptionEn": "Type depends on the user’s form. Breaks through Reflect and Light Screen barriers.",
       "nameEn": "Raging Bull",
-      "nameVi": "Raging Bull"
+      "nameVi": "Bò Tót Nổi Điên"
     },
     "raging_fury": {
       "id": "raging_fury",
@@ -9704,7 +9704,7 @@
       "description": "User's used hold item is restored.",
       "descriptionEn": "User's used hold item is restored.",
       "nameEn": "Recycle",
-      "nameVi": "Recycle"
+      "nameVi": "Tái Chế"
     },
     "reflect": {
       "id": "reflect",
@@ -9808,7 +9808,7 @@
       "description": "Power increases with higher Friendship.",
       "descriptionEn": "Power increases with higher Friendship.",
       "nameEn": "Return",
-      "nameVi": "Return"
+      "nameVi": "Đền Ơn"
     },
     "revelation_dance": {
       "id": "revelation_dance",
@@ -9836,7 +9836,7 @@
       "description": "Power increases if user was hit first.",
       "descriptionEn": "Power increases if user was hit first.",
       "nameEn": "Revenge",
-      "nameVi": "Revenge"
+      "nameVi": "Báo Thù"
     },
     "reversal": {
       "id": "reversal",
@@ -9864,7 +9864,7 @@
       "description": "Revives a fainted party Pokémon to half HP.",
       "descriptionEn": "Revives a fainted party Pokémon to half HP.",
       "nameEn": "Revival Blessing",
-      "nameVi": "Revival Blessing"
+      "nameVi": "Lời Chúc Hồi Sinh"
     },
     "rising_voltage": {
       "id": "rising_voltage",
@@ -10254,7 +10254,7 @@
       "description": "Creates a sandstorm for 5 turns.",
       "descriptionEn": "Creates a sandstorm for 5 turns.",
       "nameEn": "Sandstorm",
-      "nameVi": "Sandstorm"
+      "nameVi": "Bão Cát"
     },
     "sappy_seed": {
       "id": "sappy_seed",
@@ -10268,7 +10268,7 @@
       "description": "Drains HP from opponent each turn.",
       "descriptionEn": "Drains HP from opponent each turn.",
       "nameEn": "Sappy Seed",
-      "nameVi": "Sappy Seed"
+      "nameVi": "Hạt Mầm Hút Nhựa"
     },
     "savage_spin_out": {
       "id": "savage_spin_out",
@@ -10282,7 +10282,7 @@
       "description": "Bug type Z-Move.",
       "descriptionEn": "Bug type Z-Move.",
       "nameEn": "Savage Spin-Out",
-      "nameVi": "Savage Spin-Out"
+      "nameVi": "Cuộn Tơ Man Dại"
     },
     "scald": {
       "id": "scald",
@@ -10479,7 +10479,7 @@
       "description": "Có cơ hội làm giảm Phòng thủ Đặc biệt của đối phương (-1 bậc).",
       "descriptionEn": "May lower opponent's Special Defense.",
       "nameEn": "Seed Flare",
-      "nameVi": "Seed Flare"
+      "nameVi": "Pháo Hoa Hạt Mầm"
     },
     "seismic_toss": {
       "id": "seismic_toss",
@@ -10628,7 +10628,7 @@
       "description": "Psychic type Z-Move.",
       "descriptionEn": "Psychic type Z-Move.",
       "nameEn": "Shattered Psyche",
-      "nameVi": "Shattered Psyche"
+      "nameVi": "Phá Vỡ Tâm Trí"
     },
     "shed_tail": {
       "id": "shed_tail",
@@ -10731,7 +10731,7 @@
         }
       ],
       "nameEn": "Shelter",
-      "nameVi": "Shelter"
+      "nameVi": "Ẩn Nấp Mai Thép"
     },
     "shift_gear": {
       "id": "shift_gear",
@@ -10891,7 +10891,7 @@
       "description": "Burns the opponent.",
       "descriptionEn": "Burns the opponent.",
       "nameEn": "Sizzly Slide",
-      "nameVi": "Sizzly Slide"
+      "nameVi": "Lướt Trượt Rực Lửa"
     },
     "sketch": {
       "id": "sketch",
@@ -10905,7 +10905,7 @@
       "description": "Permanently copies the opponent's last move.",
       "descriptionEn": "Permanently copies the opponent's last move.",
       "nameEn": "Sketch",
-      "nameVi": "Sketch"
+      "nameVi": "Phác Họa"
     },
     "skill_swap": {
       "id": "skill_swap",
@@ -11166,7 +11166,7 @@
       "description": "Power doubles if opponent is paralyzed, but cures it.",
       "descriptionEn": "Power doubles if opponent is paralyzed, but cures it.",
       "nameEn": "Smelling Salts",
-      "nameVi": "Smelling Salts"
+      "nameVi": "Muối Tỉnh Táo"
     },
     "smog": {
       "id": "smog",
@@ -11284,7 +11284,7 @@
       "description": "Raises Phòng thủ of Ice types for 5 turns.",
       "descriptionEn": "Raises Defense of Ice types for 5 turns.",
       "nameEn": "Snowscape",
-      "nameVi": "Snowscape"
+      "nameVi": "Cảnh Tuyết Rơi"
     },
     "soak": {
       "id": "soak",
@@ -11417,7 +11417,7 @@
       "description": "Heals the burns of its target.",
       "descriptionEn": "Heals the burns of its target.",
       "nameEn": "Sparkling Aria",
-      "nameVi": "Sparkling Aria"
+      "nameVi": "Khúc Ca Lấp Lánh"
     },
     "sparkly_swirl": {
       "id": "sparkly_swirl",
@@ -11431,7 +11431,7 @@
       "description": "Cures all status problems in the party Pokémon.",
       "descriptionEn": "Cures all status problems in the party Pokémon.",
       "nameEn": "Sparkly Swirl",
-      "nameVi": "Sparkly Swirl"
+      "nameVi": "Lốc Xoáy Lấp Lánh"
     },
     "spectral_thief": {
       "id": "spectral_thief",
@@ -11543,7 +11543,7 @@
       "description": "Harshly lowers user’s Tốc độ.",
       "descriptionEn": "Harshly lowers user’s Speed.",
       "nameEn": "Spin Out",
-      "nameVi": "Spin Out"
+      "nameVi": "Xoay Trượt Vòng"
     },
     "spirit_break": {
       "id": "spirit_break",
@@ -11585,7 +11585,7 @@
       "description": "Power depends on how many times the user performed Stockpile.",
       "descriptionEn": "Power depends on how many times the user performed Stockpile.",
       "nameEn": "Spit Up",
-      "nameVi": "Spit Up"
+      "nameVi": "Nhổ Ra"
     },
     "spite": {
       "id": "spite",
@@ -11627,7 +11627,7 @@
       "description": "Lycanroc-exclusive Z-Move.",
       "descriptionEn": "Lycanroc-exclusive Z-Move.",
       "nameEn": "Splintered Stormshards",
-      "nameVi": "Splintered Stormshards"
+      "nameVi": "Mảnh Đá Bão Bùng"
     },
     "splishy_splash": {
       "id": "splishy_splash",
@@ -11740,7 +11740,7 @@
       "description": "Có cơ hội khiến đối phương nao núng không thể ra đòn.",
       "descriptionEn": "May cause flinching.",
       "nameEn": "Steamroller",
-      "nameVi": "Steamroller"
+      "nameVi": "Đè Bẹp"
     },
     "steel_beam": {
       "id": "steel_beam",
@@ -11831,7 +11831,7 @@
       "description": "Alolan Raichu-exclusive Electric type Z-Move.",
       "descriptionEn": "Alolan Raichu-exclusive Electric type Z-Move.",
       "nameEn": "Stoked Sparksurfer",
-      "nameVi": "Stoked Sparksurfer"
+      "nameVi": "Lướt Sóng Sét"
     },
     "stomp": {
       "id": "stomp",
@@ -12083,7 +12083,7 @@
       "description": "Ice type Z-Move.",
       "descriptionEn": "Ice type Z-Move.",
       "nameEn": "Subzero Slammer",
-      "nameVi": "Subzero Slammer"
+      "nameVi": "Cú Đập Âm Độ"
     },
     "sucker_punch": {
       "id": "sucker_punch",
@@ -12195,7 +12195,7 @@
       "description": "Flying type Z-Move.",
       "descriptionEn": "Flying type Z-Move.",
       "nameEn": "Supersonic Skystrike",
-      "nameVi": "Supersonic Skystrike"
+      "nameVi": "Đột Kích Siêu Thanh"
     },
     "surf": {
       "id": "surf",
@@ -12237,7 +12237,7 @@
       "description": "Confuses opponent, but sharply raises its Tấn công.",
       "descriptionEn": "Confuses opponent, but sharply raises its Attack.",
       "nameEn": "Swagger",
-      "nameVi": "Swagger"
+      "nameVi": "Tự Đắc"
     },
     "swallow": {
       "id": "swallow",
@@ -12392,7 +12392,7 @@
       "description": "Guaranteed to hit twice in a row.",
       "descriptionEn": "Guaranteed to hit twice in a row.",
       "nameEn": "Tachyon Cutter",
-      "nameVi": "Tachyon Cutter"
+      "nameVi": "Nhát Cắt Siêu Quang"
     },
     "tackle": {
       "id": "tackle",
@@ -12610,7 +12610,7 @@
       "description": "Ignores opponent's Evasiveness for three turns, add Ground immunity.",
       "descriptionEn": "Ignores opponent's Evasiveness for three turns, add Ground immunity.",
       "nameEn": "Telekinesis",
-      "nameVi": "Telekinesis"
+      "nameVi": "Điều Khiển Ý Nghĩ"
     },
     "teleport": {
       "id": "teleport",
@@ -12638,7 +12638,7 @@
       "description": "Đòn tấn công vật lý hệ Fire đánh vào đối phương.",
       "descriptionEn": "",
       "nameEn": "Temper Flare",
-      "nameVi": "Temper Flare"
+      "nameVi": "Bùng Lửa Phẫn Nộ"
     },
     "tera_blast": {
       "id": "tera_blast",
@@ -12666,7 +12666,7 @@
       "description": "Đòn tấn công đặc biệt hệ Normal bắn luồng năng lượng vào đối phương.",
       "descriptionEn": "",
       "nameEn": "Tera Starstorm",
-      "nameVi": "Tera Starstorm"
+      "nameVi": "Bão Sao Tera"
     },
     "terrain_pulse": {
       "id": "terrain_pulse",
@@ -12887,7 +12887,7 @@
       "description": "Strikes before a target's move.",
       "descriptionEn": "Strikes before a target's move.",
       "nameEn": "Thunderclap",
-      "nameVi": "Thunderclap"
+      "nameVi": "Sấm Chớp Bất Ngờ"
     },
     "thunderous_kick": {
       "id": "thunderous_kick",
@@ -13128,7 +13128,7 @@
       "description": "Adds Ghost type to opponent.",
       "descriptionEn": "Adds Ghost type to opponent.",
       "nameEn": "Trick-or-Treat",
-      "nameVi": "Trick-or-Treat"
+      "nameVi": "Cho Kẹo Hay Bị Ghẹo"
     },
     "triple_arrows": {
       "id": "triple_arrows",
@@ -13309,7 +13309,7 @@
       "description": "Strikes before a target's priority move.",
       "descriptionEn": "Strikes before a target's priority move.",
       "nameEn": "Upper Hand",
-      "nameVi": "Upper Hand"
+      "nameVi": "Chiếm Thượng Phong"
     },
     "uproar": {
       "id": "uproar",
@@ -13366,7 +13366,7 @@
       "description": "Power increases when player's bond is stronger.",
       "descriptionEn": "Power increases when player's bond is stronger.",
       "nameEn": "Veevee Volley",
-      "nameVi": "Veevee Volley"
+      "nameVi": "Veevee Tung Chiêu"
     },
     "venom_drench": {
       "id": "venom_drench",
@@ -13638,7 +13638,7 @@
       "description": "Traps opponent, damaging them for 4-5 turns.",
       "descriptionEn": "Traps opponent, damaging them for 4-5 turns.",
       "nameEn": "Whirlpool",
-      "nameVi": "Whirlpool"
+      "nameVi": "Xoáy Nước"
     },
     "whirlwind": {
       "id": "whirlwind",
@@ -13810,7 +13810,7 @@
       "description": "Swaps every Pokémon's Phòng thủ and Special Phòng thủ for 5 turns.",
       "descriptionEn": "Swaps every Pokémon's Defense and Special Defense for 5 turns.",
       "nameEn": "Wonder Room",
-      "nameVi": "Wonder Room"
+      "nameVi": "Căn Phòng Kỳ Diệu"
     },
     "wood_hammer": {
       "id": "wood_hammer",
@@ -13963,7 +13963,7 @@
       "description": "Có cơ hội khiến đối phương nao núng không thể ra đòn.",
       "descriptionEn": "May cause flinching.",
       "nameEn": "Zing Zap",
-      "nameVi": "Zing Zap"
+      "nameVi": "Điện Giật Tê Tái"
     },
     "zippy_zap": {
       "id": "zippy_zap",
@@ -14290,7 +14290,7 @@
       "description": "Power doubles if opponent is paralyzed, but cures it.",
       "descriptionEn": "Power doubles if opponent is paralyzed, but cures it.",
       "nameEn": "Smelling Salts",
-      "nameVi": "Smelling Salts"
+      "nameVi": "Muối Tỉnh Táo"
     },
     "softboiled": {
       "id": "softboiled",

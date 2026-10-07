@@ -1,6 +1,51 @@
-## Cập nhật lần cuối: 2026-10-07 (Nút Chiêu Thức battleFightButtons.png, Kho Chiêu Thức Theo Cấp Độ & Kéo Thả Đổi Chiêu)
+## Cập nhật lần cuối: 2026-10-07 (Khắc Phục Toàn Diện Engine Trận Đấu Chuẩn Gen 7 & Hoàn Thiện Dịch Thuật 956 Chiêu Thức)
 
-### 0.42. Tinh Chỉnh Giao Diện Header Box & Loại Bỏ Khung Tự Render Ở PC Storage:
+### 0.43. Nâng Cấp Toàn Diện Engine Chiến Đấu Chuẩn Gen 7 & Hoàn Thiện 100% Tiếng Việt Cho Chiêu Thức:
+
+- **Trạng thái:** Đã hoàn thành 100% việc rà soát và khắc phục toàn bộ các lỗi P0, P1, P2 trong báo cáo thực nghiệm trận đấu, tuân thủ nghiêm ngặt chuẩn quy tắc Pokémon Gen 7 và dịch hoàn thiện 100% chiêu thức trong cơ sở dữ liệu (`moves-db.json`).
+- **Chi tiết đã thực hiện:**
+  1. **Quyết Định Thứ Tự Lượt Đi ([battle-engine.ts](file:///e:/Pokemon/apps/web/src/battle/battle-engine.ts), [battle-controller.ts](file:///e:/Pokemon/apps/web/src/battle/battle-controller.ts)):**
+     - Kích hoạt `getFirstAttacker(playerMove, enemyMove)` trong `BattleController`: Ưu tiên so sánh độ ưu tiên chiêu thức (`priority`), tiếp đến là Tốc độ (`speed`, có tính hệ số tê liệt $\times 0.5$ và các bậc thay đổi chỉ số $-6 \dots +6$).
+     - Hòa tốc độ được quyết định ngẫu nhiên 50/50 qua bộ sinh số ngẫu nhiên `SeededBattleRng` thay vì luôn mặc định người chơi đi trước.
+     - Xử lý ngất tức thì: Nếu Pokémon đi trước hạ gục đối thủ (`defenderFainted`), đối thủ ngất ngay lập tức và bị hủy lượt đánh.
+  2. **Xử Lý Chiêu Thức Sát Thương Đặc Biệt & Power = 0 ([battle-engine.ts](file:///e:/Pokemon/apps/web/src/battle/battle-engine.ts)):**
+     - Sát thương cố định: `Seismic Toss` và `Night Shade` gây sát thương bằng chính Level người dùng; `Dragon Rage` cố định $40\text{ HP}$; `Sonic Boom` cố định $20\text{ HP}$.
+     - Sát thương theo phần trăm máu: `Super Fang` và `Nature's Madness` gây sát thương bằng $50\%$ HP hiện tại của mục tiêu (tối thiểu $1\text{ HP}$).
+     - Đòn thế dồn lực/tình thế: `Endeavor` rút HP đối thủ bằng đúng HP hiện tại của bản thân nếu bản thân thấp máu hơn; `Psywave` gây sát thương ngẫu nhiên theo công thức Level chuẩn; `Flail` và `Reversal` tự động tính Power động từ 20 đến 200 dựa trên tỉ lệ % máu còn lại.
+     - Chiêu Nhất Kích Tất Sát (OHKO Moves: `Fissure`, `Guillotine`, `Horn Drill`, `Sheer Cold`): Độ chính xác tính bằng `(attackerLevel - defenderLevel) + 30`, tự động trượt nếu cấp độ người dùng thấp hơn mục tiêu; khi trúng hạ gục đối thủ tức thì.
+     - Chiêu Nổ Tung (`Explosion`, `Self-Destruct`): Gây sát thương uy lực lớn và người dùng tự ngất ngay lập tức (`attackerFainted`).
+     - Đòn Đánh Nhiều Lượt (Multi-hit): Các chiêu 2-5 lượt (`Bullet Seed`, `Fury Swipes`,...) và 2 lượt (`Double Kick`, `Dual Wingbeat`,...) thực hiện phân phối số hit chuẩn, trừ HP và kiểm tra ngất chính xác sau từng đòn đánh.
+  3. **Chặn Sát Thương Thừa Cho Giật Lùi (Recoil) & Hồi Máu (Drain) ([battle-engine.ts](file:///e:/Pokemon/apps/web/src/battle/battle-engine.ts)):**
+     - Recoil (`Double-Edge`, `Brave Bird`,...) và Drain (`Giga Drain`, `Absorb`,...) chỉ được tính dựa trên lượng HP thực tế bị trừ của đối thủ (`actualDamage`), không tính trên sát thương tràn ngoài chỉ số HP còn lại.
+     - Xử lý Pokémon tự ngất do recoil hoặc Struggle: Controller kiểm tra cờ `attackerFainted` để ngắt trận hoặc đổi lượt hợp lệ.
+  4. **Quy Tắc Trừ PP Khi Bị Trạng Thái Bất Lực ([battle-engine.ts](file:///e:/Pokemon/apps/web/src/battle/battle-engine.ts)):**
+     - Kiểm tra trạng thái cản trở cử động (Đang ngủ, Đóng băng, Tê liệt hoàn toàn) TRƯỚC KHI trừ PP. Nếu Pokémon không thể ra đòn, bảo lưu 100% số PP của chiêu thức.
+  5. **Bỏ Qua Né Tránh Cho Chiêu Tự Buff & Kiểm Tra Miễn Nhiễm Hệ Cho Status Move ([battle-engine.ts](file:///e:/Pokemon/apps/web/src/battle/battle-engine.ts)):**
+     - Chiêu thức trạng thái nhắm vào chính mình (Self-buff như `Swords Dance`, `Agility`,...) và chiêu không bao giờ trượt (`Swift`, `Aerial Ace`) luôn trúng 100%, bỏ qua evasion và accuracy.
+     - Chiêu trạng thái nhắm vào đối thủ tôn trọng bảng miễn nhiễm hệ: `Thunder Wave` hoàn toàn vô hiệu (`It had no effect!`) khi dùng lên Pokémon hệ Đất (Ground).
+  6. **Chuẩn Hóa Công Thức Sát Thương & Tỉ Lệ Chí Mạng Gen 7 ([battle-engine.ts](file:///e:/Pokemon/apps/web/src/battle/battle-engine.ts)):**
+     - Bổ sung hàm làm tròn xuống `Math.floor((2 * level) / 5) + 2` và `baseDmg = Math.floor(...) + 2` chính xác theo công thức gốc.
+     - Tỉ lệ chí mạng chuẩn Gen 7: Chiêu thường là $1/24 \approx 4.17\%$ và chiêu có tỉ lệ chí mạng cao (High-crit như `Slash`, `Leaf Blade`) là $1/8 = 12.5\%$, nhân hệ số sát thương chí mạng $\times 1.5$.
+     - Chiêu hệ Lửa gây sát thương tự động làm tan băng (`defrosted!`) cho mục tiêu bị đóng băng.
+  7. **Cơ Chế Struggle Khi Cạn Kiệt PP ([battle-engine.ts](file:///e:/Pokemon/apps/web/src/battle/battle-engine.ts), [battle-controller.ts](file:///e:/Pokemon/apps/web/src/battle/battle-controller.ts)):**
+     - Khi toàn bộ 4 chiêu thức hết PP, cả người chơi và kẻ địch tự động tung chiêu `Struggle` (Đấu Tranh): Sát thương không phụ thuộc hệ, người dùng nhận recoil bằng $25\%$ HP tối đa của bản thân.
+  8. **Bonus Trạng Thái Bắt Pokémon & Tích Lũy Bỏ Chạy ([battle-engine.ts](file:///e:/Pokemon/apps/web/src/battle/battle-engine.ts)):**
+     - Công thức bắt áp dụng hệ số nhân trạng thái: Ngủ/Đóng băng $\times 2.0$, Tê liệt/Bỏng/Trúng độc $\times 1.5$. Sử dụng lũy thừa căn bậc bốn ($0.25$) chuẩn xác.
+     - Bỏ chạy: Tích lũy `fleeAttempts` tăng dần khả năng đào tẩu thành công ($+30$ mỗi lần thất bại).
+  9. **Đồng Bộ Dữ Liệu Sau Trận & Thăng Cấp Toàn Diện Chỉ Số ([party-service.ts](file:///e:/Pokemon/apps/web/src/domain/party/party-service.ts), [party-state.ts](file:///e:/Pokemon/apps/web/src/domain/party/party-state.ts), [game-session.ts](file:///e:/Pokemon/apps/web/src/game/game-session.ts)):**
+     - Sửa `syncBattleResult`: Định danh Pokémon bằng `uid` duy nhất thay vì tìm lỏng lẻo theo loài hay fallback bừa bãi.
+     - Khi lên cấp (Level Up): Tính toán lại toàn bộ 6 chỉ số chiến đấu (`hp`, `attack`, `defense`, `spAtk`, `spDef`, `speed`) dựa trên `baseStats` của loài từ `pokemonCatalog`, bảo lưu lượng máu hiện tại tăng tương ứng với maxHp mới.
+     - Bảo toàn `sleepTurns` và trạng thái tích lũy độc khi chuyển đổi giữa Party và Battler.
+     - Thống nhất lượng EXP nhận được sau trận bằng hàm `calculateExpYield` chuẩn xác.
+  10. **Bổ Sung 100% Bản Dịch Tiếng Việt Cho Toàn Bộ 956 Chiêu Thức ([moves-db.json](file:///e:/Pokemon/packages/game-data/moves-db.json)):**
+      - Dịch và chuẩn hóa toàn bộ 135 chiêu thức trước đây còn để nguyên tên tiếng Anh (như `Bestow` → Ban Tặng, `Bulldoze` → San Phẳng, `Endeavor` → Nỗ Lực Tột Cùng, `Endure` → Kiên Cường, `Dual Wingbeat` → Đập Cánh Đôi, `Smelling Salts` → Muối Tỉnh Táo, `Megahorn` → Đại Giác Kích,...).
+      - Đảm bảo 100% chiêu thức trong game có tên tiếng Việt tự nhiên, chuẩn phong cách Việt hóa Pokémon.
+  11. **Kiểm Thử Toàn Diện (Unit Tests):**
+      - Bổ sung test suite `Gen 7 Battle Engine Rules & Edge-case Validations` với đầy đủ các ca kiểm thử cho từng lỗi P0, P1, P2. Toàn bộ 39 tests của hệ thống trận đấu chạy pass $100\%$ không lỗi.
+
+---
+
+
 
 - **Trạng thái:** Đã hoàn thành 100% tinh chỉnh theo phản hồi của người dùng: loại bỏ toàn bộ khung viền / bóng đổ tự render quanh Box Window, ẩn các nút mũi tên tự vẽ để hiển thị mũi tên pixel gốc từ wallpaper `box_X.png`, tăng kích thước tiêu đề Hộp và loại bỏ hoàn toàn dòng số lượng `(0/30)`.
 - **Chi tiết đã thực hiện:**

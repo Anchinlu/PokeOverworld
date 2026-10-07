@@ -169,8 +169,14 @@ export class GameSession {
 
           // Sync battle HP, PP, and EXP back into party
           const finalBattler = result.activePlayerPokemon ?? playerBattler;
-          const expGained = result.outcome === 'victory' ? wildBattler.level * 18 : 0;
+          const expGained = result.outcome === 'victory' ? (result.expGained ?? 0) : 0;
           const { leveledUp, newLevel } = partyService.syncBattleResult(finalBattler, expGained);
+          if (leveledUp) {
+            showBerryToast(
+              `🎉 ${finalBattler.name} đã lên cấp ${newLevel}! Toàn bộ chỉ số chiến đấu đã tăng!`,
+              '#22c55e'
+            );
+          }
 
           if (result.outcome === 'caught') {
             const caughtPk = createPartyPokemon(wildBattler.speciesKey, wildBattler.level);

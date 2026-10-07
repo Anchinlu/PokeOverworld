@@ -6,7 +6,7 @@
 
 import type { BattlerPokemon, BattleMove } from './types';
 import type { BattleState } from './battle-state';
-import { BattleEngine } from './battle-engine';
+import { BattleEngine, STRUGGLE_MOVE, type TurnResult } from './battle-engine';
 import { getHoveredCommandIndex, type BattleRenderer } from './battle-renderer';
 import { PartyScreen } from '../ui/party-screen';
 import { BagScreen } from '../ui/bag-screen';
@@ -17,12 +17,22 @@ import { partyService } from '../domain/party/party-service';
 import { moveAnimationManager } from './move-animation-manager';
 import { getPokeballData, getBaseCatchRate } from './pokeball-db';
 import { battleSePlayer, battleBgmPlayer } from '../audio';
+import { pokemonCatalog } from '../data';
+
+/** Calculates unified official EXP yield */
+export function calculateExpYield(enemySpeciesKey: string, enemyLevel: number): number {
+  const data = pokemonCatalog.getBySpeciesKey(enemySpeciesKey);
+  const total = data?.stats?.total ?? 300;
+  const baseExp = Math.max(40, Math.floor(total / 4));
+  return Math.max(1, Math.floor((baseExp * enemyLevel) / 7));
+}
 
 /** Callback when the battle ends */
 export type BattleEndCallback = (result: {
   outcome: 'caught' | 'victory' | 'fled' | 'defeated';
   caughtPokemon?: BattlerPokemon;
   activePlayerPokemon?: BattlerPokemon;
+  expGained?: number;
 }) => void;
 
 export class BattleController {
@@ -342,9 +352,10 @@ export class BattleController {
 
   private handleEnemyFainted(enemy: BattlerPokemon, player: BattlerPokemon): void {
     this.state.startEnemyFaint(() => {
+      const expGained = calculateExpYield(enemy.speciesKey, enemy.level);
       this.queueMessage(`The wild ${enemy.name} fainted!`, 'message', () => {
-        this.queueMessage(`${player.name} gained ${enemy.level * 35} EXP!`, 'end', () => {
-          this.endBattle('victory');
+        this.queueMessage(`${player.name} gained ${expGained} EXP!`, 'end', () => {
+          this.endBattle('victory', undefined, expGained);
         });
       });
     });
@@ -362,8 +373,7 @@ export class BattleController {
     });
   }
 
-  private handlePlayerMove(move: BattleMove): void {
-    this.state.uiMode = 'message';
+  private executePlayerAttack(move: BattleMove, onDone: (result: TurnResult) => void): void {
     const player = this.engine.playerPokemon;
     const enemy = this.engine.enemyPokemon;
 
@@ -371,7 +381,6 @@ export class BattleController {
     const animPlan = moveAnimationManager.resolveAnimationPlan(move, result.damage > 0);
     this.syncActiveBattlerToParty();
 
-    // Trigger attack animation based on move profile (physical lunge vs in-place casting for special/status)
     this.state.startPlayerAttack({
       lunge: animPlan.attackerLunges,
       onHit: () => {
@@ -385,26 +394,18 @@ export class BattleController {
     this.state.targetPlayerHpPct = player.currentHp / player.maxHp;
 
     this.queueMessage(result.message, 'message', () => {
-      if (result.defenderFainted) {
-        this.handleEnemyFainted(enemy, player);
-      } else {
-        setTimeout(() => {
-          this.handleEnemyTurn();
-        }, 400);
-      }
+      onDone(result);
     });
   }
 
-  private handleEnemyTurn(): void {
+  private executeEnemyAttack(move: BattleMove, onDone: (result: TurnResult) => void): void {
     const enemy = this.engine.enemyPokemon;
     const player = this.engine.playerPokemon;
-    const enemyMove = this.engine.getEnemyAction();
 
-    const result = this.engine.executeAttack(enemy, player, enemyMove);
-    const animPlan = moveAnimationManager.resolveAnimationPlan(enemyMove, result.damage > 0);
+    const result = this.engine.executeAttack(enemy, player, move);
+    const animPlan = moveAnimationManager.resolveAnimationPlan(move, result.damage > 0);
     this.syncActiveBattlerToParty();
 
-    // Trigger attack animation based on move profile (physical lunge vs in-place casting for special/status)
     this.state.startEnemyAttack({
       lunge: animPlan.attackerLunges,
       onHit: () => {
@@ -418,8 +419,93 @@ export class BattleController {
     this.state.targetEnemyHpPct = enemy.currentHp / enemy.maxHp;
 
     this.queueMessage(result.message, 'message', () => {
-      if (result.defenderFainted) {
+      onDone(result);
+    });
+  }
+
+  private handlePlayerMove(move: BattleMove): void {
+    this.state.uiMode = 'message';
+    const player = this.engine.playerPokemon;
+    const enemy = this.engine.enemyPokemon;
+
+    // Struggle fallback if all player moves have 0 PP
+    const hasAnyPp = player.moves.some((m) => m.pp > 0);
+    const effectivePlayerMove = hasAnyPp ? move : STRUGGLE_MOVE;
+
+    const enemyMove = this.engine.getEnemyAction();
+    const firstSide = this.engine.getFirstAttacker(effectivePlayerMove, enemyMove);
+
+    if (firstSide === 'player') {
+      // 1. Player attacks first
+      this.executePlayerAttack(effectivePlayerMove, (firstRes) => {
+        if (firstRes.defenderFainted || enemy.currentHp <= 0) {
+          this.handleEnemyFainted(enemy, player);
+          return;
+        }
+        if (firstRes.attackerFainted || player.currentHp <= 0) {
+          this.handlePlayerFainted(player);
+          return;
+        }
+
+        // 2. Enemy attacks second
+        setTimeout(() => {
+          this.executeEnemyAttack(enemyMove, (secondRes) => {
+            if (secondRes.defenderFainted || player.currentHp <= 0) {
+              this.handlePlayerFainted(player);
+              return;
+            }
+            if (secondRes.attackerFainted || enemy.currentHp <= 0) {
+              this.handleEnemyFainted(enemy, player);
+              return;
+            }
+
+            // Both survived: resolve persistent end-turn effects
+            this.resolveRoundEndEffects(player, enemy);
+          });
+        }, 400);
+      });
+    } else {
+      // 1. Enemy attacks first
+      this.executeEnemyAttack(enemyMove, (firstRes) => {
+        if (firstRes.defenderFainted || player.currentHp <= 0) {
+          this.handlePlayerFainted(player);
+          return;
+        }
+        if (firstRes.attackerFainted || enemy.currentHp <= 0) {
+          this.handleEnemyFainted(enemy, player);
+          return;
+        }
+
+        // 2. Player attacks second
+        setTimeout(() => {
+          this.executePlayerAttack(effectivePlayerMove, (secondRes) => {
+            if (secondRes.defenderFainted || enemy.currentHp <= 0) {
+              this.handleEnemyFainted(enemy, player);
+              return;
+            }
+            if (secondRes.attackerFainted || player.currentHp <= 0) {
+              this.handlePlayerFainted(player);
+              return;
+            }
+
+            // Both survived: resolve persistent end-turn effects
+            this.resolveRoundEndEffects(player, enemy);
+          });
+        }, 400);
+      });
+    }
+  }
+
+  private handleEnemyTurn(): void {
+    const enemy = this.engine.enemyPokemon;
+    const player = this.engine.playerPokemon;
+    const enemyMove = this.engine.getEnemyAction();
+
+    this.executeEnemyAttack(enemyMove, (res) => {
+      if (res.defenderFainted || player.currentHp <= 0) {
         this.handlePlayerFainted(player);
+      } else if (res.attackerFainted || enemy.currentHp <= 0) {
+        this.handleEnemyFainted(enemy, player);
       } else {
         this.resolveRoundEndEffects(player, enemy);
       }
@@ -587,7 +673,8 @@ export class BattleController {
 
   private endBattle(
     outcome: 'caught' | 'victory' | 'fled' | 'defeated',
-    caughtPokemon?: BattlerPokemon
+    caughtPokemon?: BattlerPokemon,
+    expGained?: number
   ): void {
     this.syncActiveBattlerToParty();
     this.state.isRunning = false;
@@ -596,6 +683,7 @@ export class BattleController {
       outcome,
       caughtPokemon,
       activePlayerPokemon: this.engine.playerPokemon,
+      expGained,
     });
   }
 }

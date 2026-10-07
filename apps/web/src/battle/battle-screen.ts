@@ -26,6 +26,7 @@ export interface BattleScreenResult {
   outcome: 'caught' | 'victory' | 'fled' | 'defeated';
   caughtPokemon?: BattlerPokemon;
   activePlayerPokemon?: BattlerPokemon;
+  expGained?: number;
 }
 
 export class BattleScreen {
