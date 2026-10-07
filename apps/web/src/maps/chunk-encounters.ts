@@ -42,6 +42,7 @@ export interface WildPokemonEntity {
   speciesKey: string;
   name: string;
   level: number;
+  isShiny?: boolean;
   behavior: string;
   dir: number;
   homeGX: number;

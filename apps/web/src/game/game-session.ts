@@ -161,7 +161,13 @@ export class GameSession {
         }
 
         const playerBattler = partyPokemonToBattler(activePk);
-        const wildBattler = createBattler(wp.speciesKey, wp.level, false);
+        const wildBattler = createBattler(
+          wp.speciesKey,
+          wp.level,
+          false,
+          undefined,
+          wp.isShiny ?? false
+        );
 
         new BattleScreen(playerBattler, wildBattler, env, (result) => {
           this.isBattling = false;
@@ -179,7 +185,9 @@ export class GameSession {
           }
 
           if (result.outcome === 'caught') {
-            const caughtPk = createPartyPokemon(wildBattler.speciesKey, wildBattler.level);
+            const caughtPk = createPartyPokemon(wildBattler.speciesKey, wildBattler.level, {
+              isShiny: wildBattler.isShiny,
+            });
             caughtPk.currentHp = Math.max(1, wildBattler.currentHp);
             playerService.incrementCaught();
 
@@ -233,7 +241,7 @@ export class GameSession {
     });
   }
 
-  public startTestBattle(overlayOverride?: string): void {
+  public startTestBattle(overlayOverride?: string, isEnemyShiny = false): void {
     const testRoster = [
       'PIDGEY',
       'RATTATA',
@@ -250,6 +258,7 @@ export class GameSession {
       gy: this.player.gy,
       speciesKey: randomSpecies,
       level: defaultRng.nextInt(3, 6),
+      isShiny: isEnemyShiny,
     };
     const chunk = this.chunkManager.getChunk(
       Math.floor(this.player.gx / 16),

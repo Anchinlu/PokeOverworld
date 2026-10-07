@@ -120,14 +120,17 @@ export async function bootstrap(): Promise<void> {
   });
 
   const btnTestBattle = document.querySelector<HTMLButtonElement>('#btnTestBattle');
+  const selectBattleShiny = document.querySelector<HTMLSelectElement>('#selectBattleShiny');
   const selectBattleOverlay = document.querySelector<HTMLSelectElement>('#selectBattleOverlay');
   btnTestBattle?.addEventListener('click', () => {
     const overlay = selectBattleOverlay?.value || 'auto';
-    session.startTestBattle(overlay);
+    const isShiny = selectBattleShiny?.value === 'shiny';
+    session.startTestBattle(overlay, isShiny);
   });
-  window.startBattle = (overlay?: string) => {
-    const chosen = overlay || selectBattleOverlay?.value || 'auto';
-    session.startTestBattle(chosen);
+  window.startBattle = (overlay?: string, isShiny?: boolean) => {
+    const chosenOverlay = overlay || selectBattleOverlay?.value || 'auto';
+    const chosenShiny = isShiny !== undefined ? isShiny : selectBattleShiny?.value === 'shiny';
+    session.startTestBattle(chosenOverlay, chosenShiny);
   };
   window.saveGame = () => {
     const res = saveGameRepository.save('slot_1', {
@@ -156,6 +159,7 @@ export async function bootstrap(): Promise<void> {
 
   // --- Party Debug & Testing Controls (Map Overlay) ---
   const selectPartySpecies = document.querySelector<HTMLSelectElement>('#selectPartySpecies');
+  const selectPartyForm = document.querySelector<HTMLSelectElement>('#selectPartyForm');
   const inputPartyLevel = document.querySelector<HTMLInputElement>('#inputPartyLevel');
   const lblPartyCount = document.querySelector<HTMLElement>('#lblPartyCount');
   const btnAddPartyPokemon = document.querySelector<HTMLButtonElement>('#btnAddPartyPokemon');
@@ -192,9 +196,13 @@ export async function bootstrap(): Promise<void> {
     }
     const speciesKey = selectPartySpecies?.value || 'PIKACHU';
     const level = Math.max(1, Math.min(100, parseInt(inputPartyLevel?.value || '25', 10) || 25));
-    const newPk = createPartyPokemon(speciesKey, level);
+    const isShiny = selectPartyForm?.value === 'shiny';
+    const newPk = createPartyPokemon(speciesKey, level, { isShiny });
     partyService.addPokemon(newPk);
-    showBerryToast(`🎉 Đã thêm ${newPk.name} (Lv.${newPk.level}) vào đội hình!`, '#22c55e');
+    showBerryToast(
+      `🎉 Đã thêm ${newPk.name}${isShiny ? ' ★ Shiny' : ''} (Lv.${newPk.level}) vào đội hình!`,
+      '#22c55e'
+    );
   });
 
   btnAddRandomPartyPokemon?.addEventListener('click', () => {
@@ -205,9 +213,13 @@ export async function bootstrap(): Promise<void> {
     const all = pokemonCatalog.getAll();
     const randomSpecies = defaultRng.choice(all);
     const randomLevel = defaultRng.nextInt(5, 50);
-    const newPk = createPartyPokemon(randomSpecies.speciesKey, randomLevel);
+    const isShiny = selectPartyForm?.value === 'shiny';
+    const newPk = createPartyPokemon(randomSpecies.speciesKey, randomLevel, { isShiny });
     partyService.addPokemon(newPk);
-    showBerryToast(`🎲 Đã thêm ngẫu nhiên ${newPk.name} (Lv.${newPk.level})!`, '#38bdf8');
+    showBerryToast(
+      `🎲 Đã thêm ngẫu nhiên ${newPk.name}${isShiny ? ' ★ Shiny' : ''} (Lv.${newPk.level})!`,
+      '#38bdf8'
+    );
   });
 
   btnFillPartyPokemon?.addEventListener('click', () => {
@@ -227,6 +239,7 @@ export async function bootstrap(): Promise<void> {
       'GYARADOS',
     ];
     let addedCount = 0;
+    const isShiny = selectPartyForm?.value === 'shiny';
     while (!partyService.isPartyFull()) {
       const currentKeys = partyService.getParty().map((p) => p.speciesKey);
       const candidates = showcaseKeys.filter((k) => !currentKeys.includes(k));
@@ -235,10 +248,13 @@ export async function bootstrap(): Promise<void> {
           ? defaultRng.choice(candidates)
           : defaultRng.choice(pokemonCatalog.getAll()).speciesKey;
       const level = defaultRng.nextInt(20, 50);
-      partyService.addPokemon(createPartyPokemon(chosenKey, level));
+      partyService.addPokemon(createPartyPokemon(chosenKey, level, { isShiny }));
       addedCount++;
     }
-    showBerryToast(`⚡ Đã bổ sung thêm ${addedCount} Pokémon để đủ 6 Slot!`, '#10b981');
+    showBerryToast(
+      `⚡ Đã bổ sung thêm ${addedCount} Pokémon${isShiny ? ' ★ Shiny' : ''} để đủ 6 Slot!`,
+      '#10b981'
+    );
   });
 
   btnResetPartyPokemon?.addEventListener('click', () => {

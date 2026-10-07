@@ -1,4 +1,27 @@
-## Cập nhật lần cuối: 2026-10-07 (Tích Hợp Toàn Diện Dạng Shiny Cho 151 Pokémon Gen 1 Vào Database & Hệ Thống)
+## Cập nhật lần cuối: 2026-10-07 (Bổ Sung Bộ Chọn Dạng Thường / Shiny Vào Bảng Debug & Tích Hợp UI Kiểm Thử)
+
+### 0.46. Bổ Sung Bộ Chọn Dạng Thường / Shiny Vào Bảng Debug & Đồng Bộ UI:
+
+- **Trạng thái:** Đã hoàn thành 100% việc tích hợp bộ chọn dạng Thường / 🌟 Shiny vào bảng Debug Panel (trên giao diện Map Overlay) cho cả tính năng Thêm Pokémon vào đội hình lẫn Khởi động trận đấu kiểm thử, đồng thời hiển thị huy hiệu sao vàng `★` trên giao diện Party và Storage PC.
+- **Chi tiết đã thực hiện:**
+  1. **Bảng Điều Khiển Debug ([game-overlay.ts](file:///e:/Pokemon/apps/web/src/ui/game-overlay.ts)):**
+     - Bổ sung dropdown `<select id="selectPartyForm">` với 2 lựa chọn: `⚪ Thường` và `🌟 Shiny` vào khu vực debug đội hình Pokémon.
+     - Bổ sung dropdown `<select id="selectBattleShiny">` với 2 lựa chọn: `⚪ Địch Thường` và `🌟 Địch Shiny` ngay cạnh nút `⚔️ Đấu Thử`.
+  2. **Liên Kết Sự Kiện Debug ([bootstrap.ts](file:///e:/Pokemon/apps/web/src/bootstrap.ts)):**
+     - Cập nhật nút `➕ Thêm vào đội`: Đọc giá trị từ `selectPartyForm`, truyền cờ `isShiny: boolean` vào hàm `createPartyPokemon(speciesKey, level, { isShiny })`.
+     - Cập nhật nút `🎲 Ngẫu nhiên` và `⚡ Đầy 6 Slot`: Tôn trọng lựa chọn dạng Thường/Shiny đang chọn từ dropdown `selectPartyForm`.
+     - Cập nhật nút `⚔️ Đấu Thử` và API toàn cục `window.startBattle(overlay?: string, isShiny?: boolean)`: Hỗ trợ bắt đầu trận đấu thử với đối thủ dạng Thường hoặc Shiny tùy chọn.
+  3. **Đồng Bộ Dạng Shiny Cho Trận Đấu & Thu Phục ([game-session.ts](file:///e:/Pokemon/apps/web/src/game/game-session.ts)):**
+     - `startWildBattle`: Truyền cờ `wp.isShiny` vào `createBattler`.
+     - Khi ném bóng thu phục thành công (`result.outcome === 'caught'`): Pokémon hoang dã dạng Shiny khi vào đội hình hoặc chuyển vào PC Storage vẫn giữ nguyên thuộc tính Shiny (`{ isShiny: wildBattler.isShiny }`).
+     - `startTestBattle`: Nhận tham số `isEnemyShiny` và gán vào thực thể Pokémon tạo mẫu.
+  4. **Hiển Thị Huy Hiệu Sao Vàng Trên Giao Diện ([party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts), [storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts)):**
+     - Trên các ô danh sách Party, tên Pokémon dạng Shiny có kèm biểu tượng ngôi sao vàng `★`.
+     - Trong modal xem chi tiết tóm tắt (Summary Modal) của Party và Storage PC, tên Pokémon Shiny hiển thị sao vàng `★`, đi kèm toàn bộ hoạt ảnh sprite động Shiny tương ứng.
+  5. **Kiểm Thử & Xác Thực:**
+     - Toàn bộ pipeline typecheck (`npm run typecheck:web`) và bộ test Vitest (14 files, 120 tests) đều PASS 100%.
+
+---
 
 ### 0.45. Bổ Sung Dạng Shiny (Sắc Màu Đặc Biệt) Cho Toàn Bộ 151 Pokémon Gen 1:
 

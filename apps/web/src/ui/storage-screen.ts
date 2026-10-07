@@ -1068,7 +1068,7 @@ export class StorageScreen {
       .join('');
 
     infoEl.innerHTML = `
-      <span class="preview-name">${pokemon.nickname || pokemon.name}</span>
+      <span class="preview-name">${pokemon.nickname || pokemon.name}${pokemon.isShiny ? ' <span style="color: #facc15; font-size: 13px;" title="Shiny Pokémon">★</span>' : ''}</span>
       <span class="preview-badge">Lv.${pokemon.level}</span>
       <div class="preview-types-wrap">${typesHtml}</div>
       <span class="preview-badge hp">HP: ${hpStr}</span>
@@ -1191,7 +1191,8 @@ export class StorageScreen {
     const expEl = modal.querySelector('#storageSummaryExp');
     const expBar = modal.querySelector('#storageSummaryExpBar') as HTMLElement;
 
-    if (nameEl) nameEl.textContent = `${pokemon.nickname || pokemon.name} Lv.${pokemon.level}`;
+    if (nameEl)
+      nameEl.textContent = `${pokemon.nickname || pokemon.name} Lv.${pokemon.level}${pokemon.isShiny ? ' ★' : ''}`;
     if (genderEl) {
       genderEl.textContent =
         pokemon.gender === 'male' ? '♂' : pokemon.gender === 'female' ? '♀' : '';

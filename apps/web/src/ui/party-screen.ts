@@ -506,7 +506,7 @@ export class PartyScreen {
 
           <!-- Name -->
           <div class="ps-name-row">
-            <span class="ps-pk-name">${pk.nickname || pk.name}</span>
+            <span class="ps-pk-name">${pk.nickname || pk.name}${pk.isShiny ? ' <span style="color: #facc15; font-size: 13px;" title="Shiny Pokémon">★</span>' : ''}</span>
           </div>
 
           <!-- Gender Badge (battler_gender.png) -->
@@ -622,7 +622,8 @@ export class PartyScreen {
     const modal = this.backdropEl.querySelector<HTMLElement>('#partySummaryModal');
     if (!modal) return;
 
-    modal.querySelector('#summaryPkName')!.textContent = `${pk.nickname || pk.name} Lv.${pk.level}`;
+    modal.querySelector('#summaryPkName')!.textContent =
+      `${pk.nickname || pk.name} Lv.${pk.level}${pk.isShiny ? ' ★' : ''}`;
     const spriteCanvas = modal.querySelector<HTMLCanvasElement>('#summaryPkSprite')!;
     if (spriteCanvas) {
       if (!this.summaryAnimator) {

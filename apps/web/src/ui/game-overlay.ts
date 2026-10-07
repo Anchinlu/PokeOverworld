@@ -187,7 +187,11 @@ export function createOverlayTemplate(): string {
       </div>
       <div class="actions-row" style="margin-top: 6px; display: flex; gap: 6px;">
         <button class="btn-action-primary" id="btnTestBattle" style="flex: 1; background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 2px 8px rgba(239,68,68,0.4);">⚔️ Đấu Thử</button>
-        <select id="selectBattleOverlay" style="flex: 1.2; padding: 4px 6px; font-size: 11px; border-radius: 6px; background: rgba(30, 41, 59, 0.85); color: #fff; border: 1px solid rgba(255,255,255,0.18);" title="Chọn tiền cảnh chiến đấu">
+        <select id="selectBattleShiny" style="flex: 0.95; padding: 4px 6px; font-size: 11px; border-radius: 6px; background: rgba(30, 41, 59, 0.85); color: #fff; border: 1px solid rgba(255,255,255,0.18);" title="Dạng Pokémon hoang dã">
+          <option value="normal">⚪ Địch Thường</option>
+          <option value="shiny">🌟 Địch Shiny</option>
+        </select>
+        <select id="selectBattleOverlay" style="flex: 1.15; padding: 4px 6px; font-size: 11px; border-radius: 6px; background: rgba(30, 41, 59, 0.85); color: #fff; border: 1px solid rgba(255,255,255,0.18);" title="Chọn tiền cảnh chiến đấu">
           <option value="auto">🌿 Tự động theo map</option>
           <option value="grass_tall">🌾 Cỏ cao (Tall Grass)</option>
           <option value="grass_field">🌱 Cỏ thấp (Field Grass)</option>
@@ -205,12 +209,16 @@ export function createOverlayTemplate(): string {
           <span id="lblPartyCount" style="font-size: 11px; font-family: monospace; color: #93c5fd; background: rgba(59,130,246,0.2); padding: 2px 6px; border-radius: 4px;">1 / 6</span>
         </div>
 
-        <!-- Species & Level Pickers -->
+        <!-- Species, Form & Level Pickers -->
         <div class="control-row" style="display: flex; gap: 6px;">
-          <select id="selectPartySpecies" style="flex: 1; padding: 4px 6px; font-size: 11px; border-radius: 6px; background: rgba(30, 41, 59, 0.85); color: #fff; border: 1px solid rgba(255,255,255,0.18);">
+          <select id="selectPartySpecies" style="flex: 1.3; padding: 4px 6px; font-size: 11px; border-radius: 6px; background: rgba(30, 41, 59, 0.85); color: #fff; border: 1px solid rgba(255,255,255,0.18);">
             <!-- Populated dynamically via bootstrap.ts -->
           </select>
-          <input type="number" id="inputPartyLevel" min="1" max="100" value="25" style="width: 52px; padding: 4px; font-size: 11px; text-align: center; border-radius: 6px; background: rgba(30, 41, 59, 0.85); color: #fff; border: 1px solid rgba(255,255,255,0.18);" title="Cấp độ (1-100)">
+          <select id="selectPartyForm" style="flex: 0.95; padding: 4px 6px; font-size: 11px; border-radius: 6px; background: rgba(30, 41, 59, 0.85); color: #fff; border: 1px solid rgba(255,255,255,0.18);" title="Chọn dạng Pokémon">
+            <option value="normal">⚪ Thường</option>
+            <option value="shiny">🌟 Shiny</option>
+          </select>
+          <input type="number" id="inputPartyLevel" min="1" max="100" value="25" style="width: 48px; padding: 4px; font-size: 11px; text-align: center; border-radius: 6px; background: rgba(30, 41, 59, 0.85); color: #fff; border: 1px solid rgba(255,255,255,0.18);" title="Cấp độ (1-100)">
         </div>
 
         <!-- Action Row 1: Add Selected / Add Random -->
