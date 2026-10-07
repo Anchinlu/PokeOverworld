@@ -1,6 +1,31 @@
-## Cập nhật lần cuối: 2026-10-07 (Tích Hợp Biểu Tượng Chuẩn shiny.png Cho Toàn Bộ Hệ Thống Hiển Thị)
+## Cập nhật lần cuối: 2026-10-07 (Hiệu Ứng Sáng Bóng & Âm Thanh Không Gian Cho Pokémon Shiny Trên Map & Battle)
 
-### 0.47. Sử Dụng Biểu Tượng Đồ Họa Chuẩn `shiny.png` Cho Pokémon Shiny:
+### 0.48. Hiệu Ứng Sáng Bóng (Sparkle Shine) & Âm Thanh Không Gian (Spatial Audio) Cho Pokémon Shiny Trên Map & Trong Trận Đấu:
+
+- **Trạng thái:** Đã hoàn thành 100% việc tích hợp hiệu ứng thị giác sáng bóng (sparkle visual effects) trên Overworld Map và Battle Screen, cùng hệ thống âm thanh không gian $3 \times 3$ chunk cho Pokémon Shiny trên map và âm thanh xuất hiện trong trận chiến.
+- **Chi tiết đã thực hiện:**
+  1. **Âm Thanh Không Gian Trên Map ([overworld-shiny-audio.ts](file:///e:/Pokemon/apps/web/src/audio/overworld-shiny-audio.ts), [game-session.ts](file:///e:/Pokemon/apps/web/src/game/game-session.ts)):**
+     - Tạo `OverworldShinyAudio` quản lý luồng âm thanh lặp `Audio/SE/shiny-pokemon-sound_XMc2yU61.mp3`.
+     - Xác định phạm vi lắng nghe chuẩn $3 \times 3$ chunk theo khoảng cách Chebyshev ($|cx_{pokemon} - cx_{player}| \le 1$ và $|cy_{pokemon} - cy_{player}| \le 1$).
+     - Tính toán khoảng cách Euclidean chính xác giữa người chơi và Pokémon Shiny, điều chỉnh âm lượng mượt mà (LERP) theo hàm phi tuyến: ở rìa $3 \times 3$ chunk âm thanh phát nhỏ êm dịu, càng tiến lại gần Pokémon Shiny âm thanh càng vang rõ và to dần (lên tới mức tối đa 1.0).
+     - Tự động ngắt âm thanh tức thì khi Pokémon Shiny biến mất, bị bắt, hoặc khi người chơi bắt đầu trận đấu.
+  2. **Hiệu Ứng Thị Giác Sáng Bóng Trên Bản Đồ Overworld ([character-renderer.ts](file:///e:/Pokemon/apps/web/src/rendering/character-renderer.ts)):**
+     - Nạp sprite overworld sắc màu Shiny từ `Graphics/Characters/Followers shiny/${speciesKey}.png`.
+     - Vẽ hào quang phát quang màu hổ phách/vàng kim (`#f59e0b`) tỏa ra dưới chân Pokémon Shiny.
+     - Vẽ 4 ngôi sao 4 cánh lấp lánh màu vàng và trắng bạc (`#fef08a`, `#ffffff`) xoay tròn và nhấp nháy bay lượn quanh Pokémon Shiny.
+  3. **Âm Thanh & Hiệu Ứng Sáng Bóng Riêng Biệt Trong Trận Đấu ([battle-se.ts](file:///e:/Pokemon/apps/web/src/audio/battle-se.ts), [battle-screen.ts](file:///e:/Pokemon/apps/web/src/battle/battle-screen.ts), [battle-renderer.ts](file:///e:/Pokemon/apps/web/src/battle/battle-renderer.ts)):**
+     - Phương thức `battleSePlayer.playShinyAppear()` phát tệp âm thanh `Audio/SE/shiny-pokemon.mp3`.
+     - Tự động kích hoạt âm thanh và hoạt ảnh lấp lánh khi Pokémon Shiny hoang dã xuất hiện trong màn mở đầu intro trận đấu, cũng như khi Pokémon Shiny của người chơi được ném bóng ra sân chiến đấu.
+     - Thiết kế hiệu ứng bùng nổ hào quang đa tầng trong trận đấu: Tâm phát sáng Radial Glow bung tỏa, chùm tia Starburst Cross Rays 8 hướng, và vòng 10 ngôi sao 4 cánh chuyển động xoắn ốc hướng tâm tỏa ra kèm các hạt bụi sao Starlight Dust lấp lánh.
+  4. **Công Cụ Kiểm Thử Debug Nhanh ([game-overlay.ts](file:///e:/Pokemon/apps/web/src/ui/game-overlay.ts), [bootstrap.ts](file:///e:/Pokemon/apps/web/src/bootstrap.ts)):**
+     - Thêm nút `✨ Thả Shiny Hoang Dã (Map Test)` trong bảng điều khiển Party Debug, cho phép người chơi tạo ngay một Pokémon Shiny theo loài tùy chọn ở gần nhân vật trên bản đồ để thử nghiệm âm thanh không gian và hiệu ứng sáng bóng.
+  5. **Kiểm Thử Tự Động & Đảm Bảo Tính Toàn Vẹn ([shiny-spatial.test.ts](file:///e:/Pokemon/apps/web/test/shiny-spatial.test.ts)):**
+     - Bổ sung bộ kiểm thử đơn vị tự động kiểm tra bán kính $3 \times 3$ chunk, tính tỉ lệ âm lượng khoảng cách và dừng âm thanh khi vào trận đấu.
+     - Toàn bộ 15 tệp kiểm thử (124 tests) đạt chuẩn PASS 100%, TypeScript build pass không có lỗi.
+
+---
+
+### 0.47. Sử Dụng Biểu Tượng Đồ Họa Chuẩn `shiny.png` Cho Toàn Bộ Hệ Thống Hiển Thị:
 
 - **Trạng thái:** Đã hoàn thành 100% việc tích hợp tệp ảnh biểu tượng chuẩn [shiny.png](file:///e:/Pokemon/Graphics/Pokemon/shiny.png) ($24 \times 24\text{ px}$) thay thế cho ký tự sao văn bản trên toàn bộ các giao diện: Trận đấu (Battle Databox), Đội hình (Party Screen), và Kho lưu trữ PC (Storage Screen).
 - **Chi tiết đã thực hiện:**

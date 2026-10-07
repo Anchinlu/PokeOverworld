@@ -10,7 +10,7 @@ import { isNearWater } from '../maps/terrain-rules';
 import { BattleScreen, createBattler, getBattleEnvironment } from '../battle';
 import { showBerryToast } from '../ui/toast';
 import { playEncounterTransition } from '../ui/encounter-transition';
-import { battleBgmPlayer } from '../audio';
+import { battleBgmPlayer, overworldShinyAudio } from '../audio';
 import {
   partyService,
   playerService,
@@ -105,6 +105,16 @@ export class GameSession {
 
     // 5. Wild Pokémon AI
     updateWildPokemon(this.chunkManager, this.player, this.follower, dtScale);
+
+    // 6. Overworld Shiny Pokémon Spatial Audio (3x3 chunk detection & distance scaling)
+    overworldShinyAudio.update(
+      this.player.gx,
+      this.player.gy,
+      pChunkX,
+      pChunkY,
+      this.chunkManager.activeChunks,
+      this.isBattling
+    );
 
     return { pChunkX, pChunkY };
   }
@@ -265,6 +275,82 @@ export class GameSession {
       Math.floor(this.player.gy / 16)
     );
     this.startWildBattle(mockWp, chunk, overlayOverride);
+  }
+
+  public spawnTestShinyWild(speciesKey?: string): WildPokemonEntity | null {
+    const pChunkX = Math.floor(this.player.gx / 16);
+    const pChunkY = Math.floor(this.player.gy / 16);
+    const chunk = this.chunkManager.getChunk(pChunkX, pChunkY);
+    if (!chunk) return null;
+
+    if (!chunk.wildPokemon) {
+      chunk.wildPokemon = [];
+    }
+
+    const testSpecies =
+      speciesKey ||
+      defaultRng.choice([
+        'CHARIZARD',
+        'PIKACHU',
+        'EEVEE',
+        'DRAGONITE',
+        'GENGAR',
+        'GYARADOS',
+        'BULBASAUR',
+        'NINETALES',
+      ]);
+
+    // Position 2-3 tiles away from player for clear visibility
+    const offsets = [
+      { dx: 2, dy: 1 },
+      { dx: -2, dy: 1 },
+      { dx: 1, dy: 2 },
+      { dx: -1, dy: -2 },
+      { dx: 3, dy: 0 },
+    ];
+    const offset = defaultRng.choice(offsets);
+    const gx = this.player.gx + offset.dx;
+    const gy = this.player.gy + offset.dy;
+    const px = gx * 32 - 16;
+    const py = gy * 32 - 32;
+
+    const shinyWp: WildPokemonEntity = {
+      gx,
+      gy,
+      x: px,
+      y: py,
+      speciesKey: testSpecies,
+      name: testSpecies,
+      level: defaultRng.nextInt(15, 35),
+      isShiny: true,
+      behavior: 'idle',
+      dir: 0,
+      homeGX: gx,
+      homeGY: gy,
+      wanderRadius: 4,
+      state: 'idle',
+      isMoving: false,
+      fromX: px,
+      fromY: py,
+      targetGX: gx,
+      targetGY: gy,
+      targetX: px,
+      targetY: py,
+      stepProgress: 0,
+      moveSpeed: 1.6,
+      stepsRemaining: 0,
+      currentDir: 0,
+      lastMoveTime: 0,
+      idleTimer: 3000,
+      frame: 0,
+      emote: null,
+      seed: this.seed,
+      chunkCx: pChunkX,
+      chunkCy: pChunkY,
+    };
+
+    chunk.wildPokemon.push(shinyWp);
+    return shinyWp;
   }
 
   public regenerate(seed?: number): void {

@@ -146,6 +146,20 @@ export class BattleState {
   enemyDataboxProgress = 0;
   playerDataboxProgress = 0;
 
+  // Shiny entrance sparkle animation timers
+  enemyShinyTimer = 0;
+  enemyShinyMax = 44;
+  playerShinyTimer = 0;
+  playerShinyMax = 44;
+
+  triggerEnemyShinySparkles(): void {
+    this.enemyShinyTimer = this.enemyShinyMax;
+  }
+
+  triggerPlayerShinySparkles(): void {
+    this.playerShinyTimer = this.playerShinyMax;
+  }
+
   // Animation tick
   tick = 0;
   isRunning = true;
@@ -567,6 +581,8 @@ export class BattleState {
     if (this.enemyHurtFlash > 0) this.enemyHurtFlash--;
     if (this.playerHurtFlash > 0) this.playerHurtFlash--;
     if (this.ballShakeTimer > 0) this.ballShakeTimer--;
+    if (this.enemyShinyTimer > 0) this.enemyShinyTimer--;
+    if (this.playerShinyTimer > 0) this.playerShinyTimer--;
 
     // Capture success sparkle effect
     if (this.captureSuccessEffect) {

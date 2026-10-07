@@ -132,6 +132,13 @@ export class BattleSePlayer {
   public playPcClose(): void {
     this.playSound('Audio/SE/PC close.ogg');
   }
+
+  /**
+   * Sound: Shiny Pokémon appears into battle with authentic chime & sparkle
+   */
+  public playShinyAppear(): void {
+    this.playSound('Audio/SE/shiny-pokemon.mp3', 0.95);
+  }
 }
 
 export const battleSePlayer = BattleSePlayer.getInstance();

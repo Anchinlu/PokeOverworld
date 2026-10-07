@@ -262,6 +262,18 @@ export async function bootstrap(): Promise<void> {
     showBerryToast('🗑️ Đã đặt lại đội hình (chỉ giữ Pikachu Lv.5)!', '#eab308');
   });
 
+  const btnSpawnShinyWild = document.querySelector<HTMLButtonElement>('#btnSpawnShinyWild');
+  btnSpawnShinyWild?.addEventListener('click', () => {
+    const speciesKey = selectPartySpecies?.value;
+    const shiny = session.spawnTestShinyWild(speciesKey);
+    if (shiny) {
+      showBerryToast(
+        `✨ Đã xuất hiện Pokémon Shiny ${shiny.name} (Lv.${shiny.level}) gần bạn trên map! Hãy đến gần để lắng nghe âm thanh đặc trưng!`,
+        '#f59e0b'
+      );
+    }
+  });
+
   // Initialize Party & Bag Screens
   initPartyScreen((newLeader) => {
     showBerryToast(`👑 ${newLeader.name} đang dẫn đầu đội hình!`, '#38bdf8');

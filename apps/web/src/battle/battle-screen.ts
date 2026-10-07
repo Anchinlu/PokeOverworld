@@ -19,8 +19,8 @@ import { BattleController } from './battle-controller';
 import { TypeBadgeRenderer } from './type-badge-renderer';
 import { BattleTextOverlay } from './battle-text-overlay';
 import { pokemonCryPlayer } from '../ui/pokedex/pokemon-cry';
+import { battleBgmPlayer, battleSePlayer } from '../audio';
 import { BATTLE_ASSETS } from '../assets';
-import { battleBgmPlayer } from '../audio';
 
 export interface BattleScreenResult {
   outcome: 'caught' | 'victory' | 'fled' | 'defeated';
@@ -122,19 +122,27 @@ export class BattleScreen {
 
     this.state.updateTick();
 
-    // Play wild Pokémon cry right when it flashes brightly in the intro (introProgress >= 0.55)
+    // Play wild Pokémon cry and shiny sparkle when it appears in the intro (introProgress >= 0.55)
     if (this.state.isIntro && this.state.introProgress >= 0.55 && !this.state.wildCryPlayed) {
       this.state.wildCryPlayed = true;
       if (this.engine.enemyPokemon.cry) {
         pokemonCryPlayer.play(this.engine.enemyPokemon.cry);
       }
+      if (this.engine.enemyPokemon.isShiny) {
+        this.state.triggerEnemyShinySparkles();
+        battleSePlayer.playShinyAppear();
+      }
     }
 
-    // Play player Pokémon cry when it impacts the ground on send-out
+    // Play player Pokémon cry and shiny sparkle when it impacts the ground on send-out
     if (this.state.pokemonLandCryTriggered) {
       this.state.pokemonLandCryTriggered = false;
       if (this.engine.playerPokemon.cry) {
         pokemonCryPlayer.play(this.engine.playerPokemon.cry);
+      }
+      if (this.engine.playerPokemon.isShiny) {
+        this.state.triggerPlayerShinySparkles();
+        battleSePlayer.playShinyAppear();
       }
     }
 

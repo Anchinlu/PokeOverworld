@@ -148,6 +148,7 @@ export function generateChunkWildPokemon(
         speciesKey: chosen.speciesKey,
         name: pokemonCatalog.getBySpeciesKey(chosen.speciesKey)?.name ?? chosen.speciesKey,
         level,
+        isShiny: seededHash(gx, gy, seed + 9999) < 0.05,
         behavior: chosen.behavior,
         dir: initialDir,
         homeGX: gx,

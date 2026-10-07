@@ -232,6 +232,11 @@ export function createOverlayTemplate(): string {
           <button class="btn-action-primary" id="btnFillPartyPokemon" style="background: linear-gradient(135deg, #10b981, #059669); font-size: 11px; padding: 5px 8px;">⚡ Đầy 6 Slot</button>
           <button class="btn-action-secondary" id="btnResetPartyPokemon" style="font-size: 11px; padding: 5px 8px;">🗑️ Reset đội hình</button>
         </div>
+
+        <!-- Action Row 3: Spawn Wild Shiny on Map for Testing -->
+        <div class="actions-row">
+          <button class="btn-action-primary" id="btnSpawnShinyWild" style="background: linear-gradient(135deg, #f59e0b, #d97706); font-size: 11px; padding: 5px 8px; width: 100%;" title="Tạo ngay 1 Pokémon Shiny hoang dã gần bạn trên map">✨ Thả Shiny Hoang Dã (Map Test)</button>
+        </div>
       </div>
 
       <!-- Bag Debug Section -->

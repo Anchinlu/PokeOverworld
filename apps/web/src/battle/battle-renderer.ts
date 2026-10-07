@@ -197,6 +197,14 @@ export class BattleRenderer {
     this.drawPlayerSendOut(ctx, state);
     this.drawBallThrow(ctx, state);
 
+    // Shiny entrance sparkle effects (bursting stars & halo)
+    if (state.enemyShinyTimer > 0) {
+      this.drawBattleShinySparkles(ctx, 380, 115, state.enemyShinyTimer, state.enemyShinyMax);
+    }
+    if (state.playerShinyTimer > 0) {
+      this.drawBattleShinySparkles(ctx, 130, 220, state.playerShinyTimer, state.playerShinyMax);
+    }
+
     ctx.restore();
 
     if (state.isIntro) {
@@ -1559,5 +1567,127 @@ export class BattleRenderer {
     ctx.textAlign = 'center';
     this.drawTextWithOutline(ctx, ppStr, rightColCenterX, y + 32, ppColor);
     ctx.textAlign = 'left';
+  }
+
+  /**
+   * Authentic Shiny entrance sparkle effect in battle.
+   * Features:
+   * 1. Expanding brilliant radial glow flash at center.
+   * 2. Circle of rotating 4-pointed radiant sparkle stars bursting outward.
+   * 3. Diamond starburst rays radiating and floating starlight dust.
+   */
+  private drawBattleShinySparkles(
+    ctx: CanvasRenderingContext2D,
+    cx: number,
+    cy: number,
+    timer: number,
+    maxTimer: number
+  ): void {
+    const p = Math.min(1.0, Math.max(0, 1.0 - timer / maxTimer));
+
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+
+    // 1. Central radiant glow burst (peaks early at p ~ 0.2, fades out)
+    const glowRadius = Math.max(1, Math.round(18 + p * 62));
+    const glowAlpha = Math.max(0, 0.9 - p * 1.1);
+    if (glowAlpha > 0.01) {
+      const grad = ctx.createRadialGradient(cx, cy, 2, cx, cy, glowRadius);
+      grad.addColorStop(0, `rgba(255, 255, 255, ${glowAlpha.toFixed(2)})`);
+      grad.addColorStop(0.35, `rgba(254, 240, 138, ${(glowAlpha * 0.85).toFixed(2)})`);
+      grad.addColorStop(0.7, `rgba(234, 179, 8, ${(glowAlpha * 0.45).toFixed(2)})`);
+      grad.addColorStop(1, 'rgba(234, 179, 8, 0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, glowRadius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // 2. Starburst cross rays (flashing out from center)
+    const rayAlpha = Math.max(0, 0.85 - p * 0.95);
+    if (rayAlpha > 0.02) {
+      ctx.save();
+      ctx.globalAlpha = rayAlpha;
+      const numRays = 8;
+      const rayLen = Math.round(25 + p * 65);
+      const rayWidth = Math.max(1, Math.round(3 * (1.0 - p * 0.7)));
+      for (let i = 0; i < numRays; i++) {
+        const angle = (i * Math.PI * 2) / numRays + p * 1.2;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(angle);
+        const rayGrad = ctx.createLinearGradient(0, 0, 0, -rayLen);
+        rayGrad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+        rayGrad.addColorStop(0.5, 'rgba(254, 240, 138, 0.8)');
+        rayGrad.addColorStop(1, 'rgba(234, 179, 8, 0)');
+        ctx.fillStyle = rayGrad;
+        ctx.beginPath();
+        ctx.moveTo(-rayWidth, 0);
+        ctx.lineTo(0, -rayLen);
+        ctx.lineTo(rayWidth, 0);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+      ctx.restore();
+    }
+
+    // 3. Ring of 10 bursting sparkle stars expanding outward in a spiral
+    const numStars = 10;
+    const ringRadius = 14 + Math.pow(p, 0.85) * 82;
+    const starAlpha = Math.max(0, 1.0 - Math.pow(p, 1.4));
+
+    for (let i = 0; i < numStars; i++) {
+      const baseAngle = (i * Math.PI * 2) / numStars;
+      const angle = baseAngle + p * 1.4; // spinning expansion
+      const sx = cx + Math.cos(angle) * ringRadius;
+      const sy = cy + Math.sin(angle) * (ringRadius * 0.75); // slight perspective tilt
+
+      // Star size scales up then tapers down
+      const sizeFactor = Math.sin(p * Math.PI);
+      const starSize = 5 + sizeFactor * 9;
+
+      ctx.save();
+      ctx.translate(sx, sy);
+      ctx.rotate(angle * 2.2);
+      ctx.globalAlpha = starAlpha;
+
+      // Draw 4-pointed radiant sparkle star
+      ctx.fillStyle = i % 2 === 0 ? '#ffffff' : '#fde047';
+      ctx.beginPath();
+      ctx.moveTo(0, -starSize);
+      ctx.lineTo(starSize * 0.26, -starSize * 0.26);
+      ctx.lineTo(starSize, 0);
+      ctx.lineTo(starSize * 0.26, starSize * 0.26);
+      ctx.lineTo(0, starSize);
+      ctx.lineTo(-starSize * 0.26, starSize * 0.26);
+      ctx.lineTo(-starSize, 0);
+      ctx.lineTo(-starSize * 0.26, -starSize * 0.26);
+      ctx.closePath();
+      ctx.fill();
+
+      // Golden center core
+      ctx.fillStyle = '#fef08a';
+      ctx.beginPath();
+      ctx.arc(0, 0, starSize * 0.38, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+
+      // Trailing micro-starlight dust particle
+      const trailAngle = angle - 0.22;
+      const trailDist = ringRadius * 0.84;
+      const tx = cx + Math.cos(trailAngle) * trailDist;
+      const ty = cy + Math.sin(trailAngle) * (trailDist * 0.75);
+      ctx.save();
+      ctx.globalAlpha = starAlpha * 0.6;
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(tx, ty, Math.max(1, 2.5 * sizeFactor), 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    ctx.restore();
   }
 }
