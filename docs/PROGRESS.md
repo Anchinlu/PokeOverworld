@@ -1,6 +1,31 @@
-## Cập nhật lần cuối: 2026-10-07 (Khắc Phục Toàn Diện Engine Trận Đấu Chuẩn Gen 7 & Hoàn Thiện Dịch Thuật 956 Chiêu Thức)
+## Cập nhật lần cuối: 2026-10-07 (Thực Hiện Bước A Kiến Trúc, ESLint TypeScript, Tối Ưu Hiệu Năng H1/H2/H6 & Đồng Bộ Tài Liệu Kế Hoạch)
 
-### 0.43. Nâng Cấp Toàn Diện Engine Chiến Đấu Chuẩn Gen 7 & Hoàn Thiện 100% Tiếng Việt Cho Chiêu Thức:
+### 0.44. Triển Khai Bước A Nền Tảng Kiến Trúc & Tối Ưu Hiệu Năng Runtime (H1, H2, H6):
+
+- **Trạng thái:** Đã hoàn thành 100% các yêu cầu từ [DEV_ARCHITECTURE_GUIDE.md](file:///e:/Pokemon/docs/DEV_ARCHITECTURE_GUIDE.md): Dọn dẹp file di sản, tích hợp ESLint cho toàn bộ TypeScript, sửa lỗi regex escape, tối ưu hóa thuật toán render và đồng bộ toàn bộ tài liệu quy chuẩn.
+- **Chi tiết đã thực hiện:**
+  1. **Dọn dẹp file di sản ở thư mục gốc (Root Cleanup):**
+     - Xóa bỏ `map_viewer.html` ($126\text{ KB}$) và `tiles_data.js` ($127\text{ KB}$) không còn sử dụng từ thời kỳ prototype cũ, làm sạch hoàn toàn thư mục gốc monorepo.
+  2. **Tích Hợp ESLint Hỗ Trợ TypeScript Toàn Diện ([eslint.config.js](file:///e:/Pokemon/eslint.config.js)):**
+     - Cài đặt và cấu hình `typescript-eslint` trên ESLint 10 flat config.
+     - Kích hoạt quy tắc kiểm tra lỗi cho toàn bộ các file `.ts` trong `apps/web/src` và `apps/web/test`, bảo vệ chất lượng code tĩnh.
+     - Khắc phục lỗi regex escape không cần thiết trong [asset-registry.ts](file:///e:/Pokemon/apps/web/src/assets/asset-registry.ts#L308).
+  3. **Tối Ưu Hiệu Năng Runtime (H2, H1, H6) ([ground-renderer.ts](file:///e:/Pokemon/apps/web/src/rendering/ground-renderer.ts), [time.ts](file:///e:/Pokemon/apps/web/src/core/time.ts)):**
+     - **Tối ưu H2 (Cỏ cao):** Chuyển đổi cơ chế kiểm tra thực thể di chuyển trong `renderTallGrassPatches` từ vòng lặp $O(\text{cỏ} \times \text{thực thể})$ sang bảng tra tập hợp `Set<number>` với hàm băm `tileKey(gx, gy)` đạt độ phức tạp $O(1)$ tức thì.
+     - **Tối ưu H1 (Gạch nước):** Cắt sớm (cull) toàn bộ chunk nước nằm ngoài tầm nhìn (viewport bounds) trong `renderWaterTiles` trước khi duyệt qua 256 ô con, loại bỏ lãng phí CPU render các chunk khuất.
+     - **Tối ưu H6 (Game Loop Stats):** Sửa lỗi `GameTime.getStats()` trả về mốc thời gian `lastTime` thay vì delta-time; hiện tại trả chính xác `dtMs` (khoảng cách ms giữa 2 frame thực tế) và `dtScale` chuẩn hóa theo 60 FPS.
+  4. **Đồng Bộ Hóa Toàn Diện Hệ Thống Tài Liệu Quy Chuẩn:**
+     - Cập nhật [DEV_GUARDRAILS.md](file:///e:/Pokemon/docs/DEV_GUARDRAILS.md): Bổ sung quy tắc chuẩn Gen 7 cho toàn bộ trận đấu, quy tắc hướng phụ thuộc 6 tầng (L0 $\rightarrow$ L5), cấm vòng lặp import và áp đặt giới hạn kích thước file (cảnh báo 400 dòng, lỗi 600 dòng).
+     - Cập nhật [02-architecture.md](file:///e:/Pokemon/docs/plans/02-architecture.md): Thay thế sơ đồ client-server cũ bằng sơ đồ kiến trúc 6 tầng Client-only, DDD theo thực tế.
+     - Cập nhật [03-repository-structure.md](file:///e:/Pokemon/docs/plans/03-repository-structure.md): Phản ánh chính xác cấu trúc thư mục Monorepo thực tế.
+     - Cập nhật [04-frontend-plan.md](file:///e:/Pokemon/docs/plans/04-frontend-plan.md): Ghi rõ công nghệ TypeScript thuần + Canvas 2D + DOM High-DPI (không dùng Phaser/React).
+     - Cập nhật [05-backend-plan.md](file:///e:/Pokemon/docs/plans/05-backend-plan.md): Đánh dấu trạng thái **TẠM HOÃN (Deferred)** theo quyết định D2.
+  5. **Xác Thực Chất Lượng Tuyệt Đối (CI Pipeline):**
+     - Chạy toàn bộ pipeline `npm run ci`: Schema Validation PASS, ESLint TS PASS, Prettier format PASS, Typecheck PASS, Vitest 14 files (119/119 tests) PASS, Production build Vite PASS 100%.
+
+---
+
+
 
 - **Trạng thái:** Đã hoàn thành 100% việc rà soát và khắc phục toàn bộ các lỗi P0, P1, P2 trong báo cáo thực nghiệm trận đấu, tuân thủ nghiêm ngặt chuẩn quy tắc Pokémon Gen 7 và dịch hoàn thiện 100% chiêu thức trong cơ sở dữ liệu (`moves-db.json`).
 - **Chi tiết đã thực hiện:**

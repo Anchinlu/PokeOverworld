@@ -81,6 +81,31 @@ Không cho phép:
 - Data layer phụ thuộc canvas hoặc browser event.
 - Battle engine phụ thuộc UI element.
 - AI sửa trực tiếp state của UI.
+- Import ngược tầng hoặc tạo vòng import (circular dependencies).
+- Direct import singleton toàn cục trong code mới (phải truyền qua constructor / composition root).
+
+### 2.4. Chuẩn Luật Chiến Đấu (Battle Rules) — Gen 7 Standard
+
+Toàn bộ hệ thống chiến đấu bám sát quy tắc chuẩn **Gen 7**:
+
+- **Bảng tương khắc hệ:** Chuẩn Gen 6+ gồm cả 18 hệ (kèm Fairy).
+- **Hệ số sát thương chí mạng (Critical Hit):** $\times 1.5$ (không dùng $\times 2.0$ đời cũ). Tỉ lệ thường $1/24 \approx 4.17\%$, tỉ lệ high-crit $1/8 = 12.5\%$.
+- **Trạng thái:**
+  - Bỏng (Burn): Sát thương $1/16$ HP mỗi lượt, giảm $50\%$ Tấn công vật lý.
+  - Tê liệt (Paralysis): Giảm $50\%$ Tốc độ ($\times 0.5$, không dùng $\times 0.25$ Gen 6 trở về trước), $25\%$ tỉ lệ không ra được đòn.
+  - Độc nặng (Toxic): Tăng dần $N/16$ mỗi lượt (có trần).
+  - Đóng băng (Freeze): $20\%$ tỉ lệ tan băng mỗi lượt; chiêu hệ Lửa gây sát thương tự động làm tan băng.
+- **Công thức sát thương:** `Math.floor((2 * level) / 5) + 2` và `baseDmg = Math.floor(...) + 2`.
+- **Thứ tự lượt:** Quyết định bởi Priority trước, sau đó Tốc độ; hòa tốc độ quyết định ngẫu nhiên 50/50 qua RNG được tiêm vào (`BattleRng`).
+- **Recoil & Drain:** Chỉ tính trên lượng HP thực tế đối thủ bị trừ (`actualDamage`), không tính sát thương tràn ngoài HP mục tiêu.
+- **Bắt Pokémon:** Bonus trạng thái: Ngủ/Đóng băng $\times 2.0$, Tê liệt/Bỏng/Độc $\times 1.5$; số mũ căn bậc 4 ($0.25$).
+- **Struggle:** Tự động kích hoạt khi cả 4 chiêu cạn kiệt PP, nhận giật lùi $25\%$ HP tối đa của bản thân.
+
+### 2.5. Giới hạn kích thước file và phân rã module
+
+- Giới hạn kích thước file: **Cảnh báo ở 400 dòng, lỗi ở 600 dòng**. Mọi ngoại lệ bắt buộc phải có comment giải thích lý do cụ thể.
+- Một file một trách nhiệm duy nhất (Single Responsibility Principle). Hàm vượt quá 60 dòng phải được phân rã thành các helper thuần.
+- CSS đi cùng tính năng (component/view-scoped CSS), tránh tiếp tục dồn thêm code vào `style.css`.
 
 ---
 

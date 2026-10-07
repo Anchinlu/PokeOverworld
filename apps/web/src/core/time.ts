@@ -28,6 +28,9 @@ export class GameTime {
     this.onRender = onRender;
   }
 
+  private lastDtMs = 16.667;
+  private lastDtScale = 1.0;
+
   public start(): void {
     if (this.isRunning) return;
     this.isRunning = true;
@@ -46,8 +49,8 @@ export class GameTime {
   public getStats(): GameTimeStats {
     return {
       fps: this.currentFps,
-      dtMs: this.lastTime,
-      dtScale: 1.0,
+      dtMs: this.lastDtMs,
+      dtScale: this.lastDtScale,
     };
   }
 
@@ -69,6 +72,8 @@ export class GameTime {
     // Baseline 60 FPS scale (1.0 at 60 FPS, 0.416 at 144 FPS).
     // Clamped between 0.1 and 2.5 to avoid large physics steps when switching tabs.
     const dtScale = Math.min(Math.max((dtMs || 16.667) / (1000 / 60), 0.1), 2.5);
+    this.lastDtMs = dtMs;
+    this.lastDtScale = dtScale;
 
     this.onUpdate(dtScale, dtMs);
     this.onRender();

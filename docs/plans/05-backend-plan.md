@@ -2,7 +2,8 @@
 
 ## Trạng thái
 
-Kế hoạch בלבד. Chưa triển khai.
+**TẠM HOÃN (Deferred)** theo quyết định kiến trúc D2 (xem [DEV_ARCHITECTURE_GUIDE.md](file:///e:/Pokemon/docs/DEV_ARCHITECTURE_GUIDE.md)).
+Dự án định hướng Client-only, offline-first. Toàn bộ logic nghiệp vụ (save game, party, pc, inventory, battle rules) được viết thuần TypeScript ở lớp `domain/` phía client, bảo đảm có thể chuyển sang authoritative server khi có yêu cầu chế độ multiplayer.
 
 ## Công nghệ dự kiến
 

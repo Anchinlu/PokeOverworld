@@ -305,7 +305,7 @@ export const ITEM_ASSETS = {
   },
   getItemSprite: (spritePath: string): string => {
     const clean = spritePath.replace(/^\//, '');
-    const key = `item_${clean.replace(/[\/\.]/g, '_')}`;
+    const key = `item_${clean.replace(/[/.]/g, '_')}`;
     return resolveAsset(key, `/${clean}`);
   },
 } as const;

@@ -2,58 +2,69 @@
 
 ## Trạng thái
 
-Đã phê duyệt kiến trúc tổng thể Monorepo & phân tầng Domain-Driven Design (DDD).
+Đã cập nhật theo quyết định định hướng kiến trúc D1, D2 trong [DEV_ARCHITECTURE_GUIDE.md](file:///e:/Pokemon/docs/DEV_ARCHITECTURE_GUIDE.md): **Client-only, Offline-first, Phân tầng Domain-Driven Design (DDD)**.
 
-## Sơ đồ luồng dữ liệu & Thành phần hệ thống
+## Sơ đồ phân tầng và luồng dữ liệu kiến trúc
 
 ```text
-┌────────────────────────────────────────────────────────┐
-│               apps/web (Frontend Client)               │
-│  Phaser 3 Game Engine  │  React / Vanilla DOM UI / HUD │
-│  - Overworld Scenes    │  - Dialog Box (WindowSkin)    │
-│  - Tile Autotiling     │  - Inventory Bag & Party      │
-│  - Player Controller   │  - Battle Command Interface   │
-└──────────────────────────┬─────────────────────────────┘
-                           │
-             REST API (Auth, State) / WebSockets (Realtime)
-                           │
-┌──────────────────────────▼─────────────────────────────┐
-│              apps/server (Backend Game Server)         │
-│               FastAPI + Pydantic + SQLAlchemy          │
-│                                                        │
-│  Domain Layers (DDD):                                  │
-│  ├─ player/    : Quản lý nhân vật, tọa độ, party       │
-│  ├─ pokemon/   : Chỉ số, moveset, EXP, tiến hóa        │
-│  ├─ map/       : Server validation vị trí & chunk      │
-│  ├─ inventory/ : Quản lý túi đồ & vật phẩm             │
-│  └─ battle/    : Đấu trận theo lượt, công thức damage  │
-└────────────┬─────────────────────────────┬─────────────┘
-             │                             │
-    PostgreSQL Database              Redis Cache
-    (Persistent Player Data)         (Session, Map States)
+┌────────────────────────────────────────────────────────────────────────┐
+│ L5: UI · Game · Bootstrap (Composition Root)                           │
+│     - main.ts, bootstrap.ts, GameSession                               │
+│     - UI Screens: Pokédex, PC Storage, Party, Bag, Dialog Box          │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+┌───────────────────────────────────▼────────────────────────────────────┐
+│ L4: Battle Session / Controller · Rendering System                     │
+│     - BattleController (quản lý luồng lượt và trạng thái tương tác)    │
+│     - Canvas 2D: GroundRenderer, ObjectRenderer, CharacterRenderer    │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+┌───────────────────────────────────▼────────────────────────────────────┐
+│ L3: World & Pure Battle Rules                                          │
+│     - Procedural Maps (ChunkManager, TerrainRules, VillageRules)       │
+│     - Entities & AI (Player, Follower, WildPokemon)                    │
+│     - BattleEngine: Pure calculation rules (Gen 7 standard)            │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+┌───────────────────────────────────▼────────────────────────────────────┐
+│ L2: Domain Models & Services                                           │
+│     - PartyService, PcStorageService, InventoryService, SaveService    │
+│     - Domain Models: PartyPokemon, BattlerPokemon, BoxPokemon          │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+┌───────────────────────────────────▼────────────────────────────────────┐
+│ L1: Data Catalog & Shared Packages                                     │
+│     - packages/game-data: moves-db.json, pokemon-db.json, items-db.json│
+│     - packages/shared-types, PokemonCatalog, ItemCatalog               │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+┌───────────────────────────────────▼────────────────────────────────────┐
+│ L0: Core Infrastructure & Adapters (Platform)                          │
+│     - Core: SeededRandom / RNG, Camera, GameTime loop                  │
+│     - Platform: WebAudio / BGM Player, LocalStorage, Tauri Shell       │
+└────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Ranh giới trách nhiệm (Separation of Concerns)
 
-1. **Frontend (`apps/web`):**
-   - **Game Engine (Phaser 3):** Quản lý camera, nạp chunk streaming từ map generator, render sprite nhân vật, animation đi bộ/chạy, nhạc nền và SFX.
-   - **Giao diện (UI/HUD):** Render khung thoại WindowSkin, bảng chọn lệnh battle, menu túi đồ Pokémon, thanh máu HP và thông báo quest.
-   - **Client Store:** Quản lý state cục bộ để UI phản hồi tức thì (optimistic update khi thích hợp).
+1. **Giao diện & Điều khiển (L5 & L4):**
+   - High-DPI DOM UI: Render khung thoại WindowSkin, bảng chọn lệnh battle, menu túi đồ Pokémon, thanh máu HP, Pokédex và PC Storage.
+   - Canvas 2D Render Engine: Render thế giới ô lưới (tiles), bóng đổ thực thể, mặt nước hoạt họa, cây cối, cỏ lay động theo gió.
+   - Nhận input từ người chơi và điều phối sự kiện thông qua các cổng giao tiếp (ports).
 
-2. **Backend (`apps/server`):**
-   - **Authoritative Server:** Client chỉ gửi input/hành động; server chịu trách nhiệm kiểm tra tính hợp lệ (vd: không thể đi xuyên vách núi, không thể dùng vật phẩm không có trong túi).
-   - **Battle Engine:** Tính toán lượt đấu, tốc độ (Speed priority), công thức sát thương thế hệ 3, tỉ lệ bắt trúng (catch rate) trên server.
+2. **Luật chơi thuần (L3):**
+   - Các thuật toán tính toán sát thương, hiệu ứng trạng thái, kiểm tra tương khắc hệ Gen 7 là các hàm thuần (pure functions), không phụ thuộc UI/DOM/Canvas.
 
-3. **Shared Packages (`packages/`):**
-   - `shared-types`: Type definitions và interface đồng bộ giữa TypeScript (Web) và Pydantic (Server).
-   - `game-data`: Bảng dữ liệu tĩnh về 151+ Pokémon, hiệu ứng chiêu thức (Moves), độ tương khắc thuộc tính (Type Chart), tỉ lệ bắt Pokémon theo từng vùng bụi cỏ.
+3. **Nghiệp vụ Domain (L2):**
+   - Quản lý trạng thái đội hình (Party), hộp lưu trữ (PC Boxes), túi đồ (Inventory) và dữ liệu lưu (Save Game).
+   - Đảm bảo tính toàn vẹn dữ liệu, không import trực tiếp UI hay Canvas.
 
-4. **Tools & Pipelines (`tools/`):**
-   - `map-generator`: Độc lập hóa công cụ sinh bản đồ thủ tục thành module có thể chạy batch render ra ảnh hoặc JSON metadata cho client.
-   - `asset-pipeline`: Tự động cắt sprite, ghép atlas tileset, nạp WindowSkin và nén tối ưu.
+4. **Dữ liệu tĩnh & Core (L1 & L0):**
+   - `packages/game-data`: Single Source of Truth cho toàn bộ 956 chiêu thức và danh mục Pokémon.
+   - `core/`: Bộ sinh số ngẫu nhiên theo hạt giống (`SeededBattleRng`), vòng lặp thời gian delta-time, camera.
 
-## Quy tắc thiết kế
+## Quy tắc thiết kế cốt lõi
 
-- **No God Objects:** Tuyệt đối không dồn code xử lý vào một file đơn lẻ. Tách biệt rõ ràng Scene, Entity, System, Domain Service và Repository.
-- **Single Source of Truth:** Game data tĩnh (chỉ số Pokémon, moves) được định nghĩa tại `packages/game-data`.
-- **Stateless Server Nodes:** Trạng thái phiên người chơi lưu tại Redis và PostgreSQL, giúp dễ dàng scale ngang khi cần.
+- **Chỉ import 1 chiều từ trên xuống dưới:** Tuyệt đối không import ngược tầng và không có vòng lặp phụ thuộc (circular dependency).
+- **Luật chơi là hàm thuần:** Nhận đầu vào và trả về kết quả; ngẫu nhiên phải đi qua RNG được tiêm vào (Dependency Injection).
+- **Single Source of Truth:** Game data tĩnh được định nghĩa tập trung tại `packages/game-data`.

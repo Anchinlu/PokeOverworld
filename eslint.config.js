@@ -1,7 +1,9 @@
 import js from '@eslint/js';
+import tseslint from 'typescript-eslint';
 
 export default [
   js.configs.recommended,
+  ...tseslint.configs.recommended,
   {
     ignores: [
       '**/node_modules/**',
@@ -9,8 +11,6 @@ export default [
       '**/target/**',
       '**/src-tauri/gen/**',
       '**/.system_generated/**',
-      'tiles_data.js',
-      'map_viewer.html',
       'scratch/**',
       '*.py',
       'apps/web/public/**',
@@ -31,6 +31,28 @@ export default [
     rules: {
       'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       'no-undef': 'error',
+    },
+  },
+  {
+    files: ['apps/web/src/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
+      '@typescript-eslint/no-explicit-any': 'warn',
+      'no-useless-assignment': 'warn',
+    },
+  },
+  {
+    files: ['apps/web/test/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
+      '@typescript-eslint/no-explicit-any': 'off',
+      'no-useless-assignment': 'off',
     },
   },
 ];

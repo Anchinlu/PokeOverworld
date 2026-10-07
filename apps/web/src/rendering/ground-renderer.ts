@@ -185,6 +185,27 @@ export class GroundRenderer {
     const imgTG = this.loader.getImage('tall_grass_strip');
     if (!imgTG || !imgTG.complete) return;
 
+    // H2 Optimization: Pre-compute active moving entity tiles (O(1) lookup per patch)
+    const movingTiles = new Set<number>();
+    const tileKey = (gx: number, gy: number): number => gx * 67108864 + gy;
+
+    if (player.isMoving) {
+      movingTiles.add(tileKey(player.gx, player.gy));
+      movingTiles.add(tileKey(player.targetGX, player.targetGY));
+    }
+    if (follower.isMoving) {
+      movingTiles.add(tileKey(follower.gx, follower.gy));
+      movingTiles.add(tileKey(follower.targetGX, follower.targetGY));
+    }
+    for (const chunk of chunkManager.activeChunks) {
+      for (const wp of chunk.wildPokemon) {
+        if (wp.isMoving) {
+          movingTiles.add(tileKey(wp.gx, wp.gy));
+          movingTiles.add(tileKey(wp.targetGX, wp.targetGY));
+        }
+      }
+    }
+
     for (const chunk of chunkManager.activeChunks) {
       for (const tg of chunk.tallGrass) {
         if (
@@ -196,31 +217,7 @@ export class GroundRenderer {
           continue;
         }
 
-        const isRedMovingHere =
-          ((player.gx === tg.gx && player.gy === tg.gy) ||
-            (player.isMoving && player.targetGX === tg.gx && player.targetGY === tg.gy)) &&
-          player.isMoving;
-        const isPikaMovingHere =
-          ((follower.gx === tg.gx && follower.gy === tg.gy) ||
-            (follower.isMoving && follower.targetGX === tg.gx && follower.targetGY === tg.gy)) &&
-          follower.isMoving;
-
-        let isWildMovingHere = false;
-        for (const wChunk of chunkManager.activeChunks) {
-          for (const wp of wChunk.wildPokemon) {
-            if (
-              wp.isMoving &&
-              ((wp.gx === tg.gx && wp.gy === tg.gy) ||
-                (wp.targetGX === tg.gx && wp.targetGY === tg.gy))
-            ) {
-              isWildMovingHere = true;
-              break;
-            }
-          }
-          if (isWildMovingHere) break;
-        }
-
-        const isMovingActive = isRedMovingHere || isPikaMovingHere || isWildMovingHere;
+        const isMovingActive = movingTiles.has(tileKey(tg.gx, tg.gy));
 
         let fIdx = 0;
         if (isMovingActive) {
@@ -260,8 +257,22 @@ export class GroundRenderer {
     // 8-frame animated caustic water & shore wave cycle (280ms per frame)
     const fIdx = Math.floor((now / 280) % 8);
     const sx = fIdx * TILE_SIZE;
+    const CHUNK_PX = 16 * TILE_SIZE;
 
     for (const chunk of chunkManager.activeChunks) {
+      const chunkPxX = chunk.cx * CHUNK_PX;
+      const chunkPxY = chunk.cy * CHUNK_PX;
+
+      // H1 Optimization: Cull entire chunk before iterating 256 tiles
+      if (
+        chunkPxX + CHUNK_PX < bounds.minX ||
+        chunkPxX > bounds.maxX ||
+        chunkPxY + CHUNK_PX < bounds.minY ||
+        chunkPxY > bounds.maxY
+      ) {
+        continue;
+      }
+
       const startGX = chunk.cx * 16;
       const startGY = chunk.cy * 16;
 

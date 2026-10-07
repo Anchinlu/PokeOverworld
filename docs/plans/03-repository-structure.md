@@ -2,60 +2,42 @@
 
 ## Trạng thái
 
-Đã thống nhất sơ đồ Monorepo chuẩn hoá theo kiến trúc mở rộng.
+Đã cập nhật theo cấu trúc Monorepo thực tế và định hướng tổ chức file trong [DEV_ARCHITECTURE_GUIDE.md](file:///e:/Pokemon/docs/DEV_ARCHITECTURE_GUIDE.md).
 
-## Cấu trúc thư mục Monorepo
+## Cấu trúc thư mục Monorepo thực tế
 
 ```text
-pokemon-game/
+pokemon-monorepo/
 ├─ apps/
-│  ├─ web/                    # Frontend game
+│  ├─ web/                    # Ứng dụng web game client chính (Vite + TypeScript thuần)
 │  │  ├─ src/
-│  │  │  ├─ game/             # Phaser game engine
-│  │  │  │  ├─ scenes/        # OverworldScene, BattleScene, MenuScene...
-│  │  │  │  ├─ entities/      # Player, NPC, WildPokemon...
-│  │  │  │  ├─ systems/       # Movement, Collision, Interaction, DayNight...
-│  │  │  │  ├─ maps/          # Chunk loader, autotile streaming
-│  │  │  │  └─ rendering/     # Camera, viewport, tile rendering
-│  │  │  ├─ ui/               # Menu, inventory, dialog, HUD (DOM/React/Vanilla)
-│  │  │  ├─ api/              # HTTP client, WebSocket client gọi backend
-│  │  │  ├─ stores/           # State management (Player state, UI state)
-│  │  │  ├─ assets/           # Spritesheets, tilesets, audio, windowskin
-│  │  │  └─ main.ts           # Entry point của client
+│  │  │  ├─ core/             # time loop, camera, math, seeded rng
+│  │  │  ├─ data/             # catalog loader, static catalogs
+│  │  │  ├─ domain/           # Nghiệp vụ: party, pc, inventory, player, save
+│  │  │  ├─ battle/           # Rules (hàm thuần Gen 7), state, controller, renderer, animation
+│  │  │  ├─ maps/ (world/)    # ChunkManager, sinh địa hình, ecology, entities, wild AI
+│  │  │  ├─ rendering/        # Canvas 2D renderers (ground, object, character)
+│  │  │  ├─ ui/               # Màn hình UI: pokedex, storage-screen, party-screen, bag-screen
+│  │  │  ├─ platform/         # Audio/BGM player, local storage persistence
+│  │  │  ├─ assets/           # Asset registry & path resolvers
+│  │  │  ├─ game/             # GameSession, GameLoop
+│  │  │  └─ main.ts           # Entry point & Composition Root
+│  │  ├─ test/                # Test suite Vitest (14 files, 119 tests)
 │  │  └─ package.json
 │  │
-│  └─ server/                 # Backend API (Python/FastAPI)
-│     ├─ app/
-│     │  ├─ api/              # REST & WebSocket endpoints
-│     │  ├─ core/             # Config, security/auth, logging, database session
-│     │  ├─ domain/           # Business logic theo Domain-Driven Design (DDD)
-│     │  │  ├─ player/        # Quản lý người chơi, chỉ số, tọa độ
-│     │  │  ├─ pokemon/       # Stats, tiến hóa, moveset, EXP
-│     │  │  ├─ map/           # Server-side validation vị trí & chunk
-│     │  │  ├─ inventory/     # Túi đồ, vật phẩm, sử dụng item
-│     │  │  └─ battle/        # Engine tính toán sát thương, lượt đấu đối kháng
-│     │  ├─ models/           # SQLAlchemy / SQLModel database models
-│     │  ├─ repositories/     # Lớp truy cập database (Repository pattern)
-│     │  ├─ schemas/          # Pydantic Request/Response DTOs
-│     │  └─ main.py           # Entry point FastAPI application
-│     └─ tests/               # Unit & integration tests server
+│  └─ desktop/                # Ứng dụng desktop vỏ Tauri (Rust + Webview)
+│     ├─ src-tauri/           # Cấu hình & wrapper Tauri
+│     └─ package.json
 │
 ├─ packages/
-│  ├─ shared-types/           # TypeScript types, API contracts, JSON schemas dùng chung
-│  ├─ game-data/              # Dữ liệu Pokémon, moves, items, bảng thuộc tính type-chart
-│  └─ config/                 # Hằng số cấu hình toàn dự án (tile size, chunk size...)
+│  ├─ shared-types/           # TypeScript interfaces dùng chung
+│  └─ game-data/              # Database tĩnh: moves-db.json (956 chiêu), pokemon-db, items-db
 │
-├─ tools/
-│  ├─ map-generator/          # Bộ sinh bản đồ thủ tục (tách từ map_generator.py & chunk.py)
-│  ├─ asset-pipeline/         # Xử lý sprite, cắt tileset, nén base64, atlas generator
-│  └─ validators/             # Tool kiểm tra tính hợp lệ dữ liệu và ranh giới map
-│
-├─ infra/
-│  ├─ docker-compose.yml      # Khởi chạy PostgreSQL, Redis, Server, Web
-│  ├─ migrations/             # Alembic database migrations
-│  └─ nginx/                  # Nginx reverse proxy configuration
-│
-└─ docs/                      # Tài liệu thiết kế, tiến độ (PROGRESS.md) và kế hoạch
+├─ Graphics/                  # Tài nguyên hình ảnh (Pokemon, Battle, Pokedex, Storage, Tilesets)
+├─ Audio/                     # Nhạc nền BGM và hiệu ứng âm thanh SFX
+├─ docs/                      # Tài liệu thiết kế, hướng dẫn kiến trúc và tiến độ (PROGRESS.md)
+├─ scripts/                   # Script kiểm tra dữ liệu schema & build
+└─ tools/ (map_generator)     # Bộ công cụ sinh bản đồ ngoại tuyến Python
 ```
 
 ## Quy tắc tổ chức & Ranh giới trách nhiệm
