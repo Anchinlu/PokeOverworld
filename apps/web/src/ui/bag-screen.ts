@@ -6,9 +6,11 @@
 
 import { inventoryService } from '../domain/inventory/inventory-service';
 import { partyService } from '../domain/party/party-service';
-import { BAG_ASSETS } from '../assets';
+import { applyItemToPartyPokemon } from '../domain/inventory/item-effects';
+import { BAG_ASSETS, POKEMON_ASSETS } from '../assets';
 import { BAG_POCKETS, type ItemData } from '../data/items-db';
 import { showBerryToast } from './toast';
+import { battleSePlayer } from '../audio/battle-se';
 
 export interface BagItemEntry {
   rawId: string;
@@ -80,6 +82,7 @@ export class BagScreen {
 
   public close(): void {
     const wasOptions = this.openOptions;
+    this.closePartyPicker();
     this.isOpen = false;
     this.openOptions = null;
     if (this.backdropEl) {
@@ -163,6 +166,17 @@ export class BagScreen {
             <button id="btnBagUse" class="bag-btn-action primary" title="Sử dụng vật phẩm (Enter)">DÙNG</button>
             <button id="btnBagGive" class="bag-btn-action secondary" title="Cho Pokémon cầm">CHO GIỮ</button>
             <button id="btnBagClose" class="bag-btn-action cancel" title="Đóng túi (Esc / B)">THOÁT</button>
+          </div>
+        </div>
+
+        <!-- Party Picker Modal for applying items/held items directly to a party Pokémon -->
+        <div class="bag-party-picker-modal" id="bagPartyPickerModal" style="display: none;">
+          <div class="bag-party-picker-dialog">
+            <div class="bag-party-picker-header">
+              <span class="bag-party-picker-title" id="bagPartyPickerTitle">CHỌN POKÉMON</span>
+              <button class="bag-party-picker-close" id="btnBagPartyPickerClose" title="Hủy bỏ">✕</button>
+            </div>
+            <div class="bag-party-picker-list" id="bagPartyPickerList"></div>
           </div>
         </div>
       </div>
@@ -432,67 +446,6 @@ export class BagScreen {
 
     // 2. Overworld Item Usage
     const cat = selected.item.category;
-    const slug = (selected.item.slug || selected.item.id || '').toLowerCase();
-
-    // Medicine: Potions / Revives
-    if (cat === 'medicine' || slug.includes('potion') || slug.includes('revive')) {
-      const leader = partyService.getLeader();
-      if (!leader) {
-        showBerryToast('Không có Pokémon nào trong đội hình để sử dụng!', '#ef4444');
-        return;
-      }
-
-      if (slug.includes('revive')) {
-        const faintedMember = partyService.getParty().find((p) => p.isFainted || p.currentHp <= 0);
-        if (!faintedMember) {
-          showBerryToast('Cả đội hình đều đang khỏe mạnh, không cần hồi sinh!', '#eab308');
-          return;
-        }
-        const idx = partyService.getParty().indexOf(faintedMember);
-        partyService.healPokemon(idx, Math.floor(faintedMember.maxHp / 2));
-        inventoryService.removeItem(selected.rawId, 1);
-        showBerryToast(
-          `✨ Đã dùng ${selected.item.nameVi} hồi sinh cho ${faintedMember.name}!`,
-          '#22c55e'
-        );
-        this.render();
-        return;
-      }
-
-      // Potions
-      if (leader.currentHp >= leader.maxHp && leader.status === 'none') {
-        showBerryToast(`💚 ${leader.name} hiện đang đầy máu!`, '#22c55e');
-        return;
-      }
-
-      let healAmount = 20;
-      if (slug.includes('super')) healAmount = 50;
-      else if (slug.includes('hyper')) healAmount = 200;
-      else if (slug.includes('max')) healAmount = leader.maxHp;
-
-      partyService.healPokemon(0, healAmount);
-      inventoryService.removeItem(selected.rawId, 1);
-      showBerryToast(`🧪 Đã dùng ${selected.item.nameVi} hồi phục cho ${leader.name}!`, '#22c55e');
-      this.render();
-      return;
-    }
-
-    // Rare Candy: Level Up
-    if (slug.includes('rare-candy') || slug.includes('rarecandy')) {
-      const leader = partyService.getLeader();
-      if (!leader) return;
-      if (leader.level >= 100) {
-        showBerryToast(`${leader.name} đã đạt cấp độ tối đa 100!`, '#eab308');
-        return;
-      }
-      leader.level++;
-      leader.maxHp += 2;
-      leader.currentHp = Math.min(leader.maxHp, leader.currentHp + 2);
-      inventoryService.removeItem(selected.rawId, 1);
-      showBerryToast(`⭐ ${leader.name} đã được thăng cấp lên Lv.${leader.level}!`, '#facc15');
-      this.render();
-      return;
-    }
 
     // Poké Balls outside battle
     if (cat === 'pokeballs' || cat === 'ball') {
@@ -500,24 +453,152 @@ export class BagScreen {
       return;
     }
 
-    // Default action
-    showBerryToast(`Đã chọn ${selected.item.nameVi || selected.item.name}.`, '#38bdf8');
+    // Key Items
+    if (cat === 'key') {
+      showBerryToast(
+        selected.item.descriptionVi || selected.item.description || 'Vật phẩm quan trọng.',
+        '#38bdf8'
+      );
+      return;
+    }
+
+    // Open party picker to select which Pokémon to use the item on
+    this.openPartyPicker(selected, 'use');
   }
 
   private giveSelectedItem(): void {
     const selected = this.currentPocketItems[this.selectedItemIndex];
     if (!selected) return;
 
-    const leader = partyService.getLeader();
-    if (!leader) {
-      showBerryToast('Không có Pokémon nào để trao vật phẩm!', '#ef4444');
+    if (selected.item.category === 'key') {
+      showBerryToast('Không thể trao vật phẩm quan trọng cho Pokémon cầm!', '#ef4444');
       return;
     }
 
-    leader.heldItem = selected.item.nameVi || selected.item.name;
-    inventoryService.removeItem(selected.rawId, 1);
-    showBerryToast(`🎁 Đã trao ${leader.heldItem} cho ${leader.name} nắm giữ!`, '#38bdf8');
-    this.render();
+    this.openPartyPicker(selected, 'give');
+  }
+
+  private openPartyPicker(entry: BagItemEntry, mode: 'use' | 'give'): void {
+    if (!this.backdropEl) return;
+    const modal = this.backdropEl.querySelector<HTMLElement>('#bagPartyPickerModal');
+    const titleEl = this.backdropEl.querySelector<HTMLElement>('#bagPartyPickerTitle');
+    const listEl = this.backdropEl.querySelector<HTMLElement>('#bagPartyPickerList');
+    const btnClosePicker = this.backdropEl.querySelector<HTMLElement>('#btnBagPartyPickerClose');
+
+    if (!modal || !titleEl || !listEl) return;
+
+    const itemName = entry.item.nameVi || entry.item.name;
+    titleEl.innerText =
+      mode === 'use'
+        ? `CHỌN POKÉMON ĐỂ DÙNG: ${itemName.toUpperCase()}`
+        : `CHỌN POKÉMON ĐỂ TRAO: ${itemName.toUpperCase()}`;
+
+    const closeHandler = () => {
+      this.closePartyPicker();
+    };
+    btnClosePicker?.replaceWith(btnClosePicker.cloneNode(true));
+    const newBtnClose = this.backdropEl.querySelector<HTMLElement>('#btnBagPartyPickerClose');
+    newBtnClose?.addEventListener('click', closeHandler);
+
+    listEl.innerHTML = '';
+    const party = partyService.getParty();
+
+    if (party.length === 0) {
+      showBerryToast('Không có Pokémon nào trong đội hình!', '#ef4444');
+      return;
+    }
+
+    party.forEach((pk) => {
+      const card = document.createElement('div');
+      const isFnt = pk.isFainted || pk.currentHp <= 0;
+      card.className = `bag-picker-member-card ${isFnt ? 'is-fainted' : ''}`;
+
+      const iconUrl = POKEMON_ASSETS.getIconSprite(pk.speciesKey, pk.isShiny);
+      const hpPct = Math.max(0, Math.min(100, (pk.currentHp / pk.maxHp) * 100));
+      const hpColor = hpPct > 50 ? '#22c55e' : hpPct > 20 ? '#eab308' : '#ef4444';
+
+      let statusBadge = '';
+      if (isFnt) {
+        statusBadge = '<span class="bag-picker-status-tag" style="background:#dc2626;">FNT</span>';
+      } else if (pk.status === 'poison' || pk.status === 'toxic') {
+        statusBadge = '<span class="bag-picker-status-tag" style="background:#a855f7;">ĐỘC</span>';
+      } else if (pk.status === 'paralysis') {
+        statusBadge = '<span class="bag-picker-status-tag" style="background:#eab308;">LIỆT</span>';
+      } else if (pk.status === 'burn') {
+        statusBadge = '<span class="bag-picker-status-tag" style="background:#f97316;">BỎNG</span>';
+      } else if (pk.status === 'sleep') {
+        statusBadge = '<span class="bag-picker-status-tag" style="background:#64748b;">NGỦ</span>';
+      } else if (pk.status === 'freeze') {
+        statusBadge = '<span class="bag-picker-status-tag" style="background:#06b6d4;">BĂNG</span>';
+      }
+
+      const heldInfo = pk.heldItem
+        ? `<span style="font-size:9px; color:#38bdf8;">🎁 Đang giữ: ${pk.heldItem}</span>`
+        : '';
+
+      card.innerHTML = `
+        <img src="${iconUrl}" class="bag-picker-pk-icon" alt="${pk.name}" />
+        <div class="bag-picker-member-info">
+          <div class="bag-picker-member-header">
+            <span class="bag-picker-member-name">${pk.nickname || pk.name}</span>
+            <div style="display:flex; align-items:center; gap:4px;">
+              ${statusBadge}
+              <span class="bag-picker-member-level">Lv.${pk.level}</span>
+            </div>
+          </div>
+          <div class="bag-picker-hp-row">
+            <div class="bag-picker-hp-track">
+              <div class="bag-picker-hp-fill" style="width: ${hpPct}%; background-color: ${hpColor};"></div>
+            </div>
+            <span class="bag-picker-hp-val">${pk.currentHp}/${pk.maxHp}</span>
+          </div>
+          ${heldInfo}
+        </div>
+      `;
+
+      card.addEventListener('click', () => {
+        if (mode === 'use') {
+          const result = applyItemToPartyPokemon(entry.item, pk);
+          if (result.success) {
+            // Deduct 1 item quantity from inventory!
+            inventoryService.removeItem(entry.rawId, 1);
+            battleSePlayer.playSound('Audio/SE/Battle catch click.ogg', 0.85);
+            showBerryToast(result.message, '#22c55e');
+            this.closePartyPicker();
+            this.render();
+          } else {
+            showBerryToast(`⚠️ ${result.message}`, '#ef4444');
+          }
+        } else if (mode === 'give') {
+          if (pk.heldItem) {
+            // Return previously held item to inventory
+            inventoryService.addItem(pk.heldItem, 1);
+          }
+          pk.heldItem = entry.item.nameVi || entry.item.name;
+          // Deduct 1 item quantity from inventory!
+          inventoryService.removeItem(entry.rawId, 1);
+          battleSePlayer.playSound('Audio/SE/PC access.ogg', 0.8);
+          showBerryToast(
+            `🎁 Đã trao ${pk.heldItem} cho ${pk.nickname || pk.name} nắm giữ!`,
+            '#38bdf8'
+          );
+          this.closePartyPicker();
+          this.render();
+        }
+      });
+
+      listEl.appendChild(card);
+    });
+
+    modal.style.display = 'flex';
+  }
+
+  private closePartyPicker(): void {
+    if (!this.backdropEl) return;
+    const modal = this.backdropEl.querySelector<HTMLElement>('#bagPartyPickerModal');
+    if (modal) {
+      modal.style.display = 'none';
+    }
   }
 }
 

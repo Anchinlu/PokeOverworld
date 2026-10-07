@@ -14,6 +14,9 @@ import type { ItemDef } from '../data/items-db';
 import type { PartyPokemon } from '../domain/party/party-state';
 import { partyPokemonToBattler } from '../domain/party/party-state';
 import { partyService } from '../domain/party/party-service';
+import { inventoryService } from '../domain/inventory/inventory-service';
+import { applyItemToBattler } from '../domain/inventory/item-effects';
+import { normalizeBallKey } from '../assets';
 import { moveAnimationManager } from './move-animation-manager';
 import { getPokeballData, getBaseCatchRate } from './pokeball-db';
 import { battleSePlayer, battleBgmPlayer } from '../audio';
@@ -241,9 +244,9 @@ export class BattleController {
         const item = entry.item;
         const pocket = entry.pocketIndex;
         if (pocket === 2 || item.category === 'pokeball') {
-          this.handleThrowBall(item);
+          this.handleThrowBall(item, entry.rawId);
         } else {
-          this.handleUseMedicineInBattle(item);
+          this.handleUseMedicineInBattle(item, entry.rawId);
         }
       },
       () => {
@@ -252,29 +255,34 @@ export class BattleController {
     );
   }
 
-  private handleUseMedicineInBattle(item: ItemDef): void {
+  private handleUseMedicineInBattle(item: ItemDef, rawId?: string): void {
     const player = this.engine.playerPokemon;
-    let healAmount = 20;
-    if (item.id === 'SUPERPOTION') healAmount = 50;
-    else if (item.id === 'HYPERPOTION') healAmount = 200;
-    else if (item.id === 'MAXPOTION' || item.id === 'FULLRESTORE') healAmount = player.maxHp;
+    const result = applyItemToBattler(item, player);
 
-    const oldHp = player.currentHp;
-    player.currentHp = Math.min(player.maxHp, player.currentHp + healAmount);
-    const recovered = player.currentHp - oldHp;
+    if (!result.success) {
+      this.state.uiMode = 'message';
+      this.queueMessage(result.message, 'message', () => {
+        this.state.uiMode = 'command';
+      });
+      return;
+    }
+
+    // Deduct 1 item quantity from player's inventory!
+    if (rawId && inventoryService.hasItem(rawId, 1)) {
+      inventoryService.removeItem(rawId, 1);
+    } else if (inventoryService.hasItem(item.id, 1)) {
+      inventoryService.removeItem(item.id, 1);
+    }
+
     this.state.targetPlayerHpPct = player.currentHp / player.maxHp;
     this.syncActiveBattlerToParty();
 
     this.state.uiMode = 'message';
-    this.queueMessage(
-      `Đã dùng ${item.name}! ${player.name} hồi phục ${recovered} HP!`,
-      'message',
-      () => {
-        setTimeout(() => {
-          this.handleEnemyTurn();
-        }, 400);
-      }
-    );
+    this.queueMessage(result.message, 'message', () => {
+      setTimeout(() => {
+        this.handleEnemyTurn();
+      }, 400);
+    });
   }
 
   private handleMovesClick(x: number, y: number): void {
@@ -300,7 +308,7 @@ export class BattleController {
 
   private handleBagClick(x: number, y: number): void {
     if (x >= 140 && x <= 360 && y >= 300 && y <= 345) {
-      this.handleThrowBall();
+      this.handleBagCommand();
     } else if (x >= 380 && y >= 330) {
       this.state.uiMode = 'command';
     }
@@ -512,8 +520,33 @@ export class BattleController {
     });
   }
 
-  private handleThrowBall(item?: ItemDef): void {
+  private handleThrowBall(item?: ItemDef, rawId?: string): void {
     const ballId = item?.id || 'POKEBALL';
+    const canonicalKey = normalizeBallKey(ballId);
+
+    // Verify inventory has at least 1 ball!
+    const available =
+      (rawId && inventoryService.getItemCount(rawId)) ||
+      inventoryService.getItemCount(ballId) ||
+      inventoryService.getItemCount(canonicalKey);
+
+    if (available <= 0) {
+      this.state.uiMode = 'message';
+      this.queueMessage('Bạn không còn quả bóng nào loại này trong túi!', 'message', () => {
+        this.state.uiMode = 'command';
+      });
+      return;
+    }
+
+    // Deduct 1 ball from inventory!
+    if (rawId && inventoryService.hasItem(rawId, 1)) {
+      inventoryService.removeItem(rawId, 1);
+    } else if (inventoryService.hasItem(ballId, 1)) {
+      inventoryService.removeItem(ballId, 1);
+    } else {
+      inventoryService.removeItem(canonicalKey, 1);
+    }
+
     const ballData = getPokeballData(ballId);
     const ballName = ballData?.nameVi || item?.nameVi || 'Bóng Poké';
 

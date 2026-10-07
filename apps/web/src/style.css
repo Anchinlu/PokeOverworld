@@ -5987,3 +5987,177 @@ body {
   text-shadow: 1px 1px 0 #000;
 }
 
+/* ==========================================================================
+   Bag Screen: Party Picker Modal (Pixel Art Authentic UI)
+   ========================================================================== */
+.bag-party-picker-modal {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: fadeIn 0.15s ease;
+}
+
+.bag-party-picker-dialog {
+  width: 440px;
+  background: #0f172a;
+  border: 3px solid #000000;
+  box-shadow: inset 2px 2px 0 #475569, inset -2px -2px 0 #020617, 0 10px 30px rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.bag-party-picker-header {
+  background: linear-gradient(180deg, #0284c7, #0369a1);
+  border-bottom: 2px solid #000;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bag-party-picker-title {
+  font-family: 'Power Clear', 'VT323', monospace;
+  font-size: 13px;
+  font-weight: 800;
+  color: #f8fafc;
+  text-shadow: 1px 1px 0 #000;
+  letter-spacing: 0.5px;
+}
+
+.bag-party-picker-close {
+  background: #dc2626;
+  border: 1px solid #f87171;
+  color: #fff;
+  font-family: 'Power Clear', 'VT323', monospace;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 2px 8px;
+  cursor: pointer;
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  transition: background 0.15s ease;
+}
+
+.bag-party-picker-close:hover {
+  background: #ef4444;
+}
+
+.bag-party-picker-list {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 290px;
+  overflow-y: auto;
+}
+
+.bag-picker-member-card {
+  display: flex;
+  align-items: center;
+  background: #1e293b;
+  border: 2px solid #334155;
+  padding: 5px 8px;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease, transform 0.12s ease;
+  user-select: none;
+}
+
+.bag-picker-member-card:hover {
+  background: #334155;
+  border-color: #38bdf8;
+  transform: translateX(3px);
+}
+
+.bag-picker-member-card.is-fainted {
+  opacity: 0.75;
+  filter: grayscale(0.5);
+}
+
+.bag-picker-pk-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  image-rendering: pixelated;
+  flex-shrink: 0;
+}
+
+.bag-picker-member-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.bag-picker-member-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.bag-picker-member-name {
+  font-family: 'Power Clear', 'VT323', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 1px 1px 0 #000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bag-picker-member-level {
+  font-family: 'Power Clear', 'VT323', monospace;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.bag-picker-hp-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bag-picker-hp-track {
+  flex: 1;
+  height: 5px;
+  background: #0f172a;
+  border: 1px solid #475569;
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.bag-picker-hp-fill {
+  height: 100%;
+  transition: width 0.2s ease;
+}
+
+.bag-picker-hp-val {
+  font-family: 'Power Clear', 'VT323', monospace;
+  font-size: 10px;
+  color: #cbd5e1;
+  min-width: 45px;
+  text-align: right;
+  letter-spacing: 0.5px;
+}
+
+.bag-picker-status-tag {
+  font-family: 'Power Clear', 'VT323', monospace;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 4px;
+  border-radius: 2px;
+  line-height: 1;
+  color: #ffffff;
+  flex-shrink: 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+

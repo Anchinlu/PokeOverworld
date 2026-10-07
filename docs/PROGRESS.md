@@ -1,4 +1,36 @@
-## Cập nhật lần cuối: 2026-10-07 (Gọi Follower Pokémon Từ Party Map HUD)
+## Cập nhật lần cuối: 2026-10-07 (Logic Vật Phẩm Thực Tế & Khấu Trừ Số Lượng Balo)
+
+### 0.54. Xây Dựng Hệ Thống Tác Dụng Vật Phẩm Thực Tế & Tự Động Trừ Số Lượng Trong Balo (Item Effects Engine & Inventory Consumption):
+
+- **Trạng thái:** Đã hoàn thành 100% theo yêu cầu của người dùng.
+- **Yêu cầu người dùng:** Làm logic vật phẩm thực tế trong balo; hiện tại các vật phẩm dùng được nhưng không bị trừ số lượng, cần kiểm tra và điều chỉnh toàn diện.
+- **Chi tiết đã thực hiện:**
+  1. **Động Cơ Hiệu Ứng Vật Phẩm Thực Tế ([item-effects.ts](file:///e:/Pokemon/apps/web/src/domain/inventory/item-effects.ts)):**
+     - Xây dựng module `item-effects.ts` đóng gói toàn bộ quy tắc kiểm tra điều kiện (`canUseItemOnPartyPokemon`, `canUseItemOnBattler`) và thực thi tác dụng thực tế (`applyItemToPartyPokemon`, `applyItemToBattler`):
+       - **Nhóm Hồi Phục Máu HP:** Hỗ trợ đầy đủ Dược phẩm & Quả mọng (`Potion`, `Super Potion`, `Hyper Potion`, `Max Potion`, `Fresh Water`, `Soda Pop`, `Lemonade`, `Moomoo Milk`, `Berry Juice`, `Oran Berry`, `Sitrus Berry`, các loại quả mọng pinch berries...). Chỉ dùng được khi Pokémon còn sống và chưa đầy máu.
+       - **Nhóm Hồi Sinh:** `Revive`, `Max Revive`, `Revival Herb`. Chỉ dùng được khi Pokémon đã ngất xỉu (`isFainted` hoặc `currentHp <= 0`), hồi sinh với 50% hoặc 100% max HP.
+       - **Nhóm Chữa Bệnh Trạng Thái:** `Antidote` & `Pecha Berry` (trị Độc), `Awakening` & `Chesto Berry` (trị Ngủ), `Parlyz Heal` & `Cheri Berry` (trị Tê Liệt), `Burn Heal` & `Rawst Berry` (trị Bỏng), `Ice Heal` & `Aspear Berry` (trị Đóng Băng), `Full Heal`, `Lum Berry`, `Lava Cookie`... (trị mọi trạng thái), và `Full Restore` (hồi 100% HP kèm giải mọi trạng thái).
+       - **Nhóm Thăng Cấp & Chỉ Số:** `Rare Candy` thăng 1 cấp (+1 Level, cập nhật lại Max HP, current HP, stats và EXP lên cấp kế), các loại Vitamin (`HP Up`, `Protein`, `Iron`, `Calcium`, `Zinc`, `Carbos`) tăng vĩnh viễn chỉ số stats tương ứng.
+       - **Nhóm Hồi Phục PP:** `Ether`, `Max Ether`, `Elixir`, `Max Elixir`, `Leppa Berry` hồi điểm PP cho các chiêu thức bị hao hụt.
+       - **Nhóm Vật Phẩm Trận Đấu (Battle Items):** `X Attack`, `X Defend`, `X Speed`, `X Sp. Atk`, `X Sp. Def` tăng bậc chỉ số tạm thời (+2 stages) cho Pokémon đang ra trận.
+  2. **Giao Diện Chọn Pokémon Dùng / Trao Đồ Chuẩn Pixel Art Trong Balo ([bag-screen.ts](file:///e:/Pokemon/apps/web/src/ui/bag-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Thay vì gán cứng chỉ dùng cho con đầu đội hình (Leader), giờ đây khi bấm **DÙNG** hoặc **CHO GIỮ** ngoài bản đồ, hệ thống sẽ mở hộp thoại Pixel Art `#bagPartyPickerModal` hiển thị trực quan toàn bộ 6 Pokémon trong đội hình:
+       - Mini icon Pokémon, Tên/Nickname, Level (`Lv.X`), Giới tính ♂/♀.
+       - Thanh máu HP trực quan kèm số lượng máu thực (`HP/MaxHP`) và màu sắc động (xanh/vàng/đỏ) hoặc nhãn đỏ `FNT` nếu đã ngất xỉu.
+       - Nhãn trạng thái bất thường (`ĐỘC`, `LIỆT`, `BỎNG`, `NGỦ`, `BĂNG`).
+       - Thông tin vật phẩm đang nắm giữ (`heldItem`) nếu có.
+     - **Cơ Chế Trừ Số Lượng Tuyệt Đối Chính Xác:**
+       - Khi sử dụng thành công: Tự động trừ đúng 1 vật phẩm khỏi túi qua `inventoryService.removeItem(entry.rawId, 1)`, phát âm thanh `Battle catch click.ogg`, hiển thị Toast thông báo kết quả chi tiết và tự động làm mới giao diện Balo (nếu vật phẩm về 0 sẽ tự xóa khỏi danh sách).
+       - Khi vật phẩm không có tác dụng (ví dụ đã đầy máu, chưa ngất xỉu, không bị trúng độc, đã đạt Lv 100): Cảnh báo rõ ràng và **KHÔNG HỀ TRỪ SỐ LƯỢNG VẬT PHẨM**!
+     - Khi chọn **CHO GIỮ**: Cho phép chọn Pokémon trong đội hình để trao đồ, nếu Pokémon đang cầm đồ cũ thì đồ cũ sẽ được trả lại túi đồ an toàn trước khi gán đồ mới.
+  3. **Khấu Trừ Vật Phẩm Trong Trận Đấu ([battle-controller.ts](file:///e:/Pokemon/apps/web/src/battle/battle-controller.ts)):**
+     - **Bóng bắt (Poké Balls):** Khi huấn luyện viên chọn ném bất kỳ loại bóng nào (`Poké Ball`, `Great Ball`, `Ultra Ball`, `Master Ball`...), hệ thống kiểm tra và trừ ngay 1 quả bóng tương ứng trong kho `inventoryService.removeItem(ballId, 1)`. Nếu hết bóng sẽ thông báo không còn bóng và ngăn ném lậu.
+     - **Dược phẩm & Tăng chỉ số trong trận:** Khi sử dụng thuốc hoặc vật phẩm tăng chỉ số trong trận đấu, kiểm tra điều kiện áp dụng lên `playerPokemon` và khấu trừ chính xác 1 vật phẩm khỏi kho đồ.
+  4. **Kiểm Thử Độc Lập & Toàn Diện ([item-effects.test.ts](file:///e:/Pokemon/apps/web/test/item-effects.test.ts)):**
+     - Viết bộ 8 bài test chuyên sâu kiểm tra: Potion hồi máu, Revive hồi sinh, Antidote chữa độc, Rare Candy thăng cấp, Vitamin tăng chỉ số, Ether hồi PP, cơ chế trừ số lượng kho khi dùng và trong trận đấu.
+     - Toàn bộ 17 tệp kiểm thử (136/136 tests) và TypeScript check (`npm run typecheck:web`) đều đạt kết quả **PASS 100%**.
+
+---
 
 ### 0.53. Điều Chỉnh Tương Tác Party Map HUD: Triệu Hồi Pokémon Đi Theo (Follower) Thay Vì Chuyển Sang Màn Hình Party:
 
