@@ -18,6 +18,7 @@ export interface BattleAssets {
   databoxEnemy: HTMLImageElement;
   databoxPlayer: HTMLImageElement;
   messageBox: HTMLImageElement;
+  statusIcons: HTMLImageElement;
   fightButtons: HTMLImageElement;
   categoryIcon: HTMLImageElement;
   commandButtons: HTMLImageElement;
@@ -25,6 +26,9 @@ export interface BattleAssets {
   overlayExp: HTMLImageElement;
   ball: HTMLImageElement;
   ballOpen: HTMLImageElement;
+  thrownBall: HTMLImageElement; // Ball being thrown (can be different type)
+  thrownBallOpen: HTMLImageElement;
+  thrownBallClosed: HTMLImageElement; // Closed ball on ground (for shake)
   ballBurstRay: HTMLImageElement;
   ballBurstParticle: HTMLImageElement;
   ballBurstRing: HTMLImageElement;
@@ -55,6 +59,7 @@ export function createBattleAssets(
     databoxEnemy: load(BATTLE_ASSETS.databoxEnemy),
     databoxPlayer: load(BATTLE_ASSETS.databoxPlayer),
     messageBox: load(BATTLE_ASSETS.messageBox),
+    statusIcons: load(BATTLE_ASSETS.statusIcons),
     fightButtons: load(BATTLE_ASSETS.fightButtons),
     categoryIcon: load(MOVE_ASSETS.categoryIcon),
     commandButtons: load(BATTLE_ASSETS.commandButtons),
@@ -62,6 +67,9 @@ export function createBattleAssets(
     overlayExp: load(BATTLE_ASSETS.overlayExp),
     ball: load(BATTLE_ASSETS.getBall(ballType)),
     ballOpen: load(BATTLE_ASSETS.getBallOpen(ballType)),
+    thrownBall: load(BATTLE_ASSETS.getBall(ballType)), // Initially same as player ball
+    thrownBallOpen: load(BATTLE_ASSETS.getBallOpen(ballType)),
+    thrownBallClosed: load(BATTLE_ASSETS.getBallClosed(ballType)),
     ballBurstRay: load(BATTLE_ASSETS.ballBurstRay),
     ballBurstParticle: load(BATTLE_ASSETS.ballBurstParticle),
     ballBurstRing: load(BATTLE_ASSETS.ballBurstRing),

@@ -47,13 +47,15 @@ export class BattleState {
   enemyHitOffsetX = 0;
   enemyHitOffsetY = 0;
 
-  // Attack lunge motion
+  // Attack motion (physical lunge or in-place casting)
   playerAttackTick = 0;
+  playerLungeActive = true;
   playerLungeX = 0;
   playerLungeY = 0;
   private onPlayerAttackHit?: () => void;
 
   enemyAttackTick = 0;
+  enemyLungeActive = true;
   enemyLungeX = 0;
   enemyLungeY = 0;
   private onEnemyAttackHit?: () => void;
@@ -75,7 +77,26 @@ export class BattleState {
 
   // Ball throw animation
   isThrowingBall = false;
+  ballThrowPhase: 'throwing' | 'opening' | 'capturing' | 'falling' | 'shaking' = 'throwing';
+  ballThrowTick = 0;
+  ballThrowX = -30;
+  ballThrowY = 90;
+  ballThrowRotationFrame = 0;
+  ballThrowType = 'POKEBALL'; // Type of ball being thrown
   ballShakeTimer = 0;
+  ballShakeCount = 0;
+  onBallHit?: () => void;
+  onBallCapture?: () => void;
+  onBallDrop?: () => void;
+
+  // Pokemon capture animation
+  captureFlashPhase: 'none' | 'white' | 'red' = 'none';
+  captureShrinkScale = 1.0;
+  captureAlpha = 1.0;
+  captureSuccessEffect = false; // Sparkle burst when caught
+  captureSuccessTick = 0;
+  captureZooming = false; // Camera zoom when ball hits Pokemon
+  captureZoomProgress = 0; // 0..1
 
   // UI mode
   uiMode: BattleUIMode = 'message';
@@ -154,16 +175,50 @@ export class BattleState {
     this.screenShakeY = 0;
   }
 
-  /** Start player attack lunge towards enemy */
-  startPlayerAttack(onHit?: () => void): void {
-    this.playerAttackTick = 1;
-    this.onPlayerAttackHit = onHit;
+  /** Start ball throw animation toward enemy */
+  startBallThrow(ballType: string = 'POKEBALL'): void {
+    this.isThrowingBall = true;
+    this.ballThrowPhase = 'throwing';
+    this.ballThrowTick = 0;
+    this.ballThrowX = -30;
+    this.ballThrowY = 90;
+    this.ballThrowRotationFrame = 0;
+    this.ballThrowType = ballType;
+    this.ballShakeTimer = 0;
+    this.ballShakeCount = 0;
+    this.captureFlashPhase = 'none';
+    this.captureShrinkScale = 1.0;
+    this.captureAlpha = 1.0;
+    this.captureZooming = false;
+    this.captureZoomProgress = 0;
   }
 
-  /** Start enemy attack lunge towards player */
-  startEnemyAttack(onHit?: () => void): void {
+  /** Start player attack motion (lunge if physical, in-place casting if special/status) */
+  startPlayerAttack(options?: { lunge?: boolean; onHit?: () => void } | (() => void)): void {
+    if (typeof options === 'function') {
+      this.playerLungeActive = true;
+      this.onPlayerAttackHit = options;
+    } else {
+      this.playerLungeActive = options?.lunge ?? true;
+      this.onPlayerAttackHit = options?.onHit;
+    }
+    this.playerAttackTick = 1;
+    this.playerLungeX = 0;
+    this.playerLungeY = 0;
+  }
+
+  /** Start enemy attack motion (lunge if physical, in-place casting if special/status) */
+  startEnemyAttack(options?: { lunge?: boolean; onHit?: () => void } | (() => void)): void {
+    if (typeof options === 'function') {
+      this.enemyLungeActive = true;
+      this.onEnemyAttackHit = options;
+    } else {
+      this.enemyLungeActive = options?.lunge ?? true;
+      this.onEnemyAttackHit = options?.onHit;
+    }
     this.enemyAttackTick = 1;
-    this.onEnemyAttackHit = onHit;
+    this.enemyLungeX = 0;
+    this.enemyLungeY = 0;
   }
 
   /** Trigger hit reaction on player */
@@ -212,6 +267,10 @@ export class BattleState {
   }
 
   /** Advance tick and animate smooth HP bars + flash timers */
+  update(): void {
+    this.updateTick();
+  }
+
   updateTick(): void {
     this.tick++;
 
@@ -235,61 +294,91 @@ export class BattleState {
       this.screenShakeAmp = 0;
     }
 
-    // 1. Player attack lunge
+    // 1. Player attack motion
     if (this.playerAttackTick > 0) {
       this.playerAttackTick++;
-      if (this.playerAttackTick <= 5) {
-        const p = this.playerAttackTick / 5;
-        this.playerLungeX = 22 * p;
-        this.playerLungeY = -12 * p;
-      } else if (this.playerAttackTick === 6) {
-        this.playerLungeX = 22;
-        this.playerLungeY = -12;
-        if (this.onPlayerAttackHit) {
-          const hitCb = this.onPlayerAttackHit;
-          this.onPlayerAttackHit = undefined;
-          hitCb();
+      if (this.playerLungeActive) {
+        if (this.playerAttackTick <= 5) {
+          const p = this.playerAttackTick / 5;
+          this.playerLungeX = 22 * p;
+          this.playerLungeY = -12 * p;
+        } else if (this.playerAttackTick === 6) {
+          this.playerLungeX = 22;
+          this.playerLungeY = -12;
+          if (this.onPlayerAttackHit) {
+            const hitCb = this.onPlayerAttackHit;
+            this.onPlayerAttackHit = undefined;
+            hitCb();
+          }
+        } else if (this.playerAttackTick <= 9) {
+          this.playerLungeX = 22;
+          this.playerLungeY = -12;
+        } else if (this.playerAttackTick <= 16) {
+          const p = (this.playerAttackTick - 9) / 7;
+          this.playerLungeX = 22 * (1 - p);
+          this.playerLungeY = -12 * (1 - p);
+        } else {
+          this.playerAttackTick = 0;
+          this.playerLungeX = 0;
+          this.playerLungeY = 0;
         }
-      } else if (this.playerAttackTick <= 9) {
-        this.playerLungeX = 22;
-        this.playerLungeY = -12;
-      } else if (this.playerAttackTick <= 16) {
-        const p = (this.playerAttackTick - 9) / 7;
-        this.playerLungeX = 22 * (1 - p);
-        this.playerLungeY = -12 * (1 - p);
       } else {
-        this.playerAttackTick = 0;
+        // In-place attack motion (Special / Status): stays firm without lunging forward
         this.playerLungeX = 0;
         this.playerLungeY = 0;
+        if (this.playerAttackTick === 6) {
+          if (this.onPlayerAttackHit) {
+            const hitCb = this.onPlayerAttackHit;
+            this.onPlayerAttackHit = undefined;
+            hitCb();
+          }
+        } else if (this.playerAttackTick > 12) {
+          this.playerAttackTick = 0;
+        }
       }
     }
 
-    // 2. Enemy attack lunge
+    // 2. Enemy attack motion
     if (this.enemyAttackTick > 0) {
       this.enemyAttackTick++;
-      if (this.enemyAttackTick <= 5) {
-        const p = this.enemyAttackTick / 5;
-        this.enemyLungeX = -22 * p;
-        this.enemyLungeY = 12 * p;
-      } else if (this.enemyAttackTick === 6) {
-        this.enemyLungeX = -22;
-        this.enemyLungeY = 12;
-        if (this.onEnemyAttackHit) {
-          const hitCb = this.onEnemyAttackHit;
-          this.onEnemyAttackHit = undefined;
-          hitCb();
+      if (this.enemyLungeActive) {
+        if (this.enemyAttackTick <= 5) {
+          const p = this.enemyAttackTick / 5;
+          this.enemyLungeX = -22 * p;
+          this.enemyLungeY = 12 * p;
+        } else if (this.enemyAttackTick === 6) {
+          this.enemyLungeX = -22;
+          this.enemyLungeY = 12;
+          if (this.onEnemyAttackHit) {
+            const hitCb = this.onEnemyAttackHit;
+            this.onEnemyAttackHit = undefined;
+            hitCb();
+          }
+        } else if (this.enemyAttackTick <= 9) {
+          this.enemyLungeX = -22;
+          this.enemyLungeY = 12;
+        } else if (this.enemyAttackTick <= 16) {
+          const p = (this.enemyAttackTick - 9) / 7;
+          this.enemyLungeX = -22 * (1 - p);
+          this.enemyLungeY = 12 * (1 - p);
+        } else {
+          this.enemyAttackTick = 0;
+          this.enemyLungeX = 0;
+          this.enemyLungeY = 0;
         }
-      } else if (this.enemyAttackTick <= 9) {
-        this.enemyLungeX = -22;
-        this.enemyLungeY = 12;
-      } else if (this.enemyAttackTick <= 16) {
-        const p = (this.enemyAttackTick - 9) / 7;
-        this.enemyLungeX = -22 * (1 - p);
-        this.enemyLungeY = 12 * (1 - p);
       } else {
-        this.enemyAttackTick = 0;
+        // In-place attack motion (Special / Status): stays firm without lunging forward
         this.enemyLungeX = 0;
         this.enemyLungeY = 0;
+        if (this.enemyAttackTick === 6) {
+          if (this.onEnemyAttackHit) {
+            const hitCb = this.onEnemyAttackHit;
+            this.onEnemyAttackHit = undefined;
+            hitCb();
+          }
+        } else if (this.enemyAttackTick > 12) {
+          this.enemyAttackTick = 0;
+        }
       }
     }
 
@@ -317,10 +406,13 @@ export class BattleState {
       this.enemyHitOffsetY = 0;
     }
 
-    // 5. HP Bar Drain + Ghost bar catch-up
+    // 5. HP Bar Drain/Heal + Ghost bar catch-up
     if (this.enemyHpPct > this.targetEnemyHpPct) {
       this.enemyHpPct = Math.max(this.targetEnemyHpPct, this.enemyHpPct - 0.016);
+    } else if (this.enemyHpPct < this.targetEnemyHpPct) {
+      this.enemyHpPct = Math.min(this.targetEnemyHpPct, this.enemyHpPct + 0.016);
     }
+
     if (this.ghostEnemyHpPct > this.enemyHpPct) {
       this.ghostEnemyHpPct = Math.max(this.enemyHpPct, this.ghostEnemyHpPct - 0.008);
     } else {
@@ -329,7 +421,10 @@ export class BattleState {
 
     if (this.playerHpPct > this.targetPlayerHpPct) {
       this.playerHpPct = Math.max(this.targetPlayerHpPct, this.playerHpPct - 0.016);
+    } else if (this.playerHpPct < this.targetPlayerHpPct) {
+      this.playerHpPct = Math.min(this.targetPlayerHpPct, this.playerHpPct + 0.016);
     }
+
     if (this.ghostPlayerHpPct > this.playerHpPct) {
       this.ghostPlayerHpPct = Math.max(this.playerHpPct, this.ghostPlayerHpPct - 0.008);
     } else {
@@ -472,6 +567,114 @@ export class BattleState {
     if (this.enemyHurtFlash > 0) this.enemyHurtFlash--;
     if (this.playerHurtFlash > 0) this.playerHurtFlash--;
     if (this.ballShakeTimer > 0) this.ballShakeTimer--;
+
+    // Capture success sparkle effect
+    if (this.captureSuccessEffect) {
+      this.captureSuccessTick++;
+      if (this.captureSuccessTick > 40) {
+        this.captureSuccessEffect = false;
+        this.captureSuccessTick = 0;
+      }
+    }
+
+    // Capture zoom (when ball hits Pokemon, smooth zoom in and out)
+    if (this.captureZooming) {
+      this.captureZoomProgress = Math.min(1.0, this.captureZoomProgress + 0.04);
+    } else if (this.captureZoomProgress > 0) {
+      this.captureZoomProgress = Math.max(0, this.captureZoomProgress - 0.04);
+    }
+
+    // Ball throw animation toward enemy
+    if (this.isThrowingBall) {
+      this.ballThrowTick++;
+
+      if (this.ballThrowPhase === 'throwing') {
+        const totalThrowFrames = 26;
+        const t = Math.min(1.0, this.ballThrowTick / totalThrowFrames);
+        const inv = 1 - t;
+        // Parabolic arc from (-30, 90) via peak (170, 60) to enemy (365, 125)
+        this.ballThrowX = inv * inv * -30 + 2 * inv * t * 170 + t * t * 365;
+        this.ballThrowY = inv * inv * 90 + 2 * inv * t * 60 + t * t * 125;
+        this.ballThrowRotationFrame = Math.floor(t * 18) % 8;
+
+        if (this.ballThrowTick >= totalThrowFrames) {
+          this.ballThrowPhase = 'opening';
+          this.ballThrowTick = 0;
+          this.ballThrowX = 365;
+          this.ballThrowY = 125;
+          // Start camera zoom when ball hits
+          this.captureZooming = true;
+          this.captureZoomProgress = 0;
+          this.onBallHit?.();
+        }
+      } else if (this.ballThrowPhase === 'opening') {
+        // Ball opens and starts capturing Pokemon
+        if (this.ballThrowTick >= 8) {
+          this.ballThrowPhase = 'capturing';
+          this.ballThrowTick = 0;
+          this.captureFlashPhase = 'white';
+          this.captureShrinkScale = 1.0;
+          this.captureAlpha = 1.0;
+          // Keep ball at enemy position during capture
+          this.ballThrowX = 365;
+          this.ballThrowY = 125;
+          this.onBallCapture?.();
+        }
+      } else if (this.ballThrowPhase === 'capturing') {
+        // Pokemon gets absorbed into ball
+        const CAPTURE_DURATION = 30; // ~0.5s
+        const t = Math.min(1.0, this.ballThrowTick / CAPTURE_DURATION);
+
+        // Flash: white (0-8 frames) -> red (8-20 frames) -> fade out
+        if (this.ballThrowTick < 8) {
+          this.captureFlashPhase = 'white';
+        } else if (this.ballThrowTick < 20) {
+          this.captureFlashPhase = 'red';
+        } else {
+          this.captureFlashPhase = 'none';
+        }
+
+        // Shrink Pokemon toward ball position
+        this.captureShrinkScale = Math.max(0, 1.0 - t);
+        this.captureAlpha = Math.max(0, 1.0 - t * 0.8);
+
+        if (this.ballThrowTick >= CAPTURE_DURATION) {
+          this.ballThrowPhase = 'falling';
+          this.ballThrowTick = 0;
+          this.captureAlpha = 0; // Pokemon fully absorbed
+          // Ball closes and starts falling
+          this.ballThrowX = 365;
+          this.ballThrowY = 125; // Still at capture height
+          this.onBallDrop?.();
+        }
+      } else if (this.ballThrowPhase === 'falling') {
+        // Closed ball falls with bounce: drop -> bounce up -> settle down
+        const FALL_DURATION = 20; // Longer for bounce effect
+        const t = Math.min(1.0, this.ballThrowTick / FALL_DURATION);
+
+        if (t < 0.4) {
+          // First drop: 125 -> 160 (0-0.4)
+          const dropT = t / 0.4;
+          this.ballThrowY = 125 + dropT * (160 - 125);
+        } else if (t < 0.7) {
+          // Bounce up: 160 -> 145 (0.4-0.7)
+          const bounceT = (t - 0.4) / 0.3;
+          this.ballThrowY = 160 - bounceT * (160 - 145);
+        } else {
+          // Settle down: 145 -> 160 (0.7-1.0)
+          const settleT = (t - 0.7) / 0.3;
+          this.ballThrowY = 145 + settleT * (160 - 145);
+        }
+
+        if (this.ballThrowTick >= FALL_DURATION) {
+          this.ballThrowPhase = 'shaking';
+          this.ballThrowTick = 0;
+          this.ballThrowY = 160; // Final ground position
+        }
+      } else if (this.ballThrowPhase === 'shaking') {
+        // Ball on ground, waiting for shake logic from controller
+      }
+    }
   }
 
   /** Queue a message for the typewriter display */

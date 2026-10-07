@@ -14,6 +14,9 @@ import type { ItemDef } from '../data/items-db';
 import type { PartyPokemon } from '../domain/party/party-state';
 import { partyPokemonToBattler } from '../domain/party/party-state';
 import { partyService } from '../domain/party/party-service';
+import { moveAnimationManager } from './move-animation-manager';
+import { getPokeballData, getBaseCatchRate } from './pokeball-db';
+import { battleSePlayer, battleBgmPlayer } from '../audio';
 
 /** Callback when the battle ends */
 export type BattleEndCallback = (result: {
@@ -33,6 +36,7 @@ export class BattleController {
   // Bound event handlers (for cleanup)
   private boundClick: (e: MouseEvent) => void;
   private boundMouseMove: (e: MouseEvent) => void;
+  private partyUnsubscribe?: () => void;
 
   constructor(
     state: BattleState,
@@ -52,6 +56,29 @@ export class BattleController {
 
     canvas.addEventListener('click', this.boundClick);
     canvas.addEventListener('mousemove', this.boundMouseMove);
+
+    // Two-way synchronization: if PartyScreen or external service updates party HP/status, reflect immediately in battle
+    this.partyUnsubscribe = partyService.subscribe(() => {
+      const activeUid = this.engine.playerPokemon.uid;
+      const member = partyService.getParty().find((p) => p.uid === activeUid);
+      if (member) {
+        if (
+          this.engine.playerPokemon.currentHp !== member.currentHp ||
+          this.engine.playerPokemon.maxHp !== member.maxHp ||
+          this.engine.playerPokemon.status !== member.status
+        ) {
+          this.engine.playerPokemon.currentHp = member.currentHp;
+          this.engine.playerPokemon.maxHp = member.maxHp;
+          this.engine.playerPokemon.status = member.status;
+          this.state.targetPlayerHpPct = member.currentHp / member.maxHp;
+        }
+      }
+    });
+  }
+
+  /** Synchronize current active battler's HP, PP, and status into partyService */
+  private syncActiveBattlerToParty(): void {
+    partyService.syncBattleResult(this.engine.playerPokemon, 0);
   }
 
   /** Remove all event listeners */
@@ -62,6 +89,13 @@ export class BattleController {
       clearInterval(this.typingTimer);
       this.typingTimer = null;
     }
+    if (this.partyUnsubscribe) {
+      this.partyUnsubscribe();
+      this.partyUnsubscribe = undefined;
+    }
+    this.state.onBallHit = undefined;
+    this.state.onBallCapture = undefined;
+    this.state.onBallDrop = undefined;
   }
 
   /** Start the typing interval for state.advanceMessage() */
@@ -219,6 +253,7 @@ export class BattleController {
     player.currentHp = Math.min(player.maxHp, player.currentHp + healAmount);
     const recovered = player.currentHp - oldHp;
     this.state.targetPlayerHpPct = player.currentHp / player.maxHp;
+    this.syncActiveBattlerToParty();
 
     this.state.uiMode = 'message';
     this.queueMessage(
@@ -263,30 +298,95 @@ export class BattleController {
 
   // ---- Game Actions ----
 
+  private resolveEndTurnEffects(
+    target: BattlerPokemon,
+    onSurvive: () => void,
+    onFaint: () => void
+  ): void {
+    const effect = this.engine.applyEndTurnEffects(target);
+    if (!effect) {
+      onSurvive();
+      return;
+    }
+
+    if (target === this.engine.enemyPokemon) {
+      this.state.targetEnemyHpPct = target.currentHp / target.maxHp;
+    } else {
+      this.state.targetPlayerHpPct = target.currentHp / target.maxHp;
+      this.syncActiveBattlerToParty();
+    }
+
+    this.queueMessage(effect.message, 'message', () => {
+      if (effect.defenderFainted) onFaint();
+      else onSurvive();
+    });
+  }
+
+  private resolveRoundEndEffects(player: BattlerPokemon, enemy: BattlerPokemon): void {
+    // 1. Player end-turn effects (burn, poison, toxic)
+    this.resolveEndTurnEffects(
+      player,
+      () => {
+        // 2. Enemy end-turn effects (burn, poison, toxic)
+        this.resolveEndTurnEffects(
+          enemy,
+          () => {
+            this.state.uiMode = 'command';
+          },
+          () => this.handleEnemyFainted(enemy, player)
+        );
+      },
+      () => this.handlePlayerFainted(player)
+    );
+  }
+
+  private handleEnemyFainted(enemy: BattlerPokemon, player: BattlerPokemon): void {
+    this.state.startEnemyFaint(() => {
+      this.queueMessage(`The wild ${enemy.name} fainted!`, 'message', () => {
+        this.queueMessage(`${player.name} gained ${enemy.level * 35} EXP!`, 'end', () => {
+          this.endBattle('victory');
+        });
+      });
+    });
+  }
+
+  private handlePlayerFainted(player: BattlerPokemon): void {
+    this.state.startPlayerFaint(() => {
+      partyService.syncBattleResult(this.engine.playerPokemon, 0);
+      const hasAlive = partyService.getParty().some((p) => p.currentHp > 0 && !p.isFainted);
+      if (hasAlive) {
+        this.queueMessage(`${player.name} fainted!`, 'message', () => this.handleForceSwitch());
+      } else {
+        this.queueMessage(`${player.name} fainted!`, 'end', () => this.endBattle('defeated'));
+      }
+    });
+  }
+
   private handlePlayerMove(move: BattleMove): void {
     this.state.uiMode = 'message';
     const player = this.engine.playerPokemon;
     const enemy = this.engine.enemyPokemon;
 
-    // Start player attack forward lunge
-    this.state.startPlayerAttack(() => {
-      // On impact: trigger enemy hit reaction (knockback jitter & hurt flash)
-      this.state.startEnemyHit();
+    const result = this.engine.executeAttack(player, enemy, move);
+    const animPlan = moveAnimationManager.resolveAnimationPlan(move, result.damage > 0);
+    this.syncActiveBattlerToParty();
+
+    // Trigger attack animation based on move profile (physical lunge vs in-place casting for special/status)
+    this.state.startPlayerAttack({
+      lunge: animPlan.attackerLunges,
+      onHit: () => {
+        if (animPlan.defenderTakesHit) {
+          this.state.startEnemyHit();
+        }
+      },
     });
 
-    const result = this.engine.executeAttack(player, enemy, move);
     this.state.targetEnemyHpPct = enemy.currentHp / enemy.maxHp;
+    this.state.targetPlayerHpPct = player.currentHp / player.maxHp;
 
     this.queueMessage(result.message, 'message', () => {
       if (result.defenderFainted) {
-        // Trigger wild Pokemon faint sequence: red flash -> pure white -> top-to-bottom particle dissolve
-        this.state.startEnemyFaint(() => {
-          this.queueMessage(`The wild ${enemy.name} fainted!`, 'message', () => {
-            this.queueMessage(`${player.name} gained ${enemy.level * 35} EXP!`, 'end', () => {
-              this.endBattle('victory');
-            });
-          });
-        });
+        this.handleEnemyFainted(enemy, player);
       } else {
         setTimeout(() => {
           this.handleEnemyTurn();
@@ -300,72 +400,102 @@ export class BattleController {
     const player = this.engine.playerPokemon;
     const enemyMove = this.engine.getEnemyAction();
 
-    // Start enemy attack forward lunge
-    this.state.startEnemyAttack(() => {
-      // On impact: trigger player hit reaction (knockback jitter & hurt flash)
-      this.state.startPlayerHit();
+    const result = this.engine.executeAttack(enemy, player, enemyMove);
+    const animPlan = moveAnimationManager.resolveAnimationPlan(enemyMove, result.damage > 0);
+    this.syncActiveBattlerToParty();
+
+    // Trigger attack animation based on move profile (physical lunge vs in-place casting for special/status)
+    this.state.startEnemyAttack({
+      lunge: animPlan.attackerLunges,
+      onHit: () => {
+        if (animPlan.defenderTakesHit) {
+          this.state.startPlayerHit();
+        }
+      },
     });
 
-    const result = this.engine.executeAttack(enemy, player, enemyMove);
     this.state.targetPlayerHpPct = player.currentHp / player.maxHp;
+    this.state.targetEnemyHpPct = enemy.currentHp / enemy.maxHp;
 
     this.queueMessage(result.message, 'message', () => {
       if (result.defenderFainted) {
-        // Trigger player Pokemon faint sequence: white energy -> shrinks down into base -> disappears
-        this.state.startPlayerFaint(() => {
-          partyService.syncBattleResult(this.engine.playerPokemon, 0);
-          const hasAlive = partyService.getParty().some((p) => p.currentHp > 0 && !p.isFainted);
-          if (hasAlive) {
-            this.queueMessage(`${player.name} fainted!`, 'message', () => {
-              this.handleForceSwitch();
-            });
-          } else {
-            this.queueMessage(`${player.name} fainted!`, 'end', () => {
-              this.endBattle('defeated');
-            });
-          }
-        });
+        this.handlePlayerFainted(player);
       } else {
-        this.state.uiMode = 'command';
+        this.resolveRoundEndEffects(player, enemy);
       }
     });
   }
 
   private handleThrowBall(item?: ItemDef): void {
-    const ballName = item?.name || 'Poké Ball';
-    let multiplier = 1.0;
-    if (item?.id === 'GREATBALL') multiplier = 1.5;
-    else if (item?.id === 'ULTRABALL') multiplier = 2.0;
-    else if (item?.id === 'MASTERBALL') multiplier = 999.0;
-    else if (item?.id === 'QUICKBALL') multiplier = 4.0;
-    else if (item?.id === 'DUSKBALL' || item?.id === 'NETBALL') multiplier = 3.0;
+    const ballId = item?.id || 'POKEBALL';
+    const ballData = getPokeballData(ballId);
+    const ballName = ballData?.nameVi || item?.nameVi || 'Bóng Poké';
+
+    // Get catch rate from pokeball database
+    const multiplier = getBaseCatchRate(ballId);
 
     this.state.uiMode = 'message';
-    this.state.isThrowingBall = true;
+
+    // Hook up audio callbacks for animation sequence
+    this.state.onBallHit = () => battleSePlayer.playBallHit();
+    this.state.onBallCapture = () => battleSePlayer.playJumpToBall();
+    this.state.onBallDrop = () => battleSePlayer.playBallDrop();
+
+    // Update thrown ball sprite and start animation
+    if (this.renderer) {
+      this.renderer.updateThrownBall(ballId);
+    }
+    this.state.startBallThrow(ballId);
+    battleSePlayer.playBallThrow();
 
     this.queueMessage(`Huấn luyện viên đã ném ${ballName}!`, 'message', () => {
-      const catchRes = this.engine.tryCatchPokemon(multiplier, ballName);
+      // Wait for capture animation sequence:
+      // 1. Throw (26 frames = 433ms)
+      // 2. Opening (8 frames = 133ms)
+      // 3. Capturing (30 frames = 500ms)
+      // Total: ~1067ms (no falling animation)
+      setTimeout(() => {
+        const catchRes = this.engine.tryCatchPokemon(multiplier, ballName);
 
-      let shakeCount = 0;
-      const shakeInterval = setInterval(() => {
-        if (shakeCount < catchRes.shakes) {
-          this.state.ballShakeTimer = 15;
-          shakeCount++;
-        } else {
-          clearInterval(shakeInterval);
-          this.state.isThrowingBall = false;
+        // Ball on ground, start shaking
+        this.state.ballThrowPhase = 'shaking';
 
-          if (catchRes.caught) {
-            this.queueMessage(catchRes.message, 'end', () => {
-              this.endBattle('caught', this.engine.enemyPokemon);
-            });
+        let shakeCount = 0;
+        const shakeInterval = setInterval(() => {
+          if (shakeCount < catchRes.shakes) {
+            this.state.ballShakeTimer = 15;
+            this.state.ballShakeCount = shakeCount + 1;
+            shakeCount++;
+            battleSePlayer.playBallShake();
           } else {
-            this.queueMessage(catchRes.message, 'message', () => {
-              this.handleEnemyTurn();
-            });
+            clearInterval(shakeInterval);
+
+            if (catchRes.caught) {
+              // Keep ball and hide Pokemon permanently (don't reset isThrowingBall)
+              // Trigger success sparkle effect
+              this.state.captureSuccessEffect = true;
+              this.state.captureSuccessTick = 0;
+              battleBgmPlayer.stopBgm(300);
+              battleSePlayer.playCatchSuccess();
+
+              this.queueMessage(catchRes.message, 'end', () => {
+                this.endBattle('caught', this.engine.enemyPokemon);
+              });
+            } else {
+              // Failed capture - reset camera zoom, ball state and show Pokemon again
+              this.state.isThrowingBall = false;
+              this.state.captureAlpha = 1.0; // Reset alpha so Pokemon shows
+              this.state.captureZooming = false;
+              this.state.captureZoomProgress = 0;
+              battleSePlayer.playBallBreak();
+
+              this.queueMessage(catchRes.message, 'message', () => {
+                this.handleEnemyTurn();
+              });
+            }
           }
-        }
-      }, 700);
+        }, 700);
+      }, 1400); // Wait for capture animation + bounce (30 frames capture + 20 frames bounce = 50 frames = ~833ms, rounded to 1400ms)
     });
   }
 
@@ -384,6 +514,7 @@ export class BattleController {
   }
 
   private handlePokemonCommand(): void {
+    this.syncActiveBattlerToParty();
     PartyScreen.getInstance().openForBattleSelect({
       currentBattlerUid: this.engine.playerPokemon.uid,
       onSelect: (selectedPk) => {
@@ -426,6 +557,7 @@ export class BattleController {
   }
 
   private handleForceSwitch(): void {
+    this.syncActiveBattlerToParty();
     PartyScreen.getInstance().openForBattleSelect({
       currentBattlerUid: this.engine.playerPokemon.uid,
       onSelect: (selectedPk) => {
@@ -457,6 +589,7 @@ export class BattleController {
     outcome: 'caught' | 'victory' | 'fled' | 'defeated',
     caughtPokemon?: BattlerPokemon
   ): void {
+    this.syncActiveBattlerToParty();
     this.state.isRunning = false;
     this.destroy();
     this.onEnd({

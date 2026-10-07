@@ -5,10 +5,14 @@ import {
   PlayerService,
   createDefaultPlayerProfile,
   PartyService,
+  partyService,
   createDefaultParty,
   createPartyPokemon,
   SaveGameRepository,
   type SaveStorageAdapter,
+  pcStorageService,
+  TOTAL_BOXES,
+  BOX_CAPACITY,
 } from '../src/domain';
 
 class MockStorageAdapter implements SaveStorageAdapter {
@@ -224,5 +228,100 @@ describe('Domain Layer: SaveGameRepository Unified Persistence', () => {
     repo.deleteSave('slot_1');
     expect(repo.hasSave('slot_1')).toBe(false);
     expect(repo.listSaves().length).toBe(1);
+  });
+});
+
+describe('Domain Layer: PcStorageService', () => {
+  it('initializes with 24 boxes of 30 slots each', () => {
+    const boxes = pcStorageService.getBoxes();
+    expect(boxes.length).toBe(TOTAL_BOXES);
+    expect(boxes[0].slots.length).toBe(BOX_CAPACITY);
+    expect(boxes[0].name).toBe('Hộp 1');
+  });
+
+  it('deposits a Pokemon into the first available box slot', () => {
+    const pika = createPartyPokemon('PIKACHU', 10);
+    const res = pcStorageService.depositPokemon(pika);
+    expect(res.success).toBe(true);
+    expect(res.boxIndex).toBeGreaterThanOrEqual(0);
+    expect(res.slotIndex).toBeGreaterThanOrEqual(0);
+
+    const box = pcStorageService.getBox(res.boxIndex);
+    expect(box.slots[res.slotIndex]?.name).toBe('Pikachu');
+  });
+
+  it('navigates between boxes and wraps around', () => {
+    pcStorageService.setCurrentBoxIndex(0);
+    expect(pcStorageService.getCurrentBoxIndex()).toBe(0);
+
+    pcStorageService.nextBox();
+    expect(pcStorageService.getCurrentBoxIndex()).toBe(1);
+
+    pcStorageService.prevBox();
+    expect(pcStorageService.getCurrentBoxIndex()).toBe(0);
+
+    pcStorageService.prevBox();
+    expect(pcStorageService.getCurrentBoxIndex()).toBe(TOTAL_BOXES - 1);
+  });
+
+  it('renames a box and updates its wallpaper', () => {
+    pcStorageService.setBoxName(0, 'Kanto Stars');
+    expect(pcStorageService.getBoxName(0)).toBe('Kanto Stars');
+
+    pcStorageService.setBoxWallpaper(0, 15);
+    expect(pcStorageService.getBox(0).wallpaperId).toBe(15);
+  });
+
+  it('withdraws and swaps Pokemon between party and box slots', () => {
+    const mew = createPartyPokemon('MEW', 30);
+    const depRes = pcStorageService.depositPokemon(mew, 2);
+    expect(depRes.success).toBe(true);
+
+    const box2 = pcStorageService.getBox(2);
+    expect(box2.slots[depRes.slotIndex]?.name).toBe('Mew');
+
+    // Withdraw Mew if party is not full
+    const withRes = pcStorageService.withdrawPokemon(2, depRes.slotIndex);
+    expect(withRes.success).toBe(true);
+    expect(box2.slots[depRes.slotIndex]).toBeNull();
+  });
+
+  it('allows moving/dragging Pokemon from box into an empty party slot via moveOrSwap', () => {
+    // Put a Pokemon in Box 0 Slot 5
+    const eevee = createPartyPokemon('EEVEE', 15);
+    const box0 = pcStorageService.getBox(0);
+    box0.slots[5] = eevee;
+
+    // Party currently has 1 or more Pokemon. Target party slot 3 (which is empty)
+    const partySizeBefore = partyService.getParty().length;
+    expect(partySizeBefore).toBeLessThan(6);
+
+    const moveRes = pcStorageService.moveOrSwap(
+      { location: 'box', slotIndex: 5, boxIndex: 0, pokemon: eevee },
+      { location: 'party', slotIndex: 3 }
+    );
+
+    expect(moveRes.success).toBe(true);
+    expect(box0.slots[5]).toBeNull();
+    expect(partyService.getParty().length).toBe(partySizeBefore + 1);
+    expect(partyService.getParty().some((p) => p.name === 'Eevee')).toBe(true);
+  });
+
+  it('allows moving/dragging Pokemon from party into an empty box slot via moveOrSwap', () => {
+    // Add extra conscious Pokemon so we don't violate "cannot deposit last conscious" rule
+    partyService.addPokemon(createPartyPokemon('SNORLAX', 30));
+    const party = partyService.getParty();
+    const lastIdx = party.length - 1;
+    const toDeposit = party[lastIdx];
+    const box0 = pcStorageService.getBox(0);
+    box0.slots[12] = null; // ensure empty
+
+    const moveRes = pcStorageService.moveOrSwap(
+      { location: 'party', slotIndex: lastIdx, pokemon: toDeposit },
+      { location: 'box', slotIndex: 12, boxIndex: 0 }
+    );
+
+    expect(moveRes.success).toBe(true);
+    expect(box0.slots[12]?.name).toBe(toDeposit.name);
   });
 });

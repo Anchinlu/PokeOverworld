@@ -146,14 +146,18 @@ export class BattleTextOverlay {
 
   /** Update text elements from current game state */
   update(state: BattleState, engine: BattleEngine): void {
-    // Visibility and smooth slide-in transform for databoxes
+    // Visibility and smooth slide transform for databoxes (intro slide + capture zoom slide-out)
+    const zoomT = state.captureZoomProgress;
+    const zoomE = zoomT < 0.5 ? 2 * zoomT * zoomT : 1 - Math.pow(-2 * zoomT + 2, 2) / 2;
+
     const enemyT = state.enemyDataboxProgress;
     if (enemyT <= 0) {
       this.enemyBox.style.visibility = 'hidden';
     } else {
       this.enemyBox.style.visibility = 'visible';
       const enemyE = 1 - Math.pow(1 - enemyT, 3);
-      const enemySlide = (-100 * (1 - enemyE)).toFixed(2);
+      // Intro slide-in (-100% -> 0%) + Zoom slide-out (0% -> -130%)
+      const enemySlide = (-100 * (1 - enemyE) - 130 * zoomE).toFixed(2);
       this.enemyBox.style.transform = `translateX(${enemySlide}%)`;
     }
 
@@ -163,7 +167,8 @@ export class BattleTextOverlay {
     } else {
       this.playerBox.style.visibility = 'visible';
       const playerE = 1 - Math.pow(1 - playerT, 3);
-      const playerSlide = (100 * (1 - playerE)).toFixed(2);
+      // Intro slide-in (100% -> 0%) + Zoom slide-out (0% -> 130%)
+      const playerSlide = (100 * (1 - playerE) + 130 * zoomE).toFixed(2);
       this.playerBox.style.transform = `translateX(${playerSlide}%)`;
     }
 

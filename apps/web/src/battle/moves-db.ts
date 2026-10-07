@@ -75,3 +75,52 @@ export function getMovesForSpecies(
 
   return list;
 }
+
+export interface AvailableMoveEntry {
+  move: BattleMove;
+  level: number;
+}
+
+export function getAvailableLevelUpMoves(
+  speciesKey: string,
+  level: number = 100
+): AvailableMoveEntry[] {
+  const normKey = speciesKey.replace(/^wild_/i, '').toUpperCase();
+  const learnset = speciesMovesMap.get(normKey);
+
+  const seen = new Set<string>();
+  const result: AvailableMoveEntry[] = [];
+
+  if (learnset && learnset.length > 0) {
+    const eligible = learnset.filter((m) => m.level <= level);
+    for (const entry of eligible) {
+      if (!seen.has(entry.moveId)) {
+        seen.add(entry.moveId);
+        const moveData = MOVES_DB[entry.moveId];
+        if (moveData) {
+          result.push({
+            move: { ...moveData },
+            level: entry.level,
+          });
+        }
+      }
+    }
+  }
+
+  // Fallback to SPECIES_MOVESETS if none found
+  if (result.length === 0) {
+    const fallbackIds = SPECIES_MOVESETS[normKey] || ['tackle'];
+    for (const id of fallbackIds) {
+      if (!seen.has(id) && MOVES_DB[id]) {
+        seen.add(id);
+        result.push({
+          move: { ...MOVES_DB[id] },
+          level: 1,
+        });
+      }
+    }
+  }
+
+  result.sort((a, b) => a.level - b.level);
+  return result;
+}

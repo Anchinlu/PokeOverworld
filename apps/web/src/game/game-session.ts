@@ -11,7 +11,13 @@ import { BattleScreen, createBattler, getBattleEnvironment } from '../battle';
 import { showBerryToast } from '../ui/toast';
 import { playEncounterTransition } from '../ui/encounter-transition';
 import { battleBgmPlayer } from '../audio';
-import { partyService, playerService, partyPokemonToBattler, createPartyPokemon } from '../domain';
+import {
+  partyService,
+  playerService,
+  partyPokemonToBattler,
+  createPartyPokemon,
+  pcStorageService,
+} from '../domain';
 import { defaultRng } from '../core/rng';
 
 export class GameSession {
@@ -169,18 +175,27 @@ export class GameSession {
           if (result.outcome === 'caught') {
             const caughtPk = createPartyPokemon(wildBattler.speciesKey, wildBattler.level);
             caughtPk.currentHp = Math.max(1, wildBattler.currentHp);
-            const added = partyService.addPokemon(caughtPk);
             playerService.incrementCaught();
-            if (added) {
+
+            if (!partyService.isPartyFull()) {
+              partyService.addPokemon(caughtPk);
               showBerryToast(
                 `🎉 Đã thu phục thành công ${wildBattler.name} và thêm vào Đội hình (${partyService.getPartySize()}/6)!`,
                 '#22c55e'
               );
             } else {
-              showBerryToast(
-                `🎉 Đã thu phục thành công ${wildBattler.name}! (Đội hình đã đầy 6/6)`,
-                '#eab308'
-              );
+              const depositRes = pcStorageService.depositPokemon(caughtPk);
+              if (depositRes.success) {
+                showBerryToast(
+                  `🎉 Đã thu phục thành công ${wildBattler.name}! Đội hình đã đầy (6/6), đã chuyển vào PC (${depositRes.boxName})!`,
+                  '#38bdf8'
+                );
+              } else {
+                showBerryToast(
+                  `⚠️ Đội hình và toàn bộ Hộp PC đều đã đầy! Không thể chứa thêm ${wildBattler.name}!`,
+                  '#ef4444'
+                );
+              }
             }
           } else if (result.outcome === 'victory') {
             if (leveledUp) {

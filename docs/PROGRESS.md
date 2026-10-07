@@ -1,3 +1,265 @@
+## Cập nhật lần cuối: 2026-10-07 (Nút Chiêu Thức battleFightButtons.png, Kho Chiêu Thức Theo Cấp Độ & Kéo Thả Đổi Chiêu)
+
+### 0.42. Tinh Chỉnh Giao Diện Header Box & Loại Bỏ Khung Tự Render Ở PC Storage:
+
+- **Trạng thái:** Đã hoàn thành 100% tinh chỉnh theo phản hồi của người dùng: loại bỏ toàn bộ khung viền / bóng đổ tự render quanh Box Window, ẩn các nút mũi tên tự vẽ để hiển thị mũi tên pixel gốc từ wallpaper `box_X.png`, tăng kích thước tiêu đề Hộp và loại bỏ hoàn toàn dòng số lượng `(0/30)`.
+- **Chi tiết đã thực hiện:**
+  1. **Loại bỏ hình vuông / khung viền tự render quanh Box ([style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Xóa bỏ `border: 2px solid #2d3748;`, `box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);` và `border-radius: 6px;` tại `.storage-box-window`.
+     - Chuyển `background` về `transparent` hoàn toàn, giúp màn hình hiển thị trực tiếp và ăn khớp tuyệt đối với bức tranh nền phòng PC `Graphics/Storage/bg.png` mà không bị viền hộp nhân tạo cắt ngang.
+  2. **Ẩn các phần mũi tên tự vẽ đè lên wallpaper ([storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Xóa bỏ ký tự `‹‹` và `››` cùng nền xám bo góc của `.storage-nav-btn`.
+     - Chuyển nút về dạng vùng bấm trong suốt (`background: transparent; border: none; color: transparent; font-size: 0;`) đặt khớp lên vị trí 2 mũi tên pixel-art đã có sẵn trên banner `box_X.png`. Người chơi vẫn bấm hoặc rê chuột để chuyển Hộp mượt mà mà không còn bị nút xám nhân tạo che mất hình ảnh gốc.
+  3. **Loại bỏ khung nền ở tiêu đề "Hộp 1", tăng kích thước chữ & bỏ `(0/30)`:**
+     - Xóa bỏ nền xám viền trắng của container `.storage-box-title` (`background: transparent; border: none; box-shadow: none;`).
+     - Tăng kích thước chữ của Tên hộp từ `12px` lên `17px`, in đậm `font-weight: 900;` với hiệu ứng đổ bóng pixel nổi bật `text-shadow: 0 2px 4px rgba(0,0,0,0.95), 0 0 4px rgba(0,0,0,0.9);`.
+     - Xóa bỏ hoàn toàn phần hiển thị `(0/30)` khỏi DOM và hàm cập nhật `renderCurrentBox`.
+  4. **Tái thiết kế Nút Thoát PC thành chuẩn Pixel-Art ([storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Thay thế nút đỏ bo tròn hiện đại bằng nút Pixel phong cách GBA/Essentials:
+       - Font chữ retro `VT323` kích thước `18px`, viền đổ bóng 4 hướng chuẩn pixel (`text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000`).
+       - Nền kẻ sọc scanline xen kẽ 2px đặc trưng (`repeating-linear-gradient`).
+       - Khung viền sắc cạnh 2px màu đen sẫm, vát góc nổi khối beveled pixel bằng inset shadow (sáng góc trên, tối góc dưới) cùng drop-shadow phía dưới.
+       - Trạng thái hover và active (nhấn xuống) có chuyển động nẩy/nhấn lún tactile sắc nét, hòa hợp 100% với giao diện game retro.
+  5. **Tăng độ tương phản & kích thước tiêu đề Hệ thống PC và Đội hình ([style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Sửa chữ "HỆ THỐNG LƯU TRỮ POKÉMON (PC)" từ màu xanh nhạt (#38bdf8, 11px) bị chìm vào nền sang font pixel `VT323` kích thước `19px`, màu trắng sáng `#ffffff` với viền đen 4 hướng nổi bật.
+     - Tăng kích thước chữ "ĐỘI HÌNH" lên `16px` font `VT323` màu trắng có viền đen.
+     - Cập nhật huy hiệu số lượng `6/6` sang font `VT323` `14px`, nền tối tương phản cao và chữ vàng `#facc15` sắc nét, dễ đọc trên mọi màn hình.
+  6. **Mở Rộng Không Gian & Thay Tên Hệ Bằng Icon Type Ở Thanh Trạng Thái ([storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Mở rộng chiều cao khung Storage từ `384px` lên `404px`, điều chỉnh chiều cao mỗi ô Đội hình Party từ `48px` về `44px` (khoảng cách `3px`), loại bỏ hoàn toàn hiện tượng ô số 6 đè lấn lên mép trên của thanh thông tin dưới cùng.
+     - Tăng chiều cao thanh thông tin Pokémon phía dưới (`.storage-footer`) từ `26px` lên `34px` rộng rãi, thoáng đãng, cách cụm Box và Party `24px`.
+     - Thay thế việc ghi tên hệ dạng chữ (vd: `Fire / Flying`) bằng **Icon Type Pixel-Art** chính thức từ `Graphics/Pokemon/Icons type/types_ico.png` ($24 \times 28\text{px}$), hiển thị biểu tượng ngọn lửa, đôi cánh, giọt nước, chiếc lá... sắc nét kèm tooltip giải nghĩa.
+  7. **Chuẩn Hóa Hộp Thoại Hành Động (Action Menu) Sang Phong Cách Pixel Gọn Gàng ([storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Loại bỏ toàn bộ bo tròn góc (`border-radius: 0;`), chuyển hộp thoại và các nút bấm sang dạng khối hộp vuông vức chuẩn đồ họa pixel cổ điển.
+     - Xóa bỏ các biểu tượng emoji (📥, 📤, 🔄, 📊, 🗑️, ✕), hiển thị text gọn gàng ("Gửi vào PC", "Rút về Đội hình", "Di chuyển", "Xem chi tiết", "Thả tự do", "Hủy").
+     - Thu gọn kích thước bảng menu từ `190px` xuống `140px`, giảm padding và khoảng cách các nút để giao diện thanh thoát, không che khuất màn hình.
+     - Sử dụng font chữ pixel `VT323` (15-16px) kèm viền beveled pixel sắc cạnh.
+  8. **Áp Dụng Phong Cách Pixel Vuông Vức Cho Giao Diện Tùy Chỉnh Box & Xem Chi Tiết ([style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - **Hộp thoại Tùy chỉnh Box (`.customize-card`):**
+       - Chuyển toàn bộ khung viền sang dạng khối hộp vuông vức (`border-radius: 0;`), viền đen kép sắc nét `border: 2px solid #000000;` kèm beveled inset highlight chuẩn retro.
+       - Tiêu đề "TÙY CHỈNH HỘP LƯU TRỮ" và nhãn sử dụng font `VT323` (16-18px), viền đổ bóng pixel nổi bật.
+       - Nút đóng (`.customize-btn-close`) dạng khối vuông sắc cạnh không bo góc.
+       - Ô nhập tên hộp (`.customize-input`) phẳng vuông góc, font `VT323` 17px, viền beveled tương phản cao.
+       - Lưới chọn hình nền (`.customize-wallpaper-grid`): Khung vuông vức với thanh cuộn pixel-art tùy biến (thumb xanh viền đen phẳng), các ô wallpaper preview ($50 \times 44\text{px}$) vuông góc 100%, hiệu ứng chọn viền vàng beveled sắc cạnh thay cho bóng mờ mịn.
+       - Nút "LƯU THAY ĐỔI" (`.customize-btn.save`) font pixel `VT323`, khung vuông vức nổi khối xúc giác.
+     - **Đồng bộ bảng Xem Chi Tiết (`.summary-card`):** Triệt tiêu toàn bộ góc bo tròn (`border-radius: 0;`), chuẩn hóa toàn bộ font chữ chỉ số và chiêu thức sang font pixel `VT323` đồng bộ hoàn hảo.
+  9. **Khắc Phục Lỗi Sprite Pokémon Bị Teo Nhỏ/Biến Dạng Trong Bảng Chi Tiết Summary ([storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts), [party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts)):**
+     - **Nguyên nhân:** File ảnh front sprite (`Graphics/Pokemon/Front/PIDGEOT.png`,...) là dải hoạt ảnh ngang EBS Gen 5 kích thước rất dài (vd: Pidgeot là $4828 \times 68\text{px}$ gồm 71 frame). Khi nhúng trực tiếp vào thẻ `<img>` với `object-fit: contain` kích thước $80 \times 80\text{px}$, trình duyệt co cả dải $4828\text{px}$ lại khiến chiều cao chỉ còn $\approx 1.1\text{px}$, tạo thành một vạch đỏ mảnh biến dạng.
+     - **Giải pháp:**
+       - Thay thế thẻ `<img>` bằng thẻ `<canvas class="summary-sprite">` ($80 \times 80\text{px}$).
+       - Sử dụng bộ giải mã `PokemonSpriteAnimator` tự động cắt lấy từng frame vuông ($68 \times 68\text{px}$) từ dải EBS và chạy vòng lặp hoạt họa mượt mà ở tốc độ chuẩn 22 FPS.
+       - Đồng bộ áp dụng giải pháp cho cả Hộp thoại Xem Chi Tiết của PC Storage (`StorageScreen`) và Đội hình (`PartyScreen`), giúp Pokémon hiển thị to rõ, sắc nét pixel-perfect và có hoạt ảnh động cực kỳ sinh động.
+  10. **Mở Rộng Kích Thước Bảng Chi Tiết To Bằng PC ($512 \times 404\text{px}$) & Bổ Sung Thanh Chỉ Số (Stat Bars) Nổi Bật ([storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+      - **Kích thước toàn màn hình PC:** Mở rộng `.summary-card` chiếm trọn vẹn $100\%$ không gian giao diện PC Storage ($512 \times 404\text{px}$), thay thế hoàn toàn giao diện cũ kích thước nhỏ hẹp ($420\text{px}$) bị lọt thỏm ở giữa.
+      - **Hệ thống Thanh Chỉ Số (Stat Bars) Nổi Bật:**
+        - Áp dụng thanh chỉ số ngang pixel-art cho toàn bộ 6 chỉ số: HP, Tấn công (Attack), Phòng thủ (Defense), Công ĐB (Sp. Atk), Thủ ĐB (Sp. Def), Tốc độ (Speed).
+        - Khung rãnh pixel viền đen tương phản cao (`stat-bar-track`), thanh màu beveled nổi khối có hiệu ứng chuyển động mượt mà (`transition: width 0.3s ease`).
+        - Mã màu trực quan: HP đổi màu theo % máu (Xanh lá > 50% → Vàng > 20% → Đỏ), Tấn công (Đỏ `#ef4444`), Phòng thủ (Lam `#3b82f6`), Công ĐB (Tím `#a855f7`), Thủ ĐB (Vàng kim `#eab308`), Tốc độ (Xanh ngọc `#06b6d4`).
+      - **Bố cục 2 Cột Chuyên Nghiệp:**
+        - **Cột trái:** Khung bệ hiển thị Sprite động $96 \times 96\text{px}$, Icon Hệ từ spritesheet, huy hiệu giới tính (♂ xanh / ♀ hồng), thông tin bóng bắt, cấp độ lúc bắt và thanh đo kinh nghiệm (EXP bar).
+        - **Cột phải:** Bảng thanh chỉ số chiến đấu và Lưới 2x2 hiển thị 4 chiêu thức với huy hiệu hệ màu chuẩn và số PP đầy đủ.
+  11. **Hiển Thị Nút Chiêu Thức Chuẩn battleFightButtons.png, Kho Chiêu Thức Theo Cấp Độ & Kéo Thả Đổi Chiêu ([moves-db.ts](file:///e:/Pokemon/apps/web/src/battle/moves-db.ts), [storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts), [party-service.ts](file:///e:/Pokemon/apps/web/src/domain/party/party-service.ts), [pc-storage-service.ts](file:///e:/Pokemon/apps/web/src/domain/pc/pc-storage-service.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+      - **Nút Chiêu Thức Từ [battleFightButtons.png](file:///e:/Pokemon/Graphics/Battle/battleFightButtons.png):**
+        - Render nút chiêu thức kích thước gốc $244 \times 44\text{px}$ qua canvas pixel-art: Cắt chính xác lát cắt theo 19 hệ tương ứng (`Normal` = 0, `Fighting` = 1, ..., `Fairy` = 18).
+        - Vẽ tên chiêu thức và chỉ số `PP: X/Y` trên font `VT323` có viền đen sắc nét, tự động thu nhỏ cỡ chữ nếu tên chiêu thức dài để không che icon hệ và PP.
+        - Tích hợp trạng thái Hover bằng lát cắt cột phải ($x = 244$) của spritesheet.
+      - **Kho Chiêu Thức Mở Khóa Theo Level (Level-up Move Pool):**
+        - Thêm hàm `getAvailableLevelUpMoves(speciesKey, level)` tra cứu learnset của Pokémon từ `pokemon-db.json` với điều kiện `move.level <= level`. Ví dụ: Pokémon cấp 100 sẽ tự động mở khóa toàn bộ danh sách chiêu thức từ cấp 1 đến 100 của loài đó.
+        - Hiển thị danh sách cuộn pixel-art sắc nét, mỗi chiêu thức đi kèm huy hiệu `Lv.X`, nút chiêu thức chuẩn hệ, và huy hiệu `[ĐANG DÙNG]` nếu chiêu đang nằm trong 4 ô trang bị.
+      - **Cơ Chế Kéo Thả (Drag & Drop) & Đổi Chiêu Nhanh:**
+        - Cho phép kéo thả trực tiếp một chiêu từ kho vào bất kỳ ô nào trong 4 ô chiêu thức chính để thay thế hoặc học chiêu mới.
+        - Cho phép kéo thả hoán đổi vị trí thứ tự giữa 4 ô chiêu thức chính.
+        - Hỗ trợ click trực tiếp vào chiêu thức trong kho để trang bị nhanh vào ô trống hoặc thay thế ô đầu tiên.
+        - Tự động lưu tức thì chiêu thức mới vào dữ liệu Đội hình (`PartyService`) hoặc Hộp lưu trữ PC (`PcStorageService`), đi kèm âm thanh giao diện `PC access.ogg` và thông báo thành công.
+  12. **Mở Rộng Giao Diện Chi Tiết (Summary), Tách Kho Chiêu Sang Layout Riêng Bên Phải & Loại Bỏ Số 1 2 3 4 ([storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+      - **Mở Rộng Kích Thước Bảng Chi Tiết ($780 \times 415\text{px}$):**
+        - Tách modal chi tiết thành bố cục 2 panel chữ nhật song song ngang tầm, có viền kép đen, beveled inset highlight chuẩn retro và đổ bóng nổi khối $16\text{px}$.
+        - Tự động co dãn theo viewport (`transform: scale(...)` kết hợp `@media` query), đảm bảo tương thích mọi độ phân giải màn hình mà không bao giờ bị tràn cạnh.
+      - **Tách Kho Chiêu Thức Sang Layout Chữ Nhật Riêng Bên Phải (`.summary-pool-panel`):**
+        - Layout hình chữ nhật độc lập kích thước $255 \times 415\text{px}$ bên phải, có header riêng "KHO CHIÊU THỨC (≤ Lv.X)", nhãn hướng dẫn và nút "✕ ĐÓNG".
+        - Danh sách kho chiêu thức chiếm trọn chiều cao cột, cuộn dọc êm ái, mỗi thẻ chiêu thức hiển thị huy hiệu cấp mở khóa `Lv.X`, nút bấm theo hệ chuẩn và huy hiệu trạng thái `[ĐANG DÙNG]`.
+      - **Tối Ưu Giao Diện Chi Tiết Chính Thoải Mái & Loại Bỏ Số 1 2 3 4:**
+        - Giải phóng toàn bộ diện tích cho Panel chính bên trái ($510\text{px}$): Bảng chỉ số chiến đấu và 4 ô chiêu thức trang bị có khoảng cách thoáng đãng, kích thước nút lớn hơn ($29\text{px}$ chiều cao) và hiệu ứng hover sáng viền xanh ngọc.
+        - Loại bỏ hoàn toàn các huy hiệu số `1`, `2`, `3`, `4` trên các ô chiêu thức theo đúng yêu cầu; hiển thị nhãn `+ Ô trống` tinh tế khi chưa có chiêu thức.
+  13. **Nâng Cấp Hệ Thống Kéo Thả Chiêu Thức (Dual Pointer & HTML5 Drag) & Hover Màu Vàng ([storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+      - **Cơ Chế Kéo Thả Con Trỏ Toàn Diện (Pointer Drag System):**
+        - Tích hợp hệ thống theo dõi tọa độ con trỏ chuột (`pointerdown`, `pointermove`, `pointerup` và `document.elementFromPoint`) tương tự cơ chế kéo thả Pokémon trong PC, hoạt động mượt mà 100% trên mọi nền tảng trình duyệt (kể cả khi giao diện áp dụng `transform: scale` và `user-select: none`).
+        - Hiển thị bóng mờ kéo thả sinh động (`.move-drag-ghost`): Nút chiêu thức bay theo con trỏ chuột, tự động nhận diện và làm sáng ô chiêu thức đích (`.drag-over`) khi rê chuột qua.
+        - Tự động thả và trang bị/đổi vị trí khi nhả chuột, đồng thời vẫn giữ nguyên tương thích HTML5 drag & drop tiêu chuẩn.
+      - **Bỏ Chữ "ĐANG DÙNG" & Hiệu Ứng Hover Màu Vàng Rực Rỡ:**
+        - Loại bỏ hoàn toàn nhãn chữ `[ĐANG DÙNG]` khỏi danh sách kho chiêu thức theo đúng yêu cầu.
+        - Khi di chuột qua chiêu thức, thẻ bài phát sáng rực rỡ với viền vàng pixel `#facc15` (`box-shadow: 0 0 8px rgba(250, 204, 21, 0.6)`).
+        - Chiêu thức đang trang bị có viền xanh lá tinh tế bên trái (`border-left: 3px solid #22c55e`), mở rộng chiều ngang nút chiêu thức lên tối đa $175\text{px}$ sắc nét.
+      - **Nâng Cao Vị Trí Cụm Chiêu Thức Trang Bị:**
+        - Đẩy cụm Chiêu thức trang bị lên cao tổng cộng $80\text{px}$ (`margin-bottom: 80px`) tạo bố cục cân đối, hài hòa tuyệt đối với bảng chỉ số phía trên.
+  14. **Bảng Thông Tin Chi Tiết Chiêu Thức Khi Nhấp Chuột Từ Database ([storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+      - **Bảng Thông Tin Chi Tiết Chiêu Thức (Move Detail Card):**
+        - Khi nhấp chuột vào bất kỳ chiêu thức nào (ở 4 ô trang bị hoặc trong danh sách kho chiêu thức), một bảng/card retro pixel GBA sắc nét sẽ mở ra nổi bật ngay giữa màn hình Summary Modal.
+        - Phân biệt tách bạch giữa thao tác Kéo thả (để trang bị / sắp xếp) và Nhấp chuột (để xem chi tiết dữ liệu chiêu).
+      - **Hiển Thị Đầy Đủ Thuộc Tính Chiêu Thức Từ Database (`MOVES_DB`):**
+        - **Tên Chiêu Thức:** Tên tiếng Việt rõ nét màu vàng `#facc15` kèm tên tiếng Anh phụ đề (ví dụ: `Tia Sét (Thunderbolt)`).
+        - **Hệ Chiêu Thức & Phân Loại (Sprite Category Chuẩn):** 
+          - Biểu tượng Icon Hệ từ spritesheet `types_ico.png` + tên hệ tiếng Việt (`ĐIỆN`, `NƯỚC`, `LỬA`...).
+          - **Icon Loại Chiêu Thức Chuẩn GBA ([category.png](file:///e:/Pokemon/Graphics/Move/status%20move/category.png)):** 
+            - Cắt chính xác vùng pixel thực tế $56 \times 28\text{px}$ (bỏ 4px lề trong suốt 2 bên của spritesheet $64\text{px}$) với `background-position: -4px Ypx`:
+              - Physical: `-4px 0` (Vụ nổ mặt trời đỏ cam).
+              - Special: `-4px -28px` (Sóng năng lượng xanh lam).
+              - Status: `-4px -56px` (Vòng âm dương xám bạc).
+            - **Loại bỏ hoàn toàn viền và khung chữ nhật mờ:** Xóa bỏ `background: rgba(...)`, `border` và `box-shadow` thừa quanh wrapper, giúp icon hiển thị trong suốt, phẳng mịn và sắc nét 100% không còn bất kỳ vệt khung chữ nhật mờ nào.
+        - **Bộ 3 Chỉ Số Cốt Lõi:**
+          - **SỨC MẠNH (Power):** Số nguyên nổi bật màu cam (hoặc `--` nếu là đòn trạng thái/power 0).
+          - **ĐỘ CHÍNH XÁC (Accuracy):** Tỷ lệ % màu xanh lam (hoặc `--` nếu không trượt).
+          - **ĐIỂM PP (Power Points):** Số lần sử dụng hiện tại / tối đa màu vàng sáng.
+        - **Khung Mô Tả Chiêu Thức Tiếng Việt:** Lấy toàn văn dòng giải thích công dụng, hiệu ứng phụ từ database game (`dbMove.description`).
+      - **Tương Tác & Điều Khiển Trực Quan:**
+        - Đóng bảng nhanh chóng bằng nút `✕`, nhấp chuột ra ngoài vùng tối của popup, hoặc nhấn phím `ESC`. Khi mở bảng chi tiết chiêu, phím `ESC` ưu tiên đóng bảng chiêu trước mà không thoát modal Summary.
+
+---
+
+## Cập nhật lần cuối: 2026-10-07 (Hệ Thống PC Storage, Tự Động Chuyển Khi Đầy Party & Chuẩn Hóa Icon Pokémon)
+
+### 0.41. Xây Dựng Hệ Thống PC Storage & Chuẩn Hóa Cắt Khung Phóng To Icon Pokémon:
+
+- **Trạng thái:** Đã hoàn thành 100% hệ thống PC Storage 24 Box (sức chứa 720 Pokémon) theo chuẩn Graphics/Storage, tích hợp tự động chuyển vào PC khi đầy party (6/6), đồng thời khắc phục triệt để lỗi icon Pokémon hiển thị 2 khung hình dính liền, cắt chuẩn 1 khung hình đơn và phóng to sắc nét pixel-perfect kèm hoạt ảnh 2 frame sinh động. Toàn bộ CI PASS 100% (109/109 tests).
+- **Chi tiết đã thực hiện:**
+  1. **Khắc phục lỗi Icon Pokémon hiển thị 2 khung hình cạnh nhau:**
+     - Ảnh icon Pokémon gốc từ `Graphics/Pokemon/Icons/${speciesKey}.png` có tỷ lệ $2:1$ ($128 \times 64\text{px}$) gồm 2 frame hoạt họa $64 \times 64\text{px}$ đặt cạnh nhau.
+     - Trước đó, thẻ `img` dùng `object-fit: contain` khiến cả 2 frame bị thu nhỏ cùng lúc thành $40 \times 20\text{px}$, làm mỗi Pokémon bị teo nhỏ và hiện 2 chú Pokémon song song trong ô.
+     - **Giải pháp:**
+       - **Ô lưu trữ Box (6x5 Grid):** Bọc icon trong container `.storage-grid-icon-wrap` kích thước $44 \times 44\text{px}$ (`overflow: hidden`), đặt ảnh bên trong có chiều rộng $88\text{px}$ ($200\%$) và chiều cao $44\text{px}$ (`image-rendering: pixelated; crisp-edges`). Nhờ đó icon phóng to hơn gấp 2.2 lần, chỉ hiển thị đúng 1 frame Pokémon sắc nét.
+       - **Ô Party bên trái PC:** Cập nhật `.party-slot-icon-box` ($42 \times 42\text{px}$) và `.party-slot-icon` ($84 \times 42\text{px}$) chuẩn 1 frame phóng to rõ nét.
+       - **Hoạt họa 2-Frame kinh điển (@keyframes `pokemon-icon-step`):** Tự động chuyển đổi mượt mà giữa Frame 1 và Frame 2 khi di chuột qua (`:hover`) hoặc khi đang nhấc di chuyển (`.held`), tái hiện trọn vẹn cử động nhún nhảy đặc trưng của Pokémon trong hệ thống PC Essentials.
+  2. **Hỗ Trợ Kéo Thả Chuột Toàn Diện (Custom Pointer Drag & Drop):**
+     - Chuyển đổi hoàn toàn từ HTML5 Drag sang cơ chế **Pointer Drag & Drop tuỳ biến** (`pointerdown`, `pointermove`, `pointerup`): khắc phục triệt để vấn đề trình duyệt Chromium/Windows chặn sự kiện kéo khi container có `user-select: none` hoặc `transform: scale(1.4)`.
+     - **Triệt tiêu hiện tượng giật rung khi kéo:** Loại bỏ `@keyframes` xung đột trên container `.storage-drag-ghost` (trước đó làm ghi đè `translate(-50%, -50%)`), giúp icon bay êm ái, bám chặt và cố định chính xác dưới con trỏ chuột.
+     - **Tối ưu hóa hiệu năng hover:** Quản lý `currentHoverSlot` để tránh xóa và thêm lại class `.drag-over` liên tục ở mỗi khung hình di chuyển chuột.
+     - **Hỗ trợ kéo thả vào ô trống linh hoạt:**
+       - Nâng cấp `swapPartyAndBox` và `partyService.swapPokemon`: Cho phép kéo Pokémon từ Box thả vào bất kỳ ô Party còn trống nào (kể cả ô 2, 3, 4, 5 khi đội hình chưa đủ 6 con) để rút về ngay lập tức.
+       - Cho phép kéo Pokémon từ Party thả vào bất kỳ ô trống nào trong Box để cất giữ.
+       - Cho phép sắp xếp thứ tự Pokémon trong Party kể cả khi thả vào ô trống phía sau.
+     - **Tương thích hoàn hảo con trỏ chuột Pokémon:** Tự động chuyển đổi con trỏ bàn tay mở `boxgrab.PNG` khi rê vào và bàn tay nắm `boxfist.PNG` khi đang kéo.
+     - **Lật Hộp thông minh:** Giữ và rê Pokémon qua 2 nút `<<` hoặc `>>` trong 450ms để tự động chuyển sang Hộp khác.
+     - **Tách biệt Click và Drag:** Nhấp chuột thông thường (<5px) vẫn mở menu hành động đầy đủ mà không bị kích hoạt nhầm kéo thả.
+  3. **Kiến Trúc Hệ Thống PC Storage (720 Pokémon):**
+     - Quản lý 24 Hộp lưu trữ (mỗi hộp 30 ô), hỗ trợ Rút về (Withdraw), Gửi vào (Deposit), Di chuyển/Đổi chỗ (Move/Swap), Thả tự do (Release) và Đổi tên / Chọn 39 hình nền Wallpaper đặc sắc.
+     - Tự động phát hiện khi Đội hình đầy 6/6 Pokémon, đưa Pokémon mới bắt thẳng vào ô trống đầu tiên trong PC kèm thông báo toast điều hướng.
+     - Tích hợp phím tắt `C` và nút "PC Storage" trong Game Overlay Menu.
+  4. **Kiểm thử tự động & CI:**
+     - Bổ sung test case kiểm tra kéo/thả vào ô trống Party và ô trống Box qua `moveOrSwap`.
+     - 111/111 tests Vitest PASS 100%, linter & format chuẩn, Vite build production thành công.
+
+---
+
+## Cập nhật lần cuối: 2026-10-07 (Hoạt Ảnh Databox Trượt Ra Mép Màn Hình Khi Phóng To Bắt Bóng)
+
+### 0.40. Đồng Bộ Hoạt Ảnh Trượt Databox Ra Mép Màn Hình Khi Phóng To Bắt Bóng:
+
+- **Trạng thái:** Đã hoàn thành 100% theo đúng yêu cầu người dùng: thay vì làm thanh bar biến mất đột ngột và để sót text nổi trên màn hình, cả 2 thanh bar (hình nền, thanh máu, huy hiệu trên Canvas) cùng toàn bộ chữ DOM (tên, giới tính, cấp độ, số máu) đều trượt mượt mà ra ngoài 2 mép màn hình khi phóng to, và trượt mượt mà trở lại khi zoom out. Toàn bộ CI PASS 100% (102/102 tests).
+- **Chi tiết đã thực hiện:**
+  1. **Khắc phục hiện tượng chữ nổi lơ lửng khi thanh bar biến mất:**
+     - Trước đây canvas có lệnh `if (state.captureZooming) return;` làm biến mất đột ngột canvas databox nhưng không cập nhật `BattleTextOverlay` (DOM), dẫn tới tên, giới tính, cấp độ và số máu vẫn hiện nổi lơ lửng.
+  2. **Hoạt ảnh trượt mượt mà 2 chiều ra 2 mép màn hình ([battle-renderer.ts](file:///e:/Pokemon/apps/web/src/battle/battle-renderer.ts), [battle-text-overlay.ts](file:///e:/Pokemon/apps/web/src/battle/battle-text-overlay.ts)):**
+     - Thay vì ẩn tức thời, tiến trình `captureZoomProgress` chuyển động mượt mà 2 chiều (+0.04 khi zoom in, -0.04 khi zoom out):
+       - **Enemy Databox (trên bên trái):** Trượt mượt mà sang mép trái ra khỏi màn hình (canvas offset -300px, DOM transform `translateX(-130%)`).
+       - **Player Databox (dưới bên phải):** Trượt mượt mà sang mép phải ra khỏi màn hình (canvas offset +280px, DOM transform `translateX(130%)`).
+     - Khi bắt hụt bóng hoặc kết thúc zoom, cả 2 thanh bar cùng lướt êm ái trở lại vị trí cũ trên màn hình.
+     - Khung thông báo và chữ tin nhắn ở bảng điều khiển dưới được giữ nguyên vẹn trong suốt quá trình ném và bắt bóng.
+  3. **Kiểm thử tự động:**
+     - Bổ sung test case Vitest xác nhận độ trượt chính xác của DOM text overlay và camera zoom.
+     - 102/102 test unit PASS 100%, build production thành công.
+
+---
+
+## Cập nhật lần cuối: 2026-10-07 (Cơ Sở Dữ Liệu Pokéball, Hoạt Ảnh Bắt Bóng, Quản Lý Di Chuyển Chiêu Thức & Fix Lỗi Camera Zoom)
+
+### 0.39. Hoàn Thiện Hệ Thống Pokéball, Quản Lý Hoạt Ảnh Chiêu Thức & Khắc Phục Lỗi Camera Zoom:
+
+- **Trạng thái:** Đã hoàn thành 100% kiểm tra tài nguyên hình ảnh, logic ném bắt bóng, xóa bỏ code dư thừa và khắc phục triệt để lỗi Camera Zoom khi bắt hụt. Toàn bộ CI PASS 100% (101/101 tests, 275/275 asset manifest parity).
+- **Chi tiết đã thực hiện:**
+  1. **Khắc phục lỗi Camera kẹt Zoom khi bắt hụt Pokémon ([battle-controller.ts](file:///e:/Pokemon/apps/web/src/battle/battle-controller.ts), [battle-state.ts](file:///e:/Pokemon/apps/web/src/battle/battle-state.ts)):**
+     - Đã thêm lệnh reset triệt để `captureZooming = false; captureZoomProgress = 0;` trong nhánh thất bại của `handleThrowBall()` và trong `startBallThrow()`.
+     - Loại bỏ hoàn toàn lỗi kẹt camera ở góc cận 1.4x và lỗi biến mất Databox/thanh lệnh khi người chơi ném hụt bóng.
+  2. **Dọn dẹp mã nguồn không cần thiết:**
+     - Xóa bỏ thuộc tính `ballButtonGlowTimer` và các hàm setTimeout liên quan theo yêu cầu.
+  3. **Kiểm tra và chuẩn hóa toàn bộ tài nguyên Pokéball:**
+     - Bổ sung file `ball_BEASTBALL_closed.png` (cắt chuẩn từ frame 0) giúp 26/26 loại bóng có đủ 3 file hình ảnh: dải xoay bay ($256 \times 64$), mở nắp ($32 \times 64$), đóng trên đất ($32 \times 64$).
+     - Bổ sung `CHERISHBALL` vào bộ nhận diện `normalizeBallKey()`.
+     - Đăng ký đầy đủ 78 asset keys của 26 loại bóng vào [manifest.json](file:///e:/Pokemon/apps/web/public/assets/manifest.json) để hỗ trợ cache/preload.
+  4. **Kiểm thử tự động & CI:**
+     - Thêm test case xác thực toàn bộ 26 loại bóng trong `POKEBALL_DB` và test case mô phỏng reset zoom khi bắt hụt trong [battle.test.ts](file:///e:/Pokemon/apps/web/test/battle.test.ts).
+     - 101/101 test unit Vitest PASS 100%, build production thành công.
+
+---
+
+## Cập nhật lần cuối: 2026-10-06 (Phân Loại Chiêu Thức, Cơ Chế Hồi Máu, Đòn Hút Máu, Phản Sát Thương & Hiệu Ứng Phụ Trạng Thái)
+
+### 0.38. Phân Loại Chiêu Thức, Cơ Chế Hồi Máu, Đòn Hút Máu & Phản Sát Thương Chuẩn Pokémon:
+
+- **Trạng thái:** Đã hoàn thành kiểm tra và hoàn thiện 100% logic cho toàn bộ các nhóm kỹ năng (vật lý, đặc biệt, trạng thái, hồi phục máu, hút máu, phản đòn). Toàn bộ test suite và quy trình CI PASS 100% (98/98 tests).
+- **Chi tiết đã thực hiện:**
+  1. **Phân Loại Chiêu Thức & Animation Chuyển Động ([battle-state.ts](file:///e:/Pokemon/apps/web/src/battle/battle-state.ts)):**
+     - Đòn **Vật lý (Physical)**: Kích hoạt hoạt ảnh nhích tới (`lunge`) về phía đối thủ khi tấn công.
+     - Đòn **Đặc biệt (Special)** & **Trạng thái (Status)**: Không kích hoạt lunge, giữ vị trí cố định trên sàn đấu. Hệ thống kiến trúc mở cho phép bổ sung hoạt ảnh chuyên biệt trong tương lai.
+  2. **Hiệu Ứng Phụ Trạng Thái Trên Đòn Tấn Công Vật Lý / Đặc Biệt ([battle-engine.ts](file:///e:/Pokemon/apps/web/src/battle/battle-engine.ts)):**
+     - Áp dụng chuẩn logic Pokémon: Hiệu ứng phụ (như tỉ lệ gây bỏng của Flamethrower, tê liệt của Thunderbolt/Body Slam, độc của Sludge Bomb) chỉ được tính toán và áp dụng khi đối thủ **chưa bị hạ gục** (`!defenderFainted`).
+     - Mục tiêu chưa có trạng thái bất lợi nào trước đó (`target.status === 'none'`).
+     - Tuân thủ miễn nhiễm theo hệ (`getStatusImmunity`): Hệ Lửa không bị bỏng, Hệ Điện không bị tê liệt, Hệ Độc/Thép không bị trúng độc, Hệ Băng không bị đóng băng.
+  3. **Cơ Chế Kỹ Năng Hút Máu (Drain Moves):**
+     - Bổ sung `drainPercent` vào cơ sở dữ liệu `moves-db.json` và [battle/types.ts](file:///e:/Pokemon/apps/web/src/battle/types.ts):
+       - 50% sát thương gây ra: _Absorb, Mega Drain, Giga Drain, Leech Life, Drain Punch, Horn Leech, Parabolic Charge, Bitter Blade, Bouncy Bubble_.
+       - 75% sát thương gây ra: _Draining Kiss, Oblivion Wing_.
+     - Hồi máu cho kẻ tấn công tương ứng theo lượng sát thương thực tế gây ra (tối đa bằng Max HP), kèm thông báo chuẩn: `${defender.name} had its energy drained!`.
+  4. **Cơ Chế Kỹ Năng Phản Sát Thương (Recoil Moves):**
+     - Bổ sung `recoilPercent`:
+       - 25% sát thương: _Take Down, Submission_.
+       - 33% (1/3) sát thương: _Double-Edge, Brave Bird, Flare Blitz, Wood Hammer, Volt Tackle_.
+       - 50% sát thương: _Head Smash_.
+     - Khấu trừ lượng máu của Pokémon ra đòn, kích hoạt fainted nếu HP tụt về 0 và thông báo: `${attacker.name} is hit with recoil!`.
+  5. **Cơ Chế Hồi Máu & Khắc Phục Lỗi Thanh HP Chưa Đồng Bộ ([battle-state.ts](file:///e:/Pokemon/apps/web/src/battle/battle-state.ts), [battle-controller.ts](file:///e:/Pokemon/apps/web/src/battle/battle-controller.ts)):**
+     - **Nguyên nhân lỗi cũ:** Trước đây trong `battle-state.ts` chỉ có logic giảm trừ HP (`if (playerHpPct > targetPlayerHpPct)`), hoàn toàn thiếu nhánh tăng HP khi hồi máu (`else if (playerHpPct < targetPlayerHpPct)`). Đồng thời trong `battle-controller.ts`, sau khi ra đòn tấn công thì chỉ gán `targetEnemyHpPct` mà quên cập nhật `targetPlayerHpPct` cho Pokémon dùng chiêu hồi máu/hút máu/recoil.
+     - **Khắc phục triệt để:**
+       - Bổ sung lerp tăng tiến 2 chiều cho cả `playerHpPct` và `enemyHpPct` (+0.016 mỗi frame ~ 60fps), giúp thanh máu xanh cuộn đầy mượt mà khi hồi máu.
+       - Đồng bộ thanh ghost bar vàng cam: khi hồi máu, `ghostPlayerHpPct` và `ghostEnemyHpPct` tự động bắt kịp và giữ nguyên vẹn với thanh xanh, loại bỏ triệt để hiện tượng vệt màu bào mòn cũ bị kẹt lại.
+       - Cập nhật cả `targetPlayerHpPct` và `targetEnemyHpPct` sau mỗi lượt ra đòn của cả Player lẫn Enemy.
+       - Khởi tạo `ghostPlayerHpPct` và `ghostEnemyHpPct` theo đúng HP ban đầu của Pokémon khi bắt đầu trận đấu trong `battle-screen.ts`.
+     - Kỹ năng **Rest (Nghỉ ngơi)**:
+       - Nếu HP đã đầy: Kỹ năng thất bại (`But it failed! ${attacker.name}'s HP is already full!`).
+       - Nếu đang mất máu: Xóa bỏ hoàn toàn mọi trạng thái bất lợi cũ (bỏng, trúng độc, tê liệt...), đưa vào trạng thái ngủ 2 lượt (`sleepTurns = 2`), phục hồi 100% Max HP và thanh HP cuộn đầy mượt mà lên 100%.
+  6. **Đồng Bộ HP & Trạng Thái Thời Gian Thực Với Party ([party-service.ts](file:///e:/Pokemon/apps/web/src/domain/party/party-service.ts)):**
+     - Khi Pokémon bị mất máu hoặc được hồi máu trong trận đấu, PartyState được cập nhật ngay lập tức.
+     - Khi dùng vật phẩm hồi máu hoặc hồi sinh trong giao diện Party, thanh máu và trạng thái trong trận đấu tự động đồng bộ theo thời gian thực.
+  7. **Hiển Thị Bậc Chỉ Số Tăng Giảm (Stat Stage Modifiers):**
+     - Hiển thị huy hiệu chỉ số kèm mũi tên/màu sắc (tăng: xanh lá/vàng, giảm: đỏ/cam) ngay phía dưới thanh HP bar, đẩy xuống 5px tạo khoảng cách thoáng đãng, sắc nét.
+- **Kiểm thử & CI:**
+  - 14/14 test suites (99/99 tests) Vitest PASS 100%.
+  - `npm run ci` PASS 100% (Validate schemas, ESLint, Prettier, TypeScript, Vitest, Vite production build).
+
+---
+
+## Cập nhật lần cuối: 2026-10-06 (Cơ Chế Trạng Thái Trận Đấu, Cắt & Bố Trí Icon Statuses Trên Thanh HP Bar)
+
+### 0.37. Cơ Chế Trạng Thái Trận Đấu & Bố Trí Icon Trạng Thái Trên Thanh Bar:
+
+- **Trạng thái:** Đã rà soát toàn bộ logic, sửa các lỗi tiềm ẩn, chuẩn hóa tọa độ cắt ảnh `icon_statuses.png` và bố trí hiển thị hoàn chỉnh trên thanh HP bar. Toàn bộ CI PASS 100% (89/89 tests).
+- **Rà soát & Hoàn thiện Logic Trạng thái:**
+  1. **Kháng Trạng Thái Theo Hệ (Type Immunities):** Hệ Lửa miễn nhiễm Cháy (`burn`), Hệ Điện miễn nhiễm Tê liệt (`paralysis`), Hệ Độc & Thép miễn nhiễm Trúng độc (`poison` / `toxic`), Hệ Băng miễn nhiễm Đóng băng (`freeze`).
+  2. **Hiệu Ứng Phụ Trên Chiêu Thức Tấn Công (Secondary Effects):** Đã sửa lỗi thiếu sót khiến các đòn tấn công vật lý/đặc biệt (như Flamethrower, Thunderbolt, Sludge Bomb) không thể gây trạng thái. Giờ đây hiệu ứng phụ trạng thái và thay đổi chỉ số phụ được kiểm tra và kích hoạt chính xác theo tỉ lệ xác suất sau khi gây sát thương.
+  3. **Thông Báo Tỉnh Ngủ & Tan Băng:** Bổ sung tiền tố thông báo rõ ràng khi Pokémon thức giấc (`woke up`) hoặc tan băng (`thawed out`) trước khi ra đòn trong lượt đó.
+  4. **Chu Kỳ Trừ Máu Cuối Lượt (End-of-Round Phase Lifecycle):** Chuyển việc kích hoạt sát thương cuối lượt (Cháy: 1/16 Max HP, Độc thường: 1/8 Max HP, Độc nặng Toxic: tăng tiến n/16 Max HP) về đúng thời điểm cuối hiệp sau khi cả 2 Pokémon đã hoàn thành lượt đánh thay vì trừ máu trước khi đối thủ kịp ra đòn.
+- **Chuẩn Hóa Cắt Ảnh [icon_statuses.png](file:///e:/Pokemon/Graphics/Battle/icon_statuses.png):**
+  - Kích thước ảnh gốc: **44 x 96 px**, gồm 6 khung hình dọc, mỗi icon có kích thước chuẩn **44 x 16 px**:
+    - Row 0 (sy: 0): `SLP` (Sleep - xám)
+    - Row 1 (sy: 16): `PSN` (Poison - hồng cánh sen)
+    - Row 2 (sy: 32): `BRN` (Burn - cam đỏ)
+    - Row 3 (sy: 48): `PAR` (Paralysis - vàng)
+    - Row 4 (sy: 64): `FRZ` (Freeze - xanh lam)
+    - Row 5 (sy: 80): `PSN` (Toxic / Badly Poisoned - tím sẫm)
+  - Khắc phục lỗi cắt cụt một nửa icon (`sw = 22`) và ánh xạ sai hàng của trạng thái Toxic.
+- **Bố Trí Hiển Thị Trên Thanh HP Bar ([battle-renderer.ts](file:///e:/Pokemon/apps/web/src/battle/battle-renderer.ts)):**
+  - **Enemy Databox:** Tọa độ `x = 83, y = 37`, scale `0.75` (kích thước hiển thị 33x12 px), đặt vừa khít ngay trước vạch máu HP, che phủ tự nhiên nhãn "PS" khi có trạng thái.
+  - **Player Databox:** Tọa độ `dx + 101, dy + 37`, scale `0.75` (kích thước hiển thị 33x12 px), nằm ngay trước vạch máu HP, giữ khoảng cách thoáng đãng với tên Pokémon.
+
+---
+
 ## Cập nhật lần cuối: 2026-10-05 (Hoàn Thiện Animation Trận Đấu, Freeze Sprite Khi Faint, Fix RNG & CI Checkpoint)
 
 ### 0.36. Hoàn Thiện Animation Trận Đấu, Đóng Băng Sprite Khi Faint, Fix RNG & CI Checkpoint:
@@ -34,13 +296,13 @@
 - **Chi tiết đã thực hiện:**
   1. **Trình Quản Lý Nhạc Nền Trận Đấu ([battle-bgm.ts](file:///e:/Pokemon/apps/web/src/audio/battle-bgm.ts)):**
      - Xây dựng module BattleBgmPlayer dạng Singleton:
-        - Phương thức playWildBattleBgm() : tự động chuẩn hóa đường dẫn, mã hóa ký tự khoảng trắng (Battle%20wild.ogg), bật loop = true và đặt âm lượng mở đầu 70%.
-        - Phương thức educeVolume(0.6, 800): tự động giảm âm lượng BGM mượt mà xuống còn 60% sau khi Pokémon hoang dã xuất hiện rõ ràng trên sàn đấu.
+       - Phương thức playWildBattleBgm() : tự động chuẩn hóa đường dẫn, mã hóa ký tự khoảng trắng (Battle%20wild.ogg), bật loop = true và đặt âm lượng mở đầu 70%.
+       - Phương thức educeVolume(0.6, 800): tự động giảm âm lượng BGM mượt mà xuống còn 60% sau khi Pokémon hoang dã xuất hiện rõ ràng trên sàn đấu.
        - Phương thức stopBgm(fadeDurationMs = 600): làm nhỏ dần âm lượng (fade-out) êm ái trong 600ms trước khi dừng hẳn và reset thời gian phát, tránh hiện tượng tắt nhạc đột ngột.
   2. **Tích Hợp Vào Chu Trình Đụng Độ ([game-session.ts](file:///e:/Pokemon/apps/web/src/game/game-session.ts)):**
      - Nhạc nền trận đấu được kích hoạt phát ngay khoảnh khắc người chơi đụng độ Pokémon (bắt đầu cùng lúc với hiệu ứng Rung màn hình và Thu vòng tròn Iris Pokéball), mang lại cảm xúc cao trào đúng chuẩn các game Pokémon kinh điển.
   3. **Tự Động Kết Thúc Nhạc Khi Rời Trận Đấu ([battle-screen.ts](file:///e:/Pokemon/apps/web/src/battle/battle-screen.ts)):**
-     - Khi trận đấu kết thúc (bắt được, chiến thắng, chạy trốn hoặc thất bại), tại hàm 	eardown(), nhạc nền tự động fade-out 600ms đồng bộ cùng hiệu ứng mờ dần của giao diện trận đấu.
+     - Khi trận đấu kết thúc (bắt được, chiến thắng, chạy trốn hoặc thất bại), tại hàm eardown(), nhạc nền tự động fade-out 600ms đồng bộ cùng hiệu ứng mờ dần của giao diện trận đấu.
   4. **Hỗ Trợ Đóng Gói Bundle ([vite.config.ts](file:///e:/Pokemon/apps/web/vite.config.ts)):**
      - Bổ sung quét toàn bộ thư mục Audio/Battle/ trong hàm generateBundle() để đảm bảo tệp nhạc nền luôn được sao chép đầy đủ vào bản build production dist/Audio/Battle/.
 
@@ -53,21 +315,21 @@
 - **Chi tiết đã thực hiện:**
   1. **Hiệu Ứng Rung Màn Hình (Screen Shake):**
      - Bổ sung animation CSS @keyframes encounter-shake và lớp .encounter-shaking trong [style.css](file:///e:/Pokemon/apps/web/src/style.css), điều chỉnh nhịp rung kéo dài 450ms khi vừa kích hoạt đụng độ.
-     - Đóng băng di chuyển của người chơi ngay lập tức (	his.player.isMoving = false), ngăn giật tọa độ nhân vật.
+     - Đóng băng di chuyển của người chơi ngay lập tức ( his.player.isMoving = false), ngăn giật tọa độ nhân vật.
   2. **Hiệu Ứng Khép Màn Tròn Iris Pokéball ([encounter-transition.ts](file:///e:/Pokemon/apps/web/src/ui/encounter-transition.ts)):**
      - Tạo fullscreen canvas overlay mượt mà 60 FPS với tốc độ được tinh chỉnh chậm rãi, kịch tính hơn:
        - **Giai đoạn 1 (0ms - 1050ms):** Vòng khẩu độ hình tròn từ tâm co nhỏ lại (Iris out) êm ái trong ~1.05s, bên ngoài phủ màu đen tuyền.
        - Viền tròn khẩu độ được tạo hình nửa trên Đỏ (#e11d48), nửa dưới Trắng (#ffffff), dải đai đen ở giữa và nút bấm tròn Pokéball ở tâm.
        - Khi khẩu độ khép lại hoàn toàn, hiển thị một quả bóng Pokéball hoàn chỉnh, sắc nét nổi bật giữa màn đen.
        - **Giai đoạn 2 (1050ms - 1430ms):** Nút bấm trung tâm Pokéball phát xung ánh sáng bừng tỏa hào quang trắng rực rỡ (
-adial-gradient flash) trong ~380ms.
+         adial-gradient flash) trong ~380ms.
        - **Giai đoạn 3 (1130ms - 1680ms):** Quả Pokéball phóng to dần từ tâm bung rộng ra 4 góc màn hình (tương tự chiều ngược lại khi thu), để lộ khoảng không gian đen tuyền 100% bên trong.
-        - **Giai đoạn 4 (1650ms+):** Chuyển giao tức thì sang BattleScreen, 2 tấm rèm đen sàn đấu tiếp nối mở ra lộ sàn đấu và Pokémon hoang dã.
+       - **Giai đoạn 4 (1650ms+):** Chuyển giao tức thì sang BattleScreen, 2 tấm rèm đen sàn đấu tiếp nối mở ra lộ sàn đấu và Pokémon hoang dã.
   3. **Phông Nền Mờ Ambient Mở Rộng Từ Background Chiến Đấu ([battle-screen.ts](file:///e:/Pokemon/apps/web/src/battle/battle-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
      - Thay vì để lộ bản đồ thế giới hay nền đen đơn điệu, bổ sung lớp nền .battle-ambient-backdrop phủ toàn bộ màn hình sử dụng chính ảnh background chiến đấu của địa hình hiện tại (cỏ, nước, núi, cát...).
      - Phóng to ảnh bao trọn màn hình (ackground-size: cover; image-rendering: pixelated; filter: brightness(0.6)), không làm mờ, kết hợp lớp radial-gradient làm tối nhẹ về 4 góc.\nadial-gradient làm tối dần về 4 góc.
      - Tạo chiều sâu không gian điện ảnh cao cấp (Cinematic Ambient Depth), vừa đồng điệu màu sắc môi trường vừa tôn bật sàn đấu pixel art 4:3 ở chính giữa.
-  3. **Tích Hợp Vào Vòng Lặp Game ([game-session.ts](file:///e:/Pokemon/apps/web/src/game/game-session.ts)):**
+  4. **Tích Hợp Vào Vòng Lặp Game ([game-session.ts](file:///e:/Pokemon/apps/web/src/game/game-session.ts)):**
      - Đã bọc startWildBattle() bên trong playEncounterTransition(...), áp dụng cho cả đụng độ bụi cỏ tự nhiên và nút bấm 'Đấu Thử' / window.startBattle().
 
 ---
@@ -126,10 +388,10 @@ adial-gradient flash) trong ~380ms.
        - `water_rough.png` (748×264px)
      - Giữ nguyên 100% file gốc, tuyệt đối không chỉnh sửa/cắt lại và không tự ý scale phóng to để bảo tồn trọn vẹn từng điểm ảnh pixel art sắc nét.
      - Hiển thị theo tỉ lệ thu nhỏ 50% (`scale = 0.5`) vừa vặn hoàn hảo với tỉ lệ khung hình chiến đấu 512×288, với `imageSmoothingEnabled = false` giữ các hạt pixel sắc nét, tự động lặp dải ngang liền mạch (`startX += overlayW`).
-      - Lớp vẽ Overlay nằm phía SAU 2 tấm màn đen: Ban đầu chìm nhẹ sau tâm mở ($Y = 146.1$), ngay khi màn đen hé mở khe hở ~5px (mốc ~0.13s, frame 8) thì dải overlay nhô lên lướt sóng và trượt hạ dần xuống.
-      - Nâng cao độ dải Intro lên thêm 30px (đỉnh dải trong suốt quá trình mở màn nằm cao hơn ~30px so với trước, đạt $Y \approx 182$ thay vì 220, tăng tối đa diện tích hiển thị cảnh quan mà vẫn chìm mượt mà xuống dưới hộp thoại UI theo phương trình $Y = 146.1 + p^{2.7} \times (290 - 146.1)$).
-      - Tăng tốc độ cuộn lặp vô tận lên `loopSpeed = 12` (từ 9 lên 12) giúp hiệu ứng dải địa hình lướt sóng nhanh và sống động hơn.
-      - Tăng tốc độ intro trận đấu: bước nhảy `introProgress` tăng từ `0.0055` lên `0.0075` (~2.2 giây thay vì 3.0 giây), tạo nhịp độ vào trận nhanh, dứt khoát và cuốn hút hơn.
+     - Lớp vẽ Overlay nằm phía SAU 2 tấm màn đen: Ban đầu chìm nhẹ sau tâm mở ($Y = 146.1$), ngay khi màn đen hé mở khe hở ~5px (mốc ~0.13s, frame 8) thì dải overlay nhô lên lướt sóng và trượt hạ dần xuống.
+     - Nâng cao độ dải Intro lên thêm 30px (đỉnh dải trong suốt quá trình mở màn nằm cao hơn ~30px so với trước, đạt $Y \approx 182$ thay vì 220, tăng tối đa diện tích hiển thị cảnh quan mà vẫn chìm mượt mà xuống dưới hộp thoại UI theo phương trình $Y = 146.1 + p^{2.7} \times (290 - 146.1)$).
+     - Tăng tốc độ cuộn lặp vô tận lên `loopSpeed = 12` (từ 9 lên 12) giúp hiệu ứng dải địa hình lướt sóng nhanh và sống động hơn.
+     - Tăng tốc độ intro trận đấu: bước nhảy `introProgress` tăng từ `0.0055` lên `0.0075` (~2.2 giây thay vì 3.0 giây), tạo nhịp độ vào trận nhanh, dứt khoát và cuốn hút hơn.
   2. **Trạng Thái Quản Lý Intro Trong BattleState ([battle-state.ts](file:///e:/Pokemon/apps/web/src/battle/battle-state.ts)):**
      - Thêm các cờ `isIntro: boolean = true`, `introProgress: number = 0`, `isPlayerPokemonSentOut: boolean = false`.
      - Tịnh tiến `introProgress` mượt mà theo từng tick trong `updateTick()` cho đến khi đạt 1.0 thì kết thúc intro.
@@ -144,12 +406,12 @@ adial-gradient flash) trong ~380ms.
        - Tự động chọn dải overlay phù hợp theo địa hình (cỏ, nước, cát, núi) và vẽ lặp vô tận theo chiều ngang với offset `loopX = (state.tick * 9) % overlayW` chìm nhẹ phía sau màn đen và trượt chìm dần đều đặn cho đến khi lặn dưới hộp thoại UI.
      - Hiệu ứng Pokémon hoang dã: trong giai đoạn đầu intro dùng filter `brightness(0)` (bóng đen), ở cuối giai đoạn chuyển cảnh bừng sáng cực đại `brightness(flash)` trước khi hạ về bình thường.
      - Ẩn Pokémon và Databox người chơi cho tới khi `isPlayerPokemonSentOut = true`.
-   5. **Hiệu Ứng Slide-in Mượt Mà Cho 2 Thanh Databox (Thay Vì Ẩn/Hiện Đột Ngột):**
-      - Thêm tiến trình `enemyDataboxProgress` và `playerDataboxProgress` (0..1) vào [battle-state.ts](file:///e:/Pokemon/apps/web/src/battle/battle-state.ts).
-      - **Enemy Databox (Đối thủ):** Tự động trượt từ lề trái vào vị trí chuẩn (offset `-260px -> 0px`) ngay khi màn đen tách xong và dòng thoại wild Pokémon xuất hiện.
-      - **Player Databox (Người chơi):** Tự động trượt từ lề phải vào vị trí chuẩn (offset `+260px -> 0px`) ngay khi người chơi tung Pokémon ra sân (`isPlayerPokemonSentOut = true`).
-      - Áp dụng hàm nội suy `easeOutCubic` ($1 - (1 - t)^3$) cho chuyển động lướt nhanh rồi giảm tốc êm ái (~20 frames = ~0.33s).
-      - Đồng bộ hoàn hảo giữa Canvas 2D ([battle-renderer.ts](file:///e:/Pokemon/apps/web/src/battle/battle-renderer.ts)) và lớp HTML DOM Overlay ([battle-text-overlay.ts](file:///e:/Pokemon/apps/web/src/battle/battle-text-overlay.ts)) bằng CSS `transform: translateX(...)` và `will-change: transform`.
+  5. **Hiệu Ứng Slide-in Mượt Mà Cho 2 Thanh Databox (Thay Vì Ẩn/Hiện Đột Ngột):**
+     - Thêm tiến trình `enemyDataboxProgress` và `playerDataboxProgress` (0..1) vào [battle-state.ts](file:///e:/Pokemon/apps/web/src/battle/battle-state.ts).
+     - **Enemy Databox (Đối thủ):** Tự động trượt từ lề trái vào vị trí chuẩn (offset `-260px -> 0px`) ngay khi màn đen tách xong và dòng thoại wild Pokémon xuất hiện.
+     - **Player Databox (Người chơi):** Tự động trượt từ lề phải vào vị trí chuẩn (offset `+260px -> 0px`) ngay khi người chơi tung Pokémon ra sân (`isPlayerPokemonSentOut = true`).
+     - Áp dụng hàm nội suy `easeOutCubic` ($1 - (1 - t)^3$) cho chuyển động lướt nhanh rồi giảm tốc êm ái (~20 frames = ~0.33s).
+     - Đồng bộ hoàn hảo giữa Canvas 2D ([battle-renderer.ts](file:///e:/Pokemon/apps/web/src/battle/battle-renderer.ts)) và lớp HTML DOM Overlay ([battle-text-overlay.ts](file:///e:/Pokemon/apps/web/src/battle/battle-text-overlay.ts)) bằng CSS `transform: translateX(...)` và `will-change: transform`.
   6. **Kiểm Định Toàn Bộ CI Pipeline (`npm run ci` PASS 100%):**
      - `validate:schemas`: 196/196 assets PASS.
      - `lint` & `format:check`: Prettier và ESLint PASS 0 cảnh báo.
@@ -1111,4 +1373,124 @@ adial-gradient flash) trong ~380ms.
      - **Enemy Databox (Đối thủ):** Tự động trượt từ lề trái vào vị trí chuẩn (offset -260px -> 0px) ngay khi màn đen tách xong và dòng thoại wild Pokémon xuất hiện.
      - **Player Databox (Người chơi):** Tự động trượt từ lề phải vào vị trí chuẩn (offset +260px -> 0px) ngay khi người chơi tung Pokémon ra sân (isPlayerPokemonSentOut = true).
      - Áp dụng hàm nội suy easeOutCubic ( - (1 - t)^3$) cho chuyển động lướt nhanh rồi giảm tốc êm ái (~20 frames = ~0.33s).
-     - Đồng bộ hoàn hảo giữa Canvas 2D ([battle-renderer.ts](file:///e:/Pokemon/apps/web/src/battle/battle-renderer.ts)) và lớp HTML DOM Overlay ([battle-text-overlay.ts](file:///e:/Pokemon/apps/web/src/battle/battle-text-overlay.ts)) bằng CSS 	ransform: translateX(...) và will-change: transform.
+     - Đồng bộ hoàn hảo giữa Canvas 2D ([battle-renderer.ts](file:///e:/Pokemon/apps/web/src/battle/battle-renderer.ts)) và lớp HTML DOM Overlay ([battle-text-overlay.ts](file:///e:/Pokemon/apps/web/src/battle/battle-text-overlay.ts)) bằng CSS transform: translateX(...) và will-change: transform.
+
+### 17. Cơ chế Trạng thái Bất lợi (Status Conditions) & Hiển thị Icon chuẩn Pixel 1:1
+
+- **Cắt sprite sheet chuẩn xác ([battle-status-icons.ts](file:///e:/Pokemon/apps/web/src/battle/battle-status-icons.ts)):**
+  - File `Graphics/Battle/icon_statuses.png` kích thước thật `44 x 96 px`, gồm 6 frame dọc với kích thước mỗi frame là `44 x 16 px`.
+  - Khắc phục mapping toxic (trước đây trỏ nhầm row 1 thay vì row 5 `sy: 80`).
+- **Hiển thị Icon chuẩn tỉ lệ gốc 1:1 (Không bị nén/bẹp ngang) ([battle-renderer.ts](file:///e:/Pokemon/apps/web/src/battle/battle-renderer.ts)):**
+  - Trả icon về đúng tỉ lệ `scale = 1.0` (44x16 px nguyên bản) thay vì co lại `scale = 0.75` (làm mất chi tiết pixel và bị ép chiều ngang).
+  - Canh chỉnh vị trí icon nằm gọn gàng ngay trước thanh HP:
+    - Enemy databox: `x: 72, y: 35`, che phủ hoàn toàn nhãn "PS" cũ và khớp với đầu thanh HP.
+    - Player databox: `dx + 90, dy + 35`, che phủ hoàn toàn nhãn "PS" cũ. Dời thông tin Tên/Level lên hàng `dy + 31` để phân tách rõ ràng với thanh HP và không bị đè chữ.
+- **Hoàn thiện logic trạng thái trận đấu ([battle-engine.ts](file:///e:/Pokemon/apps/web/src/battle/battle-engine.ts), [battle-controller.ts](file:///e:/Pokemon/apps/web/src/battle/battle-controller.ts)):**
+  - Miễn nhiễm hệ: Lửa kháng Bỏng, Điện kháng Tê liệt, Độc/Thép kháng Nhiễm độc thông thường lẫn Kịch độc (Toxic), Băng kháng Đóng băng.
+  - Sát thương cuối lượt (End-of-turn): Burn/Poison mất 1/16 HP tối đa, Toxic mất tăng tiến `n/16` HP tối đa mỗi lượt.
+  - Tỉnh dậy (Wake-up) & Rã băng (Thaw-out): Roll ngẫu nhiên với tỉ lệ và thông báo chính xác trong trận đấu.
+- **Kiểm thử:** 89/89 tests đạt 100%, typecheck pass.
+
+### 18. Hệ thống Quản lý Hoạt ảnh Chiêu thức (Move Animation Management System)
+
+- **Hệ thống phân cấp hoạt ảnh ([move-animation-manager.ts](file:///e:/Pokemon/apps/web/src/battle/move-animation-manager.ts)):**
+  - Xây dựng `MoveAnimationManager` tập trung điều phối hoạt ảnh theo phân loại chiêu thức (`physical`, `special`, `status`) và sẵn sàng mở rộng các chiêu đặc biệt trong tương lai.
+  - **Vật lý (`physical`):** Pokémon thực hiện nhích/lướt về phía trước (`attackerLunges: true`), đối thủ rung lắc/chớp giật khi trúng đòn (`defenderTakesHit: true`).
+  - **Đặc biệt (`special`):** Pokémon đứng yên tại chỗ để vận khí/bắn tia chiêu thức (`attackerLunges: false`), đối thủ vẫn rung lắc/chớp giật khi trúng đòn (`defenderTakesHit: true`).
+  - **Trạng thái (`status`):** Pokémon đứng yên tại chỗ (`attackerLunges: false`), đối thủ không bị hiệu ứng dội lực sát thương (`defenderTakesHit: false`).
+  - Hỗ trợ đăng ký override động (`registerOverride`) theo mã chiêu thức (ví dụ: các chiêu phức tạp sau này như Hyper Beam, Solar Beam, Fly, Dig...).
+- **Cập nhật BattleState & BattleController:**
+  - `startPlayerAttack` và `startEnemyAttack` hỗ trợ tham số `{ lunge: boolean, onHit?: () => void }`.
+  - Giữ nguyên timing 60fps mượt mà cho cả đòn lao vào lẫn đòn thi triển tại chỗ.
+- **Kiểm thử & CI:** Đã bổ sung bộ test chuyên sâu cho `MoveAnimationManager` và trạng thái `lunge`, đạt 92/92 tests passed 100%, CI pass hoàn toàn.
+
+### 19. Hiển thị Chỉ số Tăng/Giảm (Stat Stage Badges) Dưới Thanh HP
+
+- **Hệ thống nhãn chỉ số trực quan ([battle-renderer.ts](file:///e:/Pokemon/apps/web/src/battle/battle-renderer.ts)):**
+  - Tự động hiển thị các huy hiệu trạng thái chỉ số khi Pokémon được cộng hoặc bị trừ bậc chỉ số (từ -6 đến +6) bao gồm: Tấn công (`ATK`), Phòng thủ (`DEF`), Công đặc biệt (`SPA`), Thủ đặc biệt (`SPD`), Tốc độ (`SPE`), Chính xác (`ACC`), Né tránh (`EVA`).
+  - **Màu sắc phân biệt:**
+    - Chỉ số được cộng (`stage > 0`): Nền xanh rêu viền ngọc lục bảo phát sáng `rgba(16, 75, 42, 0.92)` / `#34d399`, ký hiệu `+1 ATK`, `+2 SPE`...
+    - Chỉ số bị trừ (`stage < 0`): Nền đỏ thẫm viền san hô `rgba(127, 29, 29, 0.92)` / `#f87171`, ký hiệu `-1 DEF`...
+    - Tự động ẩn hoàn toàn khi chỉ số trở về bình thường (stage = 0) để giữ giao diện thanh thoát.
+- **Bố trí chuẩn xác dưới thanh HP:**
+  - **Enemy Databox:** Bố trí tại `x: 8..148, y: 56..70` (đẩy xuống +5px, nằm ngay dưới thanh HP và bên trái tab hệ Pokémon).
+  - **Player Databox:** Bố trí tại `dx + 58..180, dy + 56..70` (đẩy xuống +5px, nằm ngay dưới thanh HP, trên thanh EXP và bên trái số HP `100/100`).
+  - **Độ sắc nét & tương phản cao:** Tắt làm mờ Canvas 2D (`imageSmoothingEnabled = false`), sử dụng font đậm `bold 12px`, nền đặc (#14532d / #7f1d1d), viền sáng và đổ bóng đen pixel 1px (`drop shadow`) giúp chữ hiển thị rõ nét, không bị mờ nhạt.
+  - **Tự động co giãn (Auto-fit):** Hỗ trợ tính toán bề rộng huy hiệu từ 1 đến 7 chỉ số, đảm bảo không bao giờ bị tràn hay đè lên các thành phần khác.
+- **Kiểm thử & CI:** Bộ test vitest đạt 93/93 tests passed 100%, TypeScript typecheck và build production đều đạt.
+
+### 20. Đồng bộ Thời Gian Thực HP & Trạng Thái Trận Đấu với Đội Hình (Real-time Battle & Party Sync)
+
+- **Khắc phục triệt để hiện tượng lệch HP ([battle-controller.ts](file:///e:/Pokemon/apps/web/src/battle/battle-controller.ts)):**
+  - Trước đây, `partyService.syncBattleResult` chỉ được gọi vào cuối trận hoặc khi ngất xỉu, dẫn đến việc khi người chơi mở bảng Đội hình (PartyScreen) giữa trận hoặc dùng vật phẩm hồi máu thì số HP hiển thị ở hai nơi bị lệch nhau.
+  - **Đồng bộ chiều đi (Battle -> Party):** Gọi `syncActiveBattlerToParty()` ngay lập tức sau mỗi lần HP của Pokémon người chơi biến động:
+    - Khi nhận sát thương từ đối thủ hoặc dính sát thương phản đòn/hút máu.
+    - Khi bị trừ máu cuối lượt từ các hiệu ứng Bỏng / Độc / Kịch độc.
+    - Khi sử dụng dược phẩm hồi máu (Potion, Super Potion, Max Potion...).
+    - Ngay trước khi mở màn hình Party (`handlePokemonCommand`, `handleForceSwitch`).
+    - Trước khi kết thúc trận đấu (`endBattle`).
+  - **Đồng bộ chiều về (Party -> Battle):** `BattleController` lắng nghe sự kiện đăng ký (`partyService.subscribe`):
+    - Nếu người chơi thao tác sơ cứu/dùng Potion trên màn hình PartyScreen trong trận, lượng HP mới, Max HP và trạng thái bệnh tật được tự động phản chiếu ngược lại ngay lập tức vào `engine.playerPokemon` và thanh máu trên Canvas/DOM overlay.
+- **Kiểm thử & CI:** Bổ sung unit test hai chiều (`synchronizes battler HP and status in real-time with partyService`), đạt 94/94 tests passed 100%, CI pass toàn diện.
+
+### 21. Tích hợp Hệ thống Âm thanh Hiệu ứng (Sound Effects - SE) Ném & Thu phục Pokéball
+
+- **Sao chép và đóng gói tài nguyên âm thanh chuẩn Essentials ([vite.config.ts](file:///e:/Pokemon/apps/web/vite.config.ts)):**
+  - Trích xuất và sao chép 10 tệp âm thanh hiệu ứng nguyên bản từ Pokémon Essentials vào dự án tại thư mục `Audio/SE/`:
+    - `Battle throw.ogg`: Tiếng huấn luyện viên vung tay ném bóng.
+    - `Battle ball hit.ogg`: Tiếng bóng va chạm trúng Pokémon hoang dã.
+    - `Battle jump to ball.ogg`: Tiếng luồng năng lượng hút Pokémon vào trong bóng.
+    - `Battle ball drop.ogg`: Tiếng bóng rơi tiếp đất và nảy tưng trên mặt đất.
+    - `Battle ball shake.ogg`: Tiếng bóng lắc lư qua lại khi kiểm tra tỉ lệ bắt.
+    - `Battle catch click.ogg`: Tiếng cạch cơ học khi chốt khóa bóng bắt thành công.
+    - `Battle recall.ogg`: Tiếng bóng bung nắp khi Pokémon phá bóng thoát ra ngoài.
+    - `Battle critical catch throw.ogg`: Âm thanh ném bóng khi kích hoạt Critical Catch.
+    - `Battle capture success.ogg`: Khúc nhạc khải hoàn thu phục thành công (Victory ME).
+    - `Shiny sparkle.ogg`: Tiếng hạt ánh sáng lấp lánh (Sparkle) khi bắt thành công.
+  - Cập nhật plugin Vite `emitLegacyGraphicsPlugin` đưa `Audio/SE` vào danh mục bundle tự động sang `dist/`.
+- **Trình phát âm thanh chuyên dụng BattleSePlayer ([battle-se.ts](file:///e:/Pokemon/apps/web/src/audio/battle-se.ts)):**
+  - Thiết kế Singleton `battleSePlayer` an toàn, xử lý mã hóa URL ký tự đặc biệt/khoảng trắng, điều tiết âm lượng độc lập và bắt lỗi Autoplay policy của trình duyệt một cách mượt mà.
+  - Tự động hạ âm lượng/dừng nhạc nền BGM (`battleBgmPlayer.stopBgm(300)`) khi bắt trúng để nhường không gian cho âm thanh click khóa bóng và nhạc hiệu chiến thắng `Battle capture success.ogg`.
+- **Đồng bộ thời gian thực với cỗ máy trạng thái bắt bóng ([battle-state.ts](file:///e:/Pokemon/apps/web/src/battle/battle-state.ts) & [battle-controller.ts](file:///e:/Pokemon/apps/web/src/battle/battle-controller.ts)):**
+  - Kết nối callbacks `onBallHit`, `onBallCapture`, `onBallDrop` tương ứng vào các bước chuyển frame:
+    - Khi bóng bay hết quỹ đạo parabol (frame 26) chạm mục tiêu -> kích hoạt `playBallHit()`.
+    - Khi bóng bung nắp và phát sáng hút Pokémon (frame 8) -> kích hoạt `playJumpToBall()`.
+    - Khi Pokémon thu nhỏ biến mất và bóng rơi xuống đất (frame 30) -> kích hoạt `playBallDrop()`.
+    - Khi bóng lắc lư trên mặt đất -> kích hoạt `playBallShake()`.
+    - Khi bắt thành công -> gọi `playCatchSuccess()` (phát tiếng click, sau 250ms phát sparkle & fanfare).
+    - Khi bắt hụt -> gọi `playBallBreak()`.
+- **Tối ưu hóa kích thước bóng ném & Giữ nguyên chất lượng ảnh ([battle-renderer.ts](file:///e:/Pokemon/apps/web/src/battle/battle-renderer.ts)):**
+  - Điều chỉnh tỉ lệ bóng ném về mức 75% (`ballScale = 0.75`, kích thước chuẩn 24x48px thay vì 32x64px), cân đối hoàn hảo với kích thước Pokémon hoang dã, đặc biệt khi camera kích hoạt zoom cận cảnh 1.4x.
+  - Bật bộ lọc làm mịn chất lượng cao cục bộ (`ctx.imageSmoothingEnabled = true`, `ctx.imageSmoothingQuality = 'high'`) dành riêng cho Pokéball, ngăn chặn triệt để hiện tượng răng cưa méo pixel khi co nhỏ, giữ trọn vẹn đường cong tròn trịa và hiệu ứng bóng đổ sắc nét.
+  - Tự động hoàn trả `imageSmoothingEnabled = false` cho toàn bộ sàn đấu sau khi vẽ bóng để đảm bảo các sprite Pixel Art khác không bị mờ.
+- **Kiểm thử & CI:** Bổ sung test kiểm thử callback và headless audio player an toàn, đạt 104/104 tests pass 100%, typecheck và build dist hoàn toàn trơn tru.
+
+### 22. Xây dựng Hệ thống Máy tính Lưu trữ Pokémon (PC Storage System) & Tự động Gửi khi Đội hình Đầy
+
+- **Tự động chuyển Pokémon vào PC khi Đội hình đầy ([game-session.ts](file:///e:/Pokemon/apps/web/src/game/game-session.ts)):**
+  - Khi bắt thành công Pokémon hoang dã, kiểm tra trạng thái đội hình:
+    - Nếu đội hình còn chỗ (`< 6`): Thêm trực tiếp vào đội hình như trước.
+    - Nếu đội hình đã đầy đủ 6 thành viên (`6/6`): Tự động chuyển Pokémon vừa bắt vào Hộp lưu trữ PC còn chỗ đầu tiên thông qua `pcStorageService.depositPokemon()`.
+    - Thông báo Toast hiển thị tên Hộp cụ thể: `🎉 Đã thu phục thành công [Tên]! Đội hình đã đầy (6/6), đã chuyển vào PC ([Tên Hộp])!`.
+- **Dịch vụ Quản lý Kho lưu trữ PC ([pc-storage-service.ts](file:///e:/Pokemon/apps/web/src/domain/pc/pc-storage-service.ts)):**
+  - Cấu hình chuẩn 24 Hộp lưu trữ (`TOTAL_BOXES = 24`), mỗi hộp 30 ô (`BOX_CAPACITY = 30`, 6 cột $\times$ 5 hàng), tổng sức chứa lên tới 720 Pokémon.
+  - Hỗ trợ đầy đủ các thao tác:
+    - `depositPokemon`: Tự động tìm ô trống đầu tiên trong hộp ưu tiên hoặc quét toàn bộ các hộp.
+    - `withdrawPokemon`: Rút Pokémon từ hộp về đội hình (kiểm tra giới hạn 6 thành viên).
+    - `depositFromParty`: Gửi Pokémon từ đội hình vào hộp (có cơ chế an toàn: cấm gửi Pokémon khỏe mạnh duy nhất còn lại).
+    - `swapPartyAndBox` / `moveOrSwap`: Đổi chỗ linh hoạt giữa Đội hình $\leftrightarrow$ Hộp, hoặc giữa Hộp $\leftrightarrow$ Hộp.
+    - `releasePokemon`: Thả Pokémon tự do có hộp thoại xác nhận.
+    - Tùy chỉnh đổi tên hộp và thay đổi hình nền (hỗ trợ 39 mẫu wallpaper `box_1.png` đến `box_39.png`).
+    - Lưu trữ bền vững tự động vào `localStorage` (`pokemon_pc_storage_v1`).
+- **Giao diện Người dùng StorageScreen ([storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts) & [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+  - Khớp 100% tài nguyên và bố cục từ [Graphics/Storage](file:///e:/Pokemon/Graphics/Storage):
+    - Khung màn hình chuẩn 512x384 trên nền `bg.png`.
+    - Cột trái: 6 thanh đội hình Pokémon hiển thị chi tiết icon, cấp độ, thanh máu động và huy hiệu trạng thái (FNT, BRN...).
+    - Cửa sổ hộp bên phải: Kích thước 324x302 hiển thị wallpaper `box_X.png`, hai nút điều hướng `<<` và `>>` chuyển hộp mượt mà.
+    - Lưới 6x5 (30 ô): Hiển thị icon động của Pokémon, hiệu ứng viền phát sáng khi rê chuột và hiệu ứng nhấp nháy màu vàng khi đang cầm/di chuyển Pokémon.
+    - Menu ngữ cảnh tiện lợi (Gửi vào PC / Rút về / Di chuyển / Xem chi tiết / Thả tự do).
+    - Tích hợp âm thanh SE chuẩn Essentials: `PC open.ogg`, `PC access.ogg`, `PC close.ogg`.
+- **Phím tắt & Menu:**
+  - Thêm biểu tượng `menuPC.png` vào thanh menu góc trên bên phải màn hình.
+  - Hỗ trợ phím tắt `C` (hoặc phím `Esc`) để mở/đóng kho lưu trữ PC tức thì.
+- **Kiểm thử & CI:** Bổ sung 5 bộ unit test cho `PcStorageService`, toàn bộ 109/109 tests passed 100%, typecheck và build production bundle pass.

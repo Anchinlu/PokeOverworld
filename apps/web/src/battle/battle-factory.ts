@@ -55,6 +55,7 @@ export function createBattler(
     },
     status: 'none',
     sleepTurns: 0,
+    statusTurns: 0,
     moves,
     frontSprite: POKEMON_ASSETS.getFrontSprite(data.speciesKey),
     backSprite: POKEMON_ASSETS.getBackSprite(data.speciesKey),

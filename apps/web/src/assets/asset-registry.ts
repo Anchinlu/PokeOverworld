@@ -28,6 +28,7 @@ export type ManifestAssetKey =
   | 'battle_databox_player'
   | 'battle_databox_enemy'
   | 'battle_message'
+  | 'battle_status_icons'
   | 'battle_command_buttons'
   | 'battle_overlay_exp'
   | 'battle_ball'
@@ -162,6 +163,7 @@ export function normalizeBallKey(name?: string): string {
   if (clean.includes('SPORT')) return 'SPORTBALL';
   if (clean.includes('BEAST')) return 'BEASTBALL';
   if (clean.includes('DREAM')) return 'DREAMBALL';
+  if (clean.includes('CHERISH')) return 'CHERISHBALL';
   return 'POKEBALL';
 }
 
@@ -174,6 +176,9 @@ export const BATTLE_ASSETS = {
   },
   get messageBox(): string {
     return resolveAsset('battle_message', '/Graphics/Battle/overlay_message_3.png');
+  },
+  get statusIcons(): string {
+    return resolveAsset('battle_status_icons', '/Graphics/Battle/icon_statuses.png');
   },
   get fightButtons(): string {
     return resolveAsset('battle_fight_buttons', '/Graphics/Battle/battleFightButtons.png');
@@ -199,6 +204,13 @@ export const BATTLE_ASSETS = {
     return resolveAsset(
       `battle_ball_${key}_open`,
       `/Graphics/Battle animations/ball_${key}_open.png`
+    );
+  },
+  getBallClosed: (ballType: string = 'POKEBALL'): string => {
+    const key = normalizeBallKey(ballType);
+    return resolveAsset(
+      `battle_ball_${key}_closed`,
+      `/Graphics/Battle animations/ball_${key}_closed.png`
     );
   },
   get ballBurstRay(): string {
@@ -246,8 +258,29 @@ export const MENU_ASSETS = {
   get menuOptions(): string {
     return resolveAsset('menu_icon_options', '/Graphics/Icons/menuOptions.png');
   },
+  get menuPC(): string {
+    return resolveAsset('menu_icon_pc', '/Graphics/Icons/menuPC.png');
+  },
   get menuQuit(): string {
     return resolveAsset('menu_icon_quit', '/Graphics/Icons/menuQuit.png');
+  },
+} as const;
+
+export const STORAGE_ASSETS = {
+  get bg(): string {
+    return resolveAsset('storage_bg', '/Graphics/Storage/bg.png');
+  },
+  get battlePlayerBoxS(): string {
+    return resolveAsset('storage_party_slot_bg', '/Graphics/Storage/battlePlayerBoxS.png');
+  },
+  getBoxWallpaper: (wallpaperId: number): string => {
+    return resolveAsset(`storage_box_${wallpaperId}`, `/Graphics/Storage/box_${wallpaperId}.png`);
+  },
+  get cursorFist(): string {
+    return resolveAsset('storage_cursor_fist', '/Graphics/Storage/boxfist.PNG');
+  },
+  get cursorGrab(): string {
+    return resolveAsset('storage_cursor_grab', '/Graphics/Storage/boxgrab.PNG');
   },
 } as const;
 

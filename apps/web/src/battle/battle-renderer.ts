@@ -4,12 +4,13 @@
  * No input handling, no state mutation, no DOM creation.
  */
 
-import type { BattleMove } from './types';
+import type { BattleMove, BattlerPokemon, StatStages } from './types';
 import type { BattleAssets } from './battle-assets';
 import { INTRO_SHUTTER_PROGRESS, type BattleState } from './battle-state';
 import { isLoaded } from './battle-assets';
 import { BattleEngine } from './battle-engine';
 import { TypeBadgeRenderer } from './type-badge-renderer';
+import { getBattleStatusIconFrame } from './battle-status-icons';
 import { TYPE_ICO_INDICES } from './type-chart';
 import { BATTLE_ASSETS } from '../assets';
 
@@ -106,6 +107,20 @@ export class BattleRenderer {
     this.assets.ballOpen = ballOpenImg;
   }
 
+  public updateThrownBall(ballType: string): void {
+    const ballImg = new Image();
+    ballImg.src = BATTLE_ASSETS.getBall(ballType);
+    this.assets.thrownBall = ballImg;
+
+    const ballOpenImg = new Image();
+    ballOpenImg.src = BATTLE_ASSETS.getBallOpen(ballType);
+    this.assets.thrownBallOpen = ballOpenImg;
+
+    const ballClosedImg = new Image();
+    ballClosedImg.src = BATTLE_ASSETS.getBallClosed(ballType);
+    this.assets.thrownBallClosed = ballClosedImg;
+  }
+
   public setForegroundOverlay(overlayKey?: string): void {
     this.assets.overlayKey = overlayKey;
     if (!overlayKey) {
@@ -145,6 +160,15 @@ export class BattleRenderer {
         camPanX = 0;
         camPanY = 0;
       }
+    }
+
+    // Capture zoom: smoothly zoom in when ball hits Pokemon and zoom out if capture fails
+    if (state.captureZoomProgress > 0) {
+      const t = state.captureZoomProgress;
+      const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+      camScale = 1.0 + eased * 0.4; // Zoom from 1.0x to 1.4x
+      camPanX = -45 * eased;
+      camPanY = 15 * eased;
     }
 
     ctx.save();
@@ -214,10 +238,12 @@ export class BattleRenderer {
   // ---- Enemy Battler ----
 
   private drawEnemyBattler(ctx: CanvasRenderingContext2D, state: BattleState): void {
+    // Hide enemy when captured or dead
     if (
       (this.engine.enemyPokemon.currentHp <= 0 && state.enemyFaintPhase === 'dead') ||
-      state.isThrowingBall ||
-      state.enemyFaintPhase === 'dead'
+      state.enemyFaintPhase === 'dead' ||
+      (state.isThrowingBall && state.captureAlpha <= 0) || // Fully absorbed into ball
+      state.captureSuccessEffect // Keep hidden during success effect
     )
       return;
 
@@ -244,24 +270,50 @@ export class BattleRenderer {
           : 0
         : Math.floor(state.tick / 4) % totalFrames;
       const sx = frameIdx * frameW;
-      const scale = 2.0;
+
+      // Apply capture shrink scale
+      const captureScale =
+        state.isThrowingBall && state.ballThrowPhase === 'capturing'
+          ? state.captureShrinkScale
+          : 1.0;
+      const scale = 2.0 * captureScale;
+
       const dw = Math.round(frameW * scale);
       const dh = Math.round(frameH * scale);
       const dx = Math.round(anchorX - dw / 2);
       const dy = Math.round(anchorY - dh);
 
-      // Sprite silhouette shadow (fades out as enemy dissolves)
-      if (state.enemyShadowAlpha > 0.01) {
+      // Sprite silhouette shadow (fades out as enemy dissolves or captured)
+      const shadowAlpha =
+        state.isThrowingBall && state.ballThrowPhase === 'capturing'
+          ? state.captureAlpha * state.enemyShadowAlpha
+          : state.enemyShadowAlpha;
+
+      if (shadowAlpha > 0.01) {
         ctx.save();
-        ctx.globalAlpha = state.enemyShadowAlpha;
+        ctx.globalAlpha = shadowAlpha;
         this.drawSpriteShadow(ctx, img, sx, frameW, frameH, anchorX, anchorY - 17, dw, dh);
         ctx.restore();
       }
 
       ctx.save();
 
-      // 1. Faint Animation Stages (Wild Pokémon)
-      if (state.enemyFaintPhase === 'red_flash') {
+      // Apply capture alpha
+      if (state.isThrowingBall && state.ballThrowPhase === 'capturing') {
+        ctx.globalAlpha = state.captureAlpha;
+      }
+
+      // 1. Capture Flash Animation (when being caught)
+      if (state.isThrowingBall && state.captureFlashPhase === 'white') {
+        // Pokemon turns white when being absorbed
+        const can = this.prepareSilhouetteCanvas(img, sx, frameW, frameH, '#ffffff', 'source-in');
+        ctx.drawImage(can, 0, 0, frameW, frameH, dx, dy, dw, dh);
+      } else if (state.isThrowingBall && state.captureFlashPhase === 'red') {
+        // Pokemon turns red before disappearing
+        const can = this.prepareSilhouetteCanvas(img, sx, frameW, frameH, '#ef4444', 'source-in');
+        ctx.drawImage(can, 0, 0, frameW, frameH, dx, dy, dw, dh);
+      } else if (state.enemyFaintPhase === 'red_flash') {
+        // 2. Faint Animation Stages (Wild Pokémon)
         // Soft red tint ("đỏ nhẹ") - clean overlay, NOT a glaring neon glow
         const can = this.prepareSilhouetteCanvas(
           img,
@@ -623,12 +675,146 @@ export class BattleRenderer {
 
   private drawBallThrow(ctx: CanvasRenderingContext2D, state: BattleState): void {
     if (!state.isThrowingBall) return;
-    const shakeOffset = state.ballShakeTimer > 0 ? Math.sin(state.tick * 0.5) * 6 : 0;
-    const bx = 365 + shakeOffset;
-    const by = 155;
-    if (isLoaded(this.assets.ball)) {
-      ctx.drawImage(this.assets.ball, 0, 0, 32, 32, bx, by, 32, 32);
+
+    ctx.save();
+    // Enable high-quality smoothing specifically for the scaled ball sprite
+    // to preserve rounded contours, fine details, and prevent pixel aliasing/distortion
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+
+    const ball = this.assets.thrownBall;
+    const ballOpen = this.assets.thrownBallOpen;
+    const ballClosed = this.assets.thrownBallClosed;
+
+    // Scale Pokéball to 75% (24px x 48px) for authentic proportions against the Pokémon,
+    // especially during camera 1.4x capture zoom
+    const ballScale = 0.75;
+    const ballW = Math.round(32 * ballScale); // 24px
+    const ballH = Math.round(64 * ballScale); // 48px
+
+    if (state.ballThrowPhase === 'throwing') {
+      // Draw shadow on ground during flight
+      ctx.save();
+      const t = Math.min(1.0, state.ballThrowTick / 26);
+      const shadowAlpha = 0.08 + t * 0.28;
+      const shadowW = Math.round((8 + t * 14) * ballScale);
+      const shadowH = Math.round((4 + t * 6) * ballScale);
+      ctx.fillStyle = `rgba(10, 20, 25, ${shadowAlpha.toFixed(2)})`;
+      ctx.beginPath();
+      ctx.ellipse(
+        Math.round(state.ballThrowX),
+        Math.round(state.ballThrowY + 30 * ballScale),
+        shadowW,
+        shadowH,
+        0,
+        0,
+        Math.PI * 2
+      );
+      ctx.fill();
+      ctx.restore();
+
+      // Draw rotating ball sprite (flying)
+      if (isLoaded(ball)) {
+        const sx = state.ballThrowRotationFrame * 32;
+        const bx = Math.round(state.ballThrowX - ballW / 2);
+        const by = Math.round(state.ballThrowY - ballH / 2);
+        ctx.drawImage(ball, sx, 0, 32, 64, bx, by, ballW, ballH);
+      }
+    } else if (state.ballThrowPhase === 'opening') {
+      // Draw open ball at enemy position
+      if (isLoaded(ballOpen)) {
+        const bx = Math.round(state.ballThrowX - ballW / 2);
+        const by = Math.round(state.ballThrowY - ballH / 2);
+        ctx.drawImage(ballOpen, 0, 0, 32, 64, bx, by, ballW, ballH);
+      }
+    } else if (state.ballThrowPhase === 'capturing') {
+      // Ball stays open at enemy position during capture
+      if (isLoaded(ballOpen)) {
+        const bx = Math.round(state.ballThrowX - ballW / 2);
+        const by = Math.round(state.ballThrowY - ballH / 2);
+        ctx.drawImage(ballOpen, 0, 0, 32, 64, bx, by, ballW, ballH);
+      }
+
+      // Draw capture beam/energy from ball to Pokemon
+      if (state.captureAlpha > 0.3) {
+        ctx.save();
+        ctx.globalAlpha = state.captureAlpha * 0.5;
+        ctx.strokeStyle = '#ff6b6b';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(state.ballThrowX, state.ballThrowY);
+        ctx.lineTo(365, 100); // Enemy position
+        ctx.stroke();
+        ctx.restore();
+      }
+    } else if (state.ballThrowPhase === 'falling') {
+      // Closed ball falling down
+      if (isLoaded(ballClosed)) {
+        const bx = Math.round(state.ballThrowX - ballW / 2);
+        const by = Math.round(state.ballThrowY - ballH / 2);
+        ctx.drawImage(ballClosed, 0, 0, 32, 64, bx, by, ballW, ballH);
+      }
+    } else if (state.ballThrowPhase === 'shaking') {
+      // Closed ball on ground, rotating left and right (not moving horizontally)
+      if (isLoaded(ballClosed)) {
+        const bx = Math.round(state.ballThrowX - ballW / 2);
+        const by = Math.round(state.ballThrowY - ballH / 2);
+
+        // Calculate rotation angle when shaking
+        const rotationAngle = state.ballShakeTimer > 0 ? Math.sin(state.tick * 0.4) * 0.25 : 0; // ~14 degrees max
+
+        if (rotationAngle !== 0) {
+          // Draw with rotation
+          ctx.save();
+          ctx.translate(state.ballThrowX, state.ballThrowY); // Move to ball center
+          ctx.rotate(rotationAngle); // Rotate
+          ctx.drawImage(ballClosed, 0, 0, 32, 64, -ballW / 2, -ballH / 2, ballW, ballH); // Draw centered
+          ctx.restore();
+        } else {
+          // Draw normal (no rotation)
+          ctx.drawImage(ballClosed, 0, 0, 32, 64, bx, by, ballW, ballH);
+        }
+
+        // Dark circular overlay on ball when capture is successful (stays until battle ends)
+        if (state.captureSuccessEffect) {
+          ctx.save();
+          ctx.globalAlpha = 0.4;
+          ctx.fillStyle = '#000000';
+          ctx.beginPath();
+          ctx.arc(state.ballThrowX, state.ballThrowY, 14 * ballScale, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      // Sparkle burst effect when caught successfully
+      if (state.captureSuccessEffect) {
+        ctx.save();
+        const t = state.captureSuccessTick / 40;
+        const centerX = state.ballThrowX;
+        const centerY = state.ballThrowY;
+
+        // Multiple sparkle particles bursting out
+        for (let i = 0; i < 20; i++) {
+          const angle = (i / 20) * Math.PI * 2;
+          const dist = t * 50 * (0.8 + (i % 3) * 0.2);
+          const px = centerX + Math.cos(angle) * dist;
+          const py = centerY + Math.sin(angle) * dist;
+          const alpha = Math.max(0, 1 - t);
+          const size = 2 + (i % 3);
+
+          ctx.globalAlpha = alpha;
+          ctx.fillStyle = i % 2 === 0 ? '#ffff00' : '#ffffff'; // Yellow and white stars
+          ctx.beginPath();
+          ctx.arc(px, py, size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.restore();
+      }
     }
+
+    ctx.restore();
   }
 
   // ---- Battle Intro Shutters (Opening from center + Looping Overlay) ----
@@ -703,7 +889,15 @@ export class BattleRenderer {
 
     const t = state.enemyDataboxProgress;
     const e = 1 - Math.pow(1 - t, 3);
-    const slideOffset = Math.round((1 - e) * -260);
+    const introOffset = Math.round((1 - e) * -260);
+
+    // Smoothly slide out to left edge during capture zoom
+    const zoomT = state.captureZoomProgress;
+    const zoomE = zoomT < 0.5 ? 2 * zoomT * zoomT : 1 - Math.pow(-2 * zoomT + 2, 2) / 2;
+    const zoomOffset = Math.round(zoomE * -300);
+
+    const slideOffset = introOffset + zoomOffset;
+    if (dx + slideOffset < -280) return; // Completely off-screen
 
     ctx.save();
     ctx.translate(dx + slideOffset, dy);
@@ -753,6 +947,10 @@ export class BattleRenderer {
 
     // HP Bar
     this.drawHpBar(ctx, 118, 40, 96, 6, state.enemyHpPct, state.ghostEnemyHpPct);
+    // Status Icon (covers the PS tag directly in front of the HP bar at native 1:1 scale 44x16)
+    this.drawStatusIcon(ctx, this.assets.statusIcons, enemy.status, 72, 35, 1);
+    // Stat Stage Badges (under HP bar on the left of the type tab, pushed down 5px to y=56)
+    this.drawStatBadges(ctx, enemy.statStages, 8, 56, 140);
     ctx.restore();
   }
 
@@ -769,7 +967,15 @@ export class BattleRenderer {
 
     const t = state.playerDataboxProgress;
     const e = 1 - Math.pow(1 - t, 3);
-    const slideOffset = Math.round((1 - e) * (CANVAS_W - dx));
+    const introOffset = Math.round((1 - e) * (CANVAS_W - dx));
+
+    // Smoothly slide out to right edge during capture zoom
+    const zoomT = state.captureZoomProgress;
+    const zoomE = zoomT < 0.5 ? 2 * zoomT * zoomT : 1 - Math.pow(-2 * zoomT + 2, 2) / 2;
+    const zoomOffset = Math.round(zoomE * (CANVAS_W - dx + 50));
+
+    const slideOffset = introOffset + zoomOffset;
+    if (dx + slideOffset > CANVAS_W + 50) return; // Completely off-screen
 
     ctx.save();
     ctx.translate(slideOffset, 0);
@@ -789,20 +995,22 @@ export class BattleRenderer {
 
     // Name
     ctx.font = `16px ${BATTLE_FONT}`;
-    this.drawTextWithOutline(ctx, player.name, dx + 58, dy + 41, '#ffffff', '#000000', 1);
+    this.drawTextWithOutline(ctx, player.name, dx + 58, dy + 31, '#ffffff', '#000000', 1);
 
     // Gender symbol
     const genderSymbol = player.gender === 'male' ? '♂' : player.gender === 'female' ? '♀' : '';
     const genderColor = player.gender === 'male' ? '#3b82f6' : '#ef4444';
     if (genderSymbol) {
-      this.drawTextWithOutline(ctx, genderSymbol, dx + 176, dy + 41, genderColor, '#000000', 3);
+      this.drawTextWithOutline(ctx, genderSymbol, dx + 176, dy + 31, genderColor, '#000000', 3);
     }
 
     // Level
-    this.drawTextWithOutline(ctx, `Lv.${player.level}`, dx + 192, dy + 41, '#ffffff', '#000000', 1);
+    this.drawTextWithOutline(ctx, `Lv.${player.level}`, dx + 192, dy + 31, '#ffffff', '#000000', 1);
 
     // HP Bar
     this.drawHpBar(ctx, dx + 136, dy + 40, 96, 6, state.playerHpPct, state.ghostPlayerHpPct);
+    // Status Icon (covers the PS tag directly in front of the HP bar at native 1:1 scale 44x16)
+    this.drawStatusIcon(ctx, this.assets.statusIcons, player.status, dx + 90, dy + 35, 1);
 
     // Numerical HP
     ctx.font = `16px ${BATTLE_FONT}`;
@@ -828,7 +1036,128 @@ export class BattleRenderer {
       ctx.fillRect(dx + 40, dy + 74, fillExpW, 4);
     }
 
+    // Stat Stage Badges (under HP bar on the left of numerical HP, pushed down 5px to dy+56)
+    this.drawStatBadges(ctx, player.statStages, dx + 58, dy + 56, 122);
+
     ctx.restore();
+  }
+
+  private drawStatusIcon(
+    ctx: CanvasRenderingContext2D,
+    sheet: HTMLImageElement,
+    status: BattlerPokemon['status'],
+    dx: number,
+    dy: number,
+    scale: number
+  ): void {
+    const frame = getBattleStatusIconFrame(status);
+    if (!frame || !isLoaded(sheet)) return;
+
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(
+      sheet,
+      frame.sx,
+      frame.sy,
+      frame.sw,
+      frame.sh,
+      dx,
+      dy,
+      frame.sw * scale,
+      frame.sh * scale
+    );
+  }
+
+  /** Render active stat stage boost/drop badges under the HP bar */
+  private drawStatBadges(
+    ctx: CanvasRenderingContext2D,
+    stages: StatStages | undefined,
+    startX: number,
+    startY: number,
+    maxWidth = 140
+  ): void {
+    if (!stages) return;
+
+    const statDefs: Array<{ key: keyof StatStages; label: string }> = [
+      { key: 'attack', label: 'ATK' },
+      { key: 'defense', label: 'DEF' },
+      { key: 'spAtk', label: 'SPA' },
+      { key: 'spDef', label: 'SPD' },
+      { key: 'speed', label: 'SPE' },
+      { key: 'accuracy', label: 'ACC' },
+      { key: 'evasion', label: 'EVA' },
+    ];
+
+    const activeStats = statDefs
+      .map(({ key, label }) => ({ label, stage: stages[key] ?? 0 }))
+      .filter((s) => s.stage !== 0);
+
+    if (activeStats.length === 0) return;
+
+    const count = activeStats.length;
+    const gap = count > 3 ? 2 : 3;
+    const badgeW = Math.max(18, Math.min(32, Math.floor((maxWidth - (count - 1) * gap) / count)));
+    const badgeH = 14;
+
+    ctx.save();
+    ctx.imageSmoothingEnabled = false;
+    ctx.font = `${badgeW < 28 ? 'bold 10px' : 'bold 12px'} ${BATTLE_FONT}`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    activeStats.forEach((stat, i) => {
+      const bx = Math.round(startX + i * (badgeW + gap));
+      const by = Math.round(startY);
+
+      const isBuff = stat.stage > 0;
+      const stageStr = isBuff ? `+${stat.stage}` : `${stat.stage}`;
+      const text = badgeW < 28 ? `${stageStr}${stat.label}` : `${stageStr} ${stat.label}`;
+
+      // Solid Badge Background & Crisp Border (high contrast)
+      ctx.fillStyle = isBuff ? '#14532d' : '#7f1d1d';
+      ctx.strokeStyle = isBuff ? '#4ade80' : '#f87171';
+      ctx.lineWidth = 1;
+
+      // Draw rounded rectangle
+      this.drawRoundedRect(ctx, bx, by, badgeW, badgeH, 2);
+      ctx.fill();
+      ctx.stroke();
+
+      // Draw Badge Text with 1px black drop shadow for crisp readability
+      const tx = Math.round(bx + badgeW / 2);
+      const ty = Math.round(by + badgeH / 2 + 1);
+      ctx.fillStyle = '#000000';
+      ctx.fillText(text, tx + 1, ty + 1);
+      ctx.fillStyle = isBuff ? '#ffffff' : '#ffffff';
+      ctx.fillText(text, tx, ty);
+    });
+
+    ctx.restore();
+  }
+
+  private drawRoundedRect(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    r: number
+  ): void {
+    if (typeof ctx.roundRect === 'function') {
+      ctx.beginPath();
+      ctx.roundRect(x, y, w, h, r);
+    } else {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+    }
   }
 
   // ---- Bottom Panel ----

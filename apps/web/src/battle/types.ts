@@ -25,6 +25,8 @@ export interface BattleMove {
   statChanges?: MoveStatChange[];
   statusEffect?: MoveStatusEffect;
   healPercent?: number;
+  drainPercent?: number;
+  recoilPercent?: number;
   highCrit?: boolean;
 }
 
@@ -54,6 +56,7 @@ export interface BattlerPokemon {
   statStages?: StatStages;
   status?: StatusCondition;
   sleepTurns?: number;
+  statusTurns?: number;
   moves: BattleMove[];
   frontSprite: string;
   backSprite: string;

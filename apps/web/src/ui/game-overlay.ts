@@ -23,6 +23,10 @@ export function createOverlayTemplate(): string {
         <img src="${MENU_ASSETS.menuBag}" alt="Túi đồ" class="menu-bar-icon" />
         <span class="menu-bar-text">Túi đồ</span>
       </button>
+      <button class="menu-bar-btn" id="btnMenuPC" title="Kho lưu trữ PC (Phím C)" aria-label="Kho lưu trữ PC">
+        <img src="${MENU_ASSETS.menuPC}" alt="PC Box" class="menu-bar-icon" />
+        <span class="menu-bar-text">PC Box</span>
+      </button>
       <button class="menu-bar-btn" id="btnMenuTrainer" title="Huấn luyện viên (Trainer Card)" aria-label="Trainer Card">
         <img src="${MENU_ASSETS.menuTrainer}" alt="Hồ sơ" class="menu-bar-icon" />
         <span class="menu-bar-text">Hồ sơ</span>

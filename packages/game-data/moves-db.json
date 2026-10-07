@@ -28,7 +28,8 @@
       "description": "Hồi phục lượng HP bằng 50% sát thương đã gây ra cho đối thủ.",
       "descriptionEn": "User recovers half the HP inflicted on opponent.",
       "nameEn": "Absorb",
-      "nameVi": "Hấp Thụ"
+      "nameVi": "Hấp Thụ",
+      "drainPercent": 0.5
     },
     "accelerock": {
       "id": "accelerock",
@@ -921,7 +922,8 @@
       "description": "Hồi phục lượng HP bằng 50% sát thương đã gây ra cho đối thủ.",
       "descriptionEn": "User recovers half the HP inflicted on opponent.",
       "nameEn": "Bitter Blade",
-      "nameVi": "Lưỡi Đao Cay Đắng"
+      "nameVi": "Lưỡi Đao Cay Đắng",
+      "drainPercent": 0.5
     },
     "bitter_malice": {
       "id": "bitter_malice",
@@ -1258,7 +1260,8 @@
       "description": "Hồi phục lượng HP bằng 50% sát thương đã gây ra cho đối thủ.",
       "descriptionEn": "User recovers half the HP inflicted on opponent.",
       "nameEn": "Bouncy Bubble",
-      "nameVi": "Bong Bóng Nảy"
+      "nameVi": "Bong Bóng Nảy",
+      "drainPercent": 0.5
     },
     "branch_poke": {
       "id": "branch_poke",
@@ -1286,7 +1289,8 @@
       "description": "User receives recoil damage.",
       "descriptionEn": "User receives recoil damage.",
       "nameEn": "Brave Bird",
-      "nameVi": "Dũng Điểu"
+      "nameVi": "Dũng Điểu",
+      "recoilPercent": 0.33
     },
     "breaking_swipe": {
       "id": "breaking_swipe",
@@ -2754,7 +2758,8 @@
       "description": "User receives recoil damage.",
       "descriptionEn": "User receives recoil damage.",
       "nameEn": "Double-Edge",
-      "nameVi": "Đòn Liều Mạng"
+      "nameVi": "Đòn Liều Mạng",
+      "recoilPercent": 0.33
     },
     "draco_meteor": {
       "id": "draco_meteor",
@@ -2962,7 +2967,8 @@
       "description": "Hồi phục lượng HP bằng 50% sát thương đã gây ra cho đối thủ.",
       "descriptionEn": "User recovers half the HP inflicted on opponent.",
       "nameEn": "Drain Punch",
-      "nameVi": "Cú Đấm Hút Máu"
+      "nameVi": "Cú Đấm Hút Máu",
+      "drainPercent": 0.5
     },
     "draining_kiss": {
       "id": "draining_kiss",
@@ -2976,7 +2982,8 @@
       "description": "User recovers most the HP inflicted on opponent.",
       "descriptionEn": "User recovers most the HP inflicted on opponent.",
       "nameEn": "Draining Kiss",
-      "nameVi": "Nụ Hôn Hút Năng Lượng"
+      "nameVi": "Nụ Hôn Hút Năng Lượng",
+      "drainPercent": 0.75
     },
     "dream_eater": {
       "id": "dream_eater",
@@ -3976,7 +3983,8 @@
         "chance": 0.3
       },
       "nameEn": "Flare Blitz",
-      "nameVi": "Hỏa Thần Cuồng Nộ"
+      "nameVi": "Hỏa Thần Cuồng Nộ",
+      "recoilPercent": 0.33
     },
     "flash": {
       "id": "flash",
@@ -5004,7 +5012,8 @@
       "description": "Hồi phục lượng HP bằng 50% sát thương đã gây ra cho đối thủ.",
       "descriptionEn": "User recovers half the HP inflicted on opponent.",
       "nameEn": "Giga Drain",
-      "nameVi": "Đại Hút Năng Lượng"
+      "nameVi": "Đại Hút Năng Lượng",
+      "drainPercent": 0.5
     },
     "giga_impact": {
       "id": "giga_impact",
@@ -5111,7 +5120,7 @@
       "statusEffect": {
         "condition": "paralysis",
         "target": "opponent",
-        "chance": 1.0
+        "chance": 1
       },
       "nameEn": "Glare",
       "nameVi": "Ánh Nhìn Tê Liệt"
@@ -5504,7 +5513,8 @@
       "description": "User receives recoil damage.",
       "descriptionEn": "User receives recoil damage.",
       "nameEn": "Head Smash",
-      "nameVi": "Head Đập Nát"
+      "nameVi": "Head Đập Nát",
+      "recoilPercent": 0.5
     },
     "headbutt": {
       "id": "headbutt",
@@ -5839,7 +5849,8 @@
       "description": "Hồi phục lượng HP bằng 50% sát thương đã gây ra cho đối thủ.",
       "descriptionEn": "User recovers half the HP inflicted on opponent.",
       "nameEn": "Horn Leech",
-      "nameVi": "Hút Máu Bằng Sừng"
+      "nameVi": "Hút Máu Bằng Sừng",
+      "drainPercent": 0.5
     },
     "howl": {
       "id": "howl",
@@ -6030,7 +6041,7 @@
       "statusEffect": {
         "condition": "sleep",
         "target": "opponent",
-        "chance": 1.0
+        "chance": 1
       },
       "nameEn": "Hypnosis",
       "nameVi": "Thôi Miên"
@@ -6708,7 +6719,8 @@
       "description": "Hồi phục lượng HP bằng 50% sát thương đã gây ra cho đối thủ.",
       "descriptionEn": "User recovers half the HP inflicted on opponent.",
       "nameEn": "Leech Life",
-      "nameVi": "Hút Sự Sống"
+      "nameVi": "Hút Sự Sống",
+      "drainPercent": 0.5
     },
     "leech_seed": {
       "id": "leech_seed",
@@ -6790,7 +6802,8 @@
       "description": "User and teammates recover HP.",
       "descriptionEn": "User and teammates recover HP.",
       "nameEn": "Life Dew",
-      "nameVi": "Giọt Sương Sự Sống"
+      "nameVi": "Giọt Sương Sự Sống",
+      "healPercent": 0.25
     },
     "light_of_ruin": {
       "id": "light_of_ruin",
@@ -7557,7 +7570,8 @@
       "description": "Hồi phục lượng HP bằng 50% sát thương đã gây ra cho đối thủ.",
       "descriptionEn": "User recovers half the HP inflicted on opponent.",
       "nameEn": "Mega Drain",
-      "nameVi": "Siêu Hút Năng Lượng"
+      "nameVi": "Siêu Hút Năng Lượng",
+      "drainPercent": 0.5
     },
     "mega_kick": {
       "id": "mega_kick",
@@ -7972,7 +7986,8 @@
       "description": "User recovers HP. Amount varies with the weather.",
       "descriptionEn": "User recovers HP. Amount varies with the weather.",
       "nameEn": "Moonlight",
-      "nameVi": "Ánh Trăng"
+      "nameVi": "Ánh Trăng",
+      "healPercent": 0.5
     },
     "morning_sun": {
       "id": "morning_sun",
@@ -7986,7 +8001,8 @@
       "description": "User recovers HP. Amount varies with the weather.",
       "descriptionEn": "User recovers HP. Amount varies with the weather.",
       "nameEn": "Morning Sun",
-      "nameVi": "Ánh Nắng Ban Mai"
+      "nameVi": "Ánh Nắng Ban Mai",
+      "healPercent": 0.5
     },
     "mortal_spin": {
       "id": "mortal_spin",
@@ -8363,7 +8379,8 @@
       "description": "User recovers most of the HP inflicted on opponent.",
       "descriptionEn": "User recovers most of the HP inflicted on opponent.",
       "nameEn": "Oblivion Wing",
-      "nameVi": "Đôi Cánh Quên Lãng"
+      "nameVi": "Đôi Cánh Quên Lãng",
+      "drainPercent": 0.75
     },
     "obstruct": {
       "id": "obstruct",
@@ -8552,7 +8569,8 @@
       "description": "Hồi phục lượng HP bằng 50% sát thương đã gây ra cho đối thủ.",
       "descriptionEn": "User recovers half the HP inflicted on opponent.",
       "nameEn": "Parabolic Charge",
-      "nameVi": "Lao Tới Parabolic"
+      "nameVi": "Lao Tới Parabolic",
+      "drainPercent": 0.5
     },
     "parting_shot": {
       "id": "parting_shot",
@@ -8806,7 +8824,7 @@
       "statusEffect": {
         "condition": "poison",
         "target": "opponent",
-        "chance": 1.0
+        "chance": 1
       },
       "nameEn": "Poison Gas",
       "nameVi": "Khí Độc"
@@ -8844,7 +8862,7 @@
       "statusEffect": {
         "condition": "poison",
         "target": "opponent",
-        "chance": 1.0
+        "chance": 1
       },
       "nameEn": "Poison Powder",
       "nameVi": "Phấn Độc"
@@ -9755,11 +9773,11 @@
       "maxPp": 5,
       "description": "Ngủ sâu trong 2 lượt để hồi phục toàn bộ HP và giải trừ mọi trạng thái.",
       "descriptionEn": "User sleeps for 2 turns, but user is fully healed.",
-      "healPercent": 1.0,
+      "healPercent": 1,
       "statusEffect": {
         "condition": "sleep",
         "target": "self",
-        "chance": 1.0
+        "chance": 1
       },
       "nameEn": "Rest",
       "nameVi": "Nghỉ Ngơi"
@@ -10762,7 +10780,8 @@
       "description": "The user regains up to half of its max HP. It restores more HP in a sandstorm.",
       "descriptionEn": "The user regains up to half of its max HP. It restores more HP in a sandstorm.",
       "nameEn": "Shore Up",
-      "nameVi": "Đắp Đụn Cát"
+      "nameVi": "Đắp Đụn Cát",
+      "healPercent": 0.5
     },
     "signal_beam": {
       "id": "signal_beam",
@@ -10841,7 +10860,7 @@
       "statusEffect": {
         "condition": "sleep",
         "target": "opponent",
-        "chance": 1.0
+        "chance": 1
       },
       "nameEn": "Sing",
       "nameVi": "Hát Ru"
@@ -11031,7 +11050,7 @@
       "statusEffect": {
         "condition": "sleep",
         "target": "opponent",
-        "chance": 1.0
+        "chance": 1
       },
       "nameEn": "Sleep Powder",
       "nameVi": "Phấn Ngủ"
@@ -11643,7 +11662,7 @@
       "statusEffect": {
         "condition": "sleep",
         "target": "opponent",
-        "chance": 1.0
+        "chance": 1
       },
       "nameEn": "Spore",
       "nameVi": "Bào Tử Ru Ngủ"
@@ -12018,7 +12037,7 @@
       "statusEffect": {
         "condition": "paralysis",
         "target": "opponent",
-        "chance": 1.0
+        "chance": 1
       },
       "nameEn": "Stun Spore",
       "nameVi": "Bào Tử Tê Liệt"
@@ -12035,7 +12054,8 @@
       "description": "User receives recoil damage.",
       "descriptionEn": "User receives recoil damage.",
       "nameEn": "Submission",
-      "nameVi": "Thế Vật Khóa"
+      "nameVi": "Thế Vật Khóa",
+      "recoilPercent": 0.25
     },
     "substitute": {
       "id": "substitute",
@@ -12336,7 +12356,8 @@
       "description": "User recovers HP. Amount varies with the weather.",
       "descriptionEn": "User recovers HP. Amount varies with the weather.",
       "nameEn": "Synthesis",
-      "nameVi": "Quang Hợp"
+      "nameVi": "Quang Hợp",
+      "healPercent": 0.5
     },
     "syrup_bomb": {
       "id": "syrup_bomb",
@@ -12462,7 +12483,8 @@
       "description": "User receives recoil damage.",
       "descriptionEn": "User receives recoil damage.",
       "nameEn": "Take Down",
-      "nameVi": "Lao Đầu"
+      "nameVi": "Lao Đầu",
+      "recoilPercent": 0.25
     },
     "take_heart": {
       "id": "take_heart",
@@ -12829,7 +12851,7 @@
       "statusEffect": {
         "condition": "paralysis",
         "target": "opponent",
-        "chance": 1.0
+        "chance": 1
       },
       "nameEn": "Thunder Wave",
       "nameVi": "Sóng Điện Từ"
@@ -12979,7 +13001,7 @@
       "statusEffect": {
         "condition": "toxic",
         "target": "opponent",
-        "chance": 1.0
+        "chance": 1
       },
       "nameEn": "Toxic",
       "nameVi": "Kịch Độc"
@@ -13461,7 +13483,8 @@
         "chance": 0.3
       },
       "nameEn": "Volt Tackle",
-      "nameVi": "Lao Đầu Điện Cao Thế"
+      "nameVi": "Lao Đầu Điện Cao Thế",
+      "recoilPercent": 0.33
     },
     "wake_up_slap": {
       "id": "wake_up_slap",
@@ -13721,7 +13744,7 @@
       "statusEffect": {
         "condition": "burn",
         "target": "opponent",
-        "chance": 1.0
+        "chance": 1
       },
       "nameEn": "Will-O-Wisp",
       "nameVi": "Ngọn Lửa Ma Trơi"
@@ -13801,7 +13824,8 @@
       "description": "User receives recoil damage.",
       "descriptionEn": "User receives recoil damage.",
       "nameEn": "Wood Hammer",
-      "nameVi": "Búa Gỗ Khổng Lồ"
+      "nameVi": "Búa Gỗ Khổng Lồ",
+      "recoilPercent": 0.33
     },
     "work_up": {
       "id": "work_up",
@@ -13894,7 +13918,7 @@
       "statusEffect": {
         "condition": "sleep",
         "target": "opponent",
-        "chance": 1.0
+        "chance": 1
       },
       "nameEn": "Yawn",
       "nameVi": "Ngáp Ngủ"
@@ -14030,7 +14054,7 @@
       "statusEffect": {
         "condition": "poison",
         "target": "opponent",
-        "chance": 1.0
+        "chance": 1
       },
       "nameEn": "Poison Powder",
       "nameVi": "Phấn Độc"
@@ -14049,7 +14073,7 @@
       "statusEffect": {
         "condition": "sleep",
         "target": "opponent",
-        "chance": 1.0
+        "chance": 1
       },
       "nameEn": "Sleep Powder",
       "nameVi": "Phấn Ngủ"
@@ -14068,7 +14092,7 @@
       "statusEffect": {
         "condition": "paralysis",
         "target": "opponent",
-        "chance": 1.0
+        "chance": 1
       },
       "nameEn": "Stun Spore",
       "nameVi": "Bào Tử Tê Liệt"

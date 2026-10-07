@@ -22,6 +22,12 @@ export interface CatchResult {
   message: string;
 }
 
+export interface EndTurnResult {
+  damage: number;
+  defenderFainted: boolean;
+  message: string;
+}
+
 /** Official Pokémon stat stage multipliers (-6 to +6) */
 export function getStatMultiplier(stage: number): number {
   const clamped = Math.max(-6, Math.min(6, stage));
@@ -78,6 +84,57 @@ export class BattleEngine {
     };
     battler.status ??= 'none';
     battler.sleepTurns ??= 0;
+    battler.statusTurns ??= 0;
+  }
+
+  private getStatusImmunity(
+    target: BattlerPokemon,
+    condition: NonNullable<BattleMove['statusEffect']>['condition']
+  ): string | null {
+    if (condition === 'burn' && target.types.includes('Fire'))
+      return 'Fire types cannot be burned.';
+    if (condition === 'paralysis' && target.types.includes('Electric')) {
+      return 'Electric types cannot be paralyzed.';
+    }
+    if (
+      (condition === 'poison' || condition === 'toxic') &&
+      (target.types.includes('Poison') || target.types.includes('Steel'))
+    ) {
+      return 'It does not affect this Pokémon.';
+    }
+    if (condition === 'freeze' && target.types.includes('Ice'))
+      return 'Ice types cannot be frozen.';
+    return null;
+  }
+
+  /** Applies persistent damage at the end of a completed turn. */
+  public applyEndTurnEffects(target: BattlerPokemon): EndTurnResult | null {
+    this.ensureBattlerState(target);
+    if (target.currentHp <= 0 || target.isFainted) return null;
+
+    let damage = 0;
+    if (target.status === 'burn') {
+      damage = Math.max(1, Math.floor(target.maxHp / 16));
+    } else if (target.status === 'poison') {
+      damage = Math.max(1, Math.floor(target.maxHp / 8));
+    } else if (target.status === 'toxic') {
+      target.statusTurns = Math.min(15, (target.statusTurns ?? 0) + 1);
+      damage = Math.max(1, Math.floor((target.maxHp * target.statusTurns) / 16));
+    }
+
+    if (damage <= 0) return null;
+
+    target.currentHp = Math.max(0, target.currentHp - damage);
+    const defenderFainted = target.currentHp <= 0;
+    if (defenderFainted) target.isFainted = true;
+
+    const statusName =
+      target.status === 'burn' ? 'burn' : target.status === 'toxic' ? 'toxic poison' : 'poison';
+    return {
+      damage,
+      defenderFainted,
+      message: `${target.name} was hurt by ${statusName}!`,
+    };
   }
 
   public executeAttack(
@@ -88,11 +145,21 @@ export class BattleEngine {
     this.ensureBattlerState(attacker);
     this.ensureBattlerState(defender);
 
-    if (move.pp > 0) {
-      move.pp--;
+    if (move.pp <= 0) {
+      return {
+        attackerName: attacker.name,
+        moveName: move.name,
+        damage: 0,
+        typeEffectiveness: 1.0,
+        isCritical: false,
+        defenderFainted: false,
+        message: `${attacker.name} tried to use ${getMoveDisplayName(move)}, but it has no PP left!`,
+      };
     }
+    move.pp--;
 
     // 1. Status hindrance check (Sleep, Freeze, Paralysis)
+    let statusPrefix = '';
     if (attacker.status === 'sleep') {
       if ((attacker.sleepTurns ?? 0) > 0) {
         attacker.sleepTurns!--;
@@ -107,12 +174,14 @@ export class BattleEngine {
         };
       } else {
         attacker.status = 'none';
+        statusPrefix = `${attacker.name} woke up! `;
       }
     }
 
     if (attacker.status === 'freeze') {
       if (this.rng.next() < 0.2) {
         attacker.status = 'none';
+        statusPrefix = `${attacker.name} thawed out! `;
       } else {
         return {
           attackerName: attacker.name,
@@ -167,16 +236,32 @@ export class BattleEngine {
     if (move.category === 'status') {
       let extraMsg = '';
 
-      // Healing
-      if (move.healPercent && move.healPercent > 0) {
-        const heal = Math.floor(attacker.maxHp * move.healPercent);
-        attacker.currentHp = Math.min(attacker.maxHp, attacker.currentHp + heal);
-        extraMsg += ` ${attacker.name} restored its HP!`;
+      // Healing & Rest logic
+      if (move.id === 'rest') {
+        if (attacker.currentHp >= attacker.maxHp) {
+          extraMsg += ` But it failed! ${attacker.name}'s HP is already full!`;
+        } else {
+          attacker.status = 'sleep';
+          attacker.statusTurns = 0;
+          attacker.sleepTurns = 2;
+          attacker.currentHp = attacker.maxHp;
+          extraMsg += ` ${attacker.name} slept and became healthy!`;
+        }
+      } else if (move.healPercent && move.healPercent > 0) {
+        if (attacker.currentHp >= attacker.maxHp) {
+          extraMsg += ` ${attacker.name}'s HP is already full!`;
+        } else {
+          const heal = Math.max(1, Math.floor(attacker.maxHp * move.healPercent));
+          attacker.currentHp = Math.min(attacker.maxHp, attacker.currentHp + heal);
+          extraMsg += ` ${attacker.name} restored its HP!`;
+        }
       }
 
       // Stat stages
       if (move.statChanges && move.statChanges.length > 0) {
         for (const sc of move.statChanges) {
+          const chance = Math.max(0, Math.min(1, sc.chance ?? 1));
+          if (this.rng.next() >= chance) continue;
           const target = sc.target === 'self' ? attacker : defender;
           const stages = target.statStages!;
           const prev = stages[sc.stat];
@@ -193,17 +278,24 @@ export class BattleEngine {
       }
 
       // Status ailment
-      if (move.statusEffect) {
+      if (move.statusEffect && move.id !== 'rest') {
         const target = move.statusEffect.target === 'self' ? attacker : defender;
-        if (target.status === 'none') {
+        const chance = Math.max(0, Math.min(1, move.statusEffect.chance));
+        const immunityMessage = this.getStatusImmunity(target, move.statusEffect.condition);
+        if (target.status === 'none' && !immunityMessage && this.rng.next() < chance) {
           target.status = move.statusEffect.condition;
+          target.statusTurns = 0;
           if (target.status === 'sleep') target.sleepTurns = this.rng.nextInt(1, 3);
           extraMsg += ` ${target.name} was inflicted with ${move.statusEffect.condition}!`;
+        } else if (target.status !== 'none' && move.statusEffect.target !== 'self') {
+          extraMsg += ` But it failed! ${target.name} already has a status condition!`;
+        } else if (target.status === 'none' && immunityMessage) {
+          extraMsg += ` ${immunityMessage}`;
         }
       }
 
       const moveDisplayName = getMoveDisplayName(move);
-      const mainMsg = `${attacker.name} used ${moveDisplayName}!${extraMsg || ' It affected the battle!'}`;
+      const mainMsg = `${statusPrefix}${attacker.name} used ${moveDisplayName}!${extraMsg || ' It affected the battle!'}`;
       return {
         attackerName: attacker.name,
         moveName: moveDisplayName,
@@ -225,7 +317,7 @@ export class BattleEngine {
         typeEffectiveness: 0,
         isCritical: false,
         defenderFainted: false,
-        message: `${attacker.name} used ${move.name}! It had no effect on ${defender.name}!`,
+        message: `${statusPrefix}${attacker.name} used ${move.name}! It had no effect on ${defender.name}!`,
       };
     }
 
@@ -265,6 +357,58 @@ export class BattleEngine {
 
     const critText = isCrit ? ' A critical hit!' : '';
 
+    let secMsg = '';
+
+    // Drain effect (Absorb, Giga Drain, Leech Life, Drain Punch, etc.)
+    if (move.drainPercent && move.drainPercent > 0) {
+      const drained = Math.max(1, Math.floor(damage * move.drainPercent));
+      attacker.currentHp = Math.min(attacker.maxHp, attacker.currentHp + drained);
+      secMsg += ` ${defender.name} had its energy drained!`;
+    }
+
+    // Recoil effect (Take Down, Double-Edge, Brave Bird, etc.)
+    if (move.recoilPercent && move.recoilPercent > 0) {
+      const recoil = Math.max(1, Math.floor(damage * move.recoilPercent));
+      attacker.currentHp = Math.max(0, attacker.currentHp - recoil);
+      secMsg += ` ${attacker.name} is hit with recoil!`;
+      if (attacker.currentHp <= 0) {
+        attacker.isFainted = true;
+      }
+    }
+
+    if (!defenderFainted) {
+      // Secondary status effect on damaging moves
+      if (move.statusEffect) {
+        const target = move.statusEffect.target === 'self' ? attacker : defender;
+        const chance = Math.max(0, Math.min(1, move.statusEffect.chance));
+        const immunityMessage = this.getStatusImmunity(target, move.statusEffect.condition);
+        if (target.status === 'none' && !immunityMessage && this.rng.next() < chance) {
+          target.status = move.statusEffect.condition;
+          target.statusTurns = 0;
+          if (target.status === 'sleep') target.sleepTurns = this.rng.nextInt(1, 3);
+          secMsg += ` ${target.name} was inflicted with ${move.statusEffect.condition}!`;
+        }
+      }
+
+      // Secondary stat changes on damaging moves
+      if (move.statChanges && move.statChanges.length > 0) {
+        for (const sc of move.statChanges) {
+          const chance = Math.max(0, Math.min(1, sc.chance ?? 1));
+          if (this.rng.next() >= chance) continue;
+          const target = sc.target === 'self' ? attacker : defender;
+          const stages = target.statStages!;
+          const prev = stages[sc.stat];
+          stages[sc.stat] = Math.max(-6, Math.min(6, prev + sc.stages));
+          const change = stages[sc.stat] - prev;
+
+          if (change > 1) secMsg += ` ${target.name}'s ${sc.stat} sharply rose!`;
+          else if (change === 1) secMsg += ` ${target.name}'s ${sc.stat} rose!`;
+          else if (change === -1) secMsg += ` ${target.name}'s ${sc.stat} fell!`;
+          else if (change < -1) secMsg += ` ${target.name}'s ${sc.stat} harshly fell!`;
+        }
+      }
+    }
+
     const moveDisplayName = getMoveDisplayName(move);
     return {
       attackerName: attacker.name,
@@ -273,7 +417,7 @@ export class BattleEngine {
       typeEffectiveness: typeEff,
       isCritical: isCrit,
       defenderFainted,
-      message: `${attacker.name} used ${moveDisplayName}!${effText}${critText}`,
+      message: `${statusPrefix}${attacker.name} used ${moveDisplayName}!${effText}${critText}${secMsg}`,
     };
   }
 

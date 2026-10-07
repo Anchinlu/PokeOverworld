@@ -6,3 +6,4 @@ export * from './pokedex-screen';
 export * from './party-screen';
 export * from './bag-screen';
 export * from './encounter-transition';
+export * from './storage-screen';

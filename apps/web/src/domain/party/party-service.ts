@@ -9,7 +9,7 @@ import {
   MAX_PARTY_SIZE,
   createDefaultParty,
 } from './party-state';
-import type { BattlerPokemon } from '../../battle/types';
+import type { BattleMove, BattlerPokemon } from '../../battle/types';
 
 const STORAGE_KEY = 'pokemon_player_party_v1';
 
@@ -114,7 +114,19 @@ export class PartyService {
    */
   public swapPokemon(index1: number, index2: number): boolean {
     const len = this.state.pokemon.length;
-    if (index1 < 0 || index1 >= len || index2 < 0 || index2 >= len || index1 === index2) {
+    if (index1 < 0 || index1 >= len || index2 < 0 || index2 >= 6 || index1 === index2) {
+      return false;
+    }
+
+    // If target index2 is an empty slot in party (>= len), move Pokémon to the end of party
+    if (index2 >= len) {
+      const [pk] = this.state.pokemon.splice(index1, 1);
+      if (pk) {
+        this.state.pokemon.push(pk);
+        this.state.swapSourceIndex = null;
+        this.notify();
+        return true;
+      }
       return false;
     }
 
@@ -124,6 +136,18 @@ export class PartyService {
     this.state.swapSourceIndex = null;
     this.notify();
     return true;
+  }
+
+  /**
+   * Replaces the Pokémon at the specified index with a new Pokémon.
+   * Returns the previous Pokémon or null if index is invalid.
+   */
+  public replacePokemon(index: number, newPokemon: PartyPokemon): PartyPokemon | null {
+    if (index < 0 || index >= this.state.pokemon.length) return null;
+    const old = this.state.pokemon[index]!;
+    this.state.pokemon[index] = newPokemon;
+    this.notify();
+    return old;
   }
 
   /**
@@ -249,6 +273,16 @@ export class PartyService {
 
     this.notify();
     return { leveledUp, newLevel: partyMember.level };
+  }
+
+  public updatePokemonMoves(uid: string, moves: BattleMove[]): boolean {
+    const pk = this.state.pokemon.find((p) => p.uid === uid);
+    if (pk) {
+      pk.moves = [...moves];
+      this.notify();
+      return true;
+    }
+    return false;
   }
 
   // --- UI Selection & Swapping State ---

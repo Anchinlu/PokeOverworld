@@ -57,8 +57,10 @@ export class BattleScreen {
     this.state = new BattleState(this.engine.rng);
     this.state.enemyHpPct = wildPokemon.currentHp / wildPokemon.maxHp;
     this.state.targetEnemyHpPct = this.state.enemyHpPct;
+    this.state.ghostEnemyHpPct = this.state.enemyHpPct;
     this.state.playerHpPct = playerPokemon.currentHp / playerPokemon.maxHp;
     this.state.targetPlayerHpPct = this.state.playerHpPct;
+    this.state.ghostPlayerHpPct = this.state.playerHpPct;
 
     // 3. Assets
     const assets = createBattleAssets(

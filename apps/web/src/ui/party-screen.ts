@@ -8,6 +8,7 @@ import { playerService } from '../domain/player/player-service';
 import type { PartyPokemon } from '../domain/party/party-state';
 import { PARTY_ASSETS, POKEMON_ASSETS } from '../assets';
 import { showBerryToast } from './toast';
+import { PokemonSpriteAnimator } from './pokedex';
 
 export interface BattleSelectOptions {
   currentBattlerUid?: string;
@@ -23,6 +24,7 @@ export class PartyScreen {
   private swapSourceIndex: number | null = null;
   private activeMenuIndex: number | null = null;
   private summaryPokemon: PartyPokemon | null = null;
+  private summaryAnimator: PokemonSpriteAnimator | null = null;
   private battleSelectOptions: BattleSelectOptions | null = null;
   private onLeaderChangeCallback?: (newLeader: PartyPokemon) => void;
 
@@ -83,6 +85,7 @@ export class PartyScreen {
     this.swapSourceIndex = null;
     this.activeMenuIndex = null;
     this.summaryPokemon = null;
+    this.summaryAnimator?.stop();
     if (this.backdropEl) {
       this.backdropEl.style.display = 'none';
     }
@@ -151,7 +154,7 @@ export class PartyScreen {
             </div>
             <div class="summary-body">
               <div class="summary-left-col">
-                <img id="summaryPkSprite" class="summary-pk-sprite" src="" alt="Pokemon" />
+                <canvas id="summaryPkSprite" class="summary-pk-sprite" width="80" height="80"></canvas>
                 <div id="summaryPkTypes" class="summary-pk-types"></div>
                 <div class="summary-stat-row">HP: <span id="summaryHp">20 / 20</span></div>
                 <div class="summary-stat-row">Tấn công: <span id="summaryAtk">12</span></div>
@@ -284,6 +287,7 @@ export class PartyScreen {
     // Summary Close Button
     const btnSummaryClose = this.backdropEl.querySelector('#btnSummaryClose');
     btnSummaryClose?.addEventListener('click', () => {
+      this.summaryAnimator?.stop();
       this.summaryPokemon = null;
       const modal = this.backdropEl?.querySelector<HTMLElement>('#partySummaryModal');
       if (modal) modal.style.display = 'none';
@@ -302,6 +306,7 @@ export class PartyScreen {
 
       if (e.code === 'Escape' || e.code === 'KeyP') {
         if (this.summaryPokemon) {
+          this.summaryAnimator?.stop();
           this.summaryPokemon = null;
           const modal = this.backdropEl?.querySelector<HTMLElement>('#partySummaryModal');
           if (modal) modal.style.display = 'none';
@@ -618,8 +623,13 @@ export class PartyScreen {
     if (!modal) return;
 
     modal.querySelector('#summaryPkName')!.textContent = `${pk.nickname || pk.name} Lv.${pk.level}`;
-    const spriteEl = modal.querySelector<HTMLImageElement>('#summaryPkSprite')!;
-    spriteEl.src = POKEMON_ASSETS.getFrontSprite(pk.speciesKey);
+    const spriteCanvas = modal.querySelector<HTMLCanvasElement>('#summaryPkSprite')!;
+    if (spriteCanvas) {
+      if (!this.summaryAnimator) {
+        this.summaryAnimator = new PokemonSpriteAnimator(spriteCanvas);
+      }
+      this.summaryAnimator.load(POKEMON_ASSETS.getFrontSprite(pk.speciesKey));
+    }
 
     const typesEl = modal.querySelector<HTMLElement>('#summaryPkTypes')!;
     typesEl.innerHTML = pk.types

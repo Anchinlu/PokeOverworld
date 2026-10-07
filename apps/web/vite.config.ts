@@ -1,6 +1,10 @@
 import { defineConfig, type Plugin } from 'vite';
-import path from 'node:path';
-import fs from 'node:fs';
+import * as path from 'node:path';
+import * as fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function serveGraphicsPlugin(): Plugin {
   return {
@@ -66,6 +70,7 @@ function emitLegacyGraphicsPlugin(): Plugin {
     'Move',
     'Party',
     'Bag',
+    'Storage',
   ];
 
   return {
@@ -145,12 +150,14 @@ function emitLegacyGraphicsPlugin(): Plugin {
         }
       }
 
-      // Add battle music files
-      const audioBattleDir = path.resolve(projectRoot, 'Audio/Battle');
-      if (fs.existsSync(audioBattleDir)) {
-        for (const entry of fs.readdirSync(audioBattleDir, { withFileTypes: true })) {
-          if (entry.isFile()) {
-            files.add(`Audio/Battle/${entry.name}`);
+      // Add battle music and SE files
+      for (const audioSub of ['Battle', 'SE']) {
+        const audioDir = path.resolve(projectRoot, 'Audio', audioSub);
+        if (fs.existsSync(audioDir)) {
+          for (const entry of fs.readdirSync(audioDir, { withFileTypes: true })) {
+            if (entry.isFile()) {
+              files.add(`Audio/${audioSub}/${entry.name}`);
+            }
           }
         }
       }

@@ -18,6 +18,7 @@ import {
   openBagScreen,
   isBagScreenOpen,
   initBagScreen,
+  storageScreen,
 } from './ui';
 import { initDesktopShell } from './shell/desktop';
 import type { Direction } from '@pokemon/shared-types';
@@ -255,6 +256,7 @@ export async function bootstrap(): Promise<void> {
   const btnMenuPokedex = document.querySelector<HTMLButtonElement>('#btnMenuPokedex');
   const btnMenuParty = document.querySelector<HTMLButtonElement>('#btnMenuParty');
   const btnMenuBag = document.querySelector<HTMLButtonElement>('#btnMenuBag');
+  const btnMenuPC = document.querySelector<HTMLButtonElement>('#btnMenuPC');
   const btnMenuTrainer = document.querySelector<HTMLButtonElement>('#btnMenuTrainer');
   const btnMenuOptions = document.querySelector<HTMLButtonElement>('#btnMenuOptions');
   const btnMenuQuit = document.querySelector<HTMLButtonElement>('#btnMenuQuit');
@@ -269,6 +271,10 @@ export async function bootstrap(): Promise<void> {
 
   btnMenuBag?.addEventListener('click', () => {
     toggleBagScreen();
+  });
+
+  btnMenuPC?.addEventListener('click', () => {
+    storageScreen.toggle();
   });
 
   // Bag Debug Overlay Buttons
@@ -426,7 +432,13 @@ export async function bootstrap(): Promise<void> {
       return;
     }
 
-    if (isPokedexOpen() || isPartyScreenOpen() || isBagScreenOpen()) {
+    if (e.code === 'KeyC') {
+      storageScreen.toggle();
+      e.preventDefault();
+      return;
+    }
+
+    if (isPokedexOpen() || isPartyScreenOpen() || isBagScreenOpen() || storageScreen.isVisible()) {
       return;
     }
 
