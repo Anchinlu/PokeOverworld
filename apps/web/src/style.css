@@ -2867,38 +2867,89 @@ body {
 }
 
 /* --- Sparkle Twinkle Animations for Shiny Pokemon Icons --- */
-@keyframes sparkleTwinkleA {
+/* --- Shiny Sparkle Cluster On Pokemon Icon (5 Lively Stars) --- */
+.shiny-sparkle-cluster {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+@keyframes sparklePop {
   0%, 100% {
     opacity: 0;
     transform: scale(0.2) rotate(0deg);
   }
   25% {
     opacity: 1;
-    transform: scale(1.25) rotate(45deg);
+    transform: scale(1.35) rotate(45deg);
   }
   50% {
+    opacity: 0.85;
+    transform: scale(1.05) rotate(60deg);
+  }
+  75% {
     opacity: 0;
     transform: scale(0.2) rotate(90deg);
   }
 }
 
-@keyframes sparkleTwinkleB {
-  0%, 100% {
-    opacity: 0;
-    transform: scale(0.2) rotate(0deg);
-  }
-  50% {
-    opacity: 0;
-    transform: scale(0.2) rotate(0deg);
-  }
-  75% {
-    opacity: 1;
-    transform: scale(1.15) rotate(-35deg);
-  }
-  95% {
-    opacity: 0;
-    transform: scale(0.2) rotate(-90deg);
-  }
+.sp-star {
+  position: absolute;
+  pointer-events: none;
+  line-height: 1;
+  opacity: 0;
+  transform: scale(0.2) rotate(0deg);
+  user-select: none;
+}
+
+/* 5 ngôi sao lấp lánh xuất hiện ngay trên bề mặt và sát quanh icon Pokémon */
+.sp-star.sp-1 {
+  top: 14%;
+  left: 18%;
+  font-size: 11px;
+  color: #fef08a;
+  text-shadow: 0 0 3px #f59e0b, 0 0 5px #ffffff;
+  animation: sparklePop 1.5s ease-in-out infinite 0s;
+}
+
+.sp-star.sp-2 {
+  top: 10%;
+  right: 18%;
+  font-size: 13px;
+  color: #ffffff;
+  text-shadow: 0 0 3px #fef08a, 0 0 6px #f59e0b;
+  animation: sparklePop 1.5s ease-in-out infinite 0.3s;
+}
+
+.sp-star.sp-3 {
+  bottom: 14%;
+  left: 20%;
+  font-size: 10px;
+  color: #fef08a;
+  text-shadow: 0 0 3px #f59e0b, 0 0 5px #ffffff;
+  animation: sparklePop 1.5s ease-in-out infinite 0.6s;
+}
+
+.sp-star.sp-4 {
+  bottom: 12%;
+  right: 18%;
+  font-size: 12px;
+  color: #ffffff;
+  text-shadow: 0 0 3px #fef08a, 0 0 6px #f59e0b;
+  animation: sparklePop 1.5s ease-in-out infinite 0.9s;
+}
+
+.sp-star.sp-5 {
+  top: 38%;
+  left: 42%;
+  font-size: 12px;
+  color: #fef08a;
+  text-shadow: 0 0 3px #f59e0b, 0 0 6px #ffffff;
+  animation: sparklePop 1.5s ease-in-out infinite 1.2s;
 }
 
 .ps-shiny-icon {
@@ -2913,32 +2964,6 @@ body {
 
 .party-slot.is-shiny .ps-sprite-wrapper {
   position: relative;
-}
-
-.party-slot.is-shiny .ps-sprite-wrapper::after {
-  content: '✦';
-  position: absolute;
-  top: -4px;
-  right: -2px;
-  font-size: 13px;
-  color: #fef08a;
-  text-shadow: 0 0 3px #f59e0b, 0 0 6px #ffffff;
-  pointer-events: none;
-  animation: sparkleTwinkleA 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  z-index: 4;
-}
-
-.party-slot.is-shiny .ps-sprite-wrapper::before {
-  content: '✦';
-  position: absolute;
-  bottom: 0px;
-  left: -2px;
-  font-size: 10px;
-  color: #ffffff;
-  text-shadow: 0 0 3px #fef08a, 0 0 5px #f59e0b;
-  pointer-events: none;
-  animation: sparkleTwinkleB 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  z-index: 4;
 }
 
 .ps-pk-name {
@@ -4179,32 +4204,6 @@ body {
   position: relative;
 }
 
-.party-slot.is-shiny .party-slot-icon-box::after {
-  content: '✦';
-  position: absolute;
-  top: -2px;
-  right: -2px;
-  font-size: 11px;
-  color: #fef08a;
-  text-shadow: 0 0 3px #f59e0b, 0 0 6px #ffffff;
-  pointer-events: none;
-  animation: sparkleTwinkleA 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  z-index: 4;
-}
-
-.party-slot.is-shiny .party-slot-icon-box::before {
-  content: '✦';
-  position: absolute;
-  bottom: 0px;
-  left: -2px;
-  font-size: 9px;
-  color: #ffffff;
-  text-shadow: 0 0 3px #fef08a, 0 0 5px #f59e0b;
-  pointer-events: none;
-  animation: sparkleTwinkleB 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  z-index: 4;
-}
-
 .party-slot-level {
   font-size: 9px;
   font-weight: 600;
@@ -4398,32 +4397,6 @@ body {
 
 .storage-grid-slot.is-shiny .storage-grid-icon-wrap {
   position: relative;
-}
-
-.storage-grid-slot.is-shiny .storage-grid-icon-wrap::after {
-  content: '✦';
-  position: absolute;
-  top: -1px;
-  right: 1px;
-  font-size: 12px;
-  color: #fef08a;
-  text-shadow: 0 0 3px #f59e0b, 0 0 6px #ffffff;
-  pointer-events: none;
-  animation: sparkleTwinkleA 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  z-index: 4;
-}
-
-.storage-grid-slot.is-shiny .storage-grid-icon-wrap::before {
-  content: '✦';
-  position: absolute;
-  bottom: 0px;
-  left: 1px;
-  font-size: 9px;
-  color: #ffffff;
-  text-shadow: 0 0 3px #fef08a, 0 0 5px #f59e0b;
-  pointer-events: none;
-  animation: sparkleTwinkleB 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  z-index: 4;
 }
 
 .storage-grid-icon-wrap {

@@ -499,6 +499,18 @@ export class PartyScreen {
           <!-- Pokemon Mini Sprite (Scaled & Clipped to 1st frame only) -->
           <div class="ps-sprite-wrapper">
             <img src="${iconUrl}" class="ps-pokemon-icon" alt="${pk.name}" />
+            ${
+              pk.isShiny
+                ? `
+            <div class="shiny-sparkle-cluster">
+              <span class="sp-star sp-1">✦</span>
+              <span class="sp-star sp-2">✦</span>
+              <span class="sp-star sp-3">✦</span>
+              <span class="sp-star sp-4">✦</span>
+              <span class="sp-star sp-5">✦</span>
+            </div>`
+                : ''
+            }
           </div>
 
           <!-- Level directly below Pokemon icon (matching template) -->

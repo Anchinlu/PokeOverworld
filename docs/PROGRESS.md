@@ -1,17 +1,17 @@
-## Cập nhật lần cuối: 2026-10-07 (Tinh Chỉnh Hiệu Ứng Sao Lấp Lánh Cho Icon Pokémon Shiny)
+## Cập nhật lần cuối: 2026-10-07 (Cụm 5 Sao Lấp Lánh Ngay Trên Icon Pokémon Shiny)
 
-### 0.49. Tinh Chỉnh Hiệu Ứng Sao Lấp Lánh (Sparkle Twinkle Stars) Cho Icon Pokémon Shiny:
+### 0.49. Tinh Chỉnh Cụm 5 Ngôi Sao Lấp Lánh (5-Star Sparkle Cluster) Ngay Trên Icon Pokémon Shiny:
 
-- **Trạng thái:** Đã hoàn thành 100% việc tinh chỉnh hiệu ứng thị giác theo yêu cầu: Bỏ hoạt ảnh co giãn của biểu tượng sao đỏ và loại bỏ hào quang phát quang (aura glow), chỉ giữ lại các ngôi sao nhỏ lấp lánh (sparkle twinkle stars) nhấp nháy tinh tế quanh icon Pokémon Shiny.
+- **Trạng thái:** Đã hoàn thành 100% việc tinh chỉnh hiệu ứng thị giác theo yêu cầu: Bỏ hoạt ảnh co giãn của biểu tượng sao đỏ và loại bỏ hào quang phát quang (aura glow), bổ sung cụm 5 ngôi sao lấp lánh (sparkle cluster) xuất hiện liên tục ngay trên bề mặt và sát quanh thân icon Pokémon Shiny.
 - **Chi tiết đã thực hiện:**
   1. **Biểu Tượng Sao Đỏ Chuẩn Tĩnh ([style.css](file:///e:/Pokemon/apps/web/src/style.css), [battle-renderer.ts](file:///e:/Pokemon/apps/web/src/battle/battle-renderer.ts)):**
      - Loại bỏ toàn bộ animation co giãn, lắc lư và hào quang trên các icon biểu tượng sao đỏ (`shiny.png`). Biểu tượng sao đỏ hiển thị sắc nét, cố định và tự nhiên trên mọi giao diện: Party Screen, PC Storage và Canvas Databox trong trận đấu.
   2. **Loại Bỏ Hào Quang & Viền Phát Quang ([style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
      - Gỡ bỏ `shinyPokemonIconAura` (filter drop-shadow tỏa sáng quanh sprite) và `shinySlotGlow` (viền ô phát sáng).
-  3. **Hiệu Ứng Các Ngôi Sao Lấp Lánh Tinh Tế ([style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
-     - Tạo 2 keyframe `@keyframes sparkleTwinkleA` và `@keyframes sparkleTwinkleB`.
-     - Đặt 2 ngôi sao 4 cánh `✦` (màu vàng kim `#fef08a` và trắng bạc `#ffffff`) tại 2 góc đối xứng của mini sprite icon Pokémon Shiny (trên màn hình Party Screen và PC Storage).
-     - Hai ngôi sao chớp tắt luân phiên so le nhịp nhàng, tạo hiệu ứng bling-bling lấp lánh thanh lịch, chuẩn mực và bắt mắt mà không làm rối mắt.
+  3. **Cụm 5 Ngôi Sao Lấp Lánh Bám Sát Trên Thân Icon Pokémon ([party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts), [storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Tạo container `.shiny-sparkle-cluster` chứa 5 ngôi sao lấp lánh (`sp-star sp-1` đến `sp-5`) đặt trực tiếp bên trong vùng sprite wrapper của icon Pokémon.
+     - Phân bổ 5 ngôi sao tại các vị trí sát quanh thân và ngay trên bề mặt icon Pokémon (`14%, 18%`, `10%, 82%`, `86%, 20%`, `88%, 82%`, `38%, 42%`).
+     - Keyframe `@keyframes sparklePop` với chu kỳ 1.5s và các độ trễ so le liên tiếp (`0s, 0.3s, 0.6s, 0.9s, 1.2s`), giúp các ngôi sao lấp lánh xuất hiện dồi dào, sinh động, chớp nở liên tục ngay trên Pokémon mà không bị văng ra ngoài khung.
   4. **Kiểm Thử & Đảm Bảo Tính Toàn Vẹn:**
      - Toàn bộ pipeline typecheck (`npm run typecheck:web`) và bộ kiểm thử Vitest (15 files, 124 tests) đều PASS 100%.
 

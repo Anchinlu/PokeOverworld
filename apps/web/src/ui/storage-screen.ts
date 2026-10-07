@@ -803,6 +803,18 @@ export class StorageScreen {
         slotEl.innerHTML = `
           <div class="party-slot-icon-box">
             <img class="party-slot-icon" src="${iconUrl}" alt="${pk.name}" onerror="this.style.opacity='0'" draggable="false" />
+            ${
+              pk.isShiny
+                ? `
+            <div class="shiny-sparkle-cluster">
+              <span class="sp-star sp-1">✦</span>
+              <span class="sp-star sp-2">✦</span>
+              <span class="sp-star sp-3">✦</span>
+              <span class="sp-star sp-4">✦</span>
+              <span class="sp-star sp-5">✦</span>
+            </div>`
+                : ''
+            }
           </div>
           <div class="party-slot-details">
             <div class="party-slot-top-row">
@@ -882,6 +894,18 @@ export class StorageScreen {
         slotEl.innerHTML = `
           <div class="storage-grid-icon-wrap">
             <img class="storage-grid-icon" src="${iconUrl}" alt="${pk.name}" draggable="false" />
+            ${
+              pk.isShiny
+                ? `
+            <div class="shiny-sparkle-cluster">
+              <span class="sp-star sp-1">✦</span>
+              <span class="sp-star sp-2">✦</span>
+              <span class="sp-star sp-3">✦</span>
+              <span class="sp-star sp-4">✦</span>
+              <span class="sp-star sp-5">✦</span>
+            </div>`
+                : ''
+            }
           </div>
           ${pk.isShiny ? `<img class="storage-grid-shiny-icon" src="${POKEMON_ASSETS.shinyIcon}" alt="Shiny" title="Shiny Pokémon" draggable="false" />` : ''}
           <span class="storage-grid-badge">Lv.${pk.level}</span>
