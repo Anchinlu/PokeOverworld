@@ -5796,3 +5796,259 @@ body {
   text-shadow: 1px 1px 0 #000;
   word-break: break-word;
 }
+
+/* ==========================================================================
+   Overworld Map Party HUD (Right-Edge 6-Pokemon Databoxes)
+   ========================================================================== */
+.party-map-hud {
+  position: fixed;
+  top: 68px;
+  right: 12px;
+  z-index: 90;
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  pointer-events: none;
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.party-map-hud.collapsed {
+  transform: translateX(calc(100% - 24px));
+}
+
+.party-map-hud-toggle {
+  pointer-events: auto;
+  cursor: pointer;
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(0, 240, 255, 0.5);
+  color: #00f0ff;
+  border-radius: 4px 0 0 4px;
+  width: 24px;
+  height: 48px;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: -2px 4px 10px rgba(0, 0, 0, 0.5);
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.party-map-hud-toggle:hover {
+  background: rgba(0, 240, 255, 0.25);
+  border-color: #00f0ff;
+  transform: scale(1.05);
+}
+
+.party-map-hud-toggle .hud-toggle-arrow {
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.party-map-hud-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  pointer-events: auto;
+}
+
+.party-hud-card {
+  width: 208px;
+  height: 67px;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  position: relative;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  cursor: pointer;
+  user-select: none;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.65));
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.party-hud-card:hover:not(.empty) {
+  transform: translateX(-4px) scale(1.02);
+  filter: drop-shadow(0 4px 12px rgba(0, 240, 255, 0.45));
+}
+
+.party-hud-card.leader {
+  filter: drop-shadow(0 2px 8px rgba(0, 240, 255, 0.5));
+}
+
+.party-hud-card.leader::after {
+  content: '👑';
+  position: absolute;
+  top: -6px;
+  left: 2px;
+  font-size: 11px;
+  filter: drop-shadow(0 1px 2px #000);
+}
+
+.party-hud-card.empty {
+  opacity: 0.25;
+  filter: grayscale(0.85);
+  cursor: default;
+}
+
+.party-hud-card.is-fainted {
+  filter: grayscale(0.6) brightness(0.8);
+}
+
+/* Pokemon Icon Sprite Wrapper (Left slanted angle) */
+.hud-card-sprite-wrap {
+  position: absolute;
+  left: 18px;
+  top: 12px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hud-card-pk-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  object-position: left top;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  pointer-events: none;
+}
+
+.hud-card-level {
+  position: absolute;
+  left: 14px;
+  bottom: 8px;
+  font-family: 'Power Clear', 'VT323', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: #f8fafc;
+  text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+  letter-spacing: 0.5px;
+}
+
+/* Header Row: Name + Shiny Star + Gender */
+.hud-card-header {
+  position: absolute;
+  left: 60px;
+  top: 9px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.hud-card-name {
+  font-family: 'Power Clear', 'VT323', 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 1px 1px 1px #000, -1px -1px 1px #000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 95px;
+}
+
+.hud-card-shiny-icon {
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  flex-shrink: 0;
+}
+
+.hud-card-gender {
+  font-size: 11px;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.hud-card-gender.male {
+  color: #60a5fa;
+  text-shadow: 0 0 2px #1d4ed8, 1px 1px 0 #000;
+}
+
+.hud-card-gender.female {
+  color: #f472b6;
+  text-shadow: 0 0 2px #be185d, 1px 1px 0 #000;
+}
+
+/* HP Groove Fill */
+.hud-card-hp-groove {
+  position: absolute;
+  left: 110px;
+  top: 32px;
+  width: 77px;
+  height: 5px;
+  background: rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+}
+
+.hud-card-hp-fill {
+  height: 100%;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
+}
+
+/* HP Text / FNT */
+.hud-card-hp-text-row {
+  position: absolute;
+  right: 14px;
+  top: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.hud-card-hp-val {
+  font-family: 'Power Clear', 'VT323', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: #e2e8f0;
+  text-shadow: 1px 1px 1px #000;
+  letter-spacing: 0.5px;
+}
+
+.hud-card-status-fnt {
+  background: #dc2626;
+  color: #ffffff;
+  padding: 0 4px;
+  border-radius: 2px;
+  font-size: 9px;
+  font-weight: 800;
+  font-family: 'Power Clear', 'VT323', monospace;
+  box-shadow: 0 0 4px #dc2626;
+}
+
+/* EXP Groove Fill */
+.hud-card-exp-groove {
+  position: absolute;
+  left: 30px;
+  bottom: 5px;
+  width: 157px;
+  height: 3px;
+  background: rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+.hud-card-exp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #38bdf8, #818cf8);
+  transition: width 0.3s ease;
+}
+
+.hud-card-empty-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Power Clear', 'VT323', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  text-shadow: 1px 1px 0 #000;
+}
+

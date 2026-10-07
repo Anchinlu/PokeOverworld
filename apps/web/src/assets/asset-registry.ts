@@ -38,6 +38,7 @@ export type ManifestAssetKey =
   | 'menu_icon_options'
   | 'menu_icon_quit'
   | 'pokemon_shiny_icon'
+  | 'party_databox_normal'
   | (string & {});
 
 /**
@@ -371,6 +372,9 @@ export const PARTY_ASSETS = {
   },
   get battlerGender(): string {
     return resolveAsset('party_battler_gender', '/Graphics/Party/battler_gender.png');
+  },
+  get databoxNormal(): string {
+    return resolveAsset('party_databox_normal', '/Graphics/Party/databox_normal.png');
   },
 } as const;
 

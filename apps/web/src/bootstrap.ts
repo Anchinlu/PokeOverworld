@@ -19,6 +19,7 @@ import {
   isBagScreenOpen,
   initBagScreen,
   storageScreen,
+  initPartyMapHud,
 } from './ui';
 import { initDesktopShell } from './shell/desktop';
 import type { Direction } from '@pokemon/shared-types';
@@ -274,11 +275,12 @@ export async function bootstrap(): Promise<void> {
     }
   });
 
-  // Initialize Party & Bag Screens
+  // Initialize Party, Bag Screens & Map Party HUD
   initPartyScreen((newLeader) => {
     showBerryToast(`👑 ${newLeader.name} đang dẫn đầu đội hình!`, '#38bdf8');
   });
   initBagScreen();
+  initPartyMapHud();
 
   // Top Right Menu Bar Buttons
   const btnMenuPokedex = document.querySelector<HTMLButtonElement>('#btnMenuPokedex');

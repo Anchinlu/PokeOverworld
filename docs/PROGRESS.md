@@ -1,4 +1,38 @@
-## Cập nhật lần cuối: 2026-10-07 (Cụm 5 Sao Lấp Lánh Ngay Trên Icon Pokémon Shiny)
+## Cập nhật lần cuối: 2026-10-07 (UI HUD Đội Hình 6 Pokémon Mép Phải Trên Map)
+
+### 0.50. Tích Hợp UI HUD Đội Hình 6 Pokémon Dọc Mép Phải Trên Bản Đồ (Party Map HUD):
+
+- **Trạng thái:** Đã hoàn thành 100% việc tích hợp giao diện HUD hiển thị 6 Pokémon trong đội hình ở mép bên phải bản đồ thế giới mở (Overworld Map) sử dụng đồ họa chuẩn `Graphics/Party/databox_normal.png`.
+- **Chi tiết đã thực hiện:**
+  1. **Đăng Ký & Quản Lý Asset ([asset-registry.ts](file:///e:/Pokemon/apps/web/src/assets/asset-registry.ts)):**
+     - Đăng ký asset manifest key `party_databox_normal` trỏ về `/Graphics/Party/databox_normal.png`.
+     - Thêm getter `PARTY_ASSETS.databoxNormal` truy xuất URL tài nguyên tập trung qua AssetLoader.
+  2. **Thành Phần Giao Diện Đội Hình Ngoài Map ([party-map-hud.ts](file:///e:/Pokemon/apps/web/src/ui/party-map-hud.ts)):**
+     - Xây dựng component `PartyMapHud` độc lập, quản lý danh sách tối đa 6 slot Pokémon đặt dọc cố định ở mép bên phải màn hình.
+     - Sử dụng khung ảnh chuẩn `databox_normal.png` (tỉ lệ $208 \times 67\text{ px}$) cực kỳ sắc nét pixelated.
+     - Hiển thị đầy đủ chi tiết cho từng Pokémon:
+       - Mini sprite icon Pokémon (cắt frame đầu tiên từ icon sprite sheet).
+       - Cụm 5 ngôi sao lấp lánh (5-star sparkle cluster) bám sát quanh thân và trên bề mặt icon nếu là Pokémon Shiny.
+       - Biểu tượng sao đỏ tĩnh chuẩn `shiny.png` nằm cạnh tên Pokémon.
+       - Tên Pokémon/Nickname, giới tính (♂/♀), và cấp độ (`Lv.${pk.level}`).
+       - Rãnh máu HP: Căn chỉnh tọa độ pixel khớp tuyệt đối với rãnh HP trên thẻ `databox_normal.png`, tự động đổi màu theo tỉ lệ (xanh >50%, vàng >20%, đỏ $\le 20\%$).
+       - Hiển thị chỉ số máu số (`${pk.currentHp}/${pk.maxHp}`) hoặc nhãn `FNT` màu đỏ nếu Pokémon ngất xỉu.
+       - Rãnh kinh nghiệm EXP: Căn chỉnh ở rãnh đáy hiển thị % EXP lên cấp tiếp theo.
+       - Huy hiệu vương miện 👑 nhận diện Pokémon dẫn đầu (Leader/Slot 0).
+     - Hỗ trợ nút toggle thu gọn / mở rộng (`party-map-hud-toggle`) trượt mượt mà sang phải khi người chơi cần toàn cảnh bản đồ.
+     - Bấm vào bất kỳ thẻ Pokémon nào để mở nhanh màn hình Quản lý đội hình (`togglePartyScreen()`).
+     - Tự động đồng bộ hóa thời gian thực với `partyService.subscribe(...)` mỗi khi có thay đổi (hồi máu, đổi chỗ, bắt mới, v.v.).
+  3. **Tạo Mẫu Giao Diện & Khởi Tạo Bootstrap ([bootstrap.ts](file:///e:/Pokemon/apps/web/src/bootstrap.ts), [ui/index.ts](file:///e:/Pokemon/apps/web/src/ui/index.ts)):**
+     - Export `PartyMapHud` và hàm `initPartyMapHud()` trong `apps/web/src/ui/index.ts`.
+     - Khởi tạo `initPartyMapHud()` tự động ngay khi boot ứng dụng trong `apps/web/src/bootstrap.ts`.
+  4. **Kiểu Dáng Pixel-Art CSS Hoàn Chỉnh ([style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Định vị `right: 12px; top: 68px; z-index: 90;` bên dưới thanh Menu bar góc trên bên phải.
+     - Hiệu ứng tương tác hover trượt nhẹ sang trái và viền cyan neon tinh tế.
+  5. **Kiểm Thử Tự Động & Đảm Bảo Tính Toàn Vẹn ([party-map-hud.test.ts](file:///e:/Pokemon/apps/web/test/party-map-hud.test.ts)):**
+     - Bổ sung bộ kiểm thử đơn vị cho `PartyMapHud`: kiểm tra khởi tạo 6 slot, render dữ liệu máu/cấp độ/tên, kích hoạt biểu tượng Shiny và cụm 5 sao, tính năng thu gọn/mở rộng, và phản hồi sự kiện từ partyService.
+     - Toàn bộ 16 tệp kiểm thử (127 tests) đạt kết quả PASS 100%, typecheck và build bundle pass hoàn hảo.
+
+---
 
 ### 0.49. Tinh Chỉnh Cụm 5 Ngôi Sao Lấp Lánh (5-Star Sparkle Cluster) Ngay Trên Icon Pokémon Shiny:
 
