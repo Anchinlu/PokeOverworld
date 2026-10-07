@@ -584,7 +584,7 @@ export class StorageScreen {
     const ghost = document.createElement('div');
     ghost.className = 'storage-drag-ghost';
     ghost.id = 'storageDragGhost';
-    const iconUrl = POKEMON_ASSETS.getIconSprite(pokemon.speciesKey);
+    const iconUrl = POKEMON_ASSETS.getIconSprite(pokemon.speciesKey, pokemon.isShiny);
     ghost.innerHTML = `<img src="${iconUrl}" alt="${pokemon.name}" draggable="false" />`;
     ghost.style.left = `${x}px`;
     ghost.style.top = `${y}px`;
@@ -794,7 +794,7 @@ export class StorageScreen {
       if (isHeld) slotEl.classList.add('held');
 
       if (pk) {
-        const iconUrl = POKEMON_ASSETS.getIconSprite(pk.speciesKey);
+        const iconUrl = POKEMON_ASSETS.getIconSprite(pk.speciesKey, pk.isShiny);
         const hpPct = Math.max(0, Math.min(100, Math.round((pk.currentHp / pk.maxHp) * 100)));
         const hpColor = hpPct > 50 ? '#22c55e' : hpPct > 20 ? '#eab308' : '#ef4444';
         const isFainted = pk.isFainted || pk.currentHp <= 0;
@@ -876,7 +876,7 @@ export class StorageScreen {
       if (isHeld) slotEl.classList.add('held');
 
       if (pk) {
-        const iconUrl = POKEMON_ASSETS.getIconSprite(pk.speciesKey);
+        const iconUrl = POKEMON_ASSETS.getIconSprite(pk.speciesKey, pk.isShiny);
         slotEl.innerHTML = `
           <div class="storage-grid-icon-wrap">
             <img class="storage-grid-icon" src="${iconUrl}" alt="${pk.name}" draggable="false" />
@@ -1202,7 +1202,7 @@ export class StorageScreen {
       if (!this.summaryAnimator) {
         this.summaryAnimator = new PokemonSpriteAnimator(spriteCanvas);
       }
-      this.summaryAnimator.load(POKEMON_ASSETS.getFrontSprite(pokemon.speciesKey));
+      this.summaryAnimator.load(POKEMON_ASSETS.getFrontSprite(pokemon.speciesKey, pokemon.isShiny));
     }
 
     if (typesEl) {

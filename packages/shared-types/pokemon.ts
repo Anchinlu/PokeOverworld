@@ -33,6 +33,9 @@ export interface PokemonSprites {
   front: string;
   back: string;
   icon: string;
+  frontShiny?: string;
+  backShiny?: string;
+  iconShiny?: string;
   cry?: string;
 }
 

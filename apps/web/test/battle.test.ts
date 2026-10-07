@@ -15,7 +15,8 @@ import {
   getPokeballData,
   STRUGGLE_MOVE,
 } from '../src/battle';
-import { normalizeBallKey, BATTLE_ASSETS } from '../src/assets/asset-registry';
+import { normalizeBallKey, BATTLE_ASSETS, POKEMON_ASSETS } from '../src/assets/asset-registry';
+import { pokemonCatalog } from '../src/data';
 import { partyService } from '../src/domain/party/party-service';
 import { createPartyPokemon, partyPokemonToBattler } from '../src/domain/party/party-state';
 import { BattleTextOverlay } from '../src/battle/battle-text-overlay';
@@ -1203,6 +1204,32 @@ describe('Wild Pokémon Battle System', () => {
       expect(updatedPk.stats.attack).toBeGreaterThan(initialAtk);
       expect(updatedPk.stats.defense).toBeGreaterThan(initialDef);
       expect(updatedPk.currentHp).toBeGreaterThan(0);
+    });
+
+    it('accurately resolves Shiny Pokémon sprites across catalog, assets, party, and battler', () => {
+      const charizard = pokemonCatalog.getBySpeciesKey('CHARIZARD');
+      expect(charizard).toBeDefined();
+      expect(charizard!.sprites.frontShiny).toBe('Graphics/Pokemon/Front shiny/CHARIZARD.png');
+      expect(charizard!.sprites.backShiny).toBe('Graphics/Pokemon/Back shiny/CHARIZARD.png');
+      expect(charizard!.sprites.iconShiny).toBe('Graphics/Pokemon/Icons shiny/CHARIZARD.png');
+
+      const normalFront = POKEMON_ASSETS.getFrontSprite('CHARIZARD', false);
+      const shinyFront = POKEMON_ASSETS.getFrontSprite('CHARIZARD', true);
+      expect(normalFront).toContain('/Graphics/Pokemon/Front/CHARIZARD.png');
+      expect(shinyFront).toContain('/Graphics/Pokemon/Front shiny/CHARIZARD.png');
+
+      const shinyPartyPk = createPartyPokemon('CHARIZARD', 36, { isShiny: true });
+      expect(shinyPartyPk.isShiny).toBe(true);
+
+      const shinyBattler = partyPokemonToBattler(shinyPartyPk);
+      expect(shinyBattler.isShiny).toBe(true);
+      expect(shinyBattler.frontSprite).toContain('Front shiny');
+      expect(shinyBattler.backSprite).toContain('Back shiny');
+      expect(shinyBattler.iconSprite).toContain('Icons shiny');
+
+      const wildShiny = createBattler('CHARIZARD', 36, false, undefined, true);
+      expect(wildShiny.isShiny).toBe(true);
+      expect(wildShiny.frontSprite).toContain('Front shiny');
     });
   });
 });

@@ -22,7 +22,10 @@
         "front": "Graphics/Pokemon/Front/BULBASAUR.png",
         "back": "Graphics/Pokemon/Back/BULBASAUR.png",
         "icon": "Graphics/Pokemon/Icons/BULBASAUR.png",
-        "cry": "Audio/Cries/BULBASAUR.ogg"
+        "cry": "Audio/Cries/BULBASAUR.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/BULBASAUR.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/BULBASAUR.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/BULBASAUR.png"
       },
       "species": "Seed Pokémon",
       "height": 0.7,
@@ -161,7 +164,10 @@
         "front": "Graphics/Pokemon/Front/IVYSAUR.png",
         "back": "Graphics/Pokemon/Back/IVYSAUR.png",
         "icon": "Graphics/Pokemon/Icons/IVYSAUR.png",
-        "cry": "Audio/Cries/IVYSAUR.ogg"
+        "cry": "Audio/Cries/IVYSAUR.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/IVYSAUR.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/IVYSAUR.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/IVYSAUR.png"
       },
       "species": "Seed Pokémon",
       "height": 1,
@@ -300,7 +306,10 @@
         "front": "Graphics/Pokemon/Front/VENUSAUR.png",
         "back": "Graphics/Pokemon/Back/VENUSAUR.png",
         "icon": "Graphics/Pokemon/Icons/VENUSAUR.png",
-        "cry": "Audio/Cries/VENUSAUR.ogg"
+        "cry": "Audio/Cries/VENUSAUR.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/VENUSAUR.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/VENUSAUR.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/VENUSAUR.png"
       },
       "species": "Seed Pokémon",
       "height": 2,
@@ -439,7 +448,10 @@
         "front": "Graphics/Pokemon/Front/CHARMANDER.png",
         "back": "Graphics/Pokemon/Back/CHARMANDER.png",
         "icon": "Graphics/Pokemon/Icons/CHARMANDER.png",
-        "cry": "Audio/Cries/CHARMANDER_clean.ogg"
+        "cry": "Audio/Cries/CHARMANDER_clean.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/CHARMANDER.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/CHARMANDER.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/CHARMANDER.png"
       },
       "species": "Lizard Pokémon",
       "height": 0.6,
@@ -550,7 +562,10 @@
         "front": "Graphics/Pokemon/Front/CHARMELEON.png",
         "back": "Graphics/Pokemon/Back/CHARMELEON.png",
         "icon": "Graphics/Pokemon/Icons/CHARMELEON.png",
-        "cry": "Audio/Cries/CHARMELEON.ogg"
+        "cry": "Audio/Cries/CHARMELEON.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/CHARMELEON.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/CHARMELEON.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/CHARMELEON.png"
       },
       "species": "Flame Pokémon",
       "height": 1.1,
@@ -661,7 +676,10 @@
         "front": "Graphics/Pokemon/Front/CHARIZARD.png",
         "back": "Graphics/Pokemon/Back/CHARIZARD.png",
         "icon": "Graphics/Pokemon/Icons/CHARIZARD.png",
-        "cry": "Audio/Cries/CHARIZARD.ogg"
+        "cry": "Audio/Cries/CHARIZARD.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/CHARIZARD.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/CHARIZARD.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/CHARIZARD.png"
       },
       "species": "Flame Pokémon",
       "height": 1.7,
@@ -779,7 +797,10 @@
         "front": "Graphics/Pokemon/Front/SQUIRTLE.png",
         "back": "Graphics/Pokemon/Back/SQUIRTLE.png",
         "icon": "Graphics/Pokemon/Icons/SQUIRTLE.png",
-        "cry": "Audio/Cries/SQUIRTLE.ogg"
+        "cry": "Audio/Cries/SQUIRTLE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/SQUIRTLE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/SQUIRTLE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SQUIRTLE.png"
       },
       "species": "Tiny Turtle Pokémon",
       "height": 0.5,
@@ -883,7 +904,10 @@
         "front": "Graphics/Pokemon/Front/WARTORTLE.png",
         "back": "Graphics/Pokemon/Back/WARTORTLE.png",
         "icon": "Graphics/Pokemon/Icons/WARTORTLE.png",
-        "cry": "Audio/Cries/WARTORTLE.ogg"
+        "cry": "Audio/Cries/WARTORTLE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/WARTORTLE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/WARTORTLE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/WARTORTLE.png"
       },
       "species": "Turtle Pokémon",
       "height": 1,
@@ -987,7 +1011,10 @@
         "front": "Graphics/Pokemon/Front/BLASTOISE.png",
         "back": "Graphics/Pokemon/Back/BLASTOISE.png",
         "icon": "Graphics/Pokemon/Icons/BLASTOISE.png",
-        "cry": "Audio/Cries/BLASTOISE.ogg"
+        "cry": "Audio/Cries/BLASTOISE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/BLASTOISE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/BLASTOISE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/BLASTOISE.png"
       },
       "species": "Shellfish Pokémon",
       "height": 1.6,
@@ -1091,7 +1118,10 @@
         "front": "Graphics/Pokemon/Front/CATERPIE.png",
         "back": "Graphics/Pokemon/Back/CATERPIE.png",
         "icon": "Graphics/Pokemon/Icons/CATERPIE.png",
-        "cry": "Audio/Cries/CATERPIE.ogg"
+        "cry": "Audio/Cries/CATERPIE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/CATERPIE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/CATERPIE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/CATERPIE.png"
       },
       "species": "Worm Pokémon",
       "height": 0.3,
@@ -1146,7 +1176,10 @@
         "front": "Graphics/Pokemon/Front/METAPOD.png",
         "back": "Graphics/Pokemon/Back/METAPOD.png",
         "icon": "Graphics/Pokemon/Icons/METAPOD.png",
-        "cry": "Audio/Cries/METAPOD.ogg"
+        "cry": "Audio/Cries/METAPOD.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/METAPOD.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/METAPOD.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/METAPOD.png"
       },
       "species": "Cocoon Pokémon",
       "height": 0.7,
@@ -1187,7 +1220,10 @@
         "front": "Graphics/Pokemon/Front/BUTTERFREE.png",
         "back": "Graphics/Pokemon/Back/BUTTERFREE.png",
         "icon": "Graphics/Pokemon/Icons/BUTTERFREE.png",
-        "cry": "Audio/Cries/BUTTERFREE.ogg"
+        "cry": "Audio/Cries/BUTTERFREE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/BUTTERFREE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/BUTTERFREE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/BUTTERFREE.png"
       },
       "species": "Butterfly Pokémon",
       "height": 1.1,
@@ -1347,7 +1383,10 @@
         "front": "Graphics/Pokemon/Front/WEEDLE.png",
         "back": "Graphics/Pokemon/Back/WEEDLE.png",
         "icon": "Graphics/Pokemon/Icons/WEEDLE.png",
-        "cry": "Audio/Cries/WEEDLE.ogg"
+        "cry": "Audio/Cries/WEEDLE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/WEEDLE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/WEEDLE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/WEEDLE.png"
       },
       "species": "Hairy Bug Pokémon",
       "height": 0.3,
@@ -1395,7 +1434,10 @@
         "front": "Graphics/Pokemon/Front/KAKUNA.png",
         "back": "Graphics/Pokemon/Back/KAKUNA.png",
         "icon": "Graphics/Pokemon/Icons/KAKUNA.png",
-        "cry": "Audio/Cries/KAKUNA.ogg"
+        "cry": "Audio/Cries/KAKUNA.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/KAKUNA.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/KAKUNA.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/KAKUNA.png"
       },
       "species": "Cocoon Pokémon",
       "height": 0.6,
@@ -1450,7 +1492,10 @@
         "front": "Graphics/Pokemon/Front/BEEDRILL.png",
         "back": "Graphics/Pokemon/Back/BEEDRILL.png",
         "icon": "Graphics/Pokemon/Icons/BEEDRILL.png",
-        "cry": "Audio/Cries/BEEDRILL.ogg"
+        "cry": "Audio/Cries/BEEDRILL.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/BEEDRILL.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/BEEDRILL.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/BEEDRILL.png"
       },
       "species": "Poison Bee Pokémon",
       "height": 1,
@@ -1561,7 +1606,10 @@
         "front": "Graphics/Pokemon/Front/PIDGEY.png",
         "back": "Graphics/Pokemon/Back/PIDGEY.png",
         "icon": "Graphics/Pokemon/Icons/PIDGEY.png",
-        "cry": "Audio/Cries/PIDGEY.ogg"
+        "cry": "Audio/Cries/PIDGEY.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/PIDGEY.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/PIDGEY.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PIDGEY.png"
       },
       "species": "Tiny Bird Pokémon",
       "height": 0.3,
@@ -1679,7 +1727,10 @@
         "front": "Graphics/Pokemon/Front/PIDGEOTTO.png",
         "back": "Graphics/Pokemon/Back/PIDGEOTTO.png",
         "icon": "Graphics/Pokemon/Icons/PIDGEOTTO.png",
-        "cry": "Audio/Cries/PIDGEOTTO.ogg"
+        "cry": "Audio/Cries/PIDGEOTTO.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/PIDGEOTTO.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/PIDGEOTTO.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PIDGEOTTO.png"
       },
       "species": "Bird Pokémon",
       "height": 1.1,
@@ -1797,7 +1848,10 @@
         "front": "Graphics/Pokemon/Front/PIDGEOT.png",
         "back": "Graphics/Pokemon/Back/PIDGEOT.png",
         "icon": "Graphics/Pokemon/Icons/PIDGEOT.png",
-        "cry": "Audio/Cries/PIDGEOT.ogg"
+        "cry": "Audio/Cries/PIDGEOT.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/PIDGEOT.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/PIDGEOT.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PIDGEOT.png"
       },
       "species": "Bird Pokémon",
       "height": 1.5,
@@ -1915,7 +1969,10 @@
         "front": "Graphics/Pokemon/Front/RATTATA.png",
         "back": "Graphics/Pokemon/Back/RATTATA.png",
         "icon": "Graphics/Pokemon/Icons/RATTATA.png",
-        "cry": "Audio/Cries/RATTATA.ogg"
+        "cry": "Audio/Cries/RATTATA.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/RATTATA.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/RATTATA.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/RATTATA.png"
       },
       "species": "Mouse Pokémon",
       "height": 0.3,
@@ -2040,7 +2097,10 @@
         "front": "Graphics/Pokemon/Front/RATICATE.png",
         "back": "Graphics/Pokemon/Back/RATICATE.png",
         "icon": "Graphics/Pokemon/Icons/RATICATE.png",
-        "cry": "Audio/Cries/RATICATE.ogg"
+        "cry": "Audio/Cries/RATICATE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/RATICATE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/RATICATE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/RATICATE.png"
       },
       "species": "Mouse Pokémon",
       "height": 0.7,
@@ -2193,7 +2253,10 @@
         "front": "Graphics/Pokemon/Front/SPEAROW.png",
         "back": "Graphics/Pokemon/Back/SPEAROW.png",
         "icon": "Graphics/Pokemon/Icons/SPEAROW.png",
-        "cry": "Audio/Cries/SPEAROW.ogg"
+        "cry": "Audio/Cries/SPEAROW.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/SPEAROW.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/SPEAROW.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SPEAROW.png"
       },
       "species": "Tiny Bird Pokémon",
       "height": 0.3,
@@ -2311,7 +2374,10 @@
         "front": "Graphics/Pokemon/Front/FEAROW.png",
         "back": "Graphics/Pokemon/Back/FEAROW.png",
         "icon": "Graphics/Pokemon/Icons/FEAROW.png",
-        "cry": "Audio/Cries/FEAROW.ogg"
+        "cry": "Audio/Cries/FEAROW.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/FEAROW.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/FEAROW.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/FEAROW.png"
       },
       "species": "Beak Pokémon",
       "height": 1.2,
@@ -2457,7 +2523,10 @@
         "front": "Graphics/Pokemon/Front/EKANS.png",
         "back": "Graphics/Pokemon/Back/EKANS.png",
         "icon": "Graphics/Pokemon/Icons/EKANS.png",
-        "cry": "Audio/Cries/EKANS.ogg"
+        "cry": "Audio/Cries/EKANS.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/EKANS.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/EKANS.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/EKANS.png"
       },
       "species": "Snake Pokémon",
       "height": 2,
@@ -2575,7 +2644,10 @@
         "front": "Graphics/Pokemon/Front/ARBOK.png",
         "back": "Graphics/Pokemon/Back/ARBOK.png",
         "icon": "Graphics/Pokemon/Icons/ARBOK.png",
-        "cry": "Audio/Cries/ARBOK.ogg"
+        "cry": "Audio/Cries/ARBOK.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/ARBOK.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/ARBOK.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/ARBOK.png"
       },
       "species": "Cobra Pokémon",
       "height": 3.5,
@@ -2693,7 +2765,10 @@
         "front": "Graphics/Pokemon/Front/PIKACHU.png",
         "back": "Graphics/Pokemon/Back/PIKACHU.png",
         "icon": "Graphics/Pokemon/Icons/PIKACHU.png",
-        "cry": "Audio/Cries/PIKACHU.ogg"
+        "cry": "Audio/Cries/PIKACHU.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/PIKACHU.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/PIKACHU.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PIKACHU.png"
       },
       "species": "Mouse Pokémon",
       "height": 0.4,
@@ -2818,7 +2893,10 @@
         "front": "Graphics/Pokemon/Front/RAICHU.png",
         "back": "Graphics/Pokemon/Back/RAICHU.png",
         "icon": "Graphics/Pokemon/Icons/RAICHU.png",
-        "cry": "Audio/Cries/RAICHU.ogg"
+        "cry": "Audio/Cries/RAICHU.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/RAICHU.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/RAICHU.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/RAICHU.png"
       },
       "species": "Mouse Pokémon",
       "height": 0.8,
@@ -2943,7 +3021,10 @@
         "front": "Graphics/Pokemon/Front/SANDSHREW.png",
         "back": "Graphics/Pokemon/Back/SANDSHREW.png",
         "icon": "Graphics/Pokemon/Icons/SANDSHREW.png",
-        "cry": "Audio/Cries/SANDSHREW.ogg"
+        "cry": "Audio/Cries/SANDSHREW.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/SANDSHREW.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/SANDSHREW.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SANDSHREW.png"
       },
       "species": "Mouse Pokémon",
       "height": 0.6,
@@ -3096,7 +3177,10 @@
         "front": "Graphics/Pokemon/Front/SANDSLASH.png",
         "back": "Graphics/Pokemon/Back/SANDSLASH.png",
         "icon": "Graphics/Pokemon/Icons/SANDSLASH.png",
-        "cry": "Audio/Cries/SANDSLASH.ogg"
+        "cry": "Audio/Cries/SANDSLASH.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/SANDSLASH.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/SANDSLASH.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SANDSLASH.png"
       },
       "species": "Mouse Pokémon",
       "height": 1,
@@ -3256,7 +3340,10 @@
         "front": "Graphics/Pokemon/Front/NIDORANfE.png",
         "back": "Graphics/Pokemon/Back/NIDORANfE.png",
         "icon": "Graphics/Pokemon/Icons/NIDORANfE.png",
-        "cry": "Audio/Cries/NIDORANfE.ogg"
+        "cry": "Audio/Cries/NIDORANfE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/NIDORANfE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/NIDORANfE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/NIDORANfE.png"
       },
       "species": "Poison Pin Pokémon",
       "height": 0.4,
@@ -3381,7 +3468,10 @@
         "front": "Graphics/Pokemon/Front/NIDORINA.png",
         "back": "Graphics/Pokemon/Back/NIDORINA.png",
         "icon": "Graphics/Pokemon/Icons/NIDORINA.png",
-        "cry": "Audio/Cries/NIDORINA.ogg"
+        "cry": "Audio/Cries/NIDORINA.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/NIDORINA.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/NIDORINA.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/NIDORINA.png"
       },
       "species": "Poison Pin Pokémon",
       "height": 0.8,
@@ -3506,7 +3596,10 @@
         "front": "Graphics/Pokemon/Front/NIDOQUEEN.png",
         "back": "Graphics/Pokemon/Back/NIDOQUEEN.png",
         "icon": "Graphics/Pokemon/Icons/NIDOQUEEN.png",
-        "cry": "Audio/Cries/NIDOQUEEN.ogg"
+        "cry": "Audio/Cries/NIDOQUEEN.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/NIDOQUEEN.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/NIDOQUEEN.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/NIDOQUEEN.png"
       },
       "species": "Drill Pokémon",
       "height": 1.3,
@@ -3645,7 +3738,10 @@
         "front": "Graphics/Pokemon/Front/NIDORANmA.png",
         "back": "Graphics/Pokemon/Back/NIDORANmA.png",
         "icon": "Graphics/Pokemon/Icons/NIDORANmA.png",
-        "cry": "Audio/Cries/NIDORANmA.ogg"
+        "cry": "Audio/Cries/NIDORANmA.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/NIDORANmA.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/NIDORANmA.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/NIDORANmA.png"
       },
       "species": "Poison Pin Pokémon",
       "height": 0.5,
@@ -3770,7 +3866,10 @@
         "front": "Graphics/Pokemon/Front/NIDORINO.png",
         "back": "Graphics/Pokemon/Back/NIDORINO.png",
         "icon": "Graphics/Pokemon/Icons/NIDORINO.png",
-        "cry": "Audio/Cries/NIDORINO.ogg"
+        "cry": "Audio/Cries/NIDORINO.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/NIDORINO.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/NIDORINO.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/NIDORINO.png"
       },
       "species": "Poison Pin Pokémon",
       "height": 0.9,
@@ -3895,7 +3994,10 @@
         "front": "Graphics/Pokemon/Front/NIDOKING.png",
         "back": "Graphics/Pokemon/Back/NIDOKING.png",
         "icon": "Graphics/Pokemon/Icons/NIDOKING.png",
-        "cry": "Audio/Cries/NIDOKING.ogg"
+        "cry": "Audio/Cries/NIDOKING.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/NIDOKING.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/NIDOKING.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/NIDOKING.png"
       },
       "species": "Drill Pokémon",
       "height": 1.4,
@@ -4034,7 +4136,10 @@
         "front": "Graphics/Pokemon/Front/CLEFAIRY.png",
         "back": "Graphics/Pokemon/Back/CLEFAIRY.png",
         "icon": "Graphics/Pokemon/Icons/CLEFAIRY.png",
-        "cry": "Audio/Cries/CLEFAIRY.ogg"
+        "cry": "Audio/Cries/CLEFAIRY.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/CLEFAIRY.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/CLEFAIRY.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/CLEFAIRY.png"
       },
       "species": "Fairy Pokémon",
       "height": 0.6,
@@ -4173,7 +4278,10 @@
         "front": "Graphics/Pokemon/Front/CLEFABLE.png",
         "back": "Graphics/Pokemon/Back/CLEFABLE.png",
         "icon": "Graphics/Pokemon/Icons/CLEFABLE.png",
-        "cry": "Audio/Cries/CLEFABLE.ogg"
+        "cry": "Audio/Cries/CLEFABLE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/CLEFABLE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/CLEFABLE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/CLEFABLE.png"
       },
       "species": "Fairy Pokémon",
       "height": 1.3,
@@ -4319,7 +4427,10 @@
         "front": "Graphics/Pokemon/Front/VULPIX.png",
         "back": "Graphics/Pokemon/Back/VULPIX.png",
         "icon": "Graphics/Pokemon/Icons/VULPIX.png",
-        "cry": "Audio/Cries/VULPIX.ogg"
+        "cry": "Audio/Cries/VULPIX.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/VULPIX.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/VULPIX.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/VULPIX.png"
       },
       "species": "Fox Pokémon",
       "height": 0.6,
@@ -4458,7 +4569,10 @@
         "front": "Graphics/Pokemon/Front/NINETALES.png",
         "back": "Graphics/Pokemon/Back/NINETALES.png",
         "icon": "Graphics/Pokemon/Icons/NINETALES.png",
-        "cry": "Audio/Cries/NINETALES.ogg"
+        "cry": "Audio/Cries/NINETALES.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/NINETALES.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/NINETALES.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/NINETALES.png"
       },
       "species": "Fox Pokémon",
       "height": 1.1,
@@ -4513,7 +4627,10 @@
         "front": "Graphics/Pokemon/Front/JIGGLYPUFF.png",
         "back": "Graphics/Pokemon/Back/JIGGLYPUFF.png",
         "icon": "Graphics/Pokemon/Icons/JIGGLYPUFF.png",
-        "cry": "Audio/Cries/JIGGLYPUFF.ogg"
+        "cry": "Audio/Cries/JIGGLYPUFF.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/JIGGLYPUFF.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/JIGGLYPUFF.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/JIGGLYPUFF.png"
       },
       "species": "Balloon Pokémon",
       "height": 0.5,
@@ -4666,7 +4783,10 @@
         "front": "Graphics/Pokemon/Front/WIGGLYTUFF.png",
         "back": "Graphics/Pokemon/Back/WIGGLYTUFF.png",
         "icon": "Graphics/Pokemon/Icons/WIGGLYTUFF.png",
-        "cry": "Audio/Cries/WIGGLYTUFF.ogg"
+        "cry": "Audio/Cries/WIGGLYTUFF.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/WIGGLYTUFF.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/WIGGLYTUFF.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/WIGGLYTUFF.png"
       },
       "species": "Balloon Pokémon",
       "height": 1,
@@ -4819,7 +4939,10 @@
         "front": "Graphics/Pokemon/Front/ZUBAT.png",
         "back": "Graphics/Pokemon/Back/ZUBAT.png",
         "icon": "Graphics/Pokemon/Icons/ZUBAT.png",
-        "cry": "Audio/Cries/ZUBAT.ogg"
+        "cry": "Audio/Cries/ZUBAT.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/ZUBAT.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/ZUBAT.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/ZUBAT.png"
       },
       "species": "Bat Pokémon",
       "height": 0.8,
@@ -4944,7 +5067,10 @@
         "front": "Graphics/Pokemon/Front/GOLBAT.png",
         "back": "Graphics/Pokemon/Back/GOLBAT.png",
         "icon": "Graphics/Pokemon/Icons/GOLBAT.png",
-        "cry": "Audio/Cries/GOLBAT.ogg"
+        "cry": "Audio/Cries/GOLBAT.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/GOLBAT.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/GOLBAT.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/GOLBAT.png"
       },
       "species": "Bat Pokémon",
       "height": 1.6,
@@ -5076,7 +5202,10 @@
         "front": "Graphics/Pokemon/Front/ODDISH.png",
         "back": "Graphics/Pokemon/Back/ODDISH.png",
         "icon": "Graphics/Pokemon/Icons/ODDISH.png",
-        "cry": "Audio/Cries/ODDISH.ogg"
+        "cry": "Audio/Cries/ODDISH.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/ODDISH.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/ODDISH.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/ODDISH.png"
       },
       "species": "Weed Pokémon",
       "height": 0.5,
@@ -5208,7 +5337,10 @@
         "front": "Graphics/Pokemon/Front/GLOOM.png",
         "back": "Graphics/Pokemon/Back/GLOOM.png",
         "icon": "Graphics/Pokemon/Icons/GLOOM.png",
-        "cry": "Audio/Cries/GLOOM.ogg"
+        "cry": "Audio/Cries/GLOOM.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/GLOOM.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/GLOOM.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/GLOOM.png"
       },
       "species": "Weed Pokémon",
       "height": 0.8,
@@ -5340,7 +5472,10 @@
         "front": "Graphics/Pokemon/Front/VILEPLUME.png",
         "back": "Graphics/Pokemon/Back/VILEPLUME.png",
         "icon": "Graphics/Pokemon/Icons/VILEPLUME.png",
-        "cry": "Audio/Cries/VILEPLUME.ogg"
+        "cry": "Audio/Cries/VILEPLUME.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/VILEPLUME.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/VILEPLUME.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/VILEPLUME.png"
       },
       "species": "Flower Pokémon",
       "height": 1.2,
@@ -5472,7 +5607,10 @@
         "front": "Graphics/Pokemon/Front/PARAS.png",
         "back": "Graphics/Pokemon/Back/PARAS.png",
         "icon": "Graphics/Pokemon/Icons/PARAS.png",
-        "cry": "Audio/Cries/PARAS.ogg"
+        "cry": "Audio/Cries/PARAS.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/PARAS.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/PARAS.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PARAS.png"
       },
       "species": "Mushroom Pokémon",
       "height": 0.3,
@@ -5562,7 +5700,10 @@
         "front": "Graphics/Pokemon/Front/PARASECT.png",
         "back": "Graphics/Pokemon/Back/PARASECT.png",
         "icon": "Graphics/Pokemon/Icons/PARASECT.png",
-        "cry": "Audio/Cries/PARASECT.ogg"
+        "cry": "Audio/Cries/PARASECT.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/PARASECT.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/PARASECT.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PARASECT.png"
       },
       "species": "Mushroom Pokémon",
       "height": 1,
@@ -5652,7 +5793,10 @@
         "front": "Graphics/Pokemon/Front/VENONAT.png",
         "back": "Graphics/Pokemon/Back/VENONAT.png",
         "icon": "Graphics/Pokemon/Icons/VENONAT.png",
-        "cry": "Audio/Cries/VENONAT.ogg"
+        "cry": "Audio/Cries/VENONAT.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/VENONAT.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/VENONAT.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/VENONAT.png"
       },
       "species": "Insect Pokémon",
       "height": 1,
@@ -5777,7 +5921,10 @@
         "front": "Graphics/Pokemon/Front/VENOMOTH.png",
         "back": "Graphics/Pokemon/Back/VENOMOTH.png",
         "icon": "Graphics/Pokemon/Icons/VENOMOTH.png",
-        "cry": "Audio/Cries/VENOMOTH.ogg"
+        "cry": "Audio/Cries/VENOMOTH.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/VENOMOTH.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/VENOMOTH.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/VENOMOTH.png"
       },
       "species": "Poison Moth Pokémon",
       "height": 1.5,
@@ -5909,7 +6056,10 @@
         "front": "Graphics/Pokemon/Front/DIGLETT.png",
         "back": "Graphics/Pokemon/Back/DIGLETT.png",
         "icon": "Graphics/Pokemon/Icons/DIGLETT.png",
-        "cry": "Audio/Cries/DIGLETT.ogg"
+        "cry": "Audio/Cries/DIGLETT.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/DIGLETT.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/DIGLETT.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/DIGLETT.png"
       },
       "species": "Mole Pokémon",
       "height": 0.2,
@@ -6034,7 +6184,10 @@
         "front": "Graphics/Pokemon/Front/DUGTRIO.png",
         "back": "Graphics/Pokemon/Back/DUGTRIO.png",
         "icon": "Graphics/Pokemon/Icons/DUGTRIO.png",
-        "cry": "Audio/Cries/DUGTRIO.ogg"
+        "cry": "Audio/Cries/DUGTRIO.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/DUGTRIO.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/DUGTRIO.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/DUGTRIO.png"
       },
       "species": "Mole Pokémon",
       "height": 0.7,
@@ -6173,7 +6326,10 @@
         "front": "Graphics/Pokemon/Front/MEOWTH.png",
         "back": "Graphics/Pokemon/Back/MEOWTH.png",
         "icon": "Graphics/Pokemon/Icons/MEOWTH.png",
-        "cry": "Audio/Cries/MEOWTH.ogg"
+        "cry": "Audio/Cries/MEOWTH.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/MEOWTH.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/MEOWTH.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MEOWTH.png"
       },
       "species": "Scratch Cat Pokémon",
       "height": 0.4,
@@ -6298,7 +6454,10 @@
         "front": "Graphics/Pokemon/Front/PERSIAN.png",
         "back": "Graphics/Pokemon/Back/PERSIAN.png",
         "icon": "Graphics/Pokemon/Icons/PERSIAN.png",
-        "cry": "Audio/Cries/PERSIAN.ogg"
+        "cry": "Audio/Cries/PERSIAN.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/PERSIAN.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/PERSIAN.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PERSIAN.png"
       },
       "species": "Classy Cat Pokémon",
       "height": 1,
@@ -6437,7 +6596,10 @@
         "front": "Graphics/Pokemon/Front/PSYDUCK.png",
         "back": "Graphics/Pokemon/Back/PSYDUCK.png",
         "icon": "Graphics/Pokemon/Icons/PSYDUCK.png",
-        "cry": "Audio/Cries/PSYDUCK.ogg"
+        "cry": "Audio/Cries/PSYDUCK.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/PSYDUCK.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/PSYDUCK.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PSYDUCK.png"
       },
       "species": "Duck Pokémon",
       "height": 0.8,
@@ -6569,7 +6731,10 @@
         "front": "Graphics/Pokemon/Front/GOLDUCK.png",
         "back": "Graphics/Pokemon/Back/GOLDUCK.png",
         "icon": "Graphics/Pokemon/Icons/GOLDUCK.png",
-        "cry": "Audio/Cries/GOLDUCK.ogg"
+        "cry": "Audio/Cries/GOLDUCK.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/GOLDUCK.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/GOLDUCK.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/GOLDUCK.png"
       },
       "species": "Duck Pokémon",
       "height": 1.7,
@@ -6715,7 +6880,10 @@
         "front": "Graphics/Pokemon/Front/MANKEY.png",
         "back": "Graphics/Pokemon/Back/MANKEY.png",
         "icon": "Graphics/Pokemon/Icons/MANKEY.png",
-        "cry": "Audio/Cries/MANKEY.ogg"
+        "cry": "Audio/Cries/MANKEY.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/MANKEY.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/MANKEY.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MANKEY.png"
       },
       "species": "Pig Monkey Pokémon",
       "height": 0.5,
@@ -6854,7 +7022,10 @@
         "front": "Graphics/Pokemon/Front/PRIMEAPE.png",
         "back": "Graphics/Pokemon/Back/PRIMEAPE.png",
         "icon": "Graphics/Pokemon/Icons/PRIMEAPE.png",
-        "cry": "Audio/Cries/PRIMEAPE.ogg"
+        "cry": "Audio/Cries/PRIMEAPE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/PRIMEAPE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/PRIMEAPE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PRIMEAPE.png"
       },
       "species": "Pig Monkey Pokémon",
       "height": 1,
@@ -7000,7 +7171,10 @@
         "front": "Graphics/Pokemon/Front/GROWLITHE.png",
         "back": "Graphics/Pokemon/Back/GROWLITHE.png",
         "icon": "Graphics/Pokemon/Icons/GROWLITHE.png",
-        "cry": "Audio/Cries/GROWLITHE.ogg"
+        "cry": "Audio/Cries/GROWLITHE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/GROWLITHE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/GROWLITHE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/GROWLITHE.png"
       },
       "species": "Puppy Pokémon",
       "height": 0.7,
@@ -7146,7 +7320,10 @@
         "front": "Graphics/Pokemon/Front/ARCANINE.png",
         "back": "Graphics/Pokemon/Back/ARCANINE.png",
         "icon": "Graphics/Pokemon/Icons/ARCANINE.png",
-        "cry": "Audio/Cries/ARCANINE.ogg"
+        "cry": "Audio/Cries/ARCANINE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/ARCANINE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/ARCANINE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/ARCANINE.png"
       },
       "species": "Legendary Pokémon",
       "height": 1.9,
@@ -7292,7 +7469,10 @@
         "front": "Graphics/Pokemon/Front/POLIWAG.png",
         "back": "Graphics/Pokemon/Back/POLIWAG.png",
         "icon": "Graphics/Pokemon/Icons/POLIWAG.png",
-        "cry": "Audio/Cries/POLIWAG.ogg"
+        "cry": "Audio/Cries/POLIWAG.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/POLIWAG.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/POLIWAG.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/POLIWAG.png"
       },
       "species": "Tadpole Pokémon",
       "height": 0.6,
@@ -7403,7 +7583,10 @@
         "front": "Graphics/Pokemon/Front/POLIWHIRL.png",
         "back": "Graphics/Pokemon/Back/POLIWHIRL.png",
         "icon": "Graphics/Pokemon/Icons/POLIWHIRL.png",
-        "cry": "Audio/Cries/POLIWHIRL.ogg"
+        "cry": "Audio/Cries/POLIWHIRL.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/POLIWHIRL.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/POLIWHIRL.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/POLIWHIRL.png"
       },
       "species": "Tadpole Pokémon",
       "height": 1,
@@ -7514,7 +7697,10 @@
         "front": "Graphics/Pokemon/Front/POLIWRATH.png",
         "back": "Graphics/Pokemon/Back/POLIWRATH.png",
         "icon": "Graphics/Pokemon/Icons/POLIWRATH.png",
-        "cry": "Audio/Cries/POLIWRATH.ogg"
+        "cry": "Audio/Cries/POLIWRATH.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/POLIWRATH.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/POLIWRATH.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/POLIWRATH.png"
       },
       "species": "Tadpole Pokémon",
       "height": 1.3,
@@ -7569,7 +7755,10 @@
         "front": "Graphics/Pokemon/Front/ABRA.png",
         "back": "Graphics/Pokemon/Back/ABRA.png",
         "icon": "Graphics/Pokemon/Icons/ABRA.png",
-        "cry": "Audio/Cries/ABRA.ogg"
+        "cry": "Audio/Cries/ABRA.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/ABRA.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/ABRA.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/ABRA.png"
       },
       "species": "Psi Pokémon",
       "height": 0.9,
@@ -7610,7 +7799,10 @@
         "front": "Graphics/Pokemon/Front/KADABRA.png",
         "back": "Graphics/Pokemon/Back/KADABRA.png",
         "icon": "Graphics/Pokemon/Icons/KADABRA.png",
-        "cry": "Audio/Cries/KADABRA.ogg"
+        "cry": "Audio/Cries/KADABRA.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/KADABRA.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/KADABRA.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/KADABRA.png"
       },
       "species": "Psi Pokémon",
       "height": 1.3,
@@ -7714,7 +7906,10 @@
         "front": "Graphics/Pokemon/Front/ALAKAZAM.png",
         "back": "Graphics/Pokemon/Back/ALAKAZAM.png",
         "icon": "Graphics/Pokemon/Icons/ALAKAZAM.png",
-        "cry": "Audio/Cries/ALAKAZAM.ogg"
+        "cry": "Audio/Cries/ALAKAZAM.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/ALAKAZAM.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/ALAKAZAM.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/ALAKAZAM.png"
       },
       "species": "Psi Pokémon",
       "height": 1.5,
@@ -7818,7 +8013,10 @@
         "front": "Graphics/Pokemon/Front/MACHOP.png",
         "back": "Graphics/Pokemon/Back/MACHOP.png",
         "icon": "Graphics/Pokemon/Icons/MACHOP.png",
-        "cry": "Audio/Cries/MACHOP.ogg"
+        "cry": "Audio/Cries/MACHOP.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/MACHOP.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/MACHOP.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MACHOP.png"
       },
       "species": "Superpower Pokémon",
       "height": 0.8,
@@ -7943,7 +8141,10 @@
         "front": "Graphics/Pokemon/Front/MACHOKE.png",
         "back": "Graphics/Pokemon/Back/MACHOKE.png",
         "icon": "Graphics/Pokemon/Icons/MACHOKE.png",
-        "cry": "Audio/Cries/MACHOKE.ogg"
+        "cry": "Audio/Cries/MACHOKE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/MACHOKE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/MACHOKE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MACHOKE.png"
       },
       "species": "Superpower Pokémon",
       "height": 1.5,
@@ -8068,7 +8269,10 @@
         "front": "Graphics/Pokemon/Front/MACHAMP.png",
         "back": "Graphics/Pokemon/Back/MACHAMP.png",
         "icon": "Graphics/Pokemon/Icons/MACHAMP.png",
-        "cry": "Audio/Cries/MACHAMP.ogg"
+        "cry": "Audio/Cries/MACHAMP.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/MACHAMP.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/MACHAMP.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MACHAMP.png"
       },
       "species": "Superpower Pokémon",
       "height": 1.6,
@@ -8200,7 +8404,10 @@
         "front": "Graphics/Pokemon/Front/BELLSPROUT.png",
         "back": "Graphics/Pokemon/Back/BELLSPROUT.png",
         "icon": "Graphics/Pokemon/Icons/BELLSPROUT.png",
-        "cry": "Audio/Cries/BELLSPROUT.ogg"
+        "cry": "Audio/Cries/BELLSPROUT.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/BELLSPROUT.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/BELLSPROUT.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/BELLSPROUT.png"
       },
       "species": "Flower Pokémon",
       "height": 0.7,
@@ -8339,7 +8546,10 @@
         "front": "Graphics/Pokemon/Front/WEEPINBELL.png",
         "back": "Graphics/Pokemon/Back/WEEPINBELL.png",
         "icon": "Graphics/Pokemon/Icons/WEEPINBELL.png",
-        "cry": "Audio/Cries/WEEPINBELL.ogg"
+        "cry": "Audio/Cries/WEEPINBELL.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/WEEPINBELL.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/WEEPINBELL.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/WEEPINBELL.png"
       },
       "species": "Flycatcher Pokémon",
       "height": 1,
@@ -8478,7 +8688,10 @@
         "front": "Graphics/Pokemon/Front/VICTREEBEL.png",
         "back": "Graphics/Pokemon/Back/VICTREEBEL.png",
         "icon": "Graphics/Pokemon/Icons/VICTREEBEL.png",
-        "cry": "Audio/Cries/VICTREEBEL.ogg"
+        "cry": "Audio/Cries/VICTREEBEL.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/VICTREEBEL.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/VICTREEBEL.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/VICTREEBEL.png"
       },
       "species": "Flycatcher Pokémon",
       "height": 1.7,
@@ -8624,7 +8837,10 @@
         "front": "Graphics/Pokemon/Front/TENTACOOL.png",
         "back": "Graphics/Pokemon/Back/TENTACOOL.png",
         "icon": "Graphics/Pokemon/Icons/TENTACOOL.png",
-        "cry": "Audio/Cries/TENTACOOL.ogg"
+        "cry": "Audio/Cries/TENTACOOL.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/TENTACOOL.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/TENTACOOL.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/TENTACOOL.png"
       },
       "species": "Jellyfish Pokémon",
       "height": 0.9,
@@ -8756,7 +8972,10 @@
         "front": "Graphics/Pokemon/Front/TENTACRUEL.png",
         "back": "Graphics/Pokemon/Back/TENTACRUEL.png",
         "icon": "Graphics/Pokemon/Icons/TENTACRUEL.png",
-        "cry": "Audio/Cries/TENTACRUEL.ogg"
+        "cry": "Audio/Cries/TENTACRUEL.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/TENTACRUEL.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/TENTACRUEL.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/TENTACRUEL.png"
       },
       "species": "Jellyfish Pokémon",
       "height": 1.6,
@@ -8895,7 +9114,10 @@
         "front": "Graphics/Pokemon/Front/GEODUDE.png",
         "back": "Graphics/Pokemon/Back/GEODUDE.png",
         "icon": "Graphics/Pokemon/Icons/GEODUDE.png",
-        "cry": "Audio/Cries/GEODUDE.ogg"
+        "cry": "Audio/Cries/GEODUDE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/GEODUDE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/GEODUDE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/GEODUDE.png"
       },
       "species": "Rock Pokémon",
       "height": 0.4,
@@ -9027,7 +9249,10 @@
         "front": "Graphics/Pokemon/Front/GRAVELER.png",
         "back": "Graphics/Pokemon/Back/GRAVELER.png",
         "icon": "Graphics/Pokemon/Icons/GRAVELER.png",
-        "cry": "Audio/Cries/GRAVELER.ogg"
+        "cry": "Audio/Cries/GRAVELER.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/GRAVELER.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/GRAVELER.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/GRAVELER.png"
       },
       "species": "Rock Pokémon",
       "height": 1,
@@ -9159,7 +9384,10 @@
         "front": "Graphics/Pokemon/Front/GOLEM.png",
         "back": "Graphics/Pokemon/Back/GOLEM.png",
         "icon": "Graphics/Pokemon/Icons/GOLEM.png",
-        "cry": "Audio/Cries/GOLEM.ogg"
+        "cry": "Audio/Cries/GOLEM.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/GOLEM.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/GOLEM.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/GOLEM.png"
       },
       "species": "Megaton Pokémon",
       "height": 1.4,
@@ -9291,7 +9519,10 @@
         "front": "Graphics/Pokemon/Front/PONYTA.png",
         "back": "Graphics/Pokemon/Back/PONYTA.png",
         "icon": "Graphics/Pokemon/Icons/PONYTA.png",
-        "cry": "Audio/Cries/PONYTA.ogg"
+        "cry": "Audio/Cries/PONYTA.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/PONYTA.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/PONYTA.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PONYTA.png"
       },
       "species": "Fire Horse Pokémon",
       "height": 1,
@@ -9381,7 +9612,10 @@
         "front": "Graphics/Pokemon/Front/RAPIDASH.png",
         "back": "Graphics/Pokemon/Back/RAPIDASH.png",
         "icon": "Graphics/Pokemon/Icons/RAPIDASH.png",
-        "cry": "Audio/Cries/RAPIDASH.ogg"
+        "cry": "Audio/Cries/RAPIDASH.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/RAPIDASH.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/RAPIDASH.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/RAPIDASH.png"
       },
       "species": "Fire Horse Pokémon",
       "height": 1.7,
@@ -9471,7 +9705,10 @@
         "front": "Graphics/Pokemon/Front/SLOWPOKE.png",
         "back": "Graphics/Pokemon/Back/SLOWPOKE.png",
         "icon": "Graphics/Pokemon/Icons/SLOWPOKE.png",
-        "cry": "Audio/Cries/SLOWPOKE.ogg"
+        "cry": "Audio/Cries/SLOWPOKE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/SLOWPOKE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/SLOWPOKE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SLOWPOKE.png"
       },
       "species": "Dopey Pokémon",
       "height": 1.2,
@@ -9589,7 +9826,10 @@
         "front": "Graphics/Pokemon/Front/SLOWBRO.png",
         "back": "Graphics/Pokemon/Back/SLOWBRO.png",
         "icon": "Graphics/Pokemon/Icons/SLOWBRO.png",
-        "cry": "Audio/Cries/SLOWBRO.ogg"
+        "cry": "Audio/Cries/SLOWBRO.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/SLOWBRO.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/SLOWBRO.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SLOWBRO.png"
       },
       "species": "Hermit Crab Pokémon",
       "height": 1.6,
@@ -9714,7 +9954,10 @@
         "front": "Graphics/Pokemon/Front/MAGNEMITE.png",
         "back": "Graphics/Pokemon/Back/MAGNEMITE.png",
         "icon": "Graphics/Pokemon/Icons/MAGNEMITE.png",
-        "cry": "Audio/Cries/MAGNEMITE.ogg"
+        "cry": "Audio/Cries/MAGNEMITE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/MAGNEMITE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/MAGNEMITE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MAGNEMITE.png"
       },
       "species": "Magnet Pokémon",
       "height": 0.3,
@@ -9853,7 +10096,10 @@
         "front": "Graphics/Pokemon/Front/MAGNETON.png",
         "back": "Graphics/Pokemon/Back/MAGNETON.png",
         "icon": "Graphics/Pokemon/Icons/MAGNETON.png",
-        "cry": "Audio/Cries/MAGNETON.ogg"
+        "cry": "Audio/Cries/MAGNETON.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/MAGNETON.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/MAGNETON.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MAGNETON.png"
       },
       "species": "Magnet Pokémon",
       "height": 1,
@@ -9999,7 +10245,10 @@
         "front": "Graphics/Pokemon/Front/FARFETCHD.png",
         "back": "Graphics/Pokemon/Back/FARFETCHD.png",
         "icon": "Graphics/Pokemon/Icons/FARFETCHD.png",
-        "cry": "Audio/Cries/FARFETCHD.ogg"
+        "cry": "Audio/Cries/FARFETCHD.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/FARFETCHD.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/FARFETCHD.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/FARFETCHD.png"
       },
       "species": "Wild Duck Pokémon",
       "height": 0.8,
@@ -10152,7 +10401,10 @@
         "front": "Graphics/Pokemon/Front/DODUO.png",
         "back": "Graphics/Pokemon/Back/DODUO.png",
         "icon": "Graphics/Pokemon/Icons/DODUO.png",
-        "cry": "Audio/Cries/DODUO.ogg"
+        "cry": "Audio/Cries/DODUO.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/DODUO.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/DODUO.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/DODUO.png"
       },
       "species": "Twin Bird Pokémon",
       "height": 1.4,
@@ -10277,7 +10529,10 @@
         "front": "Graphics/Pokemon/Front/DODRIO.png",
         "back": "Graphics/Pokemon/Back/DODRIO.png",
         "icon": "Graphics/Pokemon/Icons/DODRIO.png",
-        "cry": "Audio/Cries/DODRIO.ogg"
+        "cry": "Audio/Cries/DODRIO.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/DODRIO.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/DODRIO.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/DODRIO.png"
       },
       "species": "Triple Bird Pokémon",
       "height": 1.8,
@@ -10402,7 +10657,10 @@
         "front": "Graphics/Pokemon/Front/SEEL.png",
         "back": "Graphics/Pokemon/Back/SEEL.png",
         "icon": "Graphics/Pokemon/Icons/SEEL.png",
-        "cry": "Audio/Cries/SEEL.ogg"
+        "cry": "Audio/Cries/SEEL.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/SEEL.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/SEEL.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SEEL.png"
       },
       "species": "Sea Lion Pokémon",
       "height": 1.1,
@@ -10555,7 +10813,10 @@
         "front": "Graphics/Pokemon/Front/DEWGONG.png",
         "back": "Graphics/Pokemon/Back/DEWGONG.png",
         "icon": "Graphics/Pokemon/Icons/DEWGONG.png",
-        "cry": "Audio/Cries/DEWGONG.ogg"
+        "cry": "Audio/Cries/DEWGONG.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/DEWGONG.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/DEWGONG.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/DEWGONG.png"
       },
       "species": "Sea Lion Pokémon",
       "height": 1.7,
@@ -10701,7 +10962,10 @@
         "front": "Graphics/Pokemon/Front/GRIMER.png",
         "back": "Graphics/Pokemon/Back/GRIMER.png",
         "icon": "Graphics/Pokemon/Icons/GRIMER.png",
-        "cry": "Audio/Cries/GRIMER.ogg"
+        "cry": "Audio/Cries/GRIMER.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/GRIMER.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/GRIMER.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/GRIMER.png"
       },
       "species": "Sludge Pokémon",
       "height": 0.9,
@@ -10847,7 +11111,10 @@
         "front": "Graphics/Pokemon/Front/MUK.png",
         "back": "Graphics/Pokemon/Back/MUK.png",
         "icon": "Graphics/Pokemon/Icons/MUK.png",
-        "cry": "Audio/Cries/MUK.ogg"
+        "cry": "Audio/Cries/MUK.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/MUK.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/MUK.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MUK.png"
       },
       "species": "Sludge Pokémon",
       "height": 1.2,
@@ -10993,7 +11260,10 @@
         "front": "Graphics/Pokemon/Front/SHELLDER.png",
         "back": "Graphics/Pokemon/Back/SHELLDER.png",
         "icon": "Graphics/Pokemon/Icons/SHELLDER.png",
-        "cry": "Audio/Cries/SHELLDER.ogg"
+        "cry": "Audio/Cries/SHELLDER.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/SHELLDER.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/SHELLDER.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SHELLDER.png"
       },
       "species": "Bivalve Pokémon",
       "height": 0.3,
@@ -11125,7 +11395,10 @@
         "front": "Graphics/Pokemon/Front/CLOYSTER.png",
         "back": "Graphics/Pokemon/Back/CLOYSTER.png",
         "icon": "Graphics/Pokemon/Icons/CLOYSTER.png",
-        "cry": "Audio/Cries/CLOYSTER.ogg"
+        "cry": "Audio/Cries/CLOYSTER.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/CLOYSTER.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/CLOYSTER.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/CLOYSTER.png"
       },
       "species": "Bivalve Pokémon",
       "height": 1.5,
@@ -11278,7 +11551,10 @@
         "front": "Graphics/Pokemon/Front/GASTLY.png",
         "back": "Graphics/Pokemon/Back/GASTLY.png",
         "icon": "Graphics/Pokemon/Icons/GASTLY.png",
-        "cry": "Audio/Cries/GASTLY.ogg"
+        "cry": "Audio/Cries/GASTLY.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/GASTLY.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/GASTLY.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/GASTLY.png"
       },
       "species": "Gas Pokémon",
       "height": 1.3,
@@ -11389,7 +11665,10 @@
         "front": "Graphics/Pokemon/Front/HAUNTER.png",
         "back": "Graphics/Pokemon/Back/HAUNTER.png",
         "icon": "Graphics/Pokemon/Icons/HAUNTER.png",
-        "cry": "Audio/Cries/HAUNTER.ogg"
+        "cry": "Audio/Cries/HAUNTER.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/HAUNTER.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/HAUNTER.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/HAUNTER.png"
       },
       "species": "Gas Pokémon",
       "height": 1.6,
@@ -11521,7 +11800,10 @@
         "front": "Graphics/Pokemon/Front/GENGAR.png",
         "back": "Graphics/Pokemon/Back/GENGAR.png",
         "icon": "Graphics/Pokemon/Icons/GENGAR.png",
-        "cry": "Audio/Cries/GENGAR.ogg"
+        "cry": "Audio/Cries/GENGAR.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/GENGAR.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/GENGAR.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/GENGAR.png"
       },
       "species": "Shadow Pokémon",
       "height": 1.5,
@@ -11653,7 +11935,10 @@
         "front": "Graphics/Pokemon/Front/ONIX.png",
         "back": "Graphics/Pokemon/Back/ONIX.png",
         "icon": "Graphics/Pokemon/Icons/ONIX.png",
-        "cry": "Audio/Cries/ONIX.ogg"
+        "cry": "Audio/Cries/ONIX.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/ONIX.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/ONIX.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/ONIX.png"
       },
       "species": "Rock Snake Pokémon",
       "height": 8.8,
@@ -11792,7 +12077,10 @@
         "front": "Graphics/Pokemon/Front/DROWZEE.png",
         "back": "Graphics/Pokemon/Back/DROWZEE.png",
         "icon": "Graphics/Pokemon/Icons/DROWZEE.png",
-        "cry": "Audio/Cries/DROWZEE.ogg"
+        "cry": "Audio/Cries/DROWZEE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/DROWZEE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/DROWZEE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/DROWZEE.png"
       },
       "species": "Hypnosis Pokémon",
       "height": 1,
@@ -11924,7 +12212,10 @@
         "front": "Graphics/Pokemon/Front/HYPNO.png",
         "back": "Graphics/Pokemon/Back/HYPNO.png",
         "icon": "Graphics/Pokemon/Icons/HYPNO.png",
-        "cry": "Audio/Cries/HYPNO.ogg"
+        "cry": "Audio/Cries/HYPNO.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/HYPNO.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/HYPNO.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/HYPNO.png"
       },
       "species": "Hypnosis Pokémon",
       "height": 1.6,
@@ -12063,7 +12354,10 @@
         "front": "Graphics/Pokemon/Front/KRABBY.png",
         "back": "Graphics/Pokemon/Back/KRABBY.png",
         "icon": "Graphics/Pokemon/Icons/KRABBY.png",
-        "cry": "Audio/Cries/KRABBY.ogg"
+        "cry": "Audio/Cries/KRABBY.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/KRABBY.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/KRABBY.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/KRABBY.png"
       },
       "species": "River Crab Pokémon",
       "height": 0.4,
@@ -12195,7 +12489,10 @@
         "front": "Graphics/Pokemon/Front/KINGLER.png",
         "back": "Graphics/Pokemon/Back/KINGLER.png",
         "icon": "Graphics/Pokemon/Icons/KINGLER.png",
-        "cry": "Audio/Cries/KINGLER.ogg"
+        "cry": "Audio/Cries/KINGLER.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/KINGLER.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/KINGLER.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/KINGLER.png"
       },
       "species": "Pincer Pokémon",
       "height": 1.3,
@@ -12341,7 +12638,10 @@
         "front": "Graphics/Pokemon/Front/VOLTORB.png",
         "back": "Graphics/Pokemon/Back/VOLTORB.png",
         "icon": "Graphics/Pokemon/Icons/VOLTORB.png",
-        "cry": "Audio/Cries/VOLTORB.ogg"
+        "cry": "Audio/Cries/VOLTORB.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/VOLTORB.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/VOLTORB.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/VOLTORB.png"
       },
       "species": "Ball Pokémon",
       "height": 0.5,
@@ -12494,7 +12794,10 @@
         "front": "Graphics/Pokemon/Front/ELECTRODE.png",
         "back": "Graphics/Pokemon/Back/ELECTRODE.png",
         "icon": "Graphics/Pokemon/Icons/ELECTRODE.png",
-        "cry": "Audio/Cries/ELECTRODE.ogg"
+        "cry": "Audio/Cries/ELECTRODE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/ELECTRODE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/ELECTRODE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/ELECTRODE.png"
       },
       "species": "Ball Pokémon",
       "height": 1.2,
@@ -12654,7 +12957,10 @@
         "front": "Graphics/Pokemon/Front/EXEGGCUTE.png",
         "back": "Graphics/Pokemon/Back/EXEGGCUTE.png",
         "icon": "Graphics/Pokemon/Icons/EXEGGCUTE.png",
-        "cry": "Audio/Cries/EXEGGCUTE.ogg"
+        "cry": "Audio/Cries/EXEGGCUTE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/EXEGGCUTE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/EXEGGCUTE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/EXEGGCUTE.png"
       },
       "species": "Egg Pokémon",
       "height": 0.4,
@@ -12779,7 +13085,10 @@
         "front": "Graphics/Pokemon/Front/EXEGGUTOR.png",
         "back": "Graphics/Pokemon/Back/EXEGGUTOR.png",
         "icon": "Graphics/Pokemon/Icons/EXEGGUTOR.png",
-        "cry": "Audio/Cries/EXEGGUTOR.ogg"
+        "cry": "Audio/Cries/EXEGGUTOR.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/EXEGGUTOR.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/EXEGGUTOR.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/EXEGGUTOR.png"
       },
       "species": "Coconut Pokémon",
       "height": 2,
@@ -12932,7 +13241,10 @@
         "front": "Graphics/Pokemon/Front/CUBONE.png",
         "back": "Graphics/Pokemon/Back/CUBONE.png",
         "icon": "Graphics/Pokemon/Icons/CUBONE.png",
-        "cry": "Audio/Cries/CUBONE.ogg"
+        "cry": "Audio/Cries/CUBONE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/CUBONE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/CUBONE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/CUBONE.png"
       },
       "species": "Lonely Pokémon",
       "height": 0.4,
@@ -13064,7 +13376,10 @@
         "front": "Graphics/Pokemon/Front/MAROWAK.png",
         "back": "Graphics/Pokemon/Back/MAROWAK.png",
         "icon": "Graphics/Pokemon/Icons/MAROWAK.png",
-        "cry": "Audio/Cries/MAROWAK.ogg"
+        "cry": "Audio/Cries/MAROWAK.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/MAROWAK.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/MAROWAK.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MAROWAK.png"
       },
       "species": "Bone Keeper Pokémon",
       "height": 1,
@@ -13196,7 +13511,10 @@
         "front": "Graphics/Pokemon/Front/HITMONLEE.png",
         "back": "Graphics/Pokemon/Back/HITMONLEE.png",
         "icon": "Graphics/Pokemon/Icons/HITMONLEE.png",
-        "cry": "Audio/Cries/HITMONLEE.ogg"
+        "cry": "Audio/Cries/HITMONLEE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/HITMONLEE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/HITMONLEE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/HITMONLEE.png"
       },
       "species": "Kicking Pokémon",
       "height": 1.5,
@@ -13349,7 +13667,10 @@
         "front": "Graphics/Pokemon/Front/HITMONCHAN.png",
         "back": "Graphics/Pokemon/Back/HITMONCHAN.png",
         "icon": "Graphics/Pokemon/Icons/HITMONCHAN.png",
-        "cry": "Audio/Cries/HITMONCHAN.ogg"
+        "cry": "Audio/Cries/HITMONCHAN.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/HITMONCHAN.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/HITMONCHAN.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/HITMONCHAN.png"
       },
       "species": "Punching Pokémon",
       "height": 1.4,
@@ -13509,7 +13830,10 @@
         "front": "Graphics/Pokemon/Front/LICKITUNG.png",
         "back": "Graphics/Pokemon/Back/LICKITUNG.png",
         "icon": "Graphics/Pokemon/Icons/LICKITUNG.png",
-        "cry": "Audio/Cries/LICKITUNG.ogg"
+        "cry": "Audio/Cries/LICKITUNG.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/LICKITUNG.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/LICKITUNG.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/LICKITUNG.png"
       },
       "species": "Licking Pokémon",
       "height": 1.2,
@@ -13592,7 +13916,10 @@
         "front": "Graphics/Pokemon/Front/KOFFING.png",
         "back": "Graphics/Pokemon/Back/KOFFING.png",
         "icon": "Graphics/Pokemon/Icons/KOFFING.png",
-        "cry": "Audio/Cries/KOFFING.ogg"
+        "cry": "Audio/Cries/KOFFING.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/KOFFING.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/KOFFING.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/KOFFING.png"
       },
       "species": "Poison Gas Pokémon",
       "height": 0.6,
@@ -13731,7 +14058,10 @@
         "front": "Graphics/Pokemon/Front/WEEZING.png",
         "back": "Graphics/Pokemon/Back/WEEZING.png",
         "icon": "Graphics/Pokemon/Icons/WEEZING.png",
-        "cry": "Audio/Cries/WEEZING.ogg"
+        "cry": "Audio/Cries/WEEZING.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/WEEZING.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/WEEZING.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/WEEZING.png"
       },
       "species": "Poison Gas Pokémon",
       "height": 1.2,
@@ -13877,7 +14207,10 @@
         "front": "Graphics/Pokemon/Front/RHYHORN.png",
         "back": "Graphics/Pokemon/Back/RHYHORN.png",
         "icon": "Graphics/Pokemon/Icons/RHYHORN.png",
-        "cry": "Audio/Cries/RHYHORN.ogg"
+        "cry": "Audio/Cries/RHYHORN.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/RHYHORN.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/RHYHORN.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/RHYHORN.png"
       },
       "species": "Spikes Pokémon",
       "height": 1,
@@ -14009,7 +14342,10 @@
         "front": "Graphics/Pokemon/Front/RHYDON.png",
         "back": "Graphics/Pokemon/Back/RHYDON.png",
         "icon": "Graphics/Pokemon/Icons/RHYDON.png",
-        "cry": "Audio/Cries/RHYDON.ogg"
+        "cry": "Audio/Cries/RHYDON.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/RHYDON.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/RHYDON.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/RHYDON.png"
       },
       "species": "Drill Pokémon",
       "height": 1.9,
@@ -14141,7 +14477,10 @@
         "front": "Graphics/Pokemon/Front/CHANSEY.png",
         "back": "Graphics/Pokemon/Back/CHANSEY.png",
         "icon": "Graphics/Pokemon/Icons/CHANSEY.png",
-        "cry": "Audio/Cries/CHANSEY.ogg"
+        "cry": "Audio/Cries/CHANSEY.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/CHANSEY.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/CHANSEY.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/CHANSEY.png"
       },
       "species": "Egg Pokémon",
       "height": 1.1,
@@ -14315,7 +14654,10 @@
         "front": "Graphics/Pokemon/Front/TANGELA.png",
         "back": "Graphics/Pokemon/Back/TANGELA.png",
         "icon": "Graphics/Pokemon/Icons/TANGELA.png",
-        "cry": "Audio/Cries/TANGELA.ogg"
+        "cry": "Audio/Cries/TANGELA.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/TANGELA.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/TANGELA.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/TANGELA.png"
       },
       "species": "Vine Pokémon",
       "height": 1,
@@ -14405,7 +14747,10 @@
         "front": "Graphics/Pokemon/Front/KANGASKHAN.png",
         "back": "Graphics/Pokemon/Back/KANGASKHAN.png",
         "icon": "Graphics/Pokemon/Icons/KANGASKHAN.png",
-        "cry": "Audio/Cries/KANGASKHAN.ogg"
+        "cry": "Audio/Cries/KANGASKHAN.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/KANGASKHAN.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/KANGASKHAN.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/KANGASKHAN.png"
       },
       "species": "Parent Pokémon",
       "height": 2.2,
@@ -14516,7 +14861,10 @@
         "front": "Graphics/Pokemon/Front/HORSEA.png",
         "back": "Graphics/Pokemon/Back/HORSEA.png",
         "icon": "Graphics/Pokemon/Icons/HORSEA.png",
-        "cry": "Audio/Cries/HORSEA.ogg"
+        "cry": "Audio/Cries/HORSEA.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/HORSEA.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/HORSEA.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/HORSEA.png"
       },
       "species": "Dragon Pokémon",
       "height": 0.4,
@@ -14641,7 +14989,10 @@
         "front": "Graphics/Pokemon/Front/SEADRA.png",
         "back": "Graphics/Pokemon/Back/SEADRA.png",
         "icon": "Graphics/Pokemon/Icons/SEADRA.png",
-        "cry": "Audio/Cries/SEADRA.ogg"
+        "cry": "Audio/Cries/SEADRA.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/SEADRA.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/SEADRA.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SEADRA.png"
       },
       "species": "Dragon Pokémon",
       "height": 1.2,
@@ -14766,7 +15117,10 @@
         "front": "Graphics/Pokemon/Front/GOLDEEN.png",
         "back": "Graphics/Pokemon/Back/GOLDEEN.png",
         "icon": "Graphics/Pokemon/Icons/GOLDEEN.png",
-        "cry": "Audio/Cries/GOLDEEN.ogg"
+        "cry": "Audio/Cries/GOLDEEN.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/GOLDEEN.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/GOLDEEN.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/GOLDEEN.png"
       },
       "species": "Goldfish Pokémon",
       "height": 0.6,
@@ -14884,7 +15238,10 @@
         "front": "Graphics/Pokemon/Front/SEAKING.png",
         "back": "Graphics/Pokemon/Back/SEAKING.png",
         "icon": "Graphics/Pokemon/Icons/SEAKING.png",
-        "cry": "Audio/Cries/SEAKING.ogg"
+        "cry": "Audio/Cries/SEAKING.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/SEAKING.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/SEAKING.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SEAKING.png"
       },
       "species": "Goldfish Pokémon",
       "height": 1.3,
@@ -15002,7 +15359,10 @@
         "front": "Graphics/Pokemon/Front/STARYU.png",
         "back": "Graphics/Pokemon/Back/STARYU.png",
         "icon": "Graphics/Pokemon/Icons/STARYU.png",
-        "cry": "Audio/Cries/STARYU.ogg"
+        "cry": "Audio/Cries/STARYU.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/STARYU.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/STARYU.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/STARYU.png"
       },
       "species": "Star Shape Pokémon",
       "height": 0.8,
@@ -15134,7 +15494,10 @@
         "front": "Graphics/Pokemon/Front/STARMIE.png",
         "back": "Graphics/Pokemon/Back/STARMIE.png",
         "icon": "Graphics/Pokemon/Icons/STARMIE.png",
-        "cry": "Audio/Cries/STARMIE.ogg"
+        "cry": "Audio/Cries/STARMIE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/STARMIE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/STARMIE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/STARMIE.png"
       },
       "species": "Mysterious Pokémon",
       "height": 1.1,
@@ -15280,7 +15643,10 @@
         "front": "Graphics/Pokemon/Front/MRMIME.png",
         "back": "Graphics/Pokemon/Back/MRMIME.png",
         "icon": "Graphics/Pokemon/Icons/MRMIME.png",
-        "cry": "Audio/Cries/MRMIME.ogg"
+        "cry": "Audio/Cries/MRMIME.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/MRMIME.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/MRMIME.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MRMIME.png"
       },
       "species": "Barrier Pokémon",
       "height": 1.3,
@@ -15433,7 +15799,10 @@
         "front": "Graphics/Pokemon/Front/SCYTHER.png",
         "back": "Graphics/Pokemon/Back/SCYTHER.png",
         "icon": "Graphics/Pokemon/Icons/SCYTHER.png",
-        "cry": "Audio/Cries/SCYTHER.ogg"
+        "cry": "Audio/Cries/SCYTHER.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/SCYTHER.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/SCYTHER.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SCYTHER.png"
       },
       "species": "Mantis Pokémon",
       "height": 1.5,
@@ -15551,7 +15920,10 @@
         "front": "Graphics/Pokemon/Front/JYNX.png",
         "back": "Graphics/Pokemon/Back/JYNX.png",
         "icon": "Graphics/Pokemon/Icons/JYNX.png",
-        "cry": "Audio/Cries/JYNX.ogg"
+        "cry": "Audio/Cries/JYNX.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/JYNX.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/JYNX.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/JYNX.png"
       },
       "species": "Human Shape Pokémon",
       "height": 1.4,
@@ -15690,7 +16062,10 @@
         "front": "Graphics/Pokemon/Front/ELECTABUZZ.png",
         "back": "Graphics/Pokemon/Back/ELECTABUZZ.png",
         "icon": "Graphics/Pokemon/Icons/ELECTABUZZ.png",
-        "cry": "Audio/Cries/ELECTABUZZ.ogg"
+        "cry": "Audio/Cries/ELECTABUZZ.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/ELECTABUZZ.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/ELECTABUZZ.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/ELECTABUZZ.png"
       },
       "species": "Electric Pokémon",
       "height": 1.1,
@@ -15829,7 +16204,10 @@
         "front": "Graphics/Pokemon/Front/MAGMAR.png",
         "back": "Graphics/Pokemon/Back/MAGMAR.png",
         "icon": "Graphics/Pokemon/Icons/MAGMAR.png",
-        "cry": "Audio/Cries/MAGMAR.ogg"
+        "cry": "Audio/Cries/MAGMAR.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/MAGMAR.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/MAGMAR.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MAGMAR.png"
       },
       "species": "Spitfire Pokémon",
       "height": 1.3,
@@ -15968,7 +16346,10 @@
         "front": "Graphics/Pokemon/Front/PINSIR.png",
         "back": "Graphics/Pokemon/Back/PINSIR.png",
         "icon": "Graphics/Pokemon/Icons/PINSIR.png",
-        "cry": "Audio/Cries/PINSIR.ogg"
+        "cry": "Audio/Cries/PINSIR.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/PINSIR.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/PINSIR.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PINSIR.png"
       },
       "species": "Stag Beetle Pokémon",
       "height": 1.5,
@@ -16079,7 +16460,10 @@
         "front": "Graphics/Pokemon/Front/TAUROS.png",
         "back": "Graphics/Pokemon/Back/TAUROS.png",
         "icon": "Graphics/Pokemon/Icons/TAUROS.png",
-        "cry": "Audio/Cries/TAUROS.ogg"
+        "cry": "Audio/Cries/TAUROS.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/TAUROS.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/TAUROS.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/TAUROS.png"
       },
       "species": "Wild Bull Pokémon",
       "height": 1.4,
@@ -16211,7 +16595,10 @@
         "front": "Graphics/Pokemon/Front/MAGIKARP.png",
         "back": "Graphics/Pokemon/Back/MAGIKARP.png",
         "icon": "Graphics/Pokemon/Icons/MAGIKARP.png",
-        "cry": "Audio/Cries/MAGIKARP.ogg"
+        "cry": "Audio/Cries/MAGIKARP.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/MAGIKARP.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/MAGIKARP.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MAGIKARP.png"
       },
       "species": "Fish Pokémon",
       "height": 0.9,
@@ -16259,7 +16646,10 @@
         "front": "Graphics/Pokemon/Front/GYARADOS.png",
         "back": "Graphics/Pokemon/Back/GYARADOS.png",
         "icon": "Graphics/Pokemon/Icons/GYARADOS.png",
-        "cry": "Audio/Cries/GYARADOS.ogg"
+        "cry": "Audio/Cries/GYARADOS.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/GYARADOS.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/GYARADOS.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/GYARADOS.png"
       },
       "species": "Atrocious Pokémon",
       "height": 6.5,
@@ -16377,7 +16767,10 @@
         "front": "Graphics/Pokemon/Front/LAPRAS.png",
         "back": "Graphics/Pokemon/Back/LAPRAS.png",
         "icon": "Graphics/Pokemon/Icons/LAPRAS.png",
-        "cry": "Audio/Cries/LAPRAS.ogg"
+        "cry": "Audio/Cries/LAPRAS.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/LAPRAS.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/LAPRAS.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/LAPRAS.png"
       },
       "species": "Transport Pokémon",
       "height": 2.5,
@@ -16516,7 +16909,10 @@
         "front": "Graphics/Pokemon/Front/DITTO.png",
         "back": "Graphics/Pokemon/Back/DITTO.png",
         "icon": "Graphics/Pokemon/Icons/DITTO.png",
-        "cry": "Audio/Cries/DITTO.ogg"
+        "cry": "Audio/Cries/DITTO.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/DITTO.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/DITTO.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/DITTO.png"
       },
       "species": "Transform Pokémon",
       "height": 0.3,
@@ -16557,7 +16953,10 @@
         "front": "Graphics/Pokemon/Front/EEVEE.png",
         "back": "Graphics/Pokemon/Back/EEVEE.png",
         "icon": "Graphics/Pokemon/Icons/EEVEE.png",
-        "cry": "Audio/Cries/EEVEE.ogg"
+        "cry": "Audio/Cries/EEVEE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/EEVEE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/EEVEE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/EEVEE.png"
       },
       "species": "Evolution Pokémon",
       "height": 0.3,
@@ -16668,7 +17067,10 @@
         "front": "Graphics/Pokemon/Front/VAPOREON.png",
         "back": "Graphics/Pokemon/Back/VAPOREON.png",
         "icon": "Graphics/Pokemon/Icons/VAPOREON.png",
-        "cry": "Audio/Cries/VAPOREON.ogg"
+        "cry": "Audio/Cries/VAPOREON.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/VAPOREON.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/VAPOREON.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/VAPOREON.png"
       },
       "species": "Bubble Jet Pokémon",
       "height": 1,
@@ -16793,7 +17195,10 @@
         "front": "Graphics/Pokemon/Front/JOLTEON.png",
         "back": "Graphics/Pokemon/Back/JOLTEON.png",
         "icon": "Graphics/Pokemon/Icons/JOLTEON.png",
-        "cry": "Audio/Cries/JOLTEON.ogg"
+        "cry": "Audio/Cries/JOLTEON.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/JOLTEON.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/JOLTEON.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/JOLTEON.png"
       },
       "species": "Lightning Pokémon",
       "height": 0.8,
@@ -16918,7 +17323,10 @@
         "front": "Graphics/Pokemon/Front/FLAREON.png",
         "back": "Graphics/Pokemon/Back/FLAREON.png",
         "icon": "Graphics/Pokemon/Icons/FLAREON.png",
-        "cry": "Audio/Cries/FLAREON.ogg"
+        "cry": "Audio/Cries/FLAREON.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/FLAREON.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/FLAREON.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/FLAREON.png"
       },
       "species": "Flame Pokémon",
       "height": 0.9,
@@ -17036,7 +17444,10 @@
         "front": "Graphics/Pokemon/Front/PORYGON.png",
         "back": "Graphics/Pokemon/Back/PORYGON.png",
         "icon": "Graphics/Pokemon/Icons/PORYGON.png",
-        "cry": "Audio/Cries/PORYGON.ogg"
+        "cry": "Audio/Cries/PORYGON.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/PORYGON.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/PORYGON.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PORYGON.png"
       },
       "species": "Virtual Pokémon",
       "height": 0.8,
@@ -17168,7 +17579,10 @@
         "front": "Graphics/Pokemon/Front/OMANYTE.png",
         "back": "Graphics/Pokemon/Back/OMANYTE.png",
         "icon": "Graphics/Pokemon/Icons/OMANYTE.png",
-        "cry": "Audio/Cries/OMANYTE.ogg"
+        "cry": "Audio/Cries/OMANYTE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/OMANYTE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/OMANYTE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/OMANYTE.png"
       },
       "species": "Spiral Pokémon",
       "height": 0.4,
@@ -17300,7 +17714,10 @@
         "front": "Graphics/Pokemon/Front/OMASTAR.png",
         "back": "Graphics/Pokemon/Back/OMASTAR.png",
         "icon": "Graphics/Pokemon/Icons/OMASTAR.png",
-        "cry": "Audio/Cries/OMASTAR.ogg"
+        "cry": "Audio/Cries/OMASTAR.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/OMASTAR.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/OMASTAR.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/OMASTAR.png"
       },
       "species": "Spiral Pokémon",
       "height": 1,
@@ -17439,7 +17856,10 @@
         "front": "Graphics/Pokemon/Front/KABUTO.png",
         "back": "Graphics/Pokemon/Back/KABUTO.png",
         "icon": "Graphics/Pokemon/Icons/KABUTO.png",
-        "cry": "Audio/Cries/KABUTO.ogg"
+        "cry": "Audio/Cries/KABUTO.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/KABUTO.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/KABUTO.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/KABUTO.png"
       },
       "species": "Shellfish Pokémon",
       "height": 0.5,
@@ -17571,7 +17991,10 @@
         "front": "Graphics/Pokemon/Front/KABUTOPS.png",
         "back": "Graphics/Pokemon/Back/KABUTOPS.png",
         "icon": "Graphics/Pokemon/Icons/KABUTOPS.png",
-        "cry": "Audio/Cries/KABUTOPS.ogg"
+        "cry": "Audio/Cries/KABUTOPS.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/KABUTOPS.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/KABUTOPS.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/KABUTOPS.png"
       },
       "species": "Shellfish Pokémon",
       "height": 1.3,
@@ -17724,7 +18147,10 @@
         "front": "Graphics/Pokemon/Front/AERODACTYL.png",
         "back": "Graphics/Pokemon/Back/AERODACTYL.png",
         "icon": "Graphics/Pokemon/Icons/AERODACTYL.png",
-        "cry": "Audio/Cries/AERODACTYL.ogg"
+        "cry": "Audio/Cries/AERODACTYL.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/AERODACTYL.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/AERODACTYL.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/AERODACTYL.png"
       },
       "species": "Fossil Pokémon",
       "height": 1.8,
@@ -17849,7 +18275,10 @@
         "front": "Graphics/Pokemon/Front/SNORLAX.png",
         "back": "Graphics/Pokemon/Back/SNORLAX.png",
         "icon": "Graphics/Pokemon/Icons/SNORLAX.png",
-        "cry": "Audio/Cries/SNORLAX.ogg"
+        "cry": "Audio/Cries/SNORLAX.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/SNORLAX.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/SNORLAX.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SNORLAX.png"
       },
       "species": "Sleeping Pokémon",
       "height": 2.1,
@@ -18072,7 +18501,10 @@
         "front": "Graphics/Pokemon/Front/ARTICUNO.png",
         "back": "Graphics/Pokemon/Back/ARTICUNO.png",
         "icon": "Graphics/Pokemon/Icons/ARTICUNO.png",
-        "cry": "Audio/Cries/ARTICUNO.ogg"
+        "cry": "Audio/Cries/ARTICUNO.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/ARTICUNO.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/ARTICUNO.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/ARTICUNO.png"
       },
       "species": "Freeze Pokémon",
       "height": 1.7,
@@ -18218,7 +18650,10 @@
         "front": "Graphics/Pokemon/Front/ZAPDOS.png",
         "back": "Graphics/Pokemon/Back/ZAPDOS.png",
         "icon": "Graphics/Pokemon/Icons/ZAPDOS.png",
-        "cry": "Audio/Cries/ZAPDOS.ogg"
+        "cry": "Audio/Cries/ZAPDOS.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/ZAPDOS.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/ZAPDOS.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/ZAPDOS.png"
       },
       "species": "Electric Pokémon",
       "height": 1.6,
@@ -18364,7 +18799,10 @@
         "front": "Graphics/Pokemon/Front/MOLTRES.png",
         "back": "Graphics/Pokemon/Back/MOLTRES.png",
         "icon": "Graphics/Pokemon/Icons/MOLTRES.png",
-        "cry": "Audio/Cries/MOLTRES.ogg"
+        "cry": "Audio/Cries/MOLTRES.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/MOLTRES.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/MOLTRES.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MOLTRES.png"
       },
       "species": "Flame Pokémon",
       "height": 2,
@@ -18510,7 +18948,10 @@
         "front": "Graphics/Pokemon/Front/DRATINI.png",
         "back": "Graphics/Pokemon/Back/DRATINI.png",
         "icon": "Graphics/Pokemon/Icons/DRATINI.png",
-        "cry": "Audio/Cries/DRATINI.ogg"
+        "cry": "Audio/Cries/DRATINI.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/DRATINI.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/DRATINI.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/DRATINI.png"
       },
       "species": "Dragon Pokémon",
       "height": 1.8,
@@ -18628,7 +19069,10 @@
         "front": "Graphics/Pokemon/Front/DRAGONAIR.png",
         "back": "Graphics/Pokemon/Back/DRAGONAIR.png",
         "icon": "Graphics/Pokemon/Icons/DRAGONAIR.png",
-        "cry": "Audio/Cries/DRAGONAIR.ogg"
+        "cry": "Audio/Cries/DRAGONAIR.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/DRAGONAIR.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/DRAGONAIR.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/DRAGONAIR.png"
       },
       "species": "Dragon Pokémon",
       "height": 4,
@@ -18746,7 +19190,10 @@
         "front": "Graphics/Pokemon/Front/DRAGONITE.png",
         "back": "Graphics/Pokemon/Back/DRAGONITE.png",
         "icon": "Graphics/Pokemon/Icons/DRAGONITE.png",
-        "cry": "Audio/Cries/DRAGONITE.ogg"
+        "cry": "Audio/Cries/DRAGONITE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/DRAGONITE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/DRAGONITE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/DRAGONITE.png"
       },
       "species": "Dragon Pokémon",
       "height": 2.2,
@@ -18871,7 +19318,10 @@
         "front": "Graphics/Pokemon/Front/MEWTWO.png",
         "back": "Graphics/Pokemon/Back/MEWTWO.png",
         "icon": "Graphics/Pokemon/Icons/MEWTWO.png",
-        "cry": "Audio/Cries/MEWTWO.ogg"
+        "cry": "Audio/Cries/MEWTWO.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/MEWTWO.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/MEWTWO.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MEWTWO.png"
       },
       "species": "Genetic Pokémon",
       "height": 2,
@@ -18989,7 +19439,10 @@
         "front": "Graphics/Pokemon/Front/MEW.png",
         "back": "Graphics/Pokemon/Back/MEW.png",
         "icon": "Graphics/Pokemon/Icons/MEW.png",
-        "cry": "Audio/Cries/MEW.ogg"
+        "cry": "Audio/Cries/MEW.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/MEW.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/MEW.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MEW.png"
       },
       "species": "New Species Pokémon",
       "height": 0.4,

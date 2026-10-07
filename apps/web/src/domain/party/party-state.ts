@@ -18,6 +18,7 @@ export interface PartyPokemon {
   speciesKey: string;
   name: string;
   nickname?: string;
+  isShiny?: boolean;
   level: number;
   exp: number;
   maxExp: number;
@@ -57,6 +58,7 @@ export function createPartyPokemon(
   level = 5,
   options?: {
     nickname?: string;
+    isShiny?: boolean;
     gender?: 'male' | 'female' | 'genderless';
     ballCaught?: string;
     heldItem?: string | null;
@@ -86,6 +88,7 @@ export function createPartyPokemon(
     speciesKey: data.speciesKey,
     name: data.name,
     nickname: options?.nickname,
+    isShiny: options?.isShiny ?? false,
     level,
     exp: 0,
     maxExp: level * level * 10,
@@ -113,6 +116,7 @@ export function partyPokemonToBattler(pokemon: PartyPokemon): BattlerPokemon {
     id: pokemon.speciesId,
     name: pokemon.nickname || pokemon.name,
     speciesKey: pokemon.speciesKey,
+    isShiny: pokemon.isShiny,
     types: [...pokemon.types],
     level: pokemon.level,
     currentHp: pokemon.currentHp,
@@ -131,9 +135,9 @@ export function partyPokemonToBattler(pokemon: PartyPokemon): BattlerPokemon {
     sleepTurns: pokemon.status === 'sleep' ? Math.max(1, Math.floor(Math.random() * 3) + 1) : 0,
     statusTurns: 0,
     moves: pokemon.moves.map((m) => ({ ...m })),
-    frontSprite: POKEMON_ASSETS.getFrontSprite(pokemon.speciesKey),
-    backSprite: POKEMON_ASSETS.getBackSprite(pokemon.speciesKey),
-    iconSprite: POKEMON_ASSETS.getIconSprite(pokemon.speciesKey),
+    frontSprite: POKEMON_ASSETS.getFrontSprite(pokemon.speciesKey, pokemon.isShiny),
+    backSprite: POKEMON_ASSETS.getBackSprite(pokemon.speciesKey, pokemon.isShiny),
+    iconSprite: POKEMON_ASSETS.getIconSprite(pokemon.speciesKey, pokemon.isShiny),
     gender: pokemon.gender,
     cry: pokemonCatalog.getBySpeciesKey(pokemon.speciesKey)?.sprites?.cry,
     isFainted: pokemon.currentHp <= 0,

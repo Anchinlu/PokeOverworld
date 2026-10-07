@@ -1,6 +1,33 @@
-## Cập nhật lần cuối: 2026-10-07 (Thực Hiện Bước A Kiến Trúc, ESLint TypeScript, Tối Ưu Hiệu Năng H1/H2/H6 & Đồng Bộ Tài Liệu Kế Hoạch)
+## Cập nhật lần cuối: 2026-10-07 (Tích Hợp Toàn Diện Dạng Shiny Cho 151 Pokémon Gen 1 Vào Database & Hệ Thống)
 
-### 0.44. Triển Khai Bước A Nền Tảng Kiến Trúc & Tối Ưu Hiệu Năng Runtime (H1, H2, H6):
+### 0.45. Bổ Sung Dạng Shiny (Sắc Màu Đặc Biệt) Cho Toàn Bộ 151 Pokémon Gen 1:
+
+- **Trạng thái:** Đã hoàn thành 100% việc tích hợp các đường dẫn assets dạng Shiny (`Front shiny`, `Back shiny`, `Icons shiny`) cho toàn bộ 151 loài Pokémon Gen 1 vào cơ sở dữ liệu `pokemon-db.json`, đồng bộ schema JSON, type TypeScript và hỗ trợ hiển thị trên toàn bộ hệ thống Party, Storage và Battle.
+- **Chi tiết đã thực hiện:**
+  1. **Cập nhật Cơ Sở Dữ Liệu ([pokemon-db.json](file:///e:/Pokemon/packages/game-data/pokemon-db.json)):**
+     - Bổ sung 3 trường sprite dạng Shiny cho toàn bộ 151 loài Pokémon:
+       - `frontShiny`: `"Graphics/Pokemon/Front shiny/${speciesKey}.png"`
+       - `backShiny`: `"Graphics/Pokemon/Back shiny/${speciesKey}.png"`
+       - `iconShiny`: `"Graphics/Pokemon/Icons shiny/${speciesKey}.png"`
+     - Xác thực 151/151 loài đều có đầy đủ tệp ảnh pixel-art hợp lệ trên đĩa, không thiếu bất kỳ tệp nào.
+  2. **Đồng Bộ Schema & Type Definitions ([pokemon.ts](file:///e:/Pokemon/packages/shared-types/pokemon.ts), [pokemon.schema.json](file:///e:/Pokemon/packages/shared-types/pokemon.schema.json)):**
+     - Mở rộng interface `PokemonSprites`: thêm `frontShiny?: string`, `backShiny?: string`, `iconShiny?: string`, `cry?: string`.
+     - Cập nhật schema validation `pokemon.schema.json` hỗ trợ đầy đủ các trường sprite shiny. Chạy script `node scripts/validate-schemas.mjs` đạt kết quả PASS 100%.
+  3. **Mở Rộng Asset Registry ([asset-registry.ts](file:///e:/Pokemon/apps/web/src/assets/asset-registry.ts)):**
+     - Nâng cấp `POKEMON_ASSETS.getFrontSprite(speciesKey, isShiny = false)`, `getBackSprite(speciesKey, isShiny = false)`, `getIconSprite(speciesKey, isShiny = false)`: Tự động trỏ vào thư mục `Front shiny/`, `Back shiny/`, `Icons shiny/` khi cờ `isShiny === true`.
+  4. **Hỗ Trợ Dạng Shiny Trong Đội Hình, Trận Đấu & Kho PC ([party-state.ts](file:///e:/Pokemon/apps/web/src/domain/party/party-state.ts), [battle/types.ts](file:///e:/Pokemon/apps/web/src/battle/types.ts), [battle-factory.ts](file:///e:/Pokemon/apps/web/src/battle/battle-factory.ts), [party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts), [storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts)):**
+     - Bổ sung thuộc tính `isShiny?: boolean` vào cả `PartyPokemon` và `BattlerPokemon`.
+     - `createPartyPokemon`: Hỗ trợ tùy chọn `options.isShiny`.
+     - `partyPokemonToBattler`: Tự động truyền cờ `isShiny` và nạp đúng sprite trước/sau/icon shiny cho đấu sĩ Pokémon.
+     - `createBattler`: Hỗ trợ tham số `isShiny = false` cho cả Pokémon hoang dã.
+     - `PartyScreen` & `StorageScreen`: Đồng bộ hiển thị icon thu nhỏ và sprite hoạt ảnh động dạng Shiny trong danh sách ô và bảng chi tiết Summary Modal.
+  5. **Kiểm Thử Toàn Diện (Unit Tests):**
+     - Bổ sung unit test xác thực dạng Shiny trong suite kiểm thử trận đấu: Kiểm tra Catalog, Asset Resolver, Party State, Battler Converter và Wild Battler Factory.
+     - Toàn bộ pipeline `npm run ci` (Schema, Lint TS, Format Prettier, Typecheck, 120 Vitest tests, Production Build) đạt PASS 100%.
+
+---
+
+
 
 - **Trạng thái:** Đã hoàn thành 100% các yêu cầu từ [DEV_ARCHITECTURE_GUIDE.md](file:///e:/Pokemon/docs/DEV_ARCHITECTURE_GUIDE.md): Dọn dẹp file di sản, tích hợp ESLint cho toàn bộ TypeScript, sửa lỗi regex escape, tối ưu hóa thuật toán render và đồng bộ toàn bộ tài liệu quy chuẩn.
 - **Chi tiết đã thực hiện:**

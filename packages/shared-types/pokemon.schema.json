@@ -45,7 +45,11 @@
               "follower": { "type": "string" },
               "front": { "type": "string" },
               "back": { "type": "string" },
-              "icon": { "type": "string" }
+              "icon": { "type": "string" },
+              "frontShiny": { "type": "string" },
+              "backShiny": { "type": "string" },
+              "iconShiny": { "type": "string" },
+              "cry": { "type": "string" }
             },
             "additionalProperties": false
           },

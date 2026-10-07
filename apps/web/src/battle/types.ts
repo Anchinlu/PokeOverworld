@@ -48,6 +48,7 @@ export interface BattlerPokemon {
   id: number;
   name: string;
   speciesKey: string;
+  isShiny?: boolean;
   types: PokemonType[];
   level: number;
   currentHp: number;

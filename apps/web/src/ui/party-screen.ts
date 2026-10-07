@@ -493,7 +493,7 @@ export class PartyScreen {
               ? 'ps-gender-badge gender-female'
               : '';
 
-        const iconUrl = POKEMON_ASSETS.getIconSprite(pk.speciesKey);
+        const iconUrl = POKEMON_ASSETS.getIconSprite(pk.speciesKey, pk.isShiny);
 
         slotEl.innerHTML = `
           <!-- Pokemon Mini Sprite (Scaled & Clipped to 1st frame only) -->
@@ -628,7 +628,7 @@ export class PartyScreen {
       if (!this.summaryAnimator) {
         this.summaryAnimator = new PokemonSpriteAnimator(spriteCanvas);
       }
-      this.summaryAnimator.load(POKEMON_ASSETS.getFrontSprite(pk.speciesKey));
+      this.summaryAnimator.load(POKEMON_ASSETS.getFrontSprite(pk.speciesKey, pk.isShiny));
     }
 
     const typesEl = modal.querySelector<HTMLElement>('#summaryPkTypes')!;

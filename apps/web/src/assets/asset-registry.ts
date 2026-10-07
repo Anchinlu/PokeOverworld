@@ -125,14 +125,20 @@ export const POKEMON_ASSETS = {
       '/Graphics/Pokemon/Icons%20type/types.png?v=newtype'
     );
   },
-  getFrontSprite: (speciesKey: string): string => {
-    return resolveAsset(`pokemon_front_${speciesKey}`, `/Graphics/Pokemon/Front/${speciesKey}.png`);
+  getFrontSprite: (speciesKey: string, isShiny = false): string => {
+    const folder = isShiny ? 'Front shiny' : 'Front';
+    const key = isShiny ? `pokemon_front_shiny_${speciesKey}` : `pokemon_front_${speciesKey}`;
+    return resolveAsset(key, `/Graphics/Pokemon/${folder}/${speciesKey}.png`);
   },
-  getBackSprite: (speciesKey: string): string => {
-    return resolveAsset(`pokemon_back_${speciesKey}`, `/Graphics/Pokemon/Back/${speciesKey}.png`);
+  getBackSprite: (speciesKey: string, isShiny = false): string => {
+    const folder = isShiny ? 'Back shiny' : 'Back';
+    const key = isShiny ? `pokemon_back_shiny_${speciesKey}` : `pokemon_back_${speciesKey}`;
+    return resolveAsset(key, `/Graphics/Pokemon/${folder}/${speciesKey}.png`);
   },
-  getIconSprite: (speciesKey: string): string => {
-    return resolveAsset(`pokemon_icon_${speciesKey}`, `/Graphics/Pokemon/Icons/${speciesKey}.png`);
+  getIconSprite: (speciesKey: string, isShiny = false): string => {
+    const folder = isShiny ? 'Icons shiny' : 'Icons';
+    const key = isShiny ? `pokemon_icon_shiny_${speciesKey}` : `pokemon_icon_${speciesKey}`;
+    return resolveAsset(key, `/Graphics/Pokemon/${folder}/${speciesKey}.png`);
   },
 } as const;
 

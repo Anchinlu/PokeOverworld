@@ -17,7 +17,8 @@ export function createBattler(
   speciesKey: string,
   level: number,
   isPlayer = false,
-  rng: BattleRng = defaultBattleRng
+  rng: BattleRng = defaultBattleRng,
+  isShiny = false
 ): BattlerPokemon {
   const data =
     pokemonCatalog.getBySpeciesKey(speciesKey) ?? pokemonCatalog.getBySpeciesKey('PIKACHU')!;
@@ -39,6 +40,7 @@ export function createBattler(
     id: data.id,
     name: data.name,
     speciesKey: data.speciesKey,
+    isShiny,
     types: [...data.types],
     level,
     currentHp: maxHp,
@@ -57,9 +59,9 @@ export function createBattler(
     sleepTurns: 0,
     statusTurns: 0,
     moves,
-    frontSprite: POKEMON_ASSETS.getFrontSprite(data.speciesKey),
-    backSprite: POKEMON_ASSETS.getBackSprite(data.speciesKey),
-    iconSprite: POKEMON_ASSETS.getIconSprite(data.speciesKey),
+    frontSprite: POKEMON_ASSETS.getFrontSprite(data.speciesKey, isShiny),
+    backSprite: POKEMON_ASSETS.getBackSprite(data.speciesKey, isShiny),
+    iconSprite: POKEMON_ASSETS.getIconSprite(data.speciesKey, isShiny),
     cry: data.sprites?.cry,
     gender: isPlayer ? 'male' : rng.next() < 0.5 ? 'male' : 'female',
     isFainted: false,
