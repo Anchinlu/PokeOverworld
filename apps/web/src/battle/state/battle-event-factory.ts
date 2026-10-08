@@ -1,4 +1,27 @@
-import type { BattleEvent, BattlerSide, StatusCondition } from '../types';
+import type {
+  BattlerSide,
+  StatusCondition,
+  MoveDeclaredEvent,
+  RechargeHinderedEvent,
+  StatusHinderedEvent,
+  StatusCuredEvent,
+  ProtectActivatedEvent,
+  ProtectBlockedEvent,
+  ChargeBeginEvent,
+  SemiInvulnerableEnterEvent,
+  SemiInvulnerableMissEvent,
+  AccuracyMissEvent,
+  TypeImmuneEvent,
+  DamageDealtEvent,
+  MultiHitCompletedEvent,
+  HpRestoredEvent,
+  RecoilDamageEvent,
+  StatStageChangedEvent,
+  StatusInflictedEvent,
+  FaintedEvent,
+  DestinyBondTriggeredEvent,
+  EndTurnDamageEvent,
+} from '../types';
 
 export const BattleEventFactory = {
   moveDeclared(
@@ -6,7 +29,7 @@ export const BattleEventFactory = {
     attackerName: string,
     moveId: string,
     moveName: string
-  ): BattleEvent {
+  ): MoveDeclaredEvent {
     return {
       type: 'move_declared',
       attackerSide,
@@ -16,7 +39,11 @@ export const BattleEventFactory = {
     };
   },
 
-  rechargeHindered(attackerSide: BattlerSide, attackerName: string, message: string): BattleEvent {
+  rechargeHindered(
+    attackerSide: BattlerSide,
+    attackerName: string,
+    message: string
+  ): RechargeHinderedEvent {
     return {
       type: 'recharge_hindered',
       attackerSide,
@@ -30,7 +57,7 @@ export const BattleEventFactory = {
     attackerName: string,
     status: StatusCondition,
     message: string
-  ): BattleEvent {
+  ): StatusHinderedEvent {
     return {
       type: 'status_hindered',
       attackerSide,
@@ -45,7 +72,7 @@ export const BattleEventFactory = {
     targetName: string,
     status: StatusCondition,
     message: string
-  ): BattleEvent {
+  ): StatusCuredEvent {
     return {
       type: 'status_cured',
       targetSide,
@@ -60,7 +87,7 @@ export const BattleEventFactory = {
     attackerName: string,
     success: boolean,
     message: string
-  ): BattleEvent {
+  ): ProtectActivatedEvent {
     return {
       type: 'protect_activated',
       attackerSide,
@@ -76,7 +103,7 @@ export const BattleEventFactory = {
     moveId: string,
     moveName: string,
     message: string
-  ): BattleEvent {
+  ): ChargeBeginEvent {
     return {
       type: 'charge_begin',
       attackerSide,
@@ -92,7 +119,7 @@ export const BattleEventFactory = {
     attackerName: string,
     stance: 'flying' | 'underground' | 'underwater' | 'high',
     message: string
-  ): BattleEvent {
+  ): SemiInvulnerableEnterEvent {
     return {
       type: 'semi_invulnerable_enter',
       attackerSide,
@@ -108,7 +135,7 @@ export const BattleEventFactory = {
     attackerName: string,
     moveName: string,
     message: string
-  ): BattleEvent {
+  ): ProtectBlockedEvent {
     return {
       type: 'protect_blocked',
       defenderSide,
@@ -124,7 +151,7 @@ export const BattleEventFactory = {
     defenderName: string,
     stance: 'flying' | 'underground' | 'underwater' | 'high',
     message: string
-  ): BattleEvent {
+  ): SemiInvulnerableMissEvent {
     return {
       type: 'semi_invulnerable_miss',
       defenderSide,
@@ -139,7 +166,7 @@ export const BattleEventFactory = {
     attackerName: string,
     moveName: string,
     message: string
-  ): BattleEvent {
+  ): AccuracyMissEvent {
     return {
       type: 'accuracy_miss',
       attackerSide,
@@ -155,7 +182,7 @@ export const BattleEventFactory = {
     attackerName: string,
     moveName: string,
     message: string
-  ): BattleEvent {
+  ): TypeImmuneEvent {
     return {
       type: 'type_immune',
       defenderSide,
@@ -176,7 +203,7 @@ export const BattleEventFactory = {
     isCritical: boolean,
     hitsCount: number = 1,
     message: string = ''
-  ): BattleEvent {
+  ): DamageDealtEvent {
     return {
       type: 'damage_dealt',
       targetSide,
@@ -191,7 +218,11 @@ export const BattleEventFactory = {
     };
   },
 
-  multiHitCompleted(targetSide: BattlerSide, hitsCount: number, message: string): BattleEvent {
+  multiHitCompleted(
+    targetSide: BattlerSide,
+    hitsCount: number,
+    message: string
+  ): MultiHitCompletedEvent {
     return {
       type: 'multi_hit_completed',
       targetSide,
@@ -208,7 +239,7 @@ export const BattleEventFactory = {
     maxHp: number,
     source: 'move' | 'item' | 'drain' | 'leech_seed',
     message: string
-  ): BattleEvent {
+  ): HpRestoredEvent {
     return {
       type: 'hp_restored',
       targetSide,
@@ -227,7 +258,7 @@ export const BattleEventFactory = {
     damage: number,
     remainingHp: number,
     message: string
-  ): BattleEvent {
+  ): RecoilDamageEvent {
     return {
       type: 'recoil_damage',
       targetSide,
@@ -238,7 +269,7 @@ export const BattleEventFactory = {
     };
   },
 
-  fainted(targetSide: BattlerSide, targetName: string, message: string): BattleEvent {
+  fainted(targetSide: BattlerSide, targetName: string, message: string): FaintedEvent {
     return {
       type: 'fainted',
       targetSide,
@@ -253,7 +284,7 @@ export const BattleEventFactory = {
     targetSide: BattlerSide,
     targetName: string,
     message: string
-  ): BattleEvent {
+  ): DestinyBondTriggeredEvent {
     return {
       type: 'destiny_bond_triggered',
       sourceSide,
@@ -269,7 +300,7 @@ export const BattleEventFactory = {
     targetName: string,
     condition: StatusCondition,
     message: string
-  ): BattleEvent {
+  ): StatusInflictedEvent {
     return {
       type: 'status_inflicted',
       targetSide,
@@ -286,7 +317,7 @@ export const BattleEventFactory = {
     change: number,
     currentStage: number,
     message: string
-  ): BattleEvent {
+  ): StatStageChangedEvent {
     return {
       type: 'stat_stage_changed',
       targetSide,
@@ -305,7 +336,7 @@ export const BattleEventFactory = {
     remainingHp: number,
     source: 'burn' | 'poison' | 'toxic' | 'leech_seed',
     message: string
-  ): BattleEvent {
+  ): EndTurnDamageEvent {
     return {
       type: 'end_turn_damage',
       targetSide,
