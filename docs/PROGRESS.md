@@ -2205,5 +2205,35 @@
     - Chặn sử dụng các vật phẩm tăng bậc (X-Attack, X-Defense...) khi chỉ số đã đạt trần +6 để tránh lãng phí vật phẩm.
   - **Sửa lỗi mất vật phẩm khi trao (`heldItem`):** Lưu chuẩn ID gốc (`rawId`) vào Pokémon thay vì tên hiển thị tiếng Việt, giải quyết lỗi biến mất vật phẩm khi trao đổi hoặc lấy lại.
   - **Hái Berry ngoài map ([berry-panel.ts](file:///e:/Pokemon/apps/web/src/ui/berry-panel.ts)):** Kết nối trực tiếp `inventoryService.addItem(bush.type, count)` khi hái cây chín.
-- **Kiểm thử:** Đã bổ sung bộ test chuyên biệt [test/pokemon-nature-stats.test.ts](file:///e:/Pokemon/apps/web/test/pokemon-nature-stats.test.ts); toàn bộ 18 test suite (140/140 tests) và TypeScript typecheck đạt 100% PASS.
+### 24. Bóc tách Battle Engine thành Modular Rule Engines & State Reducer (Bước 3 Tái Cấu Trúc Trận Đấu)
+
+- **Trạng thái:** Đã hoàn thành 100% tái cấu trúc module monolithic `battle-engine.ts` ($56.7\text{ KB}$, $1671$ dòng) thành hệ thống Rule Engine và State Reducer thuần túy ($25.2\text{ KB}$, giảm hơn $55\%$ kích thước), đáp ứng tiêu chuẩn sản phẩm chất lượng cao và bảo toàn 100% hành vi hiện tại.
+- **Tiền đề đã xử lý triệt để:**
+  1. **Triệt tiêu 4 Asset Build Warnings:** Khắc phục lỗi build-time của Vite đối với các asset giao diện CSS (`/Graphics/Storage/bg.png`, `boxgrab.PNG`, `boxfist.PNG`, `/Graphics/Pokemon/Icons type/types_ico.png`) thông qua plugin sao chép tài nguyên tĩnh.
+  2. **Loại bỏ Circular Chunk Rollup:** Phân tách chunk `game-assets` riêng cho Asset Registry và đưa `data/pokemon-catalog` vào chunk `pokemon-data`, bẻ gãy hoàn toàn vòng phụ thuộc `pokedex <-> gameplay-ui`.
+  3. **Đồng bộ Git Working Tree:** Commit toàn bộ asset mới và mã nguồn thay đổi vào lịch sử Git sạch sẽ.
+- **Cấu trúc Kiến trúc Trận đấu Mới:**
+  ```
+  apps/web/src/battle/
+  ├── rules/
+  │   ├── damage-calculator.ts     # Công thức sát thương Gen 7, đòn thế biến thiên, cố định, OHKO & multi-hit
+  │   ├── type-effectiveness.ts    # Tính toán hệ số khắc hệ, miễn nhiễm
+  │   ├── status-engine.ts         # Miễn nhiễm trạng thái, cản trở trước lượt & sát thương cuối lượt (Burn/Poison/Toxic/Seed)
+  │   ├── move-effect-engine.ts    # Chiêu 2-lượt (charge/semi-invulnerable), Protect/Detect, Status moves & độ chính xác
+  │   └── turn-order.ts            # Thứ tự lượt đi theo độ ưu tiên chiêu, tốc độ thực tế (kèm tê liệt) & tie-break
+  ├── state/
+  │   ├── battle-state-reducer.ts  # Đảm bảo state battler, biến đổi HP, cập nhật/reset bậc chỉ số & trạng thái
+  │   └── battle-event-factory.ts  # Nhà máy tạo Typed BattleEvent chuẩn mực
+  ├── battle-engine.ts             # Facade / Coordinator thuần túy điều phối state, rule engines & events
+  └── battle-controller.ts         # Điều phối luồng vòng lặp trận đấu người chơi & AI
+  ```
+- **Kiểm Thử & Đảm Bảo Tính Toàn Vẹn:**
+  - Bổ sung suite kiểm thử độc lập [test/battle-rules.test.ts](file:///e:/Pokemon/apps/web/test/battle-rules.test.ts) xác nhận từng rule engine con chạy độc lập chính xác.
+  - Toàn bộ pipeline `npm run ci`:
+    - `validate:schemas`: PASS 100% (7/7 checks).
+    - `eslint .`: 0 errors, 0 warnings.
+    - `prettier --check`: 100% code style pass.
+    - `typecheck:web`: 0 errors.
+    - `test:web`: **25 suites, 192/192 tests PASS 100%**.
+    - `build:web`: **PASS in 14.61s (0 asset warnings, 0 circular chunk warnings)**.
 

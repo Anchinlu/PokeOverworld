@@ -49,7 +49,7 @@ export const TYPE_COLORS: Record<string, string> = {
 };
 
 // Attack Type -> Defense Type -> Multiplier
-const TYPE_CHART: Partial<Record<PokemonType, Partial<Record<PokemonType, number>>>> = {
+export const TYPE_CHART: Partial<Record<PokemonType, Partial<Record<PokemonType, number>>>> = {
   Normal: { Rock: 0.5, Ghost: 0, Steel: 0.5 },
   Fire: { Fire: 0.5, Water: 0.5, Grass: 2, Ice: 2, Bug: 2, Rock: 0.5, Dragon: 0.5, Steel: 2 },
   Water: { Fire: 2, Water: 0.5, Grass: 0.5, Ground: 2, Rock: 2, Dragon: 0.5 },
