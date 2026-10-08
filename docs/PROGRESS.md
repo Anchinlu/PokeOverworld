@@ -2237,3 +2237,9 @@
     - `test:web`: **25 suites, 192/192 tests PASS 100%**.
     - `build:web`: **PASS in 14.61s (0 asset warnings, 0 circular chunk warnings)**.
 
+### 25. Cập nhật Asset Cỏ Tiền Cảnh Title Screen (06_grass_front4.png)
+
+- **Trạng thái:** Đã hoàn thành 100% việc thay thế asset 2 lớp cỏ gần camera trên Title Screen bằng `Graphics/Intro/06_grass_front4.png` ($512 \times 300\text{ px}$) sắc nét pixel-art với hoa đỏ li ti, xóa bỏ asset di sản cũ `06_grass_front.png` ($611\text{ KB}$).
+- Cập nhật logic vẽ tự động scale theo kích thước tự nhiên (`naturalWidth`, `naturalHeight`), đảm bảo cuộn vô tận từ trái qua phải mượt mà trên canvas $1920 \times 1200$.
+- Đã đăng ký thư mục `Intro` vào danh sách copy asset trong [vite.config.ts](file:///e:/Pokemon/apps/web/vite.config.ts), pipeline build PASS 100%.
+
