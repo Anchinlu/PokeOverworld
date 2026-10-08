@@ -1,4 +1,20 @@
-## Cập nhật lần cuối: 2026-10-08 (Tích Hợp Asset Lá Cây leaf.png 5 Frames Pixel Art Do Người Dùng Cung Cấp)
+## Cập nhật lần cuối: 2026-10-08 (Điều Chỉnh Giảm Mật Độ Lá Bay Title Screen Xuống 12 Lá)
+
+### 0.68. Tinh Chỉnh Mật Độ Lá Bay Title Screen (Giảm Từ 35 Xuống 12 Lá):
+
+- **Trạng thái:** Đã hoàn thành 100%. 25 tệp test suite (192/192 tests), Typecheck (`npm run typecheck:web`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** "cho sinh ra ít lại nhé nhiều lá quá rồi" - Giảm tần suất và số lượng lá bay để màn hình không bị quá tải, tạo cảm giác thoáng đãng và tự nhiên.
+- **Chi tiết đã thực hiện:**
+  1. **Giảm Số Lượng Lá Cố Định ([title-screen.ts](file:///e:/Pokemon/apps/web/src/ui/title-screen.ts)):**
+     - Giảm `TOTAL_LEAVES` từ 35 lá xuống **12 lá** (6 lá tầng trung cảnh `mid`, 6 lá tầng cận cảnh `fore`).
+     - Tỷ lệ phân bổ đều trên toàn khung nhìn canvas $1920 \times 1200$, mỗi thời điểm chỉ có 8-10 lá xuất hiện lác đác trong tầm nhìn.
+  2. **Chu Kỳ Tái Sinh Nhẹ Nhàng:**
+     - Các hạt lá sau khi vượt mép phải ($X > 1980\text{px}$) hoặc rơi đáy ($Y > 1250\text{px}$) được đưa về bên trái ngoài màn hình với độ lệch ngẫu nhiên, giúp luồng gió thoảng lá bay đều đặn, không dồn cục.
+  3. **Kiểm Thử & Đảm Bảo Tính Toàn Vẹn:**
+     - `npm run typecheck:web` $\rightarrow$ PASS, 0 errors.
+     - `npm run test:web` $\rightarrow$ 25/25 suites, 192/192 tests PASS 100%.
+
+---
 
 ### 0.67. Tích Hợp Asset Lá Cây Pixel Art Sprite Sheet (leaf.png 80x16px, 5 Frames) Vào Title Screen:
 

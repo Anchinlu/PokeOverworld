@@ -396,7 +396,7 @@ export function showTitleScreen(options?: { onStart?: () => void }): TitleScreen
   }
 
   const driftingLeaves: DriftingLeaf[] = [];
-  const TOTAL_LEAVES = 35;
+  const TOTAL_LEAVES = 12; // Giảm số lượng lá (chỉ 12 lá bay rải rác nhẹ nhàng, không bị rối màn hình)
   for (let i = 0; i < TOTAL_LEAVES; i++) {
     const layer: 'mid' | 'fore' = i % 2 === 0 ? 'mid' : 'fore';
     const seedX = -50 + (i / TOTAL_LEAVES) * 2050 + (Math.random() * 80 - 40);
