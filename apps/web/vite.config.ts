@@ -105,6 +105,10 @@ function emitLegacyGraphicsPlugin(): Plugin {
         'Graphics/Pokedex/bg_info.png',
         'Graphics/Pokedex/overlay_info.png',
         'Graphics/Move/status move/category.png',
+        'Graphics/Storage/bg.png',
+        'Graphics/Storage/boxgrab.PNG',
+        'Graphics/Storage/boxfist.PNG',
+        'Graphics/Pokemon/Icons type/types_ico.png',
       ];
 
       for (const relativePath of cssAssets) {
@@ -196,7 +200,11 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           const normalized = id.replace(/\\/g, '/');
-          if (normalized.includes('pokemon-db.json')) {
+          if (
+            normalized.includes('pokemon-db.json') ||
+            normalized.includes('/data/pokemon-catalog') ||
+            normalized.includes('/data/index')
+          ) {
             return 'pokemon-data';
           }
           if (normalized.includes('moves-db.json') || normalized.includes('/battle/moves-db')) {
@@ -204,6 +212,9 @@ export default defineConfig({
           }
           if (normalized.includes('items-db.json') || normalized.includes('/data/items-db')) {
             return 'items-data';
+          }
+          if (normalized.includes('/src/assets/')) {
+            return 'game-assets';
           }
           if (
             normalized.includes('/src/battle/') ||
