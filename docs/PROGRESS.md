@@ -1,25 +1,22 @@
-## Cập nhật lần cuối: 2026-10-08 (Xây Dựng Hệ Thống Lá Bay Chuẩn 100% Pixel Art Sprite GBA Trong Title Screen)
+## Cập nhật lần cuối: 2026-10-08 (Tích Hợp Asset Lá Cây leaf.png 5 Frames Pixel Art Do Người Dùng Cung Cấp)
 
-### 0.67. Xây Dựng Hệ Thống Hạt Lá Bay Chuẩn 100% Pixel Art Sprite (GBA Pokémon Style - Procedural):
+### 0.67. Tích Hợp Asset Lá Cây Pixel Art Sprite Sheet (leaf.png 80x16px, 5 Frames) Vào Title Screen:
 
 - **Trạng thái:** Đã hoàn thành 100%. 25 tệp test suite (192/192 tests), Typecheck (`npm run typecheck:web`) đạt kết quả **PASS 100%**.
-- **Yêu cầu người dùng:** Chuyển đổi hiệu ứng lá bay sang chuẩn phong cách Pixel Art thuần túy, loại bỏ các đường cong vector mềm không phù hợp với game pixel.
+- **Yêu cầu người dùng:** Bỏ phần tự vẽ pixel procedural, sử dụng trực tiếp asset hình ảnh lá cây pixel art do người dùng cung cấp (`leaf.png`).
 - **Chi tiết đã thực hiện:**
-  1. **Ma Trận Điểm Ảnh Pixel Art Sprite 4 Frame 10x10 ([title-screen.ts](file:///e:/Pokemon/apps/web/src/ui/title-screen.ts)):**
-     - Xây dựng 4 khung hình sprite pixel art thủ công (`PIXEL_LEAF_FRAMES`) thể hiện trọn vẹn chu kỳ xoay lật 3D của chiếc lá:
-       - **Frame 0:** Lá nghiêng $45^\circ$ với viền răng cưa pixel sẫm màu, thân lá và gân sáng.
-       - **Frame 1:** Lá nằm ngang bẹt lướt theo luồng gió.
-       - **Frame 2:** Lá lật mép mỏng theo phương dọc thể hiện độ dày 3D.
-       - **Frame 3:** Lá úp góc ngược lại hoàn tất chu kỳ lộn vòng.
-     - Từng pixel được render trực tiếp bằng các khối vuông `ctx.fillRect` nguyên vẹn ($pSize = 2\text{px}$ cho trung cảnh $20 \times 20\text{px}$, $pSize = 3\text{px}$ cho tiền cảnh $30 \times 30\text{px}$), đảm bảo độ sắc nét pixelated tuyệt đối, không có bất kỳ đường cong khử răng cưa vector nào.
-  2. **Bảng Màu Pixel Art GBA Chuẩn Mực:**
-     - 3 bảng màu pixel retro kinh điển:
-       - **Classic Emerald Grass:** Viền `#0e3a1e`, Thân `#16a34a`, Highlight `#86efac`.
-       - **Fresh Lime Green:** Viền `#1c3d0b`, Thân `#65a30d`, Highlight `#bef264`.
-       - **Autumn Golden Leaf:** Viền `#451a03`, Thân `#d97706`, Highlight `#fde047`.
-  3. **Vật Lý Bay & Hoạt Họa Sprite Pixel Đa Tầng:**
-     - Lá chuyển động trôi từ Trái qua Phải theo gió ($v_x = 155 - 310\text{ px/s}$) kết hợp dao động hình sin lượn sóng dọc và rơi từ từ $v_y = 35 - 80\text{ px/s}$.
-     - Hoạt họa lật lá pixel theo nhịp $3.5 - 6\text{ FPS}$ luân phiên giữa 4 frame pixel, tái sinh tuần hoàn khi bay ra khỏi khung nhìn.
+  1. **Đồng Bộ & Quản Lý Asset Lá Cây ([leaf.png](file:///e:/Pokemon/Graphics/Intro/leaf.png)):**
+     - Lưu trữ asset spritesheet nguyên bản kích thước $80 \times 16\text{ px}$ vào [Graphics/Intro/leaf.png](file:///e:/Pokemon/Graphics/Intro/leaf.png) và [apps/web/public/Graphics/Intro/leaf.png](file:///e:/Pokemon/apps/web/public/Graphics/Intro/leaf.png).
+     - Asset chứa 5 khung hình pixel art ($16 \times 16\text{ px}$ mỗi frame) diễn hoạt quá trình lật xoay chuyển động của chiếc lá với màu vàng chanh / xanh non đặc trưng.
+  2. **Thay Thế Hoàn Toàn Thuật Toán Procedural Sang Cắt Frame Sprite Sheet ([title-screen.ts](file:///e:/Pokemon/apps/web/src/ui/title-screen.ts)):**
+     - Loại bỏ toàn bộ ma trận dữ liệu vẽ điểm ảnh thủ công (`PIXEL_LEAF_FRAMES`, `PIXEL_LEAF_PALETTES`, v.v.).
+     - Tải trước ảnh qua hàm `loadImage('/Graphics/Intro/leaf.png')`.
+     - Cắt frame theo vị trí ngang: `sx = frameIndex * 16`, `sy = 0`, `sw = 16`, `sh = 16`.
+     - Giữ nguyên cấu trúc pixel art sắc nét bằng `ctx.imageSmoothingEnabled = false`.
+  3. **Vật Lý Bay & Tỷ Lệ Hiển Thị Đa Tầng:**
+     - Tầng trung cảnh (`mid`): scale $1.4 - 1.9\times$ ($22 - 30\text{px}$), bay sau cỏ tiền cảnh và trước Viento.
+     - Tầng cận cảnh (`fore`): scale $2.4 - 3.2\times$ ($38 - 51\text{px}$), bay phía trước các ngọn cỏ cận camera.
+     - Diễn hoạt xoay 5 frame theo tốc độ $6 - 8.5\text{ FPS}$, chuyển động trôi ngang theo luồng gió $v_x = 155 - 310\text{ px/s}$ và rơi tự nhiên kèm dao động lượn sóng $\sin(t)$.
   4. **Kiểm Thử & Đảm Bảo Tính Toàn Vẹn ([title-screen.test.ts](file:///e:/Pokemon/apps/web/test/title-screen.test.ts)):**
      - `npm run typecheck:web` $\rightarrow$ PASS, 0 errors.
      - `npm run test:web` $\rightarrow$ 25/25 suites, 192/192 tests PASS 100%.
