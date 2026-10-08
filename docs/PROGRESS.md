@@ -1,27 +1,20 @@
-## Cập nhật lần cuối: 2026-10-08 (Thiết Kế Menu Nút Bấm Procedural Pixel Art Thuần CSS Cho Màn Hình Chờ - Không Dùng Asset Ngoài)
+## Cập nhật lần cuối: 2026-10-08 (Thiết Kế Menu Nút Bấm Chuẩn Phong Cách Minecraft GUI Đồng Nhất 1 Màu - Pure CSS)
 
-### 0.66. Tái Thiết Kế Menu Nút Bấm Chuẩn Phong Cách Pixel Art Procedural (Pure CSS - Không Phụ Thuộc Asset Có Sẵn):
+### 0.66. Tái Thiết Kế Menu Nút Bấm Chuẩn Phong Cách Minecraft GUI (Đồng Nhất 1 Màu - Không Dùng Asset Ngoài):
 
 - **Trạng thái:** Đã hoàn thành 100%. 25 tệp test suite (192/192 tests), Typecheck (`npm run typecheck:web`) đạt kết quả **PASS 100%**.
-- **Yêu cầu người dùng:** Ở phần button của giao diện chờ, sửa lại không dùng asset có sẵn mà tự render các nút theo phong cách pixel.
+- **Yêu cầu người dùng:** Render các nút giống phong cách Minecraft, sử dụng 1 màu đồng nhất, tối giản và thanh lịch, không dùng asset có sẵn.
 - **Chi tiết đã thực hiện:**
-  1. **Loại Bỏ Hoàn Toàn Phụ Thuộc Asset Ảnh Có Sẵn ([style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
-     - Gỡ bỏ thuộc tính `background: url('/Graphics/Intro/Buton/Bunton.png')`. Toàn bộ giao diện nút bấm giờ đây được vẽ trực tiếp 100% bằng CSS hiện đại theo phong cách pixel art thủ công.
-  2. **Kỹ Thuật Tạo Hình Stepped Pixel Border & 3D Bevel Nổi Khối ([style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
-     - **Góc răng cưa Pixel (4px stepped corners):** Sử dụng `clip-path: polygon(...)` khía 4 góc răng cưa pixel đối xứng, tái hiện hoàn hảo cảm giác các nút giao diện trong game 16-bit / Game Boy Advance.
-     - **Viền nổi khối 3D (Beveled Inset Shadows):** Cạnh trên và trái có highlight sáng (`inset 0 3px 0 0`, `inset 3px 0 0 0`), cạnh dưới và phải có dải bóng tối (`inset 0 -3px 0 0`, `inset -3px 0 0 0`) kết hợp cùng lớp đổ bóng cứng pixel `filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.65))`.
-     - **Thân nút 2 tầng Split-Gradient:** Dải màu phân đôi (46% dải trên sáng, 50% dải dưới tối) kinh điển của phong cách menu RPG Pokémon GBA/NDS.
-  3. **Con Trỏ Pixel `▶` & Icon Đặc Trưng Từng Nút ([title-screen.ts](file:///e:/Pokemon/apps/web/src/ui/title-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
-     - Bổ sung con trỏ pixel `▶` (`.btn-pixel-cursor`) nhấp nháy tuần hoàn theo nhịp 8-bit (`@keyframes pixelCursorBlink`) khi hover chuột hoặc chọn nút.
-     - Phối màu và icon đặc trưng theo từng chức năng:
-       - **Thế Giới Mới (`#btnNewWorld`):** Tông hổ phách hoàng gia (Amber Gold `#fde047` / `#b45309`), biểu tượng `✦`.
-       - **Tải Thế Giới (`#btnLoadWorld`):** Tông xanh hải dương (Sapphire Blue `#93c5fd` / `#1d4ed8`), biểu tượng `📂`.
-       - **Gia Nhập Thế Giới (`#btnJoinWorld`):** Tông ngọc lục bảo (Emerald Green `#6ee7b7` / `#047857`), biểu tượng `🌐`.
-       - **Cài Đặt (`#btnSettings`):** Tông thép phiến (Slate Iron `#cbd5e1` / `#475569`), biểu tượng `⚙️`.
-  4. **Phản Hồi Cơ Học Khi Bấm (Interactive Feedback):**
-     - **Hover:** Nút dịch chuyển sang phải $10\text{px}$, phát sáng viền vàng óng pixel (`drop-shadow(0 0 8px rgba(250, 204, 21, 0.65))`).
-     - **Active (Nhấn chuột):** Nút thụt xuống $3\text{px}$, các dải viền bóng bevel đảo chiều mô phỏng cảm giác bấm nút cơ học pixel thật tay.
-  5. **Kiểm Thử & Đảm Bảo Tính Toàn Vẹn:**
+  1. **Đồng Nhất 1 Màu & Tạo Hình Khối Minecraft GUI ([style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Toàn bộ 4 nút (Thế Giới Mới, Tải Thế Giới, Gia Nhập Thế Giới, Cài Đặt) dùng chung **một màu xám đá Minecraft kinh điển (`#737373`)** với viền đen `border: 2px solid #000000`.
+     - Loại bỏ các màu sắc và ký hiệu rườm rà, tạo cảm giác retro tối giản, thanh lịch và hoài niệm đặc trưng của Minecraft.
+  2. **Viền Bevel 3D & Hiệu Ứng Bấm Nút Cơ Học Minecraft:**
+     - **3D Bevel kinh điển:** Viền trên và trái có highlight trắng xám sáng (`inset 2px 2px 0 0 rgba(255, 255, 255, 0.55)`), viền dưới và phải có dải bóng tối xám sẫm (`inset -2px -2px 0 0 #373737`).
+     - **Hiệu ứng Hover:** Nút chuyển sang tông xám sáng pha xanh nhạt (`#8c9cb0`), toàn bộ chữ chuyển sang **màu vàng tươi Minecraft `#ffffa0`** chuẩn mực với bóng đổ `#3f3f28`.
+     - **Hiệu ứng Active (Click):** Nút thụt xuống $2\text{px}$, bevel đảo ngược (trên/trái thành tối `#000000`, dưới/phải thành sáng) tạo cảm giác bấm nút cơ học đã tay.
+  3. **Phông Chữ & Bóng Đổ Pixel Minecraft:**
+     - Font pixel căn giữa hoàn hảo (`text-align: center`), màu chữ mặc định `#e0e0e0` kết hợp bóng chữ pixel chuẩn Minecraft: `text-shadow: 2px 2px 0px #3f3f3f`.
+  4. **Kiểm Thử & Đảm Bảo Tính Toàn Vẹn:**
      - `npm run typecheck:web` $\rightarrow$ PASS, 0 errors.
      - `npm run test:web` $\rightarrow$ 25/25 suites, 192/192 tests PASS 100%.
 

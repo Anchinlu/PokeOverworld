@@ -6670,7 +6670,7 @@ body {
 }
 
 /* ==========================================================================
-   Title Screen Pixel Art Menu (Pure Procedural CSS - Không Dùng Asset Ngoài)
+   Title Screen Minecraft GUI Button Menu (Đồng nhất 1 màu - Chuẩn Minecraft)
    ========================================================================== */
 .title-menu-container {
   position: absolute;
@@ -6678,219 +6678,110 @@ body {
   left: clamp(24px, 3.5vw, 56px);
   display: flex;
   flex-direction: column;
-  gap: 13px;
+  gap: 10px;
   pointer-events: auto;
   z-index: 25;
 }
 
-/* Khung nút Pixel Art: Kỹ thuật Stepped Pixel Border & Beveled 3D Shading */
+/* Nút bấm chuẩn Minecraft GUI: Hình chữ nhật góc vuông pixel, viền Bevel 3D, nền xám đá */
 .title-pixel-btn {
   position: relative;
-  width: clamp(228px, 18vw, 268px);
-  height: clamp(44px, 3.5vw, 52px);
+  width: clamp(230px, 17.5vw, 260px);
+  height: clamp(42px, 3.3vw, 48px);
   box-sizing: border-box;
-  padding: 0 16px 0 14px;
+  padding: 0 16px;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 10px;
+  justify-content: center;
   cursor: pointer;
-  border: none;
   outline: none;
   user-select: none;
-  background: linear-gradient(
+  border-radius: 0;
+
+  /* Nền xám đá Minecraft kinh điển (#737373) với dải ánh sáng nhẹ */
+  background-color: #737373;
+  background-image: linear-gradient(
     180deg,
-    #1e293b 0%,
-    #1e293b 46%,
-    #0f172a 50%,
-    #020617 100%
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(0, 0, 0, 0.08) 50%,
+    rgba(0, 0, 0, 0.22) 100%
   );
-  /* Pixel Stepped Corners (Khía răng cưa pixel 4px cổ điển) */
-  clip-path: polygon(
-    0 4px, 4px 4px, 4px 0,
-    calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
-    100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
-    4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
-  );
-  /* Viền khối Bevel 3D Pixel Art */
+
+  /* Viền ngoài 2px màu đen tuyền (#000000) */
+  border: 2px solid #000000;
+
+  /* Khối Bevel 3D kinh điển của Minecraft:
+     - Trên & Trái: Highlight trắng xám sáng (#ffffff 55%)
+     - Dưới & Phải: Shadow xám sẫm (#373737)
+     - Đổ bóng ngoài nhẹ nhàng
+  */
   box-shadow:
-    inset 0 3px 0 0 rgba(255, 255, 255, 0.28),
-    inset 3px 0 0 0 rgba(255, 255, 255, 0.28),
-    inset 0 -3px 0 0 rgba(0, 0, 0, 0.65),
-    inset -3px 0 0 0 rgba(0, 0, 0, 0.65);
-  /* Đổ bóng ngoài pixel */
-  filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.65));
+    inset 2px 2px 0px 0px rgba(255, 255, 255, 0.55),
+    inset -2px -2px 0px 0px #373737,
+    0 4px 10px rgba(0, 0, 0, 0.6);
+
   transition:
-    transform 0.12s steps(4),
-    filter 0.12s ease,
-    background 0.16s ease;
+    background-color 0.1s steps(2),
+    border-color 0.1s steps(2),
+    box-shadow 0.1s steps(2);
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
 
-/* Lớp viền phụ pixel bên trong */
-.title-pixel-btn::before {
-  content: '';
-  position: absolute;
-  inset: 3px;
-  pointer-events: none;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  opacity: 0.8;
-}
-
-/* Con trỏ Pixel ▶ xuất hiện khi hover */
-.title-pixel-btn .btn-pixel-cursor {
-  font-family: 'Power Red and Blue', 'VT323', monospace;
-  font-size: 15px;
-  color: #facc15;
-  text-shadow:
-    1px 1px 0px #000000,
-    -1px -1px 0px #000000,
-    1px -1px 0px #000000,
-    -1px 1px 0px #000000;
-  opacity: 0;
-  transform: translateX(-4px);
-  transition: opacity 0.1s ease, transform 0.1s steps(3);
-  pointer-events: none;
-  flex-shrink: 0;
-}
-
-/* Biểu tượng pixel bên cạnh text */
-.title-pixel-btn .btn-pixel-icon {
-  font-size: 16px;
-  line-height: 1;
-  filter: drop-shadow(1px 1px 0px #000000);
-  pointer-events: none;
-  flex-shrink: 0;
-}
-
-/* Text nút bấm chuẩn Retro Font */
+/* Font chữ Minecraft Pixel Art: Căn giữa, màu trắng xám, bóng chữ 2px xám sẫm */
 .title-pixel-btn .btn-text {
   font-family: 'Power Red and Blue', 'VT323', 'Power Clear', monospace, sans-serif;
-  font-size: clamp(15px, 1.2vw, 18px);
+  font-size: clamp(16px, 1.25vw, 19px);
   font-weight: 700;
-  letter-spacing: 0.5px;
-  color: #f1f5f9;
-  text-shadow:
-    2px 2px 0px #020617,
-    -1px -1px 0px #020617,
-    1px -1px 0px #020617,
-    -1px 1px 0px #020617,
-    2px 0px 0px #020617,
-    0px 2px 0px #020617;
+  letter-spacing: 1px;
+  color: #e0e0e0;
+  text-align: center;
+  /* Bóng chữ pixel chuẩn Minecraft: lệch 2px góc dưới phải (#3f3f3f) */
+  text-shadow: 2px 2px 0px #3f3f3f;
   pointer-events: none;
   white-space: nowrap;
+  transition:
+    color 0.1s steps(2),
+    text-shadow 0.1s steps(2);
 }
 
-/* Điểm nhấn màu sắc pixel đặc trưng cho từng nút */
-/* 1. Thế Giới Mới: Tông Amber Gold / Hổ Phách Sang Trọng */
-.title-pixel-btn.btn-new-world {
-  background: linear-gradient(
-    180deg,
-    #b45309 0%,
-    #92400e 46%,
-    #78350f 50%,
-    #451a03 100%
-  );
-  box-shadow:
-    inset 0 3px 0 0 #fde047,
-    inset 3px 0 0 0 #fde047,
-    inset 0 -3px 0 0 #291102,
-    inset -3px 0 0 0 #291102;
-}
-.title-pixel-btn.btn-new-world .btn-text {
-  color: #fef08a;
-}
-
-/* 2. Tải Thế Giới: Tông Sapphire Blue / Hải Dương */
-.title-pixel-btn.btn-load-world {
-  background: linear-gradient(
-    180deg,
-    #1d4ed8 0%,
-    #1e40af 46%,
-    #172554 50%,
-    #0f172a 100%
-  );
-  box-shadow:
-    inset 0 3px 0 0 #93c5fd,
-    inset 3px 0 0 0 #93c5fd,
-    inset 0 -3px 0 0 #020617,
-    inset -3px 0 0 0 #020617;
-}
-.title-pixel-btn.btn-load-world .btn-text {
-  color: #e0f2fe;
-}
-
-/* 3. Gia Nhập Thế Giới: Tông Emerald Green / Ngọc Lục Bảo */
-.title-pixel-btn.btn-join-world {
-  background: linear-gradient(
-    180deg,
-    #047857 0%,
-    #065f46 46%,
-    #064e3b 50%,
-    #022c22 100%
-  );
-  box-shadow:
-    inset 0 3px 0 0 #6ee7b7,
-    inset 3px 0 0 0 #6ee7b7,
-    inset 0 -3px 0 0 #011812,
-    inset -3px 0 0 0 #011812;
-}
-.title-pixel-btn.btn-join-world .btn-text {
-  color: #d1fae5;
-}
-
-/* 4. Cài Đặt: Tông Slate Iron / Thép Băng */
-.title-pixel-btn.btn-settings {
-  background: linear-gradient(
-    180deg,
-    #475569 0%,
-    #334155 46%,
-    #1e293b 50%,
-    #0f172a 100%
-  );
-  box-shadow:
-    inset 0 3px 0 0 #cbd5e1,
-    inset 3px 0 0 0 #cbd5e1,
-    inset 0 -3px 0 0 #020617,
-    inset -3px 0 0 0 #020617;
-}
-.title-pixel-btn.btn-settings .btn-text {
-  color: #f8fafc;
-}
-
-/* Trạng thái Hover: Dịch phải 10px, con trỏ nhấp nháy, viền phát sáng pixel */
+/* Trạng thái Hover: Chuẩn Minecraft (Chuyển tông xám sáng pha xanh nhạt, chữ chuyển vàng chanh) */
 .title-pixel-btn:hover {
-  transform: translateX(10px);
-  filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.75)) drop-shadow(0 0 8px rgba(250, 204, 21, 0.65));
-}
-.title-pixel-btn:hover .btn-pixel-cursor {
-  opacity: 1;
-  transform: translateX(0);
-  animation: pixelCursorBlink 0.6s steps(2) infinite;
-}
-.title-pixel-btn:hover .btn-text {
-  filter: brightness(1.15);
-}
-
-/* Trạng thái Active: Lún nút cơ học chân thực */
-.title-pixel-btn:active {
-  transform: translateX(10px) translateY(3px);
-  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.75));
+  background-color: #8c9cb0;
+  background-image: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.18) 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(0, 0, 0, 0.05) 50%,
+    rgba(0, 0, 0, 0.18) 100%
+  );
   box-shadow:
-    inset 0 3px 0 0 rgba(0, 0, 0, 0.65),
-    inset 3px 0 0 0 rgba(0, 0, 0, 0.65),
-    inset 0 -3px 0 0 rgba(255, 255, 255, 0.2),
-    inset -3px 0 0 0 rgba(255, 255, 255, 0.2);
+    inset 2px 2px 0px 0px rgba(255, 255, 255, 0.8),
+    inset -2px -2px 0px 0px #2a3542,
+    0 5px 12px rgba(0, 0, 0, 0.7);
 }
 
-@keyframes pixelCursorBlink {
-  0%, 49% {
-    opacity: 1;
-  }
-  50%, 100% {
-    opacity: 0.1;
-  }
+.title-pixel-btn:hover .btn-text {
+  /* Chữ vàng Minecraft kinh điển */
+  color: #ffffa0;
+  text-shadow: 2px 2px 0px #3f3f28;
+}
+
+/* Trạng thái Active / Nhấn nút: Nút lún xuống (Đảo ngược bevel trên tối - dưới sáng) */
+.title-pixel-btn:active {
+  background-color: #555555;
+  background-image: none;
+  box-shadow:
+    inset 2px 2px 0px 0px #000000,
+    inset -2px -2px 0px 0px rgba(255, 255, 255, 0.35),
+    0 2px 4px rgba(0, 0, 0, 0.5);
+  transform: translateY(2px);
+}
+
+.title-pixel-btn:active .btn-text {
+  color: #c0c0c0;
+  text-shadow: 1px 1px 0px #202020;
 }
 
 .title-pixel-notice {
