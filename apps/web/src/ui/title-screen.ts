@@ -43,7 +43,7 @@ const WINGULL_PATH = '/Graphics/Intro/Intro_moning/WINGULL.png';
 const RUNNING_POKEMON_PATH = '/Graphics/Intro/pokemon.png';
 const RUNNING_TRAINER_PATH = '/Graphics/Intro/trainer000.png';
 const VIENTO_PATH = '/Graphics/Intro/Viento.png';
-const GRASS_FRONT_PATH = '/Graphics/Intro/06_grass_front.png';
+const GRASS_FRONT_PATH = '/Graphics/Intro/06_grass_front4.png';
 
 function loadImage(src: string): HTMLImageElement {
   if (typeof Image !== 'undefined') {
@@ -586,22 +586,30 @@ export function showTitleScreen(options?: { onStart?: () => void }): TitleScreen
       }
     }
 
-    // 7a. Layer 7a: Back Foreground Grass Layer (Scaled smaller ~0.85x -> dw=1632, dh=918, Y=240, scroll Left -> Right)
+    // 7a. Layer 7a: Back Foreground Grass Layer (06_grass_front4.png, scaled ~0.85x, Y=240, scroll Left -> Right)
     if (grassFrontImg.complete && grassFrontImg.naturalWidth > 0) {
+      const sw = grassFrontImg.naturalWidth;
+      const sh = grassFrontImg.naturalHeight;
       const dw1 = 1632;
-      const dh1 = 918;
+      const dh1 = Math.round(dw1 * (sh / sw));
       const swayY1 = 240 + Math.sin((currentTime / 1000) * 2.2) * 2.0;
-      ctx.drawImage(grassFrontImg, 0, 0, 1920, 1080, grassFrontOffset1 - dw1, swayY1, dw1, dh1);
-      ctx.drawImage(grassFrontImg, 0, 0, 1920, 1080, grassFrontOffset1, swayY1, dw1, dh1);
-      ctx.drawImage(grassFrontImg, 0, 0, 1920, 1080, grassFrontOffset1 + dw1, swayY1, dw1, dh1);
+      ctx.drawImage(grassFrontImg, 0, 0, sw, sh, grassFrontOffset1 - dw1, swayY1, dw1, dh1);
+      ctx.drawImage(grassFrontImg, 0, 0, sw, sh, grassFrontOffset1, swayY1, dw1, dh1);
+      ctx.drawImage(grassFrontImg, 0, 0, sw, sh, grassFrontOffset1 + dw1, swayY1, dw1, dh1);
+      ctx.drawImage(grassFrontImg, 0, 0, sw, sh, grassFrontOffset1 + dw1 * 2, swayY1, dw1, dh1);
     }
 
-    // 7b. Layer 7b: Nearest Camera Grass Layer (Pushed down 40px -> Y=160, scroll Left -> Right)
+    // 7b. Layer 7b: Nearest Camera Grass Layer (06_grass_front4.png, near camera Y=160, scroll Left -> Right)
     if (grassFrontImg.complete && grassFrontImg.naturalWidth > 0) {
+      const sw = grassFrontImg.naturalWidth;
+      const sh = grassFrontImg.naturalHeight;
+      const dw2 = 1920;
+      const dh2 = Math.round(dw2 * (sh / sw));
       const swayY2 = 160 + Math.sin((currentTime / 1000) * 2.8) * 2.5;
-      ctx.drawImage(grassFrontImg, grassFrontOffset2 - 1920, swayY2, 1920, 1080);
-      ctx.drawImage(grassFrontImg, grassFrontOffset2, swayY2, 1920, 1080);
-      ctx.drawImage(grassFrontImg, grassFrontOffset2 + 1920, swayY2, 1920, 1080);
+      ctx.drawImage(grassFrontImg, 0, 0, sw, sh, grassFrontOffset2 - dw2, swayY2, dw2, dh2);
+      ctx.drawImage(grassFrontImg, 0, 0, sw, sh, grassFrontOffset2, swayY2, dw2, dh2);
+      ctx.drawImage(grassFrontImg, 0, 0, sw, sh, grassFrontOffset2 + dw2, swayY2, dw2, dh2);
+      ctx.drawImage(grassFrontImg, 0, 0, sw, sh, grassFrontOffset2 + dw2 * 2, swayY2, dw2, dh2);
     }
 
     animFrameId =

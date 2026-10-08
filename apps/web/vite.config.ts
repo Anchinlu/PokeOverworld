@@ -71,6 +71,7 @@ function emitLegacyGraphicsPlugin(): Plugin {
     'Party',
     'Bag',
     'Storage',
+    'Intro',
   ];
 
   return {
