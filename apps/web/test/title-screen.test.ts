@@ -92,6 +92,16 @@ describe('Game Title Screen / Màn Hình Chờ', () => {
         fillRect: vi.fn(),
         save: vi.fn(),
         restore: vi.fn(),
+        beginPath: vi.fn(),
+        moveTo: vi.fn(),
+        lineTo: vi.fn(),
+        bezierCurveTo: vi.fn(),
+        closePath: vi.fn(),
+        fill: vi.fn(),
+        stroke: vi.fn(),
+        translate: vi.fn(),
+        rotate: vi.fn(),
+        scale: vi.fn(),
       };
     }
 

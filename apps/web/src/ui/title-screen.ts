@@ -353,6 +353,79 @@ export function showTitleScreen(options?: { onStart?: () => void }): TitleScreen
     clouds.push(createRandomCloud(seedX));
   }
 
+  // 4.6. Windblown Drifting Leaves Particle System (Hiệu ứng lá bay trong gió)
+  interface DriftingLeaf {
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    scale: number;
+    rotation: number;
+    spinSpeed: number;
+    flipAngle: number;
+    flipSpeed: number;
+    swayFreq: number;
+    swayAmp: number;
+    swayPhase: number;
+    colorLight: string;
+    colorDark: string;
+    colorVein: string;
+    layer: 'mid' | 'fore';
+  }
+
+  const LEAF_COLOR_PALETTES = [
+    // 1. Fresh Emerald / Spring Green
+    { light: '#4ade80', dark: '#16a34a', vein: '#bbf7d0' },
+    // 2. Vibrant Lime Green
+    { light: '#a3e635', dark: '#65a30d', vein: '#d9f99d' },
+    // 3. Mint / Celadon Green
+    { light: '#34d399', dark: '#059669', vein: '#a7f3d0' },
+    // 4. Soft Golden Yellow (Autumn accent)
+    { light: '#fde047', dark: '#ca8a04', vein: '#fef08a' },
+    // 5. Amber Leaf
+    { light: '#fb923c', dark: '#c2410c', vein: '#fed7aa' },
+  ];
+
+  function createDriftingLeaf(initialX?: number, layer: 'mid' | 'fore' = 'mid'): DriftingLeaf {
+    const palette = LEAF_COLOR_PALETTES[Math.floor(Math.random() * LEAF_COLOR_PALETTES.length)];
+    const isFore = layer === 'fore';
+
+    // Fore layer leaves are slightly larger & faster
+    const scale = isFore ? 1.25 + Math.random() * 0.55 : 0.8 + Math.random() * 0.4;
+    const vx = isFore ? 230 + Math.random() * 100 : 160 + Math.random() * 70;
+    const vy = 35 + Math.random() * 45;
+
+    const x = initialX !== undefined ? initialX : -50 - Math.random() * 120;
+    const y = -60 + Math.random() * 1100;
+
+    return {
+      x,
+      y,
+      vx,
+      vy,
+      scale,
+      rotation: Math.random() * Math.PI * 2,
+      spinSpeed: (Math.random() - 0.5) * 4.0,
+      flipAngle: Math.random() * Math.PI * 2,
+      flipSpeed: 1.8 + Math.random() * 3.0,
+      swayFreq: 1.6 + Math.random() * 1.8,
+      swayAmp: 18 + Math.random() * 30,
+      swayPhase: Math.random() * Math.PI * 2,
+      colorLight: palette.light,
+      colorDark: palette.dark,
+      colorVein: palette.vein,
+      layer,
+    };
+  }
+
+  const driftingLeaves: DriftingLeaf[] = [];
+  const TOTAL_LEAVES = 36;
+  for (let i = 0; i < TOTAL_LEAVES; i++) {
+    const layer: 'mid' | 'fore' = i % 2 === 0 ? 'mid' : 'fore';
+    const seedX = -50 + (i / TOTAL_LEAVES) * 2050 + (Math.random() * 80 - 40);
+    driftingLeaves.push(createDriftingLeaf(seedX, layer));
+  }
+
   // 5. Main Render Loop
   function loop(currentTime: number) {
     if (!isRunning) return;
@@ -463,6 +536,76 @@ export function showTitleScreen(options?: { onStart?: () => void }): TitleScreen
         clouds[i] = createRandomCloud();
       }
     }
+
+    // C2. Update Windblown Leaves (Drifting Left -> Right according to wind)
+    for (let i = 0; i < driftingLeaves.length; i++) {
+      const leaf = driftingLeaves[i];
+      leaf.x += leaf.vx * dt;
+      leaf.y += leaf.vy * dt;
+      leaf.rotation += leaf.spinSpeed * dt;
+      leaf.flipAngle += leaf.flipSpeed * dt;
+
+      // When passed right screen edge or bottom, recycle smoothly from top-left
+      if (leaf.x > 1980 || leaf.y > 1250) {
+        leaf.x = -60 - Math.random() * 120;
+        leaf.y = -60 + Math.random() * 950;
+      }
+    }
+
+    // Helper: Render Drifting Leaves by Layer
+    const renderLeaves = (targetLayer: 'mid' | 'fore') => {
+      if (!ctx.beginPath) return;
+      const timeSec = currentTime / 1000;
+      for (let i = 0; i < driftingLeaves.length; i++) {
+        const leaf = driftingLeaves[i];
+        if (leaf.layer !== targetLayer) continue;
+
+        const swayY = leaf.y + Math.sin(timeSec * leaf.swayFreq + leaf.swayPhase) * leaf.swayAmp;
+        const flip = Math.cos(leaf.flipAngle);
+        const w = 11 * leaf.scale;
+        const h = 22 * leaf.scale;
+
+        ctx.save();
+        ctx.translate(Math.round(leaf.x), Math.round(swayY));
+        ctx.rotate(leaf.rotation);
+        ctx.scale(flip, 1);
+
+        // Nửa trái lá (màu sáng)
+        ctx.beginPath();
+        ctx.moveTo(0, -h / 2);
+        ctx.bezierCurveTo(-w, -h / 4, -w, h / 4, 0, h / 2);
+        ctx.closePath();
+        ctx.fillStyle = leaf.colorLight;
+        ctx.fill();
+
+        // Nửa phải lá (màu tối tạo bóng 3D)
+        ctx.beginPath();
+        ctx.moveTo(0, -h / 2);
+        ctx.bezierCurveTo(w * 0.85, -h / 4, w * 0.85, h / 4, 0, h / 2);
+        ctx.closePath();
+        ctx.fillStyle = leaf.colorDark;
+        ctx.fill();
+
+        // Gân lá trung tâm (stem vein)
+        ctx.beginPath();
+        ctx.moveTo(0, -h / 2 + 2);
+        ctx.lineTo(0, h / 2 - 2);
+        ctx.strokeStyle = leaf.colorVein;
+        ctx.lineWidth = Math.max(1, 1.2 * leaf.scale);
+        ctx.stroke();
+
+        // Viền lá mờ nét pixel
+        ctx.beginPath();
+        ctx.moveTo(0, -h / 2);
+        ctx.bezierCurveTo(-w, -h / 4, -w, h / 4, 0, h / 2);
+        ctx.bezierCurveTo(w * 0.85, h / 4, w * 0.85, -h / 4, 0, -h / 2);
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.28)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        ctx.restore();
+      }
+    };
 
     // D. Render Scene to 1920x1200 Canvas
     ctx.clearRect(0, 0, 1920, 1200);
@@ -586,6 +729,9 @@ export function showTitleScreen(options?: { onStart?: () => void }): TitleScreen
       }
     }
 
+    // 6. Layer 6: Midground Drifting Leaves (Bay lơ lửng phía trước gió và sau tầng cỏ cận)
+    renderLeaves('mid');
+
     // 7a. Layer 7a: Back Foreground Grass Layer (06_grass_front4.png, scaled ~0.85x, Y=460, scroll Left -> Right)
     if (grassFrontImg.complete && grassFrontImg.naturalWidth > 0) {
       const sw = grassFrontImg.naturalWidth;
@@ -611,6 +757,9 @@ export function showTitleScreen(options?: { onStart?: () => void }): TitleScreen
       ctx.drawImage(grassFrontImg, 0, 0, sw, sh, grassFrontOffset2 + dw2, swayY2, dw2, dh2);
       ctx.drawImage(grassFrontImg, 0, 0, sw, sh, grassFrontOffset2 + dw2 * 2, swayY2, dw2, dh2);
     }
+
+    // 8. Layer 8: Foreground Drifting Leaves (Lá cận cảnh bay qua trước ống kính camera)
+    renderLeaves('fore');
 
     animFrameId =
       typeof window !== 'undefined' && window.requestAnimationFrame
