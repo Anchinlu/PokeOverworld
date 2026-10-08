@@ -230,7 +230,7 @@ describe('Game Title Screen / Màn Hình Chờ', () => {
     expect(overlay.querySelector('#btnSettings')).not.toBeNull();
   });
 
-  it('opens pixel settings modal and toggles sunset theme', () => {
+  it('opens pixel settings modal and toggles sunset and night themes', () => {
     const controller = showTitleScreen({ initialTheme: 'day' });
     const overlay = document.getElementById('titleScreenOverlay') as unknown as MockDOMElement;
     const modal = overlay.querySelector('#titleSettingsModal') as unknown as MockDOMElement;
@@ -248,9 +248,12 @@ describe('Game Title Screen / Màn Hình Chờ', () => {
       h(mockClickEvent);
     }
 
-    // Toggle theme via controller & verify state
+    // Toggle theme via controller & verify state for sunset and night
     controller.setTheme('sunset');
     expect(controller.getTheme()).toBe('sunset');
+
+    controller.setTheme('night');
+    expect(controller.getTheme()).toBe('night');
 
     controller.setTheme('day');
     expect(controller.getTheme()).toBe('day');

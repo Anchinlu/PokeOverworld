@@ -1,4 +1,31 @@
-## Cập nhật lần cuối: 2026-10-08 (Thu Nhỏ Mặt Trời Sunset & Hạ Xuống 5px)
+## Cập nhật lần cuối: 2026-10-08 (Tích Hợp Màn Hình Chờ Ban Đêm Intro_night & grass_front_night)
+
+### 0.71. Màn Hình Chờ Ban Đêm (Night Theme) & Chu Kỳ 3 Chủ Đề (Day / Sunset / Night):
+
+- **Trạng thái:** Đã hoàn thành 100%. 25 tệp test suite (193/193 tests), Typecheck (`npm run typecheck:web`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** Tích hợp bộ asset Ban Đêm từ `Intro_night` và `grass_front_night`, thay thế các phần nền và dàn Pokémon phù hợp với màn đêm.
+- **Chi tiết đã thực hiện:**
+  1. **Tích Hợp Asset Màn Đêm Huyền Bí ([Intro_night](file:///e:/Pokemon/Graphics/Intro/Intro_night), [grass_front_night](file:///e:/Pokemon/Graphics/Intro/grass_front_night)):**
+     - **Bầu trời & Sao:** Bầu trời đêm tĩnh mịch `01_sky_night.png` kết hợp dải ngân hà lấp lánh `01b_stars_night.png` với hiệu ứng chớp sáng huyền ảo (`twinkle: 0.85 + sin(t) * 0.15`).
+     - **Mặt Trăng & Quầng Sáng Đêm:** Đĩa mặt trăng `06_moon_disc.png` và quầng sáng bạc `06_moon_glow.png` ngự trị ở góc trời cao $(CX=1213, CY=246)$.
+     - **Mặt Biển & Vệt Trăng Phản Chiếu:** Biển đêm xanh thẫm `03_sea_night.png` kết hợp dải ánh trăng bạc lấp lánh `04_moon_reflection_cropped_night.png` trải dài trên mặt sóng tại $X=984, Y=848$.
+     - **Tầng Cỏ Animated Ban Đêm:** 24 khung hình từ [Graphics/Intro/grass_front_night](file:///e:/Pokemon/Graphics/Intro/grass_front_night) (`frame_00.png` $\rightarrow$ `frame_23.png`) trong tông màu tím đêm huyền ảo.
+  2. **Dàn Pokémon Huyền Thoại & Thủy Quái Ban Đêm:**
+     - **Chim Trời / Bay Lượn (Flying Pokémon):**
+       - 1 **Lugia** (`LUGIA.png`, 4 frames $128 \times 123\text{px}$): Huyền thoại biển sâu sải cánh bay lượn uy phong qua bầu trời đêm ngàn sao.
+       - 4 **Fearow** (`FEAROW.png`, 4 frames $64 \times 64\text{px}$): Đàn chim săn đêm lướt gió.
+     - **Pokémon Biển Đêm (Sea Pokémon):**
+       - 1 **Kyogre** (`yogre.png`, 4 frames $128 \times 127\text{px}$): Siêu cổ đại thủy thần trồi lên mặt nước hùng vĩ tại $X=1190, Y=828$.
+       - 1 **Feraligatr** (`Surfaligatueur.png`, 4 frames $64 \times 69\text{px}$): Cá sấu bạo chúa bơi dũng mãnh tại $X=1460, Y=848$.
+       - 1 **Starmie** (`surfstaross.png`, 4 frames $64 \times 68\text{px}$): Sao biển phát sáng ngọc đỏ bồng bềnh tại $X=980, Y=849$.
+  3. **Hộp Thoại Cài Đặt Hỗ Trợ Xoay Vòng 3 Chủ Đề:**
+     - Nút trong Modal Cài Đặt luân chuyển tuần tự: `☀️ Ban Ngày (DAY)` $\rightarrow$ `🌅 Hoàng Hôn (SUNSET)` $\rightarrow$ `🌙 Ban Đêm (NIGHT)` $\rightarrow$ `☀️ Ban Ngày`.
+     - Lưu trữ trạng thái lựa chọn vào `localStorage ('pokemon_title_theme')`.
+  4. **Kiểm Thử & Đảm Bảo Tính Toàn Vẹn ([title-screen.test.ts](file:///e:/Pokemon/apps/web/test/title-screen.test.ts)):**
+     - `npm run typecheck:web` $\rightarrow$ PASS, 0 errors.
+     - `npm run test:web` $\rightarrow$ 25/25 suites, 193/193 tests PASS 100%.
+
+---
 
 ### 0.70. Tinh Chỉnh Mặt Trời Sunset (Thu Nhỏ 0.88x & Đẩy Xuống 5px):
 

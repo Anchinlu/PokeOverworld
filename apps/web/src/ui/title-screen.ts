@@ -1,27 +1,36 @@
 /**
  * Game Title Screen / Màn Hình Chờ
  * Features:
- * 1. Layer 1 (Sky): 01_sky_moning.png (Day) / 01_sky_sunset.png (Sunset)
- * 2. Layer 2 (Clouds & Sun): Clouds with parallax, Sunset Sun Glow & Disc (06_sun_sunset_*)
+ * 1. Layer 1 (Sky):
+ *    - Day: 01_sky_moning.png
+ *    - Sunset: 01_sky_sunset.png
+ *    - Night: 01_sky_night.png & 01b_stars_night.png (Twinkling starry night)
+ * 2. Layer 2 (Clouds & Celestial Bodies):
+ *    - Day: Clouds with parallax
+ *    - Sunset: Sun Glow & Disc (06_sun_sunset_*) scaled 0.88x and offset +5px
+ *    - Night: Moon Glow & Disc (06_moon_*) in the upper night sky
  * 3. Layer 2.5 (Flying Pokemon):
  *    - Day: 1 Pelipper & 4 Wingull soaring through morning sky
  *    - Sunset: 1 Swanna & 4 Swablu soaring across sunset sky
- * 4. Layer 3 (Sea): 03_sea_moning.png (Day) / 03_sea_sunset.png (Sunset) seamless scroll
- * 5. Layer 4 (Sun Reflection): 04_sun_reflection_cropped_* stationary at X=984, Y=848
+ *    - Night: 1 Lugia (128x123) & 4 Fearow (64x64) soaring across starry night
+ * 4. Layer 3 (Sea): 03_sea_* seamless infinite scroll
+ * 5. Layer 4 (Sun / Moon Reflection): 04_*_reflection_cropped_* on horizon
  * 6. Layer 4.5 (Sea Pokemon):
  *    - Day: Gyarados red (4 frames, 64x60)
- *    - Sunset: Lapras / Loklass (64x65), Tentacool (64x73), Tentacruel (64x75) swimming on waves
+ *    - Sunset: Lapras / Loklass (64x65), Tentacool (64x73), Tentacruel (64x75)
+ *    - Night: Kyogre (128x127), Feraligatr (64x69), Starmie (64x68)
  * 7. Layer 4.8 (Running Duo): Pikachu & Trainer running behind grass
  * 8. Layer 5 (Grass):
  *    - Day: 24 frames (grass_front_day/frame_00..23)
  *    - Sunset: 24 frames (grass_front_sunset/frame_00..23)
+ *    - Night: 24 frames (grass_front_night/frame_00..23)
  * 9. Layer 5.5: Viento wind swirls
  * 10. Layer 6 & 8: Pixel art drifting leaves (leaf.png, 5 frames 16x16)
  * 11. Layer 7a & 7b: Foreground grass layers (06_grass_front4.png)
- * 12. UI: Minecraft GUI menu buttons & centered Settings Modal with Sunset toggle
+ * 12. UI: Minecraft GUI menu buttons & centered Settings Modal with 3-theme cycling toggle
  */
 
-export type TitleScreenTheme = 'day' | 'sunset';
+export type TitleScreenTheme = 'day' | 'sunset' | 'night';
 
 export interface TitleScreenOptions {
   onStart?: () => void;
@@ -75,6 +84,11 @@ const GRASS_FRONT_SUNSET_PATHS = Array.from({ length: 24 }, (_, i) => {
   return `/Graphics/Intro/grass_front_sunset/frame_${num}.png`;
 });
 
+const GRASS_FRONT_NIGHT_PATHS = Array.from({ length: 24 }, (_, i) => {
+  const num = String(i).padStart(2, '0');
+  return `/Graphics/Intro/grass_front_night/frame_${num}.png`;
+});
+
 // Day / Morning Assets
 const SKY_DAY_PATH = '/Graphics/Intro/Intro_moning/01_sky_moning.png';
 const SEA_DAY_PATH = '/Graphics/Intro/Intro_moning/03_sea_moning.png';
@@ -95,6 +109,19 @@ const SWABLU_PATH = '/Graphics/Intro/Intro_sunset/SWABLU.png';
 const LOKLASS_PATH = '/Graphics/Intro/Intro_sunset/surfloklass.png';
 const TENTACOOL_PATH = '/Graphics/Intro/Intro_sunset/surftentacool.png';
 const TENTACRUEL_PATH = '/Graphics/Intro/Intro_sunset/surftentacruel.png';
+
+// Night Assets
+const SKY_NIGHT_PATH = '/Graphics/Intro/Intro_night/01_sky_night.png';
+const STARS_NIGHT_PATH = '/Graphics/Intro/Intro_night/01b_stars_night.png';
+const SEA_NIGHT_PATH = '/Graphics/Intro/Intro_night/03_sea_night.png';
+const MOON_REFLECTION_NIGHT_PATH = '/Graphics/Intro/Intro_night/04_moon_reflection_cropped_night.png';
+const MOON_DISC_NIGHT_PATH = '/Graphics/Intro/Intro_night/06_moon_disc.png';
+const MOON_GLOW_NIGHT_PATH = '/Graphics/Intro/Intro_night/06_moon_glow.png';
+const FEAROW_PATH = '/Graphics/Intro/Intro_night/FEAROW.png';
+const LUGIA_PATH = '/Graphics/Intro/Intro_night/LUGIA.png';
+const KYOGRE_PATH = '/Graphics/Intro/Intro_night/yogre.png';
+const FERALIGATR_PATH = '/Graphics/Intro/Intro_night/Surfaligatueur.png';
+const STARMIE_PATH = '/Graphics/Intro/Intro_night/surfstaross.png';
 
 // Common Assets
 const RUNNING_POKEMON_PATH = '/Graphics/Intro/pokemon.png';
@@ -125,11 +152,13 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
   }
 
   // Determine current active theme
+  const savedTheme =
+    typeof localStorage !== 'undefined'
+      ? (localStorage.getItem('pokemon_title_theme') as TitleScreenTheme)
+      : null;
   let currentTheme: TitleScreenTheme =
     options?.initialTheme ||
-    (typeof localStorage !== 'undefined' && localStorage.getItem('pokemon_title_theme') === 'sunset'
-      ? 'sunset'
-      : 'day');
+    (savedTheme === 'sunset' || savedTheme === 'night' ? savedTheme : 'day');
 
   // 2. Preload assets
   // Day assets
@@ -154,6 +183,20 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
   const tentacoolImg = loadImage(TENTACOOL_PATH);
   const tentacruelImg = loadImage(TENTACRUEL_PATH);
   const grassSunsetFrames = GRASS_FRONT_SUNSET_PATHS.map(loadImage);
+
+  // Night assets
+  const skyNightImg = loadImage(SKY_NIGHT_PATH);
+  const starsNightImg = loadImage(STARS_NIGHT_PATH);
+  const seaNightImg = loadImage(SEA_NIGHT_PATH);
+  const moonReflectionNightImg = loadImage(MOON_REFLECTION_NIGHT_PATH);
+  const moonDiscNightImg = loadImage(MOON_DISC_NIGHT_PATH);
+  const moonGlowNightImg = loadImage(MOON_GLOW_NIGHT_PATH);
+  const fearowImg = loadImage(FEAROW_PATH);
+  const lugiaImg = loadImage(LUGIA_PATH);
+  const kyogreImg = loadImage(KYOGRE_PATH);
+  const feraligatrImg = loadImage(FERALIGATR_PATH);
+  const starmieImg = loadImage(STARMIE_PATH);
+  const grassNightFrames = GRASS_FRONT_NIGHT_PATHS.map(loadImage);
 
   // Common assets
   const pokemonRunnerImg = loadImage(RUNNING_POKEMON_PATH);
@@ -199,8 +242,8 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
           <div class="title-pixel-modal-body">
             <div class="title-pixel-setting-row">
               <label class="title-pixel-setting-label">Chủ Đề Màn Hình Chờ:</label>
-              <button class="title-pixel-btn btn-setting-theme" id="btnToggleSunsetTheme" title="Chuyển đổi giao diện Ban Ngày / Hoàng Hôn">
-                <span class="btn-text" id="txtSunsetTheme">🌅 Hoàng Hôn: [ TẮT ]</span>
+              <button class="title-pixel-btn btn-setting-theme" id="btnToggleSunsetTheme" title="Chuyển đổi giao diện Ban Ngày / Hoàng Hôn / Ban Đêm">
+                <span class="btn-text" id="txtSunsetTheme">☀️ Chủ Đề: Ban Ngày</span>
               </button>
             </div>
           </div>
@@ -265,15 +308,18 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
   let grassFrontOffset2 = 640; // staggered offset
   const FRONT_GRASS_SPEED_2 = 215; // px/sec
 
-  // Gyarados red animation: 4 frames (64x60) cycling at ~6 FPS (for Day mode)
+  // Sea Creatures Animation Timers
   let gyaradosTimer = 0;
   let gyaradosFrameIndex = 0;
   const GYARADOS_FRAME_DURATION = 0.16; // sec per frame
 
-  // Sunset Sea Creatures: Loklass (64x65), Tentacool (64x73), Tentacruel (64x75) cycling at ~6 FPS
   let sunsetSeaTimer = 0;
   let sunsetSeaFrameIndex = 0;
   const SUNSET_SEA_FRAME_DURATION = 0.16; // sec per frame
+
+  let nightSeaTimer = 0;
+  let nightSeaFrameIndex = 0;
+  const NIGHT_SEA_FRAME_DURATION = 0.16; // sec per frame
 
   // Running Duo behind back grass (Pikachu ahead, Trainer chasing behind)
   let pikaTimer = 0;
@@ -284,7 +330,7 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
   let trainerFrameIndex = 0;
   const TRAINER_FRAME_DURATION = 0.09; // sec per frame (11 FPS)
 
-  // Flying Birds: Day Mode (1 Pelipper & 4 Wingull soaring across morning sky)
+  // Flying Birds: Day Mode (1 Pelipper & 4 Wingull)
   const birdsDay: FlyingBird[] = [
     {
       img: pelipperImg,
@@ -363,7 +409,7 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
     },
   ];
 
-  // Flying Birds: Sunset Mode (1 Swanna & 4 Swablu soaring across sunset sky)
+  // Flying Birds: Sunset Mode (1 Swanna & 4 Swablu)
   const birdsSunset: FlyingBird[] = [
     {
       img: swannaImg,
@@ -438,6 +484,85 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
       waveAmp: 4,
       frameW: 64,
       frameH: 67,
+      wrapX: 2320,
+    },
+  ];
+
+  // Flying Birds: Night Mode (1 Lugia 128x123 & 4 Fearow 64x64)
+  const birdsNight: FlyingBird[] = [
+    {
+      img: lugiaImg,
+      x: 520,
+      baseY: 470,
+      speed: 46,
+      scale: 1.0,
+      frameIndex: 0,
+      timer: 0,
+      frameDuration: 0.18,
+      waveFreq: 1.6,
+      waveAmp: 10,
+      frameW: 128,
+      frameH: 123,
+      wrapX: 2000,
+    },
+    {
+      img: fearowImg,
+      x: 840,
+      baseY: 510,
+      speed: 54,
+      scale: 0.95,
+      frameIndex: 1,
+      timer: 0.05,
+      frameDuration: 0.14,
+      waveFreq: 2.2,
+      waveAmp: 7,
+      frameW: 64,
+      frameH: 64,
+      wrapX: 2080,
+    },
+    {
+      img: fearowImg,
+      x: 1030,
+      baseY: 440,
+      speed: 50,
+      scale: 0.82,
+      frameIndex: 3,
+      timer: 0.1,
+      frameDuration: 0.15,
+      waveFreq: 2.0,
+      waveAmp: 5,
+      frameW: 64,
+      frameH: 64,
+      wrapX: 2160,
+    },
+    {
+      img: fearowImg,
+      x: 1210,
+      baseY: 560,
+      speed: 52,
+      scale: 0.88,
+      frameIndex: 2,
+      timer: 0.03,
+      frameDuration: 0.14,
+      waveFreq: 2.4,
+      waveAmp: 8,
+      frameW: 64,
+      frameH: 64,
+      wrapX: 2240,
+    },
+    {
+      img: fearowImg,
+      x: 1470,
+      baseY: 420,
+      speed: 42,
+      scale: 0.72,
+      frameIndex: 0,
+      timer: 0.08,
+      frameDuration: 0.16,
+      waveFreq: 1.9,
+      waveAmp: 4,
+      frameW: 64,
+      frameH: 64,
       wrapX: 2320,
     },
   ];
@@ -563,7 +688,7 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
   }
 
   const driftingLeaves: DriftingLeaf[] = [];
-  const TOTAL_LEAVES = 12; // Mật độ nhẹ nhàng, thoáng đãng
+  const TOTAL_LEAVES = 12;
   for (let i = 0; i < TOTAL_LEAVES; i++) {
     const layer: 'mid' | 'fore' = i % 2 === 0 ? 'mid' : 'fore';
     const seedX = -50 + (i / TOTAL_LEAVES) * 2050 + (Math.random() * 80 - 40);
@@ -573,10 +698,13 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
   // Helper update button text for modal
   const updateThemeButtonText = () => {
     if (txtSunsetTheme) {
-      txtSunsetTheme.innerText =
-        currentTheme === 'sunset'
-          ? '🌅 Chủ Đề: Hoàng Hôn [ BẬT ]'
-          : '☀️ Chủ Đề: Ban Ngày [ TẮT ]';
+      if (currentTheme === 'sunset') {
+        txtSunsetTheme.innerText = '🌅 Chủ Đề: Hoàng Hôn [ SUNSET ]';
+      } else if (currentTheme === 'night') {
+        txtSunsetTheme.innerText = '🌙 Chủ Đề: Ban Đêm [ NIGHT ]';
+      } else {
+        txtSunsetTheme.innerText = '☀️ Chủ Đề: Ban Ngày [ DAY ]';
+      }
     }
   };
   updateThemeButtonText();
@@ -618,7 +746,13 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
     }
 
     // A3. Update Sea Pokemon Animation
-    if (currentTheme === 'sunset') {
+    if (currentTheme === 'night') {
+      nightSeaTimer += dt;
+      if (nightSeaTimer >= NIGHT_SEA_FRAME_DURATION) {
+        nightSeaTimer -= NIGHT_SEA_FRAME_DURATION;
+        nightSeaFrameIndex = (nightSeaFrameIndex + 1) % 4;
+      }
+    } else if (currentTheme === 'sunset') {
       sunsetSeaTimer += dt;
       if (sunsetSeaTimer >= SUNSET_SEA_FRAME_DURATION) {
         sunsetSeaTimer -= SUNSET_SEA_FRAME_DURATION;
@@ -645,8 +779,14 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
       trainerFrameIndex = (trainerFrameIndex + 1) % 6;
     }
 
-    // A4. Update Flying Birds (Day: Pelipper & Wingull, Sunset: Swanna & Swablu)
-    const activeBirds = currentTheme === 'sunset' ? birdsSunset : birdsDay;
+    // A4. Update Flying Birds
+    const activeBirds =
+      currentTheme === 'night'
+        ? birdsNight
+        : currentTheme === 'sunset'
+          ? birdsSunset
+          : birdsDay;
+
     for (const b of activeBirds) {
       b.x -= b.speed * dt;
       b.timer += dt;
@@ -654,7 +794,7 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
         b.timer -= b.frameDuration;
         b.frameIndex = (b.frameIndex + 1) % 4;
       }
-      if (b.x < -120) {
+      if (b.x < -140) {
         b.x = b.wrapX + Math.random() * 200;
       }
     }
@@ -749,20 +889,41 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
     ctx.clearRect(0, 0, 1920, 1200);
 
     // 1. Layer 1: Sky (Full 1920x1200)
-    const curSkyImg = currentTheme === 'sunset' ? skySunsetImg : skyDayImg;
+    const curSkyImg =
+      currentTheme === 'night'
+        ? skyNightImg
+        : currentTheme === 'sunset'
+          ? skySunsetImg
+          : skyDayImg;
+
     if (curSkyImg.complete && curSkyImg.naturalWidth > 0) {
       ctx.drawImage(curSkyImg, 0, 0, 1920, 1200);
     } else {
-      ctx.fillStyle = currentTheme === 'sunset' ? '#f97316' : '#6ec5ff';
+      ctx.fillStyle =
+        currentTheme === 'night'
+          ? '#070b19'
+          : currentTheme === 'sunset'
+            ? '#f97316'
+            : '#6ec5ff';
       ctx.fillRect(0, 0, 1920, 1200);
     }
 
-    // 1.5. Layer 1.5: Sunset Sun Glow & Disc (if sunset mode: thu nhỏ 0.88x và đẩy xuống 5px)
+    // 1.2. Layer 1.2: Stars (Night only)
+    if (currentTheme === 'night' && starsNightImg.complete && starsNightImg.naturalWidth > 0) {
+      const starTwinkle = 0.85 + Math.sin(currentTime / 700) * 0.15;
+      ctx.save();
+      ctx.globalAlpha = starTwinkle;
+      ctx.drawImage(starsNightImg, 0, 0, 1920, 1200);
+      ctx.restore();
+    }
+
+    // 1.5. Layer 1.5: Sunset Sun or Night Moon
     if (currentTheme === 'sunset') {
+      // Mặt trời sunset: scale 0.88x và đẩy xuống 5px quanh tâm (1216, 800)
       const sunCenterX = 1216;
       const sunCenterY = 800;
-      const sunScale = 0.88; // Thu nhỏ mặt trời 1 ít (~12%)
-      const sunOffsetY = 5; // Đẩy xuống 5px theo yêu cầu người dùng
+      const sunScale = 0.88;
+      const sunOffsetY = 5;
 
       ctx.save();
       ctx.translate(sunCenterX, sunCenterY + sunOffsetY);
@@ -776,6 +937,14 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
         ctx.drawImage(sunDiscSunsetImg, 0, 0, 1920, 1200);
       }
       ctx.restore();
+    } else if (currentTheme === 'night') {
+      // Mặt trăng ban đêm trên bầu trời
+      if (moonGlowNightImg.complete && moonGlowNightImg.naturalWidth > 0) {
+        ctx.drawImage(moonGlowNightImg, 0, 0, 1920, 1200);
+      }
+      if (moonDiscNightImg.complete && moonDiscNightImg.naturalWidth > 0) {
+        ctx.drawImage(moonDiscNightImg, 0, 0, 1920, 1200);
+      }
     }
 
     // 2. Layer 2: Clouds (Drifting Left -> Right across sky)
@@ -784,13 +953,13 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
         const cw = c.img.naturalWidth * c.scale;
         const ch = c.img.naturalHeight * c.scale;
         ctx.save();
-        ctx.globalAlpha = c.opacity;
+        ctx.globalAlpha = currentTheme === 'night' ? c.opacity * 0.45 : c.opacity;
         ctx.drawImage(c.img, c.x, c.y - ch / 2, cw, ch);
         ctx.restore();
       }
     }
 
-    // 2.5. Layer 2.5: Flying Pokémon (Day: Pelipper & Wingull, Sunset: Swanna & Swablu)
+    // 2.5. Layer 2.5: Flying Pokémon (Day: Pelipper/Wingull, Sunset: Swanna/Swablu, Night: Lugia/Fearow)
     for (const b of activeBirds) {
       if (b.img.complete && b.img.naturalWidth > 0) {
         const sx = b.frameIndex * b.frameW;
@@ -802,7 +971,13 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
     }
 
     // 3. Layer 3: Sea Strip (Y=848, H=92, Infinite Scroll from Right to Left)
-    const curSeaImg = currentTheme === 'sunset' ? seaSunsetImg : seaDayImg;
+    const curSeaImg =
+      currentTheme === 'night'
+        ? seaNightImg
+        : currentTheme === 'sunset'
+          ? seaSunsetImg
+          : seaDayImg;
+
     if (curSeaImg.complete && curSeaImg.naturalWidth > 0) {
       ctx.drawImage(curSeaImg, 0, 848, 1920, 92, seaOffset, 848, 1920, 92);
       ctx.drawImage(curSeaImg, 0, 848, 1920, 92, seaOffset + 1920, 848, 1920, 92);
@@ -811,13 +986,17 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
       }
     }
 
-    // 4. Layer 4: Sun Reflection (Stationary on Horizon at X=984, Y=848, W=466, H=49)
+    // 4. Layer 4: Celestial Reflection on Horizon (X=984, Y=848)
     if (currentTheme === 'sunset') {
       if (sunReflectionSunsetImg.complete && sunReflectionSunsetImg.naturalWidth > 0) {
         const refW = Math.round(466 * 0.88);
         const refH = 49;
         const refX = Math.round(1216 - refW / 2);
         ctx.drawImage(sunReflectionSunsetImg, refX, 850, refW, refH);
+      }
+    } else if (currentTheme === 'night') {
+      if (moonReflectionNightImg.complete && moonReflectionNightImg.naturalWidth > 0) {
+        ctx.drawImage(moonReflectionNightImg, 984, 848, 466, 49);
       }
     } else {
       if (sunDayImg.complete && sunDayImg.naturalWidth > 0) {
@@ -826,7 +1005,29 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
     }
 
     // 4.5. Layer 4.5: Sea Pokémon swimming on waves
-    if (currentTheme === 'sunset') {
+    if (currentTheme === 'night') {
+      // 1. Kyogre (yogre.png, 4 frames 128x127) surfacing majestically on the sea
+      if (kyogreImg.complete && kyogreImg.naturalWidth > 0) {
+        const sx = nightSeaFrameIndex * 128;
+        const kBobX = 1190 + Math.sin(currentTime / 850) * 8;
+        const kBobY = 828 + Math.sin(currentTime / 500) * 3;
+        ctx.drawImage(kyogreImg, sx, 0, 128, 127, Math.round(kBobX), Math.round(kBobY), 128, 127);
+      }
+      // 2. Feraligatr (Surfaligatueur.png, 4 frames 64x69)
+      if (feraligatrImg.complete && feraligatrImg.naturalWidth > 0) {
+        const sx = ((nightSeaFrameIndex + 1) % 4) * 64;
+        const fBobX = 1460 + Math.sin(currentTime / 680 + 1) * 6;
+        const fBobY = 848 + Math.sin(currentTime / 440 + 1) * 2;
+        ctx.drawImage(feraligatrImg, sx, 0, 64, 69, Math.round(fBobX), Math.round(fBobY), 64, 69);
+      }
+      // 3. Starmie (surfstaross.png, 4 frames 64x68)
+      if (starmieImg.complete && starmieImg.naturalWidth > 0) {
+        const sx = ((nightSeaFrameIndex + 2) % 4) * 64;
+        const sBobX = 980 + Math.sin(currentTime / 720 + 2) * 6;
+        const sBobY = 849 + Math.sin(currentTime / 460 + 2) * 2;
+        ctx.drawImage(starmieImg, sx, 0, 64, 68, Math.round(sBobX), Math.round(sBobY), 64, 68);
+      }
+    } else if (currentTheme === 'sunset') {
       // 1. Loklass / Lapras (surfloklass.png, 4 frames 64x65)
       if (loklassImg.complete && loklassImg.naturalWidth > 0) {
         const sx = sunsetSeaFrameIndex * 64;
@@ -849,7 +1050,7 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
         ctx.drawImage(tentacruelImg, sx, 0, 64, 75, Math.round(tcBobX), Math.round(tcBobY), 64, 75);
       }
     } else {
-      // Day mode: Gyarados Red (4 frames, 64x60, right side at X~1360)
+      // Day mode: Gyarados Red (4 frames, 64x60)
       if (gyaradosImg.complete && gyaradosImg.naturalWidth > 0) {
         const gFrameX = gyaradosFrameIndex * 64;
         const gBobX = 1360 + Math.sin(currentTime / 750) * 8;
@@ -858,7 +1059,7 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
       }
     }
 
-    // 4.8. Layer 4.8: Running Duo (Pikachu ahead, Trainer chasing behind, running in place behind back grass)
+    // 4.8. Layer 4.8: Running Duo (Pikachu ahead, Trainer chasing behind)
     if (pokemonRunnerImg.complete && pokemonRunnerImg.naturalWidth > 0) {
       const pFrameX = pikaFrameIndex * 220;
       const pikaW = Math.round(220 * 0.28);
@@ -895,9 +1096,11 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
     }
 
     const curGrassBlades =
-      currentTheme === 'sunset'
-        ? grassSunsetFrames[grassDayFrameIndex]
-        : grassDayFrames[grassDayFrameIndex];
+      currentTheme === 'night'
+        ? grassNightFrames[grassDayFrameIndex]
+        : currentTheme === 'sunset'
+          ? grassSunsetFrames[grassDayFrameIndex]
+          : grassDayFrames[grassDayFrameIndex];
 
     if (curGrassBlades && curGrassBlades.complete && curGrassBlades.naturalWidth > 0) {
       ctx.drawImage(curGrassBlades, backGrassOffset - 1920, 13, 1920, 1200);
@@ -919,7 +1122,7 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
         const dh = Math.round(206 * w.scale);
 
         ctx.save();
-        ctx.globalAlpha = w.alpha;
+        ctx.globalAlpha = currentTheme === 'night' ? w.alpha * 0.75 : w.alpha;
         ctx.drawImage(vientoImg, sx, sy, 192, 206, Math.round(w.x), Math.round(w.y), dw, dh);
         ctx.restore();
       }
@@ -1034,18 +1237,21 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
 
   btnToggleSunsetTheme?.addEventListener('click', (e) => {
     e.stopPropagation();
-    currentTheme = currentTheme === 'sunset' ? 'day' : 'sunset';
+    const themes: TitleScreenTheme[] = ['day', 'sunset', 'night'];
+    const nextIdx = (themes.indexOf(currentTheme) + 1) % themes.length;
+    currentTheme = themes[nextIdx];
     if (typeof localStorage !== 'undefined') {
       try {
         localStorage.setItem('pokemon_title_theme', currentTheme);
       } catch (_) {}
     }
     updateThemeButtonText();
-    showNotice(
-      currentTheme === 'sunset'
-        ? '🌅 Đã chuyển sang chủ đề Hoàng Hôn (Sunset)!'
-        : '☀️ Đã chuyển sang chủ đề Ban Ngày (Day)!'
-    );
+    const notices: Record<TitleScreenTheme, string> = {
+      day: '☀️ Đã chuyển sang chủ đề Ban Ngày (Day)!',
+      sunset: '🌅 Đã chuyển sang chủ đề Hoàng Hôn (Sunset)!',
+      night: '🌙 Đã chuyển sang chủ đề Ban Đêm (Night)!',
+    };
+    showNotice(notices[currentTheme]);
   });
 
   btnSettingsModalCloseX?.addEventListener('click', (e) => {
