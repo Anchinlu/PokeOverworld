@@ -149,7 +149,7 @@ export function showTitleScreen(options?: { onStart?: () => void }): TitleScreen
   let grassFrontOffset1 = 0;
   const FRONT_GRASS_SPEED_1 = 165; // px/sec
 
-  // Foreground grass scroll layer 2 (06_grass_front.png, near camera pushed down 40px -> Y=160): Left to Right
+  // Foreground grass scroll layer 2 (06_grass_front4.png, near camera pushed down 70px -> Y=230): Left to Right
   let grassFrontOffset2 = 640; // staggered offset
   const FRONT_GRASS_SPEED_2 = 215; // px/sec
 
@@ -599,13 +599,13 @@ export function showTitleScreen(options?: { onStart?: () => void }): TitleScreen
       ctx.drawImage(grassFrontImg, 0, 0, sw, sh, grassFrontOffset1 + dw1 * 2, swayY1, dw1, dh1);
     }
 
-    // 7b. Layer 7b: Nearest Camera Grass Layer (06_grass_front4.png, near camera Y=160, scroll Left -> Right)
+    // 7b. Layer 7b: Nearest Camera Grass Layer (06_grass_front4.png, near camera Y=230, scroll Left -> Right)
     if (grassFrontImg.complete && grassFrontImg.naturalWidth > 0) {
       const sw = grassFrontImg.naturalWidth;
       const sh = grassFrontImg.naturalHeight;
       const dw2 = 1920;
       const dh2 = Math.round(dw2 * (sh / sw));
-      const swayY2 = 160 + Math.sin((currentTime / 1000) * 2.8) * 2.5;
+      const swayY2 = 230 + Math.sin((currentTime / 1000) * 2.8) * 2.5;
       ctx.drawImage(grassFrontImg, 0, 0, sw, sh, grassFrontOffset2 - dw2, swayY2, dw2, dh2);
       ctx.drawImage(grassFrontImg, 0, 0, sw, sh, grassFrontOffset2, swayY2, dw2, dh2);
       ctx.drawImage(grassFrontImg, 0, 0, sw, sh, grassFrontOffset2 + dw2, swayY2, dw2, dh2);
