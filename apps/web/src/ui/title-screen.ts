@@ -145,11 +145,11 @@ export function showTitleScreen(options?: { onStart?: () => void }): TitleScreen
   let grassDayFrameIndex = 0;
   const GRASS_DAY_FRAME_DURATION = 0.09; // sec per frame
 
-  // Foreground grass scroll layer 1 (06_grass_front4.png, back layer pushed down 130px -> Y=370, scale 0.85): Left to Right
+  // Foreground grass scroll layer 1 (06_grass_front4.png, back layer pushed down 170px -> Y=410, scale 0.85): Left to Right
   let grassFrontOffset1 = 0;
   const FRONT_GRASS_SPEED_1 = 165; // px/sec
 
-  // Foreground grass scroll layer 2 (06_grass_front4.png, near camera pushed down 120px -> Y=280): Left to Right
+  // Foreground grass scroll layer 2 (06_grass_front4.png, near camera pushed down 150px -> Y=310): Left to Right
   let grassFrontOffset2 = 640; // staggered offset
   const FRONT_GRASS_SPEED_2 = 215; // px/sec
 
@@ -586,26 +586,26 @@ export function showTitleScreen(options?: { onStart?: () => void }): TitleScreen
       }
     }
 
-    // 7a. Layer 7a: Back Foreground Grass Layer (06_grass_front4.png, scaled ~0.85x, Y=370, scroll Left -> Right)
+    // 7a. Layer 7a: Back Foreground Grass Layer (06_grass_front4.png, scaled ~0.85x, Y=410, scroll Left -> Right)
     if (grassFrontImg.complete && grassFrontImg.naturalWidth > 0) {
       const sw = grassFrontImg.naturalWidth;
       const sh = grassFrontImg.naturalHeight;
       const dw1 = 1632;
       const dh1 = Math.round(dw1 * (sh / sw));
-      const swayY1 = 370 + Math.sin((currentTime / 1000) * 2.2) * 2.0;
+      const swayY1 = 410 + Math.sin((currentTime / 1000) * 2.2) * 2.0;
       ctx.drawImage(grassFrontImg, 0, 0, sw, sh, grassFrontOffset1 - dw1, swayY1, dw1, dh1);
       ctx.drawImage(grassFrontImg, 0, 0, sw, sh, grassFrontOffset1, swayY1, dw1, dh1);
       ctx.drawImage(grassFrontImg, 0, 0, sw, sh, grassFrontOffset1 + dw1, swayY1, dw1, dh1);
       ctx.drawImage(grassFrontImg, 0, 0, sw, sh, grassFrontOffset1 + dw1 * 2, swayY1, dw1, dh1);
     }
 
-    // 7b. Layer 7b: Nearest Camera Grass Layer (06_grass_front4.png, near camera Y=280, scroll Left -> Right)
+    // 7b. Layer 7b: Nearest Camera Grass Layer (06_grass_front4.png, near camera Y=310, scroll Left -> Right)
     if (grassFrontImg.complete && grassFrontImg.naturalWidth > 0) {
       const sw = grassFrontImg.naturalWidth;
       const sh = grassFrontImg.naturalHeight;
       const dw2 = 1920;
       const dh2 = Math.round(dw2 * (sh / sw));
-      const swayY2 = 280 + Math.sin((currentTime / 1000) * 2.8) * 2.5;
+      const swayY2 = 310 + Math.sin((currentTime / 1000) * 2.8) * 2.5;
       ctx.drawImage(grassFrontImg, 0, 0, sw, sh, grassFrontOffset2 - dw2, swayY2, dw2, dh2);
       ctx.drawImage(grassFrontImg, 0, 0, sw, sh, grassFrontOffset2, swayY2, dw2, dh2);
       ctx.drawImage(grassFrontImg, 0, 0, sw, sh, grassFrontOffset2 + dw2, swayY2, dw2, dh2);

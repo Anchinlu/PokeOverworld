@@ -1,18 +1,16 @@
-## Cập nhật lần cuối: 2026-10-08 (Tinh Chỉnh Độ Cao Tầng Cỏ Tiền Cảnh Title Screen: Layer 7b Hạ Thêm 50px -> Y=280, Layer 7a Hạ Thêm 130px -> Y=370)
+## Cập nhật lần cuối: 2026-10-08 (Tinh Chỉnh Độ Cao Tầng Cỏ Tiền Cảnh Title Screen: Layer 7b Hạ Thêm 30px -> Y=310, Layer 7a Hạ Thêm 40px -> Y=410)
 
 ### 0.65. Tinh Chỉnh Độ Cao Tầng Cỏ Tiền Cảnh Title Screen (Layer 7b & Layer 7a):
 
 - **Trạng thái:** Đã hoàn thành 100%. 25 tệp test suite (192/192 tests), Typecheck (`npm run typecheck:web`) đạt kết quả **PASS 100%**.
-- **Yêu cầu người dùng:** Đẩy layer 7b xuống thêm 50px và layer còn lại (layer 7a) xuống thêm 130px.
+- **Yêu cầu người dùng:** Đẩy layer 7b xuống thêm 30px và layer 7a xuống thêm 40px.
 - **Chi tiết đã thực hiện:**
   1. **Điều Chỉnh Tọa Độ Layer 7b (Nearest Camera Grass Layer - [title-screen.ts](file:///e:/Pokemon/apps/web/src/ui/title-screen.ts)):**
-     - Ban đầu sau lần hạ 70px là $Y = 230$.
-     - Hạ thêm $50\text{px} \rightarrow Y = 280\text{px}$ (`swayY2 = 280 + Math.sin(...) * 2.5`).
-     - Với chiều cao hiển thị $dh_2 = 1125\text{px}$, chân cỏ chìm sâu xuống dưới mép canvas $1200\text{px}$ ($280 + 1125 = 1405\text{px}$), giữ ngọn cỏ nhô lên đúng tỷ lệ tiền cảnh tinh tế, không còn che khuất tầm nhìn.
+     - Đẩy xuống thêm $30\text{px} \rightarrow Y = 310\text{px}$ (`swayY2 = 310 + Math.sin(...) * 2.5`).
+     - Với chiều cao hiển thị $dh_2 = 1125\text{px}$, chân cỏ chìm sâu xuống dưới mép canvas $1200\text{px}$ ($310 + 1125 = 1435\text{px}$), giữ phần ngọn cỏ nhô lên ở độ cao hài hòa, thanh thoát.
   2. **Điều Chỉnh Tọa Độ Layer 7a (Back Foreground Grass Layer - [title-screen.ts](file:///e:/Pokemon/apps/web/src/ui/title-screen.ts)):**
-     - Ban đầu là $Y = 240$.
-     - Hạ thêm $130\text{px} \rightarrow Y = 370\text{px}$ (`swayY1 = 370 + Math.sin(...) * 2.0`).
-     - Với chiều cao hiển thị $dh_1 = 956\text{px}$, chân cỏ vươn tới $1326\text{px}$, xếp lớp chiều sâu (depth layering) tự nhiên phía sau Layer 7b.
+     - Đẩy xuống thêm $40\text{px} \rightarrow Y = 410\text{px}$ (`swayY1 = 410 + Math.sin(...) * 2.0`).
+     - Với chiều cao hiển thị $dh_1 = 956\text{px}$, chân cỏ vươn tới $1366\text{px}$, giữ trọn vẹn hiệu ứng phân tầng độ sâu phía sau Layer 7b.
   3. **Kiểm Thử & Đảm Bảo Tính Toàn Vẹn:**
      - `npm run typecheck:web` $\rightarrow$ PASS, 0 errors.
      - `npm run test:web` $\rightarrow$ 25/25 suites, 192/192 tests PASS 100%.
