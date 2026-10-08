@@ -93,7 +93,7 @@ const GRASS_FRONT_NIGHT_PATHS = Array.from({ length: 24 }, (_, i) => {
 const SKY_DAY_PATH = '/Graphics/Intro/Intro_moning/01_sky_moning.png';
 const SEA_DAY_PATH = '/Graphics/Intro/Intro_moning/03_sea_moning.png';
 const SUN_DAY_PATH = '/Graphics/Intro/Intro_moning/04_sun_reflection_cropped_moning.png';
-const BACK_GRASS_PATH = '/Graphics/Intro/Intro_moning/05_grass.png';
+const BACK_GRASS_DAY_PATH = '/Graphics/Intro/Intro_moning/05_grass.png';
 const GYARADOS_PATH = '/Graphics/Intro/Intro_moning/gyarados_red.png';
 const PELIPPER_PATH = '/Graphics/Intro/Intro_moning/PELIPPER.png';
 const WINGULL_PATH = '/Graphics/Intro/Intro_moning/WINGULL.png';
@@ -104,6 +104,7 @@ const SEA_SUNSET_PATH = '/Graphics/Intro/Intro_sunset/03_sea_sunset.png';
 const SUN_REFLECTION_SUNSET_PATH = '/Graphics/Intro/Intro_sunset/04_sun_reflection_cropped_sunset.png';
 const SUN_DISC_SUNSET_PATH = '/Graphics/Intro/Intro_sunset/06_sun_sunset_disc.png';
 const SUN_GLOW_SUNSET_PATH = '/Graphics/Intro/Intro_sunset/06_sun_sunset_glow.png';
+const BACK_GRASS_SUNSET_PATH = '/Graphics/Intro/Intro_sunset/05a_grass_back_sunset.png';
 const SWANNA_PATH = '/Graphics/Intro/Intro_sunset/SWANNA.png';
 const SWABLU_PATH = '/Graphics/Intro/Intro_sunset/SWABLU.png';
 const LOKLASS_PATH = '/Graphics/Intro/Intro_sunset/surfloklass.png';
@@ -117,6 +118,7 @@ const SEA_NIGHT_PATH = '/Graphics/Intro/Intro_night/03_sea_night.png';
 const MOON_REFLECTION_NIGHT_PATH = '/Graphics/Intro/Intro_night/04_moon_reflection_cropped_night.png';
 const MOON_DISC_NIGHT_PATH = '/Graphics/Intro/Intro_night/06_moon_disc.png';
 const MOON_GLOW_NIGHT_PATH = '/Graphics/Intro/Intro_night/06_moon_glow.png';
+const BACK_GRASS_NIGHT_PATH = '/Graphics/Intro/Intro_night/05a_grass_back_night.png';
 const FEAROW_PATH = '/Graphics/Intro/Intro_night/FEAROW.png';
 const LUGIA_PATH = '/Graphics/Intro/Intro_night/LUGIA.png';
 const KYOGRE_PATH = '/Graphics/Intro/Intro_night/yogre.png';
@@ -165,7 +167,7 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
   const skyDayImg = loadImage(SKY_DAY_PATH);
   const seaDayImg = loadImage(SEA_DAY_PATH);
   const sunDayImg = loadImage(SUN_DAY_PATH);
-  const backGrassImg = loadImage(BACK_GRASS_PATH);
+  const backGrassDayImg = loadImage(BACK_GRASS_DAY_PATH);
   const grassDayFrames = GRASS_FRONT_DAY_PATHS.map(loadImage);
   const gyaradosImg = loadImage(GYARADOS_PATH);
   const pelipperImg = loadImage(PELIPPER_PATH);
@@ -177,6 +179,7 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
   const sunReflectionSunsetImg = loadImage(SUN_REFLECTION_SUNSET_PATH);
   const sunDiscSunsetImg = loadImage(SUN_DISC_SUNSET_PATH);
   const sunGlowSunsetImg = loadImage(SUN_GLOW_SUNSET_PATH);
+  const backGrassSunsetImg = loadImage(BACK_GRASS_SUNSET_PATH);
   const swannaImg = loadImage(SWANNA_PATH);
   const swabluImg = loadImage(SWABLU_PATH);
   const loklassImg = loadImage(LOKLASS_PATH);
@@ -191,6 +194,7 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
   const moonReflectionNightImg = loadImage(MOON_REFLECTION_NIGHT_PATH);
   const moonDiscNightImg = loadImage(MOON_DISC_NIGHT_PATH);
   const moonGlowNightImg = loadImage(MOON_GLOW_NIGHT_PATH);
+  const backGrassNightImg = loadImage(BACK_GRASS_NIGHT_PATH);
   const fearowImg = loadImage(FEAROW_PATH);
   const lugiaImg = loadImage(LUGIA_PATH);
   const kyogreImg = loadImage(KYOGRE_PATH);
@@ -1087,11 +1091,18 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
     }
 
     // 5. Layer 5: Back Grass & Animated Grass Blades (infinite scroll Left -> Right)
-    if (backGrassImg.complete && backGrassImg.naturalWidth > 0) {
-      ctx.drawImage(backGrassImg, backGrassOffset - 1920, 13, 1920, 1200);
-      ctx.drawImage(backGrassImg, backGrassOffset, 13, 1920, 1200);
+    const curBackGrassImg =
+      currentTheme === 'night'
+        ? backGrassNightImg
+        : currentTheme === 'sunset'
+          ? backGrassSunsetImg
+          : backGrassDayImg;
+
+    if (curBackGrassImg.complete && curBackGrassImg.naturalWidth > 0) {
+      ctx.drawImage(curBackGrassImg, backGrassOffset - 1920, 13, 1920, 1200);
+      ctx.drawImage(curBackGrassImg, backGrassOffset, 13, 1920, 1200);
       if (backGrassOffset > 0) {
-        ctx.drawImage(backGrassImg, backGrassOffset + 1920, 13, 1920, 1200);
+        ctx.drawImage(curBackGrassImg, backGrassOffset + 1920, 13, 1920, 1200);
       }
     }
 

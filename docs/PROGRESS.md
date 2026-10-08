@@ -1,4 +1,22 @@
-## Cập nhật lần cuối: 2026-10-08 (Tích Hợp Màn Hình Chờ Ban Đêm Intro_night & grass_front_night)
+## Cập nhật lần cuối: 2026-10-08 (Bổ Sung Cỏ Nền Sau 05a Grass Back Cho Từng Buổi)
+
+### 0.72. Bổ Sung Tầng Cỏ Nền Sau (05a Grass Back) Theo Từng Buổi (Day, Sunset, Night):
+
+- **Trạng thái:** Đã hoàn thành 100%. 25 tệp test suite (193/193 tests), Typecheck (`npm run typecheck:web`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** Bổ sung `Intro_night/05a_grass_back_night.png` và `Intro_sunset/05a_grass_back_sunset.png` tương ứng cho từng buổi.
+- **Chi tiết đã thực hiện:**
+  1. **Đồng Bộ & Quản Lý Asset ([title-screen.ts](file:///e:/Pokemon/apps/web/src/ui/title-screen.ts)):**
+     - **Ban Ngày (Day):** Sử dụng `Intro_moning/05_grass.png` ($1920 \times 1200\text{px}$).
+     - **Hoàng Hôn (Sunset):** Sử dụng `Intro_sunset/05a_grass_back_sunset.png` ($1920 \times 1200\text{px}$) với rặng núi/gò cỏ ngả sắc cam ấm áp của buổi chiều tà.
+     - **Ban Đêm (Night):** Sử dụng `Intro_night/05a_grass_back_night.png` ($1920 \times 1200\text{px}$) với sắc tím xanh sẫm tĩnh mịch của màn đêm.
+  2. **Render Theo Chủ Đề Hiện Tại:**
+     - Lựa chọn hình ảnh nền sau `curBackGrassImg` tự động theo biến `currentTheme` (`day` / `sunset` / `night`).
+     - Cuộn nền vô tận mượt mà từ Trái sang Phải cùng nhịp với dải cỏ animated bên trên.
+  3. **Kiểm Thử & Đảm Bảo Tính Toàn Vẹn ([title-screen.test.ts](file:///e:/Pokemon/apps/web/test/title-screen.test.ts)):**
+     - `npm run typecheck:web` $\rightarrow$ PASS, 0 errors.
+     - `npm run test:web` $\rightarrow$ 25/25 suites, 193/193 tests PASS 100%.
+
+---
 
 ### 0.71. Màn Hình Chờ Ban Đêm (Night Theme) & Chu Kỳ 3 Chủ Đề (Day / Sunset / Night):
 
