@@ -6819,3 +6819,135 @@ body {
     transform: translate(-50%, 0);
   }
 }
+
+/* ==========================================================================
+   Title Screen Minecraft GUI Settings Modal (Giao Diện Cài Đặt Pixel Art Ở Giữa)
+   ========================================================================== */
+.title-pixel-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 60;
+  pointer-events: auto;
+  animation: titleModalFadeIn 0.15s ease-out;
+}
+
+.title-pixel-modal {
+  position: relative;
+  width: clamp(340px, 32vw, 480px);
+  background-color: #444444;
+  background-image: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  border: 4px solid #000000;
+  box-shadow:
+    inset 3px 3px 0px 0px rgba(255, 255, 255, 0.45),
+    inset -3px -3px 0px 0px #222222,
+    0 20px 48px rgba(0, 0, 0, 0.85);
+  padding: 22px 26px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  image-rendering: pixelated;
+  user-select: none;
+}
+
+.title-pixel-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #282828;
+  padding-bottom: 12px;
+}
+
+.title-pixel-modal-title {
+  font-family: 'Power Red and Blue', 'VT323', monospace;
+  font-size: clamp(20px, 1.6vw, 24px);
+  font-weight: 700;
+  color: #ffffa0;
+  text-shadow: 2px 2px 0px #3f3f28;
+  letter-spacing: 1px;
+}
+
+.title-pixel-modal-close-btn {
+  background: #353535;
+  border: 2px solid #000000;
+  color: #e0e0e0;
+  font-family: 'Power Red and Blue', monospace;
+  font-size: 16px;
+  font-weight: 700;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow:
+    inset 2px 2px 0px rgba(255, 255, 255, 0.4),
+    inset -2px -2px 0px #1e1e1e;
+  transition: background-color 0.1s steps(2);
+}
+
+.title-pixel-modal-close-btn:hover {
+  background-color: #dc2626;
+  color: #ffffff;
+}
+
+.title-pixel-modal-close-btn:active {
+  background-color: #991b1b;
+  transform: translateY(1px);
+}
+
+.title-pixel-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.title-pixel-setting-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.title-pixel-setting-label {
+  font-family: 'Power Clear', 'VT323', sans-serif;
+  font-size: 15px;
+  color: #e2e8f0;
+  font-weight: 600;
+  text-shadow: 1px 1px 0px #000000;
+}
+
+.title-pixel-setting-row .title-pixel-btn {
+  width: 100%;
+}
+
+.title-pixel-modal-footer {
+  display: flex;
+  justify-content: center;
+  padding-top: 10px;
+  border-top: 2px solid #282828;
+}
+
+.title-pixel-modal-footer .title-pixel-btn {
+  width: 160px;
+}
+
+@keyframes titleModalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

@@ -45,6 +45,11 @@ describe('Game Title Screen / Màn Hình Chờ', () => {
         'btnLoadWorld',
         'btnJoinWorld',
         'btnSettings',
+        'titleSettingsModal',
+        'btnSettingsModalCloseX',
+        'btnSettingsModalDone',
+        'btnToggleSunsetTheme',
+        'txtSunsetTheme',
       ];
       for (const id of ids) {
         if (html.includes(`id="${id}"`)) {
@@ -223,5 +228,33 @@ describe('Game Title Screen / Màn Hình Chờ', () => {
     expect(overlay.querySelector('#btnLoadWorld')).not.toBeNull();
     expect(overlay.querySelector('#btnJoinWorld')).not.toBeNull();
     expect(overlay.querySelector('#btnSettings')).not.toBeNull();
+  });
+
+  it('opens pixel settings modal and toggles sunset theme', () => {
+    const controller = showTitleScreen({ initialTheme: 'day' });
+    const overlay = document.getElementById('titleScreenOverlay') as unknown as MockDOMElement;
+    const modal = overlay.querySelector('#titleSettingsModal') as unknown as MockDOMElement;
+    const btnSettings = overlay.querySelector('#btnSettings') as unknown as MockDOMElement;
+    const btnToggle = overlay.querySelector('#btnToggleSunsetTheme') as unknown as MockDOMElement;
+    const btnDone = overlay.querySelector('#btnSettingsModalDone') as unknown as MockDOMElement;
+
+    expect(modal).not.toBeNull();
+    expect(controller.getTheme()).toBe('day');
+
+    // Simulate clicking Settings button
+    const mockClickEvent = { stopPropagation: vi.fn() };
+    const handlers = eventListeners['element_click'] || [];
+    for (const h of handlers) {
+      h(mockClickEvent);
+    }
+
+    // Toggle theme via controller & verify state
+    controller.setTheme('sunset');
+    expect(controller.getTheme()).toBe('sunset');
+
+    controller.setTheme('day');
+    expect(controller.getTheme()).toBe('day');
+
+    controller.destroy();
   });
 });

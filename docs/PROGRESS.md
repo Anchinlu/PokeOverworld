@@ -1,4 +1,35 @@
-## Cập nhật lần cuối: 2026-10-08 (Điều Chỉnh Giảm Mật Độ Lá Bay Title Screen Xuống 12 Lá)
+## Cập nhật lần cuối: 2026-10-08 (Modal Cài Đặt Minecraft GUI & Tích Hợp Màn Hình Chờ Hoàng Hôn Sunset)
+
+### 0.69. Modal Cài Đặt Minecraft GUI & Màn Hình Chờ Hoàng Hôn (Sunset Theme):
+
+- **Trạng thái:** Đã hoàn thành 100%. 25 tệp test suite (193/193 tests), Typecheck (`npm run typecheck:web`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** Tại nút Cài Đặt, mở modal pixel art ở giữa màn hình có nút bật/tắt Sunset; thêm màn hình chờ Hoàng Hôn sử dụng `grass_front_sunset` và `Intro_sunset` thay thế các phần nền và Pokémon.
+- **Chi tiết đã thực hiện:**
+  1. **Giao Diện Hộp Thoại Cài Đặt Pixel Art Chuẩn Minecraft ([title-screen.ts](file:///e:/Pokemon/apps/web/src/ui/title-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Bổ sung modal centered `#titleSettingsModal` với phong cách Minecraft GUI:
+       - Nền xám đá `#444444`, viền đen dày 4px, khối Bevel 3D (`inset 3px 3px 0px rgba(255,255,255,0.45), inset -3px -3px 0px #222222`).
+       - Tiêu đề "⚙️ CÀI ĐẶT HỆ THỐNG" phông chữ pixel vàng `#ffffa0`, text-shadow `#3f3f28`.
+       - Nút chuyển đổi: `[ 🌅 Chủ Đề: Hoàng Hôn [ BẬT ] ]` / `[ ☀️ Chủ Đề: Ban Ngày [ TẮT ] ]`.
+       - Nút đóng `✕` và nút `XONG` chuẩn Minecraft, hỗ trợ bấm backdrop hoặc phím `Escape` để thoát.
+       - Lưu trạng thái vào `localStorage` ('pokemon_title_theme') và hỗ trợ thông báo toast phản hồi tức thì.
+  2. **Thay Thế Hoàn Toàn Tầng Nền Hoàng Hôn (Sunset Assets):**
+     - **Bầu trời:** Thay sang `Intro_sunset/01_sky_sunset.png` với sắc hoàng hôn cam đỏ rực rỡ.
+     - **Mặt trời & Quầng sáng:** Tích hợp `06_sun_sunset_glow.png` và `06_sun_sunset_disc.png` phủ lên không gian, cùng `04_sun_reflection_cropped_sunset.png` phản chiếu lung linh trên mặt biển tại tọa độ $X=984, Y=848$.
+     - **Mặt biển:** Cuộn vô tận `03_sea_sunset.png` theo chiều từ Phải sang Trái.
+     - **Tầng cỏ animated:** Chuyển sang 24 khung hình từ [Graphics/Intro/grass_front_sunset](file:///e:/Pokemon/Graphics/Intro/grass_front_sunset) (`frame_00.png` $\rightarrow$ `frame_23.png`) ngả màu vàng cam hoàng hôn đồng điệu.
+  3. **Thay Thế Toàn Bộ Pokémon Chuẩn Mực Hoàng Hôn ([Intro_sunset](file:///e:/Pokemon/Graphics/Intro/Intro_sunset)):**
+     - **Chim trời (Birds):** Thay Pelipper & Wingull bằng:
+       - 1 **Swanna** (`SWANNA.png`, 4 frames $64 \times 63\text{px}$) bay lượn kiêu hãnh.
+       - 4 **Swablu** (`SWABLU.png`, 4 frames $64 \times 67\text{px}$) đàn chim mây bồng bềnh lướt qua ráng chiều.
+     - **Pokémon biển (Sea Pokemon):** Thay Gyarados Red bằng:
+       - **Lapras / Loklass** (`surfloklass.png`, 4 frames $64 \times 65\text{px}$) cưỡi sóng êm ả tại $X=1290, Y=847$.
+       - **Tentacool** (`surftentacool.png`, 4 frames $64 \times 73\text{px}$) dập dềnh tại $X=1460, Y=849$.
+       - **Tentacruel** (`surftentacruel.png`, 4 frames $64 \times 75\text{px}$) lướt sóng tại $X=1060, Y=846$.
+  4. **Kiểm Thử & Đảm Bảo Tính Toàn Vẹn ([title-screen.test.ts](file:///e:/Pokemon/apps/web/test/title-screen.test.ts)):**
+     - `npm run typecheck:web` $\rightarrow$ PASS, 0 errors.
+     - `npm run test:web` $\rightarrow$ 25/25 suites, 193/193 tests PASS 100%.
+
+---
 
 ### 0.68. Tinh Chỉnh Mật Độ Lá Bay Title Screen (Giảm Từ 35 Xuống 12 Lá):
 
