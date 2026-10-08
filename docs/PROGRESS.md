@@ -1,4 +1,23 @@
-## Cập nhật lần cuối: 2026-10-08 (Hoàn Tất Khắc Phục ESLint & Xanh Toàn Bộ Pipeline CI: Schemas, Lint, Prettier, Typecheck, Tests, Build)
+## Cập nhật lần cuối: 2026-10-08 (Tinh Chỉnh Độ Cao Tầng Cỏ Tiền Cảnh Title Screen: Layer 7b Hạ Thêm 50px -> Y=280, Layer 7a Hạ Thêm 130px -> Y=370)
+
+### 0.65. Tinh Chỉnh Độ Cao Tầng Cỏ Tiền Cảnh Title Screen (Layer 7b & Layer 7a):
+
+- **Trạng thái:** Đã hoàn thành 100%. 25 tệp test suite (192/192 tests), Typecheck (`npm run typecheck:web`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** Đẩy layer 7b xuống thêm 50px và layer còn lại (layer 7a) xuống thêm 130px.
+- **Chi tiết đã thực hiện:**
+  1. **Điều Chỉnh Tọa Độ Layer 7b (Nearest Camera Grass Layer - [title-screen.ts](file:///e:/Pokemon/apps/web/src/ui/title-screen.ts)):**
+     - Ban đầu sau lần hạ 70px là $Y = 230$.
+     - Hạ thêm $50\text{px} \rightarrow Y = 280\text{px}$ (`swayY2 = 280 + Math.sin(...) * 2.5`).
+     - Với chiều cao hiển thị $dh_2 = 1125\text{px}$, chân cỏ chìm sâu xuống dưới mép canvas $1200\text{px}$ ($280 + 1125 = 1405\text{px}$), giữ ngọn cỏ nhô lên đúng tỷ lệ tiền cảnh tinh tế, không còn che khuất tầm nhìn.
+  2. **Điều Chỉnh Tọa Độ Layer 7a (Back Foreground Grass Layer - [title-screen.ts](file:///e:/Pokemon/apps/web/src/ui/title-screen.ts)):**
+     - Ban đầu là $Y = 240$.
+     - Hạ thêm $130\text{px} \rightarrow Y = 370\text{px}$ (`swayY1 = 370 + Math.sin(...) * 2.0`).
+     - Với chiều cao hiển thị $dh_1 = 956\text{px}$, chân cỏ vươn tới $1326\text{px}$, xếp lớp chiều sâu (depth layering) tự nhiên phía sau Layer 7b.
+  3. **Kiểm Thử & Đảm Bảo Tính Toàn Vẹn:**
+     - `npm run typecheck:web` $\rightarrow$ PASS, 0 errors.
+     - `npm run test:web` $\rightarrow$ 25/25 suites, 192/192 tests PASS 100%.
+
+---
 
 ### 0.64. Khắc Phục Dứt Điểm Toàn Bộ Lỗi/Cảnh Báo ESLint & Xanh Tuyệt Đối Pipeline CI:
 
