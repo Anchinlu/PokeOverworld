@@ -833,7 +833,7 @@ export function generateChunkTallGrass(
 
   const qRoll = seededHash(cx, cy, seed + 909);
   const effectiveDensity = tallGrassDensity * 0.7 + qRoll * 0.3;
-  let numPatches = 0;
+  let numPatches: number;
   if (effectiveDensity < 0.25) {
     numPatches = 0;
   } else if (effectiveDensity < 0.55) {
@@ -864,7 +864,7 @@ export function generateChunkTallGrass(
         const gx = startGX + lx;
         const gy = startGY + ly;
 
-        let include = false;
+        let include: boolean;
         if (style === 0) {
           // Style 0: Organic Blob with boundary noise modulation
           const d = Math.pow((lx - ax) / rx, 2) + Math.pow((ly - ay) / ry, 2);

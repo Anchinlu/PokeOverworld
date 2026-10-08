@@ -197,6 +197,8 @@ export class GameSession {
           if (result.outcome === 'caught') {
             const caughtPk = createPartyPokemon(wildBattler.speciesKey, wildBattler.level, {
               isShiny: wildBattler.isShiny,
+              ivs: wildBattler.ivs,
+              nature: wildBattler.nature,
             });
             caughtPk.currentHp = Math.max(1, wildBattler.currentHp);
             playerService.incrementCaught();

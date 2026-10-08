@@ -118,7 +118,6 @@ export class PokemonSpriteAnimator {
         const tempCtx = tempCanvas.getContext('2d', { willReadFrequently: true });
         let minX = this.frameWidth;
         let maxX = 0;
-        let minY = this.frameHeight;
         let maxY = 0;
 
         if (tempCtx) {
@@ -140,7 +139,6 @@ export class PokemonSpriteAnimator {
               if (alpha > 20) {
                 if (x < minX) minX = x;
                 if (x > maxX) maxX = x;
-                if (y < minY) minY = y;
                 if (y > maxY) maxY = y;
               }
             }
@@ -150,7 +148,6 @@ export class PokemonSpriteAnimator {
         if (minX > maxX) {
           minX = 0;
           maxX = this.frameWidth - 1;
-          minY = 0;
           maxY = this.frameHeight - 1;
         }
 

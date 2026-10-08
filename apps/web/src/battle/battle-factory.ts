@@ -4,6 +4,11 @@ import { getMovesForSpecies } from './moves-db';
 import type { EcologyZone } from '../maps/ecology';
 import { defaultBattleRng, type BattleRng } from './battle-rng';
 import { POKEMON_ASSETS } from '../assets';
+import { normalizeGrowthRate, getExpToNextLevel } from '../domain/pokemon/pokemon-exp';
+
+import type { PokemonStatValues, NatureName } from '@pokemon/shared-types';
+import { ALL_NATURES } from '../domain/party/pokemon-stats';
+import { defaultRng } from '../core/rng';
 
 function calculateHp(base: number, level: number): number {
   return Math.floor(((2 * base + 31) * level) / 100) + level + 10;
@@ -18,7 +23,9 @@ export function createBattler(
   level: number,
   isPlayer = false,
   rng: BattleRng = defaultBattleRng,
-  isShiny = false
+  isShiny = false,
+  customIvs?: PokemonStatValues,
+  customNature?: NatureName
 ): BattlerPokemon {
   const data =
     pokemonCatalog.getBySpeciesKey(speciesKey) ?? pokemonCatalog.getBySpeciesKey('PIKACHU')!;
@@ -36,6 +43,18 @@ export function createBattler(
 
   const moves = getMovesForSpecies(data.speciesKey, data.types, level);
 
+  // Authentically roll random IVs (0–31 per stat) and Nature for the wild encounter
+  const ivs: PokemonStatValues = customIvs ?? {
+    hp: defaultRng.nextInt(0, 31),
+    attack: defaultRng.nextInt(0, 31),
+    defense: defaultRng.nextInt(0, 31),
+    spAtk: defaultRng.nextInt(0, 31),
+    spDef: defaultRng.nextInt(0, 31),
+    speed: defaultRng.nextInt(0, 31),
+  };
+  const nature: NatureName =
+    customNature ?? ALL_NATURES[defaultRng.nextInt(0, ALL_NATURES.length - 1)];
+
   return {
     id: data.id,
     name: data.name,
@@ -46,6 +65,8 @@ export function createBattler(
     currentHp: maxHp,
     maxHp,
     stats,
+    ivs,
+    nature,
     statStages: {
       attack: 0,
       defense: 0,
@@ -67,7 +88,7 @@ export function createBattler(
     isFainted: false,
     catchRate: data.catchRate ?? 45,
     exp: 0,
-    maxExp: level * level * 10,
+    maxExp: getExpToNextLevel(normalizeGrowthRate(data.growthRate), level),
     pokeball: 'POKEBALL',
   };
 }

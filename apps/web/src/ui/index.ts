@@ -8,3 +8,6 @@ export * from './bag-screen';
 export * from './encounter-transition';
 export * from './storage-screen';
 export * from './party-map-hud';
+export * from './pokemon-radar-chart';
+export * from './game-intro';
+export * from './title-screen';

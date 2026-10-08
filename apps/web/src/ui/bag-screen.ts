@@ -8,7 +8,7 @@ import { inventoryService } from '../domain/inventory/inventory-service';
 import { partyService } from '../domain/party/party-service';
 import { applyItemToPartyPokemon } from '../domain/inventory/item-effects';
 import { BAG_ASSETS, POKEMON_ASSETS } from '../assets';
-import { BAG_POCKETS, type ItemData } from '../data/items-db';
+import { BAG_POCKETS, findItem, type ItemData } from '../data/items-db';
 import { showBerryToast } from './toast';
 import { battleSePlayer } from '../audio/battle-se';
 
@@ -532,8 +532,10 @@ export class BagScreen {
         statusBadge = '<span class="bag-picker-status-tag" style="background:#06b6d4;">BĂNG</span>';
       }
 
-      const heldInfo = pk.heldItem
-        ? `<span style="font-size:9px; color:#38bdf8;">🎁 Đang giữ: ${pk.heldItem}</span>`
+      const heldDef = pk.heldItem ? findItem(pk.heldItem) : null;
+      const heldName = heldDef ? heldDef.nameVi || heldDef.name : pk.heldItem;
+      const heldInfo = heldName
+        ? `<span style="font-size:9px; color:#38bdf8;">🎁 Đang giữ: ${heldName}</span>`
         : '';
 
       card.innerHTML = `
@@ -574,12 +576,16 @@ export class BagScreen {
             // Return previously held item to inventory
             inventoryService.addItem(pk.heldItem, 1);
           }
-          pk.heldItem = entry.item.nameVi || entry.item.name;
+          pk.heldItem = entry.rawId;
           // Deduct 1 item quantity from inventory!
           inventoryService.removeItem(entry.rawId, 1);
           battleSePlayer.playSound('Audio/SE/PC access.ogg', 0.8);
+          const givenDef = findItem(entry.rawId);
+          const givenName = givenDef
+            ? givenDef.nameVi || givenDef.name
+            : entry.item.nameVi || entry.item.name;
           showBerryToast(
-            `🎁 Đã trao ${pk.heldItem} cho ${pk.nickname || pk.name} nắm giữ!`,
+            `🎁 Đã trao ${givenName} cho ${pk.nickname || pk.name} nắm giữ!`,
             '#38bdf8'
           );
           this.closePartyPicker();

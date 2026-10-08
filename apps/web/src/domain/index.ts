@@ -5,6 +5,7 @@
 export * from './player/player-state';
 export * from './player/player-service';
 export * from './party/party-state';
+export * from './party/pokemon-stats';
 export * from './party/party-service';
 export * from './inventory/inventory-state';
 export * from './inventory/inventory-service';

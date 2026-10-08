@@ -34,14 +34,8 @@ export class CharacterRenderer {
               follower.y + 56,
               glowRadius
             );
-            auraGrad.addColorStop(
-              0,
-              `rgba(253, 224, 71, ${(0.45 + pulse * 0.25).toFixed(2)})`
-            );
-            auraGrad.addColorStop(
-              0.6,
-              `rgba(234, 179, 8, ${(0.2 + pulse * 0.15).toFixed(2)})`
-            );
+            auraGrad.addColorStop(0, `rgba(253, 224, 71, ${(0.45 + pulse * 0.25).toFixed(2)})`);
+            auraGrad.addColorStop(0.6, `rgba(234, 179, 8, ${(0.2 + pulse * 0.15).toFixed(2)})`);
             auraGrad.addColorStop(1, 'rgba(234, 179, 8, 0)');
             ctx.fillStyle = auraGrad;
             ctx.beginPath();
@@ -76,7 +70,7 @@ export class CharacterRenderer {
 
     const wildImg = this.getWildSprite(follower.speciesKey, follower.isShiny);
     const pikaImg = this.loader.getImage('char_pika_sheet');
-    const img = (wildImg && wildImg.complete && wildImg.naturalWidth > 0) ? wildImg : pikaImg;
+    const img = wildImg && wildImg.complete && wildImg.naturalWidth > 0 ? wildImg : pikaImg;
 
     list.push({
       ySort: follower.y + 56,

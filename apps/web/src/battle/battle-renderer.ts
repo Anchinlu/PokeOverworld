@@ -1347,7 +1347,7 @@ export class BattleRenderer {
     ctx.font = `16px ${BATTLE_FONT}`;
     this.drawTextWithOutline(
       ctx,
-      `POKÉ BALLS: x${this.engine.ballsCount}`,
+      `BÓNG POKÉ: x${this.engine.ballsCount}`,
       32,
       py + 48,
       '#ffffff',
@@ -1361,14 +1361,14 @@ export class BattleRenderer {
     ctx.strokeStyle = '#fed7aa';
     ctx.lineWidth = 2;
     ctx.strokeRect(200, py + 25, 160, 45);
-    this.drawTextWithOutline(ctx, '⚾ THROW BALL', 215, py + 53, '#ffffff', '#000000', 2);
+    this.drawTextWithOutline(ctx, '⚾ NÉM BÓNG', 215, py + 53, '#ffffff', '#000000', 2);
 
     // Back Button
     ctx.fillStyle = 'rgba(0,0,0,0.6)';
     ctx.fillRect(390, py + 30, 95, 36);
     ctx.strokeStyle = '#94a3b8';
     ctx.strokeRect(390, py + 30, 95, 36);
-    this.drawTextWithOutline(ctx, 'BACK', 420, py + 53, '#ffffff', '#000000', 2);
+    this.drawTextWithOutline(ctx, 'QUAY LẠI', 415, py + 53, '#ffffff', '#000000', 2);
   }
 
   // ---- Sprite Silhouette Shadow ----

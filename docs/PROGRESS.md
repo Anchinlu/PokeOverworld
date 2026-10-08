@@ -1,4 +1,356 @@
-## Cập nhật lần cuối: 2026-10-07 (Logic Vật Phẩm Thực Tế & Khấu Trừ Số Lượng Balo)
+## Cập nhật lần cuối: 2026-10-08 (Hoàn Tất Khắc Phục ESLint & Xanh Toàn Bộ Pipeline CI: Schemas, Lint, Prettier, Typecheck, Tests, Build)
+
+### 0.64. Khắc Phục Dứt Điểm Toàn Bộ Lỗi/Cảnh Báo ESLint & Xanh Tuyệt Đối Pipeline CI:
+
+- **Trạng thái:** Đã hoàn thành 100%. Lệnh `npm run ci` chạy qua toàn bộ 6 bước kiểm định nghiêm ngặt đạt **PASS 100% (0 errors, 0 warnings)**:
+  1. `validate:schemas`: 7/7 checks PASS (Parity TypeScript & Python, 275 asset manifests, 151 Gen 1 Pokémons).
+  2. `lint` (`eslint .`): **0 errors, 0 warnings** (Đã xóa sạch 3 errors và 29 warnings).
+  3. `format:check` (`prettier --check`): All matched files use Prettier code style.
+  4. `typecheck:web` (`tsc --noEmit`): **0 lỗi typecheck**.
+  5. `test:web` (`vitest run`): **24/24 suites (181/181 tests) PASS 100%**.
+  6. `build:web` (`tsc -b && vite build`): **Build production thành công trong 20.95s**.
+- **Chi tiết các hạng mục đã xử lý sạch:**
+  1. **Sửa 3 lỗi ESLint nghiêm trọng:**
+     - [apps/web/test/game-intro.test.ts](file:///e:/Pokemon/apps/web/test/game-intro.test.ts): Thay kiểu generic `Function` bằng `(...args: unknown[]) => void` chuẩn type-safety.
+     - [apps/web/test/title-screen.test.ts](file:///e:/Pokemon/apps/web/test/title-screen.test.ts): Thay kiểu generic `Function` bằng `(...args: unknown[]) => void`.
+     - [apps/web/test/party-map-hud.test.ts](file:///e:/Pokemon/apps/web/test/party-map-hud.test.ts): Loại bỏ `const self = this;` trong getter `classList` bằng cách chuyển sang các phương thức arrow functions.
+  2. **Dọn dẹp triệt để 29 cảnh báo ESLint (`no-useless-assignment`, `@typescript-eslint/no-unused-vars`, `no-explicit-any`):**
+     - [apps/web/src/ui/title-screen.ts](file:///e:/Pokemon/apps/web/src/ui/title-screen.ts): Thay `as any` bằng `as unknown as HTMLImageElement`.
+     - [apps/web/src/battle/battle-engine.ts](file:///e:/Pokemon/apps/web/src/battle/battle-engine.ts): Loại bỏ gán giá trị thừa `damage`, `mag`, `pwr`.
+     - [apps/web/src/maps/chunk-objects.ts](file:///e:/Pokemon/apps/web/src/maps/chunk-objects.ts): Loại bỏ gán thừa `numPatches` và `include`.
+     - [apps/web/src/maps/terrain-rules.ts](file:///e:/Pokemon/apps/web/src/maps/terrain-rules.ts): Loại bỏ gán thừa `onMain`.
+     - [apps/web/src/rendering/ground-renderer.ts](file:///e:/Pokemon/apps/web/src/rendering/ground-renderer.ts) & [object-renderer.ts](file:///e:/Pokemon/apps/web/src/rendering/object-renderer.ts): Loại bỏ gán thừa `fIdx`.
+     - [apps/web/src/ui/party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts): Loại bỏ gán thừa chuỗi rỗng `panelBg`.
+     - [apps/web/src/ui/pokedex/pokedex-sprite.ts](file:///e:/Pokemon/apps/web/src/ui/pokedex/pokedex-sprite.ts): Xóa biến `minY` không được sử dụng.
+     - Các file unit test ([battle-advanced-moves.test.ts](file:///e:/Pokemon/apps/web/test/battle-advanced-moves.test.ts), [battle-events.test.ts](file:///e:/Pokemon/apps/web/test/battle-events.test.ts), [battle.test.ts](file:///e:/Pokemon/apps/web/test/battle.test.ts), [desktop-shell.test.ts](file:///e:/Pokemon/apps/web/test/desktop-shell.test.ts), [ecology-statistical.test.ts](file:///e:/Pokemon/apps/web/test/ecology-statistical.test.ts), [ecology.test.ts](file:///e:/Pokemon/apps/web/test/ecology.test.ts), [pokemon-nature-stats.test.ts](file:///e:/Pokemon/apps/web/test/pokemon-nature-stats.test.ts), [shiny-spatial.test.ts](file:///e:/Pokemon/apps/web/test/shiny-spatial.test.ts), [village.test.ts](file:///e:/Pokemon/apps/web/test/village.test.ts), [water-terrain.test.ts](file:///e:/Pokemon/apps/web/test/water-terrain.test.ts)): Dọn sạch toàn bộ unused imports và biến thừa.
+
+---
+
+### 0.63. Menu Nút Bấm Pixel [Bunton.png](file:///e:/Pokemon/Graphics/Intro/Buton/Bunton.png), 2 Tầng Cỏ Cận Camera & Bỏ Prompt Nhấp Toàn Màn Hình:
+
+- **Trạng thái:** Đã hoàn thành 100%. 24 tệp test suite (181/181 tests), Typecheck và Schema validation đều đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:**
+  1. Thay thế 2 lớp cỏ cũ bằng 2 lớp cỏ cận cảnh nhân bản từ [06_grass_front.png](file:///e:/Pokemon/Graphics/Intro/06_grass_front.png), lớp gần camera hơn được hạ thấp xuống 40px và lớp thứ nhất được thu nhỏ lại.
+  2. Bổ sung hệ thống nút bấm pixel nằm ở góc trên mép bên trái sử dụng asset [Bunton.png](file:///e:/Pokemon/Graphics/Intro/Buton/Bunton.png) gồm các nút: **Thế Giới Mới**, **Tải Thế Giới**, **Gia Nhập Thế Giới**, **Cài Đặt**.
+  3. Hạ vị trí menu button xuống 100px.
+  4. Bỏ hoàn toàn phần "nhấp để vào thế giới" (prompt nhấp chuột/phím bất kỳ toàn màn hình), điều hướng vào game thông qua nút menu.
+  5. Đổi hướng chuyển động của tất cả các lớp cỏ (`grass_front_day`, lớp cỏ nền và 2 lớp cỏ cận cảnh `06_grass_front.png`) thành cuộn từ **Trái qua Phải** thay vì từ phải qua trái.
+- **Chi tiết đã thực hiện:**
+  1. **Menu Nút Bấm Pixel ([title-screen.ts](file:///e:/Pokemon/apps/web/src/ui/title-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Nạp sprite giấy da cổ kính [Bunton.png](file:///e:/Pokemon/Graphics/Intro/Buton/Bunton.png) làm background nút bấm với `background-size: 100% 100%` và `image-rendering: pixelated`.
+     - 4 nút chức năng:
+       - **Thế Giới Mới (`btnNewWorld`):** Kích hoạt transition mượt mà và khởi tạo thế giới Overworld.
+       - **Tải Thế Giới (`btnLoadWorld`):** Chuyển vào thế giới game.
+       - **Gia Nhập Thế Giới (`btnJoinWorld`):** Hiển thị toast thông báo pixel art cho chế độ nhiều người chơi.
+       - **Cài Đặt (`btnSettings`):** Hiển thị toast thông báo cấu hình hệ thống.
+     - Định vị góc trên bên trái đã đẩy xuống 100px (`top: clamp(124px, calc(4.5vh + 100px), 148px)`).
+     - Hiệu ứng hover dịch chuyển `+8px`, scale $1.03$, ánh hào quang vàng óng pixel và hiệu ứng active lún nút chân thực.
+  2. **Bỏ Hoàn Toàn Lời Nhắc Nhấp Chuột Toàn Màn Hình ([title-screen.ts](file:///e:/Pokemon/apps/web/src/ui/title-screen.ts)):**
+     - Loại bỏ phần tử DOM `titleStartPrompt` và `titleSubPrompt`.
+     - Gỡ bỏ lắng nghe sự kiện `click` và `keydown` toàn màn hình. Tránh việc người chơi nhấp chuột ngắm cảnh màn hình chờ bị nhảy nhầm vào thế giới.
+  3. **Đảo Chiều Toàn Bộ Các Lớp Cỏ Sang Trái ➔ Phải ([title-screen.ts](file:///e:/Pokemon/apps/web/src/ui/title-screen.ts)):**
+     - **Lớp Cỏ Nền & [grass_front_day](file:///e:/Pokemon/Graphics/Intro/grass_front_day):** Tích hợp chu kỳ 24 frames hoạt họa đung đưa gió của `grass_front_day` kết hợp cùng lớp cỏ [05_grass.png](file:///e:/Pokemon/Graphics/Intro/Intro_moning/05_grass.png), cuộn đều đặn từ **Trái ➔ Phải** với tốc độ $125\text{ px/s}$.
+     - **2 Lớp Cỏ Tiền Cảnh Cận Camera ([06_grass_front.png](file:///e:/Pokemon/Graphics/Intro/06_grass_front.png)):**
+       - Lớp sau (scale $0.85$, $Y = 240$): Cuộn từ **Trái ➔ Phải** với tốc độ $165\text{ px/s}$.
+       - Lớp cận camera nhất ($Y = 160$): Cuộn từ **Trái ➔ Phải** với tốc độ $215\text{ px/s}$.
+       - Thuật toán lặp nối vô hạn (seamless infinite wrapping) với 3 tiles buffer $(-W, 0, +W)$ đảm bảo không có bất kỳ kẽ hở hoặc đứt gãy nào trên màn hình.
+  4. **Kiểm Thử & Đảm Bảo Chất Lượng ([title-screen.test.ts](file:///e:/Pokemon/apps/web/test/title-screen.test.ts)):**
+     - Đạt 181/181 unit tests (24/24 suites) PASS 100%. Typecheck đạt 0 lỗi.
+
+---
+
+### 0.62. Xây Dựng Màn Hình Chờ Động (Title Screen) & Bóc Tách Khởi Tạo Thế Giới Theo Yêu Cầu:
+
+- **Trạng thái:** Đã hoàn thành 100%. 24 tệp test suite (180/180 tests), Typecheck và Schema validation đều đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:**
+  1. Xây dựng một lớp màn hình chờ động (Title Screen) hiển thị ngay sau khi đoạn Intro mở ra.
+  2. Bố cục gồm 5 tầng đồ họa theo ảnh mẫu:
+     - Nền bầu trời (`01_sky_moning.png`): Tĩnh, mở rộng phủ toàn màn hình.
+     - Mây (`clouds/cloud_01`..`cloud_16`): Xuất hiện ngẫu nhiên và trôi từ **Trái ➔ Phải**.
+     - Mặt nước biển (`03_sea_moning.png`): Chạy cuộn vô hạn liên tục từ **Phải ➔ Trái**.
+     - Vệt nắng phản chiếu (`04_sun_reflection_cropped_moning.png`): Đứng cố định một chỗ ngay trên đường chân trời mặt nước.
+     - Cỏ tiền cảnh (`grass_front_day/frame_00`..`frame_23`): 24 khung hình hoạt họa lặp vô hạn đung đưa theo gió.
+  3. **Bóc tách thế giới:** Thế giới Overworld không còn tự động sinh ngay khi load trang nữa. Thế giới chỉ được khởi tạo và chạy khi người chơi bấm vào màn hình chờ. Tách riêng cơ chế này để không nhầm lẫn logic và giữ lại lối vào test nhanh cho nhà phát triển.
+- **Chi tiết đã thực hiện:**
+  1. **Bộ Điều Khiển Màn Hình Chờ Động ([title-screen.ts](file:///e:/Pokemon/apps/web/src/ui/title-screen.ts)):**
+     - Tạo Canvas $1920 \times 1200$ chuẩn tỉ lệ gốc với `object-fit: cover` và pixel-art crisp rendering, đảm bảo hiển thị hoàn hảo trên mọi kích thước màn hình mà không bị lệch 1 pixel nào.
+     - **Vòng lặp hoạt họa 60 FPS:**
+       - **Mặt biển cuộn vô hạn:** Sử dụng thuật toán dual-strip side-by-side trượt đều đặn từ phải qua trái với vận tốc $28\text{ px/s}$, liên tục tuần hoàn không bao giờ đứt đoạn.
+       - **Hệ thống sinh mây ngẫu nhiên:** Quản lý đồng thời 7 cụm mây với tọa độ $Y$ rải đều ở tầng dưới bầu trời ($480 \to 800\text{ px}$), vận tốc parallax ngẫu nhiên (mây lớn bay nhanh hơn mây nhỏ) trôi êm ả từ trái qua phải, tự động tái sinh ở biên trái khi bay qua biên phải.
+       - **Vệt nắng mặt trời:** Cố định chính xác tại tọa độ $X = 984, Y = 848, W = 466, H = 49$, đứng yên soi bóng lung linh trên mặt biển đang cuộn.
+       - **Dải cỏ tiền cảnh:** Hoạt họa tuần tự 24 frames (`frame_00` ➔ `frame_23`) ở đáy màn hình ($Y = 940 \to 1200$) với tần số $\approx 11\text{ FPS}$ tạo chuyển động gió thổi mượt mà.
+     - **Tương tác chuyển cảnh:** Nhấp chuột hoặc bấm phím bất kỳ sẽ kích hoạt hiệu ứng lóe sáng prompt và fade out mượt mà, sau đó kích hoạt callback `onStart()`.
+  2. **Bóc Tách Khởi Tạo Thế Giới ([bootstrap.ts](file:///e:/Pokemon/apps/web/src/bootstrap.ts)):**
+     - Đóng gói toàn bộ logic khởi tạo `GameSession`, `GameRenderer`, `GameLoop`, nạp chunk và lắng nghe phím điều khiển vào hàm `launchGameWorld()`.
+     - Khi mở game: Thế giới Overworld hoàn toàn **chưa khởi tạo**, không tiêu tốn tài nguyên CPU/RAM.
+     - Giao diện HUD (`#topRightBar` và `#testOverlay`) được ẩn hoàn toàn trong suốt màn hình chờ, tạo trải nghiệm điện ảnh chuẩn mực.
+     - Khi người chơi bấm vào màn hình chờ: `launchGameWorld()` mới chính thức được gọi, đưa người chơi vào map.
+  3. **Lối Vào Test Nhanh Dành Cho Dev (Quick Dev Iteration):**
+     - Bổ sung nút bấm `⚡ Vào Nhanh Overworld (Dev Test)` ngay trên màn hình chờ: bấm 1 click là bay thẳng vào game bỏ qua chờ đợi.
+     - Hỗ trợ tham số URL `?quick=true` hoặc `?dev=true` để dev chạy thẳng vào map khi cần test nhanh.
+     - Gắn các hook toàn cục `window.showTitleScreen()`, `window.launchGameWorld()` và `window.replayIntro()`.
+  4. **Kiểu Dáng Giao Diện CSS & Căn Chuẩn Chiều Sâu 2 Lớp Cỏ ([style.css](file:///e:/Pokemon/apps/web/src/style.css), [title-screen.ts](file:///e:/Pokemon/apps/web/src/ui/title-screen.ts)):**
+     - Thêm styling cho `.title-screen-overlay`, `.title-screen-canvas`, `.title-start-prompt`, `.title-sub-prompt` và `.btn-title-dev`.
+     - **Hiệu chỉnh độ cao cỏ chuẩn gốc:** Đổi căn chỉnh canvas sang `bottom: 0; object-position: bottom center;` để cố định chân cỏ ở đáy màn hình trên mọi tỉ lệ hiển thị.
+     - **Bổ sung lớp cỏ nền [05_grass.png](file:///e:/Pokemon/Graphics/Intro/Intro_moning/05_grass.png):** Tích hợp tầng cỏ tĩnh nằm ngay phía sau lớp cỏ hoạt họa, bắt đầu từ $Y = 919\text{ px}$ (nhô cao hơn lớp cỏ trước khoảng $32\text{ px}$).
+     - **Hiệu ứng trượt cuộn nhanh:** Lớp cỏ nền cuộn liên tục từ Phải ➔ Trái với tốc độ nhanh vượt trội $125\text{ px/s}$ (gấp $\approx 4.5$ lần tốc độ mặt biển $28\text{ px/s}$), tạo cảm giác gió thổi cuốn qua thung lũng rất sống động, lướt qua phía sau dải cỏ tiền cảnh đang đung đưa theo chu kỳ.
+  5. **Tích Hợp Pokémon Gyarados Đỏ (Red Gyarados) Hoạt Họa Bơi Trên Biển ([title-screen.ts](file:///e:/Pokemon/apps/web/src/ui/title-screen.ts)):**
+     - Nạp spritesheet hoạt họa [0000- Gyarados red.png](file:///e:/Pokemon/Graphics/Intro/Intro_moning/0000-%20Gyarados%20red.png) ($256 \times 60\text{ px}$, gồm 4 khung hình chuyển động $64 \times 60\text{ px}$).
+     - Đặt tại tầng nước biển phía bên phải ($Y = 848 \to 908\text{ px}$, $X \approx 1360\text{ px}$), bơi trong làn nước lấp lánh cạnh vệt nắng mặt trời, đầu quay về hướng Tây đón dòng sóng biển cuộn.
+     - Chạy chu kỳ hoạt họa 4 khung hình tuần hoàn ($\approx 6\text{ FPS}$) kết hợp nhấp nhô theo nhịp sóng nước biển ($\sin(t)$ sóng dọc $\pm 2.5\text{ px}$ và dao động bơi ngang $\pm 8\text{ px}$), thân dưới chìm tự nhiên sau dải cỏ nền mang lại cảm giác Gyarados đỏ đang thực sự bơi lội trong làn nước biển bình minh.
+  6. **Bổ Sung Đàn Chim Bay Trên Trời: 1 Pelipper & 4 Wingull ([title-screen.ts](file:///e:/Pokemon/apps/web/src/ui/title-screen.ts)):**
+     - Nạp spritesheet hoạt họa [PELIPPER.png](file:///e:/Pokemon/Graphics/Intro/Intro_moning/PELIPPER.png) ($256 \times 68\text{ px}$, 4 frames) và [WINGULL.png](file:///e:/Pokemon/Graphics/Intro/Intro_moning/WINGULL.png) ($256 \times 66\text{ px}$, 4 frames).
+     - **Bố cục đàn chim tự nhiên theo đội hình lượn:**
+       - **1 Pelipper:** Bay điềm đạm ở tầng trung không ($X = 580\text{ px}, Y = 550\text{ px}$, tỉ lệ $1.0\times$), đập cánh khoan thai tốc độ $48\text{ px/s}$.
+       - **4 Wingull:** Phân bổ so le tạo chiều sâu không gian (3D Parallax):
+         - Chim đầu đàn: $X = 820\text{ px}, Y = 500\text{ px}$, tỉ lệ $0.95\times$, tốc độ $56\text{ px/s}$.
+         - Chim bay cao: $X = 980\text{ px}, Y = 450\text{ px}$, tỉ lệ $0.80\times$, tốc độ $50\text{ px/s}$.
+         - Chim bay thấp: $X = 1160\text{ px}, Y = 580\text{ px}$, tỉ lệ $0.88\times$, tốc độ $54\text{ px/s}$.
+         - Chim bay xa trên cao: $X = 1480\text{ px}, Y = 410\text{ px}$, tỉ lệ $0.68\times$, tốc độ $42\text{ px/s}$.
+       - Mỗi chú chim có pha đập cánh và tần số lượn sóng dọc $\sin(t)$ riêng biệt, bay từ Phải ➔ Trái và tự động tuần hoàn khi bay hết mép màn hình.
+  7. **Kiểm Thử Tự Động ([title-screen.test.ts](file:///e:/Pokemon/apps/web/test/title-screen.test.ts)):**
+     - Tạo test suite kiểm tra đầy đủ: render DOM canvas, prompt, dev button, cơ chế start transition và nút bypass test nhanh.
+     - Toàn bộ 24 tệp test suite (180/180 bài test) đều **PASS 100%**.
+
+
+---
+
+### 0.61. Xây Dựng Intro Khởi Động Game: Màn Tối -> Logo2 Trắng -> Logo1 Màu -> Tách Màn Hình Trượt Lên/Xuống:
+
+- **Trạng thái:** Đã hoàn thành 100%. 23 tệp test suite (177/177 tests), Typecheck và Schema validation đều đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** Xây dựng một đoạn intro khi bắt đầu vào game:
+  1. Ban đầu là màn hình tối đen (`#000000`).
+  2. Sau đó `logo2.png` (viền trắng Pokémon) xuất hiện từ bóng tối.
+  3. Tiếp theo `logo1.png` (logo Pokémon đầy đủ màu sắc vàng/xanh) xuất hiện bừng sáng thay thế logo2.
+  4. Sau đó từ chính giữa màn hình tách đôi làm 2: 1 nửa đẩy trượt lên trên, 1 nửa đẩy trượt xuống dưới mở ra thế giới game.
+- **Chi tiết đã thực hiện:**
+  1. **Đồng Bộ Tài Nguyên Intro ([apps/web/public/Graphics/Intro/](file:///e:/Pokemon/apps/web/public/Graphics/Intro/)):**
+     - Sao chép toàn bộ thư mục tài nguyên từ `e:\Pokemon\Graphics\Intro` sang `apps/web/public/Graphics/Intro/` để server tĩnh phục vụ ảnh chất lượng gốc với pixelated rendering chuẩn sắc nét.
+  2. **Bộ Điều Khiển Hoạt Họa Điện Ảnh ([game-intro.ts](file:///e:/Pokemon/apps/web/src/ui/game-intro.ts)):**
+     - Xây dựng kiến trúc Dual Shutter (màn sập đôi: nửa trên `intro-shutter-top` và nửa dưới `intro-shutter-bottom`).
+     - Tận dụng `intro-content-wrapper` chiều cao 200% căn giữa nội dung, giúp 2 nửa ảnh logo trên và dưới khớp nối chính xác 100% không lệch 1 pixel nào trước khi tách.
+     - **Dòng thời gian (Timeline):**
+       - **Giai đoạn 1 (0 – 600ms):** Toàn màn hình tối đen tuyền tĩnh lặng.
+       - **Giai đoạn 2 (600ms):** `logo2.png` (viền trắng) fade in với hiệu ứng glow phát sáng viền huyền ảo (`drop-shadow(0 0 28px rgba(96, 165, 250, 0.55))`).
+       - **Giai đoạn 3 (2200ms):** `logo1.png` (full color) hiện rõ với hào quang vàng/xanh bừng sáng rực rỡ, làm mờ nhẹ logo viền trắng phía sau.
+       - **Giai đoạn 4 (4200ms):** Tia chớp năng lượng horizon (`intro-center-flash`) lóe sáng rực rỡ dọc đường phân cách giữa màn hình, sau đó 2 nửa shutter tách ra: nửa trên trượt lên (`translateY(-100%)`), nửa dưới trượt xuống (`translateY(100%)`) bằng đường cong gia tốc mượt mà `cubic-bezier(0.77, 0, 0.175, 1)`.
+       - Sau 950ms khi 2 nửa trượt hoàn toàn ra khỏi khung hình, overlay được tháo dỡ sạch sẽ và kích hoạt callback `onComplete()`.
+     - **Tính năng tương tác:**
+       - Hỗ trợ Skip tức thì: Nhấp chuột hoặc nhấn phím bất kỳ (Space, Enter, Esc, v.v.) sẽ lập tức chuyển sang hiệu ứng tách màn hình nhanh chóng mà không phải chờ đợi.
+  3. **Tạo Kiểu Dáng Đồ Họa CSS ([style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Thêm toàn bộ các lớp tạo hình `.game-intro-overlay`, `.intro-shutter`, `.intro-shutter-top`, `.intro-shutter-bottom`, `.intro-logo-box`, `.intro-logo-outline`, `.intro-logo-color`, `.intro-center-flash`, và `.intro-skip-hint`.
+     - **Khắc phục đường lằn ở giữa:** Loại bỏ hoàn toàn đường viền `.intro-seam-line` (trước đó có màu trắng mờ 12% ở mép hai nửa shutter) và đặt `visibility: hidden` cho tia chớp trung tâm khi chưa kích hoạt, đảm bảo màn hình đen tuyền tuyệt đối 100%, liền mạch không tì vết.
+  4. **Tích Hợp Khởi Động & Công Cụ Test ([bootstrap.ts](file:///e:/Pokemon/apps/web/src/bootstrap.ts), [game-overlay.ts](file:///e:/Pokemon/apps/web/src/ui/game-overlay.ts)):**
+     - Tự động kích hoạt Intro sau khi hoàn tất nạp assets lúc mở game.
+     - Bổ sung nút `🎬 Intro` ngay trên thanh Diagnostic Panel (`#btnReplayIntro`) và hàm toàn cục `window.replayIntro()` trong DevTools giúp dễ dàng kiểm tra, phát lại intro nhiều lần mà không cần F5 làm mới trang.
+  5. **Kiểm Thử Tự Động ([game-intro.test.ts](file:///e:/Pokemon/apps/web/test/game-intro.test.ts)):**
+     - Tạo mới test suite kiểm tra đầy đủ vòng đời: khởi tạo màn tối, tiến trình chuyển màu logo theo thời gian, hiệu ứng tách đôi trên/dưới và cơ chế skip phím/chuột.
+     - 23/23 tệp test suite (177/177 bài test) đều **PASS 100%**.
+
+---
+
+### 0.60. Tinh Chỉnh Giao Diện Chiêu Thức Trang Bị: Đẩy Lên 70px & Khớp Trọn Vẹn Asset Nút:
+
+- **Trạng thái:** Đã hoàn thành 100%. 22 tệp test suite (174/174 tests), Typecheck và Schema validation đều đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** Đẩy khu vực chiêu thức trang bị lên 70px (thu hẹp khoảng trống lớn với bảng chỉ số và không bị thụt sâu xuống đáy bảng); loại bỏ phần khung hình vuông/chữ nhật màu đen thừa thãi bị lồi ra ngoài so với asset nút chiêu thức.
+- **Chi tiết đã thực hiện:**
+  1. **Đẩy Khu Vực Chiêu Thức Trang Bị Lên 70px ([style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Đặt `margin-bottom: 70px;` và `margin-top: 14px;` cho `.summary-moves-section`, nhấc toàn bộ cụm chiêu thức trang bị lên 70px, tạo khoảng cách hài hòa, cân đối giữa Bảng Chỉ Số Chiến Đấu và Chiêu Thức Trang Bị thay vì bị dồn xuống đáy bảng.
+  2. **Loại Bỏ Khung Vuông Đen Thừa Phía Sau Asset Chiêu Thức ([style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Xóa bỏ `background: rgba(10, 20, 35, 0.95)`, viền đen `border: 1px solid #000000` và `box-shadow` thừa khỏi `.summary-move-slot` khi đã trang bị chiêu thức.
+     - Cập nhật `.move-fight-canvas` mở rộng `width: 100%; height: 100%;` kết hợp `filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6))` giúp asset nút `battleFightButtons.png` phủ kín trọn vẹn ô chiêu thức, không còn bất kỳ đường viền đen hay hình vuông nào bị lộ/thừa ra ngoài.
+     - Ô trống (`.summary-move-slot.empty`) vẫn giữ nguyên viền nét đứt thanh lịch và chữ `+ Ô trống`.
+
+---
+
+### 0.59. Điều Chỉnh Chỉ Số Cá Thể (IVs 0–31) & Tính Cách Ngẫu Nhiên Cho Pokémon Hoang Dã / Mới Thu Phục:
+
+- **Trạng thái:** Đã hoàn thành 100%. 22 tệp test suite (174/174 tests), Typecheck và Schema validation đều đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** Sửa lỗi Pokémon hoang dã mới bắt trong thế giới game luôn có toàn bộ chỉ số IVs đạt tối đa (full 31) và tính cách luôn là Hardy (Neutral). Điều chỉnh lại theo đúng cơ chế Pokémon chuẩn xác.
+- **Nguyên nhân cốt lõi phát hiện:**
+  - Trong hàm tạo `createPartyPokemon()` ([party-state.ts](file:///e:/Pokemon/apps/web/src/domain/party/party-state.ts)), khi không truyền tham số `options.rng`, hệ thống bị gán mặc định `createDefaultIvs(31)` và tính cách mặc định `'Hardy'`.
+  - Khi người chơi bắt thành công Pokémon hoang dã trong trận đấu ([game-session.ts](file:///e:/Pokemon/apps/web/src/game/game-session.ts)), hàm tạo chỉ truyền `{ isShiny }` mà không truyền `rng` hay chỉ số của đấu sĩ hoang dã, dẫn tới tất cả Pokémon thu phục được đều nhận 31/31 điểm ở cả 6 chỉ số IVs.
+- **Chi tiết đã thực hiện:**
+  1. **Đồng Bộ Cơ Chế Sinh IVs (0–31) & Natures Theo Chuẩn Canonical ([party-state.ts](file:///e:/Pokemon/apps/web/src/domain/party/party-state.ts)):**
+     - Sửa mặc định trong `createPartyPokemon`: Khi không chỉ định `options.ivs === 'perfect'`, hệ thống sẽ tự động gieo xúc xắc ngẫu nhiên độc lập từng chỉ số cá thể từ 0 đến 31 (`createRandomIvs(activeRng)`) cho cả 6 chỉ số (HP, Atk, Def, SpA, SpD, Speed).
+     - Tính cách (Nature) được chọn ngẫu nhiên đồng đều trong 25 tính cách kinh điển (`ALL_NATURES`), phản ánh chân thực các biến số tăng/giảm +10% / -10% trên bảng chỉ số.
+     - Tùy chọn `ivs: 'perfect'` vẫn được duy trì nguyên vẹn phục vụ cho các trường hợp đặc biệt (ví dụ Pokémon huyền thoại hoặc cấu hình riêng).
+  2. **Gắn IVs & Natures Ngẫu Nhiên Vào Đấu Sĩ Hoang Dã ([battle-factory.ts](file:///e:/Pokemon/apps/web/src/battle/battle-factory.ts), [types.ts](file:///e:/Pokemon/apps/web/src/battle/types.ts)):**
+     - Mở rộng kiểu dữ liệu `BattlerPokemon` mang theo `ivs?: PokemonStatValues` và `nature?: NatureName`.
+     - Trong `createBattler`, khi Pokémon hoang dã xuất hiện, hệ thống sinh ngay bộ IVs (0–31) và Tính cách riêng cho cá thể đó (sử dụng `defaultRng` độc lập nhằm bảo toàn chuỗi PRNG trong combat).
+  3. **Lưu Giữ Trọn Vẹn Thuộc Tính Khi Thu Phục ([game-session.ts](file:///e:/Pokemon/apps/web/src/game/game-session.ts)):**
+     - Khi quăng bóng bắt thành công Pokémon hoang dã (`result.outcome === 'caught'`), Pokémon được thêm vào đội hình hoặc PC sẽ thừa hưởng chính xác bộ `ivs` và `nature` mà người chơi vừa đối đầu trong trận đấu.
+  4. **Migration & Fallback ([save-repository.ts](file:///e:/Pokemon/apps/web/src/domain/save/save-repository.ts), [party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts), [storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts)):**
+     - Cập nhật hàm nạp save cũ: tự động gieo IVs ngẫu nhiên (0–31) và tính cách ngẫu nhiên thay vì gán cứng 31 và Hardy.
+     - Fallback hiển thị UI chuyển từ 31 sang 0 nếu thiếu dữ liệu, ngăn chặn tình trạng hiển thị sai lệch điểm số tối đa.
+  5. **Kiểm Thử Tự Động ([pokemon-nature-stats.test.ts](file:///e:/Pokemon/apps/web/test/pokemon-nature-stats.test.ts)):**
+     - Bổ sung test kiểm tra xác thực việc sinh ngẫu nhiên IVs trong dải 0–31 và độ đa dạng tính cách trên nhiều mẫu thử.
+     - Toàn bộ 22 tệp test suite (174 bài test) đều **PASS 100%**.
+
+---
+
+### 0.58. Nâng Cấp Bảng Chi Tiết Pokémon: Mở Rộng Kích Thước (900x490px), Bỏ Mạng Nhện & Tái Thiết Kế Phối Màu Dịu Mắt (Slate Navy & Soft Pastel):
+
+- **Trạng thái:** Đã hoàn thành 100%. 22 tệp test suite (174/174 tests), Typecheck và Schema validation đều đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** Mở rộng bảng giao diện chi tiết ra cho rộng rãi, thoáng đãng; bỏ phần biểu đồ mạng nhện (radar chart) vì thấy thừa; thiết kế lại tông màu của toàn bộ giao diện chi tiết cho dịu mắt, dễ nhìn hơn.
+- **Chi tiết đã thực hiện:**
+  1. **Mở Rộng Không Gian Bố Cục ([style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Tăng kích thước khung modal `.summary-modal-inner` từ $780 \times 415\text{ px}$ lên $900 \times 490\text{ px}$, tối ưu tỷ lệ responsive (1.15x / 1.0x / 0.88x) cho các kích thước màn hình.
+     - Cột bên trái (`.summary-left`) mở rộng lên $205\text{ px}$. Khung ảnh sprite Pokémon tăng từ $104\text{ px}$ lên $120\text{ px}$ (sprite canvas $110 \times 110\text{ px}$), hiển thị Pokémon sắc nét và hoành tráng.
+     - Khu vực chiêu thức (`.summary-moves-section`) mở rộng chiều cao thẻ chiêu thức từ $38\text{ px}$ lên $46\text{ px}$, khoảng cách lưới $7\text{ px}$, nhãn Type Badge và PP hiển thị rõ ràng, thoáng đãng.
+  2. **Loại Bỏ Hoàn Toàn Thành Phần Mạng Nhện Thừa ([party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts), [storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Gỡ bỏ hoàn toàn thanh tab chuyển đổi (`📊 BẢNG` / `🕸️ MẠNG NHỆN`), các nút chọn chế độ radar và canvas mạng nhện khỏi cả Party Screen và PC Storage Screen.
+     - Dọn dẹp state và event listeners thừa, bảng chỉ số chiến đấu được ưu tiên hiển thị toàn bộ 100% không gian tab chỉ số một cách tập trung, trực quan.
+  3. **Tái Thiết Kế Phối Màu Dịu Mắt & Sang Trọng (Slate Navy & Soft Pastel):**
+     - **Tông nền modal:** Chuyển sang gradient đêm trầm dịu mắt `linear-gradient(180deg, #162032 0%, #0d1522 100%)` với viền mềm `#334155` và hiệu ứng đổ bóng mờ ảo, không gây chói mắt khi nhìn lâu.
+     - **Khung thông tin phụ (`.summary-meta-box`):** Nền slate sẫm trong suốt `rgba(15, 23, 42, 0.75)`, tên tính cách tô vàng ấm `#fbbf24`, hiệu ứng tăng/giảm chỉ số màu xanh băng dịu `#38bdf8`.
+     - **Bảng chỉ số 5 cột (`.summary-stats-table`):**
+       - Tiêu đề bảng: Chữ xám sáng `#94a3b8` viền đáy mảnh thanh lịch.
+       - Tên chỉ số: Chỉ số tăng bởi tính cách (+10%) có icon `▲` màu đỏ san hô `#f87171`; chỉ số giảm (-10%) có icon `▼` màu xanh ngọc `#38bdf8`.
+       - Thanh đo chỉ số (Stat Bars): Phối màu Pastel mềm mại hài hòa (HP: Lục bảo `#10b981`, Atk: San hô ấm `#f43f5e`, Def: Xanh biển `#3b82f6`, Sp.Atk: Tím oải hương `#a855f7`, Sp.Def: Vàng hổ phách `#eab308`, Speed: Mòng két `#06b6d4`).
+       - Cột IVs (0–31): Điểm tối đa 31 được làm nổi bật với màu vàng ánh kim `#facc15` rực rỡ.
+       - Cột EVs (0–252): Điểm đã luyện làm nổi bật màu xanh bạc hà `#34d399`.
+       - Dòng chân bảng: `Tổng nỗ lực (EVs): [Tổng] / 510` hiển thị gọn gàng, trang nhã.
+  4. **Kiểm Thử & Đảm Bảo Tính Toàn Vẹn:**
+     - Toàn bộ 22 tệp test suite (173 bài test) đều **PASS 100%**.
+     - TypeScript compiler check pass 0 lỗi.
+
+---
+
+### 0.57. Kiến Trúc Sự Kiện Trận Đấu Có Cấu Trúc (Structured Battle Events System - Step 6 Chuẩn Hóa Chuỗi Sự Kiện Mạng PvP):
+
+- **Trạng thái:** Đã hoàn thành 100% Bước 6 theo lộ trình kiến trúc. 21 tệp test suite (169/169 tests) và TypeScript check đạt kết quả **PASS 100%**.
+- **Mục tiêu kiến trúc:** Thay thế hoàn toàn cơ chế phụ thuộc vào phân tích chuỗi văn bản (`TurnResult.message`) bằng các đối tượng sự kiện nguyên tử, định kiểu chặt chẽ (`BattleEvent[]`), tương thích trực tiếp với các khung gói tin WebSocket định nghĩa trong [docs/09-network-protocol.md](file:///e:/Pokemon/docs/09-network-protocol.md) phục vụ tính năng LAN PvP N2.
+- **Chi tiết đã thực hiện:**
+  1. **Định Nghĩa Schema Sự Kiện Cấp Core ([battle-events.ts](file:///e:/Pokemon/packages/shared-types/battle-events.ts), [index.ts](file:///e:/Pokemon/packages/shared-types/index.ts)):**
+     - Xây dựng 20 kiểu sự kiện strongly-typed trong union `BattleEvent`:
+       - Khởi động lượt: `move_declared` (bên tấn công, tên đấu sĩ, moveId, moveName).
+       - Nạp năng lượng & Độn thổ: `charge_begin` (hấp thụ ánh sáng, nạp lực), `semi_invulnerable_enter` (bay lên trời `flying`, độn thổ `underground`, lặn sâu `underwater`, nhảy cao `high`).
+       - Khiên & Bất khả xâm phạm: `protect_activated` (tự bảo vệ thành công/thất bại), `protect_blocked` (chặn đứng đòn đánh), `semi_invulnerable_miss` (đòn đánh trượt do mục tiêu đang bay/độn thổ).
+       - Né tránh & Miễn nhiễm: `accuracy_miss` (đòn đánh trượt theo độ chính xác), `type_immune` (miễn nhiễm theo bảng hệ).
+       - Trạng thái cản trở: `recharge_hindered` (phải nghỉ lượt nạp năng lượng), `status_hindered` (ngủ say, đóng băng, tê liệt không thể cử động), `status_cured` (tỉnh giấc, tan băng).
+       - Sát thương & Chuỗi đòn: `damage_dealt` (sát thương, lượng máu còn lại, tỷ lệ khắc hệ, chí mạng, số đòn trúng), `multi_hit_completed` (hoàn tất chuỗi đòn liên hoàn với tổng số lần đánh trúng `hitsCount`).
+       - Phục hồi & Phản đòn: `hp_restored` (hồi máu qua chiêu thức, hút máu, vật phẩm, ký sinh), `recoil_damage` (tổn thương phản lực do đòn đánh va chạm).
+       - Chỉ số & Hiệu ứng phụ: `stat_stage_changed` (tăng/giảm bậc chỉ số từ -6 đến +6), `status_inflicted` (nhiễm bỏng, độc, tê liệt, ngủ...).
+       - Hạ gục & Kéo theo: `fainted` (đấu sĩ ngất xỉu khi HP về 0), `destiny_bond_triggered` (kéo đối thủ ngất xỉu theo khi bị hạ gục).
+       - Cuối lượt: `end_turn_damage` (sát thương cuối lượt do bỏng, trúng độc, độc cực mạnh hoặc hạt giống ký sinh).
+  2. **Tích Hợp Vào Battle Engine ([battle-engine.ts](file:///e:/Pokemon/apps/web/src/battle/battle-engine.ts), [types.ts](file:///e:/Pokemon/apps/web/src/battle/types.ts)):**
+     - Mở rộng giao diện `TurnResult` và `EndTurnResult` bổ sung trường `events: BattleEvent[]`.
+     - Giữ nguyên `message` và `damage` để duy trì tính tương thích ngược 100% với hệ thống giao diện, Text Overlay và các bài test hiện có.
+     - Toàn bộ các nhánh logic trong `executeAttack` và `applyEndTurnEffects` đều tự động tạo và thu thập các `BattleEvent` theo đúng trình tự thời gian xảy ra hành động.
+  3. **Bộ Kiểm Thử Độc Lập Cho Sự Kiện ([battle-events.test.ts](file:///e:/Pokemon/apps/web/test/battle-events.test.ts)):**
+     - Xây dựng bộ 8 unit tests chuyên sâu kiểm chứng:
+       - Trình tự sinh sự kiện chuẩn xác: `move_declared` -> `damage_dealt` -> `fainted`.
+       - Kích hoạt khiên và chặn đòn: `protect_activated` -> `protect_blocked`.
+       - Lượt nghỉ sau chiêu mạnh: `recharge_hindered` sau khi dùng Hyper Beam.
+       - Trạng thái bán bất khả xâm phạm: `semi_invulnerable_enter` và `semi_invulnerable_miss` khi mục tiêu bay lên trời.
+       - Chuỗi đòn nhiều lần: `multi_hit_completed` với `hitsCount` chính xác.
+       - Thay đổi bậc chỉ số: `stat_stage_changed` với delta và stage chính xác.
+       - Hạ gục đối thủ: `fainted` khi HP = 0.
+       - Sát thương cuối lượt: `end_turn_damage` do bỏng/độc trong `applyEndTurnEffects`.
+     - Toàn bộ 21 tệp test suite (169 bài test) đều **PASS 100%**.
+
+---
+- **Yêu cầu người dùng:** Triển khai đầy đủ chiêu thức 2 lượt, lượt nghỉ sau chiêu mạnh, Protect/Detect, multi-hit, xử lý các chiêu power=0 còn lại, và thống nhất 100% hội thoại trận đấu sang Tiếng Việt không còn lẫn lộn Anh - Việt.
+- **Chi tiết đã thực hiện:**
+  1. **Cơ Chế Chiêu Thức 2 Lượt (2-Turn Moves & Semi-Invulnerability) ([battle-engine.ts](file:///e:/Pokemon/apps/web/src/battle/battle-engine.ts)):**
+     - **Nhóm Semi-Invulnerable (Bán bất khả xâm phạm):**
+       - `Fly`: Lượt 1 bay vút lên không trung (`semiInvulnerable: 'flying'`). Miễn nhiễm hầu hết mọi đòn tấn công (chỉ trúng bởi Gust, Thunder, Twister, Sky Uppercut, Hurricane, Smack Down). Lượt 2 lao xuống tấn công.
+       - `Dig`: Lượt 1 đào sâu vào lòng đất (`semiInvulnerable: 'underground'`). Chỉ trúng bởi Earthquake, Magnitude, Fissure. Lượt 2 trồi lên tấn công.
+       - `Dive`, `Bounce`, `Shadow Force`, `Phantom Force`: Lặn dưới nước, bật nhảy lên cao hoặc biến mất vào bóng tối ở lượt 1, tung đòn ở lượt 2.
+     - **Nhóm Nạp Năng Lượng (Charging Moves):**
+       - `Solar Beam`: Lượt 1 hấp thụ ánh sáng mặt trời, lượt 2 bắn luồng sáng rực rỡ.
+       - `Skull Bash`: Lượt 1 thu đầu vào tăng +1 Phòng thủ (`statStages.defense + 1`), lượt 2 húc đầu cực mạnh.
+       - `Sky Attack`, `Razor Wind`, `Geomancy`: Nạp năng lượng ở lượt đầu, tung chiêu hủy diệt ở lượt sau.
+  2. **Cơ Chế Lượt Nghỉ Sau Đòn Cực Mạnh (Recharge Turn Moves) ([battle-engine.ts](file:///e:/Pokemon/apps/web/src/battle/battle-engine.ts)):**
+     - Áp dụng cho: `Hyper Beam`, `Giga Impact`, `Frenzy Plant`, `Blast Burn`, `Hydro Cannon`, `Roar of Time`, `Rock Wrecker`.
+     - Sau khi tung đòn thành công, Pokémon nhận cờ `mustRecharge = true`.
+     - Ở lượt tiếp theo, Pokémon không thể ra chiêu, hiển thị thông báo: `"[Tên] phải nạp lại năng lượng và không thể cử động!"` và giải phóng trạng thái nạp.
+  3. **Lá Chắn Tuyệt Đối (Protect & Detect) ([battle-engine.ts](file:///e:/Pokemon/apps/web/src/battle/battle-engine.ts)):**
+     - Độ ưu tiên Priority +4 (luôn kích hoạt trước đòn tấn công đối thủ).
+     - Chặn 100% sát thương và hiệu ứng của đòn tấn công nhắm vào người dùng trong lượt đó.
+     - Cơ chế giảm tỷ lệ thành công khi dùng liên tiếp chuẩn Pokémon chính thức: Lần 1: 100%, Lần 2: 50%, Lần 3: 25%, Lần 4: 12.5%... Khi dùng chiêu thức khác sẽ reset lại 100%.
+     - Hỗ trợ phá khiên bằng các chiêu xuyên thủng: `Feint`, `Shadow Force`, `Phantom Force`.
+  4. **Chuỗi Đòn Tấn Công Liên Hoàn (Multi-Hit Moves) ([battle-engine.ts](file:///e:/Pokemon/apps/web/src/battle/battle-engine.ts)):**
+     - Đòn đánh 2 lần: `Double Kick`, `Twineedle`, `Bonemerang`, `Dual Chop`, `Gear Grind`, `Dragon Darts`.
+     - Đòn đánh 2–5 lần: `Double Slap`, `Fury Swipes`, `Comet Punch`, `Bullet Seed`, `Pin Missile`, `Rock Blast`, `Tail Slap`, `Water Shuriken`, `Icicle Spear`, `Arm Thrust`, `Bone Rush`, `Spike Cannon`, `Barrage`, `Fury Attack`.
+     - Tính toán chuẩn xác số lần đánh trúng thực tế và thông báo Tiếng Việt: `"Đánh trúng X lần!"`.
+  5. **Xử Lý Toàn Diện 29+ Chiêu Thức Power = 0 & Sát Thương Động ([battle-engine.ts](file:///e:/Pokemon/apps/web/src/battle/battle-engine.ts)):**
+     - Sát thương cố định: `Seismic Toss` & `Night Shade` (gây sát thương đúng bằng Level người dùng), `Dragon Rage` (40 HP), `Sonic Boom` (20 HP).
+     - Sát thương % HP: `Super Fang`, `Nature's Madness`, `Ruination` (cắt 50% HP hiện tại), `Guardian of Alola` (75% HP hiện tại), `Endeavor` (rút máu đối thủ bằng đúng HP người dùng).
+     - Hi sinh ngất xỉu: `Final Gambit` (gây sát thương bằng HP người dùng và người dùng ngất xỉu).
+     - Chiêu thức theo tỷ lệ tốc độ: `Electro Ball` (40..150 power theo tỷ lệ tốc độ), `Gyro Ball` (lên đến 150 power dựa trên độ chênh lệch tốc độ đối thủ).
+     - Chiêu thức cân nặng & HP: `Low Kick`, `Grass Knot`, `Heavy Slam`, `Heat Crash`, `Crush Grip`, `Wring Out`, `Hard Press`.
+     - Chiêu thức biến số ngẫu nhiên: `Magnitude` (Địa chấn cấp 4 đến 10), `Present` (tặng quà gây 40/80/120 damage hoặc hồi 25% HP đối thủ).
+     - Chiêu thức phản đòn & đòn đặc biệt: `Counter`, `Mirror Coat`, `Metal Burst`, `Bide`, `Trump Card`, `Punishment`.
+     - Chiêu trạng thái đặc thù:
+       - `Belly Drum`: Hi sinh 50% max HP để tối đa hóa Tấn công (+6 stages).
+       - `Pain Split`: Cộng dồn HP của 2 bên chia đôi bằng nhau.
+       - `Destiny Bond`: Nếu người dùng bị hạ gục trong lượt, đối thủ cũng bị kéo ngất xỉu theo.
+       - `Leech Seed`: Gieo hạt ký sinh hút 1/8 HP mỗi cuối lượt hồi phục cho người dùng.
+       - `Haze` & `Clear Smog`: Xóa sạch toàn bộ thay đổi chỉ số của 2 bên về 0.
+       - `Splash`: Thông báo chuẩn `"Nhưng không có gì xảy ra cả!"`.
+  6. **Đồng Bộ & Thống Nhất 100% Hội Thoại Trận Đấu Sang Tiếng Việt:**
+     - Loại bỏ toàn bộ từ ngữ tiếng Anh chắp vá trong trận đấu:
+       - Xuất hiện & Triệu hồi: `"[Tên] hoang dã xuất hiện!"`, `"Tiến lên! [Tên]!"`, `"[Tên], quay lại!"`.
+       - Ngất xỉu: `"[Tên] hoang dã đã ngất xỉu!"`, `"[Tên] đã ngất xỉu!"`.
+       - Kinh nghiệm: `"[Tên] nhận được X EXP!"`.
+       - Trạng thái cản trở: `"đang ngủ say!"`, `"đã tỉnh giấc!"`, `"đã tan băng!"`, `"bị đóng băng cứng đờ!"`, `"bị tê liệt hoàn toàn! Không thể cử động!"`.
+       - Né đòn & Trúng đòn: `"Nhưng đã trượt!"`, `"Không có tác dụng lên [Tên]!"`, `"Đòn đánh cực kỳ hiệu quả!"`, `"Đòn đánh không mấy hiệu quả..."`, `"Đòn chí mạng!"`.
+       - Tổn thương cuối lượt: `"bị tổn thương bởi vết bỏng!"`, `"bị tổn thương bởi chất độc!"`, `"bị tổn thương bởi độc cực mạnh!"`.
+       - Hồi phục & Hút máu: `"HP của [Tên] đã đầy!"`, `"đã hồi phục HP!"`, `"bị hút cạn sinh lực!"`, `"bị phản lực tổn thương!"`.
+       - Thay đổi chỉ số: `"Chỉ số Tấn công/Phòng thủ/Tốc độ... tăng mạnh / tăng lên / giảm xuống / giảm mạnh"`.
+       - Chạy trốn: `"Đã chạy trốn an toàn!"`, `"Không thể chạy trốn!"`.
+       - Giao diện Text Overlay: `"Bạn muốn [Tên] làm gì?"`, `"BÓNG POKÉ: xX"`, nút `"⚾ NÉM BÓNG"`, `"QUAY LẠI"`.
+  7. **Kiểm Thử Toàn Diện ([battle-advanced-moves.test.ts](file:///e:/Pokemon/apps/web/test/battle-advanced-moves.test.ts)):**
+     - Viết bộ 13 bài test chuyên sâu kiểm tra: Solar Beam 2 lượt, Skull Bash tăng thủ, Fly bay lên né đòn, Dig độn thổ né đòn, Hyper Beam nghỉ lượt, Protect chặn đòn và priority +4, Double Kick 2 hit, Double Slap 2..5 hit, Seismic Toss sát thương bằng level, Super Fang cắt 50% HP, Belly Drum hi sinh HP max attack, Pain Split chia đôi HP, Destiny Bond kéo đối thủ ngất theo.
+     - Toàn bộ 20 test suite (161 bài test) đều **PASS 100%**.
+
+---
+
+## Cập nhật trước đó: 2026-10-08 (Hệ Thống Tính Cách 25 Natures, Chỉ Số Lõi IVs/EVs, Động Cơ Vật Phẩm Hướng Dữ Liệu & Đường Cong Kinh Nghiệm EXP Chuẩn)
+
+### 0.55. Chuẩn Hóa Hệ Thống Tính Cách (25 Natures), Chỉ Số Lõi IVs/EVs, Động Cơ Vật Phẩm Hướng Dữ Liệu & 6 Đường Cong Kinh Nghiệm EXP Chuẩn:
+
+- **Trạng thái:** Đã hoàn thành 100% Bước 1, Bước 2, Bước 3, Bước 4 theo lộ trình kiến trúc. 19 tệp test suite (148/148 tests) và TypeScript check đạt kết quả **PASS 100%**.
+- **Yêu cầu & Mục tiêu thực hiện:**
+  - **Bước 1**: Chuẩn hóa công thức chỉ số cốt lõi từ `(base, level, ivs, evs, nature)`. Tích hợp đầy đủ bảng 25 Tính cách (Natures) chính thức của Pokémon kèm hệ số 1.1x / 0.9x / 1.0x, IVs (0..31), EVs (0..252/chỉ số, tối đa 510 tổng). Nâng cấp save migration lên phiên bản 2 (`CURRENT_SAVE_VERSION = 2`).
+  - **Bước 2**: Chuẩn hóa dược phẩm theo Gen 7 (Super Potion 60 HP, Hyper Potion 120 HP), Vitamin tăng EV có trần (252 EV/stat, 510 total EV), Rare Candy đồng bộ cơ chế lên cấp thống nhất, Dire Hit tăng bậc crit (+2 stages), Ice Heal, X-Accuracy, chặn cap +6 stages, sửa lỗi mất `heldItem` (lưu bằng `rawId`) và hái Berries cộng vào balo.
+  - **Bước 3**: Chuyển đổi toàn diện cơ chế vật phẩm sang **Data-Driven Item Engine** (`ITEM_EFFECTS_REGISTRY`), xóa bỏ 4 chuỗi `if-else` lặp lại giữa Overworld và Battle, trả về mã kết quả có cấu trúc (`ItemResultCode`).
+  - **Bước 4**: Tích hợp 6 đường cong kinh nghiệm chuẩn (`Fast`, `Medium Fast`, `Medium Slow`, `Slow`, `Erratic`, `Fluctuating`), tính toán chính xác mốc EXP cấp 100 và công thức EXP Yield Gen 7 `floor((b * L) / 7)`.
+- **Chi tiết đã thực hiện:**
+  1. **Bảng 25 Tính Cách & Kiểu Dữ Liệu Mới ([shared-types/pokemon.ts](file:///e:/Pokemon/packages/shared-types/pokemon.ts)):**
+     - Bổ sung `StatKey`, `StatKeyWithoutHp`, `PokemonStatValues`, `NatureName`, `NatureData`, `NATURES_TABLE`: đầy đủ 25 tính cách (Hardy, Lonely, Brave, Adamant, Naughty, Bold, Docile, Relaxed, Impish, Lax, Timid, Hasty, Serious, Jolly, Naive, Modest, Mild, Quiet, Bashful, Rash, Calm, Gentle, Sassy, Careful, Quirky) với tên tiếng Việt và chỉ số tăng/giảm.
+  2. **Động Cơ Tính Chỉ Số Lõi ([pokemon-stats.ts](file:///e:/Pokemon/apps/web/src/domain/party/pokemon-stats.ts)):**
+     - Triển khai công thức Gen 3-7 chuẩn:
+       - HP: $\lfloor\frac{(2 \times \text{Base} + \text{IV} + \lfloor\text{EV}/4\rfloor) \times \text{Level}}{100}\rfloor + \text{Level} + 10$ (Shedinja cố định = 1).
+       - Khác: $\lfloor(\lfloor\frac{(2 \times \text{Base} + \text{IV} + \lfloor\text{EV}/4\rfloor) \times \text{Level}}{100}\rfloor + 5) \times \text{NatureMult}\rfloor$.
+     - Hàm `addEffortValues` thực thi giới hạn trần: tối đa 252 EV cho một chỉ số và 510 EV tổng cộng.
+  3. **Mở Rộng PartyPokemon & Save Migration v2 ([party-state.ts](file:///e:/Pokemon/apps/web/src/domain/party/party-state.ts), [save-state.ts](file:///e:/Pokemon/apps/web/src/domain/save/save-state.ts), [save-repository.ts](file:///e:/Pokemon/apps/web/src/domain/save/save-repository.ts)):**
+     - Bổ sung `ivs`, `evs`, `nature` vào giao diện `PartyPokemon`.
+     - Nâng `CURRENT_SAVE_VERSION` lên `2`. Thêm hàm `migrateSaveV1ToV2` tự động bù đắp IV 31, EV 0, Hardy cho các file save cũ v1.
+  4. **Động Cơ Vật Phẩm Khai Báo Dữ Liệu ([item-catalog-effects.ts](file:///e:/Pokemon/apps/web/src/domain/inventory/item-catalog-effects.ts), [item-effects.ts](file:///e:/Pokemon/apps/web/src/domain/inventory/item-effects.ts)):**
+     - Gom nhóm toàn bộ Dược phẩm Gen 7 (Potion 20, Super 60, Hyper 120, Max 9999), Quả mọng (Oran 10, Sitrus 25% max HP), Hồi sinh (Revive 50%, Max Revive 100%), Trị trạng thái, Vitamin (tăng 10 EV), Rare Candy, Vật phẩm trận đấu (X Attack, Dire Hit...) vào bảng khai báo `ITEM_EFFECTS_REGISTRY`.
+     - Thay thế toàn bộ chuỗi `if-else` cũ bằng bảng tra cứu declarative, trả về mã kết quả có cấu trúc (`SUCCESS`, `ERR_FAINTED`, `ERR_HP_FULL`, `ERR_EV_STAT_MAX`, v.v.).
+  5. **Động Cơ Kinh Nghiệm & Đường Cong EXP Chuẩn ([pokemon-exp.ts](file:///e:/Pokemon/apps/web/src/domain/pokemon/pokemon-exp.ts)):**
+     - Triển khai 6 công thức chuẩn cho 6 nhóm tốc độ tăng trưởng:
+       - Fast (800,000 EXP tại Lv.100)
+       - Medium Fast (1,000,000 EXP tại Lv.100)
+       - Medium Slow (1,059,860 EXP tại Lv.100)
+       - Slow (1,250,000 EXP tại Lv.100)
+       - Erratic (600,000 EXP tại Lv.100)
+       - Fluctuating (1,640,000 EXP tại Lv.100)
+     - Kết nối tính toán `maxExp` tự động trong `createPartyPokemon`, `recalculatePartyPokemonStats`, `syncBattleResult`, và `battle-factory.ts`.
+     - Tích hợp công thức EXP Yield Gen 7 chuẩn: $\lfloor\frac{b \times L}{7}\rfloor$.
+  6. **Sửa Lỗi Ngoại Vi & Kiểm Thử:**
+     - Sửa lỗi `heldItem` lưu tên tiếng Việt khiến mất item khi gỡ, lưu chuẩn `rawId` ([bag-screen.ts](file:///e:/Pokemon/apps/web/src/ui/bag-screen.ts)).
+     - Sửa lỗi hái Berry chín không cộng vào túi đồ ([berry-panel.ts](file:///e:/Pokemon/apps/web/src/ui/berry-panel.ts)).
+     - Tích hợp thuộc tính `critStage` và Dire Hit vào công thức tính chí mạng Gen 7 ([battle-engine.ts](file:///e:/Pokemon/apps/web/src/battle/battle-engine.ts)).
+     - Viết 2 bộ test mới: [pokemon-nature-stats.test.ts](file:///e:/Pokemon/apps/web/test/pokemon-nature-stats.test.ts) và [pokemon-exp.test.ts](file:///e:/Pokemon/apps/web/test/pokemon-exp.test.ts). Toàn bộ 19 tệp kiểm thử (148 bài tests) và TypeScript check đều vượt qua hoàn hảo.
+
+---
+
+## Cập nhật trước đó: 2026-10-07 (Logic Vật Phẩm Thực Tế & Khấu Trừ Số Lượng Balo)
 
 ### 0.54. Xây Dựng Hệ Thống Tác Dụng Vật Phẩm Thực Tế & Tự Động Trừ Số Lượng Trong Balo (Item Effects Engine & Inventory Consumption):
 
@@ -1825,3 +2177,33 @@
   - Thêm biểu tượng `menuPC.png` vào thanh menu góc trên bên phải màn hình.
   - Hỗ trợ phím tắt `C` (hoặc phím `Esc`) để mở/đóng kho lưu trữ PC tức thì.
 - **Kiểm thử & CI:** Bổ sung 5 bộ unit test cho `PcStorageService`, toàn bộ 109/109 tests passed 100%, typecheck và build production bundle pass.
+
+### 23. Chuẩn hóa Hệ thống Chỉ số Core, IV/EV, 25 Tính Cách (Natures) & Cân Bằng Vật Phẩm Chuẩn Gen 7
+
+- **25 Tính cách Pokémon chuẩn quốc tế ([pokemon-stats.ts](file:///e:/Pokemon/apps/web/src/domain/party/pokemon-stats.ts)):**
+  - Tích hợp đầy đủ bảng 25 Natures theo quy chuẩn Pokémon (Hardy, Lonely, Brave, Adamant, Naughty, Bold, Docile, Relaxed, Impish, Lax, Timid, Hasty, Serious, Jolly, Naive, Modest, Mild, Quiet, Bashful, Rash, Calm, Gentle, Sassy, Careful, Quirky).
+  - Nhân đúng hệ số: +10% (1.1x) cho chỉ số có lợi, -10% (0.9x) cho chỉ số bất lợi, HP không chịu ảnh hưởng của tính cách.
+  - Bổ sung tên tiếng Việt và mô tả ngắn gọn cho toàn bộ 25 tính cách phục vụ hiển thị UI.
+- **Hàm tính chỉ số cốt lõi thống nhất (`calculatePokemonStats`):**
+  - Công thức chuẩn Gen 3–7:
+    - HP = $\lfloor \frac{(2 \times \text{Base} + \text{IV} + \lfloor \text{EV}/4 \rfloor) \times \text{Level}}{100} \rfloor + \text{Level} + 10$ (Shedinja cố định 1 HP).
+    - Các chỉ số khác = $\lfloor (\lfloor \frac{(2 \times \text{Base} + \text{IV} + \lfloor \text{EV}/4 \rfloor) \times \text{Level}}{100} \rfloor + 5) \times \text{NatureMultiplier} \rfloor$.
+  - Thay thế toàn bộ công thức xấp xỉ cũ; dùng chung cho tạo Pokémon, lên cấp, Rare Candy, Vitamin và nạp bản lưu game.
+- **Tích hợp IVs, EVs và Nature vào `PartyPokemon`:**
+  - Bổ sung `ivs: PokemonStatValues` (0..31), `evs: PokemonStatValues` (0..252), `nature: NatureName`.
+  - Tự động sinh ngẫu nhiên khi bắt Pokémon dã ngoại, hỗ trợ cấu hình tùy chỉnh khi tạo/test.
+  - Hàm `recalculatePartyPokemonStats` tự động cập nhật lại toàn bộ chỉ số chính xác và bù trừ HP khi thăng cấp hoặc nạp Vitamin.
+  - **Save Migration:** Nâng `CURRENT_SAVE_VERSION = 2`. Tự động gán mặc định IV 31, EV 0, Hardy khi đọc bản lưu phiên bản 1.
+- **Khắc phục triệt để các sai lệch trong Item Engine ([item-effects.ts](file:///e:/Pokemon/apps/web/src/domain/inventory/item-effects.ts)):**
+  - **Vitamin (HP Up, Protein, Iron, Calcium, Zinc, Carbos):** Cộng +10 EV vào chỉ số tương ứng, có trần tối đa 252 EV/chỉ số và 510 EV tổng; chỉ số tăng vĩnh viễn và không bị xóa khi lên cấp.
+  - **Rare Candy:** Gọi trực tiếp hàm tính chỉ số chuẩn, khớp 100% với lộ trình lên cấp tự nhiên.
+  - **Dược phẩm chuẩn Gen 7:** Super Potion hồi 60 HP, Hyper Potion hồi 120 HP.
+  - **Vật phẩm trong trận:**
+    - Ice Heal & Aspear Berry chữa khỏi đóng băng (Freeze).
+    - Dire Hit tăng tỉ lệ chí mạng trong trận (`critStage + 2`), kết nối trực tiếp với công thức chí mạng của BattleEngine.
+    - X-Accuracy tăng +2 bậc chính xác.
+    - Chặn sử dụng các vật phẩm tăng bậc (X-Attack, X-Defense...) khi chỉ số đã đạt trần +6 để tránh lãng phí vật phẩm.
+  - **Sửa lỗi mất vật phẩm khi trao (`heldItem`):** Lưu chuẩn ID gốc (`rawId`) vào Pokémon thay vì tên hiển thị tiếng Việt, giải quyết lỗi biến mất vật phẩm khi trao đổi hoặc lấy lại.
+  - **Hái Berry ngoài map ([berry-panel.ts](file:///e:/Pokemon/apps/web/src/ui/berry-panel.ts)):** Kết nối trực tiếp `inventoryService.addItem(bush.type, count)` khi hái cây chín.
+- **Kiểm thử:** Đã bổ sung bộ test chuyên biệt [test/pokemon-nature-stats.test.ts](file:///e:/Pokemon/apps/web/test/pokemon-nature-stats.test.ts); toàn bộ 18 test suite (140/140 tests) và TypeScript typecheck đạt 100% PASS.
+

@@ -140,7 +140,7 @@ export function isRoadTile(
   const xkNext = getSegmentCol(k + 1, seed);
 
   // Main highway with 90-degree transitions
-  let onMain = false;
+  let onMain: boolean;
   if (yloc < 18) {
     onMain = Math.abs(gx - xk) <= 1;
   } else if (yloc < 21) {

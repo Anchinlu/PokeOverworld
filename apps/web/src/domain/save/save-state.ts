@@ -6,7 +6,7 @@
 import type { PlayerProfile } from '../player/player-state';
 import type { PartyPokemon } from '../party/party-state';
 
-export const CURRENT_SAVE_VERSION = 1;
+export const CURRENT_SAVE_VERSION = 2;
 export const DEFAULT_SAVE_SLOT = 'slot_1';
 
 export interface SaveGameMetadata {

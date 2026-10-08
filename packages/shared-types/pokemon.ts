@@ -28,6 +28,231 @@ export interface PokemonStats {
   total: number;
 }
 
+export type StatKey = 'hp' | 'attack' | 'defense' | 'spAtk' | 'spDef' | 'speed';
+export type StatKeyWithoutHp = 'attack' | 'defense' | 'spAtk' | 'spDef' | 'speed';
+
+export interface PokemonStatValues {
+  hp: number;
+  attack: number;
+  defense: number;
+  spAtk: number;
+  spDef: number;
+  speed: number;
+}
+
+export type NatureName =
+  | 'Hardy'
+  | 'Lonely'
+  | 'Brave'
+  | 'Adamant'
+  | 'Naughty'
+  | 'Bold'
+  | 'Docile'
+  | 'Relaxed'
+  | 'Impish'
+  | 'Lax'
+  | 'Timid'
+  | 'Hasty'
+  | 'Serious'
+  | 'Jolly'
+  | 'Naive'
+  | 'Modest'
+  | 'Mild'
+  | 'Quiet'
+  | 'Bashful'
+  | 'Rash'
+  | 'Calm'
+  | 'Gentle'
+  | 'Sassy'
+  | 'Careful'
+  | 'Quirky';
+
+export interface NatureData {
+  id: NatureName;
+  nameVi: string;
+  increasedStat: StatKeyWithoutHp | null;
+  decreasedStat: StatKeyWithoutHp | null;
+  descVi: string;
+}
+
+export const NATURES_TABLE: Record<NatureName, NatureData> = {
+  Hardy: {
+    id: 'Hardy',
+    nameVi: 'Cần cù',
+    increasedStat: null,
+    decreasedStat: null,
+    descVi: 'Không đổi chỉ số',
+  },
+  Lonely: {
+    id: 'Lonely',
+    nameVi: 'Cô độc',
+    increasedStat: 'attack',
+    decreasedStat: 'defense',
+    descVi: '+10% Tấn công, -10% Phòng thủ',
+  },
+  Brave: {
+    id: 'Brave',
+    nameVi: 'Dũng cảm',
+    increasedStat: 'attack',
+    decreasedStat: 'speed',
+    descVi: '+10% Tấn công, -10% Tốc độ',
+  },
+  Adamant: {
+    id: 'Adamant',
+    nameVi: 'Cương quyết',
+    increasedStat: 'attack',
+    decreasedStat: 'spAtk',
+    descVi: '+10% Tấn công, -10% Công ĐB',
+  },
+  Naughty: {
+    id: 'Naughty',
+    nameVi: 'Nghịch ngợm',
+    increasedStat: 'attack',
+    decreasedStat: 'spDef',
+    descVi: '+10% Tấn công, -10% Thủ ĐB',
+  },
+  Bold: {
+    id: 'Bold',
+    nameVi: 'Táo bạo',
+    increasedStat: 'defense',
+    decreasedStat: 'attack',
+    descVi: '+10% Phòng thủ, -10% Tấn công',
+  },
+  Docile: {
+    id: 'Docile',
+    nameVi: 'Ngoan ngoãn',
+    increasedStat: null,
+    decreasedStat: null,
+    descVi: 'Không đổi chỉ số',
+  },
+  Relaxed: {
+    id: 'Relaxed',
+    nameVi: 'Thư thả',
+    increasedStat: 'defense',
+    decreasedStat: 'speed',
+    descVi: '+10% Phòng thủ, -10% Tốc độ',
+  },
+  Impish: {
+    id: 'Impish',
+    nameVi: 'Tinh quái',
+    increasedStat: 'defense',
+    decreasedStat: 'spAtk',
+    descVi: '+10% Phòng thủ, -10% Công ĐB',
+  },
+  Lax: {
+    id: 'Lax',
+    nameVi: 'Buông lỏng',
+    increasedStat: 'defense',
+    decreasedStat: 'spDef',
+    descVi: '+10% Phòng thủ, -10% Thủ ĐB',
+  },
+  Timid: {
+    id: 'Timid',
+    nameVi: 'Nhút nhát',
+    increasedStat: 'speed',
+    decreasedStat: 'attack',
+    descVi: '+10% Tốc độ, -10% Tấn công',
+  },
+  Hasty: {
+    id: 'Hasty',
+    nameVi: 'Hấp tấp',
+    increasedStat: 'speed',
+    decreasedStat: 'defense',
+    descVi: '+10% Tốc độ, -10% Phòng thủ',
+  },
+  Serious: {
+    id: 'Serious',
+    nameVi: 'Nghiêm túc',
+    increasedStat: null,
+    decreasedStat: null,
+    descVi: 'Không đổi chỉ số',
+  },
+  Jolly: {
+    id: 'Jolly',
+    nameVi: 'Vui vẻ',
+    increasedStat: 'speed',
+    decreasedStat: 'spAtk',
+    descVi: '+10% Tốc độ, -10% Công ĐB',
+  },
+  Naive: {
+    id: 'Naive',
+    nameVi: 'Ngây thơ',
+    increasedStat: 'speed',
+    decreasedStat: 'spDef',
+    descVi: '+10% Tốc độ, -10% Thủ ĐB',
+  },
+  Modest: {
+    id: 'Modest',
+    nameVi: 'Khiêm tốn',
+    increasedStat: 'spAtk',
+    decreasedStat: 'attack',
+    descVi: '+10% Công ĐB, -10% Tấn công',
+  },
+  Mild: {
+    id: 'Mild',
+    nameVi: 'Ôn hòa',
+    increasedStat: 'spAtk',
+    decreasedStat: 'defense',
+    descVi: '+10% Công ĐB, -10% Phòng thủ',
+  },
+  Quiet: {
+    id: 'Quiet',
+    nameVi: 'Trầm lặng',
+    increasedStat: 'spAtk',
+    decreasedStat: 'speed',
+    descVi: '+10% Công ĐB, -10% Tốc độ',
+  },
+  Bashful: {
+    id: 'Bashful',
+    nameVi: 'E thẹn',
+    increasedStat: null,
+    decreasedStat: null,
+    descVi: 'Không đổi chỉ số',
+  },
+  Rash: {
+    id: 'Rash',
+    nameVi: 'Bồng bột',
+    increasedStat: 'spAtk',
+    decreasedStat: 'spDef',
+    descVi: '+10% Công ĐB, -10% Thủ ĐB',
+  },
+  Calm: {
+    id: 'Calm',
+    nameVi: 'Điềm tĩnh',
+    increasedStat: 'spDef',
+    decreasedStat: 'attack',
+    descVi: '+10% Thủ ĐB, -10% Tấn công',
+  },
+  Gentle: {
+    id: 'Gentle',
+    nameVi: 'Dịu dàng',
+    increasedStat: 'spDef',
+    decreasedStat: 'defense',
+    descVi: '+10% Thủ ĐB, -10% Phòng thủ',
+  },
+  Sassy: {
+    id: 'Sassy',
+    nameVi: 'Kiêu kì',
+    increasedStat: 'spDef',
+    decreasedStat: 'speed',
+    descVi: '+10% Thủ ĐB, -10% Tốc độ',
+  },
+  Careful: {
+    id: 'Careful',
+    nameVi: 'Cẩn thận',
+    increasedStat: 'spDef',
+    decreasedStat: 'spAtk',
+    descVi: '+10% Thủ ĐB, -10% Công ĐB',
+  },
+  Quirky: {
+    id: 'Quirky',
+    nameVi: 'Kỳ quặc',
+    increasedStat: null,
+    decreasedStat: null,
+    descVi: 'Không đổi chỉ số',
+  },
+};
+
 export interface PokemonSprites {
   follower: string;
   front: string;

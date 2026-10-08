@@ -4,7 +4,6 @@ import {
   isVillagePathTile,
   isVillageArea,
   isVillageBuildingTile,
-  getVillageBuildingsForChunk,
   WorldChunk,
 } from '../src/maps';
 

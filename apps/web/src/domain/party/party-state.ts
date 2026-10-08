@@ -3,12 +3,25 @@
  * Represents Pokémon instances stored in the player's active party (up to 6 Pokémon).
  */
 
-import type { PokemonType, PokemonStats } from '@pokemon/shared-types';
+import type {
+  PokemonType,
+  PokemonStats,
+  PokemonStatValues,
+  NatureName,
+} from '@pokemon/shared-types';
 import type { BattleMove, StatusCondition, BattlerPokemon } from '../../battle/types';
 import { pokemonCatalog } from '../../data';
 import { getMovesForSpecies } from '../../battle/moves-db';
 import { POKEMON_ASSETS, normalizeBallKey } from '../../assets';
 import { defaultRng, type RandomService } from '../../core/rng';
+import {
+  calculatePokemonStats,
+  createDefaultIvs,
+  createRandomIvs,
+  createDefaultEvs,
+  ALL_NATURES,
+} from './pokemon-stats';
+import { normalizeGrowthRate, getExpToNextLevel } from '../pokemon/pokemon-exp';
 
 export const MAX_PARTY_SIZE = 6;
 
@@ -25,6 +38,9 @@ export interface PartyPokemon {
   currentHp: number;
   maxHp: number;
   stats: PokemonStats;
+  ivs: PokemonStatValues;
+  evs: PokemonStatValues;
+  nature: NatureName;
   status: StatusCondition;
   types: PokemonType[];
   gender: 'male' | 'female' | 'genderless';
@@ -42,14 +58,6 @@ export interface PartyState {
   swapSourceIndex: number | null;
 }
 
-function calculateHp(base: number, level: number): number {
-  return Math.floor(((2 * base + 31) * level) / 100) + level + 10;
-}
-
-function calculateStat(base: number, level: number): number {
-  return Math.floor(((2 * base + 31) * level) / 100) + 5;
-}
-
 /**
  * Creates a brand new PartyPokemon instance from speciesKey and level.
  */
@@ -63,24 +71,43 @@ export function createPartyPokemon(
     ballCaught?: string;
     heldItem?: string | null;
     rng?: RandomService;
+    ivs?: Partial<PokemonStatValues> | 'perfect' | 'random';
+    evs?: Partial<PokemonStatValues>;
+    nature?: NatureName;
   }
 ): PartyPokemon {
   const data =
     pokemonCatalog.getBySpeciesKey(speciesKey) ?? pokemonCatalog.getBySpeciesKey('PIKACHU')!;
-  const maxHp = calculateHp(data.stats.hp, level);
+  const activeRng = options?.rng ?? defaultRng;
 
-  const stats: PokemonStats = {
-    hp: maxHp,
-    attack: calculateStat(data.stats.attack, level),
-    defense: calculateStat(data.stats.defense, level),
-    spAtk: calculateStat(data.stats.spAtk, level),
-    spDef: calculateStat(data.stats.spDef, level),
-    speed: calculateStat(data.stats.speed, level),
-    total: data.stats.total,
+  // 1. Resolve IVs
+  let ivs: PokemonStatValues;
+  if (options?.ivs === 'perfect') {
+    ivs = createDefaultIvs(31);
+  } else if (options?.ivs && typeof options.ivs === 'object') {
+    ivs = { ...createRandomIvs(activeRng), ...options.ivs };
+  } else {
+    // Canonical Pokémon mechanic: wild/newly acquired Pokémon have random IVs (0–31) per stat!
+    ivs = createRandomIvs(activeRng);
+  }
+
+  // 2. Resolve EVs
+  const evs: PokemonStatValues = {
+    ...createDefaultEvs(),
+    ...(options?.evs ?? {}),
   };
 
+  // 3. Resolve Nature
+  const nature: NatureName =
+    options?.nature ?? ALL_NATURES[activeRng.nextInt(0, ALL_NATURES.length - 1)];
+
+  // 4. Calculate accurate core stats
+  const stats = calculatePokemonStats(data.stats, level, ivs, evs, nature);
+  const maxHp = stats.hp;
+
   const moves = getMovesForSpecies(data.speciesKey, data.types, level);
-  const activeRng = options?.rng ?? defaultRng;
+  const growthRate = normalizeGrowthRate(data.growthRate);
+  const maxExp = getExpToNextLevel(growthRate, level);
 
   return {
     uid: `pk_${Date.now()}_${activeRng.nextInt(100000, 999999).toString(36)}`,
@@ -91,10 +118,13 @@ export function createPartyPokemon(
     isShiny: options?.isShiny ?? false,
     level,
     exp: 0,
-    maxExp: level * level * 10,
+    maxExp,
     currentHp: maxHp,
     maxHp,
     stats,
+    ivs,
+    evs,
+    nature,
     status: 'none',
     types: [...data.types],
     gender: options?.gender ?? (activeRng.next() < 0.5 ? 'male' : 'female'),
@@ -105,6 +135,52 @@ export function createPartyPokemon(
     caughtTime: Date.now(),
     caughtLevel: level,
   };
+}
+
+/**
+ * Recalculates stats for a PartyPokemon using its current IVs, EVs, and Nature.
+ * Used upon level-up, Rare Candy usage, and Vitamin stat boosting.
+ */
+export function recalculatePartyPokemonStats(
+  pokemon: PartyPokemon,
+  newLevel?: number
+): { oldStats: PokemonStats; newStats: PokemonStats; hpGained: number } {
+  const species =
+    pokemonCatalog.getBySpeciesKey(pokemon.speciesKey) ??
+    pokemonCatalog.getBySpeciesKey('PIKACHU')!;
+  const oldStats = { ...pokemon.stats };
+  const oldMaxHp = pokemon.maxHp;
+
+  if (newLevel !== undefined) {
+    pokemon.level = Math.max(1, Math.min(100, Math.floor(newLevel)));
+    const growthRate = normalizeGrowthRate(species.growthRate);
+    pokemon.maxExp = getExpToNextLevel(growthRate, pokemon.level);
+  }
+
+  // Ensure IVs/EVs/Nature exist (for migrated saves)
+  if (!pokemon.ivs) pokemon.ivs = createRandomIvs(defaultRng);
+  if (!pokemon.evs) pokemon.evs = createDefaultEvs();
+  if (!pokemon.nature) pokemon.nature = ALL_NATURES[defaultRng.nextInt(0, ALL_NATURES.length - 1)];
+
+  const newStats = calculatePokemonStats(
+    species.stats,
+    pokemon.level,
+    pokemon.ivs,
+    pokemon.evs,
+    pokemon.nature
+  );
+
+  pokemon.stats = newStats;
+  pokemon.maxHp = newStats.hp;
+
+  const hpDiff = newStats.hp - oldMaxHp;
+  if (hpDiff > 0) {
+    pokemon.currentHp = Math.min(newStats.hp, pokemon.currentHp + hpDiff);
+  } else if (pokemon.currentHp > newStats.hp) {
+    pokemon.currentHp = newStats.hp;
+  }
+
+  return { oldStats, newStats, hpGained: Math.max(0, hpDiff) };
 }
 
 /**
@@ -122,6 +198,9 @@ export function partyPokemonToBattler(pokemon: PartyPokemon): BattlerPokemon {
     currentHp: pokemon.currentHp,
     maxHp: pokemon.maxHp,
     stats: { ...pokemon.stats },
+    ivs: pokemon.ivs ? { ...pokemon.ivs } : undefined,
+    evs: pokemon.evs ? { ...pokemon.evs } : undefined,
+    nature: pokemon.nature,
     statStages: {
       attack: 0,
       defense: 0,

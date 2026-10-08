@@ -5,18 +5,9 @@ import type { WorldChunk } from '../src/maps/chunk';
 describe('Overworld Shiny Spatial Audio', () => {
   let playMock: ReturnType<typeof vi.fn>;
   let pauseMock: ReturnType<typeof vi.fn>;
-  let mockAudioInstance: any;
-
   beforeEach(() => {
     playMock = vi.fn().mockResolvedValue(undefined);
     pauseMock = vi.fn();
-    mockAudioInstance = {
-      play: playMock,
-      pause: pauseMock,
-      volume: 1,
-      loop: false,
-      currentTime: 0,
-    };
 
     // Stub window and Audio constructor
     vi.stubGlobal('window', { location: { href: 'http://localhost/' } });

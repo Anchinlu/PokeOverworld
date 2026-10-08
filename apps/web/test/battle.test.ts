@@ -271,7 +271,7 @@ describe('Wild Pokémon Battle System', () => {
 
     expect(result.damage).toBe(0);
     expect(wild.currentHp).toBe(initialHp);
-    expect(result.message).toContain('no PP left');
+    expect(result.message).toContain('đã hết điểm PP');
   });
 
   it('respects type immunities against status conditions', () => {
@@ -295,7 +295,7 @@ describe('Wild Pokémon Battle System', () => {
     };
     const burnRes = engine.executeAttack(player, fireTarget, willOWisp);
     expect(fireTarget.status).toBe('none');
-    expect(burnRes.message).toContain('Fire types cannot be burned');
+    expect(burnRes.message).toContain('không thể bị bỏng');
 
     // 2. Thunder Wave on Electric type
     const thunderWave: any = {
@@ -311,7 +311,7 @@ describe('Wild Pokémon Battle System', () => {
     };
     const paraRes = engine.executeAttack(player, electricTarget, thunderWave);
     expect(electricTarget.status).toBe('none');
-    expect(paraRes.message).toContain('Electric types cannot be paralyzed');
+    expect(paraRes.message).toContain('không thể bị tê liệt');
 
     // 3. Poison Powder on Poison type
     const poisonPowder: any = {
@@ -327,7 +327,7 @@ describe('Wild Pokémon Battle System', () => {
     };
     const psnRes = engine.executeAttack(player, poisonTarget, poisonPowder);
     expect(poisonTarget.status).toBe('none');
-    expect(psnRes.message).toContain('does not affect this Pokémon');
+    expect(psnRes.message).toContain('không có tác dụng');
   });
 
   it('correctly calculates end-turn damage for burn, poison, and toxic', () => {
@@ -359,6 +359,7 @@ describe('Wild Pokémon Battle System', () => {
     const tox1Result = engine.applyEndTurnEffects(battler);
     const expectedTox1Dmg = Math.max(1, Math.floor((battler.maxHp * 1) / 16));
     expect(tox1Result?.damage).toBe(expectedTox1Dmg);
+    expect(battler.currentHp).toBe(hpBeforeTox1 - expectedTox1Dmg);
     expect(battler.statusTurns).toBe(1);
 
     const hpBeforeTox2 = battler.currentHp;
@@ -393,7 +394,7 @@ describe('Wild Pokémon Battle System', () => {
 
     const res = engine.executeAttack(player, wild, flamethrower);
     expect(wild.status).toBe('burn');
-    expect(res.message).toContain('was inflicted with burn');
+    expect(res.message).toContain('đã bị bỏng');
   });
 
   describe('Move Animation System & Category Differentiation', () => {
@@ -623,13 +624,13 @@ describe('Wild Pokémon Battle System', () => {
       // 1. Recover fails/notifies when already full HP
       player.currentHp = player.maxHp;
       const resFull = engine.executeAttack(player, enemy, recoverMove);
-      expect(resFull.message).toContain('is already full');
+      expect(resFull.message).toContain('đã đầy');
       expect(player.currentHp).toBe(player.maxHp);
 
       // 2. Recover heals 50% HP when injured
       player.currentHp = 10;
       const resInjured = engine.executeAttack(player, enemy, recoverMove);
-      expect(resInjured.message).toContain('restored its HP');
+      expect(resInjured.message).toContain('đã hồi phục HP');
       expect(player.currentHp).toBe(10 + Math.floor(player.maxHp * 0.5));
 
       // 3. Rest move fails when full HP
@@ -646,14 +647,14 @@ describe('Wild Pokémon Battle System', () => {
       };
       player.currentHp = player.maxHp;
       const resRestFull = engine.executeAttack(player, enemy, restMove);
-      expect(resRestFull.message).toContain('is already full');
+      expect(resRestFull.message).toContain('đã đầy');
 
       // 4. Rest cures prior burn status, heals to max HP, and inflicts 2 turns sleep
       player.currentHp = 5;
       player.status = 'burn';
       player.statusTurns = 2;
       const resRestInjured = engine.executeAttack(player, enemy, restMove);
-      expect(resRestInjured.message).toContain('slept and became healthy');
+      expect(resRestInjured.message).toContain('chìm vào giấc ngủ và hồi phục hoàn toàn');
       expect(player.currentHp).toBe(player.maxHp);
       expect(player.status).toBe('sleep');
       expect(player.sleepTurns).toBe(2);
@@ -681,7 +682,7 @@ describe('Wild Pokémon Battle System', () => {
       const res = engine.executeAttack(player, enemy, gigaDrain);
 
       expect(res.damage).toBeGreaterThan(0);
-      expect(res.message).toContain('had its energy drained');
+      expect(res.message).toContain('bị hút cạn sinh lực');
       const actualDamage = Math.min(enemy.maxHp, res.damage);
       const expectedDrain = Math.max(1, Math.floor(actualDamage * 0.5));
       expect(player.currentHp).toBe(Math.min(player.maxHp, initialHp + expectedDrain));
@@ -708,7 +709,7 @@ describe('Wild Pokémon Battle System', () => {
       const res = engine.executeAttack(player, enemy, takeDown);
 
       expect(res.damage).toBeGreaterThan(0);
-      expect(res.message).toContain('is hit with recoil');
+      expect(res.message).toContain('bị phản lực tổn thương');
       const expectedRecoil = Math.max(1, Math.floor(res.damage * 0.25));
       expect(player.currentHp).toBe(player.maxHp - expectedRecoil);
     });
@@ -736,13 +737,13 @@ describe('Wild Pokémon Battle System', () => {
 
       // Grass enemy gets burned when surviving the hit
       const resBurn = engine.executeAttack(player, grassEnemy, flameMove);
-      expect(resBurn.message).toContain('was inflicted with burn');
+      expect(resBurn.message).toContain('đã bị bỏng');
       expect(grassEnemy.status).toBe('burn');
 
       // Fire enemy is immune to burn
       const resImmune = engine.executeAttack(player, fireEnemy, flameMove);
       expect(fireEnemy.status).toBe('none');
-      expect(resImmune.message).not.toContain('was inflicted with burn');
+      expect(resImmune.message).not.toContain('đã bị bỏng');
     });
 
     it('smoothly animates HP recovery upward and keeps ghost bar synchronized', () => {
@@ -1047,7 +1048,7 @@ describe('Wild Pokémon Battle System', () => {
       player.status = 'sleep';
       player.sleepTurns = 2;
       const resSleep = engine.executeAttack(player, enemy, tackle);
-      expect(resSleep.message).toContain('fast asleep');
+      expect(resSleep.message).toContain('đang ngủ say');
       expect(tackle.pp).toBe(initialPp); // PP NOT deducted!
 
       // Freeze (simulate failed thaw roll)
@@ -1061,7 +1062,7 @@ describe('Wild Pokémon Battle System', () => {
       );
       const resFreeze = fixedEngine.executeAttack(player, enemy, tackle);
       if (player.status === 'freeze') {
-        expect(resFreeze.message).toContain('frozen solid');
+        expect(resFreeze.message).toContain('bị đóng băng cứng đờ');
         expect(tackle.pp).toBe(initialPp); // PP NOT deducted!
       }
     });
@@ -1088,7 +1089,7 @@ describe('Wild Pokémon Battle System', () => {
       };
 
       const res = engine.executeAttack(player, groundEnemy, thunderWave);
-      expect(res.message).toContain('It had no effect');
+      expect(res.message).toContain('Không có tác dụng');
       expect(groundEnemy.status).toBe('none'); // Sandshrew is immune!
     });
 
@@ -1181,7 +1182,7 @@ describe('Wild Pokémon Battle System', () => {
       expect(res.damage).toBeGreaterThan(0);
       const expectedRecoil = Math.max(1, Math.floor(player.maxHp * 0.25));
       expect(player.currentHp).toBe(initialHp - expectedRecoil);
-      expect(res.message).toContain('is hit with recoil');
+      expect(res.message).toContain('bị phản lực tổn thương');
     });
 
     it('syncBattleResult recalculates all combat stats and maxHp on level up based on baseStats', () => {

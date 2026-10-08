@@ -2,6 +2,7 @@ import type { GameRenderer } from '../rendering';
 import { BERRY_STAGES } from '../maps/berry-data';
 import type { BerryBushEntity } from '../maps/chunk';
 import { showBerryToast } from './toast';
+import { inventoryService } from '../domain/inventory/inventory-service';
 
 import { defaultRng } from '../core';
 
@@ -54,6 +55,7 @@ export function interactWithBerryBush(bush: BerryBushEntity, renderer: GameRende
 
   if (stage === 3) {
     const count = defaultRng.nextInt(2, 4);
+    inventoryService.addItem(bush.type, count);
     showBerryToast(
       `🫐 Tuyệt vời! Bạn đã hái được ${count} quả ${bush.viName} (${bush.name})! [${bush.desc}]`,
       bush.color

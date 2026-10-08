@@ -21,13 +21,13 @@ import { moveAnimationManager } from './move-animation-manager';
 import { getPokeballData, getBaseCatchRate } from './pokeball-db';
 import { battleSePlayer, battleBgmPlayer } from '../audio';
 import { pokemonCatalog } from '../data';
+import { calculateExpYield as calculateCanonicalExpYield } from '../domain/pokemon/pokemon-exp';
 
 /** Calculates unified official EXP yield */
 export function calculateExpYield(enemySpeciesKey: string, enemyLevel: number): number {
   const data = pokemonCatalog.getBySpeciesKey(enemySpeciesKey);
   const total = data?.stats?.total ?? 300;
-  const baseExp = Math.max(40, Math.floor(total / 4));
-  return Math.max(1, Math.floor((baseExp * enemyLevel) / 7));
+  return calculateCanonicalExpYield(enemyLevel, undefined, total);
 }
 
 /** Callback when the battle ends */
@@ -222,6 +222,16 @@ export class BattleController {
   }
 
   private handleCommandClick(x: number, y: number): void {
+    const player = this.engine.playerPokemon;
+    if (player.chargingMove) {
+      this.handlePlayerMove(player.chargingMove.move);
+      return;
+    }
+    if (player.mustRecharge) {
+      this.handlePlayerMove(player.moves[0] ?? STRUGGLE_MOVE);
+      return;
+    }
+
     const idx = getHoveredCommandIndex(x, y);
     if (idx === 0) {
       this.state.hoveredCommandIdx = 0;
@@ -361,8 +371,8 @@ export class BattleController {
   private handleEnemyFainted(enemy: BattlerPokemon, player: BattlerPokemon): void {
     this.state.startEnemyFaint(() => {
       const expGained = calculateExpYield(enemy.speciesKey, enemy.level);
-      this.queueMessage(`The wild ${enemy.name} fainted!`, 'message', () => {
-        this.queueMessage(`${player.name} gained ${expGained} EXP!`, 'end', () => {
+      this.queueMessage(`${enemy.name} hoang dã đã ngất xỉu!`, 'message', () => {
+        this.queueMessage(`${player.name} nhận được ${expGained} EXP!`, 'end', () => {
           this.endBattle('victory', undefined, expGained);
         });
       });
@@ -374,9 +384,9 @@ export class BattleController {
       partyService.syncBattleResult(this.engine.playerPokemon, 0);
       const hasAlive = partyService.getParty().some((p) => p.currentHp > 0 && !p.isFainted);
       if (hasAlive) {
-        this.queueMessage(`${player.name} fainted!`, 'message', () => this.handleForceSwitch());
+        this.queueMessage(`${player.name} đã ngất xỉu!`, 'message', () => this.handleForceSwitch());
       } else {
-        this.queueMessage(`${player.name} fainted!`, 'end', () => this.endBattle('defeated'));
+        this.queueMessage(`${player.name} đã ngất xỉu!`, 'end', () => this.endBattle('defeated'));
       }
     });
   }
@@ -622,11 +632,11 @@ export class BattleController {
     this.state.uiMode = 'message';
     const escaped = this.engine.tryFlee();
     if (escaped) {
-      this.queueMessage('Got away safely!', 'end', () => {
+      this.queueMessage('Đã chạy trốn an toàn!', 'end', () => {
         this.endBattle('fled');
       });
     } else {
-      this.queueMessage("Can't escape!", 'message', () => {
+      this.queueMessage('Không thể chạy trốn!', 'message', () => {
         this.handleEnemyTurn();
       });
     }

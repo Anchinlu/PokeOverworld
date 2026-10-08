@@ -1,0 +1,212 @@
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { playGameIntro } from '../src/ui/game-intro';
+
+describe('Game Intro Cinematic', () => {
+  let originalDocument: any;
+  let originalWindow: any;
+  let mockBody: any;
+  let eventListeners: Record<string, ((e: any) => void)[]>;
+
+  class MockDOMElement {
+    public id: string = '';
+    public className: string = '';
+    public style: Record<string, string> = {};
+    public classList = {
+      _classes: new Set<string>(),
+      add: (cls: string) => {
+        this.classList._classes.add(cls);
+        this.className = Array.from(this.classList._classes).join(' ');
+      },
+      remove: (cls: string) => {
+        this.classList._classes.delete(cls);
+        this.className = Array.from(this.classList._classes).join(' ');
+      },
+      contains: (cls: string) => this.classList._classes.has(cls),
+    };
+    public children: MockDOMElement[] = [];
+    public parentNode: MockDOMElement | null = null;
+    public innerHTMLVal: string = '';
+
+    constructor(public tagName: string) {}
+
+    get innerHTML(): string {
+      return this.innerHTMLVal;
+    }
+
+    set innerHTML(html: string) {
+      this.innerHTMLVal = html;
+      this.children = [];
+      // Create sub-elements based on id
+      const ids = [
+        'introShutterTop',
+        'introShutterBottom',
+        'introLogo2Top',
+        'introLogo2Bottom',
+        'introLogo1Top',
+        'introLogo1Bottom',
+        'introCenterFlash',
+        'introSkipHint',
+      ];
+      for (const id of ids) {
+        if (html.includes(`id="${id}"`)) {
+          const child = new MockDOMElement('div');
+          child.id = id;
+          child.parentNode = this;
+          this.children.push(child);
+        }
+      }
+    }
+
+    appendChild(child: MockDOMElement) {
+      child.parentNode = this;
+      this.children.push(child);
+      return child;
+    }
+
+    remove() {
+      if (this.parentNode) {
+        const idx = this.parentNode.children.indexOf(this);
+        if (idx !== -1) {
+          this.parentNode.children.splice(idx, 1);
+        }
+        this.parentNode = null;
+      }
+    }
+
+    querySelector(selector: string): MockDOMElement | null {
+      const targetId = selector.startsWith('#') ? selector.slice(1) : selector;
+      const findRecursive = (node: MockDOMElement): MockDOMElement | null => {
+        if (node.id === targetId) return node;
+        for (const c of node.children) {
+          const res = findRecursive(c);
+          if (res) return res;
+        }
+        return null;
+      };
+      return findRecursive(this);
+    }
+
+    addEventListener(event: string, handler: (e: any) => void) {
+      eventListeners[`element_${event}`] = eventListeners[`element_${event}`] || [];
+      eventListeners[`element_${event}`].push(handler);
+    }
+
+    removeEventListener(event: string, handler: (e: any) => void) {
+      if (eventListeners[`element_${event}`]) {
+        eventListeners[`element_${event}`] = eventListeners[`element_${event}`].filter(
+          (h) => h !== handler
+        );
+      }
+    }
+  }
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+    eventListeners = {};
+    mockBody = new MockDOMElement('body');
+
+    originalDocument = global.document;
+    originalWindow = global.window;
+
+    global.document = {
+      body: mockBody,
+      getElementById: (id: string) => {
+        return mockBody.querySelector(`#${id}`);
+      },
+      createElement: (tag: string) => new MockDOMElement(tag),
+    } as any;
+
+    global.window = {
+      setTimeout: (fn: (...args: unknown[]) => void, ms: number) => setTimeout(fn, ms),
+      clearTimeout: (id: any) => clearTimeout(id),
+      addEventListener: (event: string, handler: (e: any) => void) => {
+        eventListeners[`window_${event}`] = eventListeners[`window_${event}`] || [];
+        eventListeners[`window_${event}`].push(handler);
+      },
+      removeEventListener: (event: string, handler: (e: any) => void) => {
+        if (eventListeners[`window_${event}`]) {
+          eventListeners[`window_${event}`] = eventListeners[`window_${event}`].filter(
+            (h) => h !== handler
+          );
+        }
+      },
+    } as any;
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+    global.document = originalDocument;
+    global.window = originalWindow;
+  });
+
+  it('initializes intro overlay in dark state with dual shutters and logos', () => {
+    const controller = playGameIntro();
+    const overlay = document.getElementById('gameIntroOverlay') as unknown as MockDOMElement;
+
+    expect(overlay).not.toBeNull();
+    expect(overlay.id).toBe('gameIntroOverlay');
+    expect(controller.isComplete).toBe(false);
+
+    const shutterTop = overlay.querySelector('#introShutterTop');
+    const shutterBottom = overlay.querySelector('#introShutterBottom');
+    expect(shutterTop).not.toBeNull();
+    expect(shutterBottom).not.toBeNull();
+    expect(shutterTop?.classList.contains('split-open')).toBe(false);
+  });
+
+  it('progresses through timeline: outline logo2 -> color logo1 -> split animation -> completion', () => {
+    const onComplete = vi.fn();
+    const controller = playGameIntro(onComplete);
+    const overlay = document.getElementById('gameIntroOverlay') as unknown as MockDOMElement;
+
+    const logo2Top = overlay.querySelector('#introLogo2Top');
+    const logo1Top = overlay.querySelector('#introLogo1Top');
+    const shutterTop = overlay.querySelector('#introShutterTop');
+    const shutterBottom = overlay.querySelector('#introShutterBottom');
+
+    // 0ms: Initial dark screen
+    expect(logo2Top?.classList.contains('visible')).toBe(false);
+    expect(logo1Top?.classList.contains('visible')).toBe(false);
+
+    // Advance 600ms: logo2 (white outline) becomes visible
+    vi.advanceTimersByTime(650);
+    expect(logo2Top?.classList.contains('visible')).toBe(true);
+    expect(logo1Top?.classList.contains('visible')).toBe(false);
+
+    // Advance to 2200ms: logo1 (full-color Pokémon) reveals, logo2 dims
+    vi.advanceTimersByTime(1600);
+    expect(logo1Top?.classList.contains('visible')).toBe(true);
+    expect(logo2Top?.classList.contains('dimmed')).toBe(true);
+
+    // Advance to 4200ms: horizon split begins
+    vi.advanceTimersByTime(2000);
+    // After 150ms inner delay, split-open is added
+    vi.advanceTimersByTime(200);
+    expect(shutterTop?.classList.contains('split-open')).toBe(true);
+    expect(shutterBottom?.classList.contains('split-open')).toBe(true);
+
+    // Advance 950ms: transition finishes, cleans up, invokes onComplete
+    vi.advanceTimersByTime(1000);
+    expect(controller.isComplete).toBe(true);
+    expect(onComplete).toHaveBeenCalledTimes(1);
+    expect(document.getElementById('gameIntroOverlay')).toBeNull();
+  });
+
+  it('supports skip to immediately transition and finish', () => {
+    const onComplete = vi.fn();
+    const controller = playGameIntro(onComplete);
+
+    expect(controller.isComplete).toBe(false);
+
+    // Trigger skip at 300ms
+    vi.advanceTimersByTime(300);
+    controller.skip();
+
+    // Advance past split delay and animation
+    vi.advanceTimersByTime(1200);
+
+    expect(controller.isComplete).toBe(true);
+    expect(onComplete).toHaveBeenCalledTimes(1);
+    expect(document.getElementById('gameIntroOverlay')).toBeNull();
+  });
+});

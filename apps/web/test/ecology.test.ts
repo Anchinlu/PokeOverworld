@@ -1,11 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { sampleEcology, sampleEcologicalNoise } from '../src/maps/ecology/ecology-field';
 import { getEcologyZone } from '../src/maps/ecology/ecology-profile';
-import {
-  ECOLOGY_FERTILITY_SALT,
-  ECOLOGY_MOISTURE_SALT,
-  ECOLOGY_DENSITY_SALT,
-} from '../src/maps/ecology/ecology-config';
+import { ECOLOGY_MOISTURE_SALT } from '../src/maps/ecology/ecology-config';
 
 describe('Ecological Field & Regional Distribution (Step 1)', () => {
   it('produces identical EcologySample for the same global coordinates and seed', () => {

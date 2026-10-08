@@ -1,10 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { sampleEcology, calculateTallGrassDensity } from '../src/maps/ecology/ecology-field';
-import {
-  getEcologyZone,
-  getTreeTypeForEcology,
-  getFlowerTypeForCluster,
-} from '../src/maps/ecology/ecology-profile';
+import { sampleEcology } from '../src/maps/ecology/ecology-field';
+import { getEcologyZone, getFlowerTypeForCluster } from '../src/maps/ecology/ecology-profile';
 import { pickBerryForEcology } from '../src/maps/berry-data';
 import { getRosterForContext } from '../src/maps/chunk-encounters';
 import { TREE_MIN_CANDIDATES, TREE_MAX_CANDIDATES } from '../src/maps/ecology/ecology-config';

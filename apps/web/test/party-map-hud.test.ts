@@ -46,26 +46,25 @@ class MockElement {
   }
 
   public get classList() {
-    const self = this;
     return {
-      contains(cls: string): boolean {
-        return self.className.split(/\s+/).includes(cls);
+      contains: (cls: string): boolean => {
+        return this.className.split(/\s+/).includes(cls);
       },
-      add(cls: string): void {
-        const classes = new Set(self.className.split(/\s+/).filter(Boolean));
+      add: (cls: string): void => {
+        const classes = new Set(this.className.split(/\s+/).filter(Boolean));
         classes.add(cls);
-        self.className = Array.from(classes).join(' ');
+        this.className = Array.from(classes).join(' ');
       },
-      remove(cls: string): void {
-        const classes = new Set(self.className.split(/\s+/).filter(Boolean));
+      remove: (cls: string): void => {
+        const classes = new Set(this.className.split(/\s+/).filter(Boolean));
         classes.delete(cls);
-        self.className = Array.from(classes).join(' ');
+        this.className = Array.from(classes).join(' ');
       },
-      toggle(cls: string, force?: boolean): boolean {
-        const has = this.contains(cls);
+      toggle: (cls: string, force?: boolean): boolean => {
+        const has = this.classList.contains(cls);
         const shouldAdd = force !== undefined ? force : !has;
-        if (shouldAdd) this.add(cls);
-        else this.remove(cls);
+        if (shouldAdd) this.classList.add(cls);
+        else this.classList.remove(cls);
         return shouldAdd;
       },
     };

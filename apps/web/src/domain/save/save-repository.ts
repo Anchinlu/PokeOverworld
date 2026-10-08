@@ -12,6 +12,8 @@ import {
 import { playerService, PlayerService } from '../player/player-service';
 import { partyService, PartyService } from '../party/party-service';
 import { inventoryService, InventoryService } from '../inventory/inventory-service';
+import { createRandomIvs, createDefaultEvs, ALL_NATURES } from '../party/pokemon-stats';
+import { defaultRng } from '../../core/rng';
 
 export interface SaveStorageAdapter {
   getItem(key: string): string | null;
@@ -148,6 +150,12 @@ export class SaveGameRepository {
         this.player.loadProfile(data.player);
       }
       if (Array.isArray(data.party) && data.party.length > 0) {
+        // Version 1 -> Version 2 migration: ensure IVs, EVs, and Nature exist
+        for (const pk of data.party) {
+          if (!pk.ivs) pk.ivs = createRandomIvs(defaultRng);
+          if (!pk.evs) pk.evs = createDefaultEvs();
+          if (!pk.nature) pk.nature = ALL_NATURES[defaultRng.nextInt(0, ALL_NATURES.length - 1)];
+        }
         this.party.loadParty(data.party);
       }
       if (data.inventory) {

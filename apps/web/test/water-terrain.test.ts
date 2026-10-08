@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest';
-import { TERRAIN, TILE_IDS } from '@pokemon/game-data';
 import { WorldChunk } from '../src/maps/chunk';
 import { ChunkManager } from '../src/maps/chunk-manager';
 import {
@@ -7,7 +6,6 @@ import {
   isBridgeTile,
   isRiverTile,
   isLakeTile,
-  isOceanTile,
   getLakePlacement,
 } from '../src/maps/terrain-rules';
 import { isInteriorFreshwater } from '../src/maps/chunk-objects';
@@ -77,8 +75,6 @@ describe('Water Terrain, River, Lake & Bridge Systems', () => {
       for (let cy = 0; cy <= 4; cy++) {
         for (let cx = -1; cx <= 1; cx++) {
           const chunk = new WorldChunk(cx, cy, seed);
-          const startGX = cx * 16;
-          const startGY = cy * 16;
 
           // Check trees
           for (const tree of chunk.trees) {

@@ -266,7 +266,7 @@ export class ObjectRenderer {
               const isMovingAny =
                 (isRedHere && player.isMoving) || (isPikaHere && follower.isMoving) || isWildMoving;
 
-              let fIdx = 0;
+              let fIdx: number;
               if (isMovingAny) {
                 fIdx = Math.floor((now / 120) % 4) + 1;
               } else {

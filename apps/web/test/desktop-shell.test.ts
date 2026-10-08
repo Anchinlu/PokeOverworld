@@ -1,10 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import {
-  isFullscreen,
-  toggleFullscreen,
-  exitFullscreen,
-  initDesktopShell,
-} from '../src/shell/desktop';
+import { isFullscreen, toggleFullscreen, initDesktopShell } from '../src/shell/desktop';
 
 describe('Desktop Shell & Fullscreen', () => {
   let listeners: Record<string, ((e: any) => void)[]> = {};

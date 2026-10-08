@@ -1,12 +1,26 @@
 import type {
   PokemonType,
   PokemonStats,
+  PokemonStatValues,
+  NatureName,
   MoveCategory,
   MoveStatChange,
   MoveStatusEffect,
+  BattleEvent,
+  BattleEventType,
+  BattlerSide,
 } from '@pokemon/shared-types';
 
-export type { MoveCategory, MoveStatChange, MoveStatusEffect };
+export type {
+  PokemonStatValues,
+  NatureName,
+  MoveCategory,
+  MoveStatChange,
+  MoveStatusEffect,
+  BattleEvent,
+  BattleEventType,
+  BattlerSide,
+};
 
 export interface BattleMove {
   id: string;
@@ -54,8 +68,12 @@ export interface BattlerPokemon {
   currentHp: number;
   maxHp: number;
   stats: PokemonStats;
+  ivs?: PokemonStatValues;
+  evs?: PokemonStatValues;
+  nature?: NatureName;
   statStages?: StatStages;
   status?: StatusCondition;
+  critStage?: number;
   sleepTurns?: number;
   statusTurns?: number;
   moves: BattleMove[];
@@ -69,6 +87,18 @@ export interface BattlerPokemon {
   exp: number;
   maxExp: number;
   pokeball?: string;
+  // Multi-turn, Protect & Status combat states
+  chargingMove?: {
+    move: BattleMove;
+    turn: number;
+    semiInvulnerable?: 'flying' | 'underground' | 'underwater' | 'high';
+  };
+  semiInvulnerable?: 'flying' | 'underground' | 'underwater' | 'high';
+  mustRecharge?: boolean;
+  isProtected?: boolean;
+  protectSuccessiveUses?: number;
+  isSeeded?: boolean;
+  destinyBond?: boolean;
 }
 
 export type BattlePhase =

@@ -6,7 +6,11 @@ import {
   applyItemToBattler,
 } from '../src/domain/inventory/item-effects';
 import { inventoryService } from '../src/domain/inventory/inventory-service';
-import { createPartyPokemon, type PartyPokemon } from '../src/domain/party/party-state';
+import {
+  createPartyPokemon,
+  recalculatePartyPokemonStats,
+  type PartyPokemon,
+} from '../src/domain/party/party-state';
 import type { BattlerPokemon } from '../src/battle/types';
 import { findItem, type ItemData } from '../src/data/items-db';
 
@@ -84,14 +88,32 @@ describe('Item Effects Engine & Inventory Deduction', () => {
     expect(pikachu.level).toBe(oldLevel + 1);
   });
 
-  it('boosts stats permanently with Vitamin items', () => {
+  it('boosts stats permanently via EV system with Vitamin items and respects cap', () => {
     const protein = findItem('protein') as ItemData;
     expect(protein).toBeDefined();
 
-    const oldAtk = pikachu.stats.attack;
+    expect(pikachu.evs.attack).toBe(0);
     const res = applyItemToPartyPokemon(protein, pikachu);
     expect(res.success).toBe(true);
-    expect(pikachu.stats.attack).toBe(oldAtk + 2);
+    expect(pikachu.evs.attack).toBe(10);
+
+    // Apply multiple proteins to verify EV accumulation
+    for (let i = 0; i < 9; i++) {
+      applyItemToPartyPokemon(protein, pikachu);
+    }
+    expect(pikachu.evs.attack).toBe(100);
+
+    // Verify stats persist across level ups
+    const oldAtk = pikachu.stats.attack;
+    pikachu.level = 50;
+    recalculatePartyPokemonStats(pikachu);
+    expect(pikachu.stats.attack).toBeGreaterThan(oldAtk);
+
+    // Max out attack EV to 252
+    pikachu.evs.attack = 252;
+    const checkMax = canUseItemOnPartyPokemon(protein, pikachu);
+    expect(checkMax.canUse).toBe(false);
+    expect(checkMax.reason).toContain('tối đa');
   });
 
   it('restores move PP with Ether and Leppa Berry', () => {
@@ -129,7 +151,7 @@ describe('Item Effects Engine & Inventory Deduction', () => {
     expect(inventoryService.hasItem('potion', 1)).toBe(false);
   });
 
-  it('handles in-battle item application and stat boosters', () => {
+  it('handles in-battle item application, Gen 7 potions, and stat boosters with cap checks', () => {
     const battler: BattlerPokemon = {
       id: 25,
       name: 'Pikachu',
@@ -137,22 +159,44 @@ describe('Item Effects Engine & Inventory Deduction', () => {
       types: ['electric'],
       level: 15,
       currentHp: 15,
-      maxHp: 45,
-      stats: { hp: 45, attack: 30, defense: 25, spAtk: 35, spDef: 30, speed: 45 },
+      maxHp: 100,
+      stats: { hp: 100, attack: 30, defense: 25, spAtk: 35, spDef: 30, speed: 45 },
       moves: [],
     };
 
-    const potion = findItem('potion') as ItemData;
-    expect(canUseItemOnBattler(potion, battler).canUse).toBe(true);
-
-    const resHeal = applyItemToBattler(potion, battler);
+    // Gen 7 Super Potion heals 60 HP
+    const superPotion = findItem('super-potion') as ItemData;
+    expect(canUseItemOnBattler(superPotion, battler).canUse).toBe(true);
+    const resHeal = applyItemToBattler(superPotion, battler);
     expect(resHeal.success).toBe(true);
-    expect(battler.currentHp).toBe(35);
+    expect(battler.currentHp).toBe(75); // 15 + 60
 
+    // In-battle Ice Heal cures freeze
+    battler.status = 'freeze';
+    const iceHeal = findItem('ice-heal') as ItemData;
+    expect(canUseItemOnBattler(iceHeal, battler).canUse).toBe(true);
+    const resIce = applyItemToBattler(iceHeal, battler);
+    expect(resIce.success).toBe(true);
+    expect(battler.status).toBe('none');
+
+    // Dire Hit increases critStage
+    const direHit = findItem('dire-hit') as ItemData;
+    expect(canUseItemOnBattler(direHit, battler).canUse).toBe(true);
+    const resDire = applyItemToBattler(direHit, battler);
+    expect(resDire.success).toBe(true);
+    expect(battler.critStage).toBe(2);
+
+    // X Attack increases stat stages and caps at +6
     const xAttack = findItem('x-attack') as ItemData;
     expect(canUseItemOnBattler(xAttack, battler).canUse).toBe(true);
-    const resX = applyItemToBattler(xAttack, battler);
-    expect(resX.success).toBe(true);
-    expect(battler.statStages?.attack).toBe(2);
+    applyItemToBattler(xAttack, battler); // +2 -> 2
+    applyItemToBattler(xAttack, battler); // +2 -> 4
+    applyItemToBattler(xAttack, battler); // +2 -> 6
+    expect(battler.statStages?.attack).toBe(6);
+
+    // At +6, cannot use X Attack anymore (prevents wasting items!)
+    const checkMaxX = canUseItemOnBattler(xAttack, battler);
+    expect(checkMaxX.canUse).toBe(false);
+    expect(checkMaxX.reason).toContain('tối đa (+6)');
   });
 });

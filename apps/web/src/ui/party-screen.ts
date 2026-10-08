@@ -13,6 +13,7 @@ import { getAvailableLevelUpMoves, MOVES_DB } from '../battle/moves-db';
 import { TYPE_ICO_INDICES } from '../battle/type-chart';
 import type { BattleMove } from '../battle/types';
 import { battleSePlayer } from '../audio';
+import { NATURES_TABLE, type StatKey } from '@pokemon/shared-types';
 
 export interface BattleSelectOptions {
   currentBattlerUid?: string;
@@ -242,6 +243,11 @@ export class PartyScreen {
                     <span class="meta-label">Cấp khi bắt:</span>
                     <span class="meta-val" id="partySummaryCaughtLv">Lv.5</span>
                   </div>
+                  <div class="summary-meta-row nature-row">
+                    <span class="meta-label">Tính cách:</span>
+                    <span class="meta-val nature-val" id="partySummaryNature">Cương quyết</span>
+                  </div>
+                  <div class="summary-nature-effect" id="partySummaryNatureEffect">+10% Công, -10% Công ĐB</div>
                   <div class="summary-meta-row">
                     <span class="meta-label">Kinh nghiệm:</span>
                     <span class="meta-val" id="partySummaryExp">120 / 350</span>
@@ -252,9 +258,20 @@ export class PartyScreen {
                 </div>
               </div>
               <div class="summary-right">
-                <div class="summary-section">
-                  <div class="summary-section-title">CHỈ SỐ CHIẾN ĐẤU</div>
-                  <div class="summary-stats-table">
+                <div class="summary-section summary-stats-section">
+                  <div class="summary-section-header">
+                    <span class="summary-section-title">CHỈ SỐ CHIẾN ĐẤU</span>
+                  </div>
+
+                  <!-- Stats Table View (with IV / EV columns) -->
+                  <div class="summary-stats-table" id="partySummaryStatsTable">
+                    <div class="summary-stat-table-header">
+                      <span class="col-stat-name">CHỈ SỐ</span>
+                      <span class="col-stat-bar">MỨC</span>
+                      <span class="col-stat-val">ĐIỂM</span>
+                      <span class="col-stat-iv">IV</span>
+                      <span class="col-stat-ev">EV</span>
+                    </div>
                     <!-- HP -->
                     <div class="summary-stat-row">
                       <span class="stat-label">HP</span>
@@ -262,49 +279,67 @@ export class PartyScreen {
                         <div class="stat-bar-fill hp" id="partyStatBarHp" style="width: 90%;"></div>
                       </div>
                       <span class="stat-val hp-val" id="partySummaryHp">50 / 50</span>
+                      <span class="stat-iv-val" id="partySummaryIvHp">31</span>
+                      <span class="stat-ev-val" id="partySummaryEvHp">0</span>
                     </div>
                     <!-- Tấn công -->
                     <div class="summary-stat-row">
-                      <span class="stat-label">Tấn công</span>
+                      <span class="stat-label" id="partyLabelAtk">Tấn công</span>
                       <div class="stat-bar-track">
                         <div class="stat-bar-fill atk" id="partyStatBarAtk" style="width: 35%;"></div>
                       </div>
                       <span class="stat-val" id="partySummaryAtk">55</span>
+                      <span class="stat-iv-val" id="partySummaryIvAtk">31</span>
+                      <span class="stat-ev-val" id="partySummaryEvAtk">252</span>
                     </div>
                     <!-- Phòng thủ -->
                     <div class="summary-stat-row">
-                      <span class="stat-label">Phòng thủ</span>
+                      <span class="stat-label" id="partyLabelDef">Phòng thủ</span>
                       <div class="stat-bar-track">
                         <div class="stat-bar-fill def" id="partyStatBarDef" style="width: 25%;"></div>
                       </div>
                       <span class="stat-val" id="partySummaryDef">40</span>
+                      <span class="stat-iv-val" id="partySummaryIvDef">31</span>
+                      <span class="stat-ev-val" id="partySummaryEvDef">0</span>
                     </div>
                     <!-- Công ĐB -->
                     <div class="summary-stat-row">
-                      <span class="stat-label">Công ĐB</span>
+                      <span class="stat-label" id="partyLabelSpAtk">Công ĐB</span>
                       <div class="stat-bar-track">
                         <div class="stat-bar-fill spatk" id="partyStatBarSpAtk" style="width: 30%;"></div>
                       </div>
                       <span class="stat-val" id="partySummarySpAtk">50</span>
+                      <span class="stat-iv-val" id="partySummaryIvSpAtk">31</span>
+                      <span class="stat-ev-val" id="partySummaryEvSpAtk">0</span>
                     </div>
                     <!-- Thủ ĐB -->
                     <div class="summary-stat-row">
-                      <span class="stat-label">Thủ ĐB</span>
+                      <span class="stat-label" id="partyLabelSpDef">Thủ ĐB</span>
                       <div class="stat-bar-track">
                         <div class="stat-bar-fill spdef" id="partyStatBarSpDef" style="width: 30%;"></div>
                       </div>
                       <span class="stat-val" id="partySummarySpDef">50</span>
+                      <span class="stat-iv-val" id="partySummaryIvSpDef">31</span>
+                      <span class="stat-ev-val" id="partySummaryEvSpDef">0</span>
                     </div>
                     <!-- Tốc độ -->
                     <div class="summary-stat-row">
-                      <span class="stat-label">Tốc độ</span>
+                      <span class="stat-label" id="partyLabelSpeed">Tốc độ</span>
                       <div class="stat-bar-track">
                         <div class="stat-bar-fill speed" id="partyStatBarSpeed" style="width: 60%;"></div>
                       </div>
                       <span class="stat-val" id="partySummarySpeed">90</span>
+                      <span class="stat-iv-val" id="partySummaryIvSpeed">31</span>
+                      <span class="stat-ev-val" id="partySummaryEvSpeed">252</span>
+                    </div>
+                    <!-- Footer: Tổng EV -->
+                    <div class="summary-stat-table-footer">
+                      <span>Tổng nỗ lực (EVs):</span>
+                      <span class="ev-total-val" id="partySummaryTotalEv">504 / 510</span>
                     </div>
                   </div>
                 </div>
+
                 <div class="summary-section summary-moves-section">
                   <div class="summary-section-header">
                     <span class="summary-section-title">CHIÊU THỨC TRANG BỊ</span>
@@ -577,7 +612,7 @@ export class PartyScreen {
       const pk = party[idx];
       const isFainted = pk ? pk.isFainted || pk.currentHp <= 0 : false;
 
-      let panelBg = '';
+      let panelBg: string;
       if (!pk) {
         panelBg = PARTY_ASSETS.panelBlank;
       } else if (isLeader) {
@@ -634,7 +669,7 @@ export class PartyScreen {
       const isFainted = pk ? pk.isFainted || pk.currentHp <= 0 : false;
 
       // Determine panel asset
-      let panelBg = '';
+      let panelBg: string;
       if (!pk) {
         panelBg = PARTY_ASSETS.panelBlank;
       } else if (isLeader) {
@@ -879,6 +914,77 @@ export class PartyScreen {
 
     if (ballEl) ballEl.textContent = pokemon.ballCaught || 'POKEBALL';
     if (caughtLvEl) caughtLvEl.textContent = `Lv.${pokemon.caughtLevel || pokemon.level}`;
+
+    // Nature & Effect
+    const natureData = NATURES_TABLE[pokemon.nature] ?? NATURES_TABLE.Hardy;
+    const natureEl = modal.querySelector('#partySummaryNature');
+    const natureEffectEl = modal.querySelector('#partySummaryNatureEffect');
+    if (natureEl) {
+      natureEl.textContent = `${natureData.nameVi} (${natureData.id})`;
+    }
+    if (natureEffectEl) {
+      natureEffectEl.textContent = natureData.descVi;
+    }
+
+    // IVs & EVs data
+    const ivs = pokemon.ivs ?? { hp: 0, attack: 0, defense: 0, spAtk: 0, spDef: 0, speed: 0 };
+    const evs = pokemon.evs ?? { hp: 0, attack: 0, defense: 0, spAtk: 0, spDef: 0, speed: 0 };
+
+    const updateIvEl = (id: string, val: number) => {
+      const el = modal.querySelector(`#${id}`);
+      if (el) {
+        el.textContent = String(val);
+        el.classList.toggle('perfect', val === 31);
+      }
+    };
+    updateIvEl('partySummaryIvHp', ivs.hp);
+    updateIvEl('partySummaryIvAtk', ivs.attack);
+    updateIvEl('partySummaryIvDef', ivs.defense);
+    updateIvEl('partySummaryIvSpAtk', ivs.spAtk);
+    updateIvEl('partySummaryIvSpDef', ivs.spDef);
+    updateIvEl('partySummaryIvSpeed', ivs.speed);
+
+    const updateEvEl = (id: string, val: number) => {
+      const el = modal.querySelector(`#${id}`);
+      if (el) {
+        el.textContent = String(val);
+        el.classList.toggle('trained', val > 0);
+      }
+    };
+    updateEvEl('partySummaryEvHp', evs.hp);
+    updateEvEl('partySummaryEvAtk', evs.attack);
+    updateEvEl('partySummaryEvDef', evs.defense);
+    updateEvEl('partySummaryEvSpAtk', evs.spAtk);
+    updateEvEl('partySummaryEvSpDef', evs.spDef);
+    updateEvEl('partySummaryEvSpeed', evs.speed);
+
+    const totalEv = evs.hp + evs.attack + evs.defense + evs.spAtk + evs.spDef + evs.speed;
+    const totalEvEl = modal.querySelector('#partySummaryTotalEv');
+    if (totalEvEl) totalEvEl.textContent = `${totalEv} / 510`;
+
+    // Nature buff / nerf labels
+    const updateStatLabel = (elId: string, baseName: string, statKey: StatKey) => {
+      const lbl = modal.querySelector(`#${elId}`);
+      if (!lbl) return;
+      lbl.classList.remove('nature-buff', 'nature-nerf');
+      if (natureData.increasedStat === statKey) {
+        lbl.textContent = `${baseName} ▲`;
+        lbl.classList.add('nature-buff');
+        lbl.setAttribute('title', '+10% từ tính cách');
+      } else if (natureData.decreasedStat === statKey) {
+        lbl.textContent = `${baseName} ▼`;
+        lbl.classList.add('nature-nerf');
+        lbl.setAttribute('title', '-10% từ tính cách');
+      } else {
+        lbl.textContent = baseName;
+        lbl.removeAttribute('title');
+      }
+    };
+    updateStatLabel('partyLabelAtk', 'Tấn công', 'attack');
+    updateStatLabel('partyLabelDef', 'Phòng thủ', 'defense');
+    updateStatLabel('partyLabelSpAtk', 'Công ĐB', 'spAtk');
+    updateStatLabel('partyLabelSpDef', 'Thủ ĐB', 'spDef');
+    updateStatLabel('partyLabelSpeed', 'Tốc độ', 'speed');
     if (expEl) expEl.textContent = `${pokemon.exp} / ${pokemon.maxExp}`;
     if (expBar) {
       const expPercent = Math.min(

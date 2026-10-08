@@ -219,7 +219,7 @@ export class GroundRenderer {
 
         const isMovingActive = movingTiles.has(tileKey(tg.gx, tg.gy));
 
-        let fIdx = 0;
+        let fIdx: number;
         if (isMovingActive) {
           fIdx = Math.floor((now / 120) % 4) + 1;
         } else {

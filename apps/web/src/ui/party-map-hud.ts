@@ -2,7 +2,7 @@
  * Overworld Map Party HUD
  * Renders the player's 6 party Pokémon vertically along the right edge of the screen
  * using Graphics/Party/databox_normal.png.
- * 
+ *
  * Features:
  * - Authentic databox_normal.png (260x84 scaled) pixel-perfect layout
  * - Displays all 6 party Pokémon with animated mini-sprites

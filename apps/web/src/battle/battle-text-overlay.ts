@@ -106,7 +106,7 @@ export class BattleTextOverlay {
     const cmdDialogue = document.createElement('div');
     cmdDialogue.className = 'bho-command-dialogue bho-text-shadow';
     this.commandDialogueLine1 = document.createElement('div');
-    this.commandDialogueLine1.textContent = 'What should';
+    this.commandDialogueLine1.textContent = 'Bạn muốn';
     this.commandDialogueLine2 = document.createElement('div');
     cmdDialogue.appendChild(this.commandDialogueLine1);
     cmdDialogue.appendChild(this.commandDialogueLine2);
@@ -223,7 +223,7 @@ export class BattleTextOverlay {
       const showCursor = state.textTypingIndex >= state.messageText.length && state.tick % 30 < 15;
       this.messageCursorEl.style.visibility = showCursor ? 'visible' : 'hidden';
     } else if (state.uiMode === 'command') {
-      this.commandDialogueLine2.textContent = `${player.name} do?`;
+      this.commandDialogueLine2.textContent = `${player.name} làm gì?`;
     } else if (state.uiMode === 'moves') {
       // Moves
       const moves = player.moves;
@@ -243,7 +243,7 @@ export class BattleTextOverlay {
     } else if (state.uiMode === 'bag') {
       if (this.lastBallsCount !== engine.ballsCount) {
         this.lastBallsCount = engine.ballsCount;
-        this.bagTextEl.textContent = `POKÉ BALLS: x${engine.ballsCount}`;
+        this.bagTextEl.textContent = `BÓNG POKÉ: x${engine.ballsCount}`;
       }
     }
   }

@@ -152,11 +152,11 @@ export class BattleScreen {
       battleBgmPlayer.reduceVolume(0.6, 800);
 
       this.controller.queueMessage(
-        `A wild ${this.engine.enemyPokemon.name} appeared!`,
+        `${this.engine.enemyPokemon.name} hoang dã xuất hiện!`,
         'message',
         () => {
           this.state.startPlayerSendOut();
-          this.controller.queueMessage(`Go! ${this.engine.playerPokemon.name}!`, 'command');
+          this.controller.queueMessage(`Tiến lên! ${this.engine.playerPokemon.name}!`, 'command');
         }
       );
     }
