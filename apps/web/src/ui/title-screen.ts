@@ -353,46 +353,99 @@ export function showTitleScreen(options?: { onStart?: () => void }): TitleScreen
     clouds.push(createRandomCloud(seedX));
   }
 
-  // 4.6. Windblown Drifting Leaves Particle System (Hiệu ứng lá bay trong gió)
+  // 4.6. Procedural Pixel Art Drifting Leaves System (Hệ thống hạt lá bay 100% Pixel Art)
+  interface PixelRect {
+    c: number; // col
+    r: number; // row
+    w: number; // width in pixels
+    t: 'D' | 'G' | 'L'; // Dark outline, Green body, Light highlight
+  }
+
+  // 4 Frames Hoạt Họa Lật Lá Pixel Chuẩn Retro GBA (10x10 Pixel Matrix)
+  const PIXEL_LEAF_FRAMES: PixelRect[][] = [
+    // Frame 0: Lá nghiêng 45°
+    [
+      { c: 7, r: 0, w: 1, t: 'D' },
+      { c: 5, r: 1, w: 2, t: 'D' }, { c: 7, r: 1, w: 1, t: 'L' }, { c: 8, r: 1, w: 1, t: 'D' },
+      { c: 4, r: 2, w: 1, t: 'D' }, { c: 5, r: 2, w: 2, t: 'L' }, { c: 7, r: 2, w: 1, t: 'G' }, { c: 8, r: 2, w: 1, t: 'D' },
+      { c: 3, r: 3, w: 1, t: 'D' }, { c: 4, r: 3, w: 2, t: 'L' }, { c: 6, r: 3, w: 2, t: 'G' }, { c: 8, r: 3, w: 1, t: 'D' },
+      { c: 2, r: 4, w: 1, t: 'D' }, { c: 3, r: 4, w: 2, t: 'L' }, { c: 5, r: 4, w: 2, t: 'G' }, { c: 7, r: 4, w: 1, t: 'D' },
+      { c: 1, r: 5, w: 1, t: 'D' }, { c: 2, r: 5, w: 1, t: 'G' }, { c: 3, r: 5, w: 1, t: 'L' }, { c: 4, r: 5, w: 2, t: 'G' }, { c: 6, r: 5, w: 1, t: 'D' },
+      { c: 1, r: 6, w: 1, t: 'D' }, { c: 2, r: 6, w: 3, t: 'G' }, { c: 5, r: 6, w: 1, t: 'D' },
+      { c: 0, r: 7, w: 1, t: 'D' }, { c: 1, r: 7, w: 3, t: 'G' }, { c: 4, r: 7, w: 1, t: 'D' },
+      { c: 1, r: 8, w: 3, t: 'D' },
+      { c: 2, r: 9, w: 1, t: 'D' },
+    ],
+    // Frame 1: Lá nằm ngang lượn sóng
+    [
+      { c: 2, r: 2, w: 5, t: 'D' },
+      { c: 1, r: 3, w: 1, t: 'D' }, { c: 2, r: 3, w: 4, t: 'L' }, { c: 6, r: 3, w: 1, t: 'G' }, { c: 7, r: 3, w: 2, t: 'D' },
+      { c: 0, r: 4, w: 1, t: 'D' }, { c: 1, r: 4, w: 3, t: 'L' }, { c: 4, r: 4, w: 4, t: 'G' }, { c: 8, r: 4, w: 1, t: 'D' },
+      { c: 1, r: 5, w: 1, t: 'D' }, { c: 2, r: 5, w: 5, t: 'G' }, { c: 7, r: 5, w: 1, t: 'D' },
+      { c: 2, r: 6, w: 5, t: 'D' },
+    ],
+    // Frame 2: Lá lật mép mỏng 3D
+    [
+      { c: 5, r: 1, w: 1, t: 'D' },
+      { c: 4, r: 2, w: 1, t: 'D' }, { c: 5, r: 2, w: 1, t: 'L' }, { c: 6, r: 2, w: 1, t: 'D' },
+      { c: 4, r: 3, w: 1, t: 'D' }, { c: 5, r: 3, w: 1, t: 'L' }, { c: 6, r: 3, w: 1, t: 'G' }, { c: 7, r: 3, w: 1, t: 'D' },
+      { c: 3, r: 4, w: 1, t: 'D' }, { c: 4, r: 4, w: 1, t: 'L' }, { c: 5, r: 4, w: 1, t: 'G' }, { c: 6, r: 4, w: 1, t: 'D' },
+      { c: 3, r: 5, w: 1, t: 'D' }, { c: 4, r: 5, w: 1, t: 'L' }, { c: 5, r: 5, w: 1, t: 'G' }, { c: 6, r: 5, w: 1, t: 'D' },
+      { c: 2, r: 6, w: 1, t: 'D' }, { c: 3, r: 6, w: 2, t: 'G' }, { c: 5, r: 6, w: 1, t: 'D' },
+      { c: 2, r: 7, w: 1, t: 'D' }, { c: 3, r: 7, w: 1, t: 'G' }, { c: 4, r: 7, w: 1, t: 'D' },
+      { c: 3, r: 8, w: 1, t: 'D' },
+    ],
+    // Frame 3: Lá úp góc ngược lại
+    [
+      { c: 2, r: 0, w: 1, t: 'D' },
+      { c: 1, r: 1, w: 1, t: 'D' }, { c: 2, r: 1, w: 1, t: 'L' }, { c: 3, r: 1, w: 2, t: 'D' },
+      { c: 1, r: 2, w: 1, t: 'D' }, { c: 2, r: 2, w: 1, t: 'G' }, { c: 3, r: 2, w: 2, t: 'L' }, { c: 5, r: 2, w: 1, t: 'D' },
+      { c: 1, r: 3, w: 1, t: 'D' }, { c: 2, r: 3, w: 2, t: 'G' }, { c: 4, r: 3, w: 2, t: 'L' }, { c: 6, r: 3, w: 1, t: 'D' },
+      { c: 2, r: 4, w: 1, t: 'D' }, { c: 3, r: 4, w: 2, t: 'G' }, { c: 5, r: 4, w: 2, t: 'L' }, { c: 7, r: 4, w: 1, t: 'D' },
+      { c: 3, r: 5, w: 1, t: 'D' }, { c: 4, r: 5, w: 2, t: 'G' }, { c: 6, r: 5, w: 1, t: 'L' }, { c: 7, r: 5, w: 1, t: 'G' }, { c: 8, r: 5, w: 1, t: 'D' },
+      { c: 4, r: 6, w: 1, t: 'D' }, { c: 5, r: 6, w: 3, t: 'G' }, { c: 8, r: 6, w: 1, t: 'D' },
+      { c: 5, r: 7, w: 1, t: 'D' }, { c: 6, r: 7, w: 3, t: 'G' }, { c: 9, r: 7, w: 1, t: 'D' },
+      { c: 6, r: 8, w: 3, t: 'D' },
+      { c: 7, r: 9, w: 1, t: 'D' },
+    ],
+  ];
+
+  interface PixelLeafPalette {
+    D: string;
+    G: string;
+    L: string;
+  }
+
+  const PIXEL_LEAF_PALETTES: PixelLeafPalette[] = [
+    // 1. Classic Emerald Grass (Lá cỏ xanh ngọc lục bảo)
+    { D: '#0e3a1e', G: '#16a34a', L: '#86efac' },
+    // 2. Fresh Lime Green (Lá xanh mạ chanh tươi sáng)
+    { D: '#1c3d0b', G: '#65a30d', L: '#bef264' },
+    // 3. Autumn Golden Leaf (Lá vàng thu hổ phách)
+    { D: '#451a03', G: '#d97706', L: '#fde047' },
+  ];
+
   interface DriftingLeaf {
     x: number;
     y: number;
     vx: number;
     vy: number;
-    scale: number;
-    rotation: number;
-    spinSpeed: number;
-    flipAngle: number;
-    flipSpeed: number;
+    pixelSize: number; // kích thước ô vuông pixel: 2px cho mid, 3px cho fore
+    animTimer: number;
+    animSpeed: number; // tốc độ chuyển frame lật lá pixel
     swayFreq: number;
     swayAmp: number;
     swayPhase: number;
-    colorLight: string;
-    colorDark: string;
-    colorVein: string;
+    palette: PixelLeafPalette;
     layer: 'mid' | 'fore';
   }
 
-  const LEAF_COLOR_PALETTES = [
-    // 1. Fresh Emerald / Spring Green
-    { light: '#4ade80', dark: '#16a34a', vein: '#bbf7d0' },
-    // 2. Vibrant Lime Green
-    { light: '#a3e635', dark: '#65a30d', vein: '#d9f99d' },
-    // 3. Mint / Celadon Green
-    { light: '#34d399', dark: '#059669', vein: '#a7f3d0' },
-    // 4. Soft Golden Yellow (Autumn accent)
-    { light: '#fde047', dark: '#ca8a04', vein: '#fef08a' },
-    // 5. Amber Leaf
-    { light: '#fb923c', dark: '#c2410c', vein: '#fed7aa' },
-  ];
-
   function createDriftingLeaf(initialX?: number, layer: 'mid' | 'fore' = 'mid'): DriftingLeaf {
-    const palette = LEAF_COLOR_PALETTES[Math.floor(Math.random() * LEAF_COLOR_PALETTES.length)];
+    const palette = PIXEL_LEAF_PALETTES[Math.floor(Math.random() * PIXEL_LEAF_PALETTES.length)];
     const isFore = layer === 'fore';
 
-    // Fore layer leaves are slightly larger & faster
-    const scale = isFore ? 1.25 + Math.random() * 0.55 : 0.8 + Math.random() * 0.4;
-    const vx = isFore ? 230 + Math.random() * 100 : 160 + Math.random() * 70;
+    const pixelSize = isFore ? 3 : 2;
+    const vx = isFore ? 220 + Math.random() * 90 : 155 + Math.random() * 65;
     const vy = 35 + Math.random() * 45;
 
     const x = initialX !== undefined ? initialX : -50 - Math.random() * 120;
@@ -403,17 +456,13 @@ export function showTitleScreen(options?: { onStart?: () => void }): TitleScreen
       y,
       vx,
       vy,
-      scale,
-      rotation: Math.random() * Math.PI * 2,
-      spinSpeed: (Math.random() - 0.5) * 4.0,
-      flipAngle: Math.random() * Math.PI * 2,
-      flipSpeed: 1.8 + Math.random() * 3.0,
-      swayFreq: 1.6 + Math.random() * 1.8,
-      swayAmp: 18 + Math.random() * 30,
+      pixelSize,
+      animTimer: Math.random() * 2,
+      animSpeed: 3.5 + Math.random() * 2.5, // 3.5 - 6 FPS chuyển frame pixel
+      swayFreq: 1.5 + Math.random() * 1.8,
+      swayAmp: 16 + Math.random() * 28,
       swayPhase: Math.random() * Math.PI * 2,
-      colorLight: palette.light,
-      colorDark: palette.dark,
-      colorVein: palette.vein,
+      palette,
       layer,
     };
   }
@@ -537,13 +586,12 @@ export function showTitleScreen(options?: { onStart?: () => void }): TitleScreen
       }
     }
 
-    // C2. Update Windblown Leaves (Drifting Left -> Right according to wind)
+    // C2. Update Windblown Pixel Leaves (Drifting Left -> Right according to wind)
     for (let i = 0; i < driftingLeaves.length; i++) {
       const leaf = driftingLeaves[i];
       leaf.x += leaf.vx * dt;
       leaf.y += leaf.vy * dt;
-      leaf.rotation += leaf.spinSpeed * dt;
-      leaf.flipAngle += leaf.flipSpeed * dt;
+      leaf.animTimer += dt;
 
       // When passed right screen edge or bottom, recycle smoothly from top-left
       if (leaf.x > 1980 || leaf.y > 1250) {
@@ -552,58 +600,31 @@ export function showTitleScreen(options?: { onStart?: () => void }): TitleScreen
       }
     }
 
-    // Helper: Render Drifting Leaves by Layer
+    // Helper: Render Pixel Art Leaves by Layer
     const renderLeaves = (targetLayer: 'mid' | 'fore') => {
-      if (!ctx.beginPath) return;
       const timeSec = currentTime / 1000;
       for (let i = 0; i < driftingLeaves.length; i++) {
         const leaf = driftingLeaves[i];
         if (leaf.layer !== targetLayer) continue;
 
         const swayY = leaf.y + Math.sin(timeSec * leaf.swayFreq + leaf.swayPhase) * leaf.swayAmp;
-        const flip = Math.cos(leaf.flipAngle);
-        const w = 11 * leaf.scale;
-        const h = 22 * leaf.scale;
+        const frameIndex = Math.floor(leaf.animTimer * leaf.animSpeed) % 4;
+        const rects = PIXEL_LEAF_FRAMES[frameIndex];
+        const pSize = leaf.pixelSize;
 
-        ctx.save();
-        ctx.translate(Math.round(leaf.x), Math.round(swayY));
-        ctx.rotate(leaf.rotation);
-        ctx.scale(flip, 1);
+        const originX = Math.round(leaf.x);
+        const originY = Math.round(swayY);
 
-        // Nửa trái lá (màu sáng)
-        ctx.beginPath();
-        ctx.moveTo(0, -h / 2);
-        ctx.bezierCurveTo(-w, -h / 4, -w, h / 4, 0, h / 2);
-        ctx.closePath();
-        ctx.fillStyle = leaf.colorLight;
-        ctx.fill();
-
-        // Nửa phải lá (màu tối tạo bóng 3D)
-        ctx.beginPath();
-        ctx.moveTo(0, -h / 2);
-        ctx.bezierCurveTo(w * 0.85, -h / 4, w * 0.85, h / 4, 0, h / 2);
-        ctx.closePath();
-        ctx.fillStyle = leaf.colorDark;
-        ctx.fill();
-
-        // Gân lá trung tâm (stem vein)
-        ctx.beginPath();
-        ctx.moveTo(0, -h / 2 + 2);
-        ctx.lineTo(0, h / 2 - 2);
-        ctx.strokeStyle = leaf.colorVein;
-        ctx.lineWidth = Math.max(1, 1.2 * leaf.scale);
-        ctx.stroke();
-
-        // Viền lá mờ nét pixel
-        ctx.beginPath();
-        ctx.moveTo(0, -h / 2);
-        ctx.bezierCurveTo(-w, -h / 4, -w, h / 4, 0, h / 2);
-        ctx.bezierCurveTo(w * 0.85, h / 4, w * 0.85, -h / 4, 0, -h / 2);
-        ctx.strokeStyle = 'rgba(0, 0, 0, 0.28)';
-        ctx.lineWidth = 1;
-        ctx.stroke();
-
-        ctx.restore();
+        for (let r = 0; r < rects.length; r++) {
+          const rect = rects[r];
+          ctx.fillStyle = leaf.palette[rect.t];
+          ctx.fillRect(
+            originX + rect.c * pSize,
+            originY + rect.r * pSize,
+            rect.w * pSize,
+            pSize
+          );
+        }
       }
     };
 

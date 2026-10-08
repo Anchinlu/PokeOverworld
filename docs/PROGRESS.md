@@ -1,24 +1,26 @@
-## Cập nhật lần cuối: 2026-10-08 (Xây Dựng Hiệu Ứng Lá Bay Trong Gió Đa Tầng Procedural Trong Title Screen Intro)
+## Cập nhật lần cuối: 2026-10-08 (Xây Dựng Hệ Thống Lá Bay Chuẩn 100% Pixel Art Sprite GBA Trong Title Screen)
 
-### 0.67. Xây Dựng Hệ Thống Hạt Lá Bay Đa Tầng Theo Gió (Windblown Drifting Leaves Particle System):
+### 0.67. Xây Dựng Hệ Thống Hạt Lá Bay Chuẩn 100% Pixel Art Sprite (GBA Pokémon Style - Procedural):
 
 - **Trạng thái:** Đã hoàn thành 100%. 25 tệp test suite (192/192 tests), Typecheck (`npm run typecheck:web`) đạt kết quả **PASS 100%**.
-- **Yêu cầu người dùng:** Thêm hiệu ứng lá bay ở intro màn hình chờ Title Screen.
+- **Yêu cầu người dùng:** Chuyển đổi hiệu ứng lá bay sang chuẩn phong cách Pixel Art thuần túy, loại bỏ các đường cong vector mềm không phù hợp với game pixel.
 - **Chi tiết đã thực hiện:**
-  1. **Hệ Thống Hạt Lá Đa Tầng (Drifting Leaves System - [title-screen.ts](file:///e:/Pokemon/apps/web/src/ui/title-screen.ts)):**
-     - Khởi tạo 36 hạt lá với 2 tầng thị giác phân tầng chiều sâu:
-       - **Tầng Trung Cảnh (Midground Leaves - 18 lá):** Kích thước vừa phải ($0.8 - 1.25\times$), bay sau tầng cỏ tiền cảnh và trước các vệt gió Viento với tốc độ $160 - 230\text{ px/s}$.
-       - **Tầng Tiền Cảnh (Foreground Leaves - 18 lá):** Kích thước lớn hơn ($1.25 - 1.8\times$), bay nhanh hơn ($230 - 330\text{ px/s}$) lướt ngay trước ống kính camera và các ngọn cỏ cận cảnh.
-  2. **Vật Lý Bay & Lượn Sóng Theo Gió Chân Thực:**
-     - **Chuyển động lượn sóng:** $Y(t) = Y_0 + \sin(\omega t + \phi) \times A$ kết hợp cùng độ trôi rơi từ từ $v_y = 35 - 80\text{ px/s}$ và lực đẩy của gió từ Trái sang Phải $v_x = 160 - 330\text{ px/s}$.
-     - **Xoay tròn 2D & Lật 3D (3D Flip Simulation):** Mỗi chiếc lá tự xoay quanh trục Z và lật mặt trong không gian 3D qua hàm `Math.cos(leaf.flipAngle)`, tạo cảm giác chiếc lá đang chao đảo, lộn vòng nhấp nhô sống động trong luồng gió biển.
-     - **Tái sinh vô tận (Seamless Wrap):** Khi bay vượt mép phải ($X > 1980$) hoặc quá đáy màn hình ($Y > 1250$), lá được tái sinh ngẫu nhiên ở mép trái trên, duy trì dòng lá bay liên tục, không bao giờ ngắt quãng.
-  3. **Tạo Hình Chiếc Lá & Bảng Màu Thiên Nhiên Sắc Nét:**
-     - Vẽ hình dáng lá elip nhọn 2 đầu bằng đường cong Bezier kép.
-     - Chia 2 nửa sáng/tối tạo khối 3D đổ bóng, gân lá trung tâm sắc nét và viền mờ pixel.
-     - Phối hợp 5 dải màu thiên nhiên: Xanh lục bảo (Emerald Green), Xanh mạ chanh (Lime), Xanh bạc hà (Mint), xen kẽ điểm xuyết lá vàng thu hoàng hôn (Golden Yellow & Amber Leaf).
+  1. **Ma Trận Điểm Ảnh Pixel Art Sprite 4 Frame 10x10 ([title-screen.ts](file:///e:/Pokemon/apps/web/src/ui/title-screen.ts)):**
+     - Xây dựng 4 khung hình sprite pixel art thủ công (`PIXEL_LEAF_FRAMES`) thể hiện trọn vẹn chu kỳ xoay lật 3D của chiếc lá:
+       - **Frame 0:** Lá nghiêng $45^\circ$ với viền răng cưa pixel sẫm màu, thân lá và gân sáng.
+       - **Frame 1:** Lá nằm ngang bẹt lướt theo luồng gió.
+       - **Frame 2:** Lá lật mép mỏng theo phương dọc thể hiện độ dày 3D.
+       - **Frame 3:** Lá úp góc ngược lại hoàn tất chu kỳ lộn vòng.
+     - Từng pixel được render trực tiếp bằng các khối vuông `ctx.fillRect` nguyên vẹn ($pSize = 2\text{px}$ cho trung cảnh $20 \times 20\text{px}$, $pSize = 3\text{px}$ cho tiền cảnh $30 \times 30\text{px}$), đảm bảo độ sắc nét pixelated tuyệt đối, không có bất kỳ đường cong khử răng cưa vector nào.
+  2. **Bảng Màu Pixel Art GBA Chuẩn Mực:**
+     - 3 bảng màu pixel retro kinh điển:
+       - **Classic Emerald Grass:** Viền `#0e3a1e`, Thân `#16a34a`, Highlight `#86efac`.
+       - **Fresh Lime Green:** Viền `#1c3d0b`, Thân `#65a30d`, Highlight `#bef264`.
+       - **Autumn Golden Leaf:** Viền `#451a03`, Thân `#d97706`, Highlight `#fde047`.
+  3. **Vật Lý Bay & Hoạt Họa Sprite Pixel Đa Tầng:**
+     - Lá chuyển động trôi từ Trái qua Phải theo gió ($v_x = 155 - 310\text{ px/s}$) kết hợp dao động hình sin lượn sóng dọc và rơi từ từ $v_y = 35 - 80\text{ px/s}$.
+     - Hoạt họa lật lá pixel theo nhịp $3.5 - 6\text{ FPS}$ luân phiên giữa 4 frame pixel, tái sinh tuần hoàn khi bay ra khỏi khung nhìn.
   4. **Kiểm Thử & Đảm Bảo Tính Toàn Vẹn ([title-screen.test.ts](file:///e:/Pokemon/apps/web/test/title-screen.test.ts)):**
-     - Bổ sung mock các hàm vẽ Bezier Canvas 2D (`beginPath`, `bezierCurveTo`, `translate`, `rotate`, `scale`, v.v.).
      - `npm run typecheck:web` $\rightarrow$ PASS, 0 errors.
      - `npm run test:web` $\rightarrow$ 25/25 suites, 192/192 tests PASS 100%.
 
