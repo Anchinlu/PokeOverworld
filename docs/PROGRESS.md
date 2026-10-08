@@ -1,4 +1,24 @@
-## Cập nhật lần cuối: 2026-10-08 (Modal Cài Đặt Minecraft GUI & Tích Hợp Màn Hình Chờ Hoàng Hôn Sunset)
+## Cập nhật lần cuối: 2026-10-08 (Thu Nhỏ Mặt Trời Sunset & Hạ Xuống 5px)
+
+### 0.70. Tinh Chỉnh Mặt Trời Sunset (Thu Nhỏ 0.88x & Đẩy Xuống 5px):
+
+- **Trạng thái:** Đã hoàn thành 100%. 25 tệp test suite (193/193 tests), Typecheck (`npm run typecheck:web`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** "thủ nhỏ mặt trời sunset lại 1 ít nhé và đẩy xuống 5px" - Thu nhỏ vầng thái dương hoàng hôn và dịch chuyển xuống 5px để chìm sâu hơn vào đường chân trời tự nhiên.
+- **Chi tiết đã thực hiện:**
+  1. **Thu Nhỏ & Dịch Chuyển Mặt Trời ([title-screen.ts](file:///e:/Pokemon/apps/web/src/ui/title-screen.ts)):**
+     - Tâm mặt trời hoàng hôn được xác định tại $(CX=1216, CY=800)$.
+     - Áp dụng phép biến đổi ma trận 2D Canvas:
+       - `ctx.translate(1216, 800 + 5)` (dịch chuyển xuống $5\text{px}$).
+       - `ctx.scale(0.88, 0.88)` (thu nhỏ nhẹ $\approx 12\%$, kích thước đĩa mặt trời giảm từ $132\text{px}$ xuống $\approx 116\text{px}$).
+       - `ctx.translate(-1216, -800)` (neo tỷ lệ ngay tâm đĩa mặt trời).
+     - Cả đĩa mặt trời (`06_sun_sunset_disc.png`) lẫn quầng phát quang (`06_sun_sunset_glow.png`) đều được thu nhỏ và đẩy xuống đồng bộ.
+  2. **Đồng Bộ Vệt Nắng Phản Chiếu Trên Mặt Biển:**
+     - Vệt nắng phản chiếu (`04_sun_reflection_cropped_sunset.png`) được co lại tương ứng theo tỷ lệ $0.88\times$ ($W = 410\text{px}$), căn giữa thẳng trục với mặt trời tại $X=1011$ và dịch nhẹ xuống $Y=850$.
+  3. **Kiểm Thử & Đảm Bảo Tính Toàn Vẹn ([title-screen.test.ts](file:///e:/Pokemon/apps/web/test/title-screen.test.ts)):**
+     - `npm run typecheck:web` $\rightarrow$ PASS, 0 errors.
+     - `npm run test:web` $\rightarrow$ 25/25 suites, 193/193 tests PASS 100%.
+
+---
 
 ### 0.69. Modal Cài Đặt Minecraft GUI & Màn Hình Chờ Hoàng Hôn (Sunset Theme):
 

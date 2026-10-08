@@ -757,14 +757,25 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
       ctx.fillRect(0, 0, 1920, 1200);
     }
 
-    // 1.5. Layer 1.5: Sunset Sun Glow & Disc (if sunset mode)
+    // 1.5. Layer 1.5: Sunset Sun Glow & Disc (if sunset mode: thu nhỏ 0.88x và đẩy xuống 5px)
     if (currentTheme === 'sunset') {
+      const sunCenterX = 1216;
+      const sunCenterY = 800;
+      const sunScale = 0.88; // Thu nhỏ mặt trời 1 ít (~12%)
+      const sunOffsetY = 5; // Đẩy xuống 5px theo yêu cầu người dùng
+
+      ctx.save();
+      ctx.translate(sunCenterX, sunCenterY + sunOffsetY);
+      ctx.scale(sunScale, sunScale);
+      ctx.translate(-sunCenterX, -sunCenterY);
+
       if (sunGlowSunsetImg.complete && sunGlowSunsetImg.naturalWidth > 0) {
         ctx.drawImage(sunGlowSunsetImg, 0, 0, 1920, 1200);
       }
       if (sunDiscSunsetImg.complete && sunDiscSunsetImg.naturalWidth > 0) {
         ctx.drawImage(sunDiscSunsetImg, 0, 0, 1920, 1200);
       }
+      ctx.restore();
     }
 
     // 2. Layer 2: Clouds (Drifting Left -> Right across sky)
@@ -801,9 +812,17 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
     }
 
     // 4. Layer 4: Sun Reflection (Stationary on Horizon at X=984, Y=848, W=466, H=49)
-    const curSunReflect = currentTheme === 'sunset' ? sunReflectionSunsetImg : sunDayImg;
-    if (curSunReflect.complete && curSunReflect.naturalWidth > 0) {
-      ctx.drawImage(curSunReflect, 984, 848, 466, 49);
+    if (currentTheme === 'sunset') {
+      if (sunReflectionSunsetImg.complete && sunReflectionSunsetImg.naturalWidth > 0) {
+        const refW = Math.round(466 * 0.88);
+        const refH = 49;
+        const refX = Math.round(1216 - refW / 2);
+        ctx.drawImage(sunReflectionSunsetImg, refX, 850, refW, refH);
+      }
+    } else {
+      if (sunDayImg.complete && sunDayImg.naturalWidth > 0) {
+        ctx.drawImage(sunDayImg, 984, 848, 466, 49);
+      }
     }
 
     // 4.5. Layer 4.5: Sea Pokémon swimming on waves
