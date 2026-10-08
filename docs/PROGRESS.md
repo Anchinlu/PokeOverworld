@@ -1,4 +1,31 @@
-## Cập nhật lần cuối: 2026-10-08 (Tinh Chỉnh Độ Cao Tầng Cỏ Tiền Cảnh Title Screen: Layer 7b Hạ Thêm 30px -> Y=340, Layer 7a Hạ Thêm 50px -> Y=460)
+## Cập nhật lần cuối: 2026-10-08 (Thiết Kế Menu Nút Bấm Procedural Pixel Art Thuần CSS Cho Màn Hình Chờ - Không Dùng Asset Ngoài)
+
+### 0.66. Tái Thiết Kế Menu Nút Bấm Chuẩn Phong Cách Pixel Art Procedural (Pure CSS - Không Phụ Thuộc Asset Có Sẵn):
+
+- **Trạng thái:** Đã hoàn thành 100%. 25 tệp test suite (192/192 tests), Typecheck (`npm run typecheck:web`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** Ở phần button của giao diện chờ, sửa lại không dùng asset có sẵn mà tự render các nút theo phong cách pixel.
+- **Chi tiết đã thực hiện:**
+  1. **Loại Bỏ Hoàn Toàn Phụ Thuộc Asset Ảnh Có Sẵn ([style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Gỡ bỏ thuộc tính `background: url('/Graphics/Intro/Buton/Bunton.png')`. Toàn bộ giao diện nút bấm giờ đây được vẽ trực tiếp 100% bằng CSS hiện đại theo phong cách pixel art thủ công.
+  2. **Kỹ Thuật Tạo Hình Stepped Pixel Border & 3D Bevel Nổi Khối ([style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - **Góc răng cưa Pixel (4px stepped corners):** Sử dụng `clip-path: polygon(...)` khía 4 góc răng cưa pixel đối xứng, tái hiện hoàn hảo cảm giác các nút giao diện trong game 16-bit / Game Boy Advance.
+     - **Viền nổi khối 3D (Beveled Inset Shadows):** Cạnh trên và trái có highlight sáng (`inset 0 3px 0 0`, `inset 3px 0 0 0`), cạnh dưới và phải có dải bóng tối (`inset 0 -3px 0 0`, `inset -3px 0 0 0`) kết hợp cùng lớp đổ bóng cứng pixel `filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.65))`.
+     - **Thân nút 2 tầng Split-Gradient:** Dải màu phân đôi (46% dải trên sáng, 50% dải dưới tối) kinh điển của phong cách menu RPG Pokémon GBA/NDS.
+  3. **Con Trỏ Pixel `▶` & Icon Đặc Trưng Từng Nút ([title-screen.ts](file:///e:/Pokemon/apps/web/src/ui/title-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Bổ sung con trỏ pixel `▶` (`.btn-pixel-cursor`) nhấp nháy tuần hoàn theo nhịp 8-bit (`@keyframes pixelCursorBlink`) khi hover chuột hoặc chọn nút.
+     - Phối màu và icon đặc trưng theo từng chức năng:
+       - **Thế Giới Mới (`#btnNewWorld`):** Tông hổ phách hoàng gia (Amber Gold `#fde047` / `#b45309`), biểu tượng `✦`.
+       - **Tải Thế Giới (`#btnLoadWorld`):** Tông xanh hải dương (Sapphire Blue `#93c5fd` / `#1d4ed8`), biểu tượng `📂`.
+       - **Gia Nhập Thế Giới (`#btnJoinWorld`):** Tông ngọc lục bảo (Emerald Green `#6ee7b7` / `#047857`), biểu tượng `🌐`.
+       - **Cài Đặt (`#btnSettings`):** Tông thép phiến (Slate Iron `#cbd5e1` / `#475569`), biểu tượng `⚙️`.
+  4. **Phản Hồi Cơ Học Khi Bấm (Interactive Feedback):**
+     - **Hover:** Nút dịch chuyển sang phải $10\text{px}$, phát sáng viền vàng óng pixel (`drop-shadow(0 0 8px rgba(250, 204, 21, 0.65))`).
+     - **Active (Nhấn chuột):** Nút thụt xuống $3\text{px}$, các dải viền bóng bevel đảo chiều mô phỏng cảm giác bấm nút cơ học pixel thật tay.
+  5. **Kiểm Thử & Đảm Bảo Tính Toàn Vẹn:**
+     - `npm run typecheck:web` $\rightarrow$ PASS, 0 errors.
+     - `npm run test:web` $\rightarrow$ 25/25 suites, 192/192 tests PASS 100%.
+
+---
 
 ### 0.65. Tinh Chỉnh Độ Cao Tầng Cỏ Tiền Cảnh Title Screen (Layer 7b & Layer 7a):
 

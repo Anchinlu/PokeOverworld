@@ -91,18 +91,26 @@ export function showTitleScreen(options?: { onStart?: () => void }): TitleScreen
     
     <!-- Title Screen UI Overlay -->
     <div class="title-screen-ui" id="titleScreenUi">
-      <!-- Pixel Menu: Top Left with Bunton.png styling -->
+      <!-- Pixel Menu: Top Left with Procedural Pixel Art styling -->
       <nav class="title-menu-container" id="titleMenuContainer" aria-label="Menu Màn Hình Chờ">
         <button class="title-pixel-btn btn-new-world" id="btnNewWorld" title="Bắt đầu thế giới mới">
+          <span class="btn-pixel-cursor" aria-hidden="true">▶</span>
+          <span class="btn-pixel-icon" aria-hidden="true">✦</span>
           <span class="btn-text">Thế Giới Mới</span>
         </button>
         <button class="title-pixel-btn btn-load-world" id="btnLoadWorld" title="Tải thế giới đã lưu">
+          <span class="btn-pixel-cursor" aria-hidden="true">▶</span>
+          <span class="btn-pixel-icon" aria-hidden="true">📂</span>
           <span class="btn-text">Tải Thế Giới</span>
         </button>
         <button class="title-pixel-btn btn-join-world" id="btnJoinWorld" title="Tham gia thế giới nhiều người chơi">
+          <span class="btn-pixel-cursor" aria-hidden="true">▶</span>
+          <span class="btn-pixel-icon" aria-hidden="true">🌐</span>
           <span class="btn-text">Gia Nhập Thế Giới</span>
         </button>
         <button class="title-pixel-btn btn-settings" id="btnSettings" title="Cài đặt hệ thống">
+          <span class="btn-pixel-cursor" aria-hidden="true">▶</span>
+          <span class="btn-pixel-icon" aria-hidden="true">⚙️</span>
           <span class="btn-text">Cài Đặt</span>
         </button>
       </nav>

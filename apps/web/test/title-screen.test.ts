@@ -206,7 +206,7 @@ describe('Game Title Screen / Màn Hình Chờ', () => {
     expect(document.getElementById('titleScreenOverlay')).toBeNull();
   });
 
-  it('renders all 4 pixel menu buttons with Bunton styling', () => {
+  it('renders all 4 procedural pixel menu buttons without external assets', () => {
     showTitleScreen();
     const overlay = document.getElementById('titleScreenOverlay') as unknown as MockDOMElement;
     expect(overlay.querySelector('#btnNewWorld')).not.toBeNull();
