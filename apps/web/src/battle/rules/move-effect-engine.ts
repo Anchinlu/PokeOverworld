@@ -1,4 +1,4 @@
-import type { BattlerPokemon, BattlerSide, BattleEvent, BattleMove } from '../types';
+import type { BattlerPokemon, BattlerSide, BattleEvent, BattleMove, BattleEnvironment } from '../types';
 import type { BattleRng } from '../battle-rng';
 import { BattleEventFactory } from '../state/battle-event-factory';
 import {
@@ -12,6 +12,7 @@ import {
 } from '../state/battle-state-reducer';
 import { getStatusImmunity } from './status-engine';
 import { AbilityEngine } from './ability-engine';
+import { getWeatherAccuracyOverride } from './environment';
 
 export const NEVER_MISS_MOVE_IDS = new Set([
   'swift',
@@ -76,13 +77,14 @@ export const STRUGGLE_MOVE: BattleMove = {
 };
 
 /**
- * Checks whether an attack hits or misses based on accuracy and evasion stages.
+ * Checks whether an attack hits or misses based on accuracy, evasion stages, and weather.
  */
 export function checkMoveAccuracy(
   attacker: BattlerPokemon,
   defender: BattlerPokemon,
   move: BattleMove,
-  rng: BattleRng
+  rng: BattleRng,
+  environment?: BattleEnvironment
 ): boolean {
   const isSelfTargetMove =
     move.category === 'status' &&
@@ -94,21 +96,26 @@ export function checkMoveAccuracy(
         move.statChanges.every((sc) => sc.target === 'self')) ||
       (move.statusEffect !== undefined && move.statusEffect.target === 'self'));
 
+  const weatherOverride = getWeatherAccuracyOverride(environment?.weather?.type, move.id);
+  if (weatherOverride?.isNeverMiss) return true;
+
+  const baseAcc = weatherOverride?.fixedAccuracy ?? move.accuracy;
+
   const isNeverMiss =
     isSelfTargetMove ||
     NEVER_MISS_MOVE_IDS.has(move.id) ||
-    move.accuracy <= 0 ||
+    baseAcc <= 0 ||
     move.id === 'struggle';
 
   const accStage = attacker.statStages?.accuracy ?? 0;
   const evaStage = defender.statStages?.evasion ?? 0;
   const requiresAccCheck =
-    !isNeverMiss && (move.accuracy < 100 || accStage !== 0 || evaStage !== 0);
+    !isNeverMiss && (baseAcc < 100 || accStage !== 0 || evaStage !== 0);
 
   if (!requiresAccCheck) return true;
 
   const accMult = getAccuracyMultiplier(accStage, evaStage);
-  const effectiveAcc = move.accuracy * accMult;
+  const effectiveAcc = baseAcc * accMult;
   return rng.next() * 100 <= effectiveAcc;
 }
 
@@ -121,7 +128,8 @@ export function handleTwoTurnMoveCharge(
   attackerSide: BattlerSide,
   move: BattleMove,
   moveDisplayName: string,
-  events: BattleEvent[]
+  events: BattleEvent[],
+  environment?: BattleEnvironment
 ): { isCharging: boolean; chargeMessage?: string } {
   const moveId = move.id.toLowerCase();
   if (!TWO_TURN_MOVE_IDS.has(moveId)) {
@@ -133,6 +141,10 @@ export function handleTwoTurnMoveCharge(
     let stance: 'flying' | 'underground' | 'underwater' | 'high' | undefined = undefined;
 
     if (moveId === 'solar_beam' || moveId === 'solarbeam') {
+      // In sun, Solar Beam fires in a single turn without charging
+      if (environment?.weather?.type === 'sun') {
+        return { isCharging: false };
+      }
       attacker.chargingMove = { move, turn: 1 };
       chargeMsg = `${attacker.name} đang hấp thụ ánh sáng mặt trời!`;
     } else if (moveId === 'skull_bash') {

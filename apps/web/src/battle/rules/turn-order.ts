@@ -1,22 +1,27 @@
-import type { BattlerPokemon, BattleMove } from '../types';
+import type { BattlerPokemon, BattleMove, BattleEnvironment } from '../types';
 import type { BattleRng } from '../battle-rng';
 import { getStatMultiplier } from '../state/battle-state-reducer';
 
 import { PROTECT_MOVE_IDS } from './move-effect-engine';
 
 import { HeldItemEngine } from './held-item-engine';
+import { getEnvironmentSpeedMultiplier } from './environment';
 
 /**
- * Calculates effective combat speed of a battler, taking into account stat stages, paralysis, and held items.
+ * Calculates effective combat speed of a battler, taking into account stat stages, paralysis, held items, and environment abilities.
  */
-export function calculateEffectiveSpeed(battler: BattlerPokemon): number {
+export function calculateEffectiveSpeed(
+  battler: BattlerPokemon,
+  environment?: BattleEnvironment
+): number {
   const baseSpeed = battler.stats.speed;
   const speedStage = battler.statStages?.speed ?? 0;
   const stageMultiplier = getStatMultiplier(speedStage);
   const paralysisMultiplier = battler.status === 'paralysis' ? 0.5 : 1.0;
   const heldItemMultiplier = HeldItemEngine.getStatMultiplier(battler, 'speed');
+  const envMultiplier = getEnvironmentSpeedMultiplier(battler, environment);
 
-  return baseSpeed * stageMultiplier * paralysisMultiplier * heldItemMultiplier;
+  return baseSpeed * stageMultiplier * paralysisMultiplier * heldItemMultiplier * envMultiplier;
 }
 
 /**
@@ -27,7 +32,8 @@ export function determineTurnOrder(
   playerMove: BattleMove,
   enemyPokemon: BattlerPokemon,
   enemyMove: BattleMove,
-  rng: BattleRng
+  rng: BattleRng,
+  environment?: BattleEnvironment
 ): 'player' | 'enemy' {
   let pPri = playerMove.priority ?? 0;
   let ePri = enemyMove.priority ?? 0;
@@ -39,8 +45,8 @@ export function determineTurnOrder(
     return pPri > ePri ? 'player' : 'enemy';
   }
 
-  const pSpeed = calculateEffectiveSpeed(playerPokemon);
-  const eSpeed = calculateEffectiveSpeed(enemyPokemon);
+  const pSpeed = calculateEffectiveSpeed(playerPokemon, environment);
+  const eSpeed = calculateEffectiveSpeed(enemyPokemon, environment);
 
   if (pSpeed === eSpeed) {
     return rng.next() < 0.5 ? 'player' : 'enemy';

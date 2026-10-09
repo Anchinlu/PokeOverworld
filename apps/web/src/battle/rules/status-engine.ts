@@ -1,4 +1,4 @@
-import type { BattlerPokemon, BattlerSide, BattleEvent, BattleMove } from '../types';
+import type { BattlerPokemon, BattlerSide, BattleEvent, BattleMove, BattleEnvironment } from '../types';
 import type { BattleRng } from '../battle-rng';
 import { BattleEventFactory } from '../state/battle-event-factory';
 import {
@@ -10,6 +10,11 @@ import {
 
 import { HeldItemEngine } from './held-item-engine';
 import { AbilityEngine } from './ability-engine';
+import {
+  calculateEndTurnWeatherDamage,
+  calculateEndTurnTerrainHealing,
+  canApplyStatusInTerrain,
+} from './environment';
 
 export interface PreTurnStatusResult {
   canAct: boolean;
@@ -30,8 +35,18 @@ export interface EndTurnEffectResult {
  */
 export function getStatusImmunity(
   target: BattlerPokemon,
-  condition: NonNullable<BattleMove['statusEffect']>['condition']
+  condition: NonNullable<BattleMove['statusEffect']>['condition'],
+  environment?: BattleEnvironment
 ): string | null {
+  if (environment?.terrain && !canApplyStatusInTerrain(environment.terrain.type, condition, target)) {
+    if (environment.terrain.type === 'electric') {
+      return 'Điện trường trên mặt đất ngăn cản giấc ngủ!';
+    }
+    if (environment.terrain.type === 'misty') {
+      return 'Màn sương mù trên mặt đất bảo vệ khỏi các trạng thái bất lợi!';
+    }
+  }
+
   const abilityImmunity = AbilityEngine.isStatusImmune(target, condition);
   if (abilityImmunity.immune) {
     return abilityImmunity.reason ?? 'Đặc tính của Pokémon ngăn chặn trạng thái này.';
@@ -147,7 +162,8 @@ export function processEndTurnEffects(
   target: BattlerPokemon,
   targetSide: BattlerSide,
   opponent?: BattlerPokemon,
-  opponentSide?: BattlerSide
+  opponentSide?: BattlerSide,
+  environment?: BattleEnvironment
 ): EndTurnEffectResult | null {
   ensureBattlerState(target);
   if (target.currentHp <= 0 || target.isFainted) return null;
@@ -271,12 +287,51 @@ export function processEndTurnEffects(
     );
   }
 
+  // Weather end-of-turn damage (Sandstorm, Hail)
+  if (environment?.weather) {
+    const weatherDmgResult = calculateEndTurnWeatherDamage(target, environment.weather.type);
+    if (weatherDmgResult) {
+      totalDamage += weatherDmgResult.damage;
+      messageText = messageText ? `${messageText} ${weatherDmgResult.message}` : weatherDmgResult.message;
+      events.push(
+        BattleEventFactory.endTurnDamage(
+          targetSide,
+          target.name,
+          weatherDmgResult.damage,
+          Math.max(0, target.currentHp - totalDamage),
+          weatherDmgResult.weatherType,
+          weatherDmgResult.message
+        )
+      );
+    }
+  }
+
   let defenderFainted = false;
   if (totalDamage > 0) {
     const res = applyDamage(target, totalDamage);
     defenderFainted = res.fainted;
     if (defenderFainted) {
       events.push(BattleEventFactory.fainted(targetSide, target.name, `${target.name} đã ngất xỉu!`));
+    }
+  }
+
+  // Grassy Terrain healing (for grounded Pokémon that did not faint)
+  if (!defenderFainted && target.currentHp > 0 && environment?.terrain) {
+    const terrainHeal = calculateEndTurnTerrainHealing(target, environment.terrain.type);
+    if (terrainHeal) {
+      const actualHealed = restoreHp(target, terrainHeal.healAmount);
+      events.push(
+        BattleEventFactory.hpRestored(
+          targetSide,
+          target.name,
+          actualHealed,
+          target.currentHp,
+          target.maxHp,
+          'terrain',
+          terrainHeal.message
+        )
+      );
+      messageText = messageText ? `${messageText} ${terrainHeal.message}` : terrainHeal.message;
     }
   }
 

@@ -1,4 +1,4 @@
-import type { BattlerPokemon, BattleMove } from '../types';
+import type { BattlerPokemon, BattleMove, BattleEnvironment } from '../types';
 import type { BattleRng } from '../battle-rng';
 import { getTypeEffectiveness } from './type-effectiveness';
 import { getStatMultiplier } from '../state/battle-state-reducer';
@@ -45,6 +45,10 @@ export const MULTI_HIT_2_MOVE_IDS = new Set([
 
 import { HeldItemEngine } from './held-item-engine';
 import { AbilityEngine } from './ability-engine';
+import {
+  getEnvironmentDamageMultiplier,
+  getWeatherMovePowerMultiplier,
+} from './environment';
 
 /**
  * Calculates raw base damage for a single hit under Gen 7 formula.
@@ -58,7 +62,6 @@ export function calculateSingleHitBaseDamage(
   const isSpecial = move.category === 'special';
   const rawAtk = isSpecial ? attacker.stats.spAtk : attacker.stats.attack;
   const rawDef = isSpecial ? defender.stats.spDef : defender.stats.defense;
-
   const atkStage = isSpecial
     ? (attacker.statStages?.spAtk ?? 0)
     : (attacker.statStages?.attack ?? 0);
@@ -96,7 +99,8 @@ export function calculateDamage(
   attacker: BattlerPokemon,
   defender: BattlerPokemon,
   move: BattleMove,
-  rng: BattleRng
+  rng: BattleRng,
+  environment?: BattleEnvironment
 ): DamageCalculationResult {
   const moveId = move.id.toLowerCase();
   const isStruggle = move.id === 'struggle';
@@ -320,6 +324,9 @@ export function calculateDamage(
       effectivePower = 120;
     }
 
+    const weatherPowerMult = getWeatherMovePowerMultiplier(environment?.weather?.type, move.id);
+    effectivePower = Math.max(1, Math.floor(effectivePower * weatherPowerMult));
+
     const { baseDmg } = calculateSingleHitBaseDamage(attacker, defender, move, effectivePower);
 
     const hasAdaptability = AbilityEngine.normalize(attacker.ability) === 'adaptability';
@@ -346,10 +353,20 @@ export function calculateDamage(
     const atkAbilityDamage = AbilityEngine.getAttackerDamageMultiplier(attacker, defender, move);
     const defAbilityDamage = AbilityEngine.getDefenderDamageMultiplier(attacker, defender, move, typeEff);
     const abilityDamageMult = atkAbilityDamage.multiplier * defAbilityDamage.multiplier;
+    const envDamageMult = getEnvironmentDamageMultiplier(environment, move, attacker, defender);
 
     damage = Math.max(
       1,
-      Math.floor(baseDmg * stab * typeEff * critMult * randomFactor * heldItemDamageMult * abilityDamageMult)
+      Math.floor(
+        baseDmg *
+          stab *
+          typeEff *
+          critMult *
+          randomFactor *
+          heldItemDamageMult *
+          abilityDamageMult *
+          envDamageMult
+      )
     );
 
     // Multi-hit moves

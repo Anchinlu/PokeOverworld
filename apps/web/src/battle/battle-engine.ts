@@ -29,6 +29,7 @@ import {
 import { BattleEventFactory } from './state/battle-event-factory';
 import { HeldItemEngine } from './rules/held-item-engine';
 import { AbilityEngine } from './rules/ability-engine';
+import { canUsePriorityMoveInTerrain } from './rules/environment';
 import {
   ensureBattlerState,
   applyStatStageChange,
@@ -167,7 +168,7 @@ export class BattleEngine {
   ): EndTurnResult | null {
     const targetSide: BattlerSide = target === this.playerPokemon ? 'player' : 'enemy';
     const opponentSide: BattlerSide = targetSide === 'player' ? 'enemy' : 'player';
-    const res = processEndTurnEffects(target, targetSide, opponent, opponentSide);
+    const res = processEndTurnEffects(target, targetSide, opponent, opponentSide, this.environment);
 
     // End turn ability triggers (Speed Boost, Shed Skin, etc.)
     const abilityEvents: BattleEvent[] = [];
@@ -320,7 +321,8 @@ export class BattleEngine {
       attackerSide,
       move,
       moveDisplayName,
-      events
+      events,
+      this.environment
     );
     if (chargeResult.isCharging) {
       return {
@@ -445,8 +447,26 @@ export class BattleEngine {
       }
     }
 
+    // Psychic Terrain priority move block on grounded targets
+    if (
+      !isSelfTarget &&
+      !canUsePriorityMoveInTerrain(this.environment.terrain?.type, move.priority, defender)
+    ) {
+      const terrainBlockedMsg = `${statusPrefix}${attacker.name} sử dụng ${moveDisplayName}! Nhưng Trường Tâm Linh bảo vệ ${defender.name} khỏi đòn ưu tiên!`;
+      return {
+        attackerName: attacker.name,
+        moveName: moveDisplayName,
+        damage: 0,
+        typeEffectiveness: 1.0,
+        isCritical: false,
+        defenderFainted: false,
+        message: terrainBlockedMsg,
+        events,
+      };
+    }
+
     // 7. Accuracy / Evasion Check
-    const hitsTarget = checkMoveAccuracy(attacker, defender, move, this.rng);
+    const hitsTarget = checkMoveAccuracy(attacker, defender, move, this.rng, this.environment);
     if (!hitsTarget) {
       const missMsg = `${statusPrefix}${attacker.name} sử dụng ${moveDisplayName}! Nhưng đã trượt!`;
       events.push(
@@ -523,7 +543,7 @@ export class BattleEngine {
     }
 
     // 9. Damaging attack handling
-    const dmgCalc = calculateDamage(attacker, defender, move, this.rng);
+    const dmgCalc = calculateDamage(attacker, defender, move, this.rng, this.environment);
 
     if (dmgCalc.typeEffectiveness === 0) {
       const immuneMsg = `${statusPrefix}${attacker.name} sử dụng ${moveDisplayName}! Không có tác dụng lên ${defender.name}!`;
@@ -924,7 +944,8 @@ export class BattleEngine {
       playerMove,
       this.enemyPokemon,
       enemyMove,
-      this.rng
+      this.rng,
+      this.environment
     );
   }
 
