@@ -6,8 +6,8 @@
  * - Rotating celestial light radiance / sunburst effect behind the type icons
  * - Glowing white outline logo (logo2.png) overlaying on top of the type ring
  * - Full color iconic Pokémon logo (logo1.png) reveal with radiant glow
- * - Middle horizontal split screen transition: Top half slides up, bottom half slides down
- * - Smooth skip mechanism on pointer click or key press
+ * - Glowing prompt: "✨ BẤM ĐỂ BƯỚC VÀO THẾ GIỚI ✨"
+ * - Smooth cinematic fade-out transition on click or key press entering the title screen
  */
 
 export interface GameIntroController {
@@ -19,7 +19,7 @@ export interface GameIntroController {
 /**
  * Generate HTML string for the rotating 18 Pokémon Type Icons and Radiance Effect
  */
-function createTypeRingAndRadianceHtml(suffix: 'Top' | 'Bottom'): string {
+function createTypeRingAndRadianceHtml(): string {
   const ICONS_COUNT = 18;
   const radius = 210; // px
   let iconsHtml = '';
@@ -41,13 +41,13 @@ function createTypeRingAndRadianceHtml(suffix: 'Top' | 'Bottom'): string {
 
   return `
     <!-- Rotating Celestial Radiance Effect -->
-    <div class="intro-radiance-wrapper" id="introRadiance${suffix}">
+    <div class="intro-radiance-wrapper" id="introRadiance">
       <div class="intro-radiance-rays"></div>
       <div class="intro-radiance-aura"></div>
     </div>
 
     <!-- Clockwise Rotating 18 Type Icons Ring -->
-    <div class="intro-type-ring-wrapper" id="introTypeRing${suffix}">
+    <div class="intro-type-ring-wrapper" id="introTypeRing">
       <div class="intro-type-ring">
         ${iconsHtml}
       </div>
@@ -68,34 +68,19 @@ export function playGameIntro(onComplete?: () => void): GameIntroController {
   overlay.className = 'game-intro-overlay';
 
   overlay.innerHTML = `
-    <!-- Top Shutter (Slides UP on split) -->
-    <div class="intro-shutter intro-shutter-top" id="introShutterTop">
-      <div class="intro-content-wrapper intro-content-top">
-        <div class="intro-logo-box">
-          ${createTypeRingAndRadianceHtml('Top')}
-          <img class="intro-logo intro-logo-outline" id="introLogo2Top" src="/Graphics/Intro/logo2.png" alt="Logo Outline" />
-          <img class="intro-logo intro-logo-color" id="introLogo1Top" src="/Graphics/Intro/logo1.png" alt="Pokemon Logo" />
-        </div>
+    <!-- Center Cinematic Stage -->
+    <div class="intro-stage" id="introStage">
+      <div class="intro-logo-box">
+        ${createTypeRingAndRadianceHtml()}
+        <img class="intro-logo intro-logo-outline" id="introLogo2" src="/Graphics/Intro/logo2.png" alt="Logo Outline" />
+        <img class="intro-logo intro-logo-color" id="introLogo1" src="/Graphics/Intro/logo1.png" alt="Pokemon Logo" />
       </div>
-    </div>
 
-    <!-- Bottom Shutter (Slides DOWN on split) -->
-    <div class="intro-shutter intro-shutter-bottom" id="introShutterBottom">
-      <div class="intro-content-wrapper intro-content-bottom">
-        <div class="intro-logo-box">
-          ${createTypeRingAndRadianceHtml('Bottom')}
-          <img class="intro-logo intro-logo-outline" id="introLogo2Bottom" src="/Graphics/Intro/logo2.png" alt="Logo Outline" />
-          <img class="intro-logo intro-logo-color" id="introLogo1Bottom" src="/Graphics/Intro/logo1.png" alt="Pokemon Logo" />
-        </div>
+      <!-- Glowing Start Prompt -->
+      <div class="intro-start-prompt" id="introStartPrompt">
+        <div class="intro-prompt-main">✨ BẤM ĐỂ BƯỚC VÀO THẾ GIỚI ✨</div>
+        <div class="intro-prompt-sub">— NHẤP CHUỘT HOẶC PHÍM BẤT KỲ ĐỂ TIẾP TỤC —</div>
       </div>
-    </div>
-
-    <!-- Center Energy Flash at the split moment -->
-    <div class="intro-center-flash" id="introCenterFlash"></div>
-
-    <!-- Skip Hint Badge -->
-    <div class="intro-skip-hint" id="introSkipHint">
-      <span>Nhấp chuột hoặc phím bất kỳ để tiếp tục</span>
     </div>
   `;
 
@@ -103,21 +88,14 @@ export function playGameIntro(onComplete?: () => void): GameIntroController {
 
   // 3. Controller state & timers
   let isComplete = false;
-  let hasSplitStarted = false;
+  let hasExitStarted = false;
   const timeoutIds: number[] = [];
 
-  const topShutter = overlay.querySelector('#introShutterTop') as HTMLElement;
-  const bottomShutter = overlay.querySelector('#introShutterBottom') as HTMLElement;
-  const radianceTop = overlay.querySelector('#introRadianceTop') as HTMLElement;
-  const radianceBottom = overlay.querySelector('#introRadianceBottom') as HTMLElement;
-  const typeRingTop = overlay.querySelector('#introTypeRingTop') as HTMLElement;
-  const typeRingBottom = overlay.querySelector('#introTypeRingBottom') as HTMLElement;
-  const logo2Top = overlay.querySelector('#introLogo2Top') as HTMLElement;
-  const logo2Bottom = overlay.querySelector('#introLogo2Bottom') as HTMLElement;
-  const logo1Top = overlay.querySelector('#introLogo1Top') as HTMLElement;
-  const logo1Bottom = overlay.querySelector('#introLogo1Bottom') as HTMLElement;
-  const centerFlash = overlay.querySelector('#introCenterFlash') as HTMLElement;
-  const skipHint = overlay.querySelector('#introSkipHint') as HTMLElement;
+  const radiance = overlay.querySelector('#introRadiance') as HTMLElement | null;
+  const typeRing = overlay.querySelector('#introTypeRing') as HTMLElement | null;
+  const logo2 = overlay.querySelector('#introLogo2') as HTMLElement | null;
+  const logo1 = overlay.querySelector('#introLogo1') as HTMLElement | null;
+  const startPrompt = overlay.querySelector('#introStartPrompt') as HTMLElement | null;
 
   const cleanup = () => {
     timeoutIds.forEach((id) => window.clearTimeout(id));
@@ -132,61 +110,42 @@ export function playGameIntro(onComplete?: () => void): GameIntroController {
     }
   };
 
-  const triggerSplitAnimation = () => {
-    if (hasSplitStarted) return;
-    hasSplitStarted = true;
+  const triggerExitTransition = () => {
+    if (hasExitStarted) return;
+    hasExitStarted = true;
 
-    // Flash beam along the middle seam
-    if (centerFlash) {
-      centerFlash.classList.add('flash');
-    }
+    // Smooth cinematic fade-out transition into Title Screen
+    overlay.classList.add('intro-fade-out');
 
-    // Hide skip hint
-    if (skipHint) {
-      skipHint.style.opacity = '0';
-    }
-
-    // Small delay to let the seam beam flash, then slide both halves open
-    const splitTimer = window.setTimeout(() => {
-      if (topShutter) topShutter.classList.add('split-open');
-      if (bottomShutter) bottomShutter.classList.add('split-open');
-
-      // After shutters slide completely out of view, finish
-      const endTimer = window.setTimeout(() => {
-        cleanup();
-      }, 950); // Matches CSS transition duration (900ms + buffer)
-      timeoutIds.push(endTimer);
-    }, 150);
-    timeoutIds.push(splitTimer);
+    const endTimer = window.setTimeout(() => {
+      cleanup();
+    }, 600); // 600ms smooth fade transition
+    timeoutIds.push(endTimer);
   };
 
-  const skip = () => {
+  const skipOrAdvance = () => {
     if (isComplete) return;
-    if (!hasSplitStarted) {
-      // Ensure radiance, type ring, and logos are visible if skipped early, then trigger split
-      if (radianceTop) radianceTop.classList.add('visible');
-      if (radianceBottom) radianceBottom.classList.add('visible');
-      if (typeRingTop) typeRingTop.classList.add('visible');
-      if (typeRingBottom) typeRingBottom.classList.add('visible');
-      if (logo1Top) logo1Top.classList.add('visible');
-      if (logo1Bottom) logo1Bottom.classList.add('visible');
-      triggerSplitAnimation();
+    if (!hasExitStarted) {
+      // Ensure logos and elements are visible before exit
+      if (radiance) radiance.classList.add('visible');
+      if (typeRing) typeRing.classList.add('visible');
+      if (logo1) logo1.classList.add('visible');
+      triggerExitTransition();
     } else {
-      // If split already running, finish immediately
       cleanup();
     }
   };
 
   const handleKey = (e: KeyboardEvent) => {
-    // Any interactive key triggers skip/advance
+    // Any interactive key advances / enters
     if (['Space', 'Enter', 'Escape', 'KeyZ', 'KeyX'].includes(e.code) || e.key) {
-      skip();
+      skipOrAdvance();
     }
   };
 
   const handleClick = (e: MouseEvent) => {
     if (e.button === 0) {
-      skip();
+      skipOrAdvance();
     }
   };
 
@@ -199,46 +158,48 @@ export function playGameIntro(onComplete?: () => void): GameIntroController {
   // Phase 1.5: Rotating Celestial Radiance & 18 Type Icons Ring fade in (at 150ms)
   timeoutIds.push(
     window.setTimeout(() => {
-      if (hasSplitStarted) return;
-      if (radianceTop) radianceTop.classList.add('visible');
-      if (radianceBottom) radianceBottom.classList.add('visible');
-      if (typeRingTop) typeRingTop.classList.add('visible');
-      if (typeRingBottom) typeRingBottom.classList.add('visible');
+      if (hasExitStarted) return;
+      if (radiance) radiance.classList.add('visible');
+      if (typeRing) typeRing.classList.add('visible');
     }, 150)
   );
 
   // Phase 2: logo2.png (white outline) fades in ON TOP of the type ring (at 600ms)
   timeoutIds.push(
     window.setTimeout(() => {
-      if (hasSplitStarted) return;
-      if (logo2Top) logo2Top.classList.add('visible');
-      if (logo2Bottom) logo2Bottom.classList.add('visible');
+      if (hasExitStarted) return;
+      if (logo2) logo2.classList.add('visible');
     }, 600)
   );
 
   // Phase 3: logo1.png (vibrant full-color Pokémon logo) reveals and flashes (at 2200ms)
   timeoutIds.push(
     window.setTimeout(() => {
-      if (hasSplitStarted) return;
-      if (logo1Top) logo1Top.classList.add('visible');
-      if (logo1Bottom) logo1Bottom.classList.add('visible');
-      // Dim down outline underneath as color takes over
-      if (logo2Top) logo2Top.classList.add('dimmed');
-      if (logo2Bottom) logo2Bottom.classList.add('dimmed');
+      if (hasExitStarted) return;
+      if (logo1) logo1.classList.add('visible');
+      if (logo2) logo2.classList.add('dimmed');
     }, 2200)
   );
 
-  // Phase 4: Hold logo, then trigger horizontal split opening (at 4200ms)
+  // Phase 4: Glowing Start Prompt appears inviting user (at 3200ms)
   timeoutIds.push(
     window.setTimeout(() => {
-      if (hasSplitStarted) return;
-      triggerSplitAnimation();
+      if (hasExitStarted) return;
+      if (startPrompt) startPrompt.classList.add('visible');
+    }, 3200)
+  );
+
+  // Phase 5: Auto-advance after showcasing the prompt (at 4200ms)
+  timeoutIds.push(
+    window.setTimeout(() => {
+      if (hasExitStarted) return;
+      triggerExitTransition();
     }, 4200)
   );
 
   // Return controller
   return {
-    skip,
+    skip: skipOrAdvance,
     destroy: cleanup,
     get isComplete() {
       return isComplete;

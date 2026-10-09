@@ -38,18 +38,12 @@ describe('Game Intro Cinematic', () => {
       this.children = [];
       // Create sub-elements based on id
       const ids = [
-        'introShutterTop',
-        'introShutterBottom',
-        'introLogo2Top',
-        'introLogo2Bottom',
-        'introLogo1Top',
-        'introLogo1Bottom',
-        'introCenterFlash',
-        'introSkipHint',
-        'introRadianceTop',
-        'introRadianceBottom',
-        'introTypeRingTop',
-        'introTypeRingBottom',
+        'introStage',
+        'introLogo2',
+        'introLogo1',
+        'introRadiance',
+        'introTypeRing',
+        'introStartPrompt',
       ];
       for (const id of ids) {
         if (html.includes(`id="${id}"`)) {
@@ -143,7 +137,7 @@ describe('Game Intro Cinematic', () => {
     global.window = originalWindow;
   });
 
-  it('initializes intro overlay in dark state with dual shutters and logos', () => {
+  it('initializes intro overlay in dark state with logos and glowing prompt', () => {
     const controller = playGameIntro();
     const overlay = document.getElementById('gameIntroOverlay') as unknown as MockDOMElement;
 
@@ -151,56 +145,61 @@ describe('Game Intro Cinematic', () => {
     expect(overlay.id).toBe('gameIntroOverlay');
     expect(controller.isComplete).toBe(false);
 
-    const shutterTop = overlay.querySelector('#introShutterTop');
-    const shutterBottom = overlay.querySelector('#introShutterBottom');
-    expect(shutterTop).not.toBeNull();
-    expect(shutterBottom).not.toBeNull();
-    expect(shutterTop?.classList.contains('split-open')).toBe(false);
+    const stage = overlay.querySelector('#introStage');
+    const logo2 = overlay.querySelector('#introLogo2');
+    const logo1 = overlay.querySelector('#introLogo1');
+    const prompt = overlay.querySelector('#introStartPrompt');
+
+    expect(stage).not.toBeNull();
+    expect(logo2).not.toBeNull();
+    expect(logo1).not.toBeNull();
+    expect(prompt).not.toBeNull();
   });
 
-  it('progresses through timeline: outline logo2 -> color logo1 -> split animation -> completion', () => {
+  it('progresses through timeline: radiance -> logo2 -> logo1 -> prompt -> completion', () => {
     const onComplete = vi.fn();
     const controller = playGameIntro(onComplete);
     const overlay = document.getElementById('gameIntroOverlay') as unknown as MockDOMElement;
 
-    const radianceTop = overlay.querySelector('#introRadianceTop');
-    const typeRingTop = overlay.querySelector('#introTypeRingTop');
-    const logo2Top = overlay.querySelector('#introLogo2Top');
-    const logo1Top = overlay.querySelector('#introLogo1Top');
-    const shutterTop = overlay.querySelector('#introShutterTop');
-    const shutterBottom = overlay.querySelector('#introShutterBottom');
+    const radiance = overlay.querySelector('#introRadiance');
+    const typeRing = overlay.querySelector('#introTypeRing');
+    const logo2 = overlay.querySelector('#introLogo2');
+    const logo1 = overlay.querySelector('#introLogo1');
+    const startPrompt = overlay.querySelector('#introStartPrompt');
 
     // 0ms: Initial dark screen
-    expect(radianceTop?.classList.contains('visible')).toBe(false);
-    expect(typeRingTop?.classList.contains('visible')).toBe(false);
-    expect(logo2Top?.classList.contains('visible')).toBe(false);
-    expect(logo1Top?.classList.contains('visible')).toBe(false);
+    expect(radiance?.classList.contains('visible')).toBe(false);
+    expect(typeRing?.classList.contains('visible')).toBe(false);
+    expect(logo2?.classList.contains('visible')).toBe(false);
+    expect(logo1?.classList.contains('visible')).toBe(false);
+    expect(startPrompt?.classList.contains('visible')).toBe(false);
 
     // Advance 200ms: Radiance & Type Ring become visible
     vi.advanceTimersByTime(200);
-    expect(radianceTop?.classList.contains('visible')).toBe(true);
-    expect(typeRingTop?.classList.contains('visible')).toBe(true);
-    expect(logo2Top?.classList.contains('visible')).toBe(false);
+    expect(radiance?.classList.contains('visible')).toBe(true);
+    expect(typeRing?.classList.contains('visible')).toBe(true);
+    expect(logo2?.classList.contains('visible')).toBe(false);
 
     // Advance to 650ms (total from start): logo2 (white outline) becomes visible
     vi.advanceTimersByTime(450);
-    expect(logo2Top?.classList.contains('visible')).toBe(true);
-    expect(logo1Top?.classList.contains('visible')).toBe(false);
+    expect(logo2?.classList.contains('visible')).toBe(true);
+    expect(logo1?.classList.contains('visible')).toBe(false);
 
     // Advance to 2200ms: logo1 (full-color Pokémon) reveals, logo2 dims
-    vi.advanceTimersByTime(1600);
-    expect(logo1Top?.classList.contains('visible')).toBe(true);
-    expect(logo2Top?.classList.contains('dimmed')).toBe(true);
+    vi.advanceTimersByTime(1550);
+    expect(logo1?.classList.contains('visible')).toBe(true);
+    expect(logo2?.classList.contains('dimmed')).toBe(true);
 
-    // Advance to 4200ms: horizon split begins
-    vi.advanceTimersByTime(2000);
-    // After 150ms inner delay, split-open is added
-    vi.advanceTimersByTime(200);
-    expect(shutterTop?.classList.contains('split-open')).toBe(true);
-    expect(shutterBottom?.classList.contains('split-open')).toBe(true);
-
-    // Advance 950ms: transition finishes, cleans up, invokes onComplete
+    // Advance to 3200ms: Glowing start prompt emerges
     vi.advanceTimersByTime(1000);
+    expect(startPrompt?.classList.contains('visible')).toBe(true);
+
+    // Advance to 4200ms: auto-advance transition triggers
+    vi.advanceTimersByTime(1000);
+    expect(overlay.classList.contains('intro-fade-out')).toBe(true);
+
+    // Advance 650ms: transition finishes, cleans up, invokes onComplete
+    vi.advanceTimersByTime(650);
     expect(controller.isComplete).toBe(true);
     expect(onComplete).toHaveBeenCalledTimes(1);
     expect(document.getElementById('gameIntroOverlay')).toBeNull();
@@ -216,8 +215,8 @@ describe('Game Intro Cinematic', () => {
     vi.advanceTimersByTime(300);
     controller.skip();
 
-    // Advance past split delay and animation
-    vi.advanceTimersByTime(1200);
+    // Advance past fade-out transition duration
+    vi.advanceTimersByTime(700);
 
     expect(controller.isComplete).toBe(true);
     expect(onComplete).toHaveBeenCalledTimes(1);

@@ -1,4 +1,26 @@
-## Cập nhật lần cuối: 2026-10-09 (Vòng Xoay 18 Icon Type & Hào Quang Chiếu Sáng Intro Mở Đầu)
+## Cập nhật lần cuối: 2026-10-09 (Bỏ Tách Đôi Màn Hình Intro & Dòng Chữ Bấm Để Vào Hào Quang)
+
+### 0.75. Thay Thế Tách Đôi Màn Hình Bằng Dòng Chữ "Bấm Để Vào" & Chuyển Cảnh Mờ Dần Êm Ái:
+
+- **Trạng thái:** Đã hoàn thành 100%. 25 tệp test suite (194/194 tests), Typecheck (`npm run typecheck:web`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** Bỏ hiệu ứng tách đôi màn hình ở intro, thay vào đó hiển thị dòng chữ mời gọi "Bấm để vào" (hoặc từ ngữ hay ho, phong cách RPG retro), khi bấm thì chuyển mượt vào màn hình chờ.
+- **Chi tiết đã thực hiện:**
+  1. **Loại Bỏ Hiệu Ứng Tách Đôi Màn Hình ([game-intro.ts](file:///e:/Pokemon/apps/web/src/ui/game-intro.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Gỡ bỏ cấu trúc cửa chập kép `.intro-shutter-top`, `.intro-shutter-bottom`, vạch chớp seam ngang `.intro-center-flash` và cơ chế trượt nửa trên/dưới.
+     - Thay thế bằng khung sân khấu trung tâm thống nhất `.intro-stage`, định vị hoàn hảo logo Pokémon, hào quang và vòng tròn 18 icon type.
+  2. **Dòng Chữ Phát Sáng "Bấm Để Vào" Phong Cách Retro RPG:**
+     - Thiết kế cụm chữ gợi mở giàu tính điện ảnh và hoài niệm Pokémon:
+       - Dòng chính: `✨ BẤM ĐỂ BƯỚC VÀO THẾ GIỚI ✨` (`.intro-prompt-main`) dùng phông pixel retro, màu vàng kim `#ffffa0`, viền đen nổi khối kèm đổ bóng hào quang neon cam vàng rực rỡ (`introPromptPulse` breathing nhẹ nhàng).
+       - Dòng phụ: `— NHẤP CHUỘT HOẶC PHÍM BẤT KỲ ĐỂ TIẾP TỤC —` (`.intro-prompt-sub`) trong sắc xám bạc tinh tế.
+  3. **Chuyển Cảnh Mờ Dần Vào Title Screen (.intro-fade-out):**
+     - Khi người chơi nhấp chuột hoặc bấm bất kỳ phím nào (hoặc sau khi dòng chữ hiển thị trọn vẹn ở 4200ms), toàn bộ màn hình Intro sẽ phóng nhẹ và mờ dần trong 600ms (`opacity: 0`, `transform: scale(1.03)`, `filter: brightness(1.25)`).
+     - Chuyển cảnh êm ái, liền mạch hé lộ khung cảnh đại dương, mây trôi và Pokémon bay lượn của Màn Hình Chờ.
+  4. **Kiểm Thử & Đảm Bảo Tính Toàn Vẹn ([game-intro.test.ts](file:///e:/Pokemon/apps/web/test/game-intro.test.ts)):**
+     - Cập nhật unit test suite kiểm thử dòng chữ mời gọi xuất hiện và fade-out chuẩn xác.
+     - `npm run typecheck:web` $\rightarrow$ PASS, 0 errors.
+     - `npm run test:web` $\rightarrow$ 25/25 suites, 194/194 tests PASS 100%.
+
+---
 
 ### 0.74. Vòng Xoay 18 Icon Type Theo Chiều Kim Đồng Hồ & Hào Quang Ánh Sáng Intro Mở Đầu:
 
