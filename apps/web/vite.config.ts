@@ -155,8 +155,8 @@ function emitLegacyGraphicsPlugin(): Plugin {
         }
       }
 
-      // Add battle music and SE files
-      for (const audioSub of ['Battle', 'SE']) {
+      // Add battle music, SE, and Misic backgound files
+      for (const audioSub of ['Battle', 'SE', 'Misic backgound']) {
         const audioDir = path.resolve(projectRoot, 'Audio', audioSub);
         if (fs.existsSync(audioDir)) {
           for (const entry of fs.readdirSync(audioDir, { withFileTypes: true })) {

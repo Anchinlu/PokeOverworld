@@ -95,7 +95,7 @@ describe('Structured Battle Events System (Step 6)', () => {
     pp: 40,
     maxPp: 40,
     description: 'Gầm gừ làm giảm Tấn Công của mục tiêu.',
-    statChanges: [{ stat: 'attack', stages: -1, target: 'enemy' }],
+    statChanges: [{ stat: 'attack', stages: -1, target: 'opponent' }],
   };
 
   it('generates move_declared and damage_dealt events for basic attack', () => {

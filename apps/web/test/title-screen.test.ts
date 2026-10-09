@@ -23,6 +23,7 @@ describe('Game Title Screen / Màn Hình Chờ', () => {
       },
       contains: (cls: string) => this.classList._classes.has(cls),
     };
+    public value: string = '60';
     public children: MockDOMElement[] = [];
     public parentNode: MockDOMElement | null = null;
     public innerHTMLVal: string = '';
@@ -50,6 +51,9 @@ describe('Game Title Screen / Màn Hình Chờ', () => {
         'btnSettingsModalDone',
         'btnToggleSunsetTheme',
         'txtSunsetTheme',
+        'sliderTitleBgm',
+        'txtTitleBgmVol',
+        'btnTitleBgmMute',
       ];
       for (const id of ids) {
         if (html.includes(`id="${id}"`)) {
@@ -131,6 +135,22 @@ describe('Game Title Screen / Màn Hình Chờ', () => {
 
     originalDocument = global.document;
     originalWindow = global.window;
+
+    class MockAudio {
+      src = '';
+      loop = false;
+      volume = 0.6;
+      paused = true;
+      currentTime = 0;
+      constructor(src?: string) {
+        if (src) this.src = src;
+      }
+      play = vi.fn().mockResolvedValue(undefined);
+      pause = vi.fn().mockImplementation(() => {
+        this.paused = true;
+      });
+    }
+    vi.stubGlobal('Audio', MockAudio);
 
     global.Image = class MockImage {
       src = '';
@@ -257,6 +277,30 @@ describe('Game Title Screen / Màn Hình Chờ', () => {
 
     controller.setTheme('day');
     expect(controller.getTheme()).toBe('day');
+
+    controller.destroy();
+  });
+
+  it('configures and controls title screen background music volume', () => {
+    const controller = showTitleScreen();
+    const overlay = document.getElementById('titleScreenOverlay') as unknown as MockDOMElement;
+    const slider = overlay.querySelector('#sliderTitleBgm') as unknown as MockDOMElement;
+    const badge = overlay.querySelector('#txtTitleBgmVol') as unknown as MockDOMElement;
+    const btnMute = overlay.querySelector('#btnTitleBgmMute') as unknown as MockDOMElement;
+
+    expect(slider).not.toBeNull();
+    expect(badge).not.toBeNull();
+    expect(btnMute).not.toBeNull();
+
+    // Adjust volume via controller
+    controller.setBgmVolume(0.8);
+    expect(controller.getBgmVolume()).toBe(0.8);
+
+    controller.setBgmVolume(0);
+    expect(controller.getBgmVolume()).toBe(0);
+
+    controller.setBgmVolume(0.5);
+    expect(controller.getBgmVolume()).toBe(0.5);
 
     controller.destroy();
   });

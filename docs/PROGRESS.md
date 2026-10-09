@@ -1,4 +1,26 @@
-## Cập nhật lần cuối: 2026-10-08 (Bổ Sung Cỏ Nền Sau 05a Grass Back Cho Từng Buổi)
+## Cập nhật lần cuối: 2026-10-09 (Nhạc Nền Sảnh Chờ & Cấu Hình Âm Lượng BGM Riêng)
+
+### 0.73. Nhạc Nền Sảnh Chờ (Title BGM) & Cấu Hình Âm Lượng Riêng Biệt:
+
+- **Trạng thái:** Đã hoàn thành 100%. 25 tệp test suite (194/194 tests), Typecheck (`npm run typecheck:web`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** Cài đặt nhạc nền cho màn hình chờ từ `Audio/Misic backgound`, bổ sung cài đặt để cấu hình âm thanh riêng cho nhạc nền sảnh chờ.
+- **Chi tiết đã thực hiện:**
+  1. **Bộ Phát Nhạc Nền Sảnh Chờ Chuyên Dụng ([title-bgm.ts](file:///e:/Pokemon/apps/web/src/audio/title-bgm.ts)):**
+     - Sử dụng bản phối giao hưởng: `[Pokemon ft. Miku] きみとそらをとぶ  Littleroot Town Orchestral Arrange - Jairus Cambe.mp3` trong thư mục [Audio/Misic backgound](file:///e:/Pokemon/Audio/Misic%20backgound).
+     - Hỗ trợ vòng lặp vô tận (`loop = true`), mở khóa phát nhạc tự động linh hoạt theo chính sách bảo mật trình duyệt (`pointerdown`/`keydown` unlock).
+     - Giảm âm lượng êm ái khi bắt đầu vào game Overworld (`stopBgm(450)` fade-out) tránh ngắt âm đột ngột.
+  2. **Thanh Điều Khiển Âm Lượng Minecraft GUI Trong Hộp Thoại Cài Đặt ([title-screen.ts](file:///e:/Pokemon/apps/web/src/ui/title-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Bổ sung hàng cài đặt: `Âm Lượng Nhạc Nền Sảnh Chờ (BGM)`.
+     - Nút Mute / Unmute pixel art: `[ 🔊 ]` $\longleftrightarrow$ `[ 🔇 ]`.
+     - Thanh kéo trượt âm lượng Minecraft (`range slider` $0\% \rightarrow 100\%$) đi kèm số phần trăm trực quan (`txtTitleBgmVol`).
+     - Tự động lưu giá trị âm lượng đã chọn vào `localStorage ('pokemon_title_bgm_volume')`.
+  3. **Tích Hợp Vite Audio Bundler ([vite.config.ts](file:///e:/Pokemon/apps/web/vite.config.ts)):**
+     - Đăng ký `Misic backgound` vào pipeline bundle file âm thanh của Vite đảm bảo hoạt động cả trên Dev Server lẫn Production Build.
+  4. **Kiểm Thử & Đảm Bảo Tính Toàn Vẹn ([title-screen.test.ts](file:///e:/Pokemon/apps/web/test/title-screen.test.ts)):**
+     - `npm run typecheck:web` $\rightarrow$ PASS, 0 errors.
+     - `npm run test:web` $\rightarrow$ 25/25 suites, 194/194 tests PASS 100%.
+
+---
 
 ### 0.72. Bổ Sung Tầng Cỏ Nền Sau (05a Grass Back) Theo Từng Buổi (Day, Sunset, Night):
 

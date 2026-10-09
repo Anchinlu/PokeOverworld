@@ -6951,3 +6951,89 @@ body {
     transform: scale(1);
   }
 }
+
+/* ==========================================================================
+   Title Screen Minecraft GUI Audio Slider & Mute Controls
+   ========================================================================== */
+.title-pixel-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #333333;
+  border: 2px solid #000000;
+  box-shadow:
+    inset 2px 2px 0px rgba(0, 0, 0, 0.4),
+    inset -2px -2px 0px rgba(255, 255, 255, 0.1);
+  padding: 8px 12px;
+}
+
+.title-pixel-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 10px;
+  background: #202020;
+  border: 1px solid #000000;
+  box-shadow: inset 1px 1px 0px #000;
+  outline: none;
+  cursor: pointer;
+}
+
+.title-pixel-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 24px;
+  background: #8c9cb0;
+  border: 2px solid #000000;
+  box-shadow:
+    inset 2px 2px 0px rgba(255, 255, 255, 0.8),
+    inset -2px -2px 0px #2a3542;
+  cursor: pointer;
+  image-rendering: pixelated;
+}
+
+.title-pixel-slider::-moz-range-thumb {
+  width: 16px;
+  height: 24px;
+  background: #8c9cb0;
+  border: 2px solid #000000;
+  box-shadow:
+    inset 2px 2px 0px rgba(255, 255, 255, 0.8),
+    inset -2px -2px 0px #2a3542;
+  cursor: pointer;
+  image-rendering: pixelated;
+}
+
+.title-pixel-vol-badge {
+  font-family: 'Power Red and Blue', 'VT323', monospace;
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffa0;
+  text-shadow: 1px 1px 0px #3f3f28;
+  min-width: 44px;
+  text-align: right;
+  letter-spacing: 1px;
+}
+
+.title-pixel-mute-btn {
+  background: #555555;
+  border: 2px solid #000000;
+  color: #ffffff;
+  font-family: 'Power Red and Blue', monospace;
+  font-size: 14px;
+  padding: 4px 8px;
+  cursor: pointer;
+  box-shadow:
+    inset 1px 1px 0px rgba(255, 255, 255, 0.4),
+    inset -1px -1px 0px #222222;
+}
+
+.title-pixel-mute-btn:hover {
+  background: #666666;
+}
+
+.title-pixel-mute-btn:active {
+  background: #3a3a3a;
+  transform: translateY(1px);
+}

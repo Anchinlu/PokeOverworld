@@ -30,6 +30,8 @@
  * 12. UI: Minecraft GUI menu buttons & centered Settings Modal with 3-theme cycling toggle
  */
 
+import { titleBgmPlayer } from '../audio/title-bgm';
+
 export type TitleScreenTheme = 'day' | 'sunset' | 'night';
 
 export interface TitleScreenOptions {
@@ -42,6 +44,8 @@ export interface TitleScreenController {
   start: () => void;
   setTheme: (theme: TitleScreenTheme) => void;
   getTheme: () => TitleScreenTheme;
+  setBgmVolume: (volume: number) => void;
+  getBgmVolume: () => number;
 }
 
 interface ActiveCloud {
@@ -245,10 +249,18 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
           </div>
           <div class="title-pixel-modal-body">
             <div class="title-pixel-setting-row">
-              <label class="title-pixel-setting-label">Chủ Đề Màn Hình Chờ:</label>
+              <label class="title-pixel-setting-label">Chủ Đề Màn Hình Chờ (Theme):</label>
               <button class="title-pixel-btn btn-setting-theme" id="btnToggleSunsetTheme" title="Chuyển đổi giao diện Ban Ngày / Hoàng Hôn / Ban Đêm">
                 <span class="btn-text" id="txtSunsetTheme">☀️ Chủ Đề: Ban Ngày</span>
               </button>
+            </div>
+            <div class="title-pixel-setting-row">
+              <label class="title-pixel-setting-label">Âm Lượng Nhạc Nền Sảnh Chờ (BGM):</label>
+              <div class="title-pixel-slider-row">
+                <button class="title-pixel-mute-btn" id="btnTitleBgmMute" title="Bật / Tắt âm thanh">🔊</button>
+                <input type="range" class="title-pixel-slider" id="sliderTitleBgm" min="0" max="100" value="60" title="Kéo để chỉnh âm lượng nhạc nền">
+                <span class="title-pixel-vol-badge" id="txtTitleBgmVol">60%</span>
+              </div>
             </div>
           </div>
           <div class="title-pixel-modal-footer">
@@ -284,6 +296,9 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
   const btnSettingsModalDone = overlay.querySelector('#btnSettingsModalDone') as HTMLButtonElement | null;
   const btnToggleSunsetTheme = overlay.querySelector('#btnToggleSunsetTheme') as HTMLButtonElement | null;
   const txtSunsetTheme = overlay.querySelector('#txtSunsetTheme') as HTMLSpanElement | null;
+  const sliderTitleBgm = overlay.querySelector('#sliderTitleBgm') as HTMLInputElement | null;
+  const txtTitleBgmVol = overlay.querySelector('#txtTitleBgmVol') as HTMLSpanElement | null;
+  const btnTitleBgmMute = overlay.querySelector('#btnTitleBgmMute') as HTMLButtonElement | null;
 
   // 4. State & Animation Parameters
   let isRunning = true;
@@ -712,6 +727,49 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
     }
   };
   updateThemeButtonText();
+
+  let lastNonZeroVolume = titleBgmPlayer.getVolume() > 0 ? titleBgmPlayer.getVolume() : 0.6;
+
+  const updateBgmControls = () => {
+    const vol = titleBgmPlayer.getVolume();
+    const percent = Math.round(vol * 100);
+    if (sliderTitleBgm) sliderTitleBgm.value = String(percent);
+    if (txtTitleBgmVol) txtTitleBgmVol.innerText = `${percent}%`;
+    if (btnTitleBgmMute) btnTitleBgmMute.innerText = vol > 0 ? '🔊' : '🔇';
+  };
+  updateBgmControls();
+
+  sliderTitleBgm?.addEventListener('input', (e) => {
+    e.stopPropagation();
+    if (!sliderTitleBgm) return;
+    const vol = parseInt(sliderTitleBgm.value, 10) / 100;
+    titleBgmPlayer.setVolume(vol);
+    if (vol > 0) lastNonZeroVolume = vol;
+    updateBgmControls();
+    if (!titleBgmPlayer.isPlaying() && vol > 0) {
+      titleBgmPlayer.playTitleBgm();
+    }
+  });
+
+  btnTitleBgmMute?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const currentVol = titleBgmPlayer.getVolume();
+    if (currentVol > 0) {
+      lastNonZeroVolume = currentVol;
+      titleBgmPlayer.setVolume(0);
+      showNotice('🔇 Đã tắt âm thanh nhạc nền sảnh chờ');
+    } else {
+      titleBgmPlayer.setVolume(lastNonZeroVolume);
+      if (!titleBgmPlayer.isPlaying()) {
+        titleBgmPlayer.playTitleBgm();
+      }
+      showNotice(`🔊 Đã bật âm thanh nhạc nền (${Math.round(lastNonZeroVolume * 100)}%)`);
+    }
+    updateBgmControls();
+  });
+
+  // Start Title Screen BGM
+  titleBgmPlayer.playTitleBgm();
 
   // 5. Main Render Loop
   function loop(currentTime: number) {
@@ -1216,6 +1274,7 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
   const openSettingsModal = () => {
     if (settingsModal) {
       updateThemeButtonText();
+      updateBgmControls();
       settingsModal.style.display = 'flex';
     }
   };
@@ -1292,6 +1351,7 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
 
   btnDev?.addEventListener('click', (e) => {
     e.stopPropagation();
+    titleBgmPlayer.stopBgm(450);
     destroy();
     if (options?.onStart) {
       options.onStart();
@@ -1300,6 +1360,7 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
 
   const destroy = () => {
     isRunning = false;
+    titleBgmPlayer.stopBgm(450);
     if (typeof window !== 'undefined') {
       window.removeEventListener('keydown', onKeyDown);
       if (window.cancelAnimationFrame) {
@@ -1328,5 +1389,10 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
       updateThemeButtonText();
     },
     getTheme: () => currentTheme,
+    setBgmVolume: (volume: number) => {
+      titleBgmPlayer.setVolume(volume);
+      updateBgmControls();
+    },
+    getBgmVolume: () => titleBgmPlayer.getVolume(),
   };
 }
