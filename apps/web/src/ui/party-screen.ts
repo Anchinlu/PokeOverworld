@@ -160,7 +160,7 @@ export class PartyScreen {
     });
   }
 
-  public close(): void {
+  public close(notifyCancel = true): void {
     const wasSelect = this.selectOptions;
     this.isOpen = false;
     this.selectOptions = null;
@@ -170,7 +170,7 @@ export class PartyScreen {
     if (this.backdropEl) {
       this.backdropEl.style.display = 'none';
     }
-    if (wasSelect?.onCancel) {
+    if (notifyCancel && wasSelect?.onCancel) {
       wasSelect.onCancel();
     }
   }
@@ -490,7 +490,7 @@ export class PartyScreen {
             const slotIdx = this.activeMenuIndex;
             this.selectOptions = null;
             this.activeMenuIndex = null;
-            this.close();
+            this.close(false);
             cb(pk, slotIdx);
           } else {
             // mode is 'use_item' or 'give_item'

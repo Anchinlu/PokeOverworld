@@ -108,14 +108,14 @@ export class BagScreen {
     });
   }
 
-  public close(): void {
+  public close(notifyCancel = true): void {
     const wasOptions = this.openOptions;
     this.isOpen = false;
     this.openOptions = null;
     if (this.backdropEl) {
       this.backdropEl.style.display = 'none';
     }
-    if (wasOptions?.onCancel) {
+    if (notifyCancel && wasOptions?.onCancel) {
       wasOptions.onCancel();
     }
   }
@@ -545,7 +545,7 @@ export class BagScreen {
     // 1. If in battle mode: invoke onUseItem callback
     if (this.openOptions?.inBattle && this.openOptions.onUseItem) {
       const onUse = this.openOptions.onUseItem;
-      this.close();
+      this.close(false);
       onUse(selected);
       return;
     }
@@ -578,7 +578,7 @@ export class BagScreen {
     }
 
     // Đóng túi đồ và mở trực tiếp Màn hình Đội hình (Party Screen) ở chế độ Dùng vật phẩm
-    this.close();
+    this.close(false);
     PartyScreen.getInstance().openForSelect({
       mode: 'use_item',
       item: selected,
@@ -630,7 +630,7 @@ export class BagScreen {
     }
 
     // 2. Mở trực tiếp Màn hình Đội hình (Party Screen) ở chế độ Trao vật phẩm
-    this.close();
+    this.close(false);
     PartyScreen.getInstance().openForSelect({
       mode: 'give_item',
       item: selected,
