@@ -124,3 +124,12 @@ export function getAvailableLevelUpMoves(
   result.sort((a, b) => a.level - b.level);
   return result;
 }
+
+export function getAllMoves(): BattleMove[] {
+  return Object.values(MOVES_DB);
+}
+
+export function getMoveById(id: string): BattleMove | undefined {
+  const norm = id.toLowerCase().replace(/-/g, '_');
+  return MOVES_DB[norm] || MOVES_DB[id];
+}

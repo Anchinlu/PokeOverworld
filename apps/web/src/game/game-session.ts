@@ -7,7 +7,7 @@ import type { BerryBushEntity, WildPokemonEntity, WorldChunk } from '../maps/chu
 import { interactWithBerryBush } from '../ui/berry-panel';
 import { sampleEcology, getEcologyZone } from '../maps/ecology';
 import { isNearWater } from '../maps/terrain-rules';
-import { BattleScreen, createBattler, getBattleEnvironment } from '../battle';
+import { BattleScreen, createBattler, getBattleEnvironment, type BattlerPokemon } from '../battle';
 import { showBerryToast } from '../ui/toast';
 import { playEncounterTransition } from '../ui/encounter-transition';
 import { battleBgmPlayer, overworldShinyAudio } from '../audio';
@@ -277,6 +277,94 @@ export class GameSession {
       Math.floor(this.player.gy / 16)
     );
     this.startWildBattle(mockWp, chunk, overlayOverride);
+  }
+
+  public startCustomBattle(
+    customBattler: BattlerPokemon,
+    overlayOverride?: string
+  ): void {
+    if (this.isBattling) return;
+    this.isBattling = true;
+
+    // Freeze player movement immediately
+    this.player.isMoving = false;
+
+    // Start wild battle BGM immediately upon encounter
+    battleBgmPlayer.playWildBattleBgm();
+
+    // Play Iris Pokéball Encounter Transition with Screen Shake
+    playEncounterTransition({
+      onComplete: () => {
+        const sample = sampleEcology(this.player.gx, this.player.gy, this.seed);
+        const zone = getEcologyZone(sample);
+        const nearWater = isNearWater(this.player.gx, this.player.gy, this.seed, 1);
+        const env = getBattleEnvironment(zone, nearWater, false);
+        if (overlayOverride && overlayOverride !== 'auto') {
+          env.foregroundOverlay = overlayOverride;
+        }
+
+        // 1. Get first alive Pokémon in Party
+        let activePk = partyService.getFirstAlivePokemon();
+        if (!activePk) {
+          partyService.healAll();
+          activePk = partyService.getLeader()!;
+          showBerryToast('Đội hình đã được hồi phục để sẵn sàng chiến đấu!', '#38bdf8');
+        }
+
+        const playerBattler = partyPokemonToBattler(activePk);
+
+        new BattleScreen(playerBattler, customBattler, env, (result) => {
+          this.isBattling = false;
+          this.lastBattleEndTime = Date.now();
+
+          // Sync battle HP, PP, and EXP back into party
+          const finalBattler = result.activePlayerPokemon ?? playerBattler;
+          const expGained = result.outcome === 'victory' ? (result.expGained ?? 0) : 0;
+          const { leveledUp, newLevel } = partyService.syncBattleResult(finalBattler, expGained);
+          if (leveledUp) {
+            showBerryToast(
+              `🎉 ${finalBattler.name} đã lên cấp ${newLevel}! Toàn bộ chỉ số chiến đấu đã tăng!`,
+              '#22c55e'
+            );
+          }
+
+          if (result.outcome === 'caught') {
+            const caughtPk = createPartyPokemon(customBattler.speciesKey, customBattler.level, {
+              isShiny: customBattler.isShiny,
+              ivs: customBattler.ivs,
+              nature: customBattler.nature,
+            });
+            caughtPk.currentHp = Math.max(1, customBattler.currentHp);
+            playerService.incrementCaught();
+
+            if (!partyService.isPartyFull()) {
+              partyService.addPokemon(caughtPk);
+              showBerryToast(
+                `🎉 Đã thu phục thành công ${customBattler.name} và thêm vào Đội hình (${partyService.getPartySize()}/6)!`,
+                '#22c55e'
+              );
+            } else {
+              const depositRes = pcStorageService.depositPokemon(caughtPk);
+              if (depositRes.success) {
+                showBerryToast(
+                  `🎉 Đã thu phục thành công ${customBattler.name}! Đã chuyển vào PC (${depositRes.boxName})!`,
+                  '#38bdf8'
+                );
+              } else {
+                showBerryToast(
+                  `⚠️ Không thể lưu ${customBattler.name} vì PC đã đầy!`,
+                  '#ef4444'
+                );
+              }
+            }
+          } else if (result.outcome === 'victory') {
+            showBerryToast(`⚔️ Đã đánh bại Bot ${customBattler.name}! (+${expGained} EXP)`, '#38bdf8');
+          } else if (result.outcome === 'defeated') {
+            showBerryToast(`💥 ${playerBattler.name} đã ngất xỉu!`, '#ef4444');
+          }
+        });
+      },
+    });
   }
 
   public spawnTestShinyWild(speciesKey?: string): WildPokemonEntity | null {

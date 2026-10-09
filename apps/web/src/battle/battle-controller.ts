@@ -4,9 +4,10 @@
  * Reads/writes BattleState, calls BattleEngine for game logic.
  */
 
-import type { BattlerPokemon, BattleMove } from './types';
+import type { BattlerPokemon, BattleMove, BattleEvent, AbilityTriggeredEvent } from './types';
 import type { BattleState } from './battle-state';
 import { BattleEngine, STRUGGLE_MOVE, type TurnResult } from './battle-engine';
+import { getAbilityDisplay } from './rules/ability-engine';
 import { getHoveredCommandIndex, type BattleRenderer } from './battle-renderer';
 import { PartyScreen } from '../ui/party-screen';
 import { BagScreen } from '../ui/bag-screen';
@@ -160,6 +161,71 @@ export class BattleController {
     this.state.queueMessage(text, nextMode, onFinish);
     if (!wasTyping && this.state.isTyping) {
       this.startTyping();
+    }
+  }
+
+  /** Dispatches ability activation banners for any ability_triggered events */
+  public triggerAbilityEvents(events: BattleEvent[], onDone?: () => void): void {
+    const abilityEvents = events.filter(
+      (e): e is AbilityTriggeredEvent => e.type === 'ability_triggered'
+    );
+    if (abilityEvents.length === 0) {
+      onDone?.();
+      return;
+    }
+
+    let idx = 0;
+    const triggerNext = () => {
+      if (idx >= abilityEvents.length) {
+        onDone?.();
+        return;
+      }
+      const evt = abilityEvents[idx++];
+      const disp = getAbilityDisplay(evt.ability);
+      this.state.triggerAbilityBanner(
+        evt.targetSide,
+        evt.targetName,
+        disp.name,
+        evt.abilityNameVi || disp.nameVi,
+        () => {
+          triggerNext();
+        }
+      );
+    };
+    triggerNext();
+  }
+
+  /**
+   * Triggers initial switch-in abilities at the start of battle (in speed order)
+   * and displays their banners and messages before giving control to player.
+   */
+  public checkAndTriggerInitialAbilities(onDone?: () => void): void {
+    const initRes = this.engine.triggerInitialAbilities();
+    if (initRes.events.length > 0) {
+      this.triggerAbilityEvents(initRes.events);
+    }
+    if (initRes.messages.length > 0) {
+      const msgs = [...initRes.messages];
+      const showNext = () => {
+        if (msgs.length === 0) {
+          this.state.uiMode = 'command';
+          onDone?.();
+          return;
+        }
+        const msg = msgs.shift()!;
+        const nextMode = msgs.length === 0 ? 'command' : 'message';
+        this.queueMessage(msg, nextMode, () => {
+          if (msgs.length > 0) {
+            showNext();
+          } else {
+            onDone?.();
+          }
+        });
+      };
+      showNext();
+    } else {
+      this.state.uiMode = 'command';
+      onDone?.();
     }
   }
 
@@ -409,6 +475,8 @@ export class BattleController {
           this.engine.playerPokemon.status = selectedPk.status;
           this.state.targetPlayerHpPct =
             this.engine.playerPokemon.currentHp / this.engine.playerPokemon.maxHp;
+          this.state.startPlayerHeal();
+          battleSePlayer.playSound('Audio/SE/Shiny sparkle.ogg', 0.45);
         }
 
         // Display the dialog message on the battle screen!
@@ -474,6 +542,20 @@ export class BattleController {
       this.syncActiveBattlerToParty();
     }
 
+    if (effect.events && effect.events.length > 0) {
+      this.triggerAbilityEvents(effect.events);
+      for (const ev of effect.events) {
+        if (ev.type === 'hp_restored') {
+          if (ev.targetSide === 'player') {
+            this.state.startPlayerHeal();
+          } else {
+            this.state.startEnemyHeal();
+          }
+          battleSePlayer.playSound('Audio/SE/Shiny sparkle.ogg', 0.4);
+        }
+      }
+    }
+
     this.queueMessage(effect.message, 'message', () => {
       if (effect.defenderFainted) onFaint();
       else onSurvive();
@@ -489,7 +571,14 @@ export class BattleController {
         this.resolveEndTurnEffects(
           enemy,
           () => {
-            this.state.uiMode = 'command';
+            const envMsgs = this.engine.resetRound();
+            if (envMsgs.length > 0) {
+              this.queueMessage(envMsgs.join(' '), 'message', () => {
+                this.state.uiMode = 'command';
+              });
+            } else {
+              this.state.uiMode = 'command';
+            }
           },
           () => this.handleEnemyFainted(enemy, player)
         );
@@ -544,6 +633,20 @@ export class BattleController {
     this.state.targetEnemyHpPct = enemy.currentHp / enemy.maxHp;
     this.state.targetPlayerHpPct = player.currentHp / player.maxHp;
 
+    if (result.events && result.events.length > 0) {
+      this.triggerAbilityEvents(result.events);
+      for (const ev of result.events) {
+        if (ev.type === 'hp_restored') {
+          if (ev.targetSide === 'player') {
+            this.state.startPlayerHeal();
+          } else {
+            this.state.startEnemyHeal();
+          }
+          battleSePlayer.playSound('Audio/SE/Shiny sparkle.ogg', 0.45);
+        }
+      }
+    }
+
     this.queueMessage(result.message, 'message', () => {
       onDone(result);
     });
@@ -568,6 +671,20 @@ export class BattleController {
 
     this.state.targetPlayerHpPct = player.currentHp / player.maxHp;
     this.state.targetEnemyHpPct = enemy.currentHp / enemy.maxHp;
+
+    if (result.events && result.events.length > 0) {
+      this.triggerAbilityEvents(result.events);
+      for (const ev of result.events) {
+        if (ev.type === 'hp_restored') {
+          if (ev.targetSide === 'enemy') {
+            this.state.startEnemyHeal();
+          } else {
+            this.state.startPlayerHeal();
+          }
+          battleSePlayer.playSound('Audio/SE/Shiny sparkle.ogg', 0.45);
+        }
+      }
+    }
 
     this.queueMessage(result.message, 'message', () => {
       onDone(result);
@@ -776,6 +893,12 @@ export class BattleController {
   }
 
   private handlePokemonCommand(): void {
+    const switchCheck = this.engine.canSwitchPokemon(this.engine.playerPokemon);
+    if (!switchCheck.canSwitch) {
+      this.state.uiMode = 'message';
+      this.queueMessage(switchCheck.reason || 'Không thể đổi Pokémon lúc này!', 'command');
+      return;
+    }
     this.syncActiveBattlerToParty();
     PartyScreen.getInstance().openForBattleSelect({
       currentBattlerUid: this.engine.playerPokemon.uid,
@@ -801,7 +924,7 @@ export class BattleController {
     this.state.isPlayerSendingOut = false;
     this.queueMessage(`${oldName}, quay lại!`, 'message', () => {
       // 3. Switch battler in engine & update renderer
-      this.engine.switchPlayerPokemon(newBattler);
+      const switchRes = this.engine.switchPlayerPokemon(newBattler);
       if (this.renderer) {
         this.renderer.updatePlayerSprite(newBattler.backSprite);
         this.renderer.updatePlayerBall(newBattler.pokeball ?? 'POKEBALL');
@@ -812,10 +935,27 @@ export class BattleController {
       this.state.startPlayerSendOut();
 
       this.queueMessage(`Tiến lên! ${newBattler.name}!`, 'message', () => {
-        // Switching takes the player's turn action -> enemy executes turn
-        setTimeout(() => {
-          this.handleEnemyTurn();
-        }, 400);
+        if (switchRes.events.length > 0) {
+          this.triggerAbilityEvents(switchRes.events);
+        }
+        if (newBattler.isFainted) {
+          this.queueMessage(`${newBattler.name} đã ngất xỉu!`, 'message', () => {
+            this.handleForceSwitch();
+          });
+          return;
+        }
+        if (switchRes.messages.length > 0) {
+          this.queueMessage(switchRes.messages.join(' '), 'message', () => {
+            setTimeout(() => {
+              this.handleEnemyTurn();
+            }, 400);
+          });
+        } else {
+          // Switching takes the player's turn action -> enemy executes turn
+          setTimeout(() => {
+            this.handleEnemyTurn();
+          }, 400);
+        }
       });
     });
   }
@@ -826,7 +966,7 @@ export class BattleController {
       currentBattlerUid: this.engine.playerPokemon.uid,
       onSelect: (selectedPk) => {
         const newBattler = partyPokemonToBattler(selectedPk);
-        this.engine.switchPlayerPokemon(newBattler);
+        const switchRes = this.engine.switchPlayerPokemon(newBattler);
         if (this.renderer) {
           this.renderer.updatePlayerSprite(newBattler.backSprite);
           this.renderer.updatePlayerBall(newBattler.pokeball ?? 'POKEBALL');
@@ -836,7 +976,22 @@ export class BattleController {
         this.state.playerHurtFlash = 0;
         this.state.startPlayerSendOut();
 
-        this.queueMessage(`Tiến lên! ${newBattler.name}!`, 'command');
+        this.queueMessage(`Tiến lên! ${newBattler.name}!`, 'message', () => {
+          if (switchRes.events.length > 0) {
+            this.triggerAbilityEvents(switchRes.events);
+          }
+          if (newBattler.isFainted) {
+            this.queueMessage(`${newBattler.name} đã ngất xỉu!`, 'message', () => {
+              this.handleForceSwitch();
+            });
+            return;
+          }
+          if (switchRes.messages.length > 0) {
+            this.queueMessage(switchRes.messages.join(' '), 'command');
+          } else {
+            this.state.uiMode = 'command';
+          }
+        });
       },
       onCancel: () => {
         const hasAlive = partyService.getParty().some((p) => p.currentHp > 0 && !p.isFainted);

@@ -156,7 +156,13 @@ export class BattleScreen {
         'message',
         () => {
           this.state.startPlayerSendOut();
-          this.controller.queueMessage(`Tiến lên! ${this.engine.playerPokemon.name}!`, 'command');
+          this.controller.queueMessage(
+            `Tiến lên! ${this.engine.playerPokemon.name}!`,
+            'message',
+            () => {
+              this.controller.checkAndTriggerInitialAbilities();
+            }
+          );
         }
       );
     }

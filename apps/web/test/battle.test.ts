@@ -1232,5 +1232,54 @@ describe('Wild Pokémon Battle System', () => {
       expect(wildShiny.isShiny).toBe(true);
       expect(wildShiny.frontSprite).toContain('Front shiny');
     });
+
+    it('manages Ability Activation Banner animation lifecycle and sequential queuing', () => {
+      expect(BATTLE_ASSETS.abilityBar).toContain('ability_bar.png');
+
+      const state = new BattleState();
+      expect(state.currentAbilityBanner).toBeNull();
+
+      let bannerCompleted = false;
+      state.triggerAbilityBanner('player', 'Gyarados', 'Intimidate', 'Đe Dọa', () => {
+        bannerCompleted = true;
+      });
+
+      expect(state.currentAbilityBanner).toBeDefined();
+      expect(state.currentAbilityBanner?.side).toBe('player');
+      expect(state.currentAbilityBanner?.pokemonName).toBe('Gyarados');
+      expect(state.currentAbilityBanner?.abilityNameVi).toBe('Đe Dọa');
+      expect(state.currentAbilityBanner?.slideProgress).toBe(0);
+
+      // Advance 10 ticks -> slide in progressing
+      for (let i = 0; i < 10; i++) state.updateTick();
+      expect(state.currentAbilityBanner?.slideProgress).toBeGreaterThan(0);
+      expect(state.currentAbilityBanner?.slideProgress).toBeLessThanOrEqual(1.0);
+
+      // Advance to hold phase (tick 20) -> slideProgress should be 1.0
+      for (let i = 0; i < 10; i++) state.updateTick();
+      expect(state.currentAbilityBanner?.slideProgress).toBe(1.0);
+
+      // Enqueue a second banner while the first is active
+      let secondCompleted = false;
+      state.triggerAbilityBanner('enemy', 'Pikachu', 'Static', 'Tĩnh Điện', () => {
+        secondCompleted = true;
+      });
+      expect(state.abilityBannerQueue.length).toBe(1);
+
+      // Advance until first banner finishes (maxTimer is 80)
+      for (let i = 0; i < 65; i++) state.updateTick();
+      expect(bannerCompleted).toBe(true);
+
+      // Second banner should now become active
+      expect(state.currentAbilityBanner).toBeDefined();
+      expect(state.currentAbilityBanner?.side).toBe('enemy');
+      expect(state.currentAbilityBanner?.pokemonName).toBe('Pikachu');
+      expect(state.currentAbilityBanner?.abilityNameVi).toBe('Tĩnh Điện');
+
+      // Finish second banner
+      for (let i = 0; i < 85; i++) state.updateTick();
+      expect(secondCompleted).toBe(true);
+      expect(state.currentAbilityBanner).toBeNull();
+    });
   });
 });

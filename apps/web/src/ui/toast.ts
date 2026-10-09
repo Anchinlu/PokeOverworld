@@ -1,6 +1,7 @@
 let toastTimer: ReturnType<typeof setTimeout> | null = null;
 
 export function showToast(msg: string, color = '#c084fc'): void {
+  if (typeof document === 'undefined') return;
   let toast = document.getElementById('berryToast') as HTMLDivElement | null;
   if (!toast) {
     toast = document.createElement('div');

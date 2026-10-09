@@ -1,5 +1,5 @@
 import { pokemonCatalog } from '../data';
-import type { BattlerPokemon, BattleEnvironment } from './types';
+import type { BattlerPokemon, BattleEnvironment, BattleMove } from './types';
 import { getMovesForSpecies } from './moves-db';
 import type { EcologyZone } from '../maps/ecology';
 import { defaultBattleRng, type BattleRng } from './battle-rng';
@@ -26,7 +26,8 @@ export function createBattler(
   isShiny = false,
   customIvs?: PokemonStatValues,
   customNature?: NatureName,
-  customAbility?: string
+  customAbility?: string,
+  customMoves?: BattleMove[]
 ): BattlerPokemon {
   const data =
     pokemonCatalog.getBySpeciesKey(speciesKey) ?? pokemonCatalog.getBySpeciesKey('PIKACHU')!;
@@ -42,7 +43,10 @@ export function createBattler(
     total: data.stats.total,
   };
 
-  const moves = getMovesForSpecies(data.speciesKey, data.types, level);
+  const moves =
+    customMoves && customMoves.length > 0
+      ? customMoves.map((m) => ({ ...m }))
+      : getMovesForSpecies(data.speciesKey, data.types, level);
 
   // Authentically roll random IVs (0–31 per stat) and Nature for the wild encounter
   const ivs: PokemonStatValues = customIvs ?? {

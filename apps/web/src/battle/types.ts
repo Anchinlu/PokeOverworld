@@ -78,6 +78,7 @@ export interface BattleMove {
   pp: number;
   maxPp: number;
   description: string;
+  descriptionVi?: string;
   descriptionEn?: string;
   priority?: number;
   statChanges?: MoveStatChange[];
@@ -133,6 +134,9 @@ export interface BattlerPokemon {
   maxExp: number;
   pokeball?: string;
   heldItem?: string | null;
+  lastConsumedItem?: string | null;
+  weight?: number;
+  faintedAlliesCount?: number;
   flashFireBoost?: boolean;
   // Multi-turn, Protect & Status combat states
   chargingMove?: {
@@ -146,6 +150,46 @@ export interface BattlerPokemon {
   protectSuccessiveUses?: number;
   isSeeded?: boolean;
   destinyBond?: boolean;
+  // Volatile statuses & round flags
+  isFlinched?: boolean;
+  confusionTurns?: number;
+  hasActedThisRound?: boolean;
+  firstTurnInBattle?: boolean;
+  hasAquaRing?: boolean;
+  isIngrained?: boolean;
+  safeguardTurns?: number;
+  // Trapping & Binding
+  isTrapped?: boolean;
+  trappedBy?: BattlerSide;
+  boundStatus?: BoundStatus;
+  // Special move volatile statuses
+  tauntTurns?: number;
+  isTormented?: boolean;
+  disabledMove?: {
+    moveId: string;
+    turnsLeft: number;
+  };
+  encore?: {
+    moveId: string;
+    turnsLeft: number;
+  };
+  throatChopTurns?: number;
+  uproarTurns?: number;
+  lastUsedMoveId?: string;
+}
+
+export interface BoundStatus {
+  moveId: string;
+  moveName: string;
+  sourceSide: BattlerSide;
+  turnsLeft: number;
+}
+
+export interface BattleSideHazards {
+  stealthRock?: boolean;
+  spikes?: number;
+  toxicSpikes?: number;
+  stickyWeb?: boolean;
 }
 
 export type BattlePhase =
@@ -176,4 +220,7 @@ export interface BattleEnvironment {
     type: 'none' | 'electric' | 'grassy' | 'misty' | 'psychic';
     turnsLeft: number;
   };
+  playerHazards?: BattleSideHazards;
+  enemyHazards?: BattleSideHazards;
+  pledgeCombo?: boolean;
 }

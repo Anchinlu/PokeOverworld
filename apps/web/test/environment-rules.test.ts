@@ -17,6 +17,7 @@ import { calculateEffectiveSpeed } from '../src/battle/rules/turn-order';
 import { calculateDamage } from '../src/battle/rules/damage-calculator';
 import { processEndTurnEffects } from '../src/battle/rules/status-engine';
 import { FixedSequenceRng } from '../src/battle/battle-rng';
+import { createBattler, BattleEngine, getBattleEnvironment } from '../src/battle';
 import type {
   BattlerPokemon,
   BattleMove,
@@ -485,4 +486,269 @@ describe('BattleEnvironmentRules Unit Tests', () => {
       expect(res?.events.some((e) => e.type === 'hp_restored')).toBe(true);
     });
   });
+
+  describe('Weather and Terrain Creation Moves & Special Interactions', () => {
+    it('creates Weather from moves (Sunny Day, Rain Dance, Sandstorm, Snowscape)', () => {
+      const baseEnv = getBattleEnvironment('meadow');
+      const player = createBattler('NINETALES', 50, true);
+      const enemy = createBattler('BLASTOISE', 50, false);
+      const engine = new BattleEngine(player, enemy, baseEnv);
+
+      // 1. Sunny Day
+      const sunnyDay: BattleMove = {
+        id: 'sunny_day',
+        name: 'Sunny Day',
+        type: 'Fire',
+        category: 'status',
+        power: 0,
+        accuracy: 100,
+        pp: 5,
+        maxPp: 5,
+        description: 'Intensifies the sun for 5 turns.',
+      };
+      const resSun = engine.executeAttack(player, enemy, sunnyDay);
+      expect(engine.environment.weather?.type).toBe('sun');
+      expect(engine.environment.weather?.turnsLeft).toBe(5);
+      expect(resSun.message).toContain('Ánh nắng mặt trời trở nên gay gắt');
+
+      // 2. Rain Dance
+      const rainDance: BattleMove = {
+        id: 'rain_dance',
+        name: 'Rain Dance',
+        type: 'Water',
+        category: 'status',
+        power: 0,
+        accuracy: 100,
+        pp: 5,
+        maxPp: 5,
+        description: 'Summons heavy rain for 5 turns.',
+      };
+      const resRain = engine.executeAttack(player, enemy, rainDance);
+      expect(engine.environment.weather?.type).toBe('rain');
+      expect(engine.environment.weather?.turnsLeft).toBe(5);
+      expect(resRain.message).toContain('đổ mưa rào lớn');
+
+      // 3. Sandstorm
+      const sandstormMove: BattleMove = {
+        id: 'sandstorm',
+        name: 'Sandstorm',
+        type: 'Rock',
+        category: 'status',
+        power: 0,
+        accuracy: 100,
+        pp: 10,
+        maxPp: 10,
+        description: 'Summons a sandstorm for 5 turns.',
+      };
+      engine.executeAttack(player, enemy, sandstormMove);
+      expect(engine.environment.weather?.type).toBe('sandstorm');
+
+      // 4. Snowscape / Hail
+      const snowscapeMove: BattleMove = {
+        id: 'snowscape',
+        name: 'Snowscape',
+        type: 'Ice',
+        category: 'status',
+        power: 0,
+        accuracy: 100,
+        pp: 10,
+        maxPp: 10,
+        description: 'Summons snow for 5 turns.',
+      };
+      engine.executeAttack(player, enemy, snowscapeMove);
+      expect(engine.environment.weather?.type).toBe('hail');
+    });
+
+    it('creates Terrain from moves (Electric, Grassy, Misty, Psychic Terrain)', () => {
+      const baseEnv = getBattleEnvironment('meadow');
+      const player = createBattler('TAPU_KOKO', 50, true);
+      const enemy = createBattler('SNORLAX', 50, false);
+      const engine = new BattleEngine(player, enemy, baseEnv);
+
+      // Electric Terrain
+      const elecMove: BattleMove = {
+        id: 'electric_terrain',
+        name: 'Electric Terrain',
+        type: 'Electric',
+        category: 'status',
+        power: 0,
+        accuracy: 100,
+        pp: 10,
+        maxPp: 10,
+        description: 'Electrifies the ground.',
+      };
+      engine.executeAttack(player, enemy, elecMove);
+      expect(engine.environment.terrain?.type).toBe('electric');
+      expect(engine.environment.terrain?.turnsLeft).toBe(5);
+
+      // Grassy Terrain
+      const grassMove: BattleMove = {
+        id: 'grassy_terrain',
+        name: 'Grassy Terrain',
+        type: 'Grass',
+        category: 'status',
+        power: 0,
+        accuracy: 100,
+        pp: 10,
+        maxPp: 10,
+        description: 'Covers the ground in grass.',
+      };
+      engine.executeAttack(player, enemy, grassMove);
+      expect(engine.environment.terrain?.type).toBe('grassy');
+
+      // Misty Terrain
+      const mistyMove: BattleMove = {
+        id: 'misty_terrain',
+        name: 'Misty Terrain',
+        type: 'Fairy',
+        category: 'status',
+        power: 0,
+        accuracy: 100,
+        pp: 10,
+        maxPp: 10,
+        description: 'Covers ground in mist.',
+      };
+      engine.executeAttack(player, enemy, mistyMove);
+      expect(engine.environment.terrain?.type).toBe('misty');
+
+      // Psychic Terrain
+      const psychMove: BattleMove = {
+        id: 'psychic_terrain',
+        name: 'Psychic Terrain',
+        type: 'Psychic',
+        category: 'status',
+        power: 0,
+        accuracy: 100,
+        pp: 10,
+        maxPp: 10,
+        description: 'Covers ground in weird psychic power.',
+      };
+      engine.executeAttack(player, enemy, psychMove);
+      expect(engine.environment.terrain?.type).toBe('psychic');
+    });
+
+    it('dynamically adapts Weather Ball power and type under weather', () => {
+      const weatherBall: BattleMove = {
+        id: 'weather_ball',
+        name: 'Weather Ball',
+        type: 'Normal',
+        category: 'special',
+        power: 50,
+        accuracy: 100,
+        pp: 10,
+        maxPp: 10,
+        description: 'Power and type depend on weather.',
+      };
+
+      const attacker = createMockBattler({ types: ['Normal'], level: 50 });
+      const grassDefender = createMockBattler({ types: ['Grass'], level: 50 });
+      const fireDefender = createMockBattler({ types: ['Fire'], level: 50 });
+      const rng = new FixedSequenceRng([0.5]);
+
+      // Under Sun: Weather Ball becomes Fire-type, 100 power -> super effective on Grass!
+      const envSun: BattleEnvironment = {
+        background: 'field',
+        enemyBase: 'grass',
+        playerBase: 'grass',
+        weather: { type: 'sun', turnsLeft: 5 },
+      };
+      const resSun = calculateDamage(attacker, grassDefender, weatherBall, rng, envSun);
+      expect(resSun.typeEffectiveness).toBe(2.0); // Fire vs Grass = 2x
+      expect(resSun.damage).toBeGreaterThan(60);
+
+      // Under Rain: Weather Ball becomes Water-type, 100 power -> super effective on Fire!
+      const envRain: BattleEnvironment = {
+        background: 'field',
+        enemyBase: 'grass',
+        playerBase: 'grass',
+        weather: { type: 'rain', turnsLeft: 5 },
+      };
+      const resRain = calculateDamage(attacker, fireDefender, weatherBall, rng, envRain);
+      expect(resRain.typeEffectiveness).toBe(2.0); // Water vs Fire = 2x
+      expect(resRain.damage).toBeGreaterThan(60);
+    });
+
+    it('dynamically boosts Terrain Pulse, Rising Voltage, and Expanding Force on terrain', () => {
+      const attacker = createMockBattler({ types: ['Electric'], level: 50 });
+      const defender = createMockBattler({ types: ['Water'], level: 50 });
+      const rng = new FixedSequenceRng([0.5]);
+
+      // Rising Voltage: 70 power normally, 140 on Electric Terrain against grounded target
+      const risingVoltage: BattleMove = {
+        id: 'rising_voltage',
+        name: 'Rising Voltage',
+        type: 'Electric',
+        category: 'special',
+        power: 70,
+        accuracy: 100,
+        pp: 20,
+        maxPp: 20,
+        description: 'Doubles power on Electric Terrain.',
+      };
+
+      const envNone: BattleEnvironment = {
+        background: 'field',
+        enemyBase: 'grass',
+        playerBase: 'grass',
+      };
+      const envElec: BattleEnvironment = {
+        background: 'field',
+        enemyBase: 'grass',
+        playerBase: 'grass',
+        terrain: { type: 'electric', turnsLeft: 5 },
+      };
+
+      const dmgNoTerrain = calculateDamage(attacker, defender, risingVoltage, rng, envNone).damage;
+      const dmgElecTerrain = calculateDamage(attacker, defender, risingVoltage, rng, envElec).damage;
+
+      // 140 power * 1.5x electric terrain damage multiplier = ~3x total damage!
+      expect(dmgElecTerrain).toBeGreaterThan(dmgNoTerrain * 2.5);
+
+      // Expanding Force: 80 power normally, 120 power on Psychic Terrain
+      const psychicAttacker = createMockBattler({ types: ['Psychic'], level: 50 });
+      const fightingDefender = createMockBattler({ types: ['Fighting'], level: 50 });
+      const expandingForce: BattleMove = {
+        id: 'expanding_force',
+        name: 'Expanding Force',
+        type: 'Psychic',
+        category: 'special',
+        power: 80,
+        accuracy: 100,
+        pp: 10,
+        maxPp: 10,
+        description: 'Boosted on Psychic Terrain.',
+      };
+      const envPsychic: BattleEnvironment = {
+        background: 'field',
+        enemyBase: 'grass',
+        playerBase: 'grass',
+        terrain: { type: 'psychic', turnsLeft: 5 },
+      };
+      const dmgExpBase = calculateDamage(psychicAttacker, fightingDefender, expandingForce, rng, envNone).damage;
+      const dmgExpBoosted = calculateDamage(psychicAttacker, fightingDefender, expandingForce, rng, envPsychic).damage;
+      expect(dmgExpBoosted).toBeGreaterThan(dmgExpBase * 2.0); // 1.5x power * 1.5x psychic terrain boost = 2.25x
+    });
+
+    it('counts down weather and terrain turns on round reset and clears them after 5 turns', () => {
+      const baseEnv = getBattleEnvironment('meadow');
+      baseEnv.weather = { type: 'sun', turnsLeft: 2 };
+      baseEnv.terrain = { type: 'electric', turnsLeft: 1 };
+      const player = createBattler('PIKACHU', 50, true);
+      const enemy = createBattler('SNORLAX', 50, false);
+      const engine = new BattleEngine(player, enemy, baseEnv);
+
+      // Round 1 reset: Terrain expires (was 1), Weather decreases to 1
+      const msgs1 = engine.resetRound();
+      expect(engine.environment.terrain?.type).toBe('none');
+      expect(msgs1.some((m) => m.includes('Dòng điện trên mặt đất đã biến mất'))).toBe(true);
+      expect(engine.environment.weather?.type).toBe('sun');
+      expect(engine.environment.weather?.turnsLeft).toBe(1);
+
+      // Round 2 reset: Weather expires (was 1)
+      const msgs2 = engine.resetRound();
+      expect(engine.environment.weather?.type).toBe('none');
+      expect(msgs2.some((m) => m.includes('Ánh nắng gay gắt đã dịu đi'))).toBe(true);
+    });
+  });
 });
+

@@ -18,7 +18,12 @@ import type {
   StatusCondition,
 } from '../types';
 import { BattleEventFactory } from '../state/battle-event-factory';
-import { applyDamage, restoreHp, clearStatusCondition } from '../state/battle-state-reducer';
+import {
+  applyDamage,
+  restoreHp,
+  clearStatusCondition,
+  applyStatStageChange,
+} from '../state/battle-state-reducer';
 import { findItem } from '../../data/items-db';
 import { AbilityEngine } from './ability-engine';
 
@@ -84,6 +89,7 @@ export class HeldItemEngine {
 
     if (healAmount > 0) {
       // Consume item
+      battler.lastConsumedItem = battler.heldItem;
       battler.heldItem = null;
       const healed = restoreHp(battler, healAmount);
       const msg = `${battler.name} đã ăn quả ${itemName} và hồi phục ${healed} HP!`;
@@ -127,6 +133,7 @@ export class HeldItemEngine {
     if (shouldCure) {
       const itemName = getHeldItemDisplayName(battler.heldItem);
       // Consume item
+      battler.lastConsumedItem = battler.heldItem;
       battler.heldItem = null;
       clearStatusCondition(battler);
       const msg = `${battler.name} đã ăn quả ${itemName} và chữa khỏi trạng thái bất thường!`;
@@ -396,4 +403,220 @@ export class HeldItemEngine {
     }
     return 1.0;
   }
+}
+
+/**
+ * Checks whether an item ID corresponds to a berry.
+ */
+export function isBerryItem(itemId?: string | null): boolean {
+  if (!itemId) return false;
+  const key = normalizeHeldItemKey(itemId);
+  return key.endsWith('-berry') || key === 'berry-juice';
+}
+
+/**
+ * Returns the base power for the move Fling based on held item.
+ */
+export function getFlingPower(itemId?: string | null): number {
+  const key = normalizeHeldItemKey(itemId);
+  if (!key) return 0;
+  if (key === 'iron-ball') return 130;
+  if (key === 'hard-stone' || key === 'rare-bone') return 100;
+  if (key === 'heavy-duty-boots') return 80;
+  if (key === 'poison-barb' || key === 'dragon-fang') return 70;
+  if (
+    key.endsWith('-rock') ||
+    key === 'damp-rock' ||
+    key === 'heat-rock' ||
+    key === 'smooth-rock' ||
+    key === 'icy-rock'
+  )
+    return 60;
+  if (key === 'sharp-beak') return 50;
+  if (key === 'eviolite' || key === 'rocky-helmet' || key === 'black-belt') return 40;
+  if (key.endsWith('-berry') || key === 'berry-juice') return 10;
+  if (key.startsWith('choice-')) return 10;
+  return 30;
+}
+
+/**
+ * Immediately consumes a berry on a battler and returns the result message while pushing events.
+ */
+export function consumeBerry(
+  battler: BattlerPokemon,
+  side: BattlerSide,
+  berryKey: string,
+  events: BattleEvent[]
+): string {
+  const key = normalizeHeldItemKey(berryKey);
+  const berryName = getHeldItemDisplayName(berryKey);
+
+  // HP Berries
+  if (key === 'sitrus-berry') {
+    const heal = Math.max(1, Math.floor(battler.maxHp / 4));
+    const healed = restoreHp(battler, heal);
+    events.push(
+      BattleEventFactory.hpRestored(
+        side,
+        battler.name,
+        healed,
+        battler.currentHp,
+        battler.maxHp,
+        'item',
+        `${battler.name} hồi phục ${healed} HP từ ${berryName}!`
+      )
+    );
+    return `Đã hồi phục ${healed} HP!`;
+  }
+  if (key === 'oran-berry' || key === 'berry-juice') {
+    const heal = Math.min(10, battler.maxHp - battler.currentHp);
+    const healed = restoreHp(battler, heal);
+    events.push(
+      BattleEventFactory.hpRestored(
+        side,
+        battler.name,
+        healed,
+        battler.currentHp,
+        battler.maxHp,
+        'item',
+        `${battler.name} hồi phục ${healed} HP từ ${berryName}!`
+      )
+    );
+    return `Đã hồi phục ${healed} HP!`;
+  }
+  if (
+    key === 'figy-berry' ||
+    key === 'wiki-berry' ||
+    key === 'mago-berry' ||
+    key === 'aguav-berry' ||
+    key === 'iapapa-berry'
+  ) {
+    const heal = Math.max(1, Math.floor(battler.maxHp / 3));
+    const healed = restoreHp(battler, heal);
+    events.push(
+      BattleEventFactory.hpRestored(
+        side,
+        battler.name,
+        healed,
+        battler.currentHp,
+        battler.maxHp,
+        'item',
+        `${battler.name} hồi phục ${healed} HP từ ${berryName}!`
+      )
+    );
+    return `Đã hồi phục ${healed} HP!`;
+  }
+
+  // Status Berries
+  if (key === 'lum-berry') {
+    let cured = false;
+    if (battler.status && battler.status !== 'none') {
+      const oldStatus = battler.status;
+      clearStatusCondition(battler);
+      events.push(
+        BattleEventFactory.statusCured(
+          side,
+          battler.name,
+          oldStatus,
+          `${battler.name} đã khỏi trạng thái!`
+        )
+      );
+      cured = true;
+    }
+    if ((battler.confusionTurns ?? 0) > 0) {
+      battler.confusionTurns = 0;
+      cured = true;
+    }
+    return cured
+      ? `Đã chữa khỏi toàn bộ trạng thái bất thường!`
+      : `Nhưng không có trạng thái nào để chữa.`;
+  }
+  if (key === 'cheri-berry' && battler.status === 'paralysis') {
+    clearStatusCondition(battler);
+    events.push(
+      BattleEventFactory.statusCured(
+        side,
+        battler.name,
+        'paralysis',
+        `${battler.name} đã khỏi tê liệt!`
+      )
+    );
+    return `Đã chữa khỏi tê liệt!`;
+  }
+  if (key === 'chesto-berry' && battler.status === 'sleep') {
+    clearStatusCondition(battler);
+    events.push(
+      BattleEventFactory.statusCured(
+        side,
+        battler.name,
+        'sleep',
+        `${battler.name} đã tỉnh giấc!`
+      )
+    );
+    return `Đã tỉnh giấc!`;
+  }
+  if (key === 'pecha-berry' && (battler.status === 'poison' || battler.status === 'toxic')) {
+    const oldStatus = battler.status;
+    clearStatusCondition(battler);
+    events.push(
+      BattleEventFactory.statusCured(
+        side,
+        battler.name,
+        oldStatus,
+        `${battler.name} đã giải độc!`
+      )
+    );
+    return `Đã giải độc!`;
+  }
+  if (key === 'rawst-berry' && battler.status === 'burn') {
+    clearStatusCondition(battler);
+    events.push(
+      BattleEventFactory.statusCured(
+        side,
+        battler.name,
+        'burn',
+        `${battler.name} đã khỏi bỏng!`
+      )
+    );
+    return `Đã chữa khỏi bỏng!`;
+  }
+  if (key === 'aspear-berry' && battler.status === 'freeze') {
+    clearStatusCondition(battler);
+    events.push(
+      BattleEventFactory.statusCured(
+        side,
+        battler.name,
+        'freeze',
+        `${battler.name} đã tan băng!`
+      )
+    );
+    return `Đã tan băng!`;
+  }
+
+  // Stat Berries
+  if (key === 'liechi-berry') {
+    applyStatStageChange(battler, 'attack', 1);
+    return `Tấn công tăng lên!`;
+  }
+  if (key === 'ganlon-berry') {
+    applyStatStageChange(battler, 'defense', 1);
+    return `Phòng thủ tăng lên!`;
+  }
+  if (key === 'salac-berry') {
+    applyStatStageChange(battler, 'speed', 1);
+    return `Tốc độ tăng lên!`;
+  }
+  if (key === 'petaya-berry') {
+    applyStatStageChange(battler, 'spAtk', 1);
+    return `Đặc công tăng lên!`;
+  }
+  if (key === 'apicot-berry') {
+    applyStatStageChange(battler, 'spDef', 1);
+    return `Đặc phòng tăng lên!`;
+  }
+
+  // Generic fallback for any other berry
+  const heal = Math.max(1, Math.floor(battler.maxHp * 0.1));
+  const healed = restoreHp(battler, heal);
+  return `Đã hồi phục ${healed} HP!`;
 }

@@ -186,7 +186,7 @@ export interface EndTurnDamageEvent extends BaseBattleEvent {
   targetName: string;
   damage: number;
   remainingHp: number;
-  source: 'burn' | 'poison' | 'toxic' | 'leech_seed' | 'sandstorm' | 'hail';
+  source: 'burn' | 'poison' | 'toxic' | 'leech_seed' | 'sandstorm' | 'hail' | 'bind' | string;
 }
 
 export interface AbilityTriggeredEvent extends BaseBattleEvent {

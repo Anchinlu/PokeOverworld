@@ -5069,12 +5069,12 @@ body {
 .summary-modal-inner {
   display: flex;
   align-items: stretch;
-  gap: 14px;
-  width: 900px;
-  height: 490px;
+  gap: 16px;
+  width: 1040px;
+  height: 560px;
   max-width: 96vw;
   max-height: 94vh;
-  transform: scale(var(--party-scale, 1.15));
+  transform: scale(var(--party-scale, 1.1));
   transform-origin: center center;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
@@ -5196,19 +5196,19 @@ body {
 
 .summary-body {
   display: flex;
-  gap: 14px;
+  gap: 16px;
   flex: 1;
   min-height: 0;
 }
 
 /* Left Column */
 .summary-left {
-  width: 205px;
+  width: 245px;
   display: flex;
   flex-direction: column;
   align-items: center;
   border-right: 1px solid rgba(56, 189, 248, 0.2);
-  padding-right: 12px;
+  padding-right: 14px;
   flex-shrink: 0;
 }
 
@@ -5245,28 +5245,41 @@ body {
 
 .summary-meta-box {
   width: 100%;
-  background: rgba(15, 23, 42, 0.75);
-  border: 1px solid #334155;
+  background: rgba(11, 19, 36, 0.88);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: 4px;
   box-shadow:
-    inset 1px 1px 0 rgba(255, 255, 255, 0.06),
-    inset -1px -1px 0 rgba(0, 0, 0, 0.5);
+    inset 1px 1px 0 rgba(255, 255, 255, 0.08),
+    inset -1px -1px 0 rgba(0, 0, 0, 0.6),
+    0 4px 14px rgba(0, 0, 0, 0.45);
   padding: 8px 10px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 7px;
+}
+
+.summary-meta-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .summary-meta-row {
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
   font-family: 'VT323', monospace;
-  font-size: 15px;
+  font-size: 16px;
   text-shadow: 1px 1px 0 #000;
+  line-height: 1.15;
 }
 
 .meta-label {
   color: #94a3b8;
+  font-weight: 700;
 }
 
 .meta-val {
@@ -5274,57 +5287,83 @@ body {
   font-weight: 700;
 }
 
-.summary-meta-row.nature-row {
-  margin-top: 2px;
+.summary-info-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 5px 8px;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 
-.nature-val {
-  color: #fbbf24;
-  font-weight: 900;
-}
-
-.summary-nature-effect {
-  font-family: 'VT323', monospace;
-  font-size: 13px;
-  color: #38bdf8;
-  text-shadow: 1px 1px 0 #000;
-  text-align: right;
-  line-height: 1.1;
-  margin-top: -1px;
-}
-
-.summary-meta-row.ability-row {
-  margin-top: 2px;
+.summary-info-card.ability-card {
+  background: rgba(168, 85, 247, 0.1);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-left: 3px solid #c084fc;
 }
 
 .ability-val {
-  color: #c084fc;
+  color: #d8b4fe;
   font-weight: 900;
+  font-size: 16px;
 }
 
 .summary-ability-desc {
   font-family: 'VT323', monospace;
-  font-size: 13px;
-  color: #e9d5ff;
+  font-size: 14px;
+  color: #f1f5f9;
   text-shadow: 1px 1px 0 #000;
-  text-align: right;
-  line-height: 1.1;
-  margin-top: -1px;
+  text-align: left;
+  line-height: 1.25;
+  padding-top: 1px;
+}
+
+.summary-info-card.nature-card {
+  background: rgba(234, 179, 8, 0.1);
+  border: 1px solid rgba(234, 179, 8, 0.25);
+  border-left: 3px solid #facc15;
+}
+
+.nature-val {
+  color: #fde047;
+  font-weight: 900;
+  font-size: 16px;
+}
+
+.summary-nature-effect {
+  font-family: 'VT323', monospace;
+  font-size: 14px;
+  color: #38bdf8;
+  text-shadow: 1px 1px 0 #000;
+  text-align: left;
+  line-height: 1.25;
+  padding-top: 1px;
+}
+
+.summary-info-card.exp-card {
+  background: rgba(2, 132, 199, 0.1);
+  border: 1px solid rgba(2, 132, 199, 0.25);
+  border-left: 3px solid #38bdf8;
+  padding: 5px 8px 6px 8px;
 }
 
 .summary-exp-bar-track {
   width: 100%;
-  height: 7px;
+  height: 8px;
   background: rgba(0, 0, 0, 0.85);
   border: 1px solid #000000;
+  border-radius: 2px;
   margin-top: 3px;
   overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.9);
 }
 
 .summary-exp-bar-fill {
   height: 100%;
-  background: #0284c7;
-  box-shadow: inset 0 1px 0 #38bdf8;
+  background: linear-gradient(90deg, #0284c7 0%, #38bdf8 100%);
+  box-shadow: 0 0 6px rgba(56, 189, 248, 0.65);
+  border-radius: 1px;
+  transition: width 0.3s ease;
 }
 
 /* Right Column of Left Card: Stats & Active Moves */
@@ -5390,7 +5429,7 @@ body {
 }
 
 .col-stat-val {
-  width: 48px;
+  width: 78px;
   text-align: right;
   flex-shrink: 0;
 }
@@ -5484,18 +5523,20 @@ body {
 }
 
 .stat-val {
-  width: 48px;
+  width: 78px;
   text-align: right;
   font-size: 16px;
   font-weight: 900;
   color: #ffffff;
   text-shadow: 1px 1px 0 #000;
   flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .stat-val.hp-val {
-  width: 48px;
+  width: 78px;
   font-size: 15px;
+  white-space: nowrap;
 }
 
 .stat-iv-val {
@@ -5563,7 +5604,7 @@ body {
 /* Equipped Moves Section */
 .summary-moves-section {
   margin-top: 14px;
-  margin-bottom: 70px;
+  margin-bottom: 140px;
 }
 
 /* 4 Active Move Slots using battleFightButtons.png (No number badges) */
@@ -5661,7 +5702,7 @@ body {
 
 /* Right Rectangle: Dedicated Move Pool Layout */
 .summary-pool-panel {
-  width: 255px;
+  width: 285px;
   height: 100%;
   box-sizing: border-box;
   background: rgba(10, 20, 35, 0.98);

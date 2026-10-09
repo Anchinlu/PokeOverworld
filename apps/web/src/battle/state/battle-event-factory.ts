@@ -56,7 +56,7 @@ export const BattleEventFactory = {
   statusHindered(
     attackerSide: BattlerSide,
     attackerName: string,
-    status: StatusCondition,
+    status: StatusCondition | string,
     message: string
   ): StatusHinderedEvent {
     return {
@@ -71,7 +71,7 @@ export const BattleEventFactory = {
   statusCured(
     targetSide: BattlerSide,
     targetName: string,
-    status: StatusCondition,
+    status: StatusCondition | string,
     message: string
   ): StatusCuredEvent {
     return {
@@ -299,7 +299,7 @@ export const BattleEventFactory = {
   statusInflicted(
     targetSide: BattlerSide,
     targetName: string,
-    condition: StatusCondition,
+    condition: StatusCondition | string,
     message: string
   ): StatusInflictedEvent {
     return {
@@ -335,7 +335,7 @@ export const BattleEventFactory = {
     targetName: string,
     damage: number,
     remainingHp: number,
-    source: 'burn' | 'poison' | 'toxic' | 'leech_seed' | 'sandstorm' | 'hail',
+    source: 'burn' | 'poison' | 'toxic' | 'leech_seed' | 'sandstorm' | 'hail' | 'bind' | string,
     message: string
   ): EndTurnDamageEvent {
     return {

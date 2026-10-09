@@ -3,11 +3,6 @@ import { GameSession, GameLoop } from './game';
 import { defaultRng } from './core';
 import {
   createOverlayTemplate,
-  bindOverlayToggle,
-  getDebugPanelBindings,
-  bindRenderOptions,
-  updateMouseInspector,
-  bindBerryPanel,
   showBerryToast,
   togglePokedex,
   isPokedexOpen,
@@ -34,11 +29,20 @@ import {
   type SaveGameData,
 } from './domain';
 import { pokemonCatalog } from './data';
+import { getMoveById } from './battle/moves-db';
+import { createBattler } from './battle/battle-factory';
+import type { BattleMove, BattlerPokemon } from './battle/types';
 import { battleSePlayer } from './audio/battle-se';
+import {
+  DebugOverlayController,
+  type DebugBridge,
+  type CustomBotConfig,
+} from './debug';
 
 declare global {
   interface Window {
     startBattle: (overlay?: string) => void;
+    startCustomBattle: (customBattler: BattlerPokemon, overlay?: string) => void;
     saveGame: () => SaveGameData;
     loadGame: () => SaveGameData | null;
     replayIntro: () => void;
@@ -55,7 +59,6 @@ export async function bootstrap(): Promise<void> {
 
   // 1. Scaffold UI
   app.innerHTML = createOverlayTemplate();
-  bindOverlayToggle();
   initDesktopShell();
 
   const canvas = document.querySelector<HTMLCanvasElement>('#gameCanvas')!;
@@ -99,64 +102,220 @@ export async function bootstrap(): Promise<void> {
 
   // 4. Overworld State Manager & Decoupled Launcher
   let isWorldLaunched = false;
+  let debugController: DebugOverlayController | null = null;
 
   function setOverworldUiVisible(visible: boolean): void {
     const bar = document.querySelector<HTMLElement>('#topRightBar');
-    const overlay = document.querySelector<HTMLElement>('#testOverlay');
     if (bar) bar.style.display = visible ? '' : 'none';
-    if (overlay) overlay.style.display = visible ? '' : 'none';
+    if (debugController) debugController.setVisible(visible);
   }
 
   function launchGameWorld(seedOverride?: number): void {
     if (isWorldLaunched) return;
     isWorldLaunched = true;
-    setOverworldUiVisible(true);
 
-    const debugBindings = getDebugPanelBindings();
-    let currentSeed = seedOverride ?? (parseInt(debugBindings.inputSeed.value, 10) || 101);
-
+    let currentSeed = seedOverride ?? 101;
     const session = new GameSession(currentSeed);
     const renderer = new GameRenderer(canvas, assetLoader);
 
-    // 5. Wire UI Panels
-    bindRenderOptions(renderer, debugBindings);
-    bindBerryPanel(renderer);
+    // Wire Debug Overlay via decoupled Remote Action Bridge
+    const debugBridge: DebugBridge = {
+      startTestBattle: (overlay, isShiny) => {
+        session.startTestBattle(overlay, isShiny);
+      },
+      startCustomBotBattle: (config: CustomBotConfig) => {
+        const customMoves = (config.moves || [])
+          .map((id) => getMoveById(id))
+          .filter((m): m is BattleMove => Boolean(m));
 
-    // 6. Action Buttons
-    debugBindings.btnRandomSeed.addEventListener('click', () => {
-      currentSeed = defaultRng.nextInt(100, 99999);
-      debugBindings.inputSeed.value = String(currentSeed);
-      session.regenerate(currentSeed);
-      renderer.clearCache();
-    });
+        const customBattler = createBattler(
+          config.speciesKey,
+          config.level,
+          false,
+          undefined,
+          config.isShiny,
+          undefined,
+          undefined,
+          config.ability,
+          customMoves.length > 0 ? customMoves : undefined
+        );
 
-    debugBindings.btnRegenerate.addEventListener('click', () => {
-      currentSeed = parseInt(debugBindings.inputSeed.value, 10) || 101;
-      session.regenerate(currentSeed);
-      renderer.clearCache();
-    });
+        session.startCustomBattle(customBattler, config.overlay);
+        showBerryToast(
+          `🤖 Khởi động trận đấu với Bot ${customBattler.name} (Lv.${config.level})!`,
+          '#ef4444'
+        );
+      },
+      addItemToBag: (itemId, count) => {
+        inventoryService.addItem(itemId, count);
+      },
+      addStarterItems: () => {
+        const starterItems: Record<string, number> = {
+          POKEBALL: 25,
+          GREATBALL: 15,
+          ULTRABALL: 10,
+          MASTERBALL: 2,
+          POTION: 15,
+          SUPERPOTION: 10,
+          HYPERPOTION: 5,
+          MAXPOTION: 3,
+          REVIVE: 10,
+          MAXREVIVE: 3,
+          FULLRESTORE: 5,
+          RARECANDY: 10,
+          ORANBERRY: 20,
+          SITRUSBERRY: 15,
+          LUMBERRY: 10,
+          TM01: 1,
+          TM13: 1,
+          TM24: 1,
+          HM01: 1,
+          HM02: 1,
+          XATTACK: 10,
+          XDEFEND: 10,
+          XSPEED: 10,
+          BICYCLE: 1,
+          TOWNMAP: 1,
+          OLDROD: 1,
+          SUPERROD: 1,
+          RUNNINGSHOES: 1,
+        };
+        for (const [id, count] of Object.entries(starterItems)) {
+          inventoryService.addItem(id, count);
+        }
+        showBerryToast('🎒 Đã thêm bộ vật phẩm khởi đầu đầy đủ vào tất cả 8 ngăn túi!', '#10b981');
+      },
+      addAllBalls: () => {
+        const balls = [
+          'POKEBALL',
+          'GREATBALL',
+          'ULTRABALL',
+          'MASTERBALL',
+          'QUICKBALL',
+          'DUSKBALL',
+          'NETBALL',
+        ];
+        for (const b of balls) {
+          inventoryService.addItem(b, 50);
+        }
+        showBerryToast('⚾ Đã bổ sung 50x các loại Bóng Poké vào túi!', '#38bdf8');
+      },
+      openBag: () => {
+        openBagScreen();
+      },
+      addPartyPokemon: (speciesKey, level, isShiny) => {
+        if (partyService.isPartyFull()) {
+          showBerryToast('⚠️ Đội hình đã đầy (tối đa 6 Pokémon)! Hãy xóa bớt hoặc reset.', '#ef4444');
+          return;
+        }
+        const newPk = createPartyPokemon(speciesKey, level, { isShiny });
+        partyService.addPokemon(newPk);
+        showBerryToast(
+          `🎉 Đã thêm ${newPk.name}${isShiny ? ' ★ Shiny' : ''} (Lv.${newPk.level}) vào đội hình!`,
+          '#22c55e'
+        );
+      },
+      addRandomPartyPokemon: (isShiny) => {
+        if (partyService.isPartyFull()) {
+          showBerryToast('⚠️ Đội hình đã đầy (tối đa 6 Pokémon)!', '#ef4444');
+          return;
+        }
+        const all = pokemonCatalog.getAll();
+        const randomSpecies = defaultRng.choice(all);
+        const randomLevel = defaultRng.nextInt(5, 50);
+        const newPk = createPartyPokemon(randomSpecies.speciesKey, randomLevel, { isShiny });
+        partyService.addPokemon(newPk);
+        showBerryToast(
+          `🎲 Đã thêm ngẫu nhiên ${newPk.name}${isShiny ? ' ★ Shiny' : ''} (Lv.${newPk.level})!`,
+          '#38bdf8'
+        );
+      },
+      fillPartyPokemon: (isShiny) => {
+        if (partyService.isPartyFull()) {
+          showBerryToast('⚠️ Đội hình đã có đủ 6 Pokémon rồi!', '#f59e0b');
+          return;
+        }
+        const showcaseKeys = [
+          'CHARIZARD',
+          'BLASTOISE',
+          'VENUSAUR',
+          'GENGAR',
+          'DRAGONITE',
+          'LUCARIO',
+          'EEVEE',
+          'SNORLAX',
+          'GYARADOS',
+        ];
+        let addedCount = 0;
+        while (!partyService.isPartyFull()) {
+          const currentKeys = partyService.getParty().map((p) => p.speciesKey);
+          const candidates = showcaseKeys.filter((k) => !currentKeys.includes(k));
+          const chosenKey =
+            candidates.length > 0
+              ? defaultRng.choice(candidates)
+              : defaultRng.choice(pokemonCatalog.getAll()).speciesKey;
+          const level = defaultRng.nextInt(20, 50);
+          partyService.addPokemon(createPartyPokemon(chosenKey, level, { isShiny }));
+          addedCount++;
+        }
+        showBerryToast(
+          `⚡ Đã bổ sung thêm ${addedCount} Pokémon${isShiny ? ' ★ Shiny' : ''} để đủ 6 Slot!`,
+          '#10b981'
+        );
+      },
+      resetPartyPokemon: () => {
+        partyService.reset();
+        showBerryToast('🗑️ Đã đặt lại đội hình (chỉ giữ Pikachu Lv.5)!', '#eab308');
+      },
+      spawnShinyWild: (speciesKey) => {
+        const shiny = session.spawnTestShinyWild(speciesKey);
+        if (shiny) {
+          showBerryToast(
+            `✨ Đã xuất hiện Pokémon Shiny ${shiny.name} (Lv.${shiny.level}) gần bạn trên map! Hãy đến gần để lắng nghe âm thanh đặc trưng!`,
+            '#f59e0b'
+          );
+        }
+      },
+      getPartySize: () => partyService.getPartySize(),
+      subscribePartyChange: (cb) => partyService.subscribe(() => cb(partyService.getPartySize())),
+      regenerateMap: (seed) => {
+        currentSeed = seed;
+        session.regenerate(seed);
+        renderer.clearCache();
+      },
+      resetPlayerPosition: () => {
+        session.resetPlayer();
+      },
+      replayIntro: () => {
+        playGameIntro();
+      },
+      saveGame: () => {
+        window.saveGame();
+      },
+      loadGame: () => {
+        window.loadGame();
+      },
+      setRenderOption: (key, value) => {
+        renderer.setOptions({ [key]: value } as any);
+      },
+      setBerryCycle: (seconds) => {
+        renderer.setBerryCycle(seconds);
+      },
+      setBerryStageOverride: (stage) => {
+        renderer.setBerryStageOverride(stage as any);
+      },
+      isCollisionEnabled: () => debugController?.isCollisionEnabled() ?? true,
+    };
 
-    debugBindings.btnResetPlayer.addEventListener('click', () => {
-      session.resetPlayer();
-    });
+    debugController = new DebugOverlayController(debugBridge);
+    debugController.mount(app);
+    setOverworldUiVisible(true);
 
-    const btnReplayIntro = document.querySelector<HTMLButtonElement>('#btnReplayIntro');
-    btnReplayIntro?.addEventListener('click', () => {
-      playGameIntro();
-    });
-
-    const btnTestBattle = document.querySelector<HTMLButtonElement>('#btnTestBattle');
-    const selectBattleShiny = document.querySelector<HTMLSelectElement>('#selectBattleShiny');
-    const selectBattleOverlay = document.querySelector<HTMLSelectElement>('#selectBattleOverlay');
-    btnTestBattle?.addEventListener('click', () => {
-      const overlay = selectBattleOverlay?.value || 'auto';
-      const isShiny = selectBattleShiny?.value === 'shiny';
-      session.startTestBattle(overlay, isShiny);
-    });
     window.startBattle = (overlay?: string, isShiny?: boolean) => {
-      const chosenOverlay = overlay || selectBattleOverlay?.value || 'auto';
-      const chosenShiny = isShiny !== undefined ? isShiny : selectBattleShiny?.value === 'shiny';
-      session.startTestBattle(chosenOverlay, chosenShiny);
+      session.startTestBattle(overlay || 'auto', isShiny ?? false);
+    };
+    window.startCustomBattle = (customBattler: BattlerPokemon, overlay?: string) => {
+      session.startCustomBattle(customBattler, overlay || 'auto');
     };
     window.saveGame = () => {
       const res = saveGameRepository.save('slot_1', {
@@ -182,123 +341,6 @@ export async function bootstrap(): Promise<void> {
       }
       return data;
     };
-
-    // --- Party Debug & Testing Controls (Map Overlay) ---
-    const selectPartySpecies = document.querySelector<HTMLSelectElement>('#selectPartySpecies');
-    const selectPartyForm = document.querySelector<HTMLSelectElement>('#selectPartyForm');
-    const inputPartyLevel = document.querySelector<HTMLInputElement>('#inputPartyLevel');
-    const lblPartyCount = document.querySelector<HTMLElement>('#lblPartyCount');
-    const btnAddPartyPokemon = document.querySelector<HTMLButtonElement>('#btnAddPartyPokemon');
-    const btnAddRandomPartyPokemon = document.querySelector<HTMLButtonElement>(
-      '#btnAddRandomPartyPokemon'
-    );
-    const btnFillPartyPokemon = document.querySelector<HTMLButtonElement>('#btnFillPartyPokemon');
-    const btnResetPartyPokemon = document.querySelector<HTMLButtonElement>('#btnResetPartyPokemon');
-
-    if (selectPartySpecies) {
-      const allSpecies = [...pokemonCatalog.getAll()].sort((a, b) => a.id - b.id);
-      selectPartySpecies.innerHTML = allSpecies
-        .map(
-          (p) =>
-            `<option value="${p.speciesKey}" ${p.speciesKey === 'CHARIZARD' ? 'selected' : ''}>#${String(p.id).padStart(3, '0')} ${p.name}</option>`
-        )
-        .join('');
-    }
-
-    const updatePartyCountLabel = () => {
-      if (lblPartyCount) {
-        const size = partyService.getPartySize();
-        lblPartyCount.innerText = `${size} / 6`;
-        lblPartyCount.style.color = size >= 6 ? '#f87171' : '#93c5fd';
-      }
-    };
-    updatePartyCountLabel();
-    partyService.subscribe(updatePartyCountLabel);
-
-    btnAddPartyPokemon?.addEventListener('click', () => {
-      if (partyService.isPartyFull()) {
-        showBerryToast('⚠️ Đội hình đã đầy (tối đa 6 Pokémon)! Hãy xóa bớt hoặc reset.', '#ef4444');
-        return;
-      }
-      const speciesKey = selectPartySpecies?.value || 'PIKACHU';
-      const level = Math.max(1, Math.min(100, parseInt(inputPartyLevel?.value || '25', 10) || 25));
-      const isShiny = selectPartyForm?.value === 'shiny';
-      const newPk = createPartyPokemon(speciesKey, level, { isShiny });
-      partyService.addPokemon(newPk);
-      showBerryToast(
-        `🎉 Đã thêm ${newPk.name}${isShiny ? ' ★ Shiny' : ''} (Lv.${newPk.level}) vào đội hình!`,
-        '#22c55e'
-      );
-    });
-
-    btnAddRandomPartyPokemon?.addEventListener('click', () => {
-      if (partyService.isPartyFull()) {
-        showBerryToast('⚠️ Đội hình đã đầy (tối đa 6 Pokémon)!', '#ef4444');
-        return;
-      }
-      const all = pokemonCatalog.getAll();
-      const randomSpecies = defaultRng.choice(all);
-      const randomLevel = defaultRng.nextInt(5, 50);
-      const isShiny = selectPartyForm?.value === 'shiny';
-      const newPk = createPartyPokemon(randomSpecies.speciesKey, randomLevel, { isShiny });
-      partyService.addPokemon(newPk);
-      showBerryToast(
-        `🎲 Đã thêm ngẫu nhiên ${newPk.name}${isShiny ? ' ★ Shiny' : ''} (Lv.${newPk.level})!`,
-        '#38bdf8'
-      );
-    });
-
-    btnFillPartyPokemon?.addEventListener('click', () => {
-      if (partyService.isPartyFull()) {
-        showBerryToast('⚠️ Đội hình đã có đủ 6 Pokémon rồi!', '#f59e0b');
-        return;
-      }
-      const showcaseKeys = [
-        'CHARIZARD',
-        'BLASTOISE',
-        'VENUSAUR',
-        'GENGAR',
-        'DRAGONITE',
-        'LUCARIO',
-        'EEVEE',
-        'SNORLAX',
-        'GYARADOS',
-      ];
-      let addedCount = 0;
-      const isShiny = selectPartyForm?.value === 'shiny';
-      while (!partyService.isPartyFull()) {
-        const currentKeys = partyService.getParty().map((p) => p.speciesKey);
-        const candidates = showcaseKeys.filter((k) => !currentKeys.includes(k));
-        const chosenKey =
-          candidates.length > 0
-            ? defaultRng.choice(candidates)
-            : defaultRng.choice(pokemonCatalog.getAll()).speciesKey;
-        const level = defaultRng.nextInt(20, 50);
-        partyService.addPokemon(createPartyPokemon(chosenKey, level, { isShiny }));
-        addedCount++;
-      }
-      showBerryToast(
-        `⚡ Đã bổ sung thêm ${addedCount} Pokémon${isShiny ? ' ★ Shiny' : ''} để đủ 6 Slot!`,
-        '#10b981'
-      );
-    });
-
-    btnResetPartyPokemon?.addEventListener('click', () => {
-      partyService.reset();
-      showBerryToast('🗑️ Đã đặt lại đội hình (chỉ giữ Pikachu Lv.5)!', '#eab308');
-    });
-
-    const btnSpawnShinyWild = document.querySelector<HTMLButtonElement>('#btnSpawnShinyWild');
-    btnSpawnShinyWild?.addEventListener('click', () => {
-      const speciesKey = selectPartySpecies?.value;
-      const shiny = session.spawnTestShinyWild(speciesKey);
-      if (shiny) {
-        showBerryToast(
-          `✨ Đã xuất hiện Pokémon Shiny ${shiny.name} (Lv.${shiny.level}) gần bạn trên map! Hãy đến gần để lắng nghe âm thanh đặc trưng!`,
-          '#f59e0b'
-        );
-      }
-    });
 
     // Initialize Party, Bag Screens & Map Party HUD
     initPartyScreen((newLeader) => {
@@ -381,68 +423,6 @@ export async function bootstrap(): Promise<void> {
       storageScreen.toggle();
     });
 
-    // Bag Debug Overlay Buttons
-    const btnOpenBagDirect = document.querySelector<HTMLButtonElement>('#btnOpenBagDirect');
-    const btnAddStarterItems = document.querySelector<HTMLButtonElement>('#btnAddStarterItems');
-    const btnAddAllBalls = document.querySelector<HTMLButtonElement>('#btnAddAllBalls');
-
-    btnOpenBagDirect?.addEventListener('click', () => {
-      openBagScreen();
-    });
-
-    btnAddStarterItems?.addEventListener('click', () => {
-      const starterItems: Record<string, number> = {
-        POKEBALL: 25,
-        GREATBALL: 15,
-        ULTRABALL: 10,
-        MASTERBALL: 2,
-        POTION: 15,
-        SUPERPOTION: 10,
-        HYPERPOTION: 5,
-        MAXPOTION: 3,
-        REVIVE: 10,
-        MAXREVIVE: 3,
-        FULLRESTORE: 5,
-        RARECANDY: 10,
-        ORANBERRY: 20,
-        SITRUSBERRY: 15,
-        LUMBERRY: 10,
-        TM01: 1,
-        TM13: 1,
-        TM24: 1,
-        HM01: 1,
-        HM02: 1,
-        XATTACK: 10,
-        XDEFEND: 10,
-        XSPEED: 10,
-        BICYCLE: 1,
-        TOWNMAP: 1,
-        OLDROD: 1,
-        SUPERROD: 1,
-        RUNNINGSHOES: 1,
-      };
-      for (const [id, count] of Object.entries(starterItems)) {
-        inventoryService.addItem(id, count);
-      }
-      showBerryToast('🎒 Đã thêm bộ vật phẩm khởi đầu đầy đủ vào tất cả 8 ngăn túi!', '#10b981');
-    });
-
-    btnAddAllBalls?.addEventListener('click', () => {
-      const balls = [
-        'POKEBALL',
-        'GREATBALL',
-        'ULTRABALL',
-        'MASTERBALL',
-        'QUICKBALL',
-        'DUSKBALL',
-        'NETBALL',
-      ];
-      for (const b of balls) {
-        inventoryService.addItem(b, 50);
-      }
-      showBerryToast('⚾ Đã bổ sung 50x các loại Bóng Poké vào túi!', '#38bdf8');
-    });
-
     btnMenuTrainer?.addEventListener('click', () => {
       const profile = playerService.getProfile();
       const leader = partyService.getLeader();
@@ -453,25 +433,15 @@ export async function bootstrap(): Promise<void> {
     });
 
     btnMenuOptions?.addEventListener('click', () => {
-      const testOverlay = document.querySelector<HTMLElement>('#testOverlay');
-      const btnToggle = document.querySelector<HTMLButtonElement>('#btnToggleOverlay');
-      if (testOverlay && testOverlay.classList.contains('collapsed')) {
-        testOverlay.classList.remove('collapsed');
-        if (btnToggle) btnToggle.innerText = '✕';
-      }
+      debugController?.toggleCollapse();
       showBerryToast('⚙️ Tùy chọn cài đặt & tham số thế giới Pokémon', '#a855f7');
     });
 
     btnMenuQuit?.addEventListener('click', () => {
-      const testOverlay = document.querySelector<HTMLElement>('#testOverlay');
-      const btnToggle = document.querySelector<HTMLButtonElement>('#btnToggleOverlay');
-      if (testOverlay) {
-        testOverlay.classList.toggle('collapsed');
-        if (btnToggle) {
-          btnToggle.innerText = testOverlay.classList.contains('collapsed') ? '⚙️' : '✕';
-        }
+      if (debugController) {
+        debugController.toggleCollapse();
         showBerryToast(
-          testOverlay.classList.contains('collapsed')
+          debugController.isCollapsed()
             ? '🚪 Đã thu gọn bảng điều khiển'
             : '⚙️ Đã mở bảng điều khiển',
           '#f59e0b'
@@ -493,7 +463,7 @@ export async function bootstrap(): Promise<void> {
       const gx = Math.floor(worldX / 32);
       const gy = Math.floor(worldY / 32);
 
-      updateMouseInspector(gx, gy, session.chunkManager, renderer, debugBindings);
+      debugController?.updateMouseInspector(gx, gy, session.chunkManager, renderer);
     });
 
     // 8. Click and Keyboard Interactions
@@ -559,16 +529,21 @@ export async function bootstrap(): Promise<void> {
     // 9. Game Loop Setup
     let hudTick = 0;
     function onUpdate(dtScale: number): void {
-      const collisionEnabled = debugBindings.chkCollision
-        ? debugBindings.chkCollision.checked
-        : true;
+      const collisionEnabled = debugController?.isCollisionEnabled() ?? true;
       const { pChunkX, pChunkY } = session.update(dtScale, collisionEnabled);
 
       hudTick++;
-      if (hudTick % 6 === 0) {
-        debugBindings.lblPlayerPos.innerText = `[${session.player.gx}, ${session.player.gy}] (${Math.round(session.player.x)}, ${Math.round(session.player.y)}px)`;
-        debugBindings.lblChunkPos.innerText = `[${pChunkX}, ${pChunkY}]`;
-        debugBindings.lblActiveChunks.innerText = `${session.chunkManager.activeChunks.length} chunks`;
+      if (hudTick % 6 === 0 && debugController) {
+        debugController.updateTick({
+          playerGx: session.player.gx,
+          playerGy: session.player.gy,
+          playerX: session.player.x,
+          playerY: session.player.y,
+          chunkX: pChunkX,
+          chunkY: pChunkY,
+          activeChunksCount: session.chunkManager.activeChunks.length,
+          fps: loop.getFps(),
+        });
       }
     }
 
@@ -578,10 +553,6 @@ export async function bootstrap(): Promise<void> {
 
     const loop = new GameLoop(onUpdate, onRender);
     loop.start();
-
-    setInterval(() => {
-      debugBindings.lblFps.innerText = `${loop.getFps()} FPS`;
-    }, 250);
   }
 
   // 10. Global Diagnostic Hooks

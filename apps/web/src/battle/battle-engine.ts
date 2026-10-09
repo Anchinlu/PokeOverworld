@@ -25,9 +25,18 @@ import {
   PROTECT_MOVE_IDS,
   TWO_TURN_MOVE_IDS,
   STRUGGLE_MOVE,
+  FLINCH_MOVE_CHANCES,
+  CONFUSION_MOVE_CHANCES,
+  SOUND_BASED_MOVE_IDS,
 } from './rules/move-effect-engine';
 import { BattleEventFactory } from './state/battle-event-factory';
-import { HeldItemEngine } from './rules/held-item-engine';
+import {
+  HeldItemEngine,
+  isBerryItem,
+  consumeBerry,
+  getHeldItemDisplayName,
+  normalizeHeldItemKey,
+} from './rules/held-item-engine';
 import { AbilityEngine } from './rules/ability-engine';
 import { canUsePriorityMoveInTerrain } from './rules/environment';
 import {
@@ -36,12 +45,23 @@ import {
   restoreHp,
   setStatusCondition,
   clearStatusCondition,
+  resetRoundCombatFlags,
   getStatMultiplier,
   getAccuracyMultiplier,
   getMoveDisplayName,
   STAT_NAME_VI,
   STATUS_NAME_VI,
 } from './state/battle-state-reducer';
+import {
+  getSideHazards,
+  clearSideHazards,
+  canSwitchOut,
+  releaseTrapsFromSide,
+  applyEntryHazards,
+  BINDING_MOVE_IDS,
+  TRAPPING_ATTACK_MOVE_IDS,
+  HAZARD_CLEARING_MOVE_IDS,
+} from './rules/hazard-engine';
 
 export interface TurnResult {
   attackerName: string;
@@ -58,6 +78,11 @@ export interface TurnResult {
   statusEffectMessage?: string;
   healAmount?: number;
   events: BattleEvent[];
+  mustSwitch?: boolean;
+  switchSide?: BattlerSide;
+  batonPassData?: Partial<BattlerPokemon>;
+  battleEnded?: boolean;
+  battleEndReason?: 'fled' | 'roar';
 }
 
 export interface CatchResult {
@@ -173,24 +198,117 @@ export class BattleEngine {
     return { messages, events };
   }
 
-  public switchPlayerPokemon(newPokemon: BattlerPokemon): {
+  public canSwitchPokemon(pokemon: BattlerPokemon): { canSwitch: boolean; reason?: string } {
+    return canSwitchOut(pokemon);
+  }
+
+  public switchPlayerPokemon(
+    newPokemon: BattlerPokemon,
+    batonPassData?: Partial<BattlerPokemon>
+  ): {
     messages: string[];
     events: BattleEvent[];
   } {
     AbilityEngine.onSwitchOut(this.playerPokemon);
+    // Release any traps player had maintained on enemy
+    releaseTrapsFromSide('player', this.enemyPokemon);
+
+    const oldSafeguard = this.playerPokemon.safeguardTurns ?? 0;
     this.playerPokemon = newPokemon;
     ensureBattlerState(this.playerPokemon);
+    this.playerPokemon.isFlinched = false;
+    this.playerPokemon.confusionTurns = batonPassData?.confusionTurns ?? 0;
+    this.playerPokemon.hasActedThisRound = false;
+    this.playerPokemon.firstTurnInBattle = true;
+    this.playerPokemon.hasAquaRing = batonPassData?.hasAquaRing ?? false;
+    this.playerPokemon.isIngrained = batonPassData?.isIngrained ?? false;
+    this.playerPokemon.isSeeded = batonPassData?.isSeeded ?? false;
+    this.playerPokemon.destinyBond = false;
+    this.playerPokemon.isProtected = false;
+    this.playerPokemon.safeguardTurns = oldSafeguard;
+    this.playerPokemon.isTrapped = false;
+    this.playerPokemon.trappedBy = undefined;
+    this.playerPokemon.boundStatus = undefined;
+    if (batonPassData?.statStages) {
+      this.playerPokemon.statStages = { ...batonPassData.statStages };
+    }
 
     const events: BattleEvent[] = [];
-    const messages = AbilityEngine.onSwitchIn(
+    const hazardMessages = applyEntryHazards(
       this.playerPokemon,
       'player',
+      this.environment,
+      events
+    );
+
+    let abilityMessages: string[] = [];
+    if (!this.playerPokemon.isFainted) {
+      abilityMessages = AbilityEngine.onSwitchIn(
+        this.playerPokemon,
+        'player',
+        this.enemyPokemon,
+        'enemy',
+        this.rng,
+        events,
+        this.environment
+      );
+    }
+    const messages = [...hazardMessages, ...abilityMessages];
+    return { messages, events };
+  }
+
+  public switchEnemyPokemon(
+    newPokemon: BattlerPokemon,
+    batonPassData?: Partial<BattlerPokemon>
+  ): {
+    messages: string[];
+    events: BattleEvent[];
+  } {
+    AbilityEngine.onSwitchOut(this.enemyPokemon);
+    // Release any traps enemy had maintained on player
+    releaseTrapsFromSide('enemy', this.playerPokemon);
+
+    const oldSafeguard = this.enemyPokemon.safeguardTurns ?? 0;
+    this.enemyPokemon = newPokemon;
+    ensureBattlerState(this.enemyPokemon);
+    this.enemyPokemon.isFlinched = false;
+    this.enemyPokemon.confusionTurns = batonPassData?.confusionTurns ?? 0;
+    this.enemyPokemon.hasActedThisRound = false;
+    this.enemyPokemon.firstTurnInBattle = true;
+    this.enemyPokemon.hasAquaRing = batonPassData?.hasAquaRing ?? false;
+    this.enemyPokemon.isIngrained = batonPassData?.isIngrained ?? false;
+    this.enemyPokemon.isSeeded = batonPassData?.isSeeded ?? false;
+    this.enemyPokemon.destinyBond = false;
+    this.enemyPokemon.isProtected = false;
+    this.enemyPokemon.safeguardTurns = oldSafeguard;
+    this.enemyPokemon.isTrapped = false;
+    this.enemyPokemon.trappedBy = undefined;
+    this.enemyPokemon.boundStatus = undefined;
+    if (batonPassData?.statStages) {
+      this.enemyPokemon.statStages = { ...batonPassData.statStages };
+    }
+
+    const events: BattleEvent[] = [];
+    const hazardMessages = applyEntryHazards(
       this.enemyPokemon,
       'enemy',
-      this.rng,
-      events,
-      this.environment
+      this.environment,
+      events
     );
+
+    let abilityMessages: string[] = [];
+    if (!this.enemyPokemon.isFainted) {
+      abilityMessages = AbilityEngine.onSwitchIn(
+        this.enemyPokemon,
+        'enemy',
+        this.playerPokemon,
+        'player',
+        this.rng,
+        events,
+        this.environment
+      );
+    }
+    const messages = [...hazardMessages, ...abilityMessages];
     return { messages, events };
   }
 
@@ -237,7 +355,8 @@ export class BattleEngine {
   public executeAttack(
     attacker: BattlerPokemon,
     defender: BattlerPokemon,
-    move: BattleMove
+    move: BattleMove,
+    bypassSleep?: boolean
   ): TurnResult {
     ensureBattlerState(attacker);
     ensureBattlerState(defender);
@@ -251,6 +370,7 @@ export class BattleEngine {
 
     // 0. Round protection reset at the beginning of action
     attacker.isProtected = false;
+    attacker.hasActedThisRound = true;
 
     events.push(
       BattleEventFactory.moveDeclared(attackerSide, attacker.name, move.id, moveDisplayName)
@@ -288,10 +408,10 @@ export class BattleEngine {
       };
     }
 
-    // 2. Status hindrance check (Sleep, Freeze, Paralysis)
-    const statusResult = checkPreTurnStatus(attacker, attackerSide, this.rng);
-    events.push(...statusResult.events);
-    if (!statusResult.canAct) {
+    // Pre-execution restrictions (Sleep-only moves, Taunt, Disable, Torment, Encore, Throat Chop)
+    const isSleepMove = moveId === 'snore' || moveId === 'sleep_talk';
+    if (isSleepMove && attacker.status !== 'sleep') {
+      const failMsg = `${attacker.name} định dùng ${moveDisplayName}, nhưng chỉ có thể dùng khi đang ngủ!`;
       return {
         attackerName: attacker.name,
         moveName: moveDisplayName,
@@ -299,11 +419,104 @@ export class BattleEngine {
         typeEffectiveness: 1.0,
         isCritical: false,
         defenderFainted: false,
-        message: statusResult.hinderedMessage || '',
+        message: failMsg,
         events,
       };
     }
-    const statusPrefix = statusResult.statusPrefix;
+
+    if ((attacker.tauntTurns ?? 0) > 0 && move.category === 'status') {
+      const tauntBlockedMsg = `${attacker.name} bị khiêu khích nên không thể dùng ${moveDisplayName}!`;
+      return {
+        attackerName: attacker.name,
+        moveName: moveDisplayName,
+        damage: 0,
+        typeEffectiveness: 1.0,
+        isCritical: false,
+        defenderFainted: false,
+        message: tauntBlockedMsg,
+        events,
+      };
+    }
+
+    if (
+      attacker.disabledMove &&
+      attacker.disabledMove.turnsLeft > 0 &&
+      attacker.disabledMove.moveId === moveId
+    ) {
+      const disableMsg = `${attacker.name} không thể sử dụng ${moveDisplayName} vì chiêu đã bị vô hiệu hóa!`;
+      return {
+        attackerName: attacker.name,
+        moveName: moveDisplayName,
+        damage: 0,
+        typeEffectiveness: 1.0,
+        isCritical: false,
+        defenderFainted: false,
+        message: disableMsg,
+        events,
+      };
+    }
+
+    if (attacker.isTormented && attacker.lastUsedMoveId === moveId) {
+      const tormentBlockedMsg = `${attacker.name} không thể sử dụng ${moveDisplayName} hai lần liên tiếp do bị Dằn Vặt!`;
+      return {
+        attackerName: attacker.name,
+        moveName: moveDisplayName,
+        damage: 0,
+        typeEffectiveness: 1.0,
+        isCritical: false,
+        defenderFainted: false,
+        message: tormentBlockedMsg,
+        events,
+      };
+    }
+
+    if (attacker.encore && attacker.encore.turnsLeft > 0 && attacker.encore.moveId !== moveId) {
+      const encoreBlockedMsg = `${attacker.name} phải tiếp tục lặp lại chiêu thức [${attacker.encore.moveId}] theo lời tán dương!`;
+      return {
+        attackerName: attacker.name,
+        moveName: moveDisplayName,
+        damage: 0,
+        typeEffectiveness: 1.0,
+        isCritical: false,
+        defenderFainted: false,
+        message: encoreBlockedMsg,
+        events,
+      };
+    }
+
+    if ((attacker.throatChopTurns ?? 0) > 0 && SOUND_BASED_MOVE_IDS.has(moveId)) {
+      const throatMsg = `${attacker.name} bị chẹt họng nên không thể dùng chiêu thức âm thanh ${moveDisplayName}!`;
+      return {
+        attackerName: attacker.name,
+        moveName: moveDisplayName,
+        damage: 0,
+        typeEffectiveness: 1.0,
+        isCritical: false,
+        defenderFainted: false,
+        message: throatMsg,
+        events,
+      };
+    }
+
+    // 2. Status hindrance check (Sleep, Freeze, Paralysis)
+    let statusPrefix = '';
+    if (!bypassSleep && (!isSleepMove || attacker.status !== 'sleep')) {
+      const statusResult = checkPreTurnStatus(attacker, attackerSide, this.rng);
+      events.push(...statusResult.events);
+      if (!statusResult.canAct) {
+        return {
+          attackerName: attacker.name,
+          moveName: moveDisplayName,
+          damage: 0,
+          typeEffectiveness: 1.0,
+          isCritical: false,
+          defenderFainted: false,
+          message: statusResult.hinderedMessage || '',
+          events,
+        };
+      }
+      statusPrefix = statusResult.statusPrefix;
+    }
 
     // Deduct PP only when attacker is able to act and not on turn 2 of a charging move
     if (move.id !== 'struggle' && !attacker.chargingMove) {
@@ -314,6 +527,37 @@ export class BattleEngine {
         defender.currentHp > 0;
       const ppCost = hasPressure ? 2 : 1;
       move.pp = Math.max(0, move.pp - ppCost);
+    }
+
+    // Sleep Talk handling (picks and executes another known move while asleep)
+    if (moveId === 'sleep_talk') {
+      const candidateMoves = attacker.moves.filter(
+        (m) =>
+          m.id.toLowerCase() !== 'sleep_talk' &&
+          m.id.toLowerCase() !== 'snore' &&
+          m.id.toLowerCase() !== 'rest' &&
+          !TWO_TURN_MOVE_IDS.has(m.id.toLowerCase())
+      );
+      if (candidateMoves.length === 0) {
+        return {
+          attackerName: attacker.name,
+          moveName: moveDisplayName,
+          damage: 0,
+          typeEffectiveness: 1.0,
+          isCritical: false,
+          defenderFainted: false,
+          message: `${statusPrefix}${attacker.name} nói mớ nhưng không thể thi triển chiêu thức nào!`,
+          events,
+        };
+      }
+      const chosenMove = candidateMoves[this.rng.nextInt(0, candidateMoves.length - 1)];
+      const chosenDisplayName = getMoveDisplayName(chosenMove);
+      const subResult = this.executeAttack(attacker, defender, chosenMove, true);
+      attacker.lastUsedMoveId = moveId;
+      return {
+        ...subResult,
+        message: `${statusPrefix}${attacker.name} nói mớ và sử dụng ${chosenDisplayName}! ${subResult.message}`,
+      };
     }
 
     // 3. Protect / Detect move handling
@@ -530,9 +774,57 @@ export class BattleEngine {
 
     // 8. Status move handling
     if (move.category === 'status') {
+      const SELF_OR_FIELD_STATUS_MOVES = new Set([
+        'rest',
+        'belly_drum',
+        'safeguard',
+        'aqua_ring',
+        'ingrain',
+        'protect',
+        'detect',
+        'splash',
+        'haze',
+        'clear_smog',
+        'substitute',
+        'endure',
+        'destiny_bond',
+        'light_screen',
+        'reflect',
+        'mist',
+        'tailwind',
+        'focus_energy',
+        'stockpile',
+        'swallow',
+        'metronome',
+        'teleport',
+        'aromatherapy',
+        'heal_bell',
+        'sunny_day',
+        'rain_dance',
+        'sandstorm',
+        'snowscape',
+        'hail',
+        'electric_terrain',
+        'grassy_terrain',
+        'misty_terrain',
+        'psychic_terrain',
+        'stealth_rock',
+        'spikes',
+        'toxic_spikes',
+        'sticky_web',
+        'mean_look',
+        'block',
+        'spider_web',
+        'trick',
+        'switcheroo',
+        'recycle',
+        'stuff_cheeks',
+        'refresh',
+        'baton_pass',
+      ]);
+
       const isSelfTargetMove =
-        move.id === 'rest' ||
-        move.id === 'belly_drum' ||
+        SELF_OR_FIELD_STATUS_MOVES.has(moveId) ||
         (move.healPercent !== undefined && move.healPercent > 0) ||
         (move.statChanges !== undefined &&
           move.statChanges.length > 0 &&
@@ -569,11 +861,14 @@ export class BattleEngine {
         defenderSide,
         move,
         this.rng,
-        events
+        events,
+        this.environment
       );
 
+      attacker.lastUsedMoveId = moveId;
+
       const mainMsg = `${statusPrefix}${attacker.name} sử dụng ${moveDisplayName}!${extraMsg || ' Đã tác động lên trận đấu!'}`;
-      return {
+      const statusRes: TurnResult = {
         attackerName: attacker.name,
         moveName: moveDisplayName,
         damage: 0,
@@ -583,6 +878,25 @@ export class BattleEngine {
         message: mainMsg,
         events,
       };
+
+      if (moveId === 'baton_pass') {
+        statusRes.mustSwitch = true;
+        statusRes.switchSide = attackerSide;
+        statusRes.batonPassData = {
+          statStages: { ...(attacker.statStages ?? { attack: 0, defense: 0, spAtk: 0, spDef: 0, speed: 0, accuracy: 0, evasion: 0 }) },
+          confusionTurns: attacker.confusionTurns,
+          hasAquaRing: attacker.hasAquaRing,
+          isIngrained: attacker.isIngrained,
+          isSeeded: attacker.isSeeded,
+        };
+      } else if (moveId === 'roar' || moveId === 'whirlwind') {
+        if (AbilityEngine.normalize(defender.ability) !== 'suctioncups' && !defender.isIngrained) {
+          statusRes.battleEnded = true;
+          statusRes.battleEndReason = 'roar';
+        }
+      }
+
+      return statusRes;
     }
 
     // 9. Damaging attack handling
@@ -612,7 +926,7 @@ export class BattleEngine {
     }
 
     if (dmgCalc.failed) {
-      const failMsg = `${statusPrefix}${attacker.name} sử dụng ${moveDisplayName}! Nhưng chiêu thức thất bại!`;
+      const failMsg = `${statusPrefix}${attacker.name} sử dụng ${moveDisplayName}!${dmgCalc.secMsg || ' Nhưng chiêu thức thất bại!'}`;
       return {
         attackerName: attacker.name,
         moveName: moveDisplayName,
@@ -727,6 +1041,20 @@ export class BattleEngine {
       );
     }
 
+    // Wake-Up Slap wakes sleeping defender on damage
+    if (defender.status === 'sleep' && moveId === 'wake_up_slap' && actualDamage > 0) {
+      clearStatusCondition(defender);
+      secMsg += ` ${defender.name} đã tỉnh giấc!`;
+      events.push(
+        BattleEventFactory.statusCured(
+          defenderSide,
+          defender.name,
+          'sleep',
+          `${defender.name} đã tỉnh giấc!`
+        )
+      );
+    }
+
     // Drain effect
     if (move.drainPercent && move.drainPercent > 0) {
       const drained = Math.max(1, Math.floor(actualDamage * move.drainPercent));
@@ -814,6 +1142,7 @@ export class BattleEngine {
 
     // Defender fainted event
     if (defenderFainted) {
+      releaseTrapsFromSide(defenderSide, attacker);
       events.push(
         BattleEventFactory.fainted(defenderSide, defender.name, `${defender.name} đã ngất xỉu!`)
       );
@@ -848,6 +1177,7 @@ export class BattleEngine {
 
     // Attacker fainted event
     if (attackerFainted) {
+      releaseTrapsFromSide(attackerSide, defender);
       events.push(
         BattleEventFactory.fainted(attackerSide, attacker.name, `${attacker.name} đã ngất xỉu!`)
       );
@@ -947,6 +1277,194 @@ export class BattleEngine {
           );
         }
       }
+
+      // Secondary Confusion
+      const confuseBaseChance = CONFUSION_MOVE_CHANCES[moveId];
+      if (confuseBaseChance !== undefined) {
+        const sereneMultiplier =
+          AbilityEngine.normalize(attacker.ability) === 'serenegrace' ? 2 : 1;
+        const confuseChance = Math.min(1.0, confuseBaseChance * sereneMultiplier);
+        if (this.rng.next() < confuseChance) {
+          if (AbilityEngine.normalize(defender.ability) === 'owntempo') {
+            secMsg += ` Nhưng [Nhịp Điệu Riêng] của ${defender.name} ngăn chặn sự bối rối!`;
+          } else if ((defender.confusionTurns ?? 0) <= 0) {
+            defender.confusionTurns = this.rng.nextInt(2, 4);
+            secMsg += ` ${defender.name} đã rơi vào trạng thái bối rối!`;
+            events.push(
+              BattleEventFactory.statusInflicted(
+                defenderSide,
+                defender.name,
+                'confusion',
+                `${defender.name} đã rơi vào trạng thái bối rối!`
+              )
+            );
+          }
+        }
+      }
+
+      // Secondary Flinch (only applies if attacker moved BEFORE defender in this round)
+      const flinchBaseChance = FLINCH_MOVE_CHANCES[moveId];
+      if (flinchBaseChance !== undefined) {
+        const isFakeOut = moveId === 'fake_out';
+        const canFakeOut = !isFakeOut || attacker.firstTurnInBattle !== false;
+        const canFlinch = !defender.hasActedThisRound && canFakeOut;
+
+        if (canFlinch) {
+          const sereneMultiplier =
+            AbilityEngine.normalize(attacker.ability) === 'serenegrace' ? 2 : 1;
+          const flinchChance = Math.min(1.0, flinchBaseChance * sereneMultiplier);
+          if (this.rng.next() < flinchChance) {
+            if (AbilityEngine.normalize(defender.ability) === 'innerfocus') {
+              secMsg += ` Nhưng [Tinh Thần Bất Khuất] của ${defender.name} ngăn cản sự nao núng!`;
+            } else {
+              defender.isFlinched = true;
+              secMsg += ` ${defender.name} bị nao núng!`;
+              events.push(
+                BattleEventFactory.statusInflicted(
+                  defenderSide,
+                  defender.name,
+                  'flinch',
+                  `${defender.name} bị nao núng!`
+                )
+              );
+            }
+          }
+        }
+      }
+    }
+
+    // Post-damage special move effects (Stone Axe, Ceaseless Edge, Hazard Clearing, Trapping & Binding)
+    if (actualDamage > 0) {
+      if (moveId === 'stone_axe') {
+        const oppHazards = getSideHazards(this.environment, defenderSide);
+        if (!oppHazards.stealthRock) {
+          oppHazards.stealthRock = true;
+          secMsg += ` Những viên đá tàng hình trôi nổi bao vây phe của ${defender.name}!`;
+        }
+      } else if (moveId === 'ceaseless_edge') {
+        const oppHazards = getSideHazards(this.environment, defenderSide);
+        if ((oppHazards.spikes ?? 0) < 3) {
+          oppHazards.spikes = (oppHazards.spikes ?? 0) + 1;
+          secMsg += ` Gai nhọn đã được rải quanh phe của ${defender.name}! (${oppHazards.spikes}/3 lớp)`;
+        }
+      } else if (HAZARD_CLEARING_MOVE_IDS.has(moveId)) {
+        clearSideHazards(this.environment, attackerSide);
+        attacker.boundStatus = undefined;
+        attacker.isSeeded = false;
+        secMsg += ` ${attacker.name} đã thổi bay toàn bộ bẫy và trói buộc trên sân!`;
+      }
+
+      if (!defenderFainted && !defender.types.includes('Ghost')) {
+        if (TRAPPING_ATTACK_MOVE_IDS.has(moveId) && !defender.isTrapped) {
+          defender.isTrapped = true;
+          defender.trappedBy = attackerSide;
+          secMsg += ` ${defender.name} đã bị khóa chặt, không thể đổi Pokémon!`;
+        } else if (
+          BINDING_MOVE_IDS.has(moveId) &&
+          (!defender.boundStatus || defender.boundStatus.turnsLeft <= 0)
+        ) {
+          defender.boundStatus = {
+            moveId,
+            moveName: moveDisplayName,
+            sourceSide: attackerSide,
+            turnsLeft: this.rng.nextInt(4, 5),
+          };
+          secMsg += ` ${defender.name} đã bị giam giữ bởi ${moveDisplayName}!`;
+        }
+      }
+    }
+
+    // Item interaction damaging moves (Knock Off, Fling, Poltergeist, Thief, Covet, Bug Bite, Pluck, Incinerate)
+    if (actualDamage > 0) {
+      if (moveId === 'knock_off') {
+        if (defender.heldItem && AbilityEngine.normalize(defender.ability) !== 'stickyhold') {
+          const itemDisplayName = getHeldItemDisplayName(defender.heldItem);
+          defender.heldItem = null;
+          secMsg += ` ${attacker.name} đã đánh rơi [${itemDisplayName}] của ${defender.name}!`;
+        } else if (defender.heldItem && AbilityEngine.normalize(defender.ability) === 'stickyhold') {
+          secMsg += ` Nhưng ${defender.name} nhờ [Dính Chặt] giữ chặt vật phẩm của mình!`;
+        }
+      } else if (moveId === 'fling') {
+        if (attacker.heldItem) {
+          const flungItem = attacker.heldItem;
+          const itemDisplayName = getHeldItemDisplayName(flungItem);
+          attacker.lastConsumedItem = flungItem;
+          attacker.heldItem = null;
+          secMsg += ` ${attacker.name} đã ném mạnh [${itemDisplayName}] vào ${defender.name}!`;
+
+          const flungKey = normalizeHeldItemKey(flungItem);
+          if (
+            flungKey === 'flame-orb' &&
+            defender.status === 'none' &&
+            !defender.types.includes('Fire')
+          ) {
+            setStatusCondition(defender, 'burn');
+            secMsg += ` ${defender.name} đã bị bỏng!`;
+            events.push(
+              BattleEventFactory.statusInflicted(
+                defenderSide,
+                defender.name,
+                'burn',
+                `${defender.name} đã bị bỏng!`
+              )
+            );
+          } else if (
+            flungKey === 'toxic-orb' &&
+            defender.status === 'none' &&
+            !defender.types.includes('Poison') &&
+            !defender.types.includes('Steel')
+          ) {
+            setStatusCondition(defender, 'toxic');
+            secMsg += ` ${defender.name} đã bị nhiễm độc nặng!`;
+            events.push(
+              BattleEventFactory.statusInflicted(
+                defenderSide,
+                defender.name,
+                'toxic',
+                `${defender.name} đã bị nhiễm độc nặng!`
+              )
+            );
+          } else if (flungKey === 'kings-rock' || flungKey === 'razor-fang') {
+            if (!defender.hasActedThisRound) {
+              defender.isFlinched = true;
+              secMsg += ` ${defender.name} bị nao núng!`;
+            }
+          } else if (isBerryItem(flungItem) && !defenderFainted) {
+            const bMsg = consumeBerry(defender, defenderSide, flungItem, events);
+            secMsg += ` ${defender.name} nhận được quả Berry! ${bMsg}`;
+          }
+        }
+      } else if (moveId === 'poltergeist') {
+        if (defender.heldItem) {
+          const itemDisplayName = getHeldItemDisplayName(defender.heldItem);
+          secMsg += ` ${defender.name} bị tấn công bởi chính [${itemDisplayName}] của mình!`;
+        }
+      } else if (moveId === 'thief' || moveId === 'covet') {
+        if (!attacker.heldItem && defender.heldItem) {
+          if (AbilityEngine.normalize(defender.ability) === 'stickyhold') {
+            secMsg += ` Nhưng ${defender.name} nhờ [Dính Chặt] ngăn cản bị cướp vật phẩm!`;
+          } else {
+            attacker.heldItem = defender.heldItem;
+            const stolenName = getHeldItemDisplayName(defender.heldItem);
+            defender.heldItem = null;
+            secMsg += ` ${attacker.name} đã cướp lấy [${stolenName}] của ${defender.name}!`;
+          }
+        }
+      } else if (moveId === 'bug_bite' || moveId === 'pluck') {
+        if (isBerryItem(defender.heldItem)) {
+          const berryKey = defender.heldItem!;
+          const berryName = getHeldItemDisplayName(berryKey);
+          defender.heldItem = null;
+          const bMsg = consumeBerry(attacker, attackerSide, berryKey, events);
+          secMsg += ` ${attacker.name} đã cướp lấy và ăn quả [${berryName}] của ${defender.name}! ${bMsg}`;
+        }
+      } else if (moveId === 'incinerate') {
+        if (isBerryItem(defender.heldItem)) {
+          const berryName = getHeldItemDisplayName(defender.heldItem);
+          defender.heldItem = null;
+          secMsg += ` Quả [${berryName}] của ${defender.name} đã bị thiêu rụi hoàn toàn!`;
+        }
+      }
     }
 
     // Recharge move flag
@@ -971,6 +1489,48 @@ export class BattleEngine {
       }
     }
 
+    let mustSwitch = false;
+    let switchSide: BattlerSide | undefined;
+
+    if (actualDamage > 0) {
+      if (moveId === 'throat_chop' && !defenderFainted) {
+        defender.throatChopTurns = 2;
+        secMsg += ` ${defender.name} bị chẹt họng, không thể sử dụng các chiêu thức âm thanh trong 2 lượt!`;
+      } else if (moveId === 'uproar') {
+        attacker.uproarTurns = 3;
+        secMsg += ` ${attacker.name} làm loạn gây ồn ào náo loạn!`;
+        if (attacker.status === 'sleep') {
+          clearStatusCondition(attacker);
+          events.push(
+            BattleEventFactory.statusCured(
+              attackerSide,
+              attacker.name,
+              'sleep',
+              `${attacker.name} đã tỉnh giấc!`
+            )
+          );
+        }
+        if (defender.status === 'sleep') {
+          clearStatusCondition(defender);
+          secMsg += ` Tiếng náo loạn đã đánh thức ${defender.name}!`;
+          events.push(
+            BattleEventFactory.statusCured(
+              defenderSide,
+              defender.name,
+              'sleep',
+              `${defender.name} đã tỉnh giấc!`
+            )
+          );
+        }
+      } else if ((moveId === 'u_turn' || moveId === 'volt_switch') && !attackerFainted) {
+        mustSwitch = true;
+        switchSide = attackerSide;
+        secMsg += ` ${attacker.name} quay về đội sau đòn đánh!`;
+      }
+    }
+
+    attacker.lastUsedMoveId = moveId;
+
     return {
       attackerName: attacker.name,
       moveName: moveDisplayName,
@@ -982,6 +1542,8 @@ export class BattleEngine {
       hitsCount: dmgCalc.hitsCount,
       message: `${statusPrefix}${attacker.name} sử dụng ${moveDisplayName}!${dmgCalc.effText}${secMsg}`,
       events,
+      mustSwitch,
+      switchSide,
     };
   }
 
@@ -1000,7 +1562,35 @@ export class BattleEngine {
     if (this.enemyPokemon.chargingMove) {
       return this.enemyPokemon.chargingMove.move;
     }
-    const validMoves = this.enemyPokemon.moves.filter((m) => m.pp > 0);
+    // Encore forces repeat of move
+    if (this.enemyPokemon.encore && this.enemyPokemon.encore.turnsLeft > 0) {
+      const encoreMove = this.enemyPokemon.moves.find(
+        (m) => m.id.toLowerCase() === this.enemyPokemon.encore!.moveId.toLowerCase() && m.pp > 0
+      );
+      if (encoreMove) return encoreMove;
+    }
+    let validMoves = this.enemyPokemon.moves.filter((m) => m.pp > 0);
+    // Disable filter
+    if (this.enemyPokemon.disabledMove && this.enemyPokemon.disabledMove.turnsLeft > 0) {
+      validMoves = validMoves.filter(
+        (m) => m.id.toLowerCase() !== this.enemyPokemon.disabledMove!.moveId.toLowerCase()
+      );
+    }
+    // Torment filter
+    if (this.enemyPokemon.isTormented && this.enemyPokemon.lastUsedMoveId) {
+      validMoves = validMoves.filter(
+        (m) => m.id.toLowerCase() !== this.enemyPokemon.lastUsedMoveId!.toLowerCase()
+      );
+    }
+    // Taunt filter
+    if ((this.enemyPokemon.tauntTurns ?? 0) > 0) {
+      validMoves = validMoves.filter((m) => m.category !== 'status');
+    }
+    // Throat chop filter
+    if ((this.enemyPokemon.throatChopTurns ?? 0) > 0) {
+      validMoves = validMoves.filter((m) => !SOUND_BASED_MOVE_IDS.has(m.id.toLowerCase()));
+    }
+
     if (validMoves.length > 0) {
       const idx = this.rng.nextInt(0, validMoves.length - 1);
       return validMoves[idx];
@@ -1085,6 +1675,9 @@ export class BattleEngine {
   }
 
   public tryFlee(): boolean {
+    const switchCheck = canSwitchOut(this.playerPokemon);
+    if (!switchCheck.canSwitch) return false;
+
     const pSpeed = this.playerPokemon.stats.speed;
     const eSpeed = this.enemyPokemon.stats.speed;
     if (pSpeed >= eSpeed) return true;
@@ -1092,5 +1685,41 @@ export class BattleEngine {
     this.fleeAttempts++;
     const odds = Math.floor((pSpeed * 128) / eSpeed + 30 * this.fleeAttempts) % 256;
     return odds >= 255 || this.rng.nextInt(0, 255) < odds;
+  }
+
+  public tickEnvironmentRound(): string[] {
+    const messages: string[] = [];
+    if (this.environment.weather && this.environment.weather.type !== 'none') {
+      this.environment.weather.turnsLeft--;
+      if (this.environment.weather.turnsLeft <= 0) {
+        const wType = this.environment.weather.type;
+        this.environment.weather = { type: 'none', turnsLeft: 0 };
+        if (wType === 'sun') messages.push('Ánh nắng gay gắt đã dịu đi!');
+        else if (wType === 'rain') messages.push('Cơn mưa rào lớn đã tạnh!');
+        else if (wType === 'sandstorm') messages.push('Cơn bão cát đã tan biến!');
+        else if (wType === 'hail') messages.push('Cơn mưa tuyết đã chấm dứt!');
+      }
+    }
+
+    if (this.environment.terrain && this.environment.terrain.type !== 'none') {
+      this.environment.terrain.turnsLeft--;
+      if (this.environment.terrain.turnsLeft <= 0) {
+        const tType = this.environment.terrain.type;
+        this.environment.terrain = { type: 'none', turnsLeft: 0 };
+        if (tType === 'electric') messages.push('Dòng điện trên mặt đất đã biến mất!');
+        else if (tType === 'grassy') messages.push('Thảm cỏ xanh trên mặt đất đã biến mất!');
+        else if (tType === 'misty') messages.push('Màn sương mù trên mặt đất đã tan biến!');
+        else if (tType === 'psychic') messages.push('Năng lượng tâm linh trên mặt đất đã biến mất!');
+      }
+    }
+
+    return messages;
+  }
+
+  public resetRound(): string[] {
+    this.playerPokemon.isProtected = false;
+    this.enemyPokemon.isProtected = false;
+    resetRoundCombatFlags(this.playerPokemon, this.enemyPokemon);
+    return this.tickEnvironmentRound();
   }
 }

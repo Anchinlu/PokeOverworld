@@ -417,4 +417,139 @@ describe('Advanced Battle Mechanics & Move Engine (Step 5)', () => {
       expect(res.message).toContain('đã kéo Charizard ngất xỉu theo');
     });
   });
+
+  describe('Multi-Hit Moves (2-Hit and 3-Hit Categories)', () => {
+    it('executes 2-hit moves accurately (Double Hit, Double Iron Bash, Twin Beam, Dual Wingbeat, Tachyon Cutter)', () => {
+      const player = createBattler('MELMETAL', 60, true);
+      const enemy = createBattler('SNORLAX', 60, false);
+      enemy.currentHp = 999;
+      enemy.stats.hp = 999;
+      const engine = new BattleEngine(player, enemy, env);
+
+      const twoHitMoves: BattleMove[] = [
+        {
+          id: 'double_hit',
+          name: 'Double Hit',
+          type: 'Normal',
+          category: 'physical',
+          power: 35,
+          accuracy: 90,
+          pp: 10,
+          maxPp: 10,
+          description: 'Strikes twice',
+        },
+        {
+          id: 'double_iron_bash',
+          name: 'Double Iron Bash',
+          type: 'Steel',
+          category: 'physical',
+          power: 60,
+          accuracy: 100,
+          pp: 5,
+          maxPp: 5,
+          description: 'Strikes twice with iron nuts',
+        },
+        {
+          id: 'twin_beam',
+          name: 'Twin Beam',
+          type: 'Psychic',
+          category: 'special',
+          power: 40,
+          accuracy: 100,
+          pp: 10,
+          maxPp: 10,
+          description: 'Fires two beams',
+        },
+        {
+          id: 'dual_wingbeat',
+          name: 'Dual Wingbeat',
+          type: 'Flying',
+          category: 'physical',
+          power: 40,
+          accuracy: 90,
+          pp: 10,
+          maxPp: 10,
+          description: 'Flaps wings twice',
+        },
+        {
+          id: 'tachyon_cutter',
+          name: 'Tachyon Cutter',
+          type: 'Steel',
+          category: 'special',
+          power: 50,
+          accuracy: 100,
+          pp: 10,
+          maxPp: 10,
+          description: 'Fires two tachyon blades',
+        },
+      ];
+
+      for (const m of twoHitMoves) {
+        const res = engine.executeAttack(player, enemy, m);
+        expect(res.damage).toBeGreaterThan(0);
+        expect(res.message).toContain('Đánh trúng 2 lần!');
+        const ev = res.events.find((e) => e.type === 'multi_hit_completed');
+        expect(ev).toBeDefined();
+        if (ev && ev.type === 'multi_hit_completed') {
+          expect(ev.hitsCount).toBe(2);
+        }
+      }
+    });
+
+    it('executes 3-hit moves accurately (Triple Kick, Triple Axel, Triple Dive)', () => {
+      const player = createBattler('HITMONTOP', 60, true);
+      const enemy = createBattler('BLISSEY', 60, false);
+      enemy.currentHp = 999;
+      enemy.stats.hp = 999;
+      const engine = new BattleEngine(player, enemy, env);
+
+      const threeHitMoves: BattleMove[] = [
+        {
+          id: 'triple_kick',
+          name: 'Triple Kick',
+          type: 'Fighting',
+          category: 'physical',
+          power: 10,
+          accuracy: 90,
+          pp: 10,
+          maxPp: 10,
+          description: 'Kicks 3 times',
+        },
+        {
+          id: 'triple_axel',
+          name: 'Triple Axel',
+          type: 'Ice',
+          category: 'physical',
+          power: 20,
+          accuracy: 90,
+          pp: 10,
+          maxPp: 10,
+          description: 'Triple spinning kick',
+        },
+        {
+          id: 'triple_dive',
+          name: 'Triple Dive',
+          type: 'Water',
+          category: 'physical',
+          power: 30,
+          accuracy: 95,
+          pp: 10,
+          maxPp: 10,
+          description: 'Hits target 3 times in rapid succession',
+        },
+      ];
+
+      for (const m of threeHitMoves) {
+        const res = engine.executeAttack(player, enemy, m);
+        expect(res.damage).toBeGreaterThan(0);
+        expect(res.message).toContain('Đánh trúng 3 lần!');
+        const ev = res.events.find((e) => e.type === 'multi_hit_completed');
+        expect(ev).toBeDefined();
+        if (ev && ev.type === 'multi_hit_completed') {
+          expect(ev.hitsCount).toBe(3);
+        }
+      }
+    });
+  });
 });
+

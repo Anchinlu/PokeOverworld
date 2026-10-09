@@ -12,9 +12,15 @@ import {
   applyDamage,
   restoreHp,
   clearStatusCondition,
+  applyStatStageChange,
+  getStatMultiplier,
 } from '../state/battle-state-reducer';
 
-import { HeldItemEngine } from './held-item-engine';
+import {
+  HeldItemEngine,
+  normalizeHeldItemKey,
+  getHeldItemDisplayName,
+} from './held-item-engine';
 import { AbilityEngine } from './ability-engine';
 // Environment rules (weather & terrain integration)
 import {
@@ -45,6 +51,14 @@ export function getStatusImmunity(
   condition: NonNullable<BattleMove['statusEffect']>['condition'],
   environment?: BattleEnvironment
 ): string | null {
+  if (target.safeguardTurns && target.safeguardTurns > 0) {
+    return `Màn Hộ Thể bảo vệ ${target.name} khỏi các trạng thái bất lợi!`;
+  }
+
+  if (condition === 'sleep' && (target.uproarTurns ?? 0) > 0) {
+    return 'Tiếng náo loạn ngăn cản cơn buồn ngủ!';
+  }
+
   if (
     environment?.terrain &&
     !canApplyStatusInTerrain(environment.terrain.type, condition, target)
@@ -81,7 +95,31 @@ export function getStatusImmunity(
 }
 
 /**
- * Checks if a Pokémon is hindered from moving due to its primary status ailment (Sleep, Freeze, Paralysis).
+ * Calculates self-inflicted confusion damage using official Gen 7 mechanics:
+ * 40 Power physical neutral attack against user's own Attack and Defense.
+ */
+export function calculateConfusionSelfDamage(
+  attacker: BattlerPokemon,
+  rng: BattleRng
+): number {
+  ensureBattlerState(attacker);
+  const level = attacker.level;
+  const atkStage = attacker.statStages?.attack ?? 0;
+  const defStage = attacker.statStages?.defense ?? 0;
+  const effAtk = Math.max(1, Math.floor(attacker.stats.attack * getStatMultiplier(atkStage)));
+  const effDef = Math.max(1, Math.floor(attacker.stats.defense * getStatMultiplier(defStage)));
+  const power = 40;
+
+  const baseDamage = Math.floor(
+    Math.floor((Math.floor((2 * level) / 5 + 2) * power * effAtk) / effDef) / 50 + 2
+  );
+  const randomFactor = rng.nextInt(85, 100) / 100;
+  return Math.max(1, Math.floor(baseDamage * randomFactor));
+}
+
+/**
+ * Checks if a Pokémon is hindered from moving due to primary status (Sleep, Freeze, Paralysis)
+ * or volatile statuses (Flinch, Confusion).
  */
 export function checkPreTurnStatus(
   attacker: BattlerPokemon,
@@ -92,11 +130,24 @@ export function checkPreTurnStatus(
   const events: BattleEvent[] = [];
   let statusPrefix = '';
 
-  // 0. Check Status Curing Berry (Cheri, Chesto, Pecha, Rawst, Aspear, Lum)
+  // 0. Check Status Curing Berry (Cheri, Chesto, Pecha, Rawst, Aspear, Lum, Persim)
+  const heldKey = normalizeHeldItemKey(attacker.heldItem);
+  if (
+    (heldKey === 'persim-berry' || heldKey === 'lum-berry') &&
+    (attacker.confusionTurns ?? 0) > 0
+  ) {
+    const itemName = getHeldItemDisplayName(attacker.heldItem);
+    attacker.heldItem = null;
+    attacker.confusionTurns = 0;
+    const cureMsg = `${attacker.name} đã ăn quả ${itemName} và chữa khỏi trạng thái bối rối! `;
+    events.push(BattleEventFactory.statusCured(attackerSide, attacker.name, 'confusion', cureMsg));
+    statusPrefix += cureMsg;
+  }
+
   const berryCureEvents = HeldItemEngine.checkStatusTriggeredBerry(attacker, attackerSide);
   if (berryCureEvents.length > 0) {
     events.push(...berryCureEvents);
-    statusPrefix = `${berryCureEvents[0].message ?? ''} `;
+    statusPrefix += `${berryCureEvents[0].message ?? ''} `;
   }
 
   // 1. Sleep handling
@@ -155,6 +206,83 @@ export function checkPreTurnStatus(
         hinderedMessage: paraMsg,
         events,
       };
+    }
+  }
+
+  // 4. Flinch handling (attacker acts and is stopped for this round)
+  if (attacker.isFlinched) {
+    attacker.isFlinched = false;
+    let extraSteadfast = '';
+    if (AbilityEngine.normalize(attacker.ability) === 'steadfast') {
+      const boost = applyStatStageChange(attacker, 'speed', 1);
+      extraSteadfast = ` ${attacker.name} kích hoạt [Ý Chí Kiên Định] và tăng Tốc độ!`;
+      events.push(
+        BattleEventFactory.statStageChanged(
+          attackerSide,
+          attacker.name,
+          'speed',
+          1,
+          boost,
+          `${attacker.name} tăng Tốc độ!`
+        )
+      );
+    }
+    const flinchMsg = `${attacker.name} bị nao núng và không thể cử động!${extraSteadfast}`;
+    events.push(
+      BattleEventFactory.statusHindered(attackerSide, attacker.name, 'flinch', flinchMsg)
+    );
+    return {
+      canAct: false,
+      statusPrefix: '',
+      hinderedMessage: flinchMsg,
+      events,
+    };
+  }
+
+  // 5. Confusion handling
+  if ((attacker.confusionTurns ?? 0) > 0) {
+    attacker.confusionTurns = (attacker.confusionTurns ?? 1) - 1;
+    if (attacker.confusionTurns <= 0) {
+      const cureMsg = `${attacker.name} đã hết bối rối! `;
+      events.push(
+        BattleEventFactory.statusCured(attackerSide, attacker.name, 'confusion', cureMsg)
+      );
+      statusPrefix += cureMsg;
+    } else {
+      const confusePrefix = `${attacker.name} đang bối rối! `;
+      // Official Gen 7: 33% (1/3) self-harm chance
+      if (rng.next() < 0.33) {
+        const selfDamage = calculateConfusionSelfDamage(attacker, rng);
+        attacker.currentHp = Math.max(0, attacker.currentHp - selfDamage);
+        if (attacker.currentHp <= 0) {
+          attacker.isFainted = true;
+        }
+        const hurtMsg = `${confusePrefix}Tự làm tổn thương chính mình trong cơn bối rối!`;
+        events.push(
+          BattleEventFactory.statusHindered(attackerSide, attacker.name, 'confusion', hurtMsg)
+        );
+        events.push(
+          BattleEventFactory.damageDealt(
+            attackerSide,
+            attacker.name,
+            selfDamage,
+            attacker.currentHp,
+            attacker.maxHp,
+            1.0,
+            false,
+            1,
+            hurtMsg
+          )
+        );
+        return {
+          canAct: false,
+          statusPrefix: '',
+          hinderedMessage: hurtMsg,
+          events,
+        };
+      } else {
+        statusPrefix += confusePrefix;
+      }
     }
   }
 
@@ -297,6 +425,32 @@ export function processEndTurnEffects(
     );
   }
 
+  // Partially trapping / Binding moves tick (Bind, Wrap, Fire Spin, Whirlpool, Sand Tomb, etc.)
+  if (target.boundStatus && target.boundStatus.turnsLeft > 0) {
+    if (!isMagicGuard) {
+      const boundDmg = Math.max(1, Math.floor(target.maxHp / 8));
+      totalDamage += boundDmg;
+      const boundMsg = `${target.name} bị tổn thương bởi ${target.boundStatus.moveName}!`;
+      messageText = messageText ? `${messageText} ${boundMsg}` : boundMsg;
+      events.push(
+        BattleEventFactory.endTurnDamage(
+          targetSide,
+          target.name,
+          boundDmg,
+          Math.max(0, target.currentHp - totalDamage),
+          target.boundStatus.moveId,
+          boundMsg
+        )
+      );
+    }
+    target.boundStatus.turnsLeft--;
+    if (target.boundStatus.turnsLeft <= 0) {
+      const freeMsg = `${target.name} đã thoát khỏi sự giam giữ của ${target.boundStatus.moveName}!`;
+      messageText = messageText ? `${messageText} ${freeMsg}` : freeMsg;
+      target.boundStatus = undefined;
+    }
+  }
+
   // Weather end-of-turn damage (Sandstorm, Hail)
   if (environment?.weather) {
     const weatherDmgResult = calculateEndTurnWeatherDamage(target, environment.weather.type);
@@ -349,11 +503,109 @@ export function processEndTurnEffects(
     }
   }
 
+  // Aqua Ring healing (1/16 max HP each turn)
+  if (!defenderFainted && target.currentHp > 0 && target.hasAquaRing) {
+    if (target.currentHp < target.maxHp) {
+      const healAmount = Math.max(1, Math.floor(target.maxHp / 16));
+      const actualHealed = restoreHp(target, healAmount);
+      const ringMsg = `Vòng Nước giúp ${target.name} hồi phục sinh lực!`;
+      messageText = messageText ? `${messageText} ${ringMsg}` : ringMsg;
+      events.push(
+        BattleEventFactory.hpRestored(
+          targetSide,
+          target.name,
+          actualHealed,
+          target.currentHp,
+          target.maxHp,
+          'move',
+          ringMsg
+        )
+      );
+    }
+  }
+
+  // Ingrain healing (1/16 max HP each turn)
+  if (!defenderFainted && target.currentHp > 0 && target.isIngrained) {
+    if (target.currentHp < target.maxHp) {
+      const healAmount = Math.max(1, Math.floor(target.maxHp / 16));
+      const actualHealed = restoreHp(target, healAmount);
+      const ingrainMsg = `${target.name} hấp thụ chất dinh dưỡng từ rễ cây!`;
+      messageText = messageText ? `${messageText} ${ingrainMsg}` : ingrainMsg;
+      events.push(
+        BattleEventFactory.hpRestored(
+          targetSide,
+          target.name,
+          actualHealed,
+          target.currentHp,
+          target.maxHp,
+          'move',
+          ingrainMsg
+        )
+      );
+    }
+  }
+
   // Held item end-of-turn effects (Leftovers, Black Sludge, Pinch Berries)
   if (!defenderFainted && target.currentHp > 0) {
     const heldItemEvents = HeldItemEngine.processEndTurnHeldItem(target, targetSide);
     if (heldItemEvents.length > 0) {
       events.push(...heldItemEvents);
+    }
+  }
+
+  // Safeguard turns tickdown
+  if (!defenderFainted && (target.safeguardTurns ?? 0) > 0) {
+    target.safeguardTurns!--;
+    if (target.safeguardTurns === 0) {
+      const sgFadeMsg = `Màn Hộ Thể của phe ${target.name} đã biến mất!`;
+      messageText = messageText ? `${messageText} ${sgFadeMsg}` : sgFadeMsg;
+    }
+  }
+
+  // Taunt turns tickdown
+  if (!defenderFainted && (target.tauntTurns ?? 0) > 0) {
+    target.tauntTurns!--;
+    if (target.tauntTurns === 0) {
+      const tauntEndMsg = `${target.name} đã thoát khỏi trạng thái khiêu khích!`;
+      messageText = messageText ? `${messageText} ${tauntEndMsg}` : tauntEndMsg;
+    }
+  }
+
+  // Disabled move tickdown
+  if (!defenderFainted && target.disabledMove && target.disabledMove.turnsLeft > 0) {
+    target.disabledMove.turnsLeft--;
+    if (target.disabledMove.turnsLeft === 0) {
+      const disEndMsg = `Chiêu thức của ${target.name} không còn bị vô hiệu hóa!`;
+      target.disabledMove = undefined;
+      messageText = messageText ? `${messageText} ${disEndMsg}` : disEndMsg;
+    }
+  }
+
+  // Encore tickdown
+  if (!defenderFainted && target.encore && target.encore.turnsLeft > 0) {
+    target.encore.turnsLeft--;
+    if (target.encore.turnsLeft === 0) {
+      const encEndMsg = `Tràng pháo tay dành cho ${target.name} đã kết thúc!`;
+      target.encore = undefined;
+      messageText = messageText ? `${messageText} ${encEndMsg}` : encEndMsg;
+    }
+  }
+
+  // Throat Chop turns tickdown
+  if (!defenderFainted && (target.throatChopTurns ?? 0) > 0) {
+    target.throatChopTurns!--;
+    if (target.throatChopTurns === 0) {
+      const tcEndMsg = `${target.name} đã hồi phục giọng nói và có thể dùng chiêu âm thanh!`;
+      messageText = messageText ? `${messageText} ${tcEndMsg}` : tcEndMsg;
+    }
+  }
+
+  // Uproar turns tickdown
+  if (!defenderFainted && (target.uproarTurns ?? 0) > 0) {
+    target.uproarTurns!--;
+    if (target.uproarTurns === 0) {
+      const upEndMsg = `Cơn náo loạn của ${target.name} đã lắng xuống!`;
+      messageText = messageText ? `${messageText} ${upEndMsg}` : upEndMsg;
     }
   }
 

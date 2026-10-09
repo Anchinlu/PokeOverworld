@@ -265,34 +265,49 @@ export class PartyScreen {
                 </div>
                 <div id="partySummaryTypes" class="summary-types"></div>
                 <div class="summary-meta-box">
-                  <div class="summary-meta-row">
-                    <span class="meta-label">Bắt bằng:</span>
-                    <span class="meta-val" id="partySummaryBall">POKEBALL</span>
+                  <!-- Origin & Item Group -->
+                  <div class="summary-meta-group">
+                    <div class="summary-meta-row">
+                      <span class="meta-label">Bắt bằng:</span>
+                      <span class="meta-val" id="partySummaryBall">POKEBALL</span>
+                    </div>
+                    <div class="summary-meta-row">
+                      <span class="meta-label">Cấp khi bắt:</span>
+                      <span class="meta-val" id="partySummaryCaughtLv">Lv.5</span>
+                    </div>
+                    <div class="summary-meta-row held-row">
+                      <span class="meta-label">Vật phẩm:</span>
+                      <span class="meta-val held-val" id="partySummaryHeldItem">Không có</span>
+                    </div>
                   </div>
-                  <div class="summary-meta-row">
-                    <span class="meta-label">Cấp khi bắt:</span>
-                    <span class="meta-val" id="partySummaryCaughtLv">Lv.5</span>
+
+                  <!-- Ability Card -->
+                  <div class="summary-info-card ability-card">
+                    <div class="summary-meta-row ability-row">
+                      <span class="meta-label">Đặc tính:</span>
+                      <span class="meta-val ability-val" id="partySummaryAbility">—</span>
+                    </div>
+                    <div class="summary-ability-desc" id="partySummaryAbilityDesc">—</div>
                   </div>
-                  <div class="summary-meta-row held-row">
-                    <span class="meta-label">Vật phẩm:</span>
-                    <span class="meta-val held-val" id="partySummaryHeldItem">Không có</span>
+
+                  <!-- Nature Card -->
+                  <div class="summary-info-card nature-card">
+                    <div class="summary-meta-row nature-row">
+                      <span class="meta-label">Tính cách:</span>
+                      <span class="meta-val nature-val" id="partySummaryNature">Cương quyết</span>
+                    </div>
+                    <div class="summary-nature-effect" id="partySummaryNatureEffect">+10% Công, -10% Công ĐB</div>
                   </div>
-                  <div class="summary-meta-row ability-row">
-                    <span class="meta-label">Đặc tính:</span>
-                    <span class="meta-val ability-val" id="partySummaryAbility">—</span>
-                  </div>
-                  <div class="summary-ability-desc" id="partySummaryAbilityDesc">—</div>
-                  <div class="summary-meta-row nature-row">
-                    <span class="meta-label">Tính cách:</span>
-                    <span class="meta-val nature-val" id="partySummaryNature">Cương quyết</span>
-                  </div>
-                  <div class="summary-nature-effect" id="partySummaryNatureEffect">+10% Công, -10% Công ĐB</div>
-                  <div class="summary-meta-row">
-                    <span class="meta-label">Kinh nghiệm:</span>
-                    <span class="meta-val" id="partySummaryExp">120 / 350</span>
-                  </div>
-                  <div class="summary-exp-bar-track">
-                    <div class="summary-exp-bar-fill" id="partySummaryExpBar" style="width: 30%;"></div>
+
+                  <!-- Exp Card -->
+                  <div class="summary-info-card exp-card">
+                    <div class="summary-meta-row">
+                      <span class="meta-label">Kinh nghiệm:</span>
+                      <span class="meta-val" id="partySummaryExp">120 / 350</span>
+                    </div>
+                    <div class="summary-exp-bar-track">
+                      <div class="summary-exp-bar-fill" id="partySummaryExpBar" style="width: 30%;"></div>
+                    </div>
                   </div>
                 </div>
               </div>

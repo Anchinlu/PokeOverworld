@@ -213,6 +213,7 @@ export class BattleRenderer {
 
     this.renderEnemyDatabox(ctx, 0, 1, state);
     this.renderPlayerDatabox(ctx, 252, 197, state);
+    this.drawAbilityBanner(ctx, state);
     this.renderBottomPanel(ctx, state);
   }
 
@@ -395,6 +396,12 @@ export class BattleRenderer {
           } else {
             ctx.filter = 'brightness(3.0)';
           }
+        } else if (state.enemyHealFlash > 0) {
+          if (state.enemyHealFlash % 4 < 2) {
+            ctx.filter = 'drop-shadow(0 0 12px rgba(74, 222, 128, 0.95)) saturate(2.5)';
+          } else {
+            ctx.filter = 'brightness(1.8) drop-shadow(0 0 6px rgba(134, 239, 172, 0.8))';
+          }
         } else if (state.isIntro) {
           const flashStart = 0.55;
           const flashEnd = 0.84;
@@ -553,6 +560,12 @@ export class BattleRenderer {
             ctx.filter = 'drop-shadow(0 0 10px rgba(239, 68, 68, 0.9)) saturate(3)';
           } else {
             ctx.filter = 'brightness(3.0)';
+          }
+        } else if (state.playerHealFlash > 0) {
+          if (state.playerHealFlash % 4 < 2) {
+            ctx.filter = 'drop-shadow(0 0 12px rgba(74, 222, 128, 0.95)) saturate(2.5)';
+          } else {
+            ctx.filter = 'brightness(1.8) drop-shadow(0 0 6px rgba(134, 239, 172, 0.8))';
           }
         } else if (isVisibleInSendOut && state.pokemonEnergyFlash > 0.05) {
           ctx.filter = `brightness(${(1.0 + state.pokemonEnergyFlash * 4.5).toFixed(2)})`;
@@ -970,7 +983,9 @@ export class BattleRenderer {
     }
 
     // HP Bar
-    this.drawHpBar(ctx, 118, 40, 96, 6, state.enemyHpPct, state.ghostEnemyHpPct);
+    const isEnemyHealing =
+      state.enemyHealFlash > 0 || state.enemyHpPct < state.targetEnemyHpPct - 0.005;
+    this.drawHpBar(ctx, 118, 40, 96, 6, state.enemyHpPct, state.ghostEnemyHpPct, isEnemyHealing);
     // Status Icon (covers the PS tag directly in front of the HP bar at native 1:1 scale 44x16)
     this.drawStatusIcon(ctx, this.assets.statusIcons, enemy.status, 72, 35, 1);
     // Stat Stage Badges (under HP bar on the left of the type tab, pushed down 5px to y=56)
@@ -1038,7 +1053,18 @@ export class BattleRenderer {
     }
 
     // HP Bar
-    this.drawHpBar(ctx, dx + 136, dy + 40, 96, 6, state.playerHpPct, state.ghostPlayerHpPct);
+    const isPlayerHealing =
+      state.playerHealFlash > 0 || state.playerHpPct < state.targetPlayerHpPct - 0.005;
+    this.drawHpBar(
+      ctx,
+      dx + 136,
+      dy + 40,
+      96,
+      6,
+      state.playerHpPct,
+      state.ghostPlayerHpPct,
+      isPlayerHealing
+    );
     // Status Icon (covers the PS tag directly in front of the HP bar at native 1:1 scale 44x16)
     this.drawStatusIcon(ctx, this.assets.statusIcons, player.status, dx + 90, dy + 35, 1);
 
@@ -1475,7 +1501,8 @@ export class BattleRenderer {
     bw: number,
     bh: number,
     pct: number,
-    ghostPct: number = pct
+    ghostPct: number = pct,
+    isHealing: boolean = false
   ): void {
     const fillW = Math.max(0, Math.round(bw * pct));
     const ghostW = Math.max(0, Math.round(bw * ghostPct));
@@ -1492,12 +1519,27 @@ export class BattleRenderer {
         fillColor = '#ef4444'; // Red < 20%
       else if (pct < 0.5) fillColor = '#eab308'; // Yellow 20-50%
 
-      ctx.fillStyle = fillColor;
-      ctx.fillRect(bx, by, fillW, bh);
+      if (isHealing) {
+        ctx.save();
+        ctx.shadowColor = '#4ade80';
+        ctx.shadowBlur = 8;
+        ctx.fillStyle = '#4ade80';
+        ctx.fillRect(bx, by, fillW, bh);
+        ctx.restore();
+      } else {
+        ctx.fillStyle = fillColor;
+        ctx.fillRect(bx, by, fillW, bh);
+      }
 
       // Top 2px highlight
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+      ctx.fillStyle = isHealing ? 'rgba(255, 255, 255, 0.85)' : 'rgba(255, 255, 255, 0.45)';
       ctx.fillRect(bx, by, fillW, 2);
+
+      // Healing pulse line at the leading edge
+      if (isHealing && fillW < bw) {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(bx + fillW - 2, by - 1, 3, bh + 2);
+      }
     }
   }
 
@@ -1696,6 +1738,82 @@ export class BattleRenderer {
       ctx.arc(tx, ty, Math.max(1, 2.5 * sizeFactor), 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
+    }
+
+    ctx.restore();
+  }
+
+  /**
+   * Draws the in-battle ability activation banner sliding in from the screen edge.
+   * Player side: uses top strip of ability_bar.png and slides from left edge (y ≈ 185).
+   * Enemy side: uses bottom strip of ability_bar.png and slides from right edge (y ≈ 65).
+   */
+  private drawAbilityBanner(ctx: CanvasRenderingContext2D, state: BattleState): void {
+    const banner = state.currentAbilityBanner;
+    if (!banner || banner.slideProgress <= 0 || !isLoaded(this.assets.abilityBar)) {
+      return;
+    }
+
+    const BAR_W = 256;
+    const BAR_H = 64;
+    const { side, pokemonName, abilityNameVi, slideProgress } = banner;
+
+    ctx.save();
+
+    if (side === 'player') {
+      // Top strip of ability_bar.png (sx: 0, sy: 0, sw: 256, sh: 64)
+      // Slanted on the right; slides in from left edge
+      const drawX = Math.round(-BAR_W + BAR_W * slideProgress);
+      const drawY = 185;
+
+      ctx.drawImage(this.assets.abilityBar, 0, 0, BAR_W, BAR_H, drawX, drawY, BAR_W, BAR_H);
+
+      // Text positioned cleanly within the left portion of the banner
+      const textX = drawX + 24;
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+
+      // Pokemon Name (sub-header)
+      ctx.font = `bold 16px ${BATTLE_FONT}`;
+      ctx.fillStyle = '#CBD5E1';
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
+      ctx.shadowOffsetX = 1;
+      ctx.shadowOffsetY = 1;
+      ctx.shadowBlur = 0;
+      ctx.fillText(pokemonName, textX, drawY + 22);
+
+      // Ability Name (vibrant white header)
+      ctx.font = `bold 22px ${BATTLE_FONT}`;
+      ctx.fillStyle = '#FFFFFF';
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.95)';
+      ctx.fillText(abilityNameVi, textX, drawY + 44);
+    } else {
+      // Bottom strip of ability_bar.png (sx: 0, sy: 64, sw: 256, sh: 64)
+      // Slanted on the left; slides in from right edge
+      const drawX = Math.round(CANVAS_W - BAR_W * slideProgress);
+      const drawY = 65;
+
+      ctx.drawImage(this.assets.abilityBar, 0, 64, BAR_W, BAR_H, drawX, drawY, BAR_W, BAR_H);
+
+      // Text positioned cleanly within the right portion of the banner
+      const textX = drawX + BAR_W - 24;
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+
+      // Pokemon Name
+      ctx.font = `bold 16px ${BATTLE_FONT}`;
+      ctx.fillStyle = '#CBD5E1';
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
+      ctx.shadowOffsetX = 1;
+      ctx.shadowOffsetY = 1;
+      ctx.shadowBlur = 0;
+      ctx.fillText(pokemonName, textX, drawY + 22);
+
+      // Ability Name
+      ctx.font = `bold 22px ${BATTLE_FONT}`;
+      ctx.fillStyle = '#FFFFFF';
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.95)';
+      ctx.fillText(abilityNameVi, textX, drawY + 44);
     }
 
     ctx.restore();

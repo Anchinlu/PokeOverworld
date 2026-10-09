@@ -16,6 +16,8 @@
     "test": "npm run test:web",
     "test:python": "python -m unittest discover tests",
     "validate:schemas": "node scripts/validate-schemas.mjs",
+    "audit:moves": "node scripts/audit-move-descriptions.mjs",
+    "translate:moves": "node scripts/translate-move-descriptions.mjs",
     "lint": "eslint .",
     "format:check": "prettier --check \"**/*.{ts,js,mjs,json,html,css}\" --ignore-path .prettierignore",
     "format": "prettier --write \"**/*.{ts,js,mjs,json,html,css}\" --ignore-path .prettierignore",

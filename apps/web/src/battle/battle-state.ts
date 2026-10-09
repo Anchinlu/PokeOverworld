@@ -22,6 +22,20 @@ export interface MessageEntry {
   onFinish?: () => void;
 }
 
+export interface AbilityBannerItem {
+  side: 'player' | 'enemy';
+  pokemonName: string;
+  abilityName: string;
+  abilityNameVi: string;
+  onComplete?: () => void;
+}
+
+export interface ActiveAbilityBanner extends AbilityBannerItem {
+  timer: number;
+  maxTimer: number;
+  slideProgress: number; // 0..1
+}
+
 export class BattleState {
   private rng: BattleRng;
 
@@ -40,6 +54,8 @@ export class BattleState {
   // Hurt flash & hit knockback timers
   enemyHurtFlash = 0;
   playerHurtFlash = 0;
+  enemyHealFlash = 0;
+  playerHealFlash = 0;
   playerHitTimer = 0;
   playerHitOffsetX = 0;
   playerHitOffsetY = 0;
@@ -97,6 +113,38 @@ export class BattleState {
   captureSuccessTick = 0;
   captureZooming = false; // Camera zoom when ball hits Pokemon
   captureZoomProgress = 0; // 0..1
+
+  // Ability activation banner
+  abilityBannerQueue: AbilityBannerItem[] = [];
+  currentAbilityBanner: ActiveAbilityBanner | null = null;
+
+  /** Triggers an in-battle ability activation banner from the corresponding screen edge */
+  triggerAbilityBanner(
+    side: 'player' | 'enemy',
+    pokemonName: string,
+    abilityName: string,
+    abilityNameVi?: string,
+    onComplete?: () => void
+  ): void {
+    const item: AbilityBannerItem = {
+      side,
+      pokemonName,
+      abilityName,
+      abilityNameVi: abilityNameVi || abilityName,
+      onComplete,
+    };
+
+    if (this.currentAbilityBanner) {
+      this.abilityBannerQueue.push(item);
+    } else {
+      this.currentAbilityBanner = {
+        ...item,
+        timer: 0,
+        maxTimer: 80,
+        slideProgress: 0,
+      };
+    }
+  }
 
   // UI mode
   uiMode: BattleUIMode = 'message';
@@ -256,6 +304,16 @@ export class BattleState {
   startEnemyHit(): void {
     this.enemyHurtFlash = 16;
     this.enemyHitTimer = 16;
+  }
+
+  /** Trigger healing visual flash on player */
+  startPlayerHeal(): void {
+    this.playerHealFlash = 24;
+  }
+
+  /** Trigger healing visual flash on enemy */
+  startEnemyHeal(): void {
+    this.enemyHealFlash = 24;
   }
 
   /** Start wild Pokemon faint animation */
@@ -591,6 +649,8 @@ export class BattleState {
 
     if (this.enemyHurtFlash > 0) this.enemyHurtFlash--;
     if (this.playerHurtFlash > 0) this.playerHurtFlash--;
+    if (this.enemyHealFlash > 0) this.enemyHealFlash--;
+    if (this.playerHealFlash > 0) this.playerHealFlash--;
     if (this.ballShakeTimer > 0) this.ballShakeTimer--;
     if (this.enemyShinyTimer > 0) this.enemyShinyTimer--;
     if (this.playerShinyTimer > 0) this.playerShinyTimer--;
@@ -700,6 +760,45 @@ export class BattleState {
         }
       } else if (this.ballThrowPhase === 'shaking') {
         // Ball on ground, waiting for shake logic from controller
+      }
+    }
+
+    // Ability Activation Banner slide-in, hold, slide-out
+    if (this.currentAbilityBanner) {
+      this.currentAbilityBanner.timer++;
+      const timer = this.currentAbilityBanner.timer;
+      const inDuration = 14;
+      const outDuration = 14;
+      const maxTimer = this.currentAbilityBanner.maxTimer;
+      const holdEnd = maxTimer - outDuration;
+
+      if (timer <= inDuration) {
+        // Slide in: 0 -> 1 with cubic ease out
+        const t = timer / inDuration;
+        this.currentAbilityBanner.slideProgress = 1 - Math.pow(1 - t, 3);
+      } else if (timer <= holdEnd) {
+        // Hold on screen
+        this.currentAbilityBanner.slideProgress = 1.0;
+      } else if (timer < maxTimer) {
+        // Slide out: 1 -> 0 with cubic ease in
+        const t = (timer - holdEnd) / outDuration;
+        this.currentAbilityBanner.slideProgress = 1 - Math.pow(t, 3);
+      } else {
+        // Animation finished
+        this.currentAbilityBanner.slideProgress = 0;
+        const cb = this.currentAbilityBanner.onComplete;
+        if (this.abilityBannerQueue.length > 0) {
+          const next = this.abilityBannerQueue.shift()!;
+          this.currentAbilityBanner = {
+            ...next,
+            timer: 0,
+            maxTimer: 80,
+            slideProgress: 0,
+          };
+        } else {
+          this.currentAbilityBanner = null;
+        }
+        cb?.();
       }
     }
   }

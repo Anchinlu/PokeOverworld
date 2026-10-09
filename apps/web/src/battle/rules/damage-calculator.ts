@@ -1,4 +1,4 @@
-import type { BattlerPokemon, BattleMove, BattleEnvironment } from '../types';
+import type { BattlerPokemon, BattleMove, BattleEnvironment, PokemonType } from '../types';
 import type { BattleRng } from '../battle-rng';
 import { getTypeEffectiveness } from './type-effectiveness';
 import { getStatMultiplier } from '../state/battle-state-reducer';
@@ -32,6 +32,7 @@ export const MULTI_HIT_2_TO_5_MOVE_IDS = new Set([
   'spike_cannon',
   'barrage',
   'fury_attack',
+  'scale_shot',
 ]);
 
 export const MULTI_HIT_2_MOVE_IDS = new Set([
@@ -41,11 +42,52 @@ export const MULTI_HIT_2_MOVE_IDS = new Set([
   'dual_chop',
   'gear_grind',
   'dragon_darts',
+  'double_hit',
+  'double_iron_bash',
+  'twin_beam',
+  'dual_wingbeat',
+  'tachyon_cutter',
 ]);
 
-import { HeldItemEngine } from './held-item-engine';
+export const MULTI_HIT_3_MOVE_IDS = new Set([
+  'triple_kick',
+  'triple_axel',
+  'triple_dive',
+  'surging_strikes',
+]);
+
+import { HeldItemEngine, getFlingPower } from './held-item-engine';
 import { AbilityEngine } from './ability-engine';
-import { getEnvironmentDamageMultiplier, getWeatherMovePowerMultiplier } from './environment';
+import {
+  getEnvironmentDamageMultiplier,
+  getWeatherMovePowerMultiplier,
+  isGrounded,
+} from './environment';
+import { calculateEffectiveSpeed } from './turn-order';
+import type { PokemonSpeciesData } from '@pokemon/shared-types';
+import rawPokemonData from '@pokemon/game-data/pokemon-db.json';
+
+const pokemonWeights = new Map<string, number>();
+for (const p of Object.values(rawPokemonData.pokemon as Record<string, PokemonSpeciesData>)) {
+  if (p.weight != null) {
+    if (p.speciesKey) pokemonWeights.set(p.speciesKey.toUpperCase(), p.weight);
+    if (p.id != null) pokemonWeights.set(String(p.id), p.weight);
+    if (p.name) pokemonWeights.set(p.name.toUpperCase(), p.weight);
+  }
+}
+
+export function getBattlerWeight(battler: BattlerPokemon): number {
+  if (typeof battler.weight === 'number' && battler.weight > 0) {
+    return battler.weight;
+  }
+  const byKey = battler.speciesKey ? pokemonWeights.get(battler.speciesKey.toUpperCase()) : undefined;
+  if (byKey != null) return byKey;
+  const byId = battler.id != null ? pokemonWeights.get(String(battler.id)) : undefined;
+  if (byId != null) return byId;
+  const byName = battler.name ? pokemonWeights.get(battler.name.toUpperCase()) : undefined;
+  if (byName != null) return byName;
+  return 50.0;
+}
 
 /**
  * Calculates raw base damage for a single hit under Gen 7 formula.
@@ -81,7 +123,8 @@ export function calculateSingleHitBaseDamage(
   if (
     !isSpecial &&
     attacker.status === 'burn' &&
-    AbilityEngine.normalize(attacker.ability) !== 'guts'
+    AbilityEngine.normalize(attacker.ability) !== 'guts' &&
+    move.id.toLowerCase() !== 'facade'
   ) {
     atk *= 0.5;
   }
@@ -104,8 +147,176 @@ export function calculateDamage(
   environment?: BattleEnvironment
 ): DamageCalculationResult {
   const moveId = move.id.toLowerCase();
+  let effectiveMoveType: PokemonType = move.type;
+  let effectivePower = move.power;
+
+  if (moveId === 'weather_ball') {
+    if (environment?.weather && environment.weather.type !== 'none') {
+      effectivePower = 100;
+      if (environment.weather.type === 'sun') effectiveMoveType = 'Fire';
+      else if (environment.weather.type === 'rain') effectiveMoveType = 'Water';
+      else if (environment.weather.type === 'sandstorm') effectiveMoveType = 'Rock';
+      else if (environment.weather.type === 'hail') effectiveMoveType = 'Ice';
+    }
+  } else if (moveId === 'terrain_pulse') {
+    if (environment?.terrain && environment.terrain.type !== 'none' && isGrounded(attacker)) {
+      effectivePower = 100;
+      if (environment.terrain.type === 'electric') effectiveMoveType = 'Electric';
+      else if (environment.terrain.type === 'grassy') effectiveMoveType = 'Grass';
+      else if (environment.terrain.type === 'misty') effectiveMoveType = 'Fairy';
+      else if (environment.terrain.type === 'psychic') effectiveMoveType = 'Psychic';
+    }
+  } else if (moveId === 'rising_voltage') {
+    if (environment?.terrain?.type === 'electric' && isGrounded(defender)) {
+      effectivePower = 140;
+    }
+  } else if (moveId === 'expanding_force') {
+    if (environment?.terrain?.type === 'psychic' && isGrounded(attacker)) {
+      effectivePower = 120;
+    }
+  } else if (moveId === 'facade') {
+    if (
+      attacker.status === 'burn' ||
+      attacker.status === 'poison' ||
+      attacker.status === 'toxic' ||
+      attacker.status === 'paralysis'
+    ) {
+      effectivePower = 140;
+    }
+  } else if (moveId === 'venoshock') {
+    if (defender.status === 'poison' || defender.status === 'toxic') {
+      effectivePower = 130;
+    }
+  } else if (moveId === 'wake_up_slap') {
+    if (defender.status === 'sleep') {
+      effectivePower = 140;
+    }
+  } else if (moveId === 'stored_power' || moveId === 'power_trip') {
+    const stages = attacker.statStages ?? {
+      attack: 0,
+      defense: 0,
+      spAtk: 0,
+      spDef: 0,
+      speed: 0,
+      accuracy: 0,
+      evasion: 0,
+    };
+    const trackedStats = [
+      'attack',
+      'defense',
+      'spAtk',
+      'spDef',
+      'speed',
+      'accuracy',
+      'evasion',
+    ] as const;
+    let totalPositiveStages = 0;
+    for (const s of trackedStats) {
+      const val = stages[s] ?? 0;
+      if (val > 0) {
+        totalPositiveStages += val;
+      }
+    }
+    effectivePower = 20 + 20 * totalPositiveStages;
+  } else if (moveId === 'heavy_slam' || moveId === 'heat_crash') {
+    const userWeight = getBattlerWeight(attacker);
+    const targetWeight = Math.max(0.1, getBattlerWeight(defender));
+    const ratio = userWeight / targetWeight;
+    if (ratio >= 5.0) {
+      effectivePower = 120;
+    } else if (ratio >= 4.0) {
+      effectivePower = 100;
+    } else if (ratio >= 3.0) {
+      effectivePower = 80;
+    } else if (ratio >= 2.0) {
+      effectivePower = 60;
+    } else {
+      effectivePower = 40;
+    }
+  } else if (moveId === 'low_kick' || moveId === 'grass_knot') {
+    const targetWeight = getBattlerWeight(defender);
+    if (targetWeight >= 200.0) {
+      effectivePower = 120;
+    } else if (targetWeight >= 100.0) {
+      effectivePower = 100;
+    } else if (targetWeight >= 50.0) {
+      effectivePower = 80;
+    } else if (targetWeight >= 25.0) {
+      effectivePower = 60;
+    } else if (targetWeight >= 10.0) {
+      effectivePower = 40;
+    } else {
+      effectivePower = 20;
+    }
+  } else if (moveId === 'electro_ball') {
+    const userSpeed = calculateEffectiveSpeed(attacker, environment);
+    const targetSpeed = calculateEffectiveSpeed(defender, environment);
+    const ratio = targetSpeed <= 0 ? 4 : userSpeed / targetSpeed;
+    if (ratio >= 4.0) {
+      effectivePower = 150;
+    } else if (ratio >= 3.0) {
+      effectivePower = 120;
+    } else if (ratio >= 2.0) {
+      effectivePower = 80;
+    } else if (ratio >= 1.0) {
+      effectivePower = 60;
+    } else {
+      effectivePower = 40;
+    }
+  } else if (moveId === 'gyro_ball') {
+    const userSpeed = Math.max(1, calculateEffectiveSpeed(attacker, environment));
+    const targetSpeed = calculateEffectiveSpeed(defender, environment);
+    effectivePower = Math.min(150, Math.max(1, Math.floor((25 * targetSpeed) / userSpeed) + 1));
+  } else if (moveId === 'last_respects') {
+    const faintedCount = Math.max(0, attacker.faintedAlliesCount ?? 0);
+    effectivePower = 50 + 50 * faintedCount;
+  } else if (
+    moveId === 'grass_pledge' ||
+    moveId === 'fire_pledge' ||
+    moveId === 'water_pledge'
+  ) {
+    if (environment?.pledgeCombo) {
+      effectivePower = 150;
+    }
+  } else if (moveId === 'knock_off') {
+    if (defender.heldItem && AbilityEngine.normalize(defender.ability) !== 'stickyhold') {
+      effectivePower = Math.floor(move.power * 1.5);
+    }
+  } else if (moveId === 'fling') {
+    if (!attacker.heldItem) {
+      return {
+        damage: 0,
+        isCritical: false,
+        typeEffectiveness: 1.0,
+        hitsCount: 0,
+        effText: '',
+        secMsg: ' Nhưng không có vật phẩm nào để ném!',
+        failed: true,
+      };
+    }
+    effectivePower = getFlingPower(attacker.heldItem);
+  } else if (moveId === 'poltergeist') {
+    if (!defender.heldItem) {
+      return {
+        damage: 0,
+        isCritical: false,
+        typeEffectiveness: 1.0,
+        hitsCount: 0,
+        effText: '',
+        secMsg: ` Nhưng ${defender.name} không mang vật phẩm nào!`,
+        failed: true,
+      };
+    }
+  }
+
+  const effectiveMove: BattleMove = {
+    ...move,
+    type: effectiveMoveType,
+    power: effectivePower,
+  };
+
   const isStruggle = move.id === 'struggle';
-  const typeEff = isStruggle ? 1.0 : getTypeEffectiveness(move.type, defender.types);
+  const typeEff = isStruggle ? 1.0 : getTypeEffectiveness(effectiveMove.type, defender.types);
 
   if (typeEff === 0) {
     return {
@@ -121,7 +332,7 @@ export function calculateDamage(
   // Wonder Guard immunity for non-super-effective damaging moves
   if (
     AbilityEngine.normalize(defender.ability) === 'wonderguard' &&
-    move.category !== 'status' &&
+    effectiveMove.category !== 'status' &&
     typeEff <= 1.0
   ) {
     return {
@@ -213,7 +424,9 @@ export function calculateDamage(
     secMsg += ' Hạ gục đối thủ chỉ với một đòn duy nhất!';
   } else {
     // B. Standard & Dynamic damage calculation with Gen 7 floor rule
-    let effectivePower = move.power;
+    if (effectivePower === 0) {
+      effectivePower = effectiveMove.power;
+    }
 
     // Dynamic variable power moves
     if (moveId === 'flail' || moveId === 'reversal') {
@@ -229,29 +442,6 @@ export function calculateDamage(
         1,
         Math.floor(120 * (defender.currentHp / Math.max(1, defender.maxHp)))
       );
-    } else if (moveId === 'electro_ball') {
-      const atkSpd = attacker.stats.speed * getStatMultiplier(attacker.statStages?.speed ?? 0);
-      const defSpd = Math.max(
-        1,
-        defender.stats.speed * getStatMultiplier(defender.statStages?.speed ?? 0)
-      );
-      const ratio = atkSpd / defSpd;
-      if (ratio >= 4) effectivePower = 150;
-      else if (ratio >= 3) effectivePower = 120;
-      else if (ratio >= 2) effectivePower = 80;
-      else if (ratio >= 1) effectivePower = 60;
-      else effectivePower = 40;
-    } else if (moveId === 'gyro_ball') {
-      const atkSpd = Math.max(
-        1,
-        attacker.stats.speed * getStatMultiplier(attacker.statStages?.speed ?? 0)
-      );
-      const defSpd = defender.stats.speed * getStatMultiplier(defender.statStages?.speed ?? 0);
-      effectivePower = Math.min(150, Math.max(1, Math.floor(25 * (defSpd / atkSpd))));
-    } else if (moveId === 'low_kick' || moveId === 'grass_knot') {
-      effectivePower = 60;
-    } else if (moveId === 'heavy_slam' || moveId === 'heat_crash') {
-      effectivePower = 80;
     } else if (moveId === 'magnitude') {
       const roll = rng.next();
       let mag: number;
@@ -332,11 +522,11 @@ export function calculateDamage(
     const weatherPowerMult = getWeatherMovePowerMultiplier(environment?.weather?.type, move.id);
     effectivePower = Math.max(1, Math.floor(effectivePower * weatherPowerMult));
 
-    const { baseDmg } = calculateSingleHitBaseDamage(attacker, defender, move, effectivePower);
+    const { baseDmg } = calculateSingleHitBaseDamage(attacker, defender, effectiveMove, effectivePower);
 
     const hasAdaptability = AbilityEngine.normalize(attacker.ability) === 'adaptability';
     const stab =
-      !isStruggle && attacker.types.includes(move.type) ? (hasAdaptability ? 2.0 : 1.5) : 1.0;
+      !isStruggle && attacker.types.includes(effectiveMove.type) ? (hasAdaptability ? 2.0 : 1.5) : 1.0;
     const hasSuperLuck = AbilityEngine.normalize(attacker.ability) === 'superluck';
     const totalCritStage =
       (attacker.critStage ?? 0) + (move.highCrit ? 1 : 0) + (hasSuperLuck ? 1 : 0);
@@ -353,19 +543,19 @@ export function calculateDamage(
     const heldItemDamageMult = HeldItemEngine.getDamageMultiplier(
       attacker,
       defender,
-      move,
+      effectiveMove,
       typeEff
     );
 
-    const atkAbilityDamage = AbilityEngine.getAttackerDamageMultiplier(attacker, defender, move);
+    const atkAbilityDamage = AbilityEngine.getAttackerDamageMultiplier(attacker, defender, effectiveMove);
     const defAbilityDamage = AbilityEngine.getDefenderDamageMultiplier(
       attacker,
       defender,
-      move,
+      effectiveMove,
       typeEff
     );
     const abilityDamageMult = atkAbilityDamage.multiplier * defAbilityDamage.multiplier;
-    const envDamageMult = getEnvironmentDamageMultiplier(environment, move, attacker, defender);
+    const envDamageMult = getEnvironmentDamageMultiplier(environment, effectiveMove, attacker, defender);
 
     damage = Math.max(
       1,
@@ -384,15 +574,23 @@ export function calculateDamage(
     // Multi-hit moves
     const isMultiHit2to5 = MULTI_HIT_2_TO_5_MOVE_IDS.has(moveId);
     const isMultiHit2 = MULTI_HIT_2_MOVE_IDS.has(moveId);
+    const isMultiHit3 = MULTI_HIT_3_MOVE_IDS.has(moveId);
 
-    if (isMultiHit2to5 || isMultiHit2) {
+    if (isMultiHit2to5 || isMultiHit2 || isMultiHit3) {
       let maxHits = 2;
       if (isMultiHit2to5) {
-        const roll = rng.next();
-        if (roll < 0.35) maxHits = 2;
-        else if (roll < 0.7) maxHits = 3;
-        else if (roll < 0.85) maxHits = 4;
-        else maxHits = 5;
+        const hasSkillLink = AbilityEngine.normalize(attacker.ability) === 'skilllink';
+        if (hasSkillLink) {
+          maxHits = 5;
+        } else {
+          const roll = rng.next();
+          if (roll < 0.35) maxHits = 2;
+          else if (roll < 0.7) maxHits = 3;
+          else if (roll < 0.85) maxHits = 4;
+          else maxHits = 5;
+        }
+      } else if (isMultiHit3) {
+        maxHits = 3;
       }
 
       let totalDmg = damage;

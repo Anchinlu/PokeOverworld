@@ -59,6 +59,33 @@ export function ensureBattlerState(battler: BattlerPokemon): void {
   battler.mustRecharge ??= false;
   battler.isSeeded ??= false;
   battler.destinyBond ??= false;
+  battler.isFlinched ??= false;
+  battler.confusionTurns ??= 0;
+  battler.hasActedThisRound ??= false;
+  battler.firstTurnInBattle ??= true;
+  battler.hasAquaRing ??= false;
+  battler.isIngrained ??= false;
+  battler.safeguardTurns ??= 0;
+  battler.isTrapped ??= false;
+  battler.tauntTurns ??= 0;
+  battler.isTormented ??= false;
+  battler.throatChopTurns ??= 0;
+  battler.uproarTurns ??= 0;
+}
+
+/**
+ * Resets per-round combat flags and flinch status after both battlers conclude the round.
+ */
+export function resetRoundCombatFlags(player: BattlerPokemon, enemy: BattlerPokemon): void {
+  player.isFlinched = false;
+  player.hasActedThisRound = false;
+  player.firstTurnInBattle = false;
+  player.isProtected = false;
+
+  enemy.isFlinched = false;
+  enemy.hasActedThisRound = false;
+  enemy.firstTurnInBattle = false;
+  enemy.isProtected = false;
 }
 
 /**

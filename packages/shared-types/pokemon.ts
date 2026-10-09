@@ -327,6 +327,8 @@ export interface MoveData {
   pp: number;
   maxPp: number;
   description: string;
+  /** Vietnamese runtime description. Keep description as the legacy/source text. */
+  descriptionVi?: string;
   descriptionEn?: string;
   priority?: number;
   statChanges?: MoveStatChange[];

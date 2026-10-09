@@ -185,6 +185,9 @@ export const BATTLE_ASSETS = {
   get databoxPlayer(): string {
     return resolveAsset('battle_databox_player', '/Graphics/Battle/databox_player.png');
   },
+  get abilityBar(): string {
+    return resolveAsset('battle_ability_bar', '/Graphics/Battle/ability_bar.png');
+  },
   get messageBox(): string {
     return resolveAsset('battle_message', '/Graphics/Battle/overlay_message_3.png');
   },

@@ -17,6 +17,7 @@ export interface BattleAssets {
   playerSprite: HTMLImageElement;
   databoxEnemy: HTMLImageElement;
   databoxPlayer: HTMLImageElement;
+  abilityBar: HTMLImageElement;
   messageBox: HTMLImageElement;
   statusIcons: HTMLImageElement;
   fightButtons: HTMLImageElement;
@@ -59,6 +60,7 @@ export function createBattleAssets(
     playerSprite: load(backSprite),
     databoxEnemy: load(BATTLE_ASSETS.databoxEnemy),
     databoxPlayer: load(BATTLE_ASSETS.databoxPlayer),
+    abilityBar: load(BATTLE_ASSETS.abilityBar),
     messageBox: load(BATTLE_ASSETS.messageBox),
     statusIcons: load(BATTLE_ASSETS.statusIcons),
     fightButtons: load(BATTLE_ASSETS.fightButtons),
