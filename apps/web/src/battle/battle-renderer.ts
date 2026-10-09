@@ -446,11 +446,14 @@ export class BattleRenderer {
     if (!state.isPlayerPokemonSentOut && !isVisibleInSendOut && state.playerFaintPhase === 'none')
       return;
 
-    if (state.playerFaintPhase === 'dead') return;
+    // Only consider player fainting if not currently in a send-out sequence
+    const isPlayerFainting =
+      !state.isPlayerSendingOut &&
+      (state.playerFaintPhase !== 'none' || this.engine.playerPokemon.currentHp <= 0);
+
+    if (isPlayerFainting && state.playerFaintPhase === 'dead') return;
 
     // Dynamic sprite anchor (with attack lunge and hit knockback; frozen when fainting)
-    const isPlayerFainting =
-      state.playerFaintPhase !== 'none' || this.engine.playerPokemon.currentHp <= 0;
     const baseAnchorX = 130;
     const baseAnchorY = isVisibleInSendOut ? state.pokemonDropY : 280;
     const anchorX =
@@ -462,7 +465,7 @@ export class BattleRenderer {
     let scaleMultiplierX = isVisibleInSendOut ? state.pokemonScaleX : 1.0;
     let scaleMultiplierY = isVisibleInSendOut ? state.pokemonScaleY : 1.0;
 
-    if (state.playerFaintPhase === 'shrinking') {
+    if (isPlayerFainting && state.playerFaintPhase === 'shrinking') {
       scaleMultiplierX *= state.playerFaintScale;
       scaleMultiplierY *= state.playerFaintScale;
     }
@@ -471,7 +474,14 @@ export class BattleRenderer {
     const scaleY = 2.0 * scaleMultiplierY;
 
     // Animated sprite (EBS horizontal strip)
-    const img = this.assets.playerSprite;
+    let img = this.assets.playerSprite;
+    const expectedSrc = this.engine.playerPokemon.backSprite;
+    if (expectedSrc && (!img || !img.src.includes(expectedSrc))) {
+      img = new Image();
+      img.src = expectedSrc;
+      this.assets.playerSprite = img;
+    }
+
     if (isLoaded(img)) {
       const frameH = img.height;
       const frameW = frameH;

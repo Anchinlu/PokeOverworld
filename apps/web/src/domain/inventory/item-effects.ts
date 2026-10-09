@@ -246,7 +246,7 @@ export function applyItemToPartyPokemon(
       return {
         success: true,
         code: 'SUCCESS',
-        message: `✨ Đã dùng ${itemName}! Toàn bộ ${revivedCount} Pokémon đã hồi sinh hoàn toàn!`,
+        message: `Đã dùng ${itemName}! Toàn bộ ${revivedCount} Pokémon đã hồi sinh hoàn toàn!`,
       };
     }
 
@@ -257,7 +257,7 @@ export function applyItemToPartyPokemon(
     return {
       success: true,
       code: 'SUCCESS',
-      message: `✨ Đã dùng ${itemName}! ${name} hồi sinh với ${pokemon.currentHp}/${pokemon.maxHp} HP!`,
+      message: `Đã dùng ${itemName}! ${name} hồi sinh với ${pokemon.currentHp}/${pokemon.maxHp} HP!`,
       hpRecovered: healAmount,
     };
   }
@@ -279,7 +279,7 @@ export function applyItemToPartyPokemon(
     return {
       success: true,
       code: 'SUCCESS',
-      message: `🧪 Đã dùng ${itemName}! ${name} được hồi phục ${recovered} HP (${pokemon.currentHp}/${pokemon.maxHp})!`,
+      message: `Đã dùng ${itemName}! ${name} được hồi phục ${recovered} HP (${pokemon.currentHp}/${pokemon.maxHp})!`,
       hpRecovered: recovered,
     };
   }
@@ -290,7 +290,7 @@ export function applyItemToPartyPokemon(
     return {
       success: true,
       code: 'SUCCESS',
-      message: `💊 Đã dùng ${itemName}! ${name} đã khỏi mọi trạng thái bất thường!`,
+      message: `Đã dùng ${itemName}! ${name} đã khỏi mọi trạng thái bất thường!`,
     };
   }
 
@@ -300,7 +300,7 @@ export function applyItemToPartyPokemon(
     return {
       success: true,
       code: 'SUCCESS',
-      message: `⭐ Đã dùng ${itemName}! ${name} thăng cấp lên Lv.${pokemon.level}!`,
+      message: `Đã dùng ${itemName}! ${name} thăng cấp lên Lv.${pokemon.level}!`,
       hpRecovered: hpGained,
     };
   }
@@ -321,7 +321,7 @@ export function applyItemToPartyPokemon(
     return {
       success: true,
       code: 'SUCCESS',
-      message: `💪 Đã dùng ${itemName}! Chỉ số ${statLabel} của ${name} đã tăng (${oldStats[def.addEv.stat]} ➔ ${newStats[def.addEv.stat]}, +${addedEv} EV)!`,
+      message: `Đã dùng ${itemName}! Chỉ số ${statLabel} của ${name} đã tăng (${oldStats[def.addEv.stat]} ➔ ${newStats[def.addEv.stat]}, +${addedEv} EV)!`,
       details: { addedEv, stat: def.addEv.stat },
     };
   }
@@ -336,7 +336,7 @@ export function applyItemToPartyPokemon(
         return {
           success: true,
           code: 'SUCCESS',
-          message: `⚡ Đã dùng ${itemName}! Phục hồi PP cho chiêu ${move.nameVi || move.name} của ${name}!`,
+          message: `Đã dùng ${itemName}! Phục hồi PP cho chiêu ${move.nameVi || move.name} của ${name}!`,
         };
       }
     } else {
@@ -347,7 +347,7 @@ export function applyItemToPartyPokemon(
       return {
         success: true,
         code: 'SUCCESS',
-        message: `⚡ Đã dùng ${itemName}! Đã phục hồi PP cho toàn bộ chiêu thức của ${name}!`,
+        message: `Đã dùng ${itemName}! Đã phục hồi PP cho toàn bộ chiêu thức của ${name}!`,
       };
     }
   }
@@ -491,7 +491,7 @@ export function applyItemToBattler(item: ItemData, battler: BattlerPokemon): Ite
     return {
       success: true,
       code: 'SUCCESS',
-      message: `✨ Đã dùng ${itemName}! ${name} hồi sinh với ${battler.currentHp}/${battler.maxHp} HP!`,
+      message: `Đã dùng ${itemName}! ${name} hồi sinh với ${battler.currentHp}/${battler.maxHp} HP!`,
       hpRecovered: healAmount,
     };
   }

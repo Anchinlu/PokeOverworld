@@ -173,6 +173,17 @@ export class BattleState {
     this.sendOutTick = 0;
     this.isPlayerPokemonSentOut = false;
     this.playerDataboxProgress = 0;
+    this.playerFaintPhase = 'none';
+    this.playerFaintTick = 0;
+    this.playerFaintScale = 1.0;
+    this.playerFrozenFrame = null;
+    this.playerHurtFlash = 0;
+    this.playerHitTimer = 0;
+    this.playerHitOffsetX = 0;
+    this.playerHitOffsetY = 0;
+    this.playerAttackTick = 0;
+    this.playerLungeX = 0;
+    this.playerLungeY = 0;
     this.ballX = -30;
     this.ballY = 90;
     this.ballRotationFrame = 0;

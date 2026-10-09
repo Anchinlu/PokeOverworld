@@ -797,6 +797,8 @@ export class BattleController {
 
     this.state.uiMode = 'message';
     const oldName = this.engine.playerPokemon.name;
+    this.state.isPlayerPokemonSentOut = false;
+    this.state.isPlayerSendingOut = false;
     this.queueMessage(`${oldName}, quay lại!`, 'message', () => {
       // 3. Switch battler in engine & update renderer
       this.engine.switchPlayerPokemon(newBattler);

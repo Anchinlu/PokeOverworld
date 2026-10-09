@@ -1,4 +1,44 @@
-## Cập nhật lần cuối: 2026-10-09 (Giao Diện Chọn Pokémon Cho Thuốc Hồi Phục & Khắc Phục Lỗi Mở Đè Túi Sau Khi Hồi Sinh)
+## Cập nhật lần cuối: 2026-10-09 (Bỏ Icon/Emoji Thoại Thuốc Hồi Phục & Sửa Lỗi Không Hiện Sprite Pokémon Khi Ra Trận / Đổi Chỗ)
+
+### 0.81. Loại Bỏ Icon Emoji Khỏi Dòng Thoại Dược Phẩm & Khắc Phục Lỗi Hiển Thị Sprite Pokémon Khi Ra Trận (Recovery Text Clean & Battler Sprite Fix):
+
+- **Trạng thái:** Đã hoàn thành 100%. 26 tệp test suite (214/214 tests), Typecheck (`npm run typecheck:web`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:**
+  1. Bỏ phần icon lọ thuốc / emoji ra khỏi dòng thoại khi sử dụng thuốc hồi phục.
+  2. Khắc phục tình trạng hình ảnh Pokémon được gọi ra khi 1 Pokémon chết hoặc người dùng đổi chỗ trong trận đấu không hiển thị.
+- **Nguyên nhân gốc rễ & Phân tích cơ chế:**
+  1. **Icon / Emoji trong thông báo vật phẩm:**
+     - Trong [item-effects.ts](file:///e:/Pokemon/apps/web/src/domain/inventory/item-effects.ts), các câu thoại dùng vật phẩm trước đó đính kèm tiền tố emoji (`🧪 `, `✨ `, `💊 `, `⭐ `, `💪 `, `⚡ `). Khi hiển thị trên hộp thoại retro font GBA, các ký tự này hiển thị thành icon lọ thuốc/biểu tượng không đồng nhất.
+  2. **Sprite Pokémon không hiển thị khi ra trận sau khi ngất xỉu hoặc đổi chỗ:**
+     - Khi một Pokémon ngất xỉu (`currentHp <= 0`), `BattleState.startPlayerFaint()` đưa `playerFaintPhase` sang `'white'` $\rightarrow$ `'shrinking'` $\rightarrow$ `'dead'` và `playerFaintScale = 0`.
+     - Khi người chơi chọn Pokémon thay thế từ đội hình (`handleForceSwitch`), code gọi `this.state.startPlayerSendOut()`. Tuy nhiên, hàm `startPlayerSendOut()` **không hề reset** `playerFaintPhase` và `playerFaintScale` về giá trị ban đầu.
+     - Trong [battle-renderer.ts](file:///e:/Pokemon/apps/web/src/battle/battle-renderer.ts), hàm `drawPlayerBattler()` có điều kiện: `if (state.playerFaintPhase === 'dead') return;`. Do `playerFaintPhase` vẫn giữ nguyên trạng thái `'dead'`, `drawPlayerBattler` lập tức thoát ra khỏi vòng lặp vẽ ở mọi frame $\rightarrow$ Pokémon mới hoàn toàn vô hình!
+     - Tương tự, nếu bất kỳ Pokémon nào từng ngất xỉu trước đó trong trận đấu, biến `playerFaintPhase` vẫn là `'dead'`, dẫn đến việc đổi chỗ bất kỳ Pokémon nào sau đó cũng bị chặn vẽ.
+     - Khi người chơi chủ động đổi chỗ (`handleSwitchPokemon`), Pokémon cũ trước đó vẫn đứng nguyên trên sân trong khi dòng thoại `"[Tên], quay lại!"` đang chạy, không có hiệu ứng thu hồi rõ ràng.
+- **Chi tiết đã thực hiện:**
+  1. **Chuẩn Hóa Thông Báo Thuốc Hồi Phục ([item-effects.ts](file:///e:/Pokemon/apps/web/src/domain/inventory/item-effects.ts)):**
+     - Đã loại bỏ hoàn toàn các tiền tố emoji/icon (`🧪`, `✨`, `💊`, `⭐`, `💪`, `⚡`) ra khỏi mọi thông báo dùng dược phẩm (Potion, Revive, Antidote, Rare Candy, PP Restores, v.v.).
+     - Thông báo hiển thị dạng văn bản thuần retro chuẩn xác: `"Đã dùng [Tên vật phẩm]! [Tên Pokémon] được hồi phục..."`.
+  2. **Khôi Phục & Làm Sạch Trạng Thái Faint Trong `startPlayerSendOut` ([battle-state.ts](file:///e:/Pokemon/apps/web/src/battle/battle-state.ts)):**
+     - Reset triệt để toàn bộ thuộc tính ngất xỉu khi bắt đầu chuỗi ném Pokémon ra trận:
+       - `this.playerFaintPhase = 'none'`
+       - `this.playerFaintTick = 0`
+       - `this.playerFaintScale = 1.0`
+       - `this.playerFrozenFrame = null`
+       - Reset toàn bộ `playerHurtFlash`, `playerHitTimer`, `playerHitOffsetX/Y`, `playerAttackTick`, `playerLungeX/Y`.
+  3. **Tái Cấu Trúc Guard Render Sprite Trong [battle-renderer.ts](file:///e:/Pokemon/apps/web/src/battle/battle-renderer.ts):**
+     - Chỉ xem xét điều kiện ngất xỉu nếu Pokémon không đang trong chuỗi ra trận (`!state.isPlayerSendingOut`).
+     - Đảm bảo Pokémon còn sống (`currentHp > 0`) không bao giờ bị chặn vẽ bởi cờ ngất xỉu cũ: `if (isPlayerFainting && state.playerFaintPhase === 'dead') return;`.
+     - Tự động đồng bộ và nạp lại sprite mặt sau (`this.engine.playerPokemon.backSprite`) ngay khi phát hiện active battler đổi sang loài khác.
+  4. **Thu Hồi Pokémon Cũ Ngay Lập Tức Khi Đổi Chỗ ([battle-controller.ts](file:///e:/Pokemon/apps/web/src/battle/battle-controller.ts)):**
+     - Trong `handleSwitchPokemon`, lập tức đặt `this.state.isPlayerPokemonSentOut = false` khi người chơi xác nhận đổi chỗ để thu hồi Pokémon cũ về bóng, sau đó ném bóng và cho Pokémon mới nhảy ra sân đấu mượt mà.
+  5. **Kiểm Thử & Đảm Bảo Chất Lượng:**
+     - `npm run typecheck:web` $\rightarrow$ PASS 0 lỗi.
+     - `npm run test:web` $\rightarrow$ 26/26 suites, 214/214 tests PASS 100%.
+
+---
+
+## Cập nhật trước đó: 2026-10-09 (Giao Diện Chọn Pokémon Cho Thuốc Hồi Phục & Khắc Phục Lỗi Mở Đè Túi Sau Khi Hồi Sinh)
 
 ### 0.80. Hỗ Trợ Dùng Vật Phẩm Hồi Sinh & Phục Hồi Trong Trận Đấu (Battle Revive & Recovery System):
 
