@@ -13,8 +13,7 @@
   2. **Hiệu Ứng Chiếu Sáng Hào Quang Xoay Tròn (Celestial Radiance Effect):**
      - Bổ sung cụm hào quang `.intro-radiance-wrapper` phía sau vòng tròn type:
        - `.intro-radiance-rays`: Quầng tia sáng nhiều cánh (`conic-gradient` vàng hoàng kim & trắng bạc) chiếu rọi và xoay tròn liên tục (`introRadianceSpin`).
-       - `.intro-radiance-aura`: Tâm hào quang phát sáng mềm mại, breathing nhẹ nhàng (`introAuraPulse`).
-       - `.intro-radiance-track`: Vòng quỹ đạo ánh sáng neon bao quanh đường chuyển động của các icon type.
+       - `.intro-radiance-aura`: Tâm hào quang phát sáng mềm mại, breathing nhẹ nhàng (`introAuraPulse`), biên ngoài mờ dần tự nhiên (loại bỏ hoàn toàn lằn viền tròn cứng `intro-radiance-track`).
   3. **Tiến Trình Chuyển Cảnh Khớp Tuyệt Đối Với Yêu Cầu & Logic Cũ:**
      - **0ms:** Màn hình đen khởi tạo.
      - **150ms:** Hào quang ánh sáng xoay tròn và vòng 18 icon type fade-in mềm mại, xoay đều theo chiều kim đồng hồ.

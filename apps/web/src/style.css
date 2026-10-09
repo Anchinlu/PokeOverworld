@@ -6440,7 +6440,6 @@ body {
   position: absolute;
   width: min(88vw, 540px);
   height: min(88vw, 540px);
-  border-radius: 50%;
   background: repeating-conic-gradient(
     from 0deg,
     rgba(255, 255, 255, 0.42) 0deg 8deg,
@@ -6448,38 +6447,25 @@ body {
     rgba(250, 204, 21, 0.35) 15deg 23deg,
     transparent 23deg 30deg
   );
-  -webkit-mask: radial-gradient(circle, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.8) 55%, transparent 72%);
-  mask: radial-gradient(circle, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.8) 55%, transparent 72%);
+  -webkit-mask: radial-gradient(circle, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.65) 35%, rgba(0, 0, 0, 0.15) 52%, transparent 65%);
+  mask: radial-gradient(circle, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.65) 35%, rgba(0, 0, 0, 0.15) 52%, transparent 65%);
   animation: introRadianceSpin 20s linear infinite;
-  filter: blur(1.5px) drop-shadow(0 0 24px rgba(250, 204, 21, 0.5));
+  filter: blur(2.5px) drop-shadow(0 0 20px rgba(250, 204, 21, 0.4));
 }
 
 .intro-radiance-aura {
   position: absolute;
   width: min(72vw, 440px);
   height: min(72vw, 440px);
-  border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(255, 255, 255, 0.8) 0%,
-    rgba(250, 204, 21, 0.45) 32%,
-    rgba(96, 165, 250, 0.25) 58%,
-    transparent 75%
+    rgba(255, 255, 255, 0.75) 0%,
+    rgba(250, 204, 21, 0.4) 30%,
+    rgba(96, 165, 250, 0.2) 52%,
+    transparent 68%
   );
   animation: introAuraPulse 3.6s ease-in-out infinite;
-  filter: blur(8px);
-}
-
-.intro-radiance-track {
-  position: absolute;
-  width: min(70vw, 420px);
-  height: min(70vw, 420px);
-  border-radius: 50%;
-  border: 2px dashed rgba(255, 255, 255, 0.35);
-  box-shadow:
-    0 0 20px 3px rgba(250, 204, 21, 0.45),
-    inset 0 0 20px 3px rgba(96, 165, 250, 0.35);
-  animation: introTrackSpin 32s linear infinite reverse;
+  filter: blur(14px);
 }
 
 .intro-type-ring-wrapper {
@@ -6561,15 +6547,6 @@ body {
   50% {
     transform: scale(1.06);
     opacity: 0.95;
-  }
-}
-
-@keyframes introTrackSpin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
   }
 }
 

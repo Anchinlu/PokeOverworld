@@ -44,7 +44,6 @@ function createTypeRingAndRadianceHtml(suffix: 'Top' | 'Bottom'): string {
     <div class="intro-radiance-wrapper" id="introRadiance${suffix}">
       <div class="intro-radiance-rays"></div>
       <div class="intro-radiance-aura"></div>
-      <div class="intro-radiance-track"></div>
     </div>
 
     <!-- Clockwise Rotating 18 Type Icons Ring -->
