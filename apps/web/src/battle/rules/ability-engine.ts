@@ -98,8 +98,139 @@ export const ABILITY_NAMES_VI: Record<string, string> = {
   swiftswim: 'Bơi Nhanh',
   chlorophyll: 'Diệp Lục',
   sandveil: 'Màn Cát',
+  sandrush: 'Lướt Cát',
+  sandforce: 'Lực Lượng Cát',
+  slushrush: 'Lướt Băng Tuyết',
+  snowcloak: 'Áo Tuyết',
+  icebody: 'Thân Băng Giá',
+  overcoat: 'Áo Choàng Bảo Vệ',
   none: 'Không có',
 };
+
+export const ABILITY_DESCRIPTIONS_VI: Record<string, string> = {
+  overgrow: 'Tăng 50% sát thương chiêu hệ Cỏ khi HP dưới 1/3.',
+  blaze: 'Tăng 50% sát thương chiêu hệ Lửa khi HP dưới 1/3.',
+  torrent: 'Tăng 50% sát thương chiêu hệ Nước khi HP dưới 1/3.',
+  swarm: 'Tăng 50% sát thương chiêu hệ Côn trùng khi HP dưới 1/3.',
+  intimidate: 'Hạ 1 bậc Tấn công của đối thủ khi xuất trận.',
+  drizzle: 'Tạo mưa rào ngay khi bước vào chiến trận.',
+  drought: 'Tạo ánh nắng chói chang khi bước vào trận.',
+  sandstream: 'Tạo bão cát ngay khi bước vào trận.',
+  snowwarning: 'Tạo mưa tuyết ngay khi bước vào trận.',
+  electricsurge: 'Trải thảm Điện Trường khi xuất trận.',
+  grassysurge: 'Trải thảm Cỏ Grassy Terrain khi xuất trận.',
+  mistysurge: 'Trải thảm Sương Mù Misty Terrain khi xuất trận.',
+  psychicsurge: 'Trải thảm Tâm Linh Psychic Terrain khi xuất trận.',
+  static: '30% cơ hội gây Tê liệt cho đối thủ khi bị đòn tiếp xúc.',
+  poisonpoint: '30% cơ hội gây Độc cho đối thủ khi bị đòn tiếp xúc.',
+  flamebody: '30% cơ hội gây Bỏng cho đối thủ khi bị đòn tiếp xúc.',
+  roughskin: 'Làm mất 1/8 HP của đối thủ khi nhận đòn tiếp xúc.',
+  ironbarbs: 'Làm mất 1/8 HP của kẻ tấn công bằng đòn tiếp xúc.',
+  cutecharm: '30% làm đối thủ mê hoặc khi nhận đòn tiếp xúc.',
+  effectspore: '30% gây Ngủ, Độc hoặc Tê liệt khi bị đòn tiếp xúc.',
+  cursedbody: '30% cơ hội khóa chiêu của đối thủ khi bị đánh trúng.',
+  levitate: 'Bay lượn, miễn nhiễm hoàn toàn chiêu thức hệ Đất.',
+  flashfire: 'Hấp thụ chiêu Lửa để tăng 50% uy lực chiêu hệ Lửa.',
+  waterabsorb: 'Hấp thụ chiêu Nước để hồi phục 1/4 lượng HP tối đa.',
+  voltabsorb: 'Hấp thụ chiêu Điện để hồi phục 1/4 lượng HP tối đa.',
+  lightningrod: 'Thu hút và hấp thụ chiêu Điện, tăng Công ĐB.',
+  motordrive: 'Hấp thụ chiêu Điện để tăng 1 bậc Tốc độ.',
+  sapsipper: 'Hấp thụ chiêu Cỏ để tăng 1 bậc Tấn công.',
+  wonderguard: 'Chỉ nhận sát thương từ các chiêu siêu hiệu quả.',
+  hugepower: 'Gấp đôi chỉ số Tấn công vật lý của Pokémon.',
+  purepower: 'Gấp đôi chỉ số Tấn công vật lý của Pokémon.',
+  guts: 'Tăng 50% Tấn công khi bị trạng thái bất lợi.',
+  technician: 'Tăng 50% uy lực các chiêu có Power từ 60 trở xuống.',
+  sniper: 'Tăng sát thương đòn chí mạng lên 2.25 lần.',
+  superluck: 'Tăng tỉ lệ đánh trúng đòn chí mạng.',
+  adaptability: 'Tăng thưởng hệ đồng chất (STAB) từ 1.5x lên 2.0x.',
+  ironfist: 'Tăng 20% uy lực cho các chiêu thức đấm.',
+  sheerforce: 'Tăng 30% sát thương, loại bỏ hiệu ứng phụ của chiêu.',
+  thickfat: 'Giảm 50% sát thương nhận vào từ chiêu Lửa và Băng.',
+  solidrock: 'Giảm 25% sát thương từ chiêu siêu hiệu quả.',
+  filter: 'Giảm 25% sát thương từ chiêu siêu hiệu quả.',
+  multiscale: 'Giảm 50% sát thương nhận vào khi HP đang đầy 100%.',
+  shellarmor: 'Giáp vỏ bảo vệ, chặn đối thủ đánh đòn chí mạng.',
+  battlearmor: 'Giáp chiến bảo vệ, chặn đối thủ đánh đòn chí mạng.',
+  sturdy: 'Không thể bị hạ gục chỉ với 1 đòn khi đầy máu.',
+  rockhead: 'Không bị mất máu phản hồi từ các chiêu thức giật lại.',
+  magicguard: 'Miễn nhiễm mọi sát thương gián tiếp ngoài đòn tấn công.',
+  soundproof: 'Miễn nhiễm hoàn toàn với các chiêu thức âm thanh.',
+  immunity: 'Miễn dịch hoàn toàn với trạng thái Trúng Độc.',
+  limber: 'Khớp dẻo, miễn dịch hoàn toàn với trạng thái Tê Liệt.',
+  waterveil: 'Màn nước bao bọc, miễn dịch với trạng thái Bị Bỏng.',
+  magmaarmor: 'Dung nham bao bọc, miễn dịch với trạng thái Đóng Băng.',
+  insomnia: 'Miễn dịch hoàn toàn với trạng thái Rơi Vào Giấc Ngủ.',
+  vitalspirit: 'Ý chí mãnh liệt, không thể bị rơi vào giấc ngủ.',
+  owntempo: 'Nhịp điệu tự nhiên, không thể bị Rối Loạn.',
+  oblivious: 'Vô cảm, miễn nhiễm với quyến rũ và khiêu khích.',
+  innerfocus: 'Tập trung cao độ, không bao giờ bị nao núng.',
+  naturalcure: 'Tự động hóa giải mọi trạng thái bất lợi khi rút lui.',
+  poisonheal: 'Hồi 1/8 HP tối đa mỗi lượt thay vì mất máu khi trúng độc.',
+  shedskin: '33% cơ hội tự chữa lành trạng thái sau mỗi lượt đi.',
+  earlybird: 'Thức dậy sau giấc ngủ nhanh gấp đôi bình thường.',
+  clearbody: 'Ngăn chặn đối thủ làm giảm các bậc chỉ số.',
+  whitesmoke: 'Khói trắng bảo vệ, ngăn đối thủ làm giảm chỉ số.',
+  hypercutter: 'Ngăn chặn đối thủ làm hạ chỉ số Tấn công.',
+  keeneye: 'Ngăn đối thủ hạ Độ chính xác và bỏ qua né tránh đối phương.',
+  defiant: 'Tăng 2 bậc Tấn công khi bị đối thủ làm hạ chỉ số.',
+  competitive: 'Tăng 2 bậc Công ĐB khi bị đối thủ làm hạ chỉ số.',
+  speedboost: 'Tăng 1 bậc Tốc độ vào cuối mỗi lượt đấu.',
+  moxie: 'Tăng 1 bậc Tấn công mỗi khi hạ gục một mục tiêu.',
+  synchronize: 'Lây ngược trạng thái Bỏng, Độc, Tê Liệt sang đối thủ.',
+  compoundeyes: 'Mắt kép giúp tăng 30% độ chính xác của chiêu thức.',
+  shielddust: 'Chặn đứng các hiệu ứng phụ cộng thêm từ chiêu đối phương.',
+  damp: 'Làm ẩm ướt chiến trường, ngăn chặn các chiêu tự phát nổ.',
+  trace: 'Sao chép đặc tính của đối thủ khi xuất trận.',
+  pressure: 'Khiến đối thủ tiêu hao gấp đôi PP khi nhắm đòn vào mình.',
+  download: 'Tự tăng Công hoặc Công ĐB tùy theo phòng thủ đối phương.',
+  runaway: 'Luôn luôn chạy trốn thành công khỏi Pokémon hoang dã.',
+  swiftswim: 'Tăng gấp đôi chỉ số Tốc độ khi trời đang Mưa.',
+  chlorophyll: 'Tăng gấp đôi chỉ số Tốc độ khi trời đang Nắng gắt.',
+  sandveil: 'Tăng né tránh thêm 20% khi đứng trong Bão Cát.',
+  sandrush: 'Tăng gấp đôi chỉ số Tốc độ khi đứng trong Bão Cát.',
+  sandforce: 'Tăng 30% sát thương chiêu Đất, Đá, Thép trong Bão Cát.',
+  slushrush: 'Tăng gấp đôi chỉ số Tốc độ khi trời Mưa Đá.',
+  snowcloak: 'Tăng né tránh thêm 20% khi trời Mưa Đá.',
+  icebody: 'Hồi phục 1/16 lượng HP tối đa mỗi lượt trong Mưa Đá.',
+  overcoat: 'Miễn nhiễm chiêu bào tử/bột và sát thương thời tiết.',
+  none: 'Pokémon này chưa có đặc tính.',
+};
+
+export interface AbilityDisplayInfo {
+  id: string;
+  name: string;
+  nameVi: string;
+  fullName: string;
+  descVi: string;
+}
+
+/**
+ * Returns formatted Ability details (English name, Vietnamese name, combined display, and description).
+ */
+export function getAbilityDisplay(ability?: string): AbilityDisplayInfo {
+  if (!ability || ability.toLowerCase() === 'none') {
+    return {
+      id: 'none',
+      name: 'None',
+      nameVi: 'Không có',
+      fullName: 'Không có',
+      descVi: 'Pokémon này chưa có đặc tính.',
+    };
+  }
+
+  const key = AbilityEngine.normalize(ability);
+  const nameVi = ABILITY_NAMES_VI[key] || ability;
+  const descVi = ABILITY_DESCRIPTIONS_VI[key] || 'Đặc tính của Pokémon.';
+
+  return {
+    id: key,
+    name: ability,
+    nameVi,
+    fullName: nameVi.toLowerCase() !== ability.toLowerCase() ? `${nameVi} (${ability})` : nameVi,
+    descVi,
+  };
+}
 
 export const PUNCH_MOVE_IDS = new Set([
   'comet_punch',

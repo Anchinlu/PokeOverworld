@@ -4749,6 +4749,12 @@ body {
   color: #fca5a5;
 }
 
+.preview-badge.ability {
+  background: rgba(88, 28, 135, 0.55);
+  border-color: rgba(167, 139, 250, 0.5);
+  color: #ddd6fe;
+}
+
 .storage-mode-indicator {
   font-family: 'VT323', monospace;
   font-size: 14px;
@@ -5281,6 +5287,25 @@ body {
   font-family: 'VT323', monospace;
   font-size: 13px;
   color: #38bdf8;
+  text-shadow: 1px 1px 0 #000;
+  text-align: right;
+  line-height: 1.1;
+  margin-top: -1px;
+}
+
+.summary-meta-row.ability-row {
+  margin-top: 2px;
+}
+
+.ability-val {
+  color: #c084fc;
+  font-weight: 900;
+}
+
+.summary-ability-desc {
+  font-family: 'VT323', monospace;
+  font-size: 13px;
+  color: #e9d5ff;
   text-shadow: 1px 1px 0 #000;
   text-align: right;
   line-height: 1.1;

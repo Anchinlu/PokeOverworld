@@ -9,6 +9,7 @@ import { getMoveCategoryLabel } from './pokedex-moves';
 import { getItemPocketName } from './pokedex-items';
 import type { PokedexInfoSubTab, PokedexTab, PokedexViewMode } from './pokedex-state';
 import { POKEDEX_ASSETS, MOVE_ASSETS, ITEM_ASSETS, HABITAT_ASSETS } from '../../assets';
+import { getAbilityDisplay } from '../../battle/rules/ability-engine';
 
 export interface PokedexViewElements {
   rootModal: HTMLElement;
@@ -541,7 +542,10 @@ export class PokedexView {
     const moveDesc = this.elements.rootModal.querySelector<HTMLElement>('#moveDescContent');
     if (moveDesc) {
       moveDesc.innerText = move
-        ? move.description || move.descriptionEn || 'Không có mô tả cho chiêu thức này.'
+        ? move.descriptionVi ||
+          move.description ||
+          move.descriptionEn ||
+          'Không có mô tả cho chiêu thức này.'
         : 'Không tìm thấy chiêu thức nào phù hợp.';
     }
   }
@@ -830,7 +834,10 @@ export class PokedexView {
       if (el) el.innerText = val;
     };
     setResearch('infoSpecies', pokemon.species ?? '—');
-    setResearch('infoAbility', pokemon.ability ?? '—');
+    const abilityDisplay = getAbilityDisplay(pokemon.ability);
+    setResearch('infoAbility', abilityDisplay.fullName);
+    const abilityEl = this.elements.rootModal.querySelector<HTMLElement>('#infoAbility');
+    if (abilityEl) abilityEl.title = abilityDisplay.descVi;
     setResearch('infoCatchRate', pokemon.catchRate != null ? String(pokemon.catchRate) : '—');
     setResearch('infoEggGroups', pokemon.eggGroups ?? '—');
     setResearch('infoGender', pokemon.genderRatio ?? '—');
@@ -886,7 +893,10 @@ export class PokedexView {
       const row = document.createElement('div');
       row.className = 'info-move-row';
       const desc =
-        moveDb?.description || moveDb?.descriptionEn || 'Không có mô tả cho chiêu thức này.';
+        moveDb?.descriptionVi ||
+        moveDb?.description ||
+        moveDb?.descriptionEn ||
+        'Không có mô tả cho chiêu thức này.';
       row.title = `${m.nameVi} (${m.nameEn}) - Cấp độ: ${m.level}\n${desc}`;
 
       const lvlEl = document.createElement('span');

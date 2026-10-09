@@ -16,6 +16,7 @@ import {
 
 import { HeldItemEngine } from './held-item-engine';
 import { AbilityEngine } from './ability-engine';
+// Environment rules (weather & terrain integration)
 import {
   calculateEndTurnWeatherDamage,
   calculateEndTurnTerrainHealing,

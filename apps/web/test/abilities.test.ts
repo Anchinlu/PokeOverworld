@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { BattleEngine } from '../src/battle/battle-engine';
 import { calculateDamage } from '../src/battle/rules/damage-calculator';
 import { checkMoveAccuracy } from '../src/battle/rules/move-effect-engine';
+import { getAbilityDisplay } from '../src/battle/rules/ability-engine';
 import type {
   BattlerPokemon,
   BattleMove,
@@ -850,6 +851,54 @@ describe('AbilityEngine System & Mechanics', () => {
       const hitsInSand = checkMoveAccuracy(attacker, garchomp, move100Acc, rng, envSand);
 
       expect(hitsInSand).toBe(false); // Evaded thanks to Sand Veil!
+    });
+  });
+
+  describe('7. Ability Display & Detail Presentation (getAbilityDisplay)', () => {
+    it('returns graceful fallback when ability is undefined or none', () => {
+      const none1 = getAbilityDisplay(undefined);
+      expect(none1.id).toBe('none');
+      expect(none1.nameVi).toBe('Không có');
+      expect(none1.fullName).toBe('Không có');
+      expect(none1.descVi).toContain('chưa có đặc tính');
+
+      const none2 = getAbilityDisplay('none');
+      expect(none2.nameVi).toBe('Không có');
+    });
+
+    it('returns localized Vietnamese name, English name, and description for known abilities', () => {
+      const overgrow = getAbilityDisplay('Overgrow');
+      expect(overgrow.name).toBe('Overgrow');
+      expect(overgrow.nameVi).toBe('Tươi Tốt');
+      expect(overgrow.fullName).toBe('Tươi Tốt (Overgrow)');
+      expect(overgrow.descVi).toContain('hệ Cỏ');
+
+      const intimidate = getAbilityDisplay('intimidate');
+      expect(intimidate.nameVi).toBe('Đe Dọa');
+      expect(intimidate.fullName).toBe('Đe Dọa (intimidate)');
+      expect(intimidate.descVi).toContain('Tấn công của đối thủ');
+
+      const magicGuard = getAbilityDisplay('Magic Guard');
+      expect(magicGuard.nameVi).toBe('Lá Chắn Ma Thuật');
+      expect(magicGuard.descVi).toContain('sát thương gián tiếp');
+
+      const poisonHeal = getAbilityDisplay('Poison Heal');
+      expect(poisonHeal.nameVi).toBe('Hồi Phục Độc Tố');
+      expect(poisonHeal.descVi).toContain('Hồi 1/8 HP');
+    });
+
+    it('handles speed and weather abilities correctly', () => {
+      const swiftSwim = getAbilityDisplay('Swift Swim');
+      expect(swiftSwim.nameVi).toBe('Bơi Nhanh');
+      expect(swiftSwim.descVi).toContain('Mưa');
+
+      const chlorophyll = getAbilityDisplay('Chlorophyll');
+      expect(chlorophyll.nameVi).toBe('Diệp Lục');
+      expect(chlorophyll.descVi).toContain('Nắng');
+
+      const overcoat = getAbilityDisplay('Overcoat');
+      expect(overcoat.nameVi).toBe('Áo Choàng Bảo Vệ');
+      expect(overcoat.descVi).toContain('bào tử');
     });
   });
 });

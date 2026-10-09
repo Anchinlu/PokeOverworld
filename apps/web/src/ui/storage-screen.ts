@@ -21,6 +21,7 @@ import { TYPE_ICO_INDICES } from '../battle/type-chart';
 import type { BattleMove } from '../battle/types';
 import { NATURES_TABLE, type StatKey } from '@pokemon/shared-types';
 import { findItem } from '../data/items-db';
+import { getAbilityDisplay } from '../battle/rules/ability-engine';
 
 const STORAGE_TYPE_INDICES: Record<string, number> = {
   normal: 0,
@@ -328,6 +329,11 @@ export class StorageScreen {
                     <span class="meta-label">Vật phẩm:</span>
                     <span class="meta-val held-val" id="storageSummaryHeldItem">Không có</span>
                   </div>
+                  <div class="summary-meta-row ability-row">
+                    <span class="meta-label">Đặc tính:</span>
+                    <span class="meta-val ability-val" id="storageSummaryAbility">—</span>
+                  </div>
+                  <div class="summary-ability-desc" id="storageSummaryAbilityDesc">—</div>
                   <div class="summary-meta-row nature-row">
                     <span class="meta-label">Tính cách:</span>
                     <span class="meta-val nature-val" id="storageSummaryNature">Cương quyết</span>
@@ -1134,12 +1140,15 @@ export class StorageScreen {
       })
       .join('');
 
+    const abilityDisplay = getAbilityDisplay(pokemon.ability);
+
     infoEl.innerHTML = `
       <span class="preview-name">${pokemon.nickname || pokemon.name}${pokemon.isShiny ? ` <img class="preview-shiny-icon" src="${POKEMON_ASSETS.shinyIcon}" alt="Shiny" title="Shiny Pokémon" />` : ''}</span>
       <span class="preview-badge">Lv.${pokemon.level}</span>
       <div class="preview-types-wrap">${typesHtml}</div>
       <span class="preview-badge hp">HP: ${hpStr}</span>
       ${statusStr ? `<span class="preview-badge status">${statusStr}</span>` : ''}
+      <span class="preview-badge ability" title="${abilityDisplay.descVi}">Đặc tính: ${abilityDisplay.nameVi}</span>
     `;
   }
 
@@ -1312,6 +1321,17 @@ export class StorageScreen {
 
     if (ballEl) ballEl.textContent = pokemon.ballCaught || 'POKEBALL';
     if (caughtLvEl) caughtLvEl.textContent = `Lv.${pokemon.caughtLevel || pokemon.level}`;
+
+    // Ability & Effect
+    const abilityDisplay = getAbilityDisplay(pokemon.ability);
+    const abilityEl = modal.querySelector('#storageSummaryAbility');
+    const abilityDescEl = modal.querySelector('#storageSummaryAbilityDesc');
+    if (abilityEl) {
+      abilityEl.textContent = abilityDisplay.fullName;
+    }
+    if (abilityDescEl) {
+      abilityDescEl.textContent = abilityDisplay.descVi;
+    }
 
     // Nature & Effect
     const natureData = NATURES_TABLE[pokemon.nature] ?? NATURES_TABLE.Hardy;
@@ -1827,7 +1847,10 @@ export class StorageScreen {
     // Description from database
     if (descEl) {
       const desc =
-        dbMove.description || move.description || 'Chưa có thông tin mô tả cho chiêu thức này.';
+        dbMove.descriptionVi ||
+        dbMove.description ||
+        move.description ||
+        'Chưa có thông tin mô tả cho chiêu thức này.';
       descEl.textContent = desc;
     }
 

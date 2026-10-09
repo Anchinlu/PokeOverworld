@@ -17,6 +17,7 @@ import { NATURES_TABLE, type StatKey } from '@pokemon/shared-types';
 import { findItem } from '../data/items-db';
 import { inventoryService } from '../domain/inventory/inventory-service';
 import { BagScreen, type BagItemEntry } from './bag-screen';
+import { getAbilityDisplay } from '../battle/rules/ability-engine';
 
 export interface BattleSelectOptions {
   currentBattlerUid?: string;
@@ -276,6 +277,11 @@ export class PartyScreen {
                     <span class="meta-label">Vật phẩm:</span>
                     <span class="meta-val held-val" id="partySummaryHeldItem">Không có</span>
                   </div>
+                  <div class="summary-meta-row ability-row">
+                    <span class="meta-label">Đặc tính:</span>
+                    <span class="meta-val ability-val" id="partySummaryAbility">—</span>
+                  </div>
+                  <div class="summary-ability-desc" id="partySummaryAbilityDesc">—</div>
                   <div class="summary-meta-row nature-row">
                     <span class="meta-label">Tính cách:</span>
                     <span class="meta-val nature-val" id="partySummaryNature">Cương quyết</span>
@@ -1056,6 +1062,17 @@ export class PartyScreen {
     if (ballEl) ballEl.textContent = pokemon.ballCaught || 'POKEBALL';
     if (caughtLvEl) caughtLvEl.textContent = `Lv.${pokemon.caughtLevel || pokemon.level}`;
 
+    // Ability & Effect
+    const abilityDisplay = getAbilityDisplay(pokemon.ability);
+    const abilityEl = modal.querySelector('#partySummaryAbility');
+    const abilityDescEl = modal.querySelector('#partySummaryAbilityDesc');
+    if (abilityEl) {
+      abilityEl.textContent = abilityDisplay.fullName;
+    }
+    if (abilityDescEl) {
+      abilityDescEl.textContent = abilityDisplay.descVi;
+    }
+
     // Nature & Effect
     const natureData = NATURES_TABLE[pokemon.nature] ?? NATURES_TABLE.Hardy;
     const natureEl = modal.querySelector('#partySummaryNature');
@@ -1567,7 +1584,10 @@ export class PartyScreen {
     // Description from database
     if (descEl) {
       const desc =
-        dbMove.description || move.description || 'Chưa có thông tin mô tả cho chiêu thức này.';
+        dbMove.descriptionVi ||
+        dbMove.description ||
+        move.description ||
+        'Chưa có thông tin mô tả cho chiêu thức này.';
       descEl.textContent = desc;
     }
 
