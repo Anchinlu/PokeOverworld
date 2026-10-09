@@ -768,8 +768,17 @@ export class PartyScreen {
             }
           </div>
 
-          <!-- Level directly below Pokemon icon (matching template) -->
-          <span class="ps-pk-level">Lv.${pk.level}</span>
+          <!-- Level directly below Pokemon icon (with held item icon directly next to it) -->
+          <div class="ps-level-row">
+            <span class="ps-pk-level">Lv.${pk.level}</span>
+            ${(() => {
+              if (!pk.heldItem) return '';
+              const heldDef = findItem(pk.heldItem);
+              const heldName = heldDef ? heldDef.nameVi || heldDef.name : pk.heldItem;
+              const heldSprite = heldDef?.sprite ? `/${heldDef.sprite}` : '/Graphics/Items/000.png';
+              return `<img src="${heldSprite}" class="ps-held-item-icon" title="Đang giữ: ${heldName}" alt="${heldName}" />`;
+            })()}
+          </div>
 
           <!-- Name -->
           <div class="ps-name-row">
@@ -795,19 +804,6 @@ export class PartyScreen {
 
           <!-- Status Condition Badge if sick/fainted -->
           ${isFainted ? '<span class="ps-status-fnt">FNT</span>' : pk.status !== 'none' ? `<span class="ps-status-badge">${pk.status.toUpperCase()}</span>` : ''}
-
-          <!-- Held Item Badge -->
-          ${(() => {
-            if (!pk.heldItem) return '';
-            const heldDef = findItem(pk.heldItem);
-            const heldName = heldDef ? heldDef.nameVi || heldDef.name : pk.heldItem;
-            const heldSprite = heldDef?.sprite ? `/${heldDef.sprite}` : '/Graphics/Items/000.png';
-            return `
-            <div class="ps-held-item-badge" title="Đang giữ: ${heldName}">
-              <img src="${heldSprite}" class="ps-held-item-icon" alt="${heldName}" />
-              <span class="ps-held-item-name">${heldName}</span>
-            </div>`;
-          })()}
         `;
       } else {
         // Blank slot: clean blank panel frame exactly matching template

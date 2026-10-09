@@ -2838,10 +2838,18 @@ body {
   display: block;
 }
 
-.ps-pk-level {
+.ps-level-row {
   position: absolute;
   left: 10px;
   top: 62px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.ps-pk-level {
   font-family: 'VT323', monospace;
   font-size: 20px;
   color: #ffffff;
@@ -2852,7 +2860,6 @@ body {
     -1px 1px 0 #000;
   line-height: 1;
   pointer-events: none;
-  z-index: 2;
 }
 
 .ps-name-row {
@@ -3108,40 +3115,21 @@ body {
   z-index: 3;
 }
 
-.ps-held-item-badge {
-  position: absolute;
-  right: 14px;
-  bottom: 8px;
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  padding: 1px 6px;
-  background: rgba(15, 23, 42, 0.88);
-  border: 1px solid rgba(56, 189, 248, 0.6);
-  border-radius: 4px;
-  z-index: 3;
-  pointer-events: none;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
-}
-
 .ps-held-item-icon {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
   object-fit: contain;
   flex-shrink: 0;
+  pointer-events: auto;
+  cursor: help;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8));
+  transition: transform 0.1s ease;
 }
 
-.ps-held-item-name {
-  font-family: 'VT323', monospace;
-  font-size: 14px;
-  color: #38bdf8;
-  line-height: 1;
-  max-width: 90px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.ps-held-item-icon:hover {
+  transform: scale(1.2);
 }
 
 .party-msg-box {

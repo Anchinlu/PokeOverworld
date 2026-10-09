@@ -24,7 +24,7 @@
      - **Vật phẩm tăng cường EXP:**
        - `Lucky Egg`: Tăng 1.5x (+50%) EXP nhận được sau trận thắng.
   2. **Hiển Thị & Thao Tác Trang Bị Trên Giao Diện ([party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts), [storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
-     - **Thẻ Slot Pokémon:** Hiển thị huy hiệu pixel `.ps-held-item-badge` gồm icon vật phẩm và tên vật phẩm ở góc dưới bên phải mỗi thẻ trong đội hình.
+     - **Thẻ Slot Pokémon Tinh Tế & Gọn Gàng:** Đưa icon vật phẩm trang bị `.ps-held-item-icon` ($16 \times 16\text{ px}$) đặt trực tiếp bên cạnh chữ cấp độ (`Lv.X`) trong hàng `.ps-level-row` ngay phía dưới ảnh Pokémon. Bỏ hoàn toàn khung viền xanh và chuỗi chữ tên đồ đè lên số HP; icon hiển thị pixel art độc lập, bóng đổ nhẹ và hỗ trợ tooltip khi rê chuột.
      - **Menu Thao Tác:** Bổ sung nút **"Gỡ vật phẩm"** (tháo đồ cất vào túi đồ, phát âm thanh và hiển thị toast) và nút **"Trao vật phẩm"** (mở nhanh túi đồ).
      - **Bảng Chi Tiết Summary Modal:** Hiển thị mục **"Vật phẩm:"** kèm icon và tên chi tiết trên cả Màn hình Đội hình và PC Box Storage.
   3. **Đồng Bộ Dữ Liệu Sau Trận Đấu ([party-state.ts](file:///e:/Pokemon/apps/web/src/domain/party/party-state.ts), [party-service.ts](file:///e:/Pokemon/apps/web/src/domain/party/party-service.ts)):**
