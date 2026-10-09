@@ -36,7 +36,7 @@ export function isWeatherDamageImmune(
   }
 
   if (weatherType === 'sandstorm') {
-    // Rock, Ground, Steel are naturally immune to Sandstorm
+    // Rock, Ground, Steel are naturally immune to Sandstorm damage
     if (
       battler.types.includes('Rock') ||
       battler.types.includes('Ground') ||
@@ -44,17 +44,9 @@ export function isWeatherDamageImmune(
     ) {
       return true;
     }
-    // Sand abilities give Sandstorm immunity
-    if (ability === 'sandveil' || ability === 'sandrush' || ability === 'sandforce') {
-      return true;
-    }
   } else if (weatherType === 'hail') {
-    // Ice-types are naturally immune to Hail
+    // Ice-types are naturally immune to Hail damage
     if (battler.types.includes('Ice')) {
-      return true;
-    }
-    // Hail abilities give Hail immunity
-    if (ability === 'icebody' || ability === 'slushrush' || ability === 'snowcloak') {
       return true;
     }
   }

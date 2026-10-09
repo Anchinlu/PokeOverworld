@@ -156,18 +156,16 @@ describe('BattleEnvironmentRules Unit Tests', () => {
       expect(res?.message).toContain('Bão cát');
     });
 
-    it('grants Sandstorm immunity to Rock, Ground, Steel, Sand Veil, and Overcoat / Magic Guard', () => {
+    it('grants Sandstorm immunity only to Rock, Ground, Steel, Overcoat, and Magic Guard', () => {
       const rockPkmn = createMockBattler({ types: ['Rock'] });
       const groundPkmn = createMockBattler({ types: ['Ground'] });
       const steelPkmn = createMockBattler({ types: ['Steel'] });
-      const sandVeilPkmn = createMockBattler({ ability: 'Sand Veil', types: ['Normal'] });
       const magicGuardPkmn = createMockBattler({ ability: 'Magic Guard', types: ['Normal'] });
       const overcoatPkmn = createMockBattler({ ability: 'Overcoat', types: ['Normal'] });
 
       expect(isWeatherDamageImmune(rockPkmn, 'sandstorm')).toBe(true);
       expect(isWeatherDamageImmune(groundPkmn, 'sandstorm')).toBe(true);
       expect(isWeatherDamageImmune(steelPkmn, 'sandstorm')).toBe(true);
-      expect(isWeatherDamageImmune(sandVeilPkmn, 'sandstorm')).toBe(true);
       expect(isWeatherDamageImmune(magicGuardPkmn, 'sandstorm')).toBe(true);
       expect(isWeatherDamageImmune(overcoatPkmn, 'sandstorm')).toBe(true);
 
@@ -175,16 +173,74 @@ describe('BattleEnvironmentRules Unit Tests', () => {
       expect(calculateEndTurnWeatherDamage(magicGuardPkmn, 'sandstorm')).toBeNull();
     });
 
-    it('damages non-Ice types in Hail and grants immunity to Ice types and Slush Rush / Magic Guard', () => {
+    it('confirms Sand Veil, Sand Rush, and Sand Force still take Sandstorm damage if not Rock/Ground/Steel', () => {
+      const sandVeilPkmn = createMockBattler({
+        ability: 'Sand Veil',
+        types: ['Normal'],
+        maxHp: 160,
+        currentHp: 160,
+      });
+      const sandRushPkmn = createMockBattler({
+        ability: 'Sand Rush',
+        types: ['Normal'],
+        maxHp: 160,
+        currentHp: 160,
+      });
+      const sandForcePkmn = createMockBattler({
+        ability: 'Sand Force',
+        types: ['Normal'],
+        maxHp: 160,
+        currentHp: 160,
+      });
+
+      expect(isWeatherDamageImmune(sandVeilPkmn, 'sandstorm')).toBe(false);
+      expect(isWeatherDamageImmune(sandRushPkmn, 'sandstorm')).toBe(false);
+      expect(isWeatherDamageImmune(sandForcePkmn, 'sandstorm')).toBe(false);
+
+      expect(calculateEndTurnWeatherDamage(sandVeilPkmn, 'sandstorm')?.damage).toBe(10);
+      expect(calculateEndTurnWeatherDamage(sandRushPkmn, 'sandstorm')?.damage).toBe(10);
+      expect(calculateEndTurnWeatherDamage(sandForcePkmn, 'sandstorm')?.damage).toBe(10);
+    });
+
+    it('damages non-Ice types in Hail and grants immunity only to Ice types, Overcoat, and Magic Guard', () => {
       const normalPkmn = createMockBattler({ types: ['Normal'], maxHp: 80, currentHp: 80 });
       const icePkmn = createMockBattler({ types: ['Ice'] });
-      const slushRushPkmn = createMockBattler({ ability: 'Slush Rush', types: ['Normal'] });
+      const overcoatPkmn = createMockBattler({ ability: 'Overcoat', types: ['Normal'] });
       const magicGuardPkmn = createMockBattler({ ability: 'Magic Guard', types: ['Normal'] });
 
       expect(calculateEndTurnWeatherDamage(normalPkmn, 'hail')?.damage).toBe(5); // 80 / 16
       expect(isWeatherDamageImmune(icePkmn, 'hail')).toBe(true);
-      expect(isWeatherDamageImmune(slushRushPkmn, 'hail')).toBe(true);
+      expect(isWeatherDamageImmune(overcoatPkmn, 'hail')).toBe(true);
       expect(isWeatherDamageImmune(magicGuardPkmn, 'hail')).toBe(true);
+    });
+
+    it('confirms Slush Rush, Snow Cloak, and Ice Body still take Hail damage if not Ice type', () => {
+      const slushRushPkmn = createMockBattler({
+        ability: 'Slush Rush',
+        types: ['Normal'],
+        maxHp: 80,
+        currentHp: 80,
+      });
+      const snowCloakPkmn = createMockBattler({
+        ability: 'Snow Cloak',
+        types: ['Normal'],
+        maxHp: 80,
+        currentHp: 80,
+      });
+      const iceBodyPkmn = createMockBattler({
+        ability: 'Ice Body',
+        types: ['Normal'],
+        maxHp: 80,
+        currentHp: 80,
+      });
+
+      expect(isWeatherDamageImmune(slushRushPkmn, 'hail')).toBe(false);
+      expect(isWeatherDamageImmune(snowCloakPkmn, 'hail')).toBe(false);
+      expect(isWeatherDamageImmune(iceBodyPkmn, 'hail')).toBe(false);
+
+      expect(calculateEndTurnWeatherDamage(slushRushPkmn, 'hail')?.damage).toBe(5);
+      expect(calculateEndTurnWeatherDamage(snowCloakPkmn, 'hail')?.damage).toBe(5);
+      expect(calculateEndTurnWeatherDamage(iceBodyPkmn, 'hail')?.damage).toBe(5);
     });
   });
 
