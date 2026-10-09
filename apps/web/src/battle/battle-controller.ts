@@ -15,7 +15,10 @@ import type { PartyPokemon } from '../domain/party/party-state';
 import { partyPokemonToBattler } from '../domain/party/party-state';
 import { partyService } from '../domain/party/party-service';
 import { inventoryService } from '../domain/inventory/inventory-service';
-import { applyItemToBattler } from '../domain/inventory/item-effects';
+import { applyItemToBattler, applyItemToPartyPokemon } from '../domain/inventory/item-effects';
+import { getItemEffectDef } from '../domain/inventory/item-catalog-effects';
+import { showBerryToast } from '../ui/toast';
+import type { BagItemEntry } from '../ui/bag-screen';
 import { normalizeBallKey } from '../assets';
 import { moveAnimationManager } from './move-animation-manager';
 import { getPokeballData, getBaseCatchRate } from './pokeball-db';
@@ -257,7 +260,7 @@ export class BattleController {
         if (pocket === 2 || item.category === 'pokeball') {
           this.handleThrowBall(item, entry.rawId);
         } else {
-          this.handleUseMedicineInBattle(item, entry.rawId);
+          this.handleUseMedicineInBattle(item, entry.rawId, entry);
         }
       },
       () => {
@@ -266,7 +269,107 @@ export class BattleController {
     );
   }
 
-  private handleUseMedicineInBattle(item: ItemDef, rawId?: string): void {
+  private handleUseMedicineInBattle(item: ItemDef, rawId?: string, entry?: BagItemEntry): void {
+    const slug = (item.id || rawId || '').toLowerCase().replace(/_/g, '-');
+    const def = getItemEffectDef(slug);
+
+    // 1. Revival Items: In battle, these revive a fainted Pokémon in the party!
+    if (def?.reviveRatio !== undefined) {
+      this.syncActiveBattlerToParty();
+      const party = partyService.getParty();
+      const hasFainted = party.some((p) => p.isFainted || p.currentHp <= 0);
+
+      if (!hasFainted) {
+        this.state.uiMode = 'message';
+        this.queueMessage(
+          'Toàn bộ đội hình đều đang khỏe mạnh, không có Pokémon nào cần hồi sinh!',
+          'message',
+          () => {
+            this.handleBagCommand();
+          }
+        );
+        return;
+      }
+
+      // Sacred Ash revives ALL fainted members
+      if (def.reviveAllParty) {
+        const result = applyItemToPartyPokemon(item, party[0], party);
+        if (rawId && inventoryService.hasItem(rawId, 1)) {
+          inventoryService.removeItem(rawId, 1);
+        } else if (inventoryService.hasItem(item.id, 1)) {
+          inventoryService.removeItem(item.id, 1);
+        }
+        battleSePlayer.playSound('Audio/SE/Battle catch click.ogg', 0.85);
+        this.state.uiMode = 'message';
+        this.queueMessage(result.message, 'message', () => {
+          setTimeout(() => {
+            this.handleEnemyTurn();
+          }, 400);
+        });
+        return;
+      }
+
+      // Open Party Screen so player can pick which fainted Pokémon to revive!
+      const bagEntry: BagItemEntry = entry || {
+        rawId: rawId || item.id,
+        count: 1,
+        item,
+        pocketIndex: 1,
+      };
+
+      PartyScreen.getInstance().openForSelect({
+        mode: 'use_item',
+        prompt: `Chọn Pokémon cần hồi sinh bằng ${item.nameVi || item.name}:`,
+        item: bagEntry,
+        onSelect: (selectedPk, _slotIndex) => {
+          if (!selectedPk.isFainted && selectedPk.currentHp > 0) {
+            showBerryToast(
+              `⚠️ ${selectedPk.nickname || selectedPk.name} đang khỏe mạnh! Hãy chọn Pokémon đã ngất xỉu.`,
+              '#ef4444'
+            );
+            return;
+          }
+
+          const result = applyItemToPartyPokemon(item, selectedPk, partyService.getParty());
+          if (!result.success) {
+            showBerryToast(`⚠️ ${result.message}`, '#ef4444');
+            return;
+          }
+
+          // Deduct 1 item quantity
+          if (rawId && inventoryService.hasItem(rawId, 1)) {
+            inventoryService.removeItem(rawId, 1);
+          } else if (inventoryService.hasItem(item.id, 1)) {
+            inventoryService.removeItem(item.id, 1);
+          }
+
+          battleSePlayer.playSound('Audio/SE/Battle catch click.ogg', 0.85);
+          PartyScreen.getInstance().close();
+
+          // Sync if selected was the active battler
+          if (selectedPk.uid === this.engine.playerPokemon.uid) {
+            this.engine.playerPokemon.currentHp = selectedPk.currentHp;
+            this.engine.playerPokemon.isFainted = false;
+            this.engine.playerPokemon.status = 'none';
+            this.state.targetPlayerHpPct =
+              this.engine.playerPokemon.currentHp / this.engine.playerPokemon.maxHp;
+          }
+
+          this.state.uiMode = 'message';
+          this.queueMessage(result.message, 'message', () => {
+            setTimeout(() => {
+              this.handleEnemyTurn();
+            }, 400);
+          });
+        },
+        onCancel: () => {
+          this.handleBagCommand();
+        },
+      });
+      return;
+    }
+
+    // 2. Direct Battler Medicine / Stat Booster
     const player = this.engine.playerPokemon;
     const result = applyItemToBattler(item, player);
 

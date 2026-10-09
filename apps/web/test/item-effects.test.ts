@@ -199,4 +199,49 @@ describe('Item Effects Engine & Inventory Deduction', () => {
     expect(checkMaxX.canUse).toBe(false);
     expect(checkMaxX.reason).toContain('tối đa (+6)');
   });
+
+  it('handles revive items in battle context and does not reject them as unusable in battle', () => {
+    const revive = findItem('revive') as ItemData;
+    const maxRevive = findItem('max-revive') as ItemData;
+    expect(revive).toBeDefined();
+    expect(maxRevive).toBeDefined();
+
+    const battler: BattlerPokemon = {
+      uid: 'bat-1',
+      name: 'Charizard',
+      speciesKey: 'charizard',
+      level: 36,
+      currentHp: 120,
+      maxHp: 120,
+      stats: { hp: 120, attack: 84, defense: 78, spAtk: 109, spDef: 85, speed: 100 },
+      moves: [],
+    };
+
+    // Live battler: cannot use revive (reason must NOT be "không thể dùng trong trận đấu")
+    const liveCheck = canUseItemOnBattler(revive, battler);
+    expect(liveCheck.canUse).toBe(false);
+    expect(liveCheck.reason).toContain('đang khỏe mạnh');
+    expect(liveCheck.reason).not.toContain('không thể dùng trong trận đấu');
+
+    // Fainted battler: can use revive
+    battler.currentHp = 0;
+    battler.isFainted = true;
+    const faintedCheck = canUseItemOnBattler(revive, battler);
+    expect(faintedCheck.canUse).toBe(true);
+
+    // Apply Revive: restores 50% HP
+    const resRevive = applyItemToBattler(revive, battler);
+    expect(resRevive.success).toBe(true);
+    expect(battler.currentHp).toBe(60); // 120 / 2
+    expect(battler.isFainted).toBe(false);
+
+    // Apply Max Revive to fainted battler: restores 100% HP
+    battler.currentHp = 0;
+    battler.isFainted = true;
+    const resMax = applyItemToBattler(maxRevive, battler);
+    expect(resMax.success).toBe(true);
+    expect(battler.currentHp).toBe(120);
+    expect(battler.isFainted).toBe(false);
+  });
 });
+

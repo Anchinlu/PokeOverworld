@@ -67,7 +67,7 @@ function normalizeKey(item: ItemData): string {
 export function canUseItemOnPartyPokemon(
   item: ItemData,
   pokemon: PartyPokemon,
-  partyMembers?: PartyPokemon[]
+  partyMembers?: readonly PartyPokemon[] | PartyPokemon[]
 ): ItemEligibilityResult {
   const key = normalizeKey(item);
   const def = getItemEffectDef(key);
@@ -215,7 +215,7 @@ export function canUseItemOnPartyPokemon(
 export function applyItemToPartyPokemon(
   item: ItemData,
   pokemon: PartyPokemon,
-  partyMembers?: PartyPokemon[]
+  partyMembers?: readonly PartyPokemon[] | PartyPokemon[]
 ): ItemActionResult {
   const check = canUseItemOnPartyPokemon(item, pokemon, partyMembers);
   if (!check.canUse) {
@@ -378,11 +378,23 @@ export function canUseItemOnBattler(
     };
   }
 
+  // 1. Revival check
+  if (def.reviveRatio !== undefined) {
+    if (!battler.isFainted && battler.currentHp > 0) {
+      return {
+        canUse: false,
+        code: 'ERR_NOT_FAINTED',
+        reason: `${name} đang khỏe mạnh, không thể hồi sinh!`,
+      };
+    }
+    return { canUse: true, code: 'SUCCESS' };
+  }
+
   if (battler.isFainted || battler.currentHp <= 0) {
     return {
       canUse: false,
       code: 'ERR_FAINTED',
-      reason: `${name} đã bị hạ gục!`,
+      reason: `${name} đã bị hạ gục! Hãy dùng Revive trước.`,
     };
   }
 
@@ -469,6 +481,20 @@ export function applyItemToBattler(item: ItemData, battler: BattlerPokemon): Ite
   const def = getItemEffectDef(key)!;
   const name = battler.name;
   const itemName = item.nameVi || item.name;
+
+  // 1. Revival Items
+  if (def.reviveRatio !== undefined) {
+    const healAmount = Math.max(1, Math.floor(battler.maxHp * def.reviveRatio));
+    battler.currentHp = Math.min(battler.maxHp, healAmount);
+    battler.isFainted = false;
+    battler.status = 'none';
+    return {
+      success: true,
+      code: 'SUCCESS',
+      message: `✨ Đã dùng ${itemName}! ${name} hồi sinh với ${battler.currentHp}/${battler.maxHp} HP!`,
+      hpRecovered: healAmount,
+    };
+  }
 
   // HP Restoration
   if (def.healHp !== undefined || def.healRatio !== undefined) {

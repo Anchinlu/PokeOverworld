@@ -874,6 +874,13 @@ export class PartyScreen {
         this.handleSlotClick(slot);
       });
 
+      slotEl.addEventListener('dblclick', () => {
+        if (this.selectOptions && party[slot]) {
+          const btn = this.backdropEl?.querySelector<HTMLButtonElement>('#btnActionSendOut');
+          btn?.click();
+        }
+      });
+
       slotEl.addEventListener('mouseenter', () => {
         this.selectedIndex = slot;
         this.updateCancelButtonState();

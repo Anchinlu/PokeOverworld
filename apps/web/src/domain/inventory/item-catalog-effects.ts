@@ -53,10 +53,10 @@ export const ITEM_EFFECTS_REGISTRY: Record<string, ItemEffectDef> = {
   'iapapa-berry': { targetScope: 'both', healRatio: 0.33 },
 
   // --- Revives ---
-  revive: { targetScope: 'party', reviveRatio: 0.5 },
-  'max-revive': { targetScope: 'party', reviveRatio: 1.0 },
-  'revival-herb': { targetScope: 'party', reviveRatio: 1.0 },
-  'sacred-ash': { targetScope: 'party', reviveRatio: 1.0, reviveAllParty: true },
+  revive: { targetScope: 'both', reviveRatio: 0.5 },
+  'max-revive': { targetScope: 'both', reviveRatio: 1.0 },
+  'revival-herb': { targetScope: 'both', reviveRatio: 1.0 },
+  'sacred-ash': { targetScope: 'both', reviveRatio: 1.0, reviveAllParty: true },
 
   // --- Status Curing Items ---
   antidote: { targetScope: 'both', cureStatus: ['poison', 'toxic'] },
@@ -92,11 +92,11 @@ export const ITEM_EFFECTS_REGISTRY: Record<string, ItemEffectDef> = {
   carbos: { targetScope: 'party', addEv: { stat: 'speed', amount: 10 } },
 
   // --- PP Restorers ---
-  ether: { targetScope: 'party', restorePp: { amount: 10, target: 'single' } },
-  'max-ether': { targetScope: 'party', restorePp: { amount: 'max', target: 'single' } },
-  elixir: { targetScope: 'party', restorePp: { amount: 10, target: 'all' } },
-  'max-elixir': { targetScope: 'party', restorePp: { amount: 'max', target: 'all' } },
-  'leppa-berry': { targetScope: 'party', restorePp: { amount: 10, target: 'all' } },
+  ether: { targetScope: 'both', restorePp: { amount: 10, target: 'single' } },
+  'max-ether': { targetScope: 'both', restorePp: { amount: 'max', target: 'single' } },
+  elixir: { targetScope: 'both', restorePp: { amount: 10, target: 'all' } },
+  'max-elixir': { targetScope: 'both', restorePp: { amount: 'max', target: 'all' } },
+  'leppa-berry': { targetScope: 'both', restorePp: { amount: 10, target: 'all' } },
 
   // --- Battle Stat Boosters ---
   'x-attack': { targetScope: 'battler', statStageBuff: { stat: 'attack', stages: 2 } },

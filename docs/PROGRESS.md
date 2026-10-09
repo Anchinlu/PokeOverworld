@@ -1,4 +1,35 @@
-## Cập nhật lần cuối: 2026-10-09 (Bộ Lọc Vật Phẩm Trao Được & Phân Loại Minh Bạch Dùng vs Cho Giữ)
+## Cập nhật lần cuối: 2026-10-09 (Hỗ Trợ Dùng Vật Phẩm Hồi Sinh & Phục Hồi PP Trong Trận Đấu)
+
+### 0.80. Hỗ Trợ Dùng Vật Phẩm Hồi Sinh & Phục Hồi PP Trong Trận Đấu (Battle Revive & PP Recovery System):
+
+- **Trạng thái:** Đã hoàn thành 100%. 26 tệp test suite (214/214 tests), Typecheck (`npm run typecheck:web`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** Sửa lỗi dùng vật phẩm hồi sinh trong trận chiến nhưng bị báo là không dùng trong trận đấu được.
+- **Nguyên nhân gốc rễ (Root Cause):**
+  1. Trong [item-catalog-effects.ts](file:///e:/Pokemon/apps/web/src/domain/inventory/item-catalog-effects.ts), các vật phẩm `revive`, `max-revive`, `revival-herb`, `sacred-ash` và các món phục hồi PP (`ether`, `max-ether`, `elixir`, `max-elixir`, `leppa-berry`) bị cấu hình nhầm `targetScope: 'party'`, khiến hàm `canUseItemOnBattler` hiểu lầm là vật phẩm chỉ dùng ngoài thế giới và trả về lỗi: `"Vật phẩm này không thể dùng trong trận đấu!"`.
+  2. Trong [battle-controller.ts](file:///e:/Pokemon/apps/web/src/battle/battle-controller.ts), toàn bộ vật phẩm dược phẩm khi bấm dùng từ túi đồ trong trận bị gán thẳng cho Pokémon đang ra trận (`this.engine.playerPokemon`). Trong khi Pokémon đang ra trận luôn ở trạng thái sống (`currentHp > 0`), còn vật phẩm hồi sinh bắt buộc phải dùng lên một Pokémon đã gục ngã (`isFainted: true`) trong đội hình.
+- **Chi tiết đã thực hiện:**
+  1. **Cập Nhật Phạm Vi Sử Dụng Trong Trận ([item-catalog-effects.ts](file:///e:/Pokemon/apps/web/src/domain/inventory/item-catalog-effects.ts)):**
+     - Đổi `targetScope` của `revive`, `max-revive`, `revival-herb`, `sacred-ash` sang `'both'` (chuẩn core-series: có thể dùng cả ngoài overworld lẫn trong trận).
+     - Đổi `targetScope` của các bình phục hồi điểm PP (`ether`, `max-ether`, `elixir`, `max-elixir`, `leppa-berry`) sang `'both'` để sẵn sàng dùng trong trận.
+  2. **Bộ Máy Kiểm Tra Tính Khả Dụng Khi Hồi Sinh ([item-effects.ts](file:///e:/Pokemon/apps/web/src/domain/inventory/item-effects.ts)):**
+     - Bổ sung logic kiểm tra hồi sinh `def.reviveRatio !== undefined` trong cả `canUseItemOnBattler` và `applyItemToBattler`:
+       - Nếu Pokémon còn sống $\rightarrow$ Trả về lý do chính xác: `"${name} đang khỏe mạnh, không thể hồi sinh!"` (thay vì báo lỗi không dùng được trong trận).
+       - Nếu Pokémon đã ngất xỉu $\rightarrow$ Cho phép hồi sinh và hồi phục chính xác 50% HP (Revive) hoặc 100% HP (Max Revive), gỡ bỏ trạng thái `isFainted` và `status`.
+     - Cập nhật kiểu tham số `partyMembers?: readonly PartyPokemon[] | PartyPokemon[]` để tương thích hoàn toàn với kiểu trả về của `partyService.getParty()`.
+  3. **Luồng Chọn Pokémon Cần Hồi Sinh Chuẩn GBA ([battle-controller.ts](file:///e:/Pokemon/apps/web/src/battle/battle-controller.ts), [party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts)):**
+     - Khi người chơi chọn `Revive` / `Max Revive` / `Revival Herb` trong túi đồ khi đang chiến đấu:
+       - Kiểm tra đội hình: Nếu tất cả đều còn sống, thông báo rõ ràng: *"Toàn bộ đội hình đều đang khỏe mạnh, không có Pokémon nào cần hồi sinh!"* và mở lại túi đồ để người chơi chọn món khác (không mất lượt).
+       - Với `Sacred Ash`: Hồi sinh toàn bộ thành viên ngất xỉu lập tức, trừ 1 vật phẩm, phát âm thanh và chuyển lượt cho đối thủ.
+       - Với `Revive` / `Max Revive`: Tự động đóng túi và mở Màn hình Đội hình (`PartyScreen`) với thông báo: *"Chọn Pokémon cần hồi sinh bằng [Tên vật phẩm]:"*.
+       - Người chơi click (hoặc double-click) vào Pokémon đã ngất xỉu $\rightarrow$ Hồi sinh ngay lập tức, trừ 1 vật phẩm khỏi túi, phát SE, cập nhật HUD máu và chuyển sang lượt của đối phương.
+       - Nếu người chơi click nhầm Pokémon đang sống $\rightarrow$ Cảnh báo toast *"⚠️ [Tên] đang khỏe mạnh! Hãy chọn Pokémon đã ngất xỉu."* và giữ nguyên màn hình để người chơi chọn lại.
+       - Nếu người chơi bấm THOÁT / Esc từ Party Screen $\rightarrow$ Mở lại túi đồ chiến đấu mà không làm mất lượt.
+  4. **Kiểm Thử Đầy Đủ ([item-effects.test.ts](file:///e:/Pokemon/apps/web/test/item-effects.test.ts)):**
+     - Thêm bài test xác thực toàn diện: `canUseItemOnBattler` không còn báo lỗi *"không thể dùng trong trận đấu"*, kiểm tra phân biệt Pokémon sống vs ngất xỉu, hồi phục 50% HP cho Revive và 100% HP cho Max Revive.
+     - `npm run typecheck:web` $\rightarrow$ PASS 0 lỗi.
+     - `npm run test:web` $\rightarrow$ 26/26 suites, 214/214 tests PASS 100%.
+
+---
 
 ### 0.79. Bộ Lọc Vật Phẩm Trao Được & Phân Loại Minh Bạch Dùng vs Cho Giữ (Holdable Filtering & Usage Classification):
 
