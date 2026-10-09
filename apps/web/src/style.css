@@ -3108,6 +3108,42 @@ body {
   z-index: 3;
 }
 
+.ps-held-item-badge {
+  position: absolute;
+  right: 14px;
+  bottom: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 6px;
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(56, 189, 248, 0.6);
+  border-radius: 4px;
+  z-index: 3;
+  pointer-events: none;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+.ps-held-item-icon {
+  width: 14px;
+  height: 14px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.ps-held-item-name {
+  font-family: 'VT323', monospace;
+  font-size: 14px;
+  color: #38bdf8;
+  line-height: 1;
+  max-width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .party-msg-box {
   position: absolute;
   left: 6px;

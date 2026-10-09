@@ -27,6 +27,7 @@ import {
   STRUGGLE_MOVE,
 } from './rules/move-effect-engine';
 import { BattleEventFactory } from './state/battle-event-factory';
+import { HeldItemEngine } from './rules/held-item-engine';
 import {
   ensureBattlerState,
   applyStatStageChange,
@@ -499,7 +500,7 @@ export class BattleEngine {
     const prevDefenderHp = defender.currentHp;
     defender.currentHp = Math.max(0, defender.currentHp - damage);
     const actualDamage = prevDefenderHp - defender.currentHp;
-    const defenderFainted = defender.currentHp <= 0;
+    let defenderFainted = defender.currentHp <= 0;
     if (defenderFainted) {
       defender.isFainted = true;
     }
@@ -696,6 +697,23 @@ export class BattleEngine {
     // Recharge move flag
     if (RECHARGE_MOVE_IDS.has(moveId) && actualDamage > 0) {
       attacker.mustRecharge = true;
+    }
+
+    // Post-attack held item effects (Life Orb recoil, Rocky Helmet counter, Defender Pinch Berries)
+    if (actualDamage > 0) {
+      const heldEffects = HeldItemEngine.checkPostAttackEffects(
+        attacker,
+        attackerSide,
+        defender,
+        defenderSide,
+        move,
+        actualDamage
+      );
+      if (heldEffects.length > 0) {
+        events.push(...heldEffects);
+        if (attacker.currentHp <= 0) attackerFainted = true;
+        if (defender.currentHp <= 0) defenderFainted = true;
+      }
     }
 
     return {

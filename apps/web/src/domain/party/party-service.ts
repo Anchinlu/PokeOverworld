@@ -282,6 +282,7 @@ export class PartyService {
     partyMember.currentHp = Math.max(0, battler.currentHp);
     partyMember.isFainted = partyMember.currentHp <= 0;
     partyMember.status = battler.status ?? 'none';
+    partyMember.heldItem = battler.heldItem ?? null;
 
     // Sync PP of moves
     for (const bMove of battler.moves) {

@@ -14,6 +14,9 @@ import { TYPE_ICO_INDICES } from '../battle/type-chart';
 import type { BattleMove } from '../battle/types';
 import { battleSePlayer } from '../audio';
 import { NATURES_TABLE, type StatKey } from '@pokemon/shared-types';
+import { findItem } from '../data/items-db';
+import { inventoryService } from '../domain/inventory/inventory-service';
+import { BagScreen } from './bag-screen';
 
 export interface BattleSelectOptions {
   currentBattlerUid?: string;
@@ -209,6 +212,14 @@ export class PartyScreen {
             <span class="action-btn-arrow">▶</span>
             <span class="action-btn-text">Xem thông tin</span>
           </button>
+          <button class="party-action-btn" id="btnActionTakeItem" style="display: none;">
+            <span class="action-btn-arrow">▶</span>
+            <span class="action-btn-text">Gỡ vật phẩm</span>
+          </button>
+          <button class="party-action-btn" id="btnActionGiveItem">
+            <span class="action-btn-arrow">▶</span>
+            <span class="action-btn-text">Trao vật phẩm</span>
+          </button>
           <button class="party-action-btn cancel" id="btnActionDismiss">
             <span class="action-btn-arrow">▶</span>
             <span class="action-btn-text">Đóng</span>
@@ -242,6 +253,10 @@ export class PartyScreen {
                   <div class="summary-meta-row">
                     <span class="meta-label">Cấp khi bắt:</span>
                     <span class="meta-val" id="partySummaryCaughtLv">Lv.5</span>
+                  </div>
+                  <div class="summary-meta-row held-row">
+                    <span class="meta-label">Vật phẩm:</span>
+                    <span class="meta-val held-val" id="partySummaryHeldItem">Không có</span>
                   </div>
                   <div class="summary-meta-row nature-row">
                     <span class="meta-label">Tính cách:</span>
@@ -477,6 +492,39 @@ export class PartyScreen {
         }
         this.activeMenuIndex = null;
         this.render();
+      }
+    });
+
+    const btnTakeItem = this.backdropEl.querySelector('#btnActionTakeItem');
+    btnTakeItem?.addEventListener('click', () => {
+      if (this.activeMenuIndex !== null) {
+        const pk = partyService.getPokemon(this.activeMenuIndex);
+        if (pk && pk.heldItem) {
+          const removedItem = pk.heldItem;
+          const itemDef = findItem(removedItem);
+          const itemName = itemDef ? itemDef.nameVi || itemDef.name : removedItem;
+          // Add back to inventory
+          inventoryService.addItem(removedItem, 1);
+          pk.heldItem = null;
+          battleSePlayer.playSound('Audio/SE/PC access.ogg', 0.8);
+          showBerryToast(
+            `🎒 Đã gỡ ${itemName} từ ${pk.nickname || pk.name} và cất vào túi đồ!`,
+            '#22c55e'
+          );
+          this.activeMenuIndex = null;
+          this.render();
+        }
+      }
+    });
+
+    const btnGiveItem = this.backdropEl.querySelector('#btnActionGiveItem');
+    btnGiveItem?.addEventListener('click', () => {
+      if (this.activeMenuIndex !== null) {
+        this.activeMenuIndex = null;
+        this.render();
+        // Open Bag in normal mode, player can use "TRAO" button
+        BagScreen.getInstance().open();
+        showBerryToast('Chọn vật phẩm trong túi và bấm "TRAO" để trang bị!', '#38bdf8');
       }
     });
 
@@ -747,6 +795,19 @@ export class PartyScreen {
 
           <!-- Status Condition Badge if sick/fainted -->
           ${isFainted ? '<span class="ps-status-fnt">FNT</span>' : pk.status !== 'none' ? `<span class="ps-status-badge">${pk.status.toUpperCase()}</span>` : ''}
+
+          <!-- Held Item Badge -->
+          ${(() => {
+            if (!pk.heldItem) return '';
+            const heldDef = findItem(pk.heldItem);
+            const heldName = heldDef ? heldDef.nameVi || heldDef.name : pk.heldItem;
+            const heldSprite = heldDef?.sprite ? `/${heldDef.sprite}` : '/Graphics/Items/000.png';
+            return `
+            <div class="ps-held-item-badge" title="Đang giữ: ${heldName}">
+              <img src="${heldSprite}" class="ps-held-item-icon" alt="${heldName}" />
+              <span class="ps-held-item-name">${heldName}</span>
+            </div>`;
+          })()}
         `;
       } else {
         // Blank slot: clean blank panel frame exactly matching template
@@ -778,13 +839,19 @@ export class PartyScreen {
 
         const btnSendOut = actionMenu.querySelector<HTMLElement>('#btnActionSendOut');
         const btnSwap = actionMenu.querySelector<HTMLElement>('#btnActionSwap');
+        const btnTakeItem = actionMenu.querySelector<HTMLElement>('#btnActionTakeItem');
+        const btnGiveItem = actionMenu.querySelector<HTMLElement>('#btnActionGiveItem');
 
         if (this.battleSelectOptions) {
           if (btnSendOut) btnSendOut.style.display = 'flex';
           if (btnSwap) btnSwap.style.display = 'none';
+          if (btnTakeItem) btnTakeItem.style.display = 'none';
+          if (btnGiveItem) btnGiveItem.style.display = 'none';
         } else {
           if (btnSendOut) btnSendOut.style.display = 'none';
           if (btnSwap) btnSwap.style.display = 'flex';
+          if (btnTakeItem) btnTakeItem.style.display = targetPk.heldItem ? 'flex' : 'none';
+          if (btnGiveItem) btnGiveItem.style.display = 'flex';
         }
 
         actionMenu.style.display = 'flex';
@@ -992,6 +1059,19 @@ export class PartyScreen {
         Math.max(0, Math.round((pokemon.exp / Math.max(1, pokemon.maxExp)) * 100))
       );
       expBar.style.width = `${expPercent}%`;
+    }
+
+    // Populate Held Item Info
+    const heldEl = modal.querySelector('#partySummaryHeldItem');
+    if (heldEl) {
+      if (pokemon.heldItem) {
+        const itemDef = findItem(pokemon.heldItem);
+        const name = itemDef ? itemDef.nameVi || itemDef.name : pokemon.heldItem;
+        const iconSrc = itemDef?.sprite ? `/${itemDef.sprite}` : '/Graphics/Items/000.png';
+        heldEl.innerHTML = `<img src="${iconSrc}" class="summary-held-icon" style="width:16px;height:16px;vertical-align:middle;margin-right:4px;" alt="${name}" /><span>${name}</span>`;
+      } else {
+        heldEl.innerHTML = '<span style="color:#94a3b8;font-style:italic;">Không có</span>';
+      }
     }
 
     // Render active moves and level-up move pool

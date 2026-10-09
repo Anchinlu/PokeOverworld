@@ -8,6 +8,8 @@ import {
   clearStatusCondition,
 } from '../state/battle-state-reducer';
 
+import { HeldItemEngine } from './held-item-engine';
+
 export interface PreTurnStatusResult {
   canAct: boolean;
   statusPrefix: string;
@@ -58,6 +60,13 @@ export function checkPreTurnStatus(
   ensureBattlerState(attacker);
   const events: BattleEvent[] = [];
   let statusPrefix = '';
+
+  // 0. Check Status Curing Berry (Cheri, Chesto, Pecha, Rawst, Aspear, Lum)
+  const berryCureEvents = HeldItemEngine.checkStatusTriggeredBerry(attacker, attackerSide);
+  if (berryCureEvents.length > 0) {
+    events.push(...berryCureEvents);
+    statusPrefix = `${(berryCureEvents[0] as any).message ?? ''} `;
+  }
 
   // 1. Sleep handling
   if (attacker.status === 'sleep') {
@@ -221,12 +230,24 @@ export function processEndTurnEffects(
     );
   }
 
-  if (totalDamage <= 0) return null;
-
-  const { fainted: defenderFainted } = applyDamage(target, totalDamage);
-  if (defenderFainted) {
-    events.push(BattleEventFactory.fainted(targetSide, target.name, `${target.name} đã ngất xỉu!`));
+  let defenderFainted = false;
+  if (totalDamage > 0) {
+    const res = applyDamage(target, totalDamage);
+    defenderFainted = res.fainted;
+    if (defenderFainted) {
+      events.push(BattleEventFactory.fainted(targetSide, target.name, `${target.name} đã ngất xỉu!`));
+    }
   }
+
+  // Held item end-of-turn effects (Leftovers, Black Sludge, Pinch Berries)
+  if (!defenderFainted && target.currentHp > 0) {
+    const heldItemEvents = HeldItemEngine.processEndTurnHeldItem(target, targetSide);
+    if (heldItemEvents.length > 0) {
+      events.push(...heldItemEvents);
+    }
+  }
+
+  if (totalDamage <= 0 && events.length === 0) return null;
 
   return {
     damage: totalDamage,

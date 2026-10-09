@@ -224,6 +224,7 @@ export function partyPokemonToBattler(pokemon: PartyPokemon): BattlerPokemon {
     exp: pokemon.exp,
     maxExp: pokemon.maxExp,
     pokeball: normalizeBallKey(pokemon.ballCaught),
+    heldItem: pokemon.heldItem ?? null,
   };
 }
 

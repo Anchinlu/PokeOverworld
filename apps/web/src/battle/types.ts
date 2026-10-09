@@ -127,6 +127,7 @@ export interface BattlerPokemon {
   exp: number;
   maxExp: number;
   pokeball?: string;
+  heldItem?: string | null;
   // Multi-turn, Protect & Status combat states
   chargingMove?: {
     move: BattleMove;

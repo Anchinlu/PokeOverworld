@@ -4,16 +4,19 @@ import { getStatMultiplier } from '../state/battle-state-reducer';
 
 import { PROTECT_MOVE_IDS } from './move-effect-engine';
 
+import { HeldItemEngine } from './held-item-engine';
+
 /**
- * Calculates effective combat speed of a battler, taking into account stat stages and paralysis.
+ * Calculates effective combat speed of a battler, taking into account stat stages, paralysis, and held items.
  */
 export function calculateEffectiveSpeed(battler: BattlerPokemon): number {
   const baseSpeed = battler.stats.speed;
   const speedStage = battler.statStages?.speed ?? 0;
   const stageMultiplier = getStatMultiplier(speedStage);
   const paralysisMultiplier = battler.status === 'paralysis' ? 0.5 : 1.0;
+  const heldItemMultiplier = HeldItemEngine.getStatMultiplier(battler, 'speed');
 
-  return baseSpeed * stageMultiplier * paralysisMultiplier;
+  return baseSpeed * stageMultiplier * paralysisMultiplier * heldItemMultiplier;
 }
 
 /**

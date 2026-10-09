@@ -20,6 +20,7 @@ import { getAvailableLevelUpMoves, MOVES_DB } from '../battle/moves-db';
 import { TYPE_ICO_INDICES } from '../battle/type-chart';
 import type { BattleMove } from '../battle/types';
 import { NATURES_TABLE, type StatKey } from '@pokemon/shared-types';
+import { findItem } from '../data/items-db';
 
 const STORAGE_TYPE_INDICES: Record<string, number> = {
   normal: 0,
@@ -322,6 +323,10 @@ export class StorageScreen {
                   <div class="summary-meta-row">
                     <span class="meta-label">Cấp khi bắt:</span>
                     <span class="meta-val" id="storageSummaryCaughtLv">Lv.5</span>
+                  </div>
+                  <div class="summary-meta-row held-row">
+                    <span class="meta-label">Vật phẩm:</span>
+                    <span class="meta-val held-val" id="storageSummaryHeldItem">Không có</span>
                   </div>
                   <div class="summary-meta-row nature-row">
                     <span class="meta-label">Tính cách:</span>
@@ -1385,6 +1390,19 @@ export class StorageScreen {
         Math.max(0, Math.round((pokemon.exp / Math.max(1, pokemon.maxExp)) * 100))
       );
       expBar.style.width = `${expPercent}%`;
+    }
+
+    // Populate Held Item Info
+    const heldEl = modal.querySelector('#storageSummaryHeldItem');
+    if (heldEl) {
+      if (pokemon.heldItem) {
+        const itemDef = findItem(pokemon.heldItem);
+        const name = itemDef ? itemDef.nameVi || itemDef.name : pokemon.heldItem;
+        const iconSrc = itemDef?.sprite ? `/${itemDef.sprite}` : '/Graphics/Items/000.png';
+        heldEl.innerHTML = `<img src="${iconSrc}" class="summary-held-icon" style="width:16px;height:16px;vertical-align:middle;margin-right:4px;" alt="${name}" /><span>${name}</span>`;
+      } else {
+        heldEl.innerHTML = '<span style="color:#94a3b8;font-style:italic;">Không có</span>';
+      }
     }
 
     // Render active moves and level-up move pool

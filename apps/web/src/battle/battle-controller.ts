@@ -22,6 +22,7 @@ import { getPokeballData, getBaseCatchRate } from './pokeball-db';
 import { battleSePlayer, battleBgmPlayer } from '../audio';
 import { pokemonCatalog } from '../data';
 import { calculateExpYield as calculateCanonicalExpYield } from '../domain/pokemon/pokemon-exp';
+import { HeldItemEngine } from './rules/held-item-engine';
 
 /** Calculates unified official EXP yield */
 export function calculateExpYield(enemySpeciesKey: string, enemyLevel: number): number {
@@ -370,9 +371,12 @@ export class BattleController {
 
   private handleEnemyFainted(enemy: BattlerPokemon, player: BattlerPokemon): void {
     this.state.startEnemyFaint(() => {
-      const expGained = calculateExpYield(enemy.speciesKey, enemy.level);
+      const baseExp = calculateExpYield(enemy.speciesKey, enemy.level);
+      const expMultiplier = HeldItemEngine.getExpMultiplier(player);
+      const expGained = Math.floor(baseExp * expMultiplier);
+      const luckyText = expMultiplier > 1 ? ' (Tăng cường bởi Lucky Egg!)' : '';
       this.queueMessage(`${enemy.name} hoang dã đã ngất xỉu!`, 'message', () => {
-        this.queueMessage(`${player.name} nhận được ${expGained} EXP!`, 'end', () => {
+        this.queueMessage(`${player.name} nhận được ${expGained} EXP!${luckyText}`, 'end', () => {
           this.endBattle('victory', undefined, expGained);
         });
       });

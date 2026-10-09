@@ -1,4 +1,41 @@
-## Cập nhật lần cuối: 2026-10-09 (Tách Độc Lập Nhạc Intro Khỏi Cài Đặt & Chờ Đến Giây Thứ 11)
+## Cập nhật lần cuối: 2026-10-09 (Hệ Thống Trang Bị & Vận Hành Vật Phẩm Pokémon - Held Items)
+
+### 0.78. Hệ Thống Trang Bị & Vận Hành Vật Phẩm Cho Pokémon (Held Items Engine & UI Display):
+
+- **Trạng thái:** Đã hoàn thành 100%. 26 tệp test suite (210/210 tests), Typecheck (`npm run typecheck:web`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** Thêm logic trang bị vật phẩm và logic vận hành của vật phẩm trang bị cho Pokémon (trong trận đấu và ngoài thế giới), kèm theo hiển thị vật phẩm được trang bị trên giao diện.
+- **Chi tiết đã thực hiện:**
+  1. **Bộ Máy Vận Hành Vật Phẩm Chiến Đấu ([held-item-engine.ts](file:///e:/Pokemon/apps/web/src/battle/rules/held-item-engine.ts)):**
+     - **Quả mọng kích hoạt khi HP $\le 50\%$ (Pinch Berries):** `Oran Berry` (+10 HP), `Sitrus Berry` (+25% Max HP), `Figy/Wiki/Mago/Aguav/Iapapa Berry` (+33% Max HP); tự động kích hoạt tiêu thụ, xóa vật phẩm và hồi phục HP kèm thông báo.
+     - **Quả mọng trị trạng thái bất thường (Status Berries):** `Cheri Berry` (Tê liệt), `Chesto Berry` (Ngủ say), `Pecha Berry` (Trúng độc/Độc nặng), `Rawst Berry` (Bỏng), `Aspear Berry` (Băng giá), `Lum Berry` (Chữa khỏi tức thì bất kỳ trạng thái nào).
+     - **Vật phẩm hồi phục & tác dụng cuối lượt (End-of-Turn):**
+       - `Leftovers` (Thức ăn thừa): Hồi 1/16 Max HP mỗi cuối lượt không tiêu thụ.
+       - `Black Sludge`: Hồi 1/16 Max HP nếu là hệ Poison; gây sát thương 1/8 Max HP nếu không phải hệ Poison.
+     - **Vật phẩm tăng cường sát thương (Damage Boosters):**
+       - 17 loại vật phẩm tăng 20% sát thương theo hệ (`Charcoal`, `Mystic Water`, `Miracle Seed`, `Magnet`, `Silk Scarf`, `Sharp Beak`, v.v.).
+       - `Life Orb`: Tăng 1.3x (+30%) sát thương mọi chiêu, gây 10% Max HP phản chấn lên người dùng sau đòn đánh.
+       - `Expert Belt`: Tăng 1.2x (+20%) sát thương khi tung chiêu khắc hệ đối thủ.
+       - `Choice Band` (+50% Công vật lý), `Choice Specs` (+50% Công đặc biệt), `Choice Scarf` (+50% Tốc độ trong [turn-order.ts](file:///e:/Pokemon/apps/web/src/battle/rules/turn-order.ts)).
+       - `Muscle Band` (+10% chiêu vật lý), `Wise Glasses` (+10% chiêu đặc biệt).
+     - **Vật phẩm phòng ngự & phản đòn:**
+       - `Focus Sash`: Giữ lại 1 HP khi nhận đòn chí tử nếu đang đầy 100% HP (vỡ vụn sau kích hoạt).
+       - `Rocky Helmet`: Phản sát thương 1/6 Max HP lên kẻ tấn công khi chịu đòn tiếp xúc vật lý.
+       - `Eviolite`: Tăng 1.5x Phòng thủ và Thủ đặc biệt cho Pokémon chưa tiến hóa cấp tối đa.
+     - **Vật phẩm tăng cường EXP:**
+       - `Lucky Egg`: Tăng 1.5x (+50%) EXP nhận được sau trận thắng.
+  2. **Hiển Thị & Thao Tác Trang Bị Trên Giao Diện ([party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts), [storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - **Thẻ Slot Pokémon:** Hiển thị huy hiệu pixel `.ps-held-item-badge` gồm icon vật phẩm và tên vật phẩm ở góc dưới bên phải mỗi thẻ trong đội hình.
+     - **Menu Thao Tác:** Bổ sung nút **"Gỡ vật phẩm"** (tháo đồ cất vào túi đồ, phát âm thanh và hiển thị toast) và nút **"Trao vật phẩm"** (mở nhanh túi đồ).
+     - **Bảng Chi Tiết Summary Modal:** Hiển thị mục **"Vật phẩm:"** kèm icon và tên chi tiết trên cả Màn hình Đội hình và PC Box Storage.
+  3. **Đồng Bộ Dữ Liệu Sau Trận Đấu ([party-state.ts](file:///e:/Pokemon/apps/web/src/domain/party/party-state.ts), [party-service.ts](file:///e:/Pokemon/apps/web/src/domain/party/party-service.ts)):**
+     - `partyPokemonToBattler`: Chuyển tiếp `heldItem` từ `PartyPokemon` sang `BattlerPokemon`.
+     - `syncBattleResult`: Lưu lại trạng thái tiêu thụ vật phẩm (quả mọng, focus sash...) trở lại `PartyPokemon`.
+  4. **Kiểm Thử Toàn Diện ([held-items.test.ts](file:///e:/Pokemon/apps/web/test/held-items.test.ts)):**
+     - Tạo bộ 16 bài test chuyên sâu xác thực 100% các tính năng: Trao/tháo vật phẩm, truyền vào trận đấu, kích hoạt quả mọng nguy cấp, quả mọng giải trạng thái, Leftovers, Black Sludge, Choice Scarf, Charcoal, Life Orb, Focus Sash, Rocky Helmet và Lucky Egg.
+     - `npm run typecheck:web` $\rightarrow$ PASS, 0 errors.
+     - `npm run test:web` $\rightarrow$ 26/26 suites, 210/210 tests PASS 100%.
+
+---
 
 ### 0.77. Tách Biệt Độc Lập Nhạc Nền Intro Khỏi Cài Đặt Âm Lượng & Chờ Đến Giây Thứ 11:
 

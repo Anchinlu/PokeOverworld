@@ -43,6 +43,8 @@ export const MULTI_HIT_2_MOVE_IDS = new Set([
   'dragon_darts',
 ]);
 
+import { HeldItemEngine } from './held-item-engine';
+
 /**
  * Calculates raw base damage for a single hit under Gen 7 formula.
  */
@@ -63,11 +65,18 @@ export function calculateSingleHitBaseDamage(
     ? (defender.statStages?.spDef ?? 0)
     : (defender.statStages?.defense ?? 0);
 
-  let atk = rawAtk * getStatMultiplier(atkStage);
+  const atkItemMult = isSpecial
+    ? HeldItemEngine.getStatMultiplier(attacker, 'spAtk')
+    : HeldItemEngine.getStatMultiplier(attacker, 'attack');
+  const defItemMult = isSpecial
+    ? HeldItemEngine.getStatMultiplier(defender, 'spDef')
+    : HeldItemEngine.getStatMultiplier(defender, 'defense');
+
+  let atk = rawAtk * getStatMultiplier(atkStage) * atkItemMult;
   if (!isSpecial && attacker.status === 'burn') {
     atk *= 0.5;
   }
-  const def = Math.max(1, rawDef * getStatMultiplier(defStage));
+  const def = Math.max(1, rawDef * getStatMultiplier(defStage) * defItemMult);
 
   const levelFactor = Math.floor((2 * attacker.level) / 5) + 2;
   const baseDmg = Math.floor((levelFactor * effectivePower * (atk / def)) / 50) + 2;
@@ -306,7 +315,17 @@ export function calculateDamage(
     const critMult = isCrit ? 1.5 : 1.0;
     const randomFactor = 0.85 + rng.next() * 0.15;
 
-    damage = Math.max(1, Math.floor(baseDmg * stab * typeEff * critMult * randomFactor));
+    const heldItemDamageMult = HeldItemEngine.getDamageMultiplier(
+      attacker,
+      defender,
+      move,
+      typeEff
+    );
+
+    damage = Math.max(
+      1,
+      Math.floor(baseDmg * stab * typeEff * critMult * randomFactor * heldItemDamageMult)
+    );
 
     // Multi-hit moves
     const isMultiHit2to5 = MULTI_HIT_2_TO_5_MOVE_IDS.has(moveId);
@@ -329,7 +348,10 @@ export function calculateDamage(
       for (let i = 2; i <= maxHits; i++) {
         if (simDefenderHp <= 0) break;
         const hitRandom = 0.85 + rng.next() * 0.15;
-        const hitDmg = Math.max(1, Math.floor(baseDmg * stab * typeEff * critMult * hitRandom));
+        const hitDmg = Math.max(
+          1,
+          Math.floor(baseDmg * stab * typeEff * critMult * hitRandom * heldItemDamageMult)
+        );
         totalDmg += hitDmg;
         simDefenderHp -= hitDmg;
         hits++;
@@ -343,6 +365,13 @@ export function calculateDamage(
     else if (typeEff < 0.8) effText = ' Đòn đánh không mấy hiệu quả...';
 
     if (isCrit) effText += ' Đòn chí mạng!';
+  }
+
+  // Defensive Focus Sash Check
+  const sashCheck = HeldItemEngine.checkFocusSash(defender, damage);
+  if (sashCheck.triggered) {
+    damage = sashCheck.damage;
+    secMsg = secMsg ? `${secMsg} ${sashCheck.message}` : sashCheck.message;
   }
 
   return {
