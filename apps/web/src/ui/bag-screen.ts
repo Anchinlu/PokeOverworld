@@ -7,10 +7,11 @@
 import { inventoryService } from '../domain/inventory/inventory-service';
 import { partyService } from '../domain/party/party-service';
 import { applyItemToPartyPokemon } from '../domain/inventory/item-effects';
-import { BAG_ASSETS, POKEMON_ASSETS } from '../assets';
+import { BAG_ASSETS } from '../assets';
 import { BAG_POCKETS, findItem, type ItemData } from '../data/items-db';
 import { showBerryToast } from './toast';
 import { battleSePlayer } from '../audio/battle-se';
+import { PartyScreen } from './party-screen';
 
 export interface BagItemEntry {
   rawId: string;
@@ -85,7 +86,6 @@ export class BagScreen {
 
   public close(): void {
     const wasOptions = this.openOptions;
-    this.closePartyPicker();
     this.isOpen = false;
     this.openOptions = null;
     if (this.backdropEl) {
@@ -169,17 +169,6 @@ export class BagScreen {
             <button id="btnBagUse" class="bag-btn-action primary" title="Sử dụng vật phẩm (Enter)">DÙNG</button>
             <button id="btnBagGive" class="bag-btn-action secondary" title="Cho Pokémon cầm">CHO GIỮ</button>
             <button id="btnBagClose" class="bag-btn-action cancel" title="Đóng túi (Esc / B)">THOÁT</button>
-          </div>
-        </div>
-
-        <!-- Party Picker Modal for applying items/held items directly to a party Pokémon -->
-        <div class="bag-party-picker-modal" id="bagPartyPickerModal" style="display: none;">
-          <div class="bag-party-picker-dialog">
-            <div class="bag-party-picker-header">
-              <span class="bag-party-picker-title" id="bagPartyPickerTitle">CHỌN POKÉMON</span>
-              <button class="bag-party-picker-close" id="btnBagPartyPickerClose" title="Hủy bỏ">✕</button>
-            </div>
-            <div class="bag-party-picker-list" id="bagPartyPickerList"></div>
           </div>
         </div>
       </div>
@@ -472,8 +461,38 @@ export class BagScreen {
       return;
     }
 
-    // Open party picker to select which Pokémon to use the item on
-    this.openPartyPicker(selected, 'use');
+    // Đóng túi đồ và mở trực tiếp Màn hình Đội hình (Party Screen) ở chế độ Dùng vật phẩm
+    this.close();
+    PartyScreen.getInstance().openForSelect({
+      mode: 'use_item',
+      item: selected,
+      onSelect: (pk, _slotIndex) => {
+        const result = applyItemToPartyPokemon(selected.item, pk);
+        if (result.success) {
+          // Trừ 1 số lượng vật phẩm khỏi túi đồ
+          inventoryService.removeItem(selected.rawId, 1);
+          battleSePlayer.playSound('Audio/SE/Battle catch click.ogg', 0.85);
+          showBerryToast(result.message, '#22c55e');
+          partyService.notify();
+
+          const remaining = inventoryService.getItemCount(selected.rawId);
+          if (remaining <= 0) {
+            // Đã hết vật phẩm, đóng màn hình đội hình và trở về túi đồ
+            PartyScreen.getInstance().close();
+            this.open(this.openOptions ?? undefined);
+          } else {
+            selected.count = remaining;
+            PartyScreen.getInstance().render();
+          }
+        } else {
+          showBerryToast(`⚠️ ${result.message}`, '#ef4444');
+        }
+      },
+      onCancel: () => {
+        // Trở về túi đồ khi người chơi bấm THOÁT / Esc từ Party Screen
+        this.open(this.openOptions ?? undefined);
+      },
+    });
   }
 
   private giveSelectedItem(): void {
@@ -491,8 +510,21 @@ export class BagScreen {
       return;
     }
 
-    // 2. Mở hộp thoại chọn Pokémon nếu mở túi độc lập từ bản đồ
-    this.openPartyPicker(selected, 'give');
+    // 2. Mở trực tiếp Màn hình Đội hình (Party Screen) ở chế độ Trao vật phẩm
+    this.close();
+    PartyScreen.getInstance().openForSelect({
+      mode: 'give_item',
+      item: selected,
+      onSelect: (_pk, slotIndex) => {
+        this.giveItemToPokemon(selected, slotIndex);
+        PartyScreen.getInstance().close();
+        this.open(this.openOptions ?? undefined);
+      },
+      onCancel: () => {
+        // Trở về túi đồ khi người chơi bấm THOÁT / Esc từ Party Screen
+        this.open(this.openOptions ?? undefined);
+      },
+    });
   }
 
   private giveItemToPokemon(entry: BagItemEntry, pokemonIndex: number): void {
@@ -529,124 +561,7 @@ export class BagScreen {
       return;
     }
 
-    this.closePartyPicker();
     this.render();
-  }
-
-  private openPartyPicker(entry: BagItemEntry, mode: 'use' | 'give'): void {
-    if (!this.backdropEl) return;
-    const modal = this.backdropEl.querySelector<HTMLElement>('#bagPartyPickerModal');
-    const titleEl = this.backdropEl.querySelector<HTMLElement>('#bagPartyPickerTitle');
-    const listEl = this.backdropEl.querySelector<HTMLElement>('#bagPartyPickerList');
-    const btnClosePicker = this.backdropEl.querySelector<HTMLElement>('#btnBagPartyPickerClose');
-
-    if (!modal || !titleEl || !listEl) return;
-
-    const itemName = entry.item.nameVi || entry.item.name;
-    titleEl.innerText =
-      mode === 'use'
-        ? `CHỌN POKÉMON ĐỂ DÙNG: ${itemName.toUpperCase()}`
-        : `CHỌN POKÉMON ĐỂ TRAO: ${itemName.toUpperCase()}`;
-
-    const closeHandler = () => {
-      this.closePartyPicker();
-    };
-    btnClosePicker?.replaceWith(btnClosePicker.cloneNode(true));
-    const newBtnClose = this.backdropEl.querySelector<HTMLElement>('#btnBagPartyPickerClose');
-    newBtnClose?.addEventListener('click', closeHandler);
-
-    listEl.innerHTML = '';
-    const party = partyService.getParty();
-
-    if (party.length === 0) {
-      showBerryToast('Không có Pokémon nào trong đội hình!', '#ef4444');
-      return;
-    }
-
-    party.forEach((pk) => {
-      const card = document.createElement('div');
-      const isFnt = pk.isFainted || pk.currentHp <= 0;
-      card.className = `bag-picker-member-card ${isFnt ? 'is-fainted' : ''}`;
-
-      const iconUrl = POKEMON_ASSETS.getIconSprite(pk.speciesKey, pk.isShiny);
-      const hpPct = Math.max(0, Math.min(100, (pk.currentHp / pk.maxHp) * 100));
-      const hpColor = hpPct > 50 ? '#22c55e' : hpPct > 20 ? '#eab308' : '#ef4444';
-
-      let statusBadge = '';
-      if (isFnt) {
-        statusBadge = '<span class="bag-picker-status-tag" style="background:#dc2626;">FNT</span>';
-      } else if (pk.status === 'poison' || pk.status === 'toxic') {
-        statusBadge = '<span class="bag-picker-status-tag" style="background:#a855f7;">ĐỘC</span>';
-      } else if (pk.status === 'paralysis') {
-        statusBadge = '<span class="bag-picker-status-tag" style="background:#eab308;">LIỆT</span>';
-      } else if (pk.status === 'burn') {
-        statusBadge = '<span class="bag-picker-status-tag" style="background:#f97316;">BỎNG</span>';
-      } else if (pk.status === 'sleep') {
-        statusBadge = '<span class="bag-picker-status-tag" style="background:#64748b;">NGỦ</span>';
-      } else if (pk.status === 'freeze') {
-        statusBadge = '<span class="bag-picker-status-tag" style="background:#06b6d4;">BĂNG</span>';
-      }
-
-      const heldDef = pk.heldItem ? findItem(pk.heldItem) : null;
-      const heldName = heldDef ? heldDef.nameVi || heldDef.name : pk.heldItem;
-      const heldInfo = heldName
-        ? `<span style="font-size:9px; color:#38bdf8;">🎁 Đang giữ: ${heldName}</span>`
-        : '';
-
-      card.innerHTML = `
-        <img src="${iconUrl}" class="bag-picker-pk-icon" alt="${pk.name}" />
-        <div class="bag-picker-member-info">
-          <div class="bag-picker-member-header">
-            <span class="bag-picker-member-name">${pk.nickname || pk.name}</span>
-            <div style="display:flex; align-items:center; gap:4px;">
-              ${statusBadge}
-              <span class="bag-picker-member-level">Lv.${pk.level}</span>
-            </div>
-          </div>
-          <div class="bag-picker-hp-row">
-            <div class="bag-picker-hp-track">
-              <div class="bag-picker-hp-fill" style="width: ${hpPct}%; background-color: ${hpColor};"></div>
-            </div>
-            <span class="bag-picker-hp-val">${pk.currentHp}/${pk.maxHp}</span>
-          </div>
-          ${heldInfo}
-        </div>
-      `;
-
-      card.addEventListener('click', () => {
-        if (mode === 'use') {
-          const result = applyItemToPartyPokemon(entry.item, pk);
-          if (result.success) {
-            // Deduct 1 item quantity from inventory!
-            inventoryService.removeItem(entry.rawId, 1);
-            battleSePlayer.playSound('Audio/SE/Battle catch click.ogg', 0.85);
-            showBerryToast(result.message, '#22c55e');
-            partyService.notify();
-            this.closePartyPicker();
-            this.render();
-          } else {
-            showBerryToast(`⚠️ ${result.message}`, '#ef4444');
-          }
-        } else if (mode === 'give') {
-          const pkIndex = party.findIndex((p) => p.uid === pk.uid);
-          if (pkIndex !== -1) {
-            this.giveItemToPokemon(entry, pkIndex);
-          }
-        }
-      });
-
-      listEl.appendChild(card);
-    });
-
-    modal.style.display = 'flex';
-  }
-
-  private closePartyPicker(): void {
-    if (!this.backdropEl) return;
-    const modal = this.backdropEl.querySelector<HTMLElement>('#bagPartyPickerModal');
-    if (modal) {
-      modal.style.display = 'none';
-    }
   }
 }
 

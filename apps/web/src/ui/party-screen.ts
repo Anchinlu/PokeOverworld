@@ -16,11 +16,20 @@ import { battleSePlayer } from '../audio';
 import { NATURES_TABLE, type StatKey } from '@pokemon/shared-types';
 import { findItem } from '../data/items-db';
 import { inventoryService } from '../domain/inventory/inventory-service';
-import { BagScreen } from './bag-screen';
+import { BagScreen, type BagItemEntry } from './bag-screen';
 
 export interface BattleSelectOptions {
   currentBattlerUid?: string;
   onSelect: (selectedPk: PartyPokemon) => void;
+  onCancel?: () => void;
+}
+
+export interface PartySelectOptions {
+  mode: 'battle' | 'use_item' | 'give_item';
+  prompt?: string;
+  item?: BagItemEntry;
+  currentBattlerUid?: string;
+  onSelect: (selectedPk: PartyPokemon, slotIndex: number) => void;
   onCancel?: () => void;
 }
 
@@ -89,7 +98,7 @@ export class PartyScreen {
   } | null = null;
   private moveDragGhostEl: HTMLElement | null = null;
   private currentHoverMoveSlot: HTMLElement | null = null;
-  private battleSelectOptions: BattleSelectOptions | null = null;
+  private selectOptions: PartySelectOptions | null = null;
   private onLeaderChangeCallback?: (newLeader: PartyPokemon) => void;
 
   private constructor() {
@@ -119,7 +128,20 @@ export class PartyScreen {
   public open(): void {
     if (!this.backdropEl) this.createDom();
     this.isOpen = true;
-    this.battleSelectOptions = null;
+    this.selectOptions = null;
+    this.swapSourceIndex = null;
+    this.activeMenuIndex = null;
+    this.summaryPokemon = null;
+    if (this.backdropEl) {
+      this.backdropEl.style.display = 'flex';
+    }
+    this.render();
+  }
+
+  public openForSelect(options: PartySelectOptions): void {
+    if (!this.backdropEl) this.createDom();
+    this.isOpen = true;
+    this.selectOptions = options;
     this.swapSourceIndex = null;
     this.activeMenuIndex = null;
     this.summaryPokemon = null;
@@ -130,30 +152,26 @@ export class PartyScreen {
   }
 
   public openForBattleSelect(options: BattleSelectOptions): void {
-    if (!this.backdropEl) this.createDom();
-    this.isOpen = true;
-    this.battleSelectOptions = options;
-    this.swapSourceIndex = null;
-    this.activeMenuIndex = null;
-    this.summaryPokemon = null;
-    if (this.backdropEl) {
-      this.backdropEl.style.display = 'flex';
-    }
-    this.render();
+    this.openForSelect({
+      mode: 'battle',
+      currentBattlerUid: options.currentBattlerUid,
+      onSelect: (selectedPk) => options.onSelect(selectedPk),
+      onCancel: options.onCancel,
+    });
   }
 
   public close(): void {
-    const wasBattleSelect = this.battleSelectOptions;
+    const wasSelect = this.selectOptions;
     this.isOpen = false;
-    this.battleSelectOptions = null;
+    this.selectOptions = null;
     this.swapSourceIndex = null;
     this.activeMenuIndex = null;
     this.closeSummaryModal();
     if (this.backdropEl) {
       this.backdropEl.style.display = 'none';
     }
-    if (wasBattleSelect?.onCancel) {
-      wasBattleSelect.onCancel();
+    if (wasSelect?.onCancel) {
+      wasSelect.onCancel();
     }
   }
 
@@ -453,25 +471,35 @@ export class PartyScreen {
     const btnDismiss = this.backdropEl.querySelector('#btnActionDismiss');
 
     btnSendOut?.addEventListener('click', () => {
-      if (this.activeMenuIndex !== null && this.battleSelectOptions) {
+      if (this.activeMenuIndex !== null && this.selectOptions) {
         const pk = partyService.getPokemon(this.activeMenuIndex);
         if (pk) {
-          if (
-            this.battleSelectOptions.currentBattlerUid &&
-            pk.uid === this.battleSelectOptions.currentBattlerUid
-          ) {
-            showBerryToast(`⚠️ ${pk.name} hiện đang ở trên sân đấu!`, '#eab308');
-            return;
+          if (this.selectOptions.mode === 'battle') {
+            if (
+              this.selectOptions.currentBattlerUid &&
+              pk.uid === this.selectOptions.currentBattlerUid
+            ) {
+              showBerryToast(`⚠️ ${pk.name} hiện đang ở trên sân đấu!`, '#eab308');
+              return;
+            }
+            if (pk.isFainted || pk.currentHp <= 0) {
+              showBerryToast(`⚠️ ${pk.name} đã gục ngã, không thể ra trận!`, '#ef4444');
+              return;
+            }
+            const cb = this.selectOptions.onSelect;
+            const slotIdx = this.activeMenuIndex;
+            this.selectOptions = null;
+            this.activeMenuIndex = null;
+            this.close();
+            cb(pk, slotIdx);
+          } else {
+            // mode is 'use_item' or 'give_item'
+            const cb = this.selectOptions.onSelect;
+            const slotIdx = this.activeMenuIndex;
+            this.activeMenuIndex = null;
+            this.render();
+            cb(pk, slotIdx);
           }
-          if (pk.isFainted || pk.currentHp <= 0) {
-            showBerryToast(`⚠️ ${pk.name} đã gục ngã, không thể ra trận!`, '#ef4444');
-            return;
-          }
-          const cb = this.battleSelectOptions.onSelect;
-          this.battleSelectOptions = null;
-          this.activeMenuIndex = null;
-          this.close();
-          cb(pk);
         }
       }
     });
@@ -716,8 +744,22 @@ export class PartyScreen {
       if (this.swapSourceIndex !== null) {
         const src = partyService.getPokemon(this.swapSourceIndex);
         msgText.innerText = `Đang chọn vị trí mới để đổi chỗ với ${src?.name ?? 'Pokémon'}... (Esc để hủy)`;
-      } else if (this.battleSelectOptions) {
-        msgText.innerText = 'Chọn pokemon để đổi ra sân.';
+      } else if (this.selectOptions) {
+        if (this.selectOptions.prompt) {
+          msgText.innerText = this.selectOptions.prompt;
+        } else if (this.selectOptions.mode === 'battle') {
+          msgText.innerText = 'Chọn pokemon để đổi ra sân.';
+        } else if (this.selectOptions.mode === 'use_item') {
+          const itemName = this.selectOptions.item
+            ? this.selectOptions.item.item.nameVi || this.selectOptions.item.item.name
+            : 'vật phẩm';
+          msgText.innerText = `Dùng ${itemName} cho Pokémon nào? (Esc để trở về Túi)`;
+        } else if (this.selectOptions.mode === 'give_item') {
+          const itemName = this.selectOptions.item
+            ? this.selectOptions.item.item.nameVi || this.selectOptions.item.item.name
+            : 'vật phẩm';
+          msgText.innerText = `Trao ${itemName} cho Pokémon nào? (Esc để trở về Túi)`;
+        }
       } else {
         msgText.innerText = 'Chọn pokemon.';
       }
@@ -855,8 +897,20 @@ export class PartyScreen {
         const btnTakeItem = actionMenu.querySelector<HTMLElement>('#btnActionTakeItem');
         const btnGiveItem = actionMenu.querySelector<HTMLElement>('#btnActionGiveItem');
 
-        if (this.battleSelectOptions) {
-          if (btnSendOut) btnSendOut.style.display = 'flex';
+        if (this.selectOptions) {
+          if (btnSendOut) {
+            btnSendOut.style.display = 'flex';
+            const actionText = btnSendOut.querySelector('.action-btn-text');
+            if (actionText) {
+              if (this.selectOptions.mode === 'battle') {
+                actionText.textContent = 'Ra chiến đấu';
+              } else if (this.selectOptions.mode === 'use_item') {
+                actionText.textContent = 'Dùng vật phẩm';
+              } else if (this.selectOptions.mode === 'give_item') {
+                actionText.textContent = 'Cho giữ vật phẩm';
+              }
+            }
+          }
           if (btnSwap) btnSwap.style.display = 'none';
           if (btnTakeItem) btnTakeItem.style.display = 'none';
           if (btnGiveItem) btnGiveItem.style.display = 'none';

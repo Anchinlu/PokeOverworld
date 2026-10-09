@@ -25,7 +25,10 @@
        - `Lucky Egg`: Tăng 1.5x (+50%) EXP nhận được sau trận thắng.
   2. **Hiển Thị & Thao Tác Trang Bị Trên Giao Diện ([party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts), [bag-screen.ts](file:///e:/Pokemon/apps/web/src/ui/bag-screen.ts), [storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
      - **Thẻ Slot Pokémon Tinh Tế & Gọn Gàng:** Đưa icon vật phẩm trang bị `.ps-held-item-icon` ($16 \times 16\text{ px}$) đặt trực tiếp bên cạnh chữ cấp độ (`Lv.X`) trong hàng `.ps-level-row` ngay phía dưới ảnh Pokémon. Bỏ hoàn toàn khung viền xanh và chuỗi chữ tên đồ đè lên số HP; icon hiển thị pixel art độc lập, bóng đổ nhẹ và hỗ trợ tooltip khi rê chuột.
-     - **Luồng Trao Vật Phẩm Trực Tiếp & Thông Minh:**
+     - **Luồng Chọn Pokémon Trực Tiếp Trên Party Screen Chuẩn GBA ([bag-screen.ts](file:///e:/Pokemon/apps/web/src/ui/bag-screen.ts), [party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts)):**
+       - **Bỏ hoàn toàn modal popup danh sách (`#bagPartyPickerModal`):** Khi bấm "DÙNG" hoặc "CHO GIỮ" từ Túi đồ, túi đóng lại và mở thẳng Màn hình Đội hình chính thức.
+       - **Chế độ Chọn Tùy Biến (`PartySelectOptions`):** Party Screen hướng dẫn rõ ràng ở thanh thông báo dưới đáy, hỗ trợ xem tóm tắt thông số trước khi quyết định dùng/trao đồ.
+       - **Hoàn Trả & Tái Sử Dụng Liền Mạch:** Sau khi dùng/trao đồ hoặc bấm THOÁT, màn hình tự động trở về Túi đồ.
        - Khi bấm **"Trao vật phẩm"** trên một Pokémon ở Màn hình Đội hình, Túi đồ mở ra với context `targetPokemonIndex` và hiển thị nút **"TRAO CHO [TÊN POKÉMON]"**.
        - Khi người chơi bấm trao, vật phẩm lập tức gán thẳng cho Pokémon đó (không mở hộp thoại chọn Pokémon thừa thãi).
        - Tự động hoàn lại món đồ cũ vào túi đồ nếu Pokémon đang cầm đồ khác.
