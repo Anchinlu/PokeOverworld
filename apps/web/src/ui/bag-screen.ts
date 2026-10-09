@@ -24,6 +24,9 @@ export interface BagOpenOptions {
   battleFilter?: (entry: BagItemEntry) => boolean;
   onUseItem?: (entry: BagItemEntry) => void;
   onCancel?: () => void;
+  targetPokemonIndex?: number;
+  targetPokemonName?: string;
+  onItemGiven?: (entry: BagItemEntry, pokemonIndex: number) => void;
 }
 
 export class BagScreen {
@@ -414,6 +417,13 @@ export class BagScreen {
       }
       if (btnGive) {
         btnGive.disabled = this.openOptions?.inBattle || selected.item.category === 'key';
+        if (this.openOptions?.targetPokemonName) {
+          btnGive.innerText = `TRAO CHO ${this.openOptions.targetPokemonName.toUpperCase()}`;
+          btnGive.title = `Trao trực tiếp cho ${this.openOptions.targetPokemonName}`;
+        } else {
+          btnGive.innerText = 'CHO GIỮ';
+          btnGive.title = 'Cho Pokémon cầm';
+        }
       }
     } else {
       if (thumbImg) thumbImg.style.display = 'none';
@@ -475,7 +485,52 @@ export class BagScreen {
       return;
     }
 
+    // 1. Nếu mở từ Màn hình Đội hình cho một Pokémon cụ thể: Gán thẳng không cần hỏi lại
+    if (this.openOptions?.targetPokemonIndex !== undefined) {
+      this.giveItemToPokemon(selected, this.openOptions.targetPokemonIndex);
+      return;
+    }
+
+    // 2. Mở hộp thoại chọn Pokémon nếu mở túi độc lập từ bản đồ
     this.openPartyPicker(selected, 'give');
+  }
+
+  private giveItemToPokemon(entry: BagItemEntry, pokemonIndex: number): void {
+    const pk = partyService.getPokemon(pokemonIndex);
+    if (!pk) return;
+
+    // Trao vật phẩm qua partyService (tự động nhận lại món đồ cũ nếu có, lưu storage và notify subscriber)
+    const result = partyService.giveHeldItem(pokemonIndex, entry.rawId);
+    if (result.returnedItem) {
+      // Cất món đồ cũ trước đó về túi đồ
+      inventoryService.addItem(result.returnedItem, 1);
+    }
+    // Trừ 1 số lượng vật phẩm khỏi túi đồ
+    inventoryService.removeItem(entry.rawId, 1);
+    battleSePlayer.playSound('Audio/SE/PC access.ogg', 0.8);
+
+    const givenDef = findItem(entry.rawId);
+    const givenName = givenDef
+      ? givenDef.nameVi || givenDef.name
+      : entry.item.nameVi || entry.item.name;
+
+    showBerryToast(
+      `🎁 Đã trao ${givenName} cho ${pk.nickname || pk.name} nắm giữ!`,
+      '#38bdf8'
+    );
+
+    if (this.openOptions?.onItemGiven) {
+      this.openOptions.onItemGiven(entry, pokemonIndex);
+    }
+
+    // Nếu mở cho Pokémon này từ Party Screen: Tự động đóng túi đồ ngay để người chơi thấy thẻ Pokémon cập nhật tức thì!
+    if (this.openOptions?.targetPokemonIndex !== undefined) {
+      this.close();
+      return;
+    }
+
+    this.closePartyPicker();
+    this.render();
   }
 
   private openPartyPicker(entry: BagItemEntry, mode: 'use' | 'give'): void {
@@ -566,30 +621,17 @@ export class BagScreen {
             inventoryService.removeItem(entry.rawId, 1);
             battleSePlayer.playSound('Audio/SE/Battle catch click.ogg', 0.85);
             showBerryToast(result.message, '#22c55e');
+            partyService.notify();
             this.closePartyPicker();
             this.render();
           } else {
             showBerryToast(`⚠️ ${result.message}`, '#ef4444');
           }
         } else if (mode === 'give') {
-          if (pk.heldItem) {
-            // Return previously held item to inventory
-            inventoryService.addItem(pk.heldItem, 1);
+          const pkIndex = party.findIndex((p) => p.uid === pk.uid);
+          if (pkIndex !== -1) {
+            this.giveItemToPokemon(entry, pkIndex);
           }
-          pk.heldItem = entry.rawId;
-          // Deduct 1 item quantity from inventory!
-          inventoryService.removeItem(entry.rawId, 1);
-          battleSePlayer.playSound('Audio/SE/PC access.ogg', 0.8);
-          const givenDef = findItem(entry.rawId);
-          const givenName = givenDef
-            ? givenDef.nameVi || givenDef.name
-            : entry.item.nameVi || entry.item.name;
-          showBerryToast(
-            `🎁 Đã trao ${givenName} cho ${pk.nickname || pk.name} nắm giữ!`,
-            '#38bdf8'
-          );
-          this.closePartyPicker();
-          this.render();
         }
       });
 

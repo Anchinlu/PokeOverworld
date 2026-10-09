@@ -106,7 +106,7 @@ export class PartyService {
     return () => this.listeners.delete(callback);
   }
 
-  private notify(): void {
+  public notify(): void {
     for (const listener of this.listeners) {
       try {
         listener(this.state);
@@ -257,6 +257,33 @@ export class PartyService {
       }
     }
     this.notify();
+  }
+
+  /**
+   * Assigns a held item to a Pokémon in the party, saving and notifying all listeners.
+   */
+  public giveHeldItem(
+    index: number,
+    itemRawId: string
+  ): { success: boolean; returnedItem: string | null } {
+    const pk = this.getPokemon(index);
+    if (!pk) return { success: false, returnedItem: null };
+    const returnedItem = pk.heldItem ?? null;
+    pk.heldItem = itemRawId;
+    this.notify();
+    return { success: true, returnedItem };
+  }
+
+  /**
+   * Removes the held item from a Pokémon in the party, saving and notifying all listeners.
+   */
+  public removeHeldItem(index: number): string | null {
+    const pk = this.getPokemon(index);
+    if (!pk || !pk.heldItem) return null;
+    const removedItem = pk.heldItem;
+    pk.heldItem = null;
+    this.notify();
+    return removedItem;
   }
 
   // --- Battle Results Synchronization ---

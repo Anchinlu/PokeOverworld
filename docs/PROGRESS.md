@@ -23,17 +23,24 @@
        - `Eviolite`: Tăng 1.5x Phòng thủ và Thủ đặc biệt cho Pokémon chưa tiến hóa cấp tối đa.
      - **Vật phẩm tăng cường EXP:**
        - `Lucky Egg`: Tăng 1.5x (+50%) EXP nhận được sau trận thắng.
-  2. **Hiển Thị & Thao Tác Trang Bị Trên Giao Diện ([party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts), [storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+  2. **Hiển Thị & Thao Tác Trang Bị Trên Giao Diện ([party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts), [bag-screen.ts](file:///e:/Pokemon/apps/web/src/ui/bag-screen.ts), [storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
      - **Thẻ Slot Pokémon Tinh Tế & Gọn Gàng:** Đưa icon vật phẩm trang bị `.ps-held-item-icon` ($16 \times 16\text{ px}$) đặt trực tiếp bên cạnh chữ cấp độ (`Lv.X`) trong hàng `.ps-level-row` ngay phía dưới ảnh Pokémon. Bỏ hoàn toàn khung viền xanh và chuỗi chữ tên đồ đè lên số HP; icon hiển thị pixel art độc lập, bóng đổ nhẹ và hỗ trợ tooltip khi rê chuột.
-     - **Menu Thao Tác:** Bổ sung nút **"Gỡ vật phẩm"** (tháo đồ cất vào túi đồ, phát âm thanh và hiển thị toast) và nút **"Trao vật phẩm"** (mở nhanh túi đồ).
+     - **Luồng Trao Vật Phẩm Trực Tiếp & Thông Minh:**
+       - Khi bấm **"Trao vật phẩm"** trên một Pokémon ở Màn hình Đội hình, Túi đồ mở ra với context `targetPokemonIndex` và hiển thị nút **"TRAO CHO [TÊN POKÉMON]"**.
+       - Khi người chơi bấm trao, vật phẩm lập tức gán thẳng cho Pokémon đó (không mở hộp thoại chọn Pokémon thừa thãi).
+       - Tự động hoàn lại món đồ cũ vào túi đồ nếu Pokémon đang cầm đồ khác.
+       - Tự động đóng Túi đồ ngay lập tức và kích hoạt cập nhật màn hình Đội hình tức thì: người chơi thấy ngay icon vật phẩm mới trên thẻ Pokémon mà không cần phải thoát ra vào lại!
+     - **Menu Thao Tác:** Nút **"Gỡ vật phẩm"** (tháo đồ cất vào túi đồ, phát âm thanh và hiển thị toast cập nhật UI ngay lập tức) và nút **"Trao vật phẩm"** (mở nhanh túi đồ có target).
      - **Bảng Chi Tiết Summary Modal:** Hiển thị mục **"Vật phẩm:"** kèm icon và tên chi tiết trên cả Màn hình Đội hình và PC Box Storage.
-  3. **Đồng Bộ Dữ Liệu Sau Trận Đấu ([party-state.ts](file:///e:/Pokemon/apps/web/src/domain/party/party-state.ts), [party-service.ts](file:///e:/Pokemon/apps/web/src/domain/party/party-service.ts)):**
+  3. **Đồng Bộ Dữ Liệu Real-time ([party-service.ts](file:///e:/Pokemon/apps/web/src/domain/party/party-service.ts)):**
+     - Bổ sung `giveHeldItem(index, itemRawId)` và `removeHeldItem(index)` vào `PartyService`, tự động lưu localStorage và notify các subscriber.
+     - `PartyScreen` tự động subscribe và re-render khi `PartyService` phát tín hiệu thay đổi.
      - `partyPokemonToBattler`: Chuyển tiếp `heldItem` từ `PartyPokemon` sang `BattlerPokemon`.
      - `syncBattleResult`: Lưu lại trạng thái tiêu thụ vật phẩm (quả mọng, focus sash...) trở lại `PartyPokemon`.
   4. **Kiểm Thử Toàn Diện ([held-items.test.ts](file:///e:/Pokemon/apps/web/test/held-items.test.ts)):**
-     - Tạo bộ 16 bài test chuyên sâu xác thực 100% các tính năng: Trao/tháo vật phẩm, truyền vào trận đấu, kích hoạt quả mọng nguy cấp, quả mọng giải trạng thái, Leftovers, Black Sludge, Choice Scarf, Charcoal, Life Orb, Focus Sash, Rocky Helmet và Lucky Egg.
+     - Tạo bộ 17 bài test chuyên sâu xác thực 100% các tính năng: Trao/tháo vật phẩm, cơ chế trả đồ cũ và notify subscriber của `PartyService`, truyền vào trận đấu, kích hoạt quả mọng nguy cấp, quả mọng giải trạng thái, Leftovers, Black Sludge, Choice Scarf, Charcoal, Life Orb, Focus Sash, Rocky Helmet và Lucky Egg.
      - `npm run typecheck:web` $\rightarrow$ PASS, 0 errors.
-     - `npm run test:web` $\rightarrow$ 26/26 suites, 210/210 tests PASS 100%.
+     - `npm run test:web` $\rightarrow$ 26/26 suites, 211/211 tests PASS 100%.
 
 ---
 

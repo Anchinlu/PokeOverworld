@@ -500,17 +500,18 @@ export class PartyScreen {
       if (this.activeMenuIndex !== null) {
         const pk = partyService.getPokemon(this.activeMenuIndex);
         if (pk && pk.heldItem) {
-          const removedItem = pk.heldItem;
-          const itemDef = findItem(removedItem);
-          const itemName = itemDef ? itemDef.nameVi || itemDef.name : removedItem;
-          // Add back to inventory
-          inventoryService.addItem(removedItem, 1);
-          pk.heldItem = null;
-          battleSePlayer.playSound('Audio/SE/PC access.ogg', 0.8);
-          showBerryToast(
-            `🎒 Đã gỡ ${itemName} từ ${pk.nickname || pk.name} và cất vào túi đồ!`,
-            '#22c55e'
-          );
+          const removedItem = partyService.removeHeldItem(this.activeMenuIndex);
+          if (removedItem) {
+            const itemDef = findItem(removedItem);
+            const itemName = itemDef ? itemDef.nameVi || itemDef.name : removedItem;
+            // Add back to inventory
+            inventoryService.addItem(removedItem, 1);
+            battleSePlayer.playSound('Audio/SE/PC access.ogg', 0.8);
+            showBerryToast(
+              `🎒 Đã gỡ ${itemName} từ ${pk.nickname || pk.name} và cất vào túi đồ!`,
+              '#22c55e'
+            );
+          }
           this.activeMenuIndex = null;
           this.render();
         }
@@ -520,11 +521,27 @@ export class PartyScreen {
     const btnGiveItem = this.backdropEl.querySelector('#btnActionGiveItem');
     btnGiveItem?.addEventListener('click', () => {
       if (this.activeMenuIndex !== null) {
+        const targetSlot = this.activeMenuIndex;
+        const targetPk = partyService.getPokemon(targetSlot);
         this.activeMenuIndex = null;
         this.render();
-        // Open Bag in normal mode, player can use "TRAO" button
-        BagScreen.getInstance().open();
-        showBerryToast('Chọn vật phẩm trong túi và bấm "TRAO" để trang bị!', '#38bdf8');
+        if (targetPk) {
+          // Open Bag directly targeting this Pokemon
+          BagScreen.getInstance().open({
+            targetPokemonIndex: targetSlot,
+            targetPokemonName: targetPk.nickname || targetPk.name,
+            onItemGiven: () => {
+              this.render();
+            },
+            onCancel: () => {
+              this.render();
+            },
+          });
+          showBerryToast(
+            `Chọn vật phẩm và bấm "CHO GIỮ" để trao cho ${targetPk.nickname || targetPk.name}!`,
+            '#38bdf8'
+          );
+        }
       }
     });
 

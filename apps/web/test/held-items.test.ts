@@ -490,4 +490,40 @@ describe('Held Item System (Trang bị & Vận hành vật phẩm Pokémon)', ()
       expect(HeldItemEngine.getExpMultiplier(eggBattler)).toBe(1.5);
     });
   });
+
+  describe('8. PartyService giveHeldItem and removeHeldItem with notifications', () => {
+    it('gives held item, notifies subscribers, and returns old held item', () => {
+      let notified = false;
+      const unsubscribe = partyService.subscribe(() => {
+        notified = true;
+      });
+
+      const firstPk = partyService.getPokemon(0);
+      expect(firstPk).not.toBeNull();
+
+      // Give Oran berry
+      const res1 = partyService.giveHeldItem(0, 'oran-berry');
+      expect(res1.success).toBe(true);
+      expect(res1.returnedItem).toBeNull();
+      expect(partyService.getPokemon(0)?.heldItem).toBe('oran-berry');
+      expect(notified).toBe(true);
+
+      // Give Sitrus berry (should return oran-berry)
+      notified = false;
+      const res2 = partyService.giveHeldItem(0, 'sitrus-berry');
+      expect(res2.success).toBe(true);
+      expect(res2.returnedItem).toBe('oran-berry');
+      expect(partyService.getPokemon(0)?.heldItem).toBe('sitrus-berry');
+      expect(notified).toBe(true);
+
+      // Remove held item
+      notified = false;
+      const removed = partyService.removeHeldItem(0);
+      expect(removed).toBe('sitrus-berry');
+      expect(partyService.getPokemon(0)?.heldItem).toBeNull();
+      expect(notified).toBe(true);
+
+      unsubscribe();
+    });
+  });
 });
