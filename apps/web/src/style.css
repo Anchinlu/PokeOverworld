@@ -6410,6 +6410,167 @@ body {
   image-rendering: crisp-edges;
   object-fit: contain;
   pointer-events: none;
+  z-index: 5;
+}
+
+/* ==========================================================================
+   Rotating Radiance & 18 Type Icons Ring
+   ========================================================================== */
+.intro-radiance-wrapper {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transform: scale(0.8);
+  transition:
+    opacity 1.4s ease-out,
+    transform 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.intro-radiance-wrapper.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.intro-radiance-rays {
+  position: absolute;
+  width: min(88vw, 540px);
+  height: min(88vw, 540px);
+  border-radius: 50%;
+  background: repeating-conic-gradient(
+    from 0deg,
+    rgba(255, 255, 255, 0.42) 0deg 8deg,
+    transparent 8deg 15deg,
+    rgba(250, 204, 21, 0.35) 15deg 23deg,
+    transparent 23deg 30deg
+  );
+  -webkit-mask: radial-gradient(circle, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.8) 55%, transparent 72%);
+  mask: radial-gradient(circle, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.8) 55%, transparent 72%);
+  animation: introRadianceSpin 20s linear infinite;
+  filter: blur(1.5px) drop-shadow(0 0 24px rgba(250, 204, 21, 0.5));
+}
+
+.intro-radiance-aura {
+  position: absolute;
+  width: min(72vw, 440px);
+  height: min(72vw, 440px);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(250, 204, 21, 0.45) 32%,
+    rgba(96, 165, 250, 0.25) 58%,
+    transparent 75%
+  );
+  animation: introAuraPulse 3.6s ease-in-out infinite;
+  filter: blur(8px);
+}
+
+.intro-radiance-track {
+  position: absolute;
+  width: min(70vw, 420px);
+  height: min(70vw, 420px);
+  border-radius: 50%;
+  border: 2px dashed rgba(255, 255, 255, 0.35);
+  box-shadow:
+    0 0 20px 3px rgba(250, 204, 21, 0.45),
+    inset 0 0 20px 3px rgba(96, 165, 250, 0.35);
+  animation: introTrackSpin 32s linear infinite reverse;
+}
+
+.intro-type-ring-wrapper {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transform: scale(0.85);
+  transition:
+    opacity 1.3s ease-out,
+    transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.intro-type-ring-wrapper.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.intro-type-ring {
+  position: absolute;
+  width: 0;
+  height: 0;
+  animation: introTypeRingSpin 24s linear infinite;
+}
+
+.intro-type-icon {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 44px;
+  height: 44px;
+  background-image: url('/Graphics/Intro/pokemon_types_transparent.png');
+  background-size: 264px 132px;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  border-radius: 50%;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.85)) drop-shadow(0 0 12px rgba(250, 204, 21, 0.5));
+  animation: introTypeIconCounterSpin 24s linear infinite;
+  transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty)));
+}
+
+@keyframes introTypeRingSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes introTypeIconCounterSpin {
+  from {
+    transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) rotate(0deg);
+  }
+  to {
+    transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) rotate(-360deg);
+  }
+}
+
+@keyframes introRadianceSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes introAuraPulse {
+  0%, 100% {
+    transform: scale(0.92);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 0.95;
+  }
+}
+
+@keyframes introTrackSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Logo 2: White outline that emerges from pure darkness */
@@ -6417,6 +6578,7 @@ body {
   opacity: 0;
   transform: scale(0.96);
   filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.4));
+  z-index: 5;
   transition:
     opacity 1.4s ease-out,
     transform 1.6s cubic-bezier(0.16, 1, 0.3, 1),

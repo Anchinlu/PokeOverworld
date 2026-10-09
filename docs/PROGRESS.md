@@ -1,4 +1,31 @@
-## Cập nhật lần cuối: 2026-10-09 (Nhạc Nền Sảnh Chờ & Cấu Hình Âm Lượng BGM Riêng)
+## Cập nhật lần cuối: 2026-10-09 (Vòng Xoay 18 Icon Type & Hào Quang Chiếu Sáng Intro Mở Đầu)
+
+### 0.74. Vòng Xoay 18 Icon Type Theo Chiều Kim Đồng Hồ & Hào Quang Ánh Sáng Intro Mở Đầu:
+
+- **Trạng thái:** Đã hoàn thành 100%. 25 tệp test suite (194/194 tests), Typecheck (`npm run typecheck:web`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** Bổ sung phần intro mở đầu: cắt 18 icon type từ `Graphics/Intro/pokemon_types_transparent.png`, sắp xếp thành vòng tròn xoay theo chiều kim đồng hồ, sau đó Logo 2 xuất hiện đè lên chúng rồi thực hiện theo logic cũ; đồng thời bổ sung hiệu ứng chiếu sáng xoay tròn phía sau các icon type.
+- **Chi tiết đã thực hiện:**
+  1. **Tách 18 Icon Hệ Pokémon & Tạo Vòng Tròn Xoay ([game-intro.ts](file:///e:/Pokemon/apps/web/src/ui/game-intro.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Asset: [Graphics/Intro/pokemon_types_transparent.png](file:///e:/Pokemon/Graphics/Intro/pokemon_types_transparent.png) kích thước $408 \times 204\text{px}$ dạng lưới $6 \text{ cột} \times 3 \text{ hàng}$, mỗi ô chính xác $68 \times 68\text{px}$.
+     - Tính toán tọa độ và góc xoay: 18 icon hệ được bố trí đều trên vòng tròn bán kính $R = 210\text{px}$ ($\Delta\theta = 20^\circ$, bắt đầu từ đỉnh 12h và xoay theo chiều kim đồng hồ).
+     - Áp dụng CSS Sprite pixel-art hiển thị ở kích thước $44 \times 44\text{px}$ có đổ bóng hào quang nguyên tố.
+     - Vòng tròn `.intro-type-ring` xoay liên tục theo chiều kim đồng hồ (`rotate(0deg)` $\rightarrow$ `rotate(360deg)`), các icon bên trong counter-rotate giữ biểu tượng luôn thẳng đứng và rõ nét.
+  2. **Hiệu Ứng Chiếu Sáng Hào Quang Xoay Tròn (Celestial Radiance Effect):**
+     - Bổ sung cụm hào quang `.intro-radiance-wrapper` phía sau vòng tròn type:
+       - `.intro-radiance-rays`: Quầng tia sáng nhiều cánh (`conic-gradient` vàng hoàng kim & trắng bạc) chiếu rọi và xoay tròn liên tục (`introRadianceSpin`).
+       - `.intro-radiance-aura`: Tâm hào quang phát sáng mềm mại, breathing nhẹ nhàng (`introAuraPulse`).
+       - `.intro-radiance-track`: Vòng quỹ đạo ánh sáng neon bao quanh đường chuyển động của các icon type.
+  3. **Tiến Trình Chuyển Cảnh Khớp Tuyệt Đối Với Yêu Cầu & Logic Cũ:**
+     - **0ms:** Màn hình đen khởi tạo.
+     - **150ms:** Hào quang ánh sáng xoay tròn và vòng 18 icon type fade-in mềm mại, xoay đều theo chiều kim đồng hồ.
+     - **600ms:** Logo 2 (viền trắng phát sáng `logo2.png`) xuất hiện đè lên trên vòng tròn type (`z-index: 5`).
+     - **2200ms:** Logo 1 (màu sắc rực rỡ `logo1.png`) bừng sáng chói lọi, logo 2 mờ dần phía dưới.
+     - **4200ms:** Chớp sáng seam ngang phát nổ, 2 nửa Shutter (trên trượt lên, dưới trượt xuống) tách đôi cả logo lẫn vòng tròn type mượt mà để lộ ra màn hình chờ.
+  4. **Kiểm Thử & Đảm Bảo Tính Toàn Vẹn ([game-intro.test.ts](file:///e:/Pokemon/apps/web/test/game-intro.test.ts)):**
+     - `npm run typecheck:web` $\rightarrow$ PASS, 0 errors.
+     - `npm run test:web` $\rightarrow$ 25/25 suites, 194/194 tests PASS 100%.
+
+---
 
 ### 0.73. Nhạc Nền Sảnh Chờ (Title BGM) & Cấu Hình Âm Lượng Riêng Biệt:
 

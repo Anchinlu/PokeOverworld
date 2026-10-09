@@ -46,6 +46,10 @@ describe('Game Intro Cinematic', () => {
         'introLogo1Bottom',
         'introCenterFlash',
         'introSkipHint',
+        'introRadianceTop',
+        'introRadianceBottom',
+        'introTypeRingTop',
+        'introTypeRingBottom',
       ];
       for (const id of ids) {
         if (html.includes(`id="${id}"`)) {
@@ -159,17 +163,27 @@ describe('Game Intro Cinematic', () => {
     const controller = playGameIntro(onComplete);
     const overlay = document.getElementById('gameIntroOverlay') as unknown as MockDOMElement;
 
+    const radianceTop = overlay.querySelector('#introRadianceTop');
+    const typeRingTop = overlay.querySelector('#introTypeRingTop');
     const logo2Top = overlay.querySelector('#introLogo2Top');
     const logo1Top = overlay.querySelector('#introLogo1Top');
     const shutterTop = overlay.querySelector('#introShutterTop');
     const shutterBottom = overlay.querySelector('#introShutterBottom');
 
     // 0ms: Initial dark screen
+    expect(radianceTop?.classList.contains('visible')).toBe(false);
+    expect(typeRingTop?.classList.contains('visible')).toBe(false);
     expect(logo2Top?.classList.contains('visible')).toBe(false);
     expect(logo1Top?.classList.contains('visible')).toBe(false);
 
-    // Advance 600ms: logo2 (white outline) becomes visible
-    vi.advanceTimersByTime(650);
+    // Advance 200ms: Radiance & Type Ring become visible
+    vi.advanceTimersByTime(200);
+    expect(radianceTop?.classList.contains('visible')).toBe(true);
+    expect(typeRingTop?.classList.contains('visible')).toBe(true);
+    expect(logo2Top?.classList.contains('visible')).toBe(false);
+
+    // Advance to 650ms (total from start): logo2 (white outline) becomes visible
+    vi.advanceTimersByTime(450);
     expect(logo2Top?.classList.contains('visible')).toBe(true);
     expect(logo1Top?.classList.contains('visible')).toBe(false);
 
