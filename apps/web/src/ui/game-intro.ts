@@ -2,13 +2,19 @@
  * Game Intro Cinematic Controller
  * Features:
  * - Pure dark screen initialization
+ * - Opening Movie BGM audio: 'Audio/Misic backgound/01. Opening Movie.mp3'
  * - Clockwise rotating 18 Pokémon type icons ring (from pokemon_types_transparent.png)
  * - Rotating celestial light radiance / sunburst effect behind the type icons
  * - Glowing white outline logo (logo2.png) overlaying on top of the type ring
  * - Full color iconic Pokémon logo (logo1.png) reveal with radiant glow
  * - Glowing prompt: "✨ BẤM ĐỂ BƯỚC VÀO THẾ GIỚI ✨"
- * - Smooth cinematic fade-out transition on click or key press entering the title screen
+ * - Automatic transition into title screen at the 8th second (8000ms)
+ * - Or click / key press to skip & enter early anytime
+ * - Smooth fade-out transition with automatic Title BGM handover
  */
+
+import { introBgmPlayer } from '../audio/intro-bgm';
+import { titleBgmPlayer } from '../audio/title-bgm';
 
 export interface GameIntroController {
   skip: () => void;
@@ -62,7 +68,13 @@ export function playGameIntro(onComplete?: () => void): GameIntroController {
     existing.remove();
   }
 
-  // 2. Build DOM Structure
+  // 2. Manage Audio: Stop Title BGM if playing, start Intro Opening Movie BGM
+  try {
+    titleBgmPlayer.stopBgm(0);
+    introBgmPlayer.playIntroBgm();
+  } catch (_) {}
+
+  // 3. Build DOM Structure
   const overlay = document.createElement('div');
   overlay.id = 'gameIntroOverlay';
   overlay.className = 'game-intro-overlay';
@@ -86,7 +98,7 @@ export function playGameIntro(onComplete?: () => void): GameIntroController {
 
   document.body.appendChild(overlay);
 
-  // 3. Controller state & timers
+  // 4. Controller state & timers
   let isComplete = false;
   let hasExitStarted = false;
   const timeoutIds: number[] = [];
@@ -104,6 +116,12 @@ export function playGameIntro(onComplete?: () => void): GameIntroController {
     if (overlay.parentNode) {
       overlay.remove();
     }
+    // Stop intro music and seamlessly start title screen BGM
+    try {
+      introBgmPlayer.stopBgm(450);
+      titleBgmPlayer.playTitleBgm();
+    } catch (_) {}
+
     if (!isComplete) {
       isComplete = true;
       if (onComplete) onComplete();
@@ -137,7 +155,7 @@ export function playGameIntro(onComplete?: () => void): GameIntroController {
   };
 
   const handleKey = (e: KeyboardEvent) => {
-    // Any interactive key advances / enters
+    // Any interactive key advances / enters early
     if (['Space', 'Enter', 'Escape', 'KeyZ', 'KeyX'].includes(e.code) || e.key) {
       skipOrAdvance();
     }
@@ -152,7 +170,7 @@ export function playGameIntro(onComplete?: () => void): GameIntroController {
   window.addEventListener('keydown', handleKey);
   overlay.addEventListener('pointerdown', handleClick);
 
-  // 4. Animation Timeline
+  // 5. Animation Timeline
   // Phase 1: Pure dark screen (0 to 150ms)
 
   // Phase 1.5: Rotating Celestial Radiance & 18 Type Icons Ring fade in (at 150ms)
@@ -182,12 +200,19 @@ export function playGameIntro(onComplete?: () => void): GameIntroController {
   );
 
   // Phase 4: Glowing Start Prompt appears inviting user (at 3200ms)
-  // Sau đó intro dừng lại chờ người chơi bấm chuột hoặc nhấn phím bất kỳ mới mờ dần vào game
   timeoutIds.push(
     window.setTimeout(() => {
       if (hasExitStarted) return;
       if (startPrompt) startPrompt.classList.add('visible');
     }, 3200)
+  );
+
+  // Phase 5: Automatically enter Title Screen at the 8th second (8000ms)
+  timeoutIds.push(
+    window.setTimeout(() => {
+      if (hasExitStarted) return;
+      triggerExitTransition();
+    }, 8000)
   );
 
   // Return controller

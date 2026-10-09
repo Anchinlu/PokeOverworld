@@ -4,6 +4,7 @@ import { playGameIntro } from '../src/ui/game-intro';
 describe('Game Intro Cinematic', () => {
   let originalDocument: any;
   let originalWindow: any;
+  let originalAudio: any;
   let mockBody: any;
   let eventListeners: Record<string, ((e: any) => void)[]>;
 
@@ -105,6 +106,27 @@ describe('Game Intro Cinematic', () => {
 
     originalDocument = global.document;
     originalWindow = global.window;
+    originalAudio = global.Audio;
+
+    class MockAudio {
+      src = '';
+      loop = false;
+      volume = 1;
+      paused = true;
+      currentTime = 0;
+      constructor(src?: string) {
+        if (src) this.src = src;
+      }
+      play = vi.fn().mockImplementation(() => {
+        this.paused = false;
+        return Promise.resolve();
+      });
+      pause = vi.fn().mockImplementation(() => {
+        this.paused = true;
+      });
+    }
+
+    (global as any).Audio = MockAudio;
 
     global.document = {
       body: mockBody,
@@ -117,6 +139,9 @@ describe('Game Intro Cinematic', () => {
     global.window = {
       setTimeout: (fn: (...args: unknown[]) => void, ms: number) => setTimeout(fn, ms),
       clearTimeout: (id: any) => clearTimeout(id),
+      setInterval: (fn: (...args: unknown[]) => void, ms: number) => setInterval(fn, ms),
+      clearInterval: (id: any) => clearInterval(id),
+      location: { href: 'http://localhost:5173/' },
       addEventListener: (event: string, handler: (e: any) => void) => {
         eventListeners[`window_${event}`] = eventListeners[`window_${event}`] || [];
         eventListeners[`window_${event}`].push(handler);
@@ -135,6 +160,7 @@ describe('Game Intro Cinematic', () => {
     vi.useRealTimers();
     global.document = originalDocument;
     global.window = originalWindow;
+    global.Audio = originalAudio;
   });
 
   it('initializes intro overlay in dark state with logos and glowing prompt', () => {
@@ -156,7 +182,7 @@ describe('Game Intro Cinematic', () => {
     expect(prompt).not.toBeNull();
   });
 
-  it('progresses through timeline: radiance -> logo2 -> logo1 -> prompt -> completion', () => {
+  it('progresses through timeline: radiance -> logo2 -> logo1 -> prompt -> auto-advance at 8th second', () => {
     const onComplete = vi.fn();
     const controller = playGameIntro(onComplete);
     const overlay = document.getElementById('gameIntroOverlay') as unknown as MockDOMElement;
@@ -194,13 +220,13 @@ describe('Game Intro Cinematic', () => {
     vi.advanceTimersByTime(1000);
     expect(startPrompt?.classList.contains('visible')).toBe(true);
 
-    // Wait 5000ms more: should NOT auto-advance; must wait for user click/press
-    vi.advanceTimersByTime(5000);
+    // Advance to 7000ms: still displaying prompt and waiting for 8th second
+    vi.advanceTimersByTime(3800);
     expect(controller.isComplete).toBe(false);
     expect(overlay.classList.contains('intro-fade-out')).toBe(false);
 
-    // User clicks / presses key to enter
-    controller.skip();
+    // Advance to 8000ms (giây thứ 8): automatically triggers fade-out transition!
+    vi.advanceTimersByTime(1000);
     expect(overlay.classList.contains('intro-fade-out')).toBe(true);
 
     // Advance 650ms: transition finishes, cleans up, invokes onComplete
@@ -210,7 +236,7 @@ describe('Game Intro Cinematic', () => {
     expect(document.getElementById('gameIntroOverlay')).toBeNull();
   });
 
-  it('supports skip to immediately transition and finish', () => {
+  it('supports skip to immediately transition and finish before 8th second', () => {
     const onComplete = vi.fn();
     const controller = playGameIntro(onComplete);
 

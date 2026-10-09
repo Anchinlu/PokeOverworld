@@ -1,4 +1,23 @@
-## Cập nhật lần cuối: 2026-10-09 (Bỏ Tách Đôi Màn Hình Intro & Dòng Chữ Bấm Để Vào Hào Quang)
+## Cập nhật lần cuối: 2026-10-09 (Tích Hợp Nhạc Nền Opening Movie & Tự Động Chuyển Vào Màn Hình Chờ Ở Giây Thứ 8)
+
+### 0.76. Nhạc Nền Opening Movie Cho Intro & Tự Động Vào Màn Hình Chờ Ở Giây Thứ 8:
+
+- **Trạng thái:** Đã hoàn thành 100%. 25 tệp test suite (194/194 tests), Typecheck (`npm run typecheck:web`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** Dùng file `Audio/Misic backgound/01. Opening Movie.mp3` làm nhạc nền cho đoạn intro mở đầu; vẫn hiển thị dòng chữ mời gọi "Bấm để vào", người chơi có thể bấm để bỏ qua sớm, và nếu không bấm thì hệ thống sẽ tự động chuyển cảnh vào màn hình chờ ở giây thứ 8 (8000ms).
+- **Chi tiết đã thực hiện:**
+  1. **Tích Hợp Trình Phát Nhạc Intro Opening Movie ([intro-bgm.ts](file:///e:/Pokemon/apps/web/src/audio/intro-bgm.ts)):**
+     - Tạo module `introBgmPlayer` phát file âm thanh [Audio/Misic backgound/01. Opening Movie.mp3](file:///e:/Pokemon/Audio/Misic%20backgound/01.%20Opening%20Movie.mp3) (đã đồng bộ vào [apps/web/public/Audio/Misic backgound/01. Opening Movie.mp3](file:///e:/Pokemon/apps/web/public/Audio/Misic%20backgound/01.%20Opening%20Movie.mp3)).
+     - Khởi chạy nhạc Opening Movie ngay khi đoạn intro bắt đầu và xử lý chính sách autoplay trên trình duyệt (mở khóa khi có tương tác).
+     - Điều phối âm thanh thông minh: Tạm ngắt Title BGM trong lúc intro đang phát; khi intro kết thúc, nhạc Opening Movie mờ dần êm ái và bàn giao mượt mà sang `titleBgmPlayer`.
+  2. **Tự Động Chuyển Vào Màn Hình Chờ Ở Giây Thứ 8 ([game-intro.ts](file:///e:/Pokemon/apps/web/src/ui/game-intro.ts)):**
+     - Đặt timer ở chính xác giây thứ 8 (8000ms): Nếu người chơi chưa tương tác, hệ thống tự động kích hoạt hiệu ứng `.intro-fade-out` (600ms) chuyển mượt vào Màn hình chờ.
+     - Dòng chữ `✨ BẤM ĐỂ BƯỚC VÀO THẾ GIỚI ✨` vẫn hiển thị lung linh từ giây 3.2 để người chơi có thể nhấp chuột hoặc bấm phím bất kỳ vào sảnh chờ sớm hơn nếu muốn.
+  3. **Kiểm Thử & Đảm Bảo Tính Toàn Vẹn ([game-intro.test.ts](file:///e:/Pokemon/apps/web/test/game-intro.test.ts)):**
+     - Cập nhật test suite xác nhận dòng chữ hiển thị, intro kiên nhẫn chờ đến đúng giây thứ 8 thì tự động chuyển cảnh mờ dần và hoàn tất dọn dẹp.
+     - `npm run typecheck:web` $\rightarrow$ PASS, 0 errors.
+     - `npm run test:web` $\rightarrow$ 25/25 suites, 194/194 tests PASS 100%.
+
+---
 
 ### 0.75. Thay Thế Tách Đôi Màn Hình Bằng Dòng Chữ "Bấm Để Vào" & Chuyển Cảnh Mờ Dần Êm Ái:
 

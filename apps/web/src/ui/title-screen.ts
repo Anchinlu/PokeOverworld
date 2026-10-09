@@ -768,8 +768,12 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
     updateBgmControls();
   });
 
-  // Start Title Screen BGM
-  titleBgmPlayer.playTitleBgm();
+  // Start Title Screen BGM (chỉ phát khi không có Intro Overlay đang chạy đè)
+  const isIntroOverlayPresent =
+    typeof document !== 'undefined' && !!document.getElementById('gameIntroOverlay');
+  if (!isIntroOverlayPresent) {
+    titleBgmPlayer.playTitleBgm();
+  }
 
   // 5. Main Render Loop
   function loop(currentTime: number) {
