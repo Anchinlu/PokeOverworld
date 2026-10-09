@@ -17,7 +17,12 @@ import { calculateEffectiveSpeed } from '../src/battle/rules/turn-order';
 import { calculateDamage } from '../src/battle/rules/damage-calculator';
 import { processEndTurnEffects } from '../src/battle/rules/status-engine';
 import { FixedSequenceRng } from '../src/battle/battle-rng';
-import type { BattlerPokemon, BattleMove, BattleEnvironment, StatStages } from '../src/battle/types';
+import type {
+  BattlerPokemon,
+  BattleMove,
+  BattleEnvironment,
+  StatStages,
+} from '../src/battle/types';
 
 interface MockBattlerPokemon extends BattlerPokemon {
   statStages: StatStages;
@@ -240,11 +245,43 @@ describe('BattleEnvironmentRules Unit Tests', () => {
       const flyingDefender = createMockBattler({ types: ['Flying'] });
 
       expect(getTerrainDamageMultiplier('grassy', 'Grass', groundedAttacker)).toBe(1.5);
-      expect(getTerrainDamageMultiplier('grassy', 'Ground', groundedAttacker, groundedDefender, 'earthquake')).toBe(0.5);
-      expect(getTerrainDamageMultiplier('grassy', 'Ground', groundedAttacker, groundedDefender, 'magnitude')).toBe(0.5);
-      expect(getTerrainDamageMultiplier('grassy', 'Ground', groundedAttacker, groundedDefender, 'bulldoze')).toBe(0.5);
+      expect(
+        getTerrainDamageMultiplier(
+          'grassy',
+          'Ground',
+          groundedAttacker,
+          groundedDefender,
+          'earthquake'
+        )
+      ).toBe(0.5);
+      expect(
+        getTerrainDamageMultiplier(
+          'grassy',
+          'Ground',
+          groundedAttacker,
+          groundedDefender,
+          'magnitude'
+        )
+      ).toBe(0.5);
+      expect(
+        getTerrainDamageMultiplier(
+          'grassy',
+          'Ground',
+          groundedAttacker,
+          groundedDefender,
+          'bulldoze'
+        )
+      ).toBe(0.5);
       // Not halved if defender is in air
-      expect(getTerrainDamageMultiplier('grassy', 'Ground', groundedAttacker, flyingDefender, 'earthquake')).toBe(1.0);
+      expect(
+        getTerrainDamageMultiplier(
+          'grassy',
+          'Ground',
+          groundedAttacker,
+          flyingDefender,
+          'earthquake'
+        )
+      ).toBe(1.0);
     });
 
     it('Psychic Terrain boosts Psychic moves by 1.5x for grounded attackers', () => {

@@ -238,7 +238,7 @@ export const BattleEventFactory = {
     amount: number,
     remainingHp: number,
     maxHp: number,
-    source: 'move' | 'item' | 'drain' | 'leech_seed',
+    source: 'move' | 'item' | 'drain' | 'leech_seed' | 'terrain' | 'held_item',
     message: string
   ): HpRestoredEvent {
     return {
@@ -335,7 +335,7 @@ export const BattleEventFactory = {
     targetName: string,
     damage: number,
     remainingHp: number,
-    source: 'burn' | 'poison' | 'toxic' | 'leech_seed',
+    source: 'burn' | 'poison' | 'toxic' | 'leech_seed' | 'sandstorm' | 'hail',
     message: string
   ): EndTurnDamageEvent {
     return {

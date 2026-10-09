@@ -33,6 +33,8 @@ import type {
 } from '@pokemon/shared-types';
 
 export type {
+  PokemonType,
+  PokemonStats,
   PokemonStatValues,
   NatureName,
   MoveCategory,

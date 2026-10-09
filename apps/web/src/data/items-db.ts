@@ -119,125 +119,125 @@ export function findItem(idOrSlug: string): ItemData | undefined {
   const normalized = idOrSlug.toLowerCase().replace(/_/g, '-');
   if (ITEMS_DB[normalized]) return ITEMS_DB[normalized];
 
-    return Object.values(ITEMS_DB).find(
-      (it) =>
-        it.id.toLowerCase() === normalized ||
-        it.slug?.toLowerCase() === normalized ||
-        it.filename.toLowerCase() === `${normalized}.png` ||
-        it.filename.toLowerCase() === `${idOrSlug.toLowerCase()}.png`
-    );
+  return Object.values(ITEMS_DB).find(
+    (it) =>
+      it.id.toLowerCase() === normalized ||
+      it.slug?.toLowerCase() === normalized ||
+      it.filename.toLowerCase() === `${normalized}.png` ||
+      it.filename.toLowerCase() === `${idOrSlug.toLowerCase()}.png`
+  );
+}
+
+// Set of specific evolution hold items / contest scarves / gems categorized under 'general'
+const GENERAL_HOLDABLE_SLUGS = new Set([
+  'dragon-scale',
+  'dubious-disc',
+  'electirizer',
+  'magmarizer',
+  'protector',
+  'reaper-cloth',
+  'upgrade',
+  'prism-scale',
+  'oval-stone',
+  'sachet',
+  'whipped-dream',
+  'deep-sea-tooth',
+  'deep-sea-scale',
+  'kings-rock',
+  'metal-coat',
+  'razor-claw',
+  'razor-fang',
+  'blue-scarf',
+  'green-scarf',
+  'pink-scarf',
+  'red-scarf',
+  'yellow-scarf',
+]);
+
+/**
+ * Checks whether an item can be given to a Pokémon to hold.
+ * Holdable items include:
+ * - Category 'hold' (All competitive equipment, battle orbs, choice items, focus sash, lucky egg, type-boosters...)
+ * - Category 'berries' / 'berry' (All berries, auto-consumed in battle or holding)
+ * - Category 'mail' (Letters/mail)
+ * - Evolution trade hold items (Dragon Scale, Electirizer, Dubious Disc, etc.) and Gems/Scarves.
+ * Excludes: Key Items, Poké Balls, Medicine (Potions, Revives, Candies), Battle items (X Attack...), etc.
+ */
+export function isHoldableItem(item?: ItemData | null): boolean {
+  if (!item) return false;
+  const cat = (item.category || '').toLowerCase();
+  if (cat === 'hold' || cat === 'berries' || cat === 'berry' || cat === 'mail') {
+    return true;
   }
-
-  // Set of specific evolution hold items / contest scarves / gems categorized under 'general'
-  const GENERAL_HOLDABLE_SLUGS = new Set([
-    'dragon-scale',
-    'dubious-disc',
-    'electirizer',
-    'magmarizer',
-    'protector',
-    'reaper-cloth',
-    'upgrade',
-    'prism-scale',
-    'oval-stone',
-    'sachet',
-    'whipped-dream',
-    'deep-sea-tooth',
-    'deep-sea-scale',
-    'kings-rock',
-    'metal-coat',
-    'razor-claw',
-    'razor-fang',
-    'blue-scarf',
-    'green-scarf',
-    'pink-scarf',
-    'red-scarf',
-    'yellow-scarf',
-  ]);
-
-  /**
-   * Checks whether an item can be given to a Pokémon to hold.
-   * Holdable items include:
-   * - Category 'hold' (All competitive equipment, battle orbs, choice items, focus sash, lucky egg, type-boosters...)
-   * - Category 'berries' / 'berry' (All berries, auto-consumed in battle or holding)
-   * - Category 'mail' (Letters/mail)
-   * - Evolution trade hold items (Dragon Scale, Electirizer, Dubious Disc, etc.) and Gems/Scarves.
-   * Excludes: Key Items, Poké Balls, Medicine (Potions, Revives, Candies), Battle items (X Attack...), etc.
-   */
-  export function isHoldableItem(item?: ItemData | null): boolean {
-    if (!item) return false;
-    const cat = (item.category || '').toLowerCase();
-    if (cat === 'hold' || cat === 'berries' || cat === 'berry' || cat === 'mail') {
-      return true;
-    }
-    const slug = (item.slug || item.id || '').toLowerCase().replace(/_/g, '-');
-    if (GENERAL_HOLDABLE_SLUGS.has(slug)) {
-      return true;
-    }
-    if (slug.endsWith('-gem') || slug.endsWith('-scarf')) {
-      return true;
-    }
-    return false;
+  const slug = (item.slug || item.id || '').toLowerCase().replace(/_/g, '-');
+  if (GENERAL_HOLDABLE_SLUGS.has(slug)) {
+    return true;
   }
-
-  /**
-   * Checks whether an item can be used directly (either on a Pokémon, in battle, or in the overworld).
-   * Usable items include:
-   * - Category 'medicine' (Potions, Revives, Full Restore, Candies, Vitamins, PP Restorers)
-   * - Category 'berries' / 'berry' (Eaten directly to restore HP/status/PP or reduce EVs)
-   * - Category 'battle' (X Attack, X Defense, Dire Hit... used during battle turns)
-   * - Category 'pokeballs' / 'ball' (Used in battle to catch wild Pokémon)
-   * - Category 'machine' / 'tm' / 'hm' (Used to teach moves)
-   * - Category 'key' (Key items used in overworld)
-   * - Evolution stones in general (Fire Stone, Water Stone, etc.)
-   * Excludes: Pure held items (Leftovers, Choice Band, Focus Sash, Rocky Helmet...) which only function when held.
-   */
-  export function isUsableItem(item?: ItemData | null): boolean {
-    if (!item) return false;
-    const cat = (item.category || '').toLowerCase();
-    if (
-      cat === 'medicine' ||
-      cat === 'berries' ||
-      cat === 'berry' ||
-      cat === 'battle' ||
-      cat === 'pokeballs' ||
-      cat === 'ball' ||
-      cat === 'machine' ||
-      cat === 'tm' ||
-      cat === 'hm' ||
-      cat === 'key'
-    ) {
-      return true;
-    }
-    const slug = (item.slug || item.id || '').toLowerCase().replace(/_/g, '-');
-    if (
-      slug.endsWith('-stone') ||
-      slug === 'black-augurite' ||
-      slug === 'auspicious-armor' ||
-      slug === 'malicious-armor' ||
-      slug === 'galarica-cuff' ||
-      slug === 'galarica-wreath' ||
-      slug === 'metal-alloy' ||
-      slug === 'escape-rope'
-    ) {
-      return true;
-    }
-    return false;
+  if (slug.endsWith('-gem') || slug.endsWith('-scarf')) {
+    return true;
   }
+  return false;
+}
 
-  export type ItemUsageType = 'hold_only' | 'use_only' | 'both' | 'none';
-
-  /**
-   * Classifies an item into its primary usage modality:
-   * - 'hold_only': Equipment meant solely for holding (Leftovers, Choice Band, Rocky Helmet, Lucky Egg...)
-   * - 'use_only': Items meant solely for direct use (Potions, Revives, Poké Balls, Rare Candies...)
-   * - 'both': Versatile items that can both be used directly and held for battle auto-activation (Berries...)
-   * - 'none': Valuables/fossils intended for selling or specialty trades.
-   */
-  export function getItemUsageType(item?: ItemData | null): ItemUsageType {
-    const holdable = isHoldableItem(item);
-    const usable = isUsableItem(item);
-    if (holdable && usable) return 'both';
-    if (holdable) return 'hold_only';
-    if (usable) return 'use_only';
-    return 'none';
+/**
+ * Checks whether an item can be used directly (either on a Pokémon, in battle, or in the overworld).
+ * Usable items include:
+ * - Category 'medicine' (Potions, Revives, Full Restore, Candies, Vitamins, PP Restorers)
+ * - Category 'berries' / 'berry' (Eaten directly to restore HP/status/PP or reduce EVs)
+ * - Category 'battle' (X Attack, X Defense, Dire Hit... used during battle turns)
+ * - Category 'pokeballs' / 'ball' (Used in battle to catch wild Pokémon)
+ * - Category 'machine' / 'tm' / 'hm' (Used to teach moves)
+ * - Category 'key' (Key items used in overworld)
+ * - Evolution stones in general (Fire Stone, Water Stone, etc.)
+ * Excludes: Pure held items (Leftovers, Choice Band, Focus Sash, Rocky Helmet...) which only function when held.
+ */
+export function isUsableItem(item?: ItemData | null): boolean {
+  if (!item) return false;
+  const cat = (item.category || '').toLowerCase();
+  if (
+    cat === 'medicine' ||
+    cat === 'berries' ||
+    cat === 'berry' ||
+    cat === 'battle' ||
+    cat === 'pokeballs' ||
+    cat === 'ball' ||
+    cat === 'machine' ||
+    cat === 'tm' ||
+    cat === 'hm' ||
+    cat === 'key'
+  ) {
+    return true;
   }
+  const slug = (item.slug || item.id || '').toLowerCase().replace(/_/g, '-');
+  if (
+    slug.endsWith('-stone') ||
+    slug === 'black-augurite' ||
+    slug === 'auspicious-armor' ||
+    slug === 'malicious-armor' ||
+    slug === 'galarica-cuff' ||
+    slug === 'galarica-wreath' ||
+    slug === 'metal-alloy' ||
+    slug === 'escape-rope'
+  ) {
+    return true;
+  }
+  return false;
+}
+
+export type ItemUsageType = 'hold_only' | 'use_only' | 'both' | 'none';
+
+/**
+ * Classifies an item into its primary usage modality:
+ * - 'hold_only': Equipment meant solely for holding (Leftovers, Choice Band, Rocky Helmet, Lucky Egg...)
+ * - 'use_only': Items meant solely for direct use (Potions, Revives, Poké Balls, Rare Candies...)
+ * - 'both': Versatile items that can both be used directly and held for battle auto-activation (Berries...)
+ * - 'none': Valuables/fossils intended for selling or specialty trades.
+ */
+export function getItemUsageType(item?: ItemData | null): ItemUsageType {
+  const holdable = isHoldableItem(item);
+  const usable = isUsableItem(item);
+  if (holdable && usable) return 'both';
+  if (holdable) return 'hold_only';
+  if (usable) return 'use_only';
+  return 'none';
+}

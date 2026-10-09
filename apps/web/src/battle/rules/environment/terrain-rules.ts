@@ -100,7 +100,7 @@ export function canApplyStatusInTerrain(
     return false;
   }
 
-  if (terrainType === 'misty' && condition !== 'none') {
+  if (terrainType === 'misty') {
     return false;
   }
 

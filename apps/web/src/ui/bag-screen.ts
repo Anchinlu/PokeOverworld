@@ -326,9 +326,7 @@ export class BagScreen {
 
     // 2. Filter items for current active pocket
     const allItems = this.getInventoryEntries();
-    let pocketItems = allItems.filter(
-      (entry) => entry.pocketIndex === this.activePocketIndex
-    );
+    let pocketItems = allItems.filter((entry) => entry.pocketIndex === this.activePocketIndex);
 
     // If opened in battle and filter supplied, filter accordingly
     if (this.openOptions?.battleFilter) {
@@ -665,10 +663,7 @@ export class BagScreen {
       ? givenDef.nameVi || givenDef.name
       : entry.item.nameVi || entry.item.name;
 
-    showBerryToast(
-      `🎁 Đã trao ${givenName} cho ${pk.nickname || pk.name} nắm giữ!`,
-      '#38bdf8'
-    );
+    showBerryToast(`🎁 Đã trao ${givenName} cho ${pk.nickname || pk.name} nắm giữ!`, '#38bdf8');
 
     if (this.openOptions?.onItemGiven) {
       this.openOptions.onItemGiven(entry, pokemonIndex);

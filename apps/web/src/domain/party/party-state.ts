@@ -196,8 +196,7 @@ export function partyPokemonToBattler(pokemon: PartyPokemon): BattlerPokemon {
     name: pokemon.nickname || pokemon.name,
     speciesKey: pokemon.speciesKey,
     ability:
-      pokemon.ability ??
-      (pokemonCatalog.getBySpeciesKey(pokemon.speciesKey)?.ability ?? 'none'),
+      pokemon.ability ?? pokemonCatalog.getBySpeciesKey(pokemon.speciesKey)?.ability ?? 'none',
     isShiny: pokemon.isShiny,
     types: [...pokemon.types],
     level: pokemon.level,

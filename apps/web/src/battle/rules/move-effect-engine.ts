@@ -1,4 +1,10 @@
-import type { BattlerPokemon, BattlerSide, BattleEvent, BattleMove, BattleEnvironment } from '../types';
+import type {
+  BattlerPokemon,
+  BattlerSide,
+  BattleEvent,
+  BattleMove,
+  BattleEnvironment,
+} from '../types';
 import type { BattleRng } from '../battle-rng';
 import { BattleEventFactory } from '../state/battle-event-factory';
 import {
@@ -102,19 +108,32 @@ export function checkMoveAccuracy(
   const baseAcc = weatherOverride?.fixedAccuracy ?? move.accuracy;
 
   const isNeverMiss =
-    isSelfTargetMove ||
-    NEVER_MISS_MOVE_IDS.has(move.id) ||
-    baseAcc <= 0 ||
-    move.id === 'struggle';
+    isSelfTargetMove || NEVER_MISS_MOVE_IDS.has(move.id) || baseAcc <= 0 || move.id === 'struggle';
 
   const accStage = attacker.statStages?.accuracy ?? 0;
   const evaStage = defender.statStages?.evasion ?? 0;
+
+  // Ability accuracy and evasion modifiers
+  let abilityAccMult = 1.0;
+  const attackerAbility = AbilityEngine.normalize(attacker.ability);
+  const defenderAbility = AbilityEngine.normalize(defender.ability);
+
+  if (attackerAbility === 'compoundeyes') {
+    abilityAccMult *= 1.3;
+  }
+  if (defenderAbility === 'sandveil' && environment?.weather?.type === 'sandstorm') {
+    abilityAccMult *= 0.8;
+  }
+  if (defenderAbility === 'snowcloak' && environment?.weather?.type === 'hail') {
+    abilityAccMult *= 0.8;
+  }
+
   const requiresAccCheck =
-    !isNeverMiss && (baseAcc < 100 || accStage !== 0 || evaStage !== 0);
+    !isNeverMiss && (baseAcc < 100 || accStage !== 0 || evaStage !== 0 || abilityAccMult !== 1.0);
 
   if (!requiresAccCheck) return true;
 
-  const accMult = getAccuracyMultiplier(accStage, evaStage);
+  const accMult = getAccuracyMultiplier(accStage, evaStage) * abilityAccMult;
   const effectiveAcc = baseAcc * accMult;
   return rng.next() * 100 <= effectiveAcc;
 }
@@ -382,7 +401,11 @@ export function applyStatusCategoryMove(
       const tSide: BattlerSide = target === attacker ? attackerSide : defenderSide;
       const statVi = STAT_NAME_VI[sc.stat] ?? sc.stat;
 
-      if (sc.stages < 0 && target !== attacker && AbilityEngine.isStatDropProtected(target, sc.stat, true)) {
+      if (
+        sc.stages < 0 &&
+        target !== attacker &&
+        AbilityEngine.isStatDropProtected(target, sc.stat, true)
+      ) {
         const protName = AbilityEngine.getDisplayName(target.ability);
         extraMsg += ` Nhưng ${target.name} nhờ [${protName}] ngăn cản giảm ${statVi}!`;
         events.push(
@@ -456,9 +479,29 @@ export function applyStatusCategoryMove(
   if (move.statusEffect && move.id !== 'rest') {
     const target = move.statusEffect.target === 'self' ? attacker : defender;
     const tSide: BattlerSide = target === attacker ? attackerSide : defenderSide;
+    const oppSide: BattlerSide = tSide === 'player' ? 'enemy' : 'player';
     const chance = Math.max(0, Math.min(1, move.statusEffect.chance));
     const immunityMessage = getStatusImmunity(target, move.statusEffect.condition);
     const conditionVi = STATUS_NAME_VI[move.statusEffect.condition] ?? move.statusEffect.condition;
+
+    // Overcoat blocks powder and spore moves
+    const POWDER_MOVES = new Set([
+      'spore',
+      'sleep_powder',
+      'poison_powder',
+      'stun_spore',
+      'cotton_spore',
+      'powder',
+    ]);
+    const isOvercoatBlocked =
+      target !== attacker &&
+      AbilityEngine.normalize(target.ability) === 'overcoat' &&
+      POWDER_MOVES.has(move.id.toLowerCase());
+
+    if (isOvercoatBlocked) {
+      extraMsg += ` Nhưng [Áo Khoác] của ${target.name} ngăn chặn các chiêu thức dạng bào tử!`;
+      return { extraMsg };
+    }
 
     if (target.status === 'none' && !immunityMessage && rng.next() < chance) {
       const initialSleepTurns = move.statusEffect.condition === 'sleep' ? rng.nextInt(1, 3) : 0;
@@ -472,6 +515,21 @@ export function applyStatusCategoryMove(
           `${target.name} đã bị ${conditionVi}!`
         )
       );
+
+      // Trigger Synchronize if target reflected onto attacker
+      if (target !== attacker) {
+        const synchMsg = AbilityEngine.checkSynchronize(
+          target,
+          tSide,
+          attacker,
+          oppSide,
+          move.statusEffect.condition,
+          events
+        );
+        if (synchMsg) {
+          extraMsg += ` ${synchMsg}`;
+        }
+      }
     } else if (target.status !== 'none' && move.statusEffect.target !== 'self') {
       extraMsg += ` Nhưng thất bại! ${target.name} đã mắc trạng thái bất thường rồi!`;
     } else if (target.status === 'none' && immunityMessage) {

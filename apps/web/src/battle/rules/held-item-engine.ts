@@ -10,10 +10,17 @@
  * - EXP Multiplier (Lucky Egg)
  */
 
-import type { BattlerPokemon, BattlerSide, BattleEvent, BattleMove, StatusCondition } from '../types';
+import type {
+  BattlerPokemon,
+  BattlerSide,
+  BattleEvent,
+  BattleMove,
+  StatusCondition,
+} from '../types';
 import { BattleEventFactory } from '../state/battle-event-factory';
 import { applyDamage, restoreHp, clearStatusCondition } from '../state/battle-state-reducer';
 import { findItem } from '../../data/items-db';
+import { AbilityEngine } from './ability-engine';
 
 export function normalizeHeldItemKey(itemId?: string | null): string {
   if (!itemId) return '';
@@ -51,10 +58,7 @@ export class HeldItemEngine {
   /**
    * Evaluates and consumes pinch berries if Pokémon HP drops to <= 50% max HP.
    */
-  public static checkHpTriggeredBerry(
-    battler: BattlerPokemon,
-    side: BattlerSide
-  ): BattleEvent[] {
+  public static checkHpTriggeredBerry(battler: BattlerPokemon, side: BattlerSide): BattleEvent[] {
     const key = normalizeHeldItemKey(battler.heldItem);
     if (!key || battler.currentHp <= 0 || battler.isFainted) return [];
 
@@ -114,7 +118,8 @@ export class HeldItemEngine {
 
     if (key === 'cheri-berry' && status === 'paralysis') shouldCure = true;
     else if (key === 'chesto-berry' && status === 'sleep') shouldCure = true;
-    else if (key === 'pecha-berry' && (status === 'poison' || status === 'toxic')) shouldCure = true;
+    else if (key === 'pecha-berry' && (status === 'poison' || status === 'toxic'))
+      shouldCure = true;
     else if (key === 'rawst-berry' && status === 'burn') shouldCure = true;
     else if (key === 'aspear-berry' && status === 'freeze') shouldCure = true;
     else if (key === 'lum-berry') shouldCure = true;
@@ -125,9 +130,7 @@ export class HeldItemEngine {
       battler.heldItem = null;
       clearStatusCondition(battler);
       const msg = `${battler.name} đã ăn quả ${itemName} và chữa khỏi trạng thái bất thường!`;
-      return [
-        BattleEventFactory.statusCured(side, battler.name, status as StatusCondition, msg),
-      ];
+      return [BattleEventFactory.statusCured(side, battler.name, status as StatusCondition, msg)];
     }
 
     return [];
@@ -136,10 +139,7 @@ export class HeldItemEngine {
   /**
    * Processes end-of-turn held item effects (Leftovers, Black Sludge, Pinch Berries).
    */
-  public static processEndTurnHeldItem(
-    battler: BattlerPokemon,
-    side: BattlerSide
-  ): BattleEvent[] {
+  public static processEndTurnHeldItem(battler: BattlerPokemon, side: BattlerSide): BattleEvent[] {
     if (battler.currentHp <= 0 || battler.isFainted) return [];
 
     const events: BattleEvent[] = [];
@@ -324,9 +324,16 @@ export class HeldItemEngine {
     if (damageDealt <= 0) return [];
     const events: BattleEvent[] = [];
 
+    const isMagicGuard = AbilityEngine.normalize(attacker.ability) === 'magicguard';
+
     // 1. Defender's Rocky Helmet: 1/6 max HP damage to attacker if physical move
     const defItem = normalizeHeldItemKey(defender.heldItem);
-    if (defItem === 'rocky-helmet' && move.category === 'physical' && attacker.currentHp > 0) {
+    if (
+      defItem === 'rocky-helmet' &&
+      move.category === 'physical' &&
+      attacker.currentHp > 0 &&
+      !isMagicGuard
+    ) {
       const helmetDmg = Math.max(1, Math.floor(attacker.maxHp / 6));
       applyDamage(attacker, helmetDmg);
       const helmetMsg = `${attacker.name} bị tổn thương bởi Mũ Gai (Rocky Helmet) của ${defender.name}!`;
@@ -349,7 +356,7 @@ export class HeldItemEngine {
 
     // 2. Attacker's Life Orb: 10% max HP recoil damage
     const atkItem = normalizeHeldItemKey(attacker.heldItem);
-    if (atkItem === 'life-orb' && attacker.currentHp > 0 && !attacker.isFainted) {
+    if (atkItem === 'life-orb' && attacker.currentHp > 0 && !attacker.isFainted && !isMagicGuard) {
       const orbDmg = Math.max(1, Math.floor(attacker.maxHp / 10));
       applyDamage(attacker, orbDmg);
       const orbMsg = `${attacker.name} bị tiêu hao sinh lực bởi Quả Cầu Sinh Mệnh (Life Orb)!`;

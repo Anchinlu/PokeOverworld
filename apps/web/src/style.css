@@ -3564,7 +3564,9 @@ body {
   background: #334155;
   color: #cbd5e1;
   cursor: pointer;
-  box-shadow: inset 1px 1px 0 #64748b, inset -1px -1px 0 #1e293b;
+  box-shadow:
+    inset 1px 1px 0 #64748b,
+    inset -1px -1px 0 #1e293b;
   text-shadow: 1px 1px 0 #000;
   transition: all 0.1s ease;
   white-space: nowrap;
@@ -3583,7 +3585,9 @@ body {
   background: #0284c7;
   color: #f0f9ff;
   border-color: #000;
-  box-shadow: inset 1px 1px 0 #7dd3fc, inset -1px -1px 0 #0369a1;
+  box-shadow:
+    inset 1px 1px 0 #7dd3fc,
+    inset -1px -1px 0 #0369a1;
 }
 
 .bag-items-list {
@@ -6360,8 +6364,6 @@ body {
   text-shadow: 1px 1px 0 #000;
 }
 
-
-
 /* ==========================================================================
    GAME INTRO CINEMATIC (DARK SCREEN -> LOGO2 OUTLINE -> LOGO1 COLOR -> MIDDLE SPLIT)
    ========================================================================== */
@@ -6444,8 +6446,20 @@ body {
     rgba(250, 204, 21, 0.35) 15deg 23deg,
     transparent 23deg 30deg
   );
-  -webkit-mask: radial-gradient(circle, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.65) 35%, rgba(0, 0, 0, 0.15) 52%, transparent 65%);
-  mask: radial-gradient(circle, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.65) 35%, rgba(0, 0, 0, 0.15) 52%, transparent 65%);
+  -webkit-mask: radial-gradient(
+    circle,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.65) 35%,
+    rgba(0, 0, 0, 0.15) 52%,
+    transparent 65%
+  );
+  mask: radial-gradient(
+    circle,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.65) 35%,
+    rgba(0, 0, 0, 0.15) 52%,
+    transparent 65%
+  );
   animation: introRadianceSpin 20s linear infinite;
   filter: blur(2.5px) drop-shadow(0 0 20px rgba(250, 204, 21, 0.4));
 }
@@ -6504,7 +6518,8 @@ body {
   image-rendering: pixelated;
   image-rendering: crisp-edges;
   border-radius: 50%;
-  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.85)) drop-shadow(0 0 12px rgba(250, 204, 21, 0.5));
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.85))
+    drop-shadow(0 0 12px rgba(250, 204, 21, 0.5));
   animation: introTypeIconCounterSpin 24s linear infinite;
   transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty)));
 }
@@ -6537,7 +6552,8 @@ body {
 }
 
 @keyframes introAuraPulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(0.92);
     opacity: 0.7;
   }
@@ -6981,11 +6997,7 @@ body {
   position: relative;
   width: clamp(340px, 32vw, 480px);
   background-color: #444444;
-  background-image: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.08) 0%,
-    rgba(0, 0, 0, 0.2) 100%
-  );
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(0, 0, 0, 0.2) 100%);
   border: 4px solid #000000;
   box-shadow:
     inset 3px 3px 0px 0px rgba(255, 255, 255, 0.45),

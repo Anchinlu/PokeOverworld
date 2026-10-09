@@ -358,14 +358,7 @@ export class AbilityEngine {
         )
       );
       events.push(
-        BattleEventFactory.statStageChanged(
-          side,
-          pokemon.name,
-          boostStat,
-          1,
-          newStage,
-          msg
-        )
+        BattleEventFactory.statStageChanged(side, pokemon.name, boostStat, 1, newStage, msg)
       );
     }
 
@@ -628,14 +621,7 @@ export class AbilityEngine {
         )
       );
       events.push(
-        BattleEventFactory.statStageChanged(
-          defenderSide,
-          defender.name,
-          'spAtk',
-          1,
-          newStage,
-          msg
-        )
+        BattleEventFactory.statStageChanged(defenderSide, defender.name, 'spAtk', 1, newStage, msg)
       );
       return { isImmune: true, message: msg };
     }
@@ -655,14 +641,7 @@ export class AbilityEngine {
         )
       );
       events.push(
-        BattleEventFactory.statStageChanged(
-          defenderSide,
-          defender.name,
-          'speed',
-          1,
-          newStage,
-          msg
-        )
+        BattleEventFactory.statStageChanged(defenderSide, defender.name, 'speed', 1, newStage, msg)
       );
       return { isImmune: true, message: msg };
     }
@@ -682,14 +661,7 @@ export class AbilityEngine {
         )
       );
       events.push(
-        BattleEventFactory.statStageChanged(
-          defenderSide,
-          defender.name,
-          'attack',
-          1,
-          newStage,
-          msg
-        )
+        BattleEventFactory.statStageChanged(defenderSide, defender.name, 'attack', 1, newStage, msg)
       );
       return { isImmune: true, message: msg };
     }
@@ -808,7 +780,10 @@ export class AbilityEngine {
     }
 
     // Sheer Force: +30% damage for moves with secondary effects
-    if (key === 'sheerforce' && (move.statusEffect || (move.statChanges && move.statChanges.length > 0))) {
+    if (
+      key === 'sheerforce' &&
+      (move.statusEffect || (move.statChanges && move.statChanges.length > 0))
+    ) {
       mult *= 1.3;
       reason = 'Lực Lượng Thuần Khiết cường hóa sát thương!';
     }
@@ -955,13 +930,26 @@ export class AbilityEngine {
           events.push(
             BattleEventFactory.statusInflicted(attackerSide, attacker.name, 'paralysis', msg)
           );
+          const synchMsg = this.checkSynchronize(
+            attacker,
+            attackerSide,
+            defender,
+            defenderSide,
+            'paralysis',
+            events
+          );
+          if (synchMsg) messages.push(synchMsg);
         }
       }
     }
 
     // 2. Poison Point: 30% Poison
     if (key === 'poisonpoint' && (!attacker.status || attacker.status === 'none')) {
-      if (rng.next() < 0.3 && !attacker.types.includes('Poison') && !attacker.types.includes('Steel')) {
+      if (
+        rng.next() < 0.3 &&
+        !attacker.types.includes('Poison') &&
+        !attacker.types.includes('Steel')
+      ) {
         const imm = this.isStatusImmune(attacker, 'poison');
         if (!imm.immune) {
           setStatusCondition(attacker, 'poison');
@@ -980,6 +968,15 @@ export class AbilityEngine {
           events.push(
             BattleEventFactory.statusInflicted(attackerSide, attacker.name, 'poison', msg)
           );
+          const synchMsg = this.checkSynchronize(
+            attacker,
+            attackerSide,
+            defender,
+            defenderSide,
+            'poison',
+            events
+          );
+          if (synchMsg) messages.push(synchMsg);
         }
       }
     }
@@ -1002,15 +999,25 @@ export class AbilityEngine {
               msg
             )
           );
-          events.push(
-            BattleEventFactory.statusInflicted(attackerSide, attacker.name, 'burn', msg)
+          events.push(BattleEventFactory.statusInflicted(attackerSide, attacker.name, 'burn', msg));
+          const synchMsg = this.checkSynchronize(
+            attacker,
+            attackerSide,
+            defender,
+            defenderSide,
+            'burn',
+            events
           );
+          if (synchMsg) messages.push(synchMsg);
         }
       }
     }
 
-    // 4. Rough Skin & Iron Barbs: 1/8 max HP recoil damage to attacker
-    if (key === 'roughskin' || key === 'ironbarbs') {
+    // 4. Rough Skin & Iron Barbs: 1/8 max HP recoil damage to attacker (Magic Guard is immune)
+    if (
+      (key === 'roughskin' || key === 'ironbarbs') &&
+      this.normalize(attacker.ability) !== 'magicguard'
+    ) {
       const recoilDmg = Math.max(1, Math.floor(attacker.maxHp / 8));
       const dmgRes = applyDamage(attacker, recoilDmg);
       const msg = `${attacker.name} bị tổn thương bởi [${nameVi}] của ${defender.name}! (-${dmgRes.actualDamage} HP)`;
@@ -1044,7 +1051,14 @@ export class AbilityEngine {
         const msg = `Bào tử độc từ [${nameVi}] làm ${attacker.name} bị nhiễm độc!`;
         messages.push(msg);
         events.push(
-          BattleEventFactory.abilityTriggered(defenderSide, defender.name, defender.ability || key, nameVi, 'Gây nhiễm độc', msg)
+          BattleEventFactory.abilityTriggered(
+            defenderSide,
+            defender.name,
+            defender.ability || key,
+            nameVi,
+            'Gây nhiễm độc',
+            msg
+          )
         );
         events.push(BattleEventFactory.statusInflicted(attackerSide, attacker.name, 'poison', msg));
       } else if (roll < 0.2 && !attacker.types.includes('Electric')) {
@@ -1052,16 +1066,32 @@ export class AbilityEngine {
         const msg = `Bào tử tê liệt từ [${nameVi}] làm ${attacker.name} bị tê liệt!`;
         messages.push(msg);
         events.push(
-          BattleEventFactory.abilityTriggered(defenderSide, defender.name, defender.ability || key, nameVi, 'Gây tê liệt', msg)
+          BattleEventFactory.abilityTriggered(
+            defenderSide,
+            defender.name,
+            defender.ability || key,
+            nameVi,
+            'Gây tê liệt',
+            msg
+          )
         );
-        events.push(BattleEventFactory.statusInflicted(attackerSide, attacker.name, 'paralysis', msg));
+        events.push(
+          BattleEventFactory.statusInflicted(attackerSide, attacker.name, 'paralysis', msg)
+        );
       } else if (roll < 0.3) {
         setStatusCondition(attacker, 'sleep');
         attacker.sleepTurns = 2;
         const msg = `Bào tử gây mê từ [${nameVi}] ru ngủ ${attacker.name}!`;
         messages.push(msg);
         events.push(
-          BattleEventFactory.abilityTriggered(defenderSide, defender.name, defender.ability || key, nameVi, 'Gây ngủ', msg)
+          BattleEventFactory.abilityTriggered(
+            defenderSide,
+            defender.name,
+            defender.ability || key,
+            nameVi,
+            'Gây ngủ',
+            msg
+          )
         );
         events.push(BattleEventFactory.statusInflicted(attackerSide, attacker.name, 'sleep', msg));
       }
@@ -1124,9 +1154,7 @@ export class AbilityEngine {
             msg
           )
         );
-        events.push(
-          BattleEventFactory.statusCured(side, pokemon.name, oldStatus, msg)
-        );
+        events.push(BattleEventFactory.statusCured(side, pokemon.name, oldStatus, msg));
       }
     }
 
@@ -1145,10 +1173,7 @@ export class AbilityEngine {
   /**
    * Checks if Sturdy prevents an otherwise lethal OHKO when at full HP.
    */
-  public static canSurviveWithSturdy(
-    defender: BattlerPokemon,
-    incomingDamage: number
-  ): boolean {
+  public static canSurviveWithSturdy(defender: BattlerPokemon, incomingDamage: number): boolean {
     const key = this.normalize(defender.ability);
     return (
       key === 'sturdy' &&
@@ -1173,6 +1198,63 @@ export class AbilityEngine {
     if (key === 'keeneye' && stat === 'accuracy') return true;
 
     return false;
+  }
+
+  /**
+   * Triggers Synchronize reflection when a Pokémon is inflicted with a primary status condition.
+   */
+  public static checkSynchronize(
+    victim: BattlerPokemon,
+    victimSide: BattlerSide,
+    inflicter: BattlerPokemon,
+    inflicterSide: BattlerSide,
+    condition: StatusCondition,
+    events: BattleEvent[]
+  ): string | null {
+    if (victim === inflicter) return null;
+    if (
+      condition !== 'burn' &&
+      condition !== 'poison' &&
+      condition !== 'toxic' &&
+      condition !== 'paralysis'
+    ) {
+      return null;
+    }
+
+    const victimAbility = this.normalize(victim.ability);
+    if (victimAbility !== 'synchronize') return null;
+
+    if (inflicter.status && inflicter.status !== 'none') return null;
+
+    // Check if inflicter is immune (type, ability)
+    const imm = this.isStatusImmune(inflicter, condition);
+    if (imm.immune) return null;
+
+    if (condition === 'burn' && inflicter.types.includes('Fire')) return null;
+    if (
+      (condition === 'poison' || condition === 'toxic') &&
+      (inflicter.types.includes('Poison') || inflicter.types.includes('Steel'))
+    ) {
+      return null;
+    }
+    if (condition === 'paralysis' && inflicter.types.includes('Electric')) return null;
+
+    setStatusCondition(inflicter, condition);
+    const condNameVi =
+      condition === 'burn' ? 'bỏng' : condition === 'paralysis' ? 'tê liệt' : 'nhiễm độc';
+    const msg = `[Đồng Bộ Hóa] của ${victim.name} khiến ${inflicter.name} cũng bị ${condNameVi}!`;
+    events.push(
+      BattleEventFactory.abilityTriggered(
+        victimSide,
+        victim.name,
+        victim.ability || 'Synchronize',
+        'Đồng Bộ Hóa',
+        'Phản hồi trạng thái',
+        msg
+      )
+    );
+    events.push(BattleEventFactory.statusInflicted(inflicterSide, inflicter.name, condition, msg));
+    return msg;
   }
 
   /**

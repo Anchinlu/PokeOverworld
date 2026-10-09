@@ -1,4 +1,10 @@
-import type { BattlerPokemon, BattlerSide, BattleEvent, BattleMove, BattleEnvironment } from '../types';
+import type {
+  BattlerPokemon,
+  BattlerSide,
+  BattleEvent,
+  BattleMove,
+  BattleEnvironment,
+} from '../types';
 import type { BattleRng } from '../battle-rng';
 import { BattleEventFactory } from '../state/battle-event-factory';
 import {
@@ -38,7 +44,10 @@ export function getStatusImmunity(
   condition: NonNullable<BattleMove['statusEffect']>['condition'],
   environment?: BattleEnvironment
 ): string | null {
-  if (environment?.terrain && !canApplyStatusInTerrain(environment.terrain.type, condition, target)) {
+  if (
+    environment?.terrain &&
+    !canApplyStatusInTerrain(environment.terrain.type, condition, target)
+  ) {
     if (environment.terrain.type === 'electric') {
       return 'Điện trường trên mặt đất ngăn cản giấc ngủ!';
     }
@@ -292,7 +301,9 @@ export function processEndTurnEffects(
     const weatherDmgResult = calculateEndTurnWeatherDamage(target, environment.weather.type);
     if (weatherDmgResult) {
       totalDamage += weatherDmgResult.damage;
-      messageText = messageText ? `${messageText} ${weatherDmgResult.message}` : weatherDmgResult.message;
+      messageText = messageText
+        ? `${messageText} ${weatherDmgResult.message}`
+        : weatherDmgResult.message;
       events.push(
         BattleEventFactory.endTurnDamage(
           targetSide,
@@ -311,7 +322,9 @@ export function processEndTurnEffects(
     const res = applyDamage(target, totalDamage);
     defenderFainted = res.fainted;
     if (defenderFainted) {
-      events.push(BattleEventFactory.fainted(targetSide, target.name, `${target.name} đã ngất xỉu!`));
+      events.push(
+        BattleEventFactory.fainted(targetSide, target.name, `${target.name} đã ngất xỉu!`)
+      );
     }
   }
 

@@ -7,10 +7,7 @@ import { AbilityEngine } from '../ability-engine';
  * - Rain: 1.5x Water damage, 0.5x Fire damage.
  * - Sun: 1.5x Fire damage, 0.5x Water damage.
  */
-export function getWeatherDamageMultiplier(
-  weatherType?: string,
-  moveType?: PokemonType
-): number {
+export function getWeatherDamageMultiplier(weatherType?: string, moveType?: PokemonType): number {
   if (!weatherType || !moveType) return 1.0;
 
   if (weatherType === 'rain') {
@@ -131,19 +128,12 @@ export function getWeatherAccuracyOverride(
 /**
  * Modifies base move power for moves hindered by weather (Solar Beam / Solar Blade).
  */
-export function getWeatherMovePowerMultiplier(
-  weatherType?: string,
-  moveId?: string
-): number {
+export function getWeatherMovePowerMultiplier(weatherType?: string, moveId?: string): number {
   if (!weatherType || !moveId) return 1.0;
   const id = moveId.toLowerCase();
 
   if (id === 'solar_beam' || id === 'solarbeam' || id === 'solar_blade') {
-    if (
-      weatherType === 'rain' ||
-      weatherType === 'sandstorm' ||
-      weatherType === 'hail'
-    ) {
+    if (weatherType === 'rain' || weatherType === 'sandstorm' || weatherType === 'hail') {
       return 0.5;
     }
   }

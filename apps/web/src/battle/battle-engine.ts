@@ -127,21 +127,56 @@ export class BattleEngine {
     const enemySpeed = this.enemyPokemon.stats.speed;
 
     if (playerSpeed >= enemySpeed) {
-      const pMsgs = AbilityEngine.onSwitchIn(this.playerPokemon, 'player', this.enemyPokemon, 'enemy', this.rng, events, this.environment);
+      const pMsgs = AbilityEngine.onSwitchIn(
+        this.playerPokemon,
+        'player',
+        this.enemyPokemon,
+        'enemy',
+        this.rng,
+        events,
+        this.environment
+      );
       messages.push(...pMsgs);
-      const eMsgs = AbilityEngine.onSwitchIn(this.enemyPokemon, 'enemy', this.playerPokemon, 'player', this.rng, events, this.environment);
+      const eMsgs = AbilityEngine.onSwitchIn(
+        this.enemyPokemon,
+        'enemy',
+        this.playerPokemon,
+        'player',
+        this.rng,
+        events,
+        this.environment
+      );
       messages.push(...eMsgs);
     } else {
-      const eMsgs = AbilityEngine.onSwitchIn(this.enemyPokemon, 'enemy', this.playerPokemon, 'player', this.rng, events, this.environment);
+      const eMsgs = AbilityEngine.onSwitchIn(
+        this.enemyPokemon,
+        'enemy',
+        this.playerPokemon,
+        'player',
+        this.rng,
+        events,
+        this.environment
+      );
       messages.push(...eMsgs);
-      const pMsgs = AbilityEngine.onSwitchIn(this.playerPokemon, 'player', this.enemyPokemon, 'enemy', this.rng, events, this.environment);
+      const pMsgs = AbilityEngine.onSwitchIn(
+        this.playerPokemon,
+        'player',
+        this.enemyPokemon,
+        'enemy',
+        this.rng,
+        events,
+        this.environment
+      );
       messages.push(...pMsgs);
     }
 
     return { messages, events };
   }
 
-  public switchPlayerPokemon(newPokemon: BattlerPokemon): { messages: string[]; events: BattleEvent[] } {
+  public switchPlayerPokemon(newPokemon: BattlerPokemon): {
+    messages: string[];
+    events: BattleEvent[];
+  } {
     AbilityEngine.onSwitchOut(this.playerPokemon);
     this.playerPokemon = newPokemon;
     ensureBattlerState(this.playerPokemon);
@@ -176,7 +211,9 @@ export class BattleEngine {
 
     if (res) {
       if (abilityMsgs.length > 0) {
-        res.message = res.message ? `${res.message} ${abilityMsgs.join(' ')}` : abilityMsgs.join(' ');
+        res.message = res.message
+          ? `${res.message} ${abilityMsgs.join(' ')}`
+          : abilityMsgs.join(' ');
       }
       res.events.push(...abilityEvents);
       return res;
@@ -270,7 +307,13 @@ export class BattleEngine {
 
     // Deduct PP only when attacker is able to act and not on turn 2 of a charging move
     if (move.id !== 'struggle' && !attacker.chargingMove) {
-      move.pp = Math.max(0, move.pp - 1);
+      const isTargetingEnemy = defender && defender !== attacker;
+      const hasPressure =
+        isTargetingEnemy &&
+        AbilityEngine.normalize(defender.ability) === 'pressure' &&
+        defender.currentHp > 0;
+      const ppCost = hasPressure ? 2 : 1;
+      move.pp = Math.max(0, move.pp - ppCost);
     }
 
     // 3. Protect / Detect move handling
@@ -866,7 +909,11 @@ export class BattleEngine {
           const tSide: BattlerSide = target === attacker ? attackerSide : defenderSide;
           const statVi = STAT_NAME_VI[sc.stat] ?? sc.stat;
 
-          if (sc.stages < 0 && target !== attacker && AbilityEngine.isStatDropProtected(target, sc.stat, true)) {
+          if (
+            sc.stages < 0 &&
+            target !== attacker &&
+            AbilityEngine.isStatDropProtected(target, sc.stat, true)
+          ) {
             const protName = AbilityEngine.getDisplayName(target.ability);
             secMsg += ` Nhưng ${target.name} nhờ [${protName}] ngăn cản giảm ${statVi}!`;
             events.push(

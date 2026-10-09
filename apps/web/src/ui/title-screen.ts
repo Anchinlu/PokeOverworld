@@ -105,7 +105,8 @@ const WINGULL_PATH = '/Graphics/Intro/Intro_moning/WINGULL.png';
 // Sunset Assets
 const SKY_SUNSET_PATH = '/Graphics/Intro/Intro_sunset/01_sky_sunset.png';
 const SEA_SUNSET_PATH = '/Graphics/Intro/Intro_sunset/03_sea_sunset.png';
-const SUN_REFLECTION_SUNSET_PATH = '/Graphics/Intro/Intro_sunset/04_sun_reflection_cropped_sunset.png';
+const SUN_REFLECTION_SUNSET_PATH =
+  '/Graphics/Intro/Intro_sunset/04_sun_reflection_cropped_sunset.png';
 const SUN_DISC_SUNSET_PATH = '/Graphics/Intro/Intro_sunset/06_sun_sunset_disc.png';
 const SUN_GLOW_SUNSET_PATH = '/Graphics/Intro/Intro_sunset/06_sun_sunset_glow.png';
 const BACK_GRASS_SUNSET_PATH = '/Graphics/Intro/Intro_sunset/05a_grass_back_sunset.png';
@@ -119,7 +120,8 @@ const TENTACRUEL_PATH = '/Graphics/Intro/Intro_sunset/surftentacruel.png';
 const SKY_NIGHT_PATH = '/Graphics/Intro/Intro_night/01_sky_night.png';
 const STARS_NIGHT_PATH = '/Graphics/Intro/Intro_night/01b_stars_night.png';
 const SEA_NIGHT_PATH = '/Graphics/Intro/Intro_night/03_sea_night.png';
-const MOON_REFLECTION_NIGHT_PATH = '/Graphics/Intro/Intro_night/04_moon_reflection_cropped_night.png';
+const MOON_REFLECTION_NIGHT_PATH =
+  '/Graphics/Intro/Intro_night/04_moon_reflection_cropped_night.png';
 const MOON_DISC_NIGHT_PATH = '/Graphics/Intro/Intro_night/06_moon_disc.png';
 const MOON_GLOW_NIGHT_PATH = '/Graphics/Intro/Intro_night/06_moon_glow.png';
 const BACK_GRASS_NIGHT_PATH = '/Graphics/Intro/Intro_night/05a_grass_back_night.png';
@@ -292,9 +294,15 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
 
   // Settings modal elements
   const settingsModal = overlay.querySelector('#titleSettingsModal') as HTMLDivElement | null;
-  const btnSettingsModalCloseX = overlay.querySelector('#btnSettingsModalCloseX') as HTMLButtonElement | null;
-  const btnSettingsModalDone = overlay.querySelector('#btnSettingsModalDone') as HTMLButtonElement | null;
-  const btnToggleSunsetTheme = overlay.querySelector('#btnToggleSunsetTheme') as HTMLButtonElement | null;
+  const btnSettingsModalCloseX = overlay.querySelector(
+    '#btnSettingsModalCloseX'
+  ) as HTMLButtonElement | null;
+  const btnSettingsModalDone = overlay.querySelector(
+    '#btnSettingsModalDone'
+  ) as HTMLButtonElement | null;
+  const btnToggleSunsetTheme = overlay.querySelector(
+    '#btnToggleSunsetTheme'
+  ) as HTMLButtonElement | null;
   const txtSunsetTheme = overlay.querySelector('#txtSunsetTheme') as HTMLSpanElement | null;
   const sliderTitleBgm = overlay.querySelector('#sliderTitleBgm') as HTMLInputElement | null;
   const txtTitleBgmVol = overlay.querySelector('#txtTitleBgmVol') as HTMLSpanElement | null;
@@ -847,11 +855,7 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
 
     // A4. Update Flying Birds
     const activeBirds =
-      currentTheme === 'night'
-        ? birdsNight
-        : currentTheme === 'sunset'
-          ? birdsSunset
-          : birdsDay;
+      currentTheme === 'night' ? birdsNight : currentTheme === 'sunset' ? birdsSunset : birdsDay;
 
     for (const b of activeBirds) {
       b.x -= b.speed * dt;
@@ -956,21 +960,13 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
 
     // 1. Layer 1: Sky (Full 1920x1200)
     const curSkyImg =
-      currentTheme === 'night'
-        ? skyNightImg
-        : currentTheme === 'sunset'
-          ? skySunsetImg
-          : skyDayImg;
+      currentTheme === 'night' ? skyNightImg : currentTheme === 'sunset' ? skySunsetImg : skyDayImg;
 
     if (curSkyImg.complete && curSkyImg.naturalWidth > 0) {
       ctx.drawImage(curSkyImg, 0, 0, 1920, 1200);
     } else {
       ctx.fillStyle =
-        currentTheme === 'night'
-          ? '#070b19'
-          : currentTheme === 'sunset'
-            ? '#f97316'
-            : '#6ec5ff';
+        currentTheme === 'night' ? '#070b19' : currentTheme === 'sunset' ? '#f97316' : '#6ec5ff';
       ctx.fillRect(0, 0, 1920, 1200);
     }
 
@@ -1038,11 +1034,7 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
 
     // 3. Layer 3: Sea Strip (Y=848, H=92, Infinite Scroll from Right to Left)
     const curSeaImg =
-      currentTheme === 'night'
-        ? seaNightImg
-        : currentTheme === 'sunset'
-          ? seaSunsetImg
-          : seaDayImg;
+      currentTheme === 'night' ? seaNightImg : currentTheme === 'sunset' ? seaSunsetImg : seaDayImg;
 
     if (curSeaImg.complete && curSeaImg.naturalWidth > 0) {
       ctx.drawImage(curSeaImg, 0, 848, 1920, 92, seaOffset, 848, 1920, 92);
@@ -1121,7 +1113,17 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
         const gFrameX = gyaradosFrameIndex * 64;
         const gBobX = 1360 + Math.sin(currentTime / 750) * 8;
         const gBobY = 848 + Math.sin(currentTime / 450) * 2.5;
-        ctx.drawImage(gyaradosImg, gFrameX, 0, 64, 60, Math.round(gBobX), Math.round(gBobY), 64, 60);
+        ctx.drawImage(
+          gyaradosImg,
+          gFrameX,
+          0,
+          64,
+          60,
+          Math.round(gBobX),
+          Math.round(gBobY),
+          64,
+          60
+        );
       }
     }
 

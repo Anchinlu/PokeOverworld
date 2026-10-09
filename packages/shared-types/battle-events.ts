@@ -139,7 +139,7 @@ export interface HpRestoredEvent extends BaseBattleEvent {
   amount: number;
   remainingHp: number;
   maxHp: number;
-  source: 'move' | 'drain' | 'item' | 'leech_seed';
+  source: 'move' | 'drain' | 'item' | 'leech_seed' | 'terrain' | 'held_item';
 }
 
 export interface RecoilDamageEvent extends BaseBattleEvent {
@@ -186,7 +186,7 @@ export interface EndTurnDamageEvent extends BaseBattleEvent {
   targetName: string;
   damage: number;
   remainingHp: number;
-  source: 'burn' | 'poison' | 'toxic' | 'leech_seed';
+  source: 'burn' | 'poison' | 'toxic' | 'leech_seed' | 'sandstorm' | 'hail';
 }
 
 export interface AbilityTriggeredEvent extends BaseBattleEvent {

@@ -1,7 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { BattleEngine } from '../src/battle/battle-engine';
 import { calculateDamage } from '../src/battle/rules/damage-calculator';
-import type { BattlerPokemon, BattleMove, BattleEnvironment, StatStages } from '../src/battle/types';
+import { checkMoveAccuracy } from '../src/battle/rules/move-effect-engine';
+import type {
+  BattlerPokemon,
+  BattleMove,
+  BattleEnvironment,
+  StatStages,
+} from '../src/battle/types';
 import { FixedSequenceRng } from '../src/battle/battle-rng';
 
 interface MockBattlerPokemon extends BattlerPokemon {
@@ -128,7 +134,9 @@ describe('AbilityEngine System & Mechanics', () => {
     it('Download boosts Attack when opponent SpDef > Def, SpAttack otherwise', () => {
       // Enemy with higher Defense than SpDef -> Download boosts SpAttack
       const p1 = createMockPokemon({ ability: 'Download' });
-      const e1 = createMockPokemon({ stats: { hp: 100, attack: 100, defense: 120, spAtk: 80, spDef: 70, speed: 80, total: 550 } });
+      const e1 = createMockPokemon({
+        stats: { hp: 100, attack: 100, defense: 120, spAtk: 80, spDef: 70, speed: 80, total: 550 },
+      });
       const eng1 = new BattleEngine(p1, e1, createMockEnvironment());
       eng1.triggerInitialAbilities();
       expect(p1.statStages.spAtk).toBe(1);
@@ -136,7 +144,9 @@ describe('AbilityEngine System & Mechanics', () => {
 
       // Enemy with higher SpDef than Defense -> Download boosts Attack
       const p2 = createMockPokemon({ ability: 'Download' });
-      const e2 = createMockPokemon({ stats: { hp: 100, attack: 100, defense: 60, spAtk: 80, spDef: 110, speed: 80, total: 530 } });
+      const e2 = createMockPokemon({
+        stats: { hp: 100, attack: 100, defense: 60, spAtk: 80, spDef: 110, speed: 80, total: 530 },
+      });
       const eng2 = new BattleEngine(p2, e2, createMockEnvironment());
       eng2.triggerInitialAbilities();
       expect(p2.statStages.attack).toBe(1);
@@ -279,9 +289,41 @@ describe('AbilityEngine System & Mechanics', () => {
     };
 
     it('Huge Power & Pure Power double physical attack', () => {
-      const normalAttacker = createMockPokemon({ ability: 'Static', stats: { hp: 100, attack: 100, defense: 100, spAtk: 100, spDef: 100, speed: 100, total: 600 } });
-      const hugePowerAttacker = createMockPokemon({ ability: 'Huge Power', stats: { hp: 100, attack: 100, defense: 100, spAtk: 100, spDef: 100, speed: 100, total: 600 } });
-      const defender = createMockPokemon({ stats: { hp: 200, attack: 100, defense: 100, spAtk: 100, spDef: 100, speed: 100, total: 700 } });
+      const normalAttacker = createMockPokemon({
+        ability: 'Static',
+        stats: {
+          hp: 100,
+          attack: 100,
+          defense: 100,
+          spAtk: 100,
+          spDef: 100,
+          speed: 100,
+          total: 600,
+        },
+      });
+      const hugePowerAttacker = createMockPokemon({
+        ability: 'Huge Power',
+        stats: {
+          hp: 100,
+          attack: 100,
+          defense: 100,
+          spAtk: 100,
+          spDef: 100,
+          speed: 100,
+          total: 600,
+        },
+      });
+      const defender = createMockPokemon({
+        stats: {
+          hp: 200,
+          attack: 100,
+          defense: 100,
+          spAtk: 100,
+          spDef: 100,
+          speed: 100,
+          total: 700,
+        },
+      });
 
       const rng = new FixedSequenceRng([0.5, 0.5]); // fixed roll
       const dmgNormal = calculateDamage(normalAttacker, defender, tackle, rng).damage;
@@ -304,11 +346,31 @@ describe('AbilityEngine System & Mechanics', () => {
     });
 
     it('Overgrow / Blaze / Torrent / Swarm activate at <= 1/3 HP', () => {
-      const healthyCharizard = createMockPokemon({ ability: 'Blaze', types: ['Fire'], currentHp: 120, maxHp: 120 });
-      const pinchCharizard = createMockPokemon({ ability: 'Blaze', types: ['Fire'], currentHp: 30, maxHp: 120 });
+      const healthyCharizard = createMockPokemon({
+        ability: 'Blaze',
+        types: ['Fire'],
+        currentHp: 120,
+        maxHp: 120,
+      });
+      const pinchCharizard = createMockPokemon({
+        ability: 'Blaze',
+        types: ['Fire'],
+        currentHp: 30,
+        maxHp: 120,
+      });
       const defender = createMockPokemon({ types: ['Normal'] });
 
-      const ember: BattleMove = { id: 'ember', name: 'Đốm Lửa', type: 'Fire', category: 'special', power: 40, accuracy: 100, pp: 25, maxPp: 25, description: '' };
+      const ember: BattleMove = {
+        id: 'ember',
+        name: 'Đốm Lửa',
+        type: 'Fire',
+        category: 'special',
+        power: 40,
+        accuracy: 100,
+        pp: 25,
+        maxPp: 25,
+        description: '',
+      };
       const rng = new FixedSequenceRng([0.5, 0.5]);
 
       const dmgHealthy = calculateDamage(healthyCharizard, defender, ember, rng).damage;
@@ -330,7 +392,12 @@ describe('AbilityEngine System & Mechanics', () => {
     });
 
     it('Wonder Guard blocks non-super-effective damaging moves', () => {
-      const shedinja = createMockPokemon({ ability: 'Wonder Guard', types: ['Bug', 'Ghost'], currentHp: 1, maxHp: 1 });
+      const shedinja = createMockPokemon({
+        ability: 'Wonder Guard',
+        types: ['Bug', 'Ghost'],
+        currentHp: 1,
+        maxHp: 1,
+      });
       const attacker = createMockPokemon();
 
       // Normal is not effective against Ghost -> 0 damage
@@ -338,19 +405,47 @@ describe('AbilityEngine System & Mechanics', () => {
       expect(tackleRes.damage).toBe(0);
 
       // Water move (neutral against Bug/Ghost) -> blocked by Wonder Guard!
-      const waterGun: BattleMove = { id: 'water_gun', name: 'Súng Nước', type: 'Water', category: 'special', power: 40, accuracy: 100, pp: 25, maxPp: 25, description: '' };
+      const waterGun: BattleMove = {
+        id: 'water_gun',
+        name: 'Súng Nước',
+        type: 'Water',
+        category: 'special',
+        power: 40,
+        accuracy: 100,
+        pp: 25,
+        maxPp: 25,
+        description: '',
+      };
       const waterRes = calculateDamage(attacker, shedinja, waterGun, new FixedSequenceRng([0.5]));
       expect(waterRes.damage).toBe(0);
 
       // Fire move is Super Effective against Bug! -> hits through Wonder Guard!
-      const ember: BattleMove = { id: 'ember', name: 'Đốm Lửa', type: 'Fire', category: 'special', power: 40, accuracy: 100, pp: 25, maxPp: 25, description: '' };
+      const ember: BattleMove = {
+        id: 'ember',
+        name: 'Đốm Lửa',
+        type: 'Fire',
+        category: 'special',
+        power: 40,
+        accuracy: 100,
+        pp: 25,
+        maxPp: 25,
+        description: '',
+      };
       const fireRes = calculateDamage(attacker, shedinja, ember, new FixedSequenceRng([0.5]));
       expect(fireRes.damage).toBeGreaterThan(0);
     });
 
     it('Multiscale halves damage when at 100% full HP', () => {
-      const fullDragonite = createMockPokemon({ ability: 'Multiscale', currentHp: 120, maxHp: 120 });
-      const damagedDragonite = createMockPokemon({ ability: 'Multiscale', currentHp: 110, maxHp: 120 });
+      const fullDragonite = createMockPokemon({
+        ability: 'Multiscale',
+        currentHp: 120,
+        maxHp: 120,
+      });
+      const damagedDragonite = createMockPokemon({
+        ability: 'Multiscale',
+        currentHp: 110,
+        maxHp: 120,
+      });
       const attacker = createMockPokemon();
 
       const rng = new FixedSequenceRng([0.5, 0.5]);
@@ -361,7 +456,17 @@ describe('AbilityEngine System & Mechanics', () => {
     });
 
     it('Sturdy prevents One-Hit KO from 100% max HP, leaving 1 HP', () => {
-      const attacker = createMockPokemon({ stats: { hp: 100, attack: 500, defense: 100, spAtk: 500, spDef: 100, speed: 100, total: 1400 } });
+      const attacker = createMockPokemon({
+        stats: {
+          hp: 100,
+          attack: 500,
+          defense: 100,
+          spAtk: 500,
+          spDef: 100,
+          speed: 100,
+          total: 1400,
+        },
+      });
       const defender = createMockPokemon({
         ability: 'Sturdy',
         currentHp: 100,
@@ -381,7 +486,12 @@ describe('AbilityEngine System & Mechanics', () => {
         description: '',
       };
 
-      const engine = new BattleEngine(attacker, defender, createMockEnvironment(), new FixedSequenceRng([0.9]));
+      const engine = new BattleEngine(
+        attacker,
+        defender,
+        createMockEnvironment(),
+        new FixedSequenceRng([0.9])
+      );
       const res = engine.executeAttack(attacker, defender, superAttack);
 
       expect(defender.currentHp).toBe(1);
@@ -407,7 +517,12 @@ describe('AbilityEngine System & Mechanics', () => {
       };
 
       // Set RNG: [crit roll (0.5), damage random roll (0.5), static contact roll (0.2 < 0.3)]
-      const engine = new BattleEngine(attacker, defender, createMockEnvironment(), new FixedSequenceRng([0.5, 0.5, 0.2]));
+      const engine = new BattleEngine(
+        attacker,
+        defender,
+        createMockEnvironment(),
+        new FixedSequenceRng([0.5, 0.5, 0.2])
+      );
       const res = engine.executeAttack(attacker, defender, contactMove);
 
       expect(attacker.status).toBe('paralysis');
@@ -500,7 +615,12 @@ describe('AbilityEngine System & Mechanics', () => {
     it('Shed Skin has 33% chance to cure status condition at end of turn', () => {
       const pkmn = createMockPokemon({ ability: 'Shed Skin', status: 'burn' });
       // RNG roll < 0.33
-      const engine = new BattleEngine(pkmn, createMockPokemon(), createMockEnvironment(), new FixedSequenceRng([0.2]));
+      const engine = new BattleEngine(
+        pkmn,
+        createMockPokemon(),
+        createMockEnvironment(),
+        new FixedSequenceRng([0.2])
+      );
 
       const res = engine.applyEndTurnEffects(pkmn);
       expect(pkmn.status).toBe('none');
@@ -531,6 +651,205 @@ describe('AbilityEngine System & Mechanics', () => {
       engine.executeAttack(attacker, defender, flamethrower);
 
       expect(defender.status).toBe('none'); // Protected by Shield Dust!
+    });
+  });
+
+  describe('6. Newly Activated Passive Abilities (Poison Heal, Magic Guard, Synchronize, Pressure, Natural Cure, Overcoat, Compound Eyes, Sand Veil)', () => {
+    it('Poison Heal restores 1/8 max HP every turn instead of taking poison damage', () => {
+      const gliscor = createMockPokemon({
+        ability: 'Poison Heal',
+        status: 'poison',
+        maxHp: 160,
+        currentHp: 100,
+      });
+      const engine = new BattleEngine(gliscor, createMockPokemon(), createMockEnvironment());
+
+      engine.applyEndTurnEffects(gliscor);
+      expect(gliscor.currentHp).toBe(120); // 100 + 160/8 = 120
+    });
+
+    it('Magic Guard ignores indirect damage (poison tick, Rocky Helmet, Life Orb recoil)', () => {
+      const reuniclus = createMockPokemon({
+        ability: 'Magic Guard',
+        status: 'burn',
+        maxHp: 100,
+        currentHp: 100,
+      });
+      const engine = new BattleEngine(reuniclus, createMockPokemon(), createMockEnvironment());
+
+      // 1. Burn tick ignored
+      engine.applyEndTurnEffects(reuniclus);
+      expect(reuniclus.currentHp).toBe(100);
+
+      // 2. Life Orb recoil ignored
+      reuniclus.heldItem = 'life-orb';
+      const enemy = createMockPokemon();
+      const tackle: BattleMove = {
+        id: 'tackle',
+        name: 'Húc',
+        type: 'Normal',
+        category: 'physical',
+        power: 50,
+        accuracy: 100,
+        pp: 35,
+        maxPp: 35,
+        description: '',
+      };
+      engine.executeAttack(reuniclus, enemy, tackle);
+      expect(reuniclus.currentHp).toBe(100); // No Life Orb recoil taken!
+
+      // 3. Rocky Helmet recoil ignored
+      enemy.heldItem = 'rocky-helmet';
+      engine.executeAttack(reuniclus, enemy, tackle);
+      expect(reuniclus.currentHp).toBe(100); // No Rocky Helmet damage taken!
+    });
+
+    it('Synchronize reflects Burn, Poison, and Paralysis onto attacker', () => {
+      const synchUser = createMockPokemon({ ability: 'Synchronize', name: 'Espeon' });
+      const attacker = createMockPokemon({ name: 'Gengar', ability: 'Cursed Body' });
+      const willOWisp: BattleMove = {
+        id: 'will_o_wisp',
+        name: 'Đốm Lửa Ma',
+        type: 'Fire',
+        category: 'status',
+        power: 0,
+        accuracy: 100,
+        statusEffect: {
+          condition: 'burn',
+          target: 'opponent',
+          chance: 1.0,
+        },
+        pp: 15,
+        maxPp: 15,
+        description: '',
+      };
+
+      const engine = new BattleEngine(attacker, synchUser, createMockEnvironment());
+      const res = engine.executeAttack(attacker, synchUser, willOWisp);
+
+      expect(synchUser.status).toBe('burn');
+      expect(attacker.status).toBe('burn'); // Reflected by Synchronize!
+      expect(res.message).toContain('Đồng Bộ Hóa');
+    });
+
+    it('Pressure deducts 2 PP when target is opponent with Pressure', () => {
+      const attacker = createMockPokemon({ name: 'Pikachu' });
+      const pressureEnemy = createMockPokemon({ name: 'Zapdos', ability: 'Pressure' });
+      const thunderbolt: BattleMove = {
+        id: 'thunderbolt',
+        name: 'Tia Sét',
+        type: 'Electric',
+        category: 'special',
+        power: 90,
+        accuracy: 100,
+        pp: 15,
+        maxPp: 15,
+        description: '',
+      };
+      attacker.moves = [thunderbolt];
+
+      const engine = new BattleEngine(attacker, pressureEnemy, createMockEnvironment());
+      engine.executeAttack(attacker, pressureEnemy, thunderbolt);
+
+      expect(thunderbolt.pp).toBe(13); // 15 - 2 = 13
+    });
+
+    it('Natural Cure clears status condition when switching out', () => {
+      const blissey = createMockPokemon({
+        ability: 'Natural Cure',
+        status: 'toxic',
+        statusTurns: 3,
+      });
+      const engine = new BattleEngine(blissey, createMockPokemon(), createMockEnvironment());
+
+      expect(blissey.status).toBe('toxic');
+      const replacement = createMockPokemon({ name: 'Snorlax' });
+      engine.switchPlayerPokemon(replacement);
+
+      expect(blissey.status).toBe('none'); // Cleared on switch-out!
+    });
+
+    it('Overcoat blocks powder and spore moves', () => {
+      const forretress = createMockPokemon({ ability: 'Overcoat' });
+      const attacker = createMockPokemon();
+      const spore: BattleMove = {
+        id: 'spore',
+        name: 'Bào Tử Ru Ngủ',
+        type: 'Grass',
+        category: 'status',
+        power: 0,
+        accuracy: 100,
+        statusEffect: {
+          condition: 'sleep',
+          target: 'opponent',
+          chance: 1.0,
+        },
+        pp: 15,
+        maxPp: 15,
+        description: '',
+      };
+
+      const engine = new BattleEngine(attacker, forretress, createMockEnvironment());
+      const res = engine.executeAttack(attacker, forretress, spore);
+
+      expect(forretress.status).toBe('none'); // Blocked by Overcoat!
+      expect(res.message).toContain('Áo Khoác');
+    });
+
+    it('Compound Eyes boosts move accuracy by 1.3x', () => {
+      const butterfree = createMockPokemon({ ability: 'Compound Eyes' });
+      const normalPkmn = createMockPokemon({ ability: 'Swarm' });
+      const defender = createMockPokemon();
+      const lowAccMove: BattleMove = {
+        id: 'hypnosis',
+        name: 'Thôi Miên',
+        type: 'Psychic',
+        category: 'status',
+        power: 0,
+        accuracy: 60, // 60 * 1.3 = 78
+        pp: 20,
+        maxPp: 20,
+        description: '',
+      };
+
+      // RNG roll = 0.70 (70%): misses at 60%, but hits at 78%!
+      const rng1 = new FixedSequenceRng([0.7]);
+      const rng2 = new FixedSequenceRng([0.7]);
+
+      const hitCompound = checkMoveAccuracy(butterfree, defender, lowAccMove, rng1);
+      const hitNormal = checkMoveAccuracy(normalPkmn, defender, lowAccMove, rng2);
+
+      expect(hitCompound).toBe(true);
+      expect(hitNormal).toBe(false);
+    });
+
+    it('Sand Veil boosts evasion by 1.25x in Sandstorm', () => {
+      const garchomp = createMockPokemon({ ability: 'Sand Veil' });
+      const attacker = createMockPokemon();
+      const move100Acc: BattleMove = {
+        id: 'tackle',
+        name: 'Húc',
+        type: 'Normal',
+        category: 'physical',
+        power: 50,
+        accuracy: 100, // 100 * 0.8 = 80 in sandstorm
+        pp: 35,
+        maxPp: 35,
+        description: '',
+      };
+
+      const envSand: BattleEnvironment = {
+        background: 'field',
+        enemyBase: 'grass',
+        playerBase: 'grass',
+        weather: { type: 'sandstorm', turnsLeft: 5 },
+      };
+
+      // Roll = 0.85 (85%): hits 100%, misses 80%
+      const rng = new FixedSequenceRng([0.85]);
+      const hitsInSand = checkMoveAccuracy(attacker, garchomp, move100Acc, rng, envSand);
+
+      expect(hitsInSand).toBe(false); // Evaded thanks to Sand Veil!
     });
   });
 });

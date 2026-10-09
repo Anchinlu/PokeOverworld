@@ -45,10 +45,7 @@ export const MULTI_HIT_2_MOVE_IDS = new Set([
 
 import { HeldItemEngine } from './held-item-engine';
 import { AbilityEngine } from './ability-engine';
-import {
-  getEnvironmentDamageMultiplier,
-  getWeatherMovePowerMultiplier,
-} from './environment';
+import { getEnvironmentDamageMultiplier, getWeatherMovePowerMultiplier } from './environment';
 
 /**
  * Calculates raw base damage for a single hit under Gen 7 formula.
@@ -81,7 +78,11 @@ export function calculateSingleHitBaseDamage(
     : AbilityEngine.getAttackerStatMultiplier(attacker, 'attack');
 
   let atk = rawAtk * getStatMultiplier(atkStage) * atkItemMult * atkAbilityMult;
-  if (!isSpecial && attacker.status === 'burn' && AbilityEngine.normalize(attacker.ability) !== 'guts') {
+  if (
+    !isSpecial &&
+    attacker.status === 'burn' &&
+    AbilityEngine.normalize(attacker.ability) !== 'guts'
+  ) {
     atk *= 0.5;
   }
   const def = Math.max(1, rawDef * getStatMultiplier(defStage) * defItemMult);
@@ -118,7 +119,11 @@ export function calculateDamage(
   }
 
   // Wonder Guard immunity for non-super-effective damaging moves
-  if (AbilityEngine.normalize(defender.ability) === 'wonderguard' && move.category !== 'status' && typeEff <= 1.0) {
+  if (
+    AbilityEngine.normalize(defender.ability) === 'wonderguard' &&
+    move.category !== 'status' &&
+    typeEff <= 1.0
+  ) {
     return {
       damage: 0,
       isCritical: false,
@@ -330,9 +335,11 @@ export function calculateDamage(
     const { baseDmg } = calculateSingleHitBaseDamage(attacker, defender, move, effectivePower);
 
     const hasAdaptability = AbilityEngine.normalize(attacker.ability) === 'adaptability';
-    const stab = !isStruggle && attacker.types.includes(move.type) ? (hasAdaptability ? 2.0 : 1.5) : 1.0;
+    const stab =
+      !isStruggle && attacker.types.includes(move.type) ? (hasAdaptability ? 2.0 : 1.5) : 1.0;
     const hasSuperLuck = AbilityEngine.normalize(attacker.ability) === 'superluck';
-    const totalCritStage = (attacker.critStage ?? 0) + (move.highCrit ? 1 : 0) + (hasSuperLuck ? 1 : 0);
+    const totalCritStage =
+      (attacker.critStage ?? 0) + (move.highCrit ? 1 : 0) + (hasSuperLuck ? 1 : 0);
     let critThreshold = 1 / 24;
     if (totalCritStage === 1) critThreshold = 1 / 8;
     else if (totalCritStage === 2) critThreshold = 1 / 2;
@@ -351,7 +358,12 @@ export function calculateDamage(
     );
 
     const atkAbilityDamage = AbilityEngine.getAttackerDamageMultiplier(attacker, defender, move);
-    const defAbilityDamage = AbilityEngine.getDefenderDamageMultiplier(attacker, defender, move, typeEff);
+    const defAbilityDamage = AbilityEngine.getDefenderDamageMultiplier(
+      attacker,
+      defender,
+      move,
+      typeEff
+    );
     const abilityDamageMult = atkAbilityDamage.multiplier * defAbilityDamage.multiplier;
     const envDamageMult = getEnvironmentDamageMultiplier(environment, move, attacker, defender);
 
@@ -392,7 +404,9 @@ export function calculateDamage(
         const hitRandom = 0.85 + rng.next() * 0.15;
         const hitDmg = Math.max(
           1,
-          Math.floor(baseDmg * stab * typeEff * critMult * hitRandom * heldItemDamageMult * abilityDamageMult)
+          Math.floor(
+            baseDmg * stab * typeEff * critMult * hitRandom * heldItemDamageMult * abilityDamageMult
+          )
         );
         totalDmg += hitDmg;
         simDefenderHp -= hitDmg;
