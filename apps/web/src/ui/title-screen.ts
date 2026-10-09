@@ -1317,7 +1317,9 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
     if (typeof localStorage !== 'undefined') {
       try {
         localStorage.setItem('pokemon_title_theme', currentTheme);
-      } catch (_) {}
+      } catch {
+        // ignore storage errors
+      }
     }
     updateThemeButtonText();
     const notices: Record<TitleScreenTheme, string> = {
@@ -1388,7 +1390,9 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
       if (typeof localStorage !== 'undefined') {
         try {
           localStorage.setItem('pokemon_title_theme', theme);
-        } catch (_) {}
+        } catch {
+          // ignore storage errors
+        }
       }
       updateThemeButtonText();
     },

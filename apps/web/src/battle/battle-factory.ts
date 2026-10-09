@@ -25,7 +25,8 @@ export function createBattler(
   rng: BattleRng = defaultBattleRng,
   isShiny = false,
   customIvs?: PokemonStatValues,
-  customNature?: NatureName
+  customNature?: NatureName,
+  customAbility?: string
 ): BattlerPokemon {
   const data =
     pokemonCatalog.getBySpeciesKey(speciesKey) ?? pokemonCatalog.getBySpeciesKey('PIKACHU')!;
@@ -59,6 +60,7 @@ export function createBattler(
     id: data.id,
     name: data.name,
     speciesKey: data.speciesKey,
+    ability: customAbility ?? data.ability ?? 'none',
     isShiny,
     types: [...data.types],
     level,

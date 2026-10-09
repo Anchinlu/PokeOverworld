@@ -28,6 +28,7 @@ import {
 } from './rules/move-effect-engine';
 import { BattleEventFactory } from './state/battle-event-factory';
 import { HeldItemEngine } from './rules/held-item-engine';
+import { AbilityEngine } from './rules/ability-engine';
 import {
   ensureBattlerState,
   applyStatStageChange,
@@ -83,6 +84,7 @@ export {
   getStatMultiplier,
   getAccuracyMultiplier,
   getMoveDisplayName,
+  AbilityEngine,
 };
 
 /**
@@ -113,13 +115,51 @@ export class BattleEngine {
     ensureBattlerState(this.enemyPokemon);
   }
 
-  public switchPlayerPokemon(newPokemon: BattlerPokemon): void {
+  /**
+   * Triggers switch-in abilities in speed priority order at the start of battle.
+   */
+  public triggerInitialAbilities(): { messages: string[]; events: BattleEvent[] } {
+    const events: BattleEvent[] = [];
+    const messages: string[] = [];
+
+    const playerSpeed = this.playerPokemon.stats.speed;
+    const enemySpeed = this.enemyPokemon.stats.speed;
+
+    if (playerSpeed >= enemySpeed) {
+      const pMsgs = AbilityEngine.onSwitchIn(this.playerPokemon, 'player', this.enemyPokemon, 'enemy', this.rng, events, this.environment);
+      messages.push(...pMsgs);
+      const eMsgs = AbilityEngine.onSwitchIn(this.enemyPokemon, 'enemy', this.playerPokemon, 'player', this.rng, events, this.environment);
+      messages.push(...eMsgs);
+    } else {
+      const eMsgs = AbilityEngine.onSwitchIn(this.enemyPokemon, 'enemy', this.playerPokemon, 'player', this.rng, events, this.environment);
+      messages.push(...eMsgs);
+      const pMsgs = AbilityEngine.onSwitchIn(this.playerPokemon, 'player', this.enemyPokemon, 'enemy', this.rng, events, this.environment);
+      messages.push(...pMsgs);
+    }
+
+    return { messages, events };
+  }
+
+  public switchPlayerPokemon(newPokemon: BattlerPokemon): { messages: string[]; events: BattleEvent[] } {
+    AbilityEngine.onSwitchOut(this.playerPokemon);
     this.playerPokemon = newPokemon;
     ensureBattlerState(this.playerPokemon);
+
+    const events: BattleEvent[] = [];
+    const messages = AbilityEngine.onSwitchIn(
+      this.playerPokemon,
+      'player',
+      this.enemyPokemon,
+      'enemy',
+      this.rng,
+      events,
+      this.environment
+    );
+    return { messages, events };
   }
 
   /**
-   * Applies persistent end-turn damage (burn, poison, toxic, leech seed).
+   * Applies persistent end-turn damage (burn, poison, toxic, leech seed) and abilities (Speed Boost, Shed Skin).
    */
   public applyEndTurnEffects(
     target: BattlerPokemon,
@@ -127,7 +167,30 @@ export class BattleEngine {
   ): EndTurnResult | null {
     const targetSide: BattlerSide = target === this.playerPokemon ? 'player' : 'enemy';
     const opponentSide: BattlerSide = targetSide === 'player' ? 'enemy' : 'player';
-    return processEndTurnEffects(target, targetSide, opponent, opponentSide);
+    const res = processEndTurnEffects(target, targetSide, opponent, opponentSide);
+
+    // End turn ability triggers (Speed Boost, Shed Skin, etc.)
+    const abilityEvents: BattleEvent[] = [];
+    const abilityMsgs = AbilityEngine.onEndTurn(target, targetSide, this.rng, abilityEvents);
+
+    if (res) {
+      if (abilityMsgs.length > 0) {
+        res.message = res.message ? `${res.message} ${abilityMsgs.join(' ')}` : abilityMsgs.join(' ');
+      }
+      res.events.push(...abilityEvents);
+      return res;
+    }
+
+    if (abilityEvents.length > 0) {
+      return {
+        damage: 0,
+        defenderFainted: false,
+        message: abilityMsgs.join(' '),
+        events: abilityEvents,
+      };
+    }
+
+    return null;
   }
 
   /**
@@ -323,6 +386,63 @@ export class BattleEngine {
         message: invMsg,
         events,
       };
+    }
+
+    // Damp ability check for explosive moves
+    if (moveId === 'explosion' || moveId === 'self_destruct') {
+      const dampBattler =
+        AbilityEngine.normalize(attacker.ability) === 'damp'
+          ? attacker
+          : AbilityEngine.normalize(defender.ability) === 'damp'
+            ? defender
+            : null;
+      if (dampBattler) {
+        const dampMsg = `${statusPrefix}${attacker.name} sử dụng ${moveDisplayName}! Nhưng [Ẩm Ướt] của ${dampBattler.name} ngăn chặn hoàn toàn vụ nổ!`;
+        return {
+          attackerName: attacker.name,
+          moveName: moveDisplayName,
+          damage: 0,
+          typeEffectiveness: 0,
+          isCritical: false,
+          defenderFainted: false,
+          message: dampMsg,
+          events,
+        };
+      }
+    }
+
+    // Ability-based elemental type immunity checks (Levitate, Flash Fire, Water Absorb, Volt Absorb, Sap Sipper, Motor Drive, Lightning Rod)
+    const isSelfTarget =
+      move.category === 'status' &&
+      (move.id === 'rest' ||
+        move.id === 'belly_drum' ||
+        (move.healPercent !== undefined && move.healPercent > 0) ||
+        (move.statChanges !== undefined &&
+          move.statChanges.length > 0 &&
+          move.statChanges.every((sc) => sc.target === 'self')) ||
+        (move.statusEffect !== undefined && move.statusEffect.target === 'self'));
+
+    if (!isSelfTarget) {
+      const abilityImmunity = AbilityEngine.checkTypeImmunity(
+        attacker,
+        defender,
+        defenderSide,
+        move,
+        1.0,
+        events
+      );
+      if (abilityImmunity.isImmune) {
+        return {
+          attackerName: attacker.name,
+          moveName: moveDisplayName,
+          damage: 0,
+          typeEffectiveness: 0,
+          isCritical: false,
+          defenderFainted: false,
+          message: `${statusPrefix}${attacker.name} sử dụng ${moveDisplayName}! ${abilityImmunity.message}`,
+          events,
+        };
+      }
     }
 
     // 7. Accuracy / Evasion Check
@@ -582,21 +702,25 @@ export class BattleEngine {
         attackerFainted = true;
       }
     } else if (move.recoilPercent && move.recoilPercent > 0) {
-      const recoil = Math.max(1, Math.floor(actualDamage * move.recoilPercent));
-      attacker.currentHp = Math.max(0, attacker.currentHp - recoil);
-      secMsg += ` ${attacker.name} bị phản lực tổn thương!`;
-      events.push(
-        BattleEventFactory.recoilDamage(
-          attackerSide,
-          attacker.name,
-          recoil,
-          attacker.currentHp,
-          `${attacker.name} bị phản lực tổn thương!`
-        )
-      );
-      if (attacker.currentHp <= 0) {
-        attacker.isFainted = true;
-        attackerFainted = true;
+      if (AbilityEngine.isRecoilImmune(attacker, move)) {
+        secMsg += ` ${attacker.name} nhờ [${AbilityEngine.getDisplayName(attacker.ability)}] không phải chịu phản lực!`;
+      } else {
+        const recoil = Math.max(1, Math.floor(actualDamage * move.recoilPercent));
+        attacker.currentHp = Math.max(0, attacker.currentHp - recoil);
+        secMsg += ` ${attacker.name} bị phản lực tổn thương!`;
+        events.push(
+          BattleEventFactory.recoilDamage(
+            attackerSide,
+            attacker.name,
+            recoil,
+            attacker.currentHp,
+            `${attacker.name} bị phản lực tổn thương!`
+          )
+        );
+        if (attacker.currentHp <= 0) {
+          attacker.isFainted = true;
+          attackerFainted = true;
+        }
       }
     } else if (moveId === 'explosion' || moveId === 'self_destruct') {
       attacker.currentHp = 0;
@@ -605,11 +729,58 @@ export class BattleEngine {
       secMsg += ` ${attacker.name} đã ngất xỉu!`;
     }
 
+    // Contact abilities trigger on attacker
+    if (actualDamage > 0) {
+      const contactMsgs = AbilityEngine.onContact(
+        attacker,
+        attackerSide,
+        defender,
+        defenderSide,
+        move,
+        this.rng,
+        events
+      );
+      if (contactMsgs.length > 0) {
+        secMsg += ' ' + contactMsgs.join(' ');
+      }
+      if (attacker.currentHp <= 0) {
+        attacker.isFainted = true;
+        attackerFainted = true;
+      }
+    }
+
     // Defender fainted event
     if (defenderFainted) {
       events.push(
         BattleEventFactory.fainted(defenderSide, defender.name, `${defender.name} đã ngất xỉu!`)
       );
+
+      // Moxie ability triggers when attacker knocks out defender
+      if (!attackerFainted && AbilityEngine.normalize(attacker.ability) === 'moxie') {
+        const boostStage = applyStatStageChange(attacker, 'attack', 1);
+        const moxieMsg = `${attacker.name} kích hoạt [${AbilityEngine.getDisplayName(attacker.ability)}] và tăng Tấn công!`;
+        secMsg += ' ' + moxieMsg;
+        events.push(
+          BattleEventFactory.abilityTriggered(
+            attackerSide,
+            attacker.name,
+            attacker.ability || 'Moxie',
+            'Tự Tin Chiến Thắng',
+            'Tăng Attack khi hạ gục',
+            moxieMsg
+          )
+        );
+        events.push(
+          BattleEventFactory.statStageChanged(
+            attackerSide,
+            attacker.name,
+            'attack',
+            1,
+            boostStage,
+            moxieMsg
+          )
+        );
+      }
     }
 
     // Attacker fainted event
@@ -640,7 +811,8 @@ export class BattleEngine {
     }
 
     // Secondary effects on surviving defender
-    if (!defenderFainted) {
+    const hasShieldDust = AbilityEngine.normalize(defender.ability) === 'shielddust';
+    if (!defenderFainted && !hasShieldDust) {
       // Secondary status effect
       if (move.statusEffect) {
         const target = move.statusEffect.target === 'self' ? attacker : defender;
@@ -672,9 +844,25 @@ export class BattleEngine {
           if (this.rng.next() >= chance) continue;
           const target = sc.target === 'self' ? attacker : defender;
           const tSide: BattlerSide = target === attacker ? attackerSide : defenderSide;
-          const change = applyStatStageChange(target, sc.stat, sc.stages);
           const statVi = STAT_NAME_VI[sc.stat] ?? sc.stat;
 
+          if (sc.stages < 0 && target !== attacker && AbilityEngine.isStatDropProtected(target, sc.stat, true)) {
+            const protName = AbilityEngine.getDisplayName(target.ability);
+            secMsg += ` Nhưng ${target.name} nhờ [${protName}] ngăn cản giảm ${statVi}!`;
+            events.push(
+              BattleEventFactory.abilityTriggered(
+                tSide,
+                target.name,
+                target.ability || 'Protected',
+                protName,
+                `Chặn giảm ${statVi}`,
+                `${target.name} nhờ [${protName}] ngăn cản giảm ${statVi}!`
+              )
+            );
+            continue;
+          }
+
+          const change = applyStatStageChange(target, sc.stat, sc.stages);
           if (change > 1) secMsg += ` Chỉ số ${statVi} của ${target.name} tăng mạnh!`;
           else if (change === 1) secMsg += ` Chỉ số ${statVi} của ${target.name} tăng lên!`;
           else if (change === -1) secMsg += ` Chỉ số ${statVi} của ${target.name} giảm xuống!`;

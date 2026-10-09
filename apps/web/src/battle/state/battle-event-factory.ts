@@ -21,6 +21,7 @@ import type {
   FaintedEvent,
   DestinyBondTriggeredEvent,
   EndTurnDamageEvent,
+  AbilityTriggeredEvent,
 } from '../types';
 
 export const BattleEventFactory = {
@@ -344,6 +345,25 @@ export const BattleEventFactory = {
       damage,
       remainingHp,
       source,
+      message,
+    };
+  },
+
+  abilityTriggered(
+    targetSide: BattlerSide,
+    targetName: string,
+    ability: string,
+    abilityNameVi: string,
+    effect: string,
+    message: string
+  ): AbilityTriggeredEvent {
+    return {
+      type: 'ability_triggered',
+      targetSide,
+      targetName,
+      ability,
+      abilityNameVi,
+      effect,
       message,
     };
   },

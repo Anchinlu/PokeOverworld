@@ -26,7 +26,8 @@ export type BattleEventType =
   | 'status_inflicted'
   | 'fainted'
   | 'destiny_bond_triggered'
-  | 'end_turn_damage';
+  | 'end_turn_damage'
+  | 'ability_triggered';
 
 export interface BaseBattleEvent {
   type: BattleEventType;
@@ -188,6 +189,15 @@ export interface EndTurnDamageEvent extends BaseBattleEvent {
   source: 'burn' | 'poison' | 'toxic' | 'leech_seed';
 }
 
+export interface AbilityTriggeredEvent extends BaseBattleEvent {
+  type: 'ability_triggered';
+  targetSide: BattlerSide;
+  targetName: string;
+  ability: string;
+  abilityNameVi: string;
+  effect: string;
+}
+
 export type BattleEvent =
   | MoveDeclaredEvent
   | ChargeBeginEvent
@@ -208,4 +218,5 @@ export type BattleEvent =
   | StatusInflictedEvent
   | FaintedEvent
   | DestinyBondTriggeredEvent
-  | EndTurnDamageEvent;
+  | EndTurnDamageEvent
+  | AbilityTriggeredEvent;

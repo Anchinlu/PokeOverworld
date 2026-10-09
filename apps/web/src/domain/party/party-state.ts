@@ -43,6 +43,7 @@ export interface PartyPokemon {
   nature: NatureName;
   status: StatusCondition;
   types: PokemonType[];
+  ability?: string;
   gender: 'male' | 'female' | 'genderless';
   moves: BattleMove[];
   heldItem?: string | null;
@@ -70,6 +71,7 @@ export function createPartyPokemon(
     gender?: 'male' | 'female' | 'genderless';
     ballCaught?: string;
     heldItem?: string | null;
+    ability?: string;
     rng?: RandomService;
     ivs?: Partial<PokemonStatValues> | 'perfect' | 'random';
     evs?: Partial<PokemonStatValues>;
@@ -127,6 +129,7 @@ export function createPartyPokemon(
     nature,
     status: 'none',
     types: [...data.types],
+    ability: options?.ability ?? data.ability ?? 'none',
     gender: options?.gender ?? (activeRng.next() < 0.5 ? 'male' : 'female'),
     moves,
     heldItem: options?.heldItem ?? null,
@@ -192,6 +195,9 @@ export function partyPokemonToBattler(pokemon: PartyPokemon): BattlerPokemon {
     id: pokemon.speciesId,
     name: pokemon.nickname || pokemon.name,
     speciesKey: pokemon.speciesKey,
+    ability:
+      pokemon.ability ??
+      (pokemonCatalog.getBySpeciesKey(pokemon.speciesKey)?.ability ?? 'none'),
     isShiny: pokemon.isShiny,
     types: [...pokemon.types],
     level: pokemon.level,

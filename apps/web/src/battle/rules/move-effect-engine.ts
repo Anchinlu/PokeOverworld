@@ -11,6 +11,7 @@ import {
   STATUS_NAME_VI,
 } from '../state/battle-state-reducer';
 import { getStatusImmunity } from './status-engine';
+import { AbilityEngine } from './ability-engine';
 
 export const NEVER_MISS_MOVE_IDS = new Set([
   'swift',
@@ -367,8 +368,25 @@ export function applyStatusCategoryMove(
       if (rng.next() >= chance) continue;
       const target = sc.target === 'self' ? attacker : defender;
       const tSide: BattlerSide = target === attacker ? attackerSide : defenderSide;
-      const change = applyStatStageChange(target, sc.stat, sc.stages);
       const statVi = STAT_NAME_VI[sc.stat] ?? sc.stat;
+
+      if (sc.stages < 0 && target !== attacker && AbilityEngine.isStatDropProtected(target, sc.stat, true)) {
+        const protName = AbilityEngine.getDisplayName(target.ability);
+        extraMsg += ` Nhưng ${target.name} nhờ [${protName}] ngăn cản giảm ${statVi}!`;
+        events.push(
+          BattleEventFactory.abilityTriggered(
+            tSide,
+            target.name,
+            target.ability || 'Protected',
+            protName,
+            `Chặn giảm ${statVi}`,
+            `${target.name} nhờ [${protName}] ngăn cản giảm ${statVi}!`
+          )
+        );
+        continue;
+      }
+
+      const change = applyStatStageChange(target, sc.stat, sc.stages);
 
       if (change > 1) extraMsg += ` Chỉ số ${statVi} của ${target.name} tăng mạnh!`;
       else if (change === 1) extraMsg += ` Chỉ số ${statVi} của ${target.name} tăng lên!`;
@@ -387,6 +405,38 @@ export function applyStatusCategoryMove(
           `Chỉ số ${statVi} của ${target.name} ${change > 0 ? 'tăng' : 'giảm'}!`
         )
       );
+
+      // Defiant & Competitive triggers on stat drops caused by opponent
+      if (change < 0 && target !== attacker) {
+        const targetAbilityKey = AbilityEngine.normalize(target.ability);
+        if (targetAbilityKey === 'defiant') {
+          const boost = applyStatStageChange(target, 'attack', 2);
+          extraMsg += ` ${target.name} kích hoạt [${AbilityEngine.getDisplayName(target.ability)}] và tăng mạnh Tấn công!`;
+          events.push(
+            BattleEventFactory.statStageChanged(
+              tSide,
+              target.name,
+              'attack',
+              2,
+              boost,
+              `${target.name} tăng mạnh Tấn công!`
+            )
+          );
+        } else if (targetAbilityKey === 'competitive') {
+          const boost = applyStatStageChange(target, 'spAtk', 2);
+          extraMsg += ` ${target.name} kích hoạt [${AbilityEngine.getDisplayName(target.ability)}] và tăng mạnh Công ĐB!`;
+          events.push(
+            BattleEventFactory.statStageChanged(
+              tSide,
+              target.name,
+              'spAtk',
+              2,
+              boost,
+              `${target.name} tăng mạnh Công ĐB!`
+            )
+          );
+        }
+      }
     }
   }
 

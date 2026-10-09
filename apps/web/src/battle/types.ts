@@ -29,6 +29,7 @@ import type {
   FaintedEvent,
   DestinyBondTriggeredEvent,
   EndTurnDamageEvent,
+  AbilityTriggeredEvent,
 } from '@pokemon/shared-types';
 
 export type {
@@ -60,6 +61,7 @@ export type {
   FaintedEvent,
   DestinyBondTriggeredEvent,
   EndTurnDamageEvent,
+  AbilityTriggeredEvent,
 };
 
 export interface BattleMove {
@@ -102,6 +104,7 @@ export interface BattlerPokemon {
   id: number;
   name: string;
   speciesKey: string;
+  ability?: string;
   isShiny?: boolean;
   types: PokemonType[];
   level: number;
@@ -128,6 +131,7 @@ export interface BattlerPokemon {
   maxExp: number;
   pokeball?: string;
   heldItem?: string | null;
+  flashFireBoost?: boolean;
   // Multi-turn, Protect & Status combat states
   chargingMove?: {
     move: BattleMove;
@@ -162,4 +166,12 @@ export interface BattleEnvironment {
   enemyBase: string;
   playerBase: string;
   foregroundOverlay?: string;
+  weather?: {
+    type: 'none' | 'sun' | 'rain' | 'sandstorm' | 'hail';
+    turnsLeft: number;
+  };
+  terrain?: {
+    type: 'none' | 'electric' | 'grassy' | 'misty' | 'psychic';
+    turnsLeft: number;
+  };
 }

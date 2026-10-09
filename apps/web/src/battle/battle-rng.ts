@@ -22,4 +22,22 @@ export class SeededBattleRng implements BattleRng {
   }
 }
 
+export class FixedSequenceRng implements BattleRng {
+  private index = 0;
+
+  constructor(private readonly sequence: number[]) {}
+
+  public next(): number {
+    if (this.sequence.length === 0) return 0.5;
+    const val = this.sequence[this.index % this.sequence.length];
+    this.index++;
+    return val;
+  }
+
+  public nextInt(min: number, max: number): number {
+    const val = this.next();
+    return Math.floor(min + val * (max - min + 1));
+  }
+}
+
 export const defaultBattleRng: BattleRng = new SeededBattleRng(0xba771e);

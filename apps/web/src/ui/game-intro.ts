@@ -72,7 +72,9 @@ export function playGameIntro(onComplete?: () => void): GameIntroController {
   try {
     titleBgmPlayer.stopBgm(0);
     introBgmPlayer.playIntroBgm();
-  } catch (_) {}
+  } catch {
+    // audio autoplay or playback restriction
+  }
 
   // 3. Build DOM Structure
   const overlay = document.createElement('div');
@@ -120,7 +122,9 @@ export function playGameIntro(onComplete?: () => void): GameIntroController {
     try {
       introBgmPlayer.stopBgm(450);
       titleBgmPlayer.playTitleBgm();
-    } catch (_) {}
+    } catch {
+      // audio autoplay or playback restriction
+    }
 
     if (!isComplete) {
       isComplete = true;

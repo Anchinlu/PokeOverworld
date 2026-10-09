@@ -9,6 +9,7 @@ import {
 } from '../state/battle-state-reducer';
 
 import { HeldItemEngine } from './held-item-engine';
+import { AbilityEngine } from './ability-engine';
 
 export interface PreTurnStatusResult {
   canAct: boolean;
@@ -25,12 +26,17 @@ export interface EndTurnEffectResult {
 }
 
 /**
- * Checks type-based immunities for primary status conditions.
+ * Checks type-based and ability-based immunities for primary status conditions.
  */
 export function getStatusImmunity(
   target: BattlerPokemon,
   condition: NonNullable<BattleMove['statusEffect']>['condition']
 ): string | null {
+  const abilityImmunity = AbilityEngine.isStatusImmune(target, condition);
+  if (abilityImmunity.immune) {
+    return abilityImmunity.reason ?? 'Đặc tính của Pokémon ngăn chặn trạng thái này.';
+  }
+
   if (condition === 'burn' && target.types.includes('Fire')) {
     return 'Pokémon hệ Lửa không thể bị bỏng.';
   }
@@ -65,7 +71,7 @@ export function checkPreTurnStatus(
   const berryCureEvents = HeldItemEngine.checkStatusTriggeredBerry(attacker, attackerSide);
   if (berryCureEvents.length > 0) {
     events.push(...berryCureEvents);
-    statusPrefix = `${(berryCureEvents[0] as any).message ?? ''} `;
+    statusPrefix = `${berryCureEvents[0].message ?? ''} `;
   }
 
   // 1. Sleep handling
@@ -150,52 +156,87 @@ export function processEndTurnEffects(
   let messageText = '';
   const events: BattleEvent[] = [];
 
+  const abilityKey = AbilityEngine.normalize(target.ability);
+  const isMagicGuard = abilityKey === 'magicguard';
+  const isPoisonHeal = abilityKey === 'poisonheal';
+
   // Burn tick
   if (target.status === 'burn') {
-    const burnDmg = Math.max(1, Math.floor(target.maxHp / 16));
-    totalDamage += burnDmg;
-    messageText = `${target.name} bị tổn thương bởi vết bỏng!`;
-    events.push(
-      BattleEventFactory.endTurnDamage(
-        targetSide,
-        target.name,
-        burnDmg,
-        Math.max(0, target.currentHp - totalDamage),
-        'burn',
-        messageText
-      )
-    );
-  } else if (target.status === 'poison') {
-    // Normal poison tick
-    const psnDmg = Math.max(1, Math.floor(target.maxHp / 8));
-    totalDamage += psnDmg;
-    messageText = `${target.name} bị tổn thương bởi chất độc!`;
-    events.push(
-      BattleEventFactory.endTurnDamage(
-        targetSide,
-        target.name,
-        psnDmg,
-        Math.max(0, target.currentHp - totalDamage),
-        'poison',
-        messageText
-      )
-    );
-  } else if (target.status === 'toxic') {
-    // Toxic scaling poison tick
-    target.statusTurns = Math.min(15, (target.statusTurns ?? 0) + 1);
-    const toxDmg = Math.max(1, Math.floor((target.maxHp * target.statusTurns) / 16));
-    totalDamage += toxDmg;
-    messageText = `${target.name} bị tổn thương bởi độc cực mạnh!`;
-    events.push(
-      BattleEventFactory.endTurnDamage(
-        targetSide,
-        target.name,
-        toxDmg,
-        Math.max(0, target.currentHp - totalDamage),
-        'toxic',
-        messageText
-      )
-    );
+    if (!isMagicGuard) {
+      const burnDmg = Math.max(1, Math.floor(target.maxHp / 16));
+      totalDamage += burnDmg;
+      messageText = `${target.name} bị tổn thương bởi vết bỏng!`;
+      events.push(
+        BattleEventFactory.endTurnDamage(
+          targetSide,
+          target.name,
+          burnDmg,
+          Math.max(0, target.currentHp - totalDamage),
+          'burn',
+          messageText
+        )
+      );
+    }
+  } else if (target.status === 'poison' || target.status === 'toxic') {
+    if (isPoisonHeal) {
+      const healAmount = Math.max(1, Math.floor(target.maxHp / 8));
+      const actualHeal = restoreHp(target, healAmount);
+      const healMsg = `${target.name} nhờ [Hồi Phục Độc Tố] hồi phục ${actualHeal} HP!`;
+      messageText = messageText ? `${messageText} ${healMsg}` : healMsg;
+      events.push(
+        BattleEventFactory.abilityTriggered(
+          targetSide,
+          target.name,
+          target.ability || 'Poison Heal',
+          'Hồi Phục Độc Tố',
+          'Hồi HP khi bị độc',
+          healMsg
+        )
+      );
+      events.push(
+        BattleEventFactory.hpRestored(
+          targetSide,
+          target.name,
+          actualHeal,
+          target.currentHp,
+          target.maxHp,
+          'drain',
+          healMsg
+        )
+      );
+    } else if (!isMagicGuard) {
+      if (target.status === 'poison') {
+        const psnDmg = Math.max(1, Math.floor(target.maxHp / 8));
+        totalDamage += psnDmg;
+        messageText = `${target.name} bị tổn thương bởi chất độc!`;
+        events.push(
+          BattleEventFactory.endTurnDamage(
+            targetSide,
+            target.name,
+            psnDmg,
+            Math.max(0, target.currentHp - totalDamage),
+            'poison',
+            messageText
+          )
+        );
+      } else {
+        // Toxic scaling poison tick
+        target.statusTurns = Math.min(15, (target.statusTurns ?? 0) + 1);
+        const toxDmg = Math.max(1, Math.floor((target.maxHp * target.statusTurns) / 16));
+        totalDamage += toxDmg;
+        messageText = `${target.name} bị tổn thương bởi độc cực mạnh!`;
+        events.push(
+          BattleEventFactory.endTurnDamage(
+            targetSide,
+            target.name,
+            toxDmg,
+            Math.max(0, target.currentHp - totalDamage),
+            'toxic',
+            messageText
+          )
+        );
+      }
+    }
   }
 
   // Leech Seed tick

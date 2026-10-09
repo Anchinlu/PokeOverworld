@@ -25,7 +25,9 @@ export class TitleBgmPlayer {
             this.initialVolume = parsed;
           }
         }
-      } catch (_) {}
+      } catch {
+        // ignore storage errors
+      }
     }
   }
 
@@ -135,7 +137,9 @@ export class TitleBgmPlayer {
     if (typeof localStorage !== 'undefined') {
       try {
         localStorage.setItem(STORAGE_KEY, String(this.initialVolume));
-      } catch (_) {}
+      } catch {
+        // ignore storage errors
+      }
     }
   }
 

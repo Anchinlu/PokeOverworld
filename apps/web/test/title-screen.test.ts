@@ -254,9 +254,9 @@ describe('Game Title Screen / Màn Hình Chờ', () => {
     const controller = showTitleScreen({ initialTheme: 'day' });
     const overlay = document.getElementById('titleScreenOverlay') as unknown as MockDOMElement;
     const modal = overlay.querySelector('#titleSettingsModal') as unknown as MockDOMElement;
-    const btnSettings = overlay.querySelector('#btnSettings') as unknown as MockDOMElement;
-    const btnToggle = overlay.querySelector('#btnToggleSunsetTheme') as unknown as MockDOMElement;
-    const btnDone = overlay.querySelector('#btnSettingsModalDone') as unknown as MockDOMElement;
+    expect(overlay.querySelector('#btnSettings')).not.toBeNull();
+    expect(overlay.querySelector('#btnToggleSunsetTheme')).not.toBeNull();
+    expect(overlay.querySelector('#btnSettingsModalDone')).not.toBeNull();
 
     expect(modal).not.toBeNull();
     expect(controller.getTheme()).toBe('day');
