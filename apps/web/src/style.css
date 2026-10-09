@@ -3525,11 +3525,71 @@ body {
   height: 228px;
   z-index: 2;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.bag-filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px 6px;
+  background: #090d16;
+  border-bottom: 2px solid #000000;
+  box-shadow: inset 0 -1px 0 #1e293b;
+  flex-shrink: 0;
+  min-height: 24px;
+}
+
+.bag-filter-title {
+  font-family: 'Power Clear', 'VT323', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: #38bdf8;
+  text-shadow: 1px 1px 0 #000;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 175px;
+}
+
+.bag-filter-toggle-btn {
+  font-family: 'Power Clear', 'VT323', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 0;
+  border: 1px solid #000;
+  background: #334155;
+  color: #cbd5e1;
+  cursor: pointer;
+  box-shadow: inset 1px 1px 0 #64748b, inset -1px -1px 0 #1e293b;
+  text-shadow: 1px 1px 0 #000;
+  transition: all 0.1s ease;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  line-height: 1.1;
+}
+
+.bag-filter-toggle-btn:hover {
+  background: #475569;
+  color: #ffffff;
+}
+
+.bag-filter-toggle-btn.active {
+  background: #0284c7;
+  color: #f0f9ff;
+  border-color: #000;
+  box-shadow: inset 1px 1px 0 #7dd3fc, inset -1px -1px 0 #0369a1;
 }
 
 .bag-items-list {
   width: 100%;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -3740,6 +3800,52 @@ body {
   text-shadow: 1px 1px 0 #000;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+}
+
+.bag-item-tag {
+  font-family: 'Power Clear', 'VT323', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 0;
+  border: 1px solid #000000;
+  text-shadow: 1px 1px 0 #000;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+
+.bag-item-tag.both {
+  background: #15803d;
+  color: #dcfce7;
+  box-shadow:
+    inset 1px 1px 0 #4ade80,
+    inset -1px -1px 0 #166534;
+}
+
+.bag-item-tag.hold_only {
+  background: #0891b2;
+  color: #cffafe;
+  box-shadow:
+    inset 1px 1px 0 #22d3ee,
+    inset -1px -1px 0 #155e75;
+}
+
+.bag-item-tag.use_only {
+  background: #d97706;
+  color: #fef3c7;
+  box-shadow:
+    inset 1px 1px 0 #fbbf24,
+    inset -1px -1px 0 #92400e;
+}
+
+.bag-item-tag.none {
+  background: #475569;
+  color: #f1f5f9;
+  box-shadow:
+    inset 1px 1px 0 #94a3b8,
+    inset -1px -1px 0 #334155;
 }
 
 .bag-selected-item-desc {

@@ -1,4 +1,41 @@
-## Cập nhật lần cuối: 2026-10-09 (Hệ Thống Trang Bị & Vận Hành Vật Phẩm Pokémon - Held Items)
+## Cập nhật lần cuối: 2026-10-09 (Bộ Lọc Vật Phẩm Trao Được & Phân Loại Minh Bạch Dùng vs Cho Giữ)
+
+### 0.79. Bộ Lọc Vật Phẩm Trao Được & Phân Loại Minh Bạch Dùng vs Cho Giữ (Holdable Filtering & Usage Classification):
+
+- **Trạng thái:** Đã hoàn thành 100%. 26 tệp test suite (213/213 tests), Typecheck (`npm run typecheck:web`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** Lọc vật phẩm có thể trao cho Pokémon (hiện tại món nào cũng trao được), tra cứu thông tin chính thống từ web để phân loại rõ ràng vật phẩm nào là DÙNG và vật phẩm nào là TRAO ĐƯỢC.
+- **Chi tiết đã thực hiện:**
+  1. **Tra Cứu & Chuẩn Hóa Cơ Chế Chính Thống (Bulbapedia & Pokémon Core Series Standards):**
+     - **Vật phẩm Trao Cho Pokémon Giữ (`isHoldableItem`):**
+       - Toàn bộ 238 vật phẩm trang bị chiến đấu (`category === 'hold'`): `Leftovers`, `Choice Band`, `Choice Specs`, `Choice Scarf`, `Focus Sash`, `Rocky Helmet`, `Life Orb`, `Eviolite`, `Lucky Egg`, 17 loại đá/vật phẩm cường hóa hệ (`Charcoal`, `Magnet`...), Mega Stones, v.v.
+       - Toàn bộ 67 loại Quả mọng (`category === 'berries'` / `'berry'`): Đều có thể trao cho Pokémon cầm và tự động kích hoạt trong trận.
+       - Thư từ (`mail`), các vật phẩm tiến hóa khi trao đổi (`dragon-scale`, `electirizer`, `magmarizer`, `protector`, `reaper-cloth`, `dubious-disc`, `upgrade`, `prism-scale`, `oval-stone`, `sachet`, `whipped-dream`), đá quý/khăn quàng (`*-gem`, `*-scarf`).
+       - **Tuyệt đối loại trừ khỏi trao đồ:** Key Items (Xe đạp, Cần câu...), Poké Balls (Bóng bắt), Dược phẩm (Potion, Revive, Rare Candy, Vitamins...), Vật phẩm trận đấu tạm thời (X Attack, X Defense...).
+     - **Vật phẩm Dùng Được Trực Tiếp (`isUsableItem`):**
+       - Dược phẩm (`medicine`), Quả mọng (`berries`), Đĩa kỹ thuật (`machine`/`tm`/`hm`), Bóng bắt (`pokeballs`), Đồ buff tạm thời trong trận (`battle`), Vật phẩm quan trọng (`key`), Đá tiến hóa dùng trực tiếp (`fire-stone`, `water-stone`...).
+       - **Tuyệt đối loại trừ khỏi dùng trực tiếp:** Các trang bị thuần cầm tay (`Leftovers`, `Choice Band`, `Focus Sash`, `Rocky Helmet`... - người chơi không thể "dùng" mà phải "cho giữ").
+  2. **Huy Hiệu Pixel Phân Loại Vật Phẩm Minh Bạch ([bag-screen.ts](file:///e:/Pokemon/apps/web/src/ui/bag-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Thêm huy hiệu pixel `.bag-item-tag` ngay trong thanh chi tiết của túi đồ:
+       - `[DÙNG & CHO GIỮ]` (Xanh lá - dành cho quả mọng Berries vừa dùng được vừa cầm được).
+       - `[CHỈ CHO GIỮ]` (Xanh ngọc / Cyan - dành cho Leftovers, Choice items, Focus Sash, Type boosters...).
+       - `[CHỈ DÙNG]` (Vàng cam - dành cho Potion, Revive, Rare Candy, Poké Balls, X-items...).
+       - `[KHÔNG DÙNG / BÁN]` (Xám - dành cho Nugget, Pearl, Stardust, hóa thạch...).
+     - **Trạng thái Nút Thông Minh:**
+       - Nút **"DÙNG"**: Tự động vô hiệu hóa (`disabled`) khi chọn món trang bị thuần kèm tooltip và toast giải thích rõ: *"⚠️ Vật phẩm này là trang bị, không thể dùng trực tiếp! Hãy bấm [CHO GIỮ] để trao cho Pokémon."*
+       - Nút **"CHO GIỮ"**: Tự động vô hiệu hóa (`disabled`) khi chọn vật phẩm không thể trao (Potion, Poké Ball, Key Item...) kèm tooltip và toast: *"⚠️ Không thể trao vật phẩm này cho Pokémon cầm!"*
+  3. **Thanh Lọc Vật Phẩm & Chế Độ Trao Đồ Tự Động ([bag-screen.ts](file:///e:/Pokemon/apps/web/src/ui/bag-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Thêm thanh `.bag-filter-bar` trên đầu danh sách vật phẩm với tiêu đề ngữ cảnh và nút chuyển đổi: `[◈ Lọc đồ trao]` / `[✓ Đang lọc đồ trao]`.
+     - Khi mở Túi đồ từ Màn hình Đội hình với mục đích trao đồ cho Pokémon (`targetPokemonIndex`):
+       - Tự động kích hoạt bộ lọc `holdableFilterOnly = true`.
+       - Tự động chuyển ngay sang ngăn `VẬT PHẨM` (`Items`) hoặc `QUẢ MỌNG` (`Berries`) có chứa đồ trao được.
+       - Tiêu đề danh sách hiển thị nổi bật: `🎁 TRAO CHO [TÊN POKÉMON]`.
+       - Danh sách lọc sạch sẽ, chỉ hiện những món trang bị và quả mọng thực sự trao được, giúp người chơi thao tác cực kỳ nhanh chóng và không bị lẫn lộn.
+  4. **Kiểm Thử Đầy Đủ ([held-items.test.ts](file:///e:/Pokemon/apps/web/test/held-items.test.ts)):**
+     - Bổ sung 2 bài test chuyên sâu xác thực độ chính xác của `isHoldableItem`, `isUsableItem` và `getItemUsageType` trên nhiều nhóm vật phẩm khác nhau.
+     - `npm run typecheck:web` $\rightarrow$ PASS, 0 errors.
+     - `npm run test:web` $\rightarrow$ 26/26 suites, 213/213 tests PASS 100%.
+
+---
 
 ### 0.78. Hệ Thống Trang Bị & Vận Hành Vật Phẩm Cho Pokémon (Held Items Engine & UI Display):
 

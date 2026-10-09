@@ -526,4 +526,75 @@ describe('Held Item System (Trang bị & Vận hành vật phẩm Pokémon)', ()
       unsubscribe();
     });
   });
+
+  describe('9. Item Classification: Holdable vs Usable Items (Lọc & Phân loại vật phẩm)', () => {
+    it('accurately identifies holdable items (equipment, berries, trade items)', async () => {
+      const { findItem, isHoldableItem } = await import('../src/data/items-db');
+
+      // Hold items
+      expect(isHoldableItem(findItem('leftovers'))).toBe(true);
+      expect(isHoldableItem(findItem('choice-band'))).toBe(true);
+      expect(isHoldableItem(findItem('focus-sash'))).toBe(true);
+      expect(isHoldableItem(findItem('rocky-helmet'))).toBe(true);
+      expect(isHoldableItem(findItem('lucky-egg'))).toBe(true);
+      expect(isHoldableItem(findItem('charcoal'))).toBe(true);
+
+      // Berries
+      expect(isHoldableItem(findItem('oran-berry'))).toBe(true);
+      expect(isHoldableItem(findItem('sitrus-berry'))).toBe(true);
+      expect(isHoldableItem(findItem('lum-berry'))).toBe(true);
+
+      // Trade held items
+      expect(isHoldableItem(findItem('dragon-scale'))).toBe(true);
+      expect(isHoldableItem(findItem('electirizer'))).toBe(true);
+
+      // Non-holdable: Medicine
+      expect(isHoldableItem(findItem('potion'))).toBe(false);
+      expect(isHoldableItem(findItem('super-potion'))).toBe(false);
+      expect(isHoldableItem(findItem('revive'))).toBe(false);
+      expect(isHoldableItem(findItem('rare-candy'))).toBe(false);
+
+      // Non-holdable: Poké Balls
+      expect(isHoldableItem(findItem('poke-ball'))).toBe(false);
+      expect(isHoldableItem(findItem('ultra-ball'))).toBe(false);
+
+      // Non-holdable: Key Items
+      expect(isHoldableItem(findItem('bicycle'))).toBe(false);
+      expect(isHoldableItem(findItem('town-map'))).toBe(false);
+
+      // Non-holdable: Battle items
+      expect(isHoldableItem(findItem('x-attack'))).toBe(false);
+      expect(isHoldableItem(findItem('dire-hit'))).toBe(false);
+    });
+
+    it('accurately identifies usable items and distinguishes them from pure equipment', async () => {
+      const { findItem, isUsableItem, getItemUsageType } = await import('../src/data/items-db');
+
+      // Usable: Medicine
+      expect(isUsableItem(findItem('potion'))).toBe(true);
+      expect(isUsableItem(findItem('revive'))).toBe(true);
+      expect(isUsableItem(findItem('rare-candy'))).toBe(true);
+
+      // Usable: Berries
+      expect(isUsableItem(findItem('oran-berry'))).toBe(true);
+
+      // Usable: Battle & Balls
+      expect(isUsableItem(findItem('poke-ball'))).toBe(true);
+      expect(isUsableItem(findItem('x-attack'))).toBe(true);
+
+      // NOT usable directly: pure equipment
+      expect(isUsableItem(findItem('leftovers'))).toBe(false);
+      expect(isUsableItem(findItem('choice-band'))).toBe(false);
+      expect(isUsableItem(findItem('focus-sash'))).toBe(false);
+      expect(isUsableItem(findItem('rocky-helmet'))).toBe(false);
+      expect(isUsableItem(findItem('lucky-egg'))).toBe(false);
+
+      // Usage type classification
+      expect(getItemUsageType(findItem('oran-berry'))).toBe('both');
+      expect(getItemUsageType(findItem('leftovers'))).toBe('hold_only');
+      expect(getItemUsageType(findItem('potion'))).toBe('use_only');
+      expect(getItemUsageType(findItem('poke-ball'))).toBe('use_only');
+      expect(getItemUsageType(findItem('nugget'))).toBe('none');
+    });
+  });
 });

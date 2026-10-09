@@ -8,7 +8,14 @@ import { inventoryService } from '../domain/inventory/inventory-service';
 import { partyService } from '../domain/party/party-service';
 import { applyItemToPartyPokemon } from '../domain/inventory/item-effects';
 import { BAG_ASSETS } from '../assets';
-import { BAG_POCKETS, findItem, type ItemData } from '../data/items-db';
+import {
+  BAG_POCKETS,
+  findItem,
+  type ItemData,
+  isHoldableItem,
+  isUsableItem,
+  getItemUsageType,
+} from '../data/items-db';
 import { showBerryToast } from './toast';
 import { battleSePlayer } from '../audio/battle-se';
 import { PartyScreen } from './party-screen';
@@ -28,6 +35,7 @@ export interface BagOpenOptions {
   targetPokemonIndex?: number;
   targetPokemonName?: string;
   onItemGiven?: (entry: BagItemEntry, pokemonIndex: number) => void;
+  filterHoldableOnly?: boolean;
 }
 
 export class BagScreen {
@@ -39,6 +47,7 @@ export class BagScreen {
   private selectedItemIndex = 0;
   private currentPocketItems: BagItemEntry[] = [];
   private openOptions: BagOpenOptions | null = null;
+  private holdableFilterOnly = false;
 
   private constructor() {
     this.createDom();
@@ -65,10 +74,25 @@ export class BagScreen {
     this.isOpen = true;
     this.openOptions = options ?? null;
 
+    if (
+      this.openOptions?.targetPokemonIndex !== undefined ||
+      this.openOptions?.filterHoldableOnly
+    ) {
+      this.holdableFilterOnly = true;
+      // Nếu đang ở các ngăn không có vật phẩm trang bị (Medicine, Pokéballs, Key, Battle), chuyển ngay sang ngăn Items (0) hoặc Berries (4)
+      if (this.activePocketIndex !== 0 && this.activePocketIndex !== 4) {
+        this.activePocketIndex = 0;
+      }
+    } else {
+      this.holdableFilterOnly = false;
+    }
+
     // Default to Pocket 0 (or Pocket 2 Pokéballs / Pocket 1 Medicine if opened in battle)
     if (this.openOptions?.inBattle) {
       this.activePocketIndex = 2; // Default to Poké Balls in battle
     }
+
+    this.selectedItemIndex = 0;
 
     if (this.backdropEl) {
       this.backdropEl.style.display = 'flex';
@@ -143,6 +167,13 @@ export class BagScreen {
 
         <!-- Right Column: Item List (Scrollable) -->
         <div class="bag-right-col">
+          <div class="bag-filter-bar" id="bagFilterBar">
+            <span id="bagFilterTitle" class="bag-filter-title">DANH SÁCH VẬT PHẨM</span>
+            <button id="btnToggleHoldableFilter" class="bag-filter-toggle-btn" title="Lọc các vật phẩm có thể cho Pokémon cầm">
+              <span class="filter-toggle-icon">◈</span>
+              <span class="filter-toggle-text">Lọc đồ trao</span>
+            </button>
+          </div>
           <div class="bag-items-list" id="bagItemsList">
             <!-- Item rows rendered dynamically -->
           </div>
@@ -159,6 +190,7 @@ export class BagScreen {
             <div class="bag-desc-header">
               <span id="bagSelectedItemName" class="bag-selected-item-name">--</span>
               <span id="bagSelectedItemCategory" class="bag-selected-item-cat">--</span>
+              <span id="bagSelectedItemUsageTag" class="bag-item-tag" style="display: none;">--</span>
             </div>
             <div id="bagSelectedItemDesc" class="bag-selected-item-desc">
               Chọn một vật phẩm trong danh sách để xem chi tiết.
@@ -185,6 +217,16 @@ export class BagScreen {
 
     const btnGive = this.backdropEl.querySelector('#btnBagGive');
     btnGive?.addEventListener('click', () => this.giveSelectedItem());
+
+    const btnToggleFilter = this.backdropEl.querySelector<HTMLButtonElement>(
+      '#btnToggleHoldableFilter'
+    );
+    btnToggleFilter?.addEventListener('click', () => {
+      this.holdableFilterOnly = !this.holdableFilterOnly;
+      this.selectedItemIndex = 0;
+      battleSePlayer.playSound('Audio/SE/Select.ogg', 0.6);
+      this.render();
+    });
 
     // Close on backdrop click outside
     this.backdropEl.addEventListener('click', (e) => {
@@ -284,17 +326,42 @@ export class BagScreen {
 
     // 2. Filter items for current active pocket
     const allItems = this.getInventoryEntries();
-    this.currentPocketItems = allItems.filter(
+    let pocketItems = allItems.filter(
       (entry) => entry.pocketIndex === this.activePocketIndex
     );
 
     // If opened in battle and filter supplied, filter accordingly
     if (this.openOptions?.battleFilter) {
-      this.currentPocketItems = this.currentPocketItems.filter(this.openOptions.battleFilter);
+      pocketItems = pocketItems.filter(this.openOptions.battleFilter);
     }
+
+    // Filter holdable items if filter is active
+    if (this.holdableFilterOnly) {
+      pocketItems = pocketItems.filter((entry) => isHoldableItem(entry.item));
+    }
+
+    this.currentPocketItems = pocketItems;
 
     if (this.selectedItemIndex >= this.currentPocketItems.length) {
       this.selectedItemIndex = Math.max(0, this.currentPocketItems.length - 1);
+    }
+
+    // Update Filter Bar State
+    const filterTitleEl = this.backdropEl.querySelector<HTMLElement>('#bagFilterTitle');
+    const filterBtn = this.backdropEl.querySelector<HTMLButtonElement>('#btnToggleHoldableFilter');
+    if (filterTitleEl) {
+      if (this.openOptions?.targetPokemonName) {
+        filterTitleEl.innerText = `🎁 TRAO CHO ${this.openOptions.targetPokemonName.toUpperCase()}`;
+      } else {
+        filterTitleEl.innerText = 'DANH SÁCH VẬT PHẨM';
+      }
+    }
+    if (filterBtn) {
+      filterBtn.className = `bag-filter-toggle-btn ${this.holdableFilterOnly ? 'active' : ''}`;
+      filterBtn.innerHTML = `
+        <span class="filter-toggle-icon">${this.holdableFilterOnly ? '✓' : '◈'}</span>
+        <span class="filter-toggle-text">${this.holdableFilterOnly ? 'Đang lọc đồ trao' : 'Lọc đồ trao'}</span>
+      `;
     }
 
     // 3. Update Left Column Pocket Info
@@ -315,7 +382,9 @@ export class BagScreen {
       if (this.currentPocketItems.length === 0) {
         const emptyEl = document.createElement('div');
         emptyEl.className = 'bag-items-empty';
-        emptyEl.innerText = 'Ngăn túi này hiện đang trống.';
+        emptyEl.innerText = this.holdableFilterOnly
+          ? 'Không có vật phẩm nào có thể trao trong ngăn này.'
+          : 'Ngăn túi này hiện đang trống.';
         itemsListEl.appendChild(emptyEl);
       } else {
         this.currentPocketItems.forEach((entry, idx) => {
@@ -371,6 +440,7 @@ export class BagScreen {
     const thumbImg = this.backdropEl.querySelector<HTMLImageElement>('#bagBottomThumb');
     const itemNameEl = this.backdropEl.querySelector<HTMLElement>('#bagSelectedItemName');
     const itemCatEl = this.backdropEl.querySelector<HTMLElement>('#bagSelectedItemCategory');
+    const usageTag = this.backdropEl.querySelector<HTMLElement>('#bagSelectedItemUsageTag');
     const itemDescEl = this.backdropEl.querySelector<HTMLElement>('#bagSelectedItemDesc');
     const bigIcon = this.backdropEl.querySelector<HTMLImageElement>('#bagBigIcon');
     const itemLarge = this.backdropEl.querySelector<HTMLImageElement>('#bagItemLargePreview');
@@ -388,6 +458,26 @@ export class BagScreen {
       }
       if (itemNameEl) itemNameEl.innerText = selected.item.nameVi || selected.item.name;
       if (itemCatEl) itemCatEl.innerText = selected.item.categoryVi || selected.item.categoryName;
+
+      // Usage badge
+      const usageType = getItemUsageType(selected.item);
+      const isHoldable = isHoldableItem(selected.item);
+      const isUsable = isUsableItem(selected.item);
+
+      if (usageTag) {
+        usageTag.style.display = 'inline-block';
+        usageTag.className = `bag-item-tag ${usageType}`;
+        if (usageType === 'both') {
+          usageTag.innerText = 'DÙNG & CHO GIỮ';
+        } else if (usageType === 'hold_only') {
+          usageTag.innerText = 'CHỈ CHO GIỮ';
+        } else if (usageType === 'use_only') {
+          usageTag.innerText = 'CHỈ DÙNG';
+        } else {
+          usageTag.innerText = 'KHÔNG DÙNG / BÁN';
+        }
+      }
+
       if (itemDescEl) {
         itemDescEl.innerText =
           selected.item.descriptionVi || selected.item.description || 'Không có mô tả chi tiết.';
@@ -401,26 +491,43 @@ export class BagScreen {
       }
 
       if (btnUse) {
-        btnUse.disabled = false;
-        btnUse.innerText = this.openOptions?.inBattle ? 'DÙNG TRẬN' : 'DÙNG';
+        if (this.openOptions?.inBattle) {
+          btnUse.disabled = false;
+          btnUse.innerText = 'DÙNG TRẬN';
+          btnUse.title = 'Sử dụng vật phẩm trong trận đấu';
+        } else {
+          btnUse.disabled = !isUsable;
+          btnUse.innerText = 'DÙNG';
+          btnUse.title = isUsable
+            ? 'Sử dụng vật phẩm (Enter)'
+            : 'Vật phẩm trang bị, không thể dùng trực tiếp! Hãy chọn CHO GIỮ để trao cho Pokémon.';
+        }
       }
+
       if (btnGive) {
-        btnGive.disabled = this.openOptions?.inBattle || selected.item.category === 'key';
+        btnGive.disabled = !isHoldable || Boolean(this.openOptions?.inBattle);
         if (this.openOptions?.targetPokemonName) {
           btnGive.innerText = `TRAO CHO ${this.openOptions.targetPokemonName.toUpperCase()}`;
-          btnGive.title = `Trao trực tiếp cho ${this.openOptions.targetPokemonName}`;
+          btnGive.title = isHoldable
+            ? `Trao trực tiếp cho ${this.openOptions.targetPokemonName}`
+            : 'Vật phẩm này không thể cho Pokémon cầm nắm!';
         } else {
           btnGive.innerText = 'CHO GIỮ';
-          btnGive.title = 'Cho Pokémon cầm';
+          btnGive.title = isHoldable
+            ? 'Cho Pokémon cầm'
+            : 'Vật phẩm này không thể cho Pokémon cầm nắm!';
         }
       }
     } else {
       if (thumbImg) thumbImg.style.display = 'none';
       if (itemNameEl) itemNameEl.innerText = '--';
       if (itemCatEl) itemCatEl.innerText = '--';
+      if (usageTag) usageTag.style.display = 'none';
       if (itemDescEl) {
         const pocketDef = BAG_POCKETS[this.activePocketIndex];
-        itemDescEl.innerText = pocketDef.descriptionVi;
+        itemDescEl.innerText = this.holdableFilterOnly
+          ? `Ngăn ${pocketDef.nameVi} (chế độ lọc đồ có thể trao).`
+          : pocketDef.descriptionVi;
       }
       if (itemLarge && bigIcon) {
         itemLarge.style.display = 'none';
@@ -457,6 +564,15 @@ export class BagScreen {
       showBerryToast(
         selected.item.descriptionVi || selected.item.description || 'Vật phẩm quan trọng.',
         '#38bdf8'
+      );
+      return;
+    }
+
+    const isUsable = isUsableItem(selected.item);
+    if (!isUsable) {
+      showBerryToast(
+        `⚠️ ${selected.item.nameVi || selected.item.name} là trang bị, không thể dùng trực tiếp! Hãy bấm [CHO GIỮ] để trao cho Pokémon.`,
+        '#f59e0b'
       );
       return;
     }
@@ -499,8 +615,11 @@ export class BagScreen {
     const selected = this.currentPocketItems[this.selectedItemIndex];
     if (!selected) return;
 
-    if (selected.item.category === 'key') {
-      showBerryToast('Không thể trao vật phẩm quan trọng cho Pokémon cầm!', '#ef4444');
+    if (!isHoldableItem(selected.item)) {
+      showBerryToast(
+        `⚠️ Không thể trao ${selected.item.nameVi || selected.item.name} cho Pokémon cầm!`,
+        '#ef4444'
+      );
       return;
     }
 
