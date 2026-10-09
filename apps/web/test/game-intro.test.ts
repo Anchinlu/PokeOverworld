@@ -182,7 +182,7 @@ describe('Game Intro Cinematic', () => {
     expect(prompt).not.toBeNull();
   });
 
-  it('progresses through timeline: radiance -> logo2 -> logo1 -> prompt -> auto-advance at 8th second', () => {
+  it('progresses through timeline: radiance -> logo2 -> logo1 -> prompt -> auto-advance at 11th second', () => {
     const onComplete = vi.fn();
     const controller = playGameIntro(onComplete);
     const overlay = document.getElementById('gameIntroOverlay') as unknown as MockDOMElement;
@@ -220,12 +220,12 @@ describe('Game Intro Cinematic', () => {
     vi.advanceTimersByTime(1000);
     expect(startPrompt?.classList.contains('visible')).toBe(true);
 
-    // Advance to 7000ms: still displaying prompt and waiting for 8th second
-    vi.advanceTimersByTime(3800);
+    // Advance to 10000ms: still displaying prompt and waiting for 11th second
+    vi.advanceTimersByTime(6800);
     expect(controller.isComplete).toBe(false);
     expect(overlay.classList.contains('intro-fade-out')).toBe(false);
 
-    // Advance to 8000ms (giây thứ 8): automatically triggers fade-out transition!
+    // Advance to 11000ms (giây thứ 11): automatically triggers fade-out transition!
     vi.advanceTimersByTime(1000);
     expect(overlay.classList.contains('intro-fade-out')).toBe(true);
 
@@ -236,7 +236,7 @@ describe('Game Intro Cinematic', () => {
     expect(document.getElementById('gameIntroOverlay')).toBeNull();
   });
 
-  it('supports skip to immediately transition and finish before 8th second', () => {
+  it('supports skip to immediately transition and finish before 11th second', () => {
     const onComplete = vi.fn();
     const controller = playGameIntro(onComplete);
 

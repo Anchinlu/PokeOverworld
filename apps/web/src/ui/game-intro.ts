@@ -207,12 +207,12 @@ export function playGameIntro(onComplete?: () => void): GameIntroController {
     }, 3200)
   );
 
-  // Phase 5: Automatically enter Title Screen at the 8th second (8000ms)
+  // Phase 5: Automatically enter Title Screen at the 11th second (11000ms)
   timeoutIds.push(
     window.setTimeout(() => {
       if (hasExitStarted) return;
       triggerExitTransition();
-    }, 8000)
+    }, 11000)
   );
 
   // Return controller

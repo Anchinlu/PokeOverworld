@@ -1,4 +1,22 @@
-## Cập nhật lần cuối: 2026-10-09 (Tích Hợp Nhạc Nền Opening Movie & Tự Động Chuyển Vào Màn Hình Chờ Ở Giây Thứ 8)
+## Cập nhật lần cuối: 2026-10-09 (Tách Độc Lập Nhạc Intro Khỏi Cài Đặt & Chờ Đến Giây Thứ 11)
+
+### 0.77. Tách Biệt Độc Lập Nhạc Nền Intro Khỏi Cài Đặt Âm Lượng & Chờ Đến Giây Thứ 11:
+
+- **Trạng thái:** Đã hoàn thành 100%. 25 tệp test suite (194/194 tests), Typecheck (`npm run typecheck:web`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** Tách riêng phần nhạc nền của intro ra độc lập hoàn toàn, không bị ảnh hưởng bởi các cài đặt âm lượng / mute trong modal cài đặt của sảnh chờ (localStorage); đồng thời chỉnh thời gian tự động vào màn hình chờ lùi lại tới giây thứ 11 (11000ms).
+- **Chi tiết đã thực hiện:**
+  1. **Độc Lập Tuyệt Đối Cho Nhạc Intro ([intro-bgm.ts](file:///e:/Pokemon/apps/web/src/audio/intro-bgm.ts)):**
+     - Gỡ bỏ mọi truy cập đến `localStorage.getItem('pokemon_title_bgm_volume')` trong `IntroBgmPlayer`.
+     - Nhạc Opening Movie luôn phát ở mức âm lượng chuẩn điện ảnh cố định (85%), không bị ảnh hưởng hay phụ thuộc vào bất kỳ thanh trượt hoặc trạng thái tắt âm của sảnh chờ.
+  2. **Tự Động Chuyển Vào Màn Hình Chờ Ở Giây Thứ 11 ([game-intro.ts](file:///e:/Pokemon/apps/web/src/ui/game-intro.ts)):**
+     - Cập nhật thời điểm tự động chuyển cảnh sang chính xác giây thứ 11 (11000ms, lùi thêm 3 giây so với trước).
+     - Cho phép người chơi thưởng thức trọn vẹn giai điệu Opening Movie hoành tráng, vòng 18 icon hệ xoay tròn và hiệu ứng hào quang lấp lánh; người chơi vẫn có thể bấm chuột hoặc phím bất kỳ để vào sớm hơn nếu muốn.
+  3. **Kiểm Thử & Đảm Bảo Tính Toàn Vẹn ([game-intro.test.ts](file:///e:/Pokemon/apps/web/test/game-intro.test.ts)):**
+     - Cập nhật unit test timeline xác minh intro kiên nhẫn chờ qua giây thứ 10 và tự động kích hoạt `.intro-fade-out` chính xác ở giây thứ 11.
+     - `npm run typecheck:web` $\rightarrow$ PASS, 0 errors.
+     - `npm run test:web` $\rightarrow$ 25/25 suites, 194/194 tests PASS 100%.
+
+---
 
 ### 0.76. Nhạc Nền Opening Movie Cho Intro & Tự Động Vào Màn Hình Chờ Ở Giây Thứ 8:
 

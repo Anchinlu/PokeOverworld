@@ -1,6 +1,10 @@
 /**
  * Intro BGM Audio Player (Opening Movie Audio)
  * Plays 'Audio/Misic backgound/01. Opening Movie.mp3' during the cinematic intro.
+ *
+ * TÁCH BIỆT HOÀN TOÀN:
+ * Nhạc intro hoạt động độc lập, không bị ảnh hưởng bởi cài đặt âm lượng hay mute
+ * của sảnh chờ (localStorage), luôn phát ở mức âm lượng chuẩn điện ảnh (85%).
  */
 
 const INTRO_BGM_PATH = 'Audio/Misic backgound/01. Opening Movie.mp3';
@@ -9,21 +13,12 @@ export class IntroBgmPlayer {
   private static instance: IntroBgmPlayer;
   private currentAudio: HTMLAudioElement | null = null;
   private fadeInterval: number | null = null;
-  private volume = 0.65;
+  // Âm lượng cố định chuẩn điện ảnh cho đoạn mở đầu, độc lập tuyệt đối với settings
+  private readonly volume = 0.85;
   private isUnlocked = false;
 
   private constructor() {
-    if (typeof localStorage !== 'undefined') {
-      try {
-        const saved = localStorage.getItem('pokemon_title_bgm_volume');
-        if (saved !== null) {
-          const parsed = parseFloat(saved);
-          if (!isNaN(parsed) && parsed >= 0 && parsed <= 1) {
-            this.volume = parsed;
-          }
-        }
-      } catch (_) {}
-    }
+    // Không đọc cài đặt localStorage để đảm bảo tính độc lập tuyệt đối của đoạn intro
   }
 
   public static getInstance(): IntroBgmPlayer {
