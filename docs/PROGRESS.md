@@ -12,8 +12,9 @@
      - Thiết kế cụm chữ gợi mở giàu tính điện ảnh và hoài niệm Pokémon:
        - Dòng chính: `✨ BẤM ĐỂ BƯỚC VÀO THẾ GIỚI ✨` (`.intro-prompt-main`) dùng phông pixel retro, màu vàng kim `#ffffa0`, viền đen nổi khối kèm đổ bóng hào quang neon cam vàng rực rỡ (`introPromptPulse` breathing nhẹ nhàng).
        - Dòng phụ: `— NHẤP CHUỘT HOẶC PHÍM BẤT KỲ ĐỂ TIẾP TỤC —` (`.intro-prompt-sub`) trong sắc xám bạc tinh tế.
-  3. **Chuyển Cảnh Mờ Dần Vào Title Screen (.intro-fade-out):**
-     - Khi người chơi nhấp chuột hoặc bấm bất kỳ phím nào (hoặc sau khi dòng chữ hiển thị trọn vẹn ở 4200ms), toàn bộ màn hình Intro sẽ phóng nhẹ và mờ dần trong 600ms (`opacity: 0`, `transform: scale(1.03)`, `filter: brightness(1.25)`).
+  3. **Chuyển Cảnh Mờ Dần Khi Người Chơi Bấm (.intro-fade-out):**
+     - Màn hình Intro dừng lại chờ vô thời hạn cho tới khi người chơi thực sự nhấp chuột hoặc nhấn bất kỳ phím nào (không tự ý fade-out hay chạy quá trước khi có tương tác).
+     - Khi bấm, toàn bộ màn hình Intro sẽ phóng nhẹ và mờ dần trong 600ms (`opacity: 0`, `transform: scale(1.03)`, `filter: brightness(1.25)`).
      - Chuyển cảnh êm ái, liền mạch hé lộ khung cảnh đại dương, mây trôi và Pokémon bay lượn của Màn Hình Chờ.
   4. **Kiểm Thử & Đảm Bảo Tính Toàn Vẹn ([game-intro.test.ts](file:///e:/Pokemon/apps/web/test/game-intro.test.ts)):**
      - Cập nhật unit test suite kiểm thử dòng chữ mời gọi xuất hiện và fade-out chuẩn xác.

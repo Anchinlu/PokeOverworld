@@ -194,8 +194,13 @@ describe('Game Intro Cinematic', () => {
     vi.advanceTimersByTime(1000);
     expect(startPrompt?.classList.contains('visible')).toBe(true);
 
-    // Advance to 4200ms: auto-advance transition triggers
-    vi.advanceTimersByTime(1000);
+    // Wait 5000ms more: should NOT auto-advance; must wait for user click/press
+    vi.advanceTimersByTime(5000);
+    expect(controller.isComplete).toBe(false);
+    expect(overlay.classList.contains('intro-fade-out')).toBe(false);
+
+    // User clicks / presses key to enter
+    controller.skip();
     expect(overlay.classList.contains('intro-fade-out')).toBe(true);
 
     // Advance 650ms: transition finishes, cleans up, invokes onComplete

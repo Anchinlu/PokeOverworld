@@ -182,19 +182,12 @@ export function playGameIntro(onComplete?: () => void): GameIntroController {
   );
 
   // Phase 4: Glowing Start Prompt appears inviting user (at 3200ms)
+  // Sau đó intro dừng lại chờ người chơi bấm chuột hoặc nhấn phím bất kỳ mới mờ dần vào game
   timeoutIds.push(
     window.setTimeout(() => {
       if (hasExitStarted) return;
       if (startPrompt) startPrompt.classList.add('visible');
     }, 3200)
-  );
-
-  // Phase 5: Auto-advance after showcasing the prompt (at 4200ms)
-  timeoutIds.push(
-    window.setTimeout(() => {
-      if (hasExitStarted) return;
-      triggerExitTransition();
-    }, 4200)
   );
 
   // Return controller
