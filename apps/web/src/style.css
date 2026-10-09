@@ -3351,10 +3351,13 @@ body {
   transform-origin: center center;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
+  border-radius: 0;
+  border: 3px solid #000000;
   box-shadow:
-    0 25px 70px rgba(0, 0, 0, 0.95),
-    0 0 0 2px rgba(59, 130, 246, 0.35);
-  border-radius: 6px;
+    0 0 0 2px #38bdf8,
+    inset 2px 2px 0 #334155,
+    inset -2px -2px 0 #020617,
+    0 25px 70px rgba(0, 0, 0, 0.95);
   overflow: hidden;
 }
 
@@ -3381,9 +3384,9 @@ body {
 }
 
 .bag-title {
-  font-family: 'VT323', monospace;
-  font-size: 28px;
-  font-weight: 700;
+  font-family: 'Power Clear', 'VT323', monospace;
+  font-size: 26px;
+  font-weight: 800;
   color: #ffffff;
   text-shadow:
     1px 1px 0 #000,
@@ -3412,22 +3415,17 @@ body {
   cursor: pointer;
   position: relative;
   opacity: 0.72;
-  transition:
-    transform 0.15s ease,
-    opacity 0.15s ease,
-    filter 0.15s ease;
+  transition: opacity 0.1s ease;
 }
 
 .bag-pocket-tab:hover {
-  opacity: 0.95;
-  transform: translateY(-2px);
-  filter: brightness(1.12);
+  opacity: 1;
+  filter: brightness(1.15);
 }
 
 .bag-pocket-tab.active {
   opacity: 1;
-  transform: translateY(-2px);
-  filter: brightness(1.2) drop-shadow(0 2px 4px var(--pocket-color, rgba(56, 189, 248, 0.7)));
+  filter: brightness(1.25);
 }
 
 .bag-pocket-tab.active::after {
@@ -3436,12 +3434,11 @@ body {
   bottom: -3px;
   left: 2px;
   right: 2px;
-  height: 2.5px;
+  height: 3px;
   background: #ffffff;
-  border-radius: 1px;
-  box-shadow:
-    0 0 6px var(--pocket-color, #ffffff),
-    0 1px 2px rgba(0, 0, 0, 0.8);
+  border-radius: 0;
+  border-bottom: 1px solid #000000;
+  box-shadow: 0 -1px 0 var(--pocket-color, #38bdf8);
 }
 
 /* Left Column */
@@ -3482,7 +3479,7 @@ body {
   height: 72px;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
-  animation: bagItemHover 1.5s ease-in-out infinite alternate;
+  animation: bagItemHover 1.5s steps(4, start) infinite alternate;
 }
 
 @keyframes bagItemHover {
@@ -3500,18 +3497,21 @@ body {
 }
 
 .bag-pocket-name {
-  font-family: 'VT323', monospace;
-  font-size: 22px;
+  font-family: 'Power Clear', 'VT323', monospace;
+  font-size: 17px;
+  font-weight: 800;
   color: #38bdf8;
   text-shadow:
     1px 1px 0 #000,
     -1px -1px 0 #000;
   letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .bag-pocket-count {
-  font-family: 'VT323', monospace;
-  font-size: 16px;
+  font-family: 'Power Clear', 'VT323', monospace;
+  font-size: 13px;
+  font-weight: 600;
   color: #94a3b8;
   text-shadow: 1px 1px 0 #000;
 }
@@ -3534,27 +3534,32 @@ body {
   display: flex;
   flex-direction: column;
   padding: 4px 6px;
-  gap: 2px;
+  gap: 3px;
 }
 
-/* Custom scrollbar for bag */
+/* Custom pixel scrollbar for bag */
 .bag-items-list::-webkit-scrollbar {
   width: 6px;
 }
 .bag-items-list::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.4);
+  background: #090d16;
+  border-left: 1px solid #1e293b;
 }
 .bag-items-list::-webkit-scrollbar-thumb {
-  background: rgba(56, 189, 248, 0.4);
-  border-radius: 3px;
+  background: #38bdf8;
+  border-radius: 0;
+  border: 1px solid #000000;
+  box-shadow:
+    inset 1px 1px 0 #bae6fd,
+    inset -1px -1px 0 #0369a1;
 }
 .bag-items-list::-webkit-scrollbar-thumb:hover {
-  background: rgba(56, 189, 248, 0.7);
+  background: #7dd3fc;
 }
 
 .bag-items-empty {
-  font-family: 'VT323', monospace;
-  font-size: 18px;
+  font-family: 'Power Clear', 'VT323', monospace;
+  font-size: 15px;
   color: #64748b;
   text-align: center;
   padding-top: 80px;
@@ -3566,21 +3571,45 @@ body {
   align-items: center;
   height: 36px;
   min-height: 36px;
-  padding: 0 8px;
-  border-radius: 4px;
+  padding: 0 8px 0 16px;
+  border-radius: 0;
+  border: 2px solid transparent;
   cursor: pointer;
-  transition: all 0.15s ease;
   user-select: none;
+  position: relative;
+  transition: background 0.1s ease;
 }
 
-.bag-item-row:hover {
+.bag-item-row:hover:not(.selected) {
   background: rgba(255, 255, 255, 0.08);
 }
 
 .bag-item-row.selected {
-  background: rgba(56, 189, 248, 0.22);
-  border: 1px solid rgba(56, 189, 248, 0.5);
-  box-shadow: 0 0 8px rgba(56, 189, 248, 0.35);
+  background: rgba(14, 165, 233, 0.28);
+  border: 2px solid #38bdf8;
+  box-shadow:
+    inset 1px 1px 0 #bae6fd,
+    inset -1px -1px 0 #0369a1;
+}
+
+.bag-item-row.selected::before {
+  content: '▶';
+  position: absolute;
+  left: 4px;
+  font-family: 'Power Clear', 'VT323', monospace;
+  font-size: 12px;
+  color: #facc15;
+  text-shadow: 1px 1px 0 #000;
+  animation: bagCursorBob 0.6s steps(2, start) infinite alternate;
+}
+
+@keyframes bagCursorBob {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(2px);
+  }
 }
 
 .bag-item-icon-box {
@@ -3603,8 +3632,9 @@ body {
 
 .bag-item-name {
   flex: 1;
-  font-family: 'VT323', monospace;
-  font-size: 20px;
+  font-family: 'Power Clear', 'VT323', monospace;
+  font-size: 15px;
+  font-weight: 700;
   color: #ffffff;
   text-shadow:
     1px 1px 0 #000,
@@ -3616,8 +3646,9 @@ body {
 }
 
 .bag-item-qty {
-  font-family: 'VT323', monospace;
-  font-size: 20px;
+  font-family: 'Power Clear', 'VT323', monospace;
+  font-size: 15px;
+  font-weight: 800;
   color: #facc15;
   text-shadow:
     1px 1px 0 #000,
@@ -3667,9 +3698,9 @@ body {
 .bag-desc-content {
   position: absolute;
   left: 88px;
-  top: 10px;
-  right: 110px;
-  bottom: 10px;
+  top: 8px;
+  right: 112px;
+  bottom: 8px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -3680,13 +3711,13 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 2px;
+  margin-bottom: 3px;
 }
 
 .bag-selected-item-name {
-  font-family: 'VT323', monospace;
-  font-size: 20px;
-  font-weight: 700;
+  font-family: 'Power Clear', 'VT323', monospace;
+  font-size: 17px;
+  font-weight: 800;
   color: #facc15;
   text-shadow:
     1px 1px 0 #000,
@@ -3695,32 +3726,42 @@ body {
 }
 
 .bag-selected-item-cat {
-  font-size: 10px;
-  background: rgba(56, 189, 248, 0.25);
-  color: #7dd3fc;
-  border: 1px solid rgba(56, 189, 248, 0.4);
+  font-family: 'Power Clear', 'VT323', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  background: #0284c7;
+  color: #f0f9ff;
+  border: 1px solid #000000;
+  box-shadow:
+    inset 1px 1px 0 #7dd3fc,
+    inset -1px -1px 0 #0369a1;
   padding: 1px 6px;
-  border-radius: 4px;
+  border-radius: 0;
+  text-shadow: 1px 1px 0 #000;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .bag-selected-item-desc {
-  font-family: 'VT323', monospace;
-  font-size: 16px;
-  color: #e2e8f0;
-  text-shadow: 1px 1px 0 #000;
-  line-height: 1.2;
+  font-family: 'Power Clear', 'VT323', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: #f8fafc;
+  text-shadow: 1px 1px 0 #000000;
+  line-height: 1.35;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  letter-spacing: 0.02em;
 }
 
 .bag-actions-box {
   position: absolute;
   right: 14px;
-  top: 10px;
-  bottom: 10px;
-  width: 86px;
+  top: 8px;
+  bottom: 8px;
+  width: 90px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -3729,49 +3770,91 @@ body {
 }
 
 .bag-btn-action {
-  font-family: 'VT323', monospace;
-  font-size: 16px;
+  font-family: 'Power Clear', 'VT323', monospace;
+  font-size: 13px;
   font-weight: 700;
-  padding: 3px 0;
-  border-radius: 4px;
-  border: none;
+  padding: 4px 6px;
+  border-radius: 0;
+  border: 2px solid #000000;
   cursor: pointer;
   letter-spacing: 0.04em;
-  transition: all 0.15s ease;
   text-shadow: 1px 1px 0 #000;
+  text-transform: uppercase;
+  transition: filter 0.1s ease;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bag-btn-action:active:not(:disabled) {
+  transform: translate(1px, 1px);
 }
 
 .bag-btn-action.primary {
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: #059669;
   color: #ffffff;
+  box-shadow:
+    inset 2px 2px 0 #34d399,
+    inset -2px -2px 0 #064e3b;
 }
+
 .bag-btn-action.primary:hover:not(:disabled) {
   filter: brightness(1.15);
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+}
+
+.bag-btn-action.primary:active:not(:disabled) {
+  box-shadow:
+    inset 2px 2px 0 #064e3b,
+    inset -2px -2px 0 #34d399;
 }
 
 .bag-btn-action.secondary {
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  background: #2563eb;
   color: #ffffff;
+  box-shadow:
+    inset 2px 2px 0 #60a5fa,
+    inset -2px -2px 0 #1e3a8a;
 }
+
 .bag-btn-action.secondary:hover:not(:disabled) {
   filter: brightness(1.15);
-  box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+}
+
+.bag-btn-action.secondary:active:not(:disabled) {
+  box-shadow:
+    inset 2px 2px 0 #1e3a8a,
+    inset -2px -2px 0 #60a5fa;
 }
 
 .bag-btn-action.cancel {
-  background: rgba(239, 68, 68, 0.8);
+  background: #dc2626;
   color: #ffffff;
+  box-shadow:
+    inset 2px 2px 0 #f87171,
+    inset -2px -2px 0 #7f1d1d;
 }
+
 .bag-btn-action.cancel:hover:not(:disabled) {
   filter: brightness(1.15);
-  box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+}
+
+.bag-btn-action.cancel:active:not(:disabled) {
+  box-shadow:
+    inset 2px 2px 0 #7f1d1d,
+    inset -2px -2px 0 #f87171;
 }
 
 .bag-btn-action:disabled {
-  opacity: 0.4;
+  background: #475569;
+  color: #94a3b8;
+  opacity: 0.55;
   cursor: not-allowed;
-  filter: grayscale(0.8);
+  box-shadow:
+    inset 2px 2px 0 #64748b,
+    inset -2px -2px 0 #334155;
 }
 
 /* --- Encounter Transition: Screen Shake & Iris Overlay --- */

@@ -30,6 +30,11 @@
        - Khi người chơi bấm trao, vật phẩm lập tức gán thẳng cho Pokémon đó (không mở hộp thoại chọn Pokémon thừa thãi).
        - Tự động hoàn lại món đồ cũ vào túi đồ nếu Pokémon đang cầm đồ khác.
        - Tự động đóng Túi đồ ngay lập tức và kích hoạt cập nhật màn hình Đội hình tức thì: người chơi thấy ngay icon vật phẩm mới trên thẻ Pokémon mà không cần phải thoát ra vào lại!
+     - **Giao Diện Túi Đồ Chuẩn Pixel Art Retro GBA ([style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+       - **Bộ Nút Hành Động Bevel Minecraft/GBA:** Các nút "DÙNG", "TRAO CHO [POKÉMON]", "THOÁT" chuyển hoàn toàn sang góc vuông sắc nét (`border-radius: 0;`), viền đen 2px, đổ bóng bevel viền nổi 3D đa tầng (inset highlight & shadow), hiệu ứng ấn phím vật lý bước nhảy `translate(1px, 1px)`.
+       - **Thẻ Danh Mục & Mô Tả:** Nhãn danh mục chuyển từ dạng viên thuốc bo tròn sang dạng hộp pixel cứng cáp viền nổi; văn bản mô tả và tên vật phẩm sử dụng font pixel `'Power Clear'` hỗ trợ đầy đủ tiếng Việt không bị nhảy font sans-serif hệ thống.
+       - **Con Trỏ & Hàng Được Chọn:** Hàng vật phẩm được chọn mang viền pixel đôi sắc cạnh và con trỏ mũi tên pixel vàng `▶` nhấp nhô theo nhịp pixel (`steps(2, start)`).
+       - **Thanh Cuộn & Khung Cửa Sổ:** Khung viền ngoài và thanh cuộn túi đồ được tinh chỉnh sang phong cách pixel art retro GBA sắc nét không bo tròn hiện đại.
      - **Menu Thao Tác:** Nút **"Gỡ vật phẩm"** (tháo đồ cất vào túi đồ, phát âm thanh và hiển thị toast cập nhật UI ngay lập tức) và nút **"Trao vật phẩm"** (mở nhanh túi đồ có target).
      - **Bảng Chi Tiết Summary Modal:** Hiển thị mục **"Vật phẩm:"** kèm icon và tên chi tiết trên cả Màn hình Đội hình và PC Box Storage.
   3. **Đồng Bộ Dữ Liệu Real-time ([party-service.ts](file:///e:/Pokemon/apps/web/src/domain/party/party-service.ts)):**
