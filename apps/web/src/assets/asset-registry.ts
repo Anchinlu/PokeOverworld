@@ -251,6 +251,28 @@ export const BATTLE_ASSETS = {
   getForegroundOverlay: (overlay: string): string => {
     return resolveAsset(`battle_overlay_${overlay}`, `/Graphics/Battle/overlay/${overlay}.png`);
   },
+  getWeatherIcon: (weatherType: string): string => {
+    const key = (weatherType || '').toLowerCase().replace(/[\s-]/g, '_');
+    const mapping: Record<string, string> = {
+      sun: '/Graphics/weather/SongSun.png',
+      sunny: '/Graphics/weather/SongSun.png',
+      rain: '/Graphics/weather/SongRain.png',
+      sandstorm: '/Graphics/weather/SongSandstorm.png',
+      hail: '/Graphics/weather/SongBlizzard.png',
+      blizzard: '/Graphics/weather/SongBlizzard.png',
+      snow: '/Graphics/weather/SongSnow.png',
+      heavy_rain: '/Graphics/weather/SongHeavyRain.png',
+      heavyrain: '/Graphics/weather/SongHeavyRain.png',
+      storm: '/Graphics/weather/SongStorm.png',
+      thunderstorm: '/Graphics/weather/SongStorm.png',
+      fog: '/Graphics/weather/SongFog.png',
+      clearing: '/Graphics/weather/SongClearing.png',
+      clear: '/Graphics/weather/SongClearing.png',
+      none: '/Graphics/weather/SongClearing.png',
+    };
+    const file = mapping[key] ?? '/Graphics/weather/SongSun.png';
+    return resolveAsset(`weather_${key}`, file);
+  },
 } as const;
 
 export const MENU_ASSETS = {

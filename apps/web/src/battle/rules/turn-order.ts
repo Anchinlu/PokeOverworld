@@ -8,11 +8,12 @@ import { HeldItemEngine } from './held-item-engine';
 import { getEnvironmentSpeedMultiplier } from './environment';
 
 /**
- * Calculates effective combat speed of a battler, taking into account stat stages, paralysis, held items, and environment abilities.
+ * Calculates effective combat speed of a battler, taking into account stat stages, paralysis, held items, Tailwind, and environment abilities.
  */
 export function calculateEffectiveSpeed(
   battler: BattlerPokemon,
-  environment?: BattleEnvironment
+  environment?: BattleEnvironment,
+  side?: 'player' | 'enemy'
 ): number {
   const baseSpeed = battler.stats.speed;
   const speedStage = battler.statStages?.speed ?? 0;
@@ -21,7 +22,21 @@ export function calculateEffectiveSpeed(
   const heldItemMultiplier = HeldItemEngine.getStatMultiplier(battler, 'speed');
   const envMultiplier = getEnvironmentSpeedMultiplier(battler, environment);
 
-  return baseSpeed * stageMultiplier * paralysisMultiplier * heldItemMultiplier * envMultiplier;
+  let tailwindMultiplier = 1.0;
+  if (side === 'player' && (environment?.playerScreens?.tailwindTurns ?? 0) > 0) {
+    tailwindMultiplier = 2.0;
+  } else if (side === 'enemy' && (environment?.enemyScreens?.tailwindTurns ?? 0) > 0) {
+    tailwindMultiplier = 2.0;
+  }
+
+  return (
+    baseSpeed *
+    stageMultiplier *
+    paralysisMultiplier *
+    heldItemMultiplier *
+    envMultiplier *
+    tailwindMultiplier
+  );
 }
 
 /**
@@ -45,11 +60,16 @@ export function determineTurnOrder(
     return pPri > ePri ? 'player' : 'enemy';
   }
 
-  const pSpeed = calculateEffectiveSpeed(playerPokemon, environment);
-  const eSpeed = calculateEffectiveSpeed(enemyPokemon, environment);
+  const pSpeed = calculateEffectiveSpeed(playerPokemon, environment, 'player');
+  const eSpeed = calculateEffectiveSpeed(enemyPokemon, environment, 'enemy');
 
   if (pSpeed === eSpeed) {
     return rng.next() < 0.5 ? 'player' : 'enemy';
+  }
+
+  const isTrickRoom = (environment?.trickRoomTurns ?? 0) > 0;
+  if (isTrickRoom) {
+    return pSpeed < eSpeed ? 'player' : 'enemy';
   }
 
   return pSpeed > eSpeed ? 'player' : 'enemy';

@@ -13,6 +13,21 @@ import {
 import { normalizeGrowthRate, getExpToNextLevel } from '../pokemon/pokemon-exp';
 import type { BattleMove, BattlerPokemon } from '../../battle/types';
 import { pokemonCatalog } from '../../data';
+import { inventoryService } from '../inventory/inventory-service';
+
+export interface BattleExpShareEntry {
+  pokemon: PartyPokemon;
+  expGained: number;
+  leveledUp: boolean;
+  oldLevel: number;
+  newLevel: number;
+}
+
+export interface BattleSyncResult {
+  leveledUp: boolean;
+  newLevel: number;
+  expShares: BattleExpShareEntry[];
+}
 
 const STORAGE_KEY = 'pokemon_player_party_v1';
 
@@ -38,6 +53,12 @@ export class PartyService {
 
   public getParty(): ReadonlyArray<PartyPokemon> {
     return this.state.pokemon;
+  }
+
+  public setParty(party: PartyPokemon[]): void {
+    this.state.pokemon = [...party];
+    this.activeFollowerUid = this.state.pokemon[0]?.uid ?? null;
+    this.notify();
   }
 
   public getPartySize(): number {
@@ -290,11 +311,12 @@ export class PartyService {
 
   /**
    * Syncs the end-of-battle state (HP, PP, status, EXP gained) back into the corresponding PartyPokemon.
+   * Also distributes Exp. Share to other eligible party members if held or present in bag.
    */
   public syncBattleResult(
     battler: BattlerPokemon,
     expGained = 0
-  ): { leveledUp: boolean; newLevel: number } {
+  ): BattleSyncResult {
     // Find the matching pokemon strictly by UID or fallback to species and level without arbitrary pokemon[0] overwrite
     const partyMember =
       (battler.uid ? this.state.pokemon.find((p) => p.uid === battler.uid) : null) ??
@@ -303,7 +325,7 @@ export class PartyService {
       );
 
     if (!partyMember) {
-      return { leveledUp: false, newLevel: 0 };
+      return { leveledUp: false, newLevel: 0, expShares: [] };
     }
 
     partyMember.currentHp = Math.max(0, battler.currentHp);
@@ -339,8 +361,72 @@ export class PartyService {
       }
     }
 
+    // --- EXP. SHARE DISTRIBUTION (Chia Sẻ Kinh Nghiệm) ---
+    const expShares: BattleExpShareEntry[] = [];
+
+    if (expGained > 0) {
+      const hasExpShareInBag =
+        inventoryService.hasItem('exp-share') ||
+        inventoryService.hasItem('expshare');
+      const hasExpCharm = inventoryService.hasItem('exp-charm');
+
+      for (const pk of this.state.pokemon) {
+        // Skip the primary battler who already received direct expGained
+        if (pk.uid === partyMember.uid) continue;
+        // Skip fainted or max-level Pokémon
+        if (pk.isFainted || pk.currentHp <= 0 || pk.level >= 100) continue;
+
+        const heldNorm = (pk.heldItem || '').toLowerCase().replace(/_/g, '-');
+        const holdsExpShare = heldNorm === 'exp-share' || heldNorm === 'expshare';
+
+        // Eligible if Pokémon holds Exp. Share OR player has Exp. Share in bag
+        if (holdsExpShare || hasExpShareInBag) {
+          // Standard Pokémon Exp. Share grants 50% of battle EXP
+          let sharedExp = Math.max(1, Math.floor(expGained * 0.5));
+          if (heldNorm === 'lucky-egg') {
+            sharedExp = Math.floor(sharedExp * 1.5);
+          }
+          if (hasExpCharm) {
+            sharedExp = Math.floor(sharedExp * 1.5);
+          }
+
+          const oldLevel = pk.level;
+          let pkLeveledUp = false;
+          pk.exp += sharedExp;
+
+          const speciesData = pokemonCatalog.getBySpeciesKey(pk.speciesKey);
+          const growthRate = normalizeGrowthRate(speciesData?.growthRate);
+          if (!pk.maxExp || pk.maxExp <= 0) {
+            pk.maxExp = getExpToNextLevel(growthRate, pk.level);
+          }
+          while (pk.exp >= pk.maxExp && pk.level < 100) {
+            pk.exp -= pk.maxExp;
+            const newLvl = pk.level + 1;
+            recalculatePartyPokemonStats(pk, newLvl);
+            pkLeveledUp = true;
+          }
+          if (pk.level >= 100) {
+            pk.exp = 0;
+            pk.maxExp = 0;
+          }
+
+          expShares.push({
+            pokemon: pk,
+            expGained: sharedExp,
+            leveledUp: pkLeveledUp,
+            oldLevel,
+            newLevel: pk.level,
+          });
+        }
+      }
+    }
+
     this.notify();
-    return { leveledUp, newLevel: partyMember.level };
+    return {
+      leveledUp,
+      newLevel: partyMember.level,
+      expShares,
+    };
   }
 
   public updatePokemonMoves(uid: string, moves: BattleMove[]): boolean {
@@ -409,6 +495,14 @@ export class PartyService {
     this.state.selectedIndex = 0;
     this.state.swapSourceIndex = null;
     this.activeFollowerUid = this.state.pokemon[0]?.uid ?? null;
+    this.notify();
+  }
+
+  public clear(): void {
+    this.state.pokemon = [];
+    this.state.selectedIndex = 0;
+    this.state.swapSourceIndex = null;
+    this.activeFollowerUid = null;
     this.notify();
   }
 }

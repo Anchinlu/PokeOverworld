@@ -215,6 +215,14 @@ describe('Custom Bot Battler & Overlay Cheat Tools', () => {
           btnQuickPersim.id = 'btnQuickAddPersim';
           overlay.children.push(btnQuickPersim);
 
+          const btnAddFullItems = new MockElement('BUTTON');
+          btnAddFullItems.id = 'btnAddFullItems';
+          overlay.children.push(btnAddFullItems);
+
+          const btnAddAllMachines = new MockElement('BUTTON');
+          btnAddAllMachines.id = 'btnAddAllMachines';
+          overlay.children.push(btnAddAllMachines);
+
           const btnResetParty = new MockElement('BUTTON');
           btnResetParty.id = 'btnResetPartyPokemon';
           overlay.children.push(btnResetParty);
@@ -261,6 +269,8 @@ describe('Custom Bot Battler & Overlay Cheat Tools', () => {
       let customBotConfigPassed: any = null;
       let addedItem: { id: string; count: number } | null = null;
       let resetPartyCalled = false;
+      let addFullItemsCalled = false;
+      let addAllMachinesCalled = false;
 
       const mockBridge: any = {
         startTestBattle: () => {},
@@ -272,6 +282,12 @@ describe('Custom Bot Battler & Overlay Cheat Tools', () => {
         },
         addStarterItems: () => {},
         addAllBalls: () => {},
+        addFullItems: () => {
+          addFullItemsCalled = true;
+        },
+        addAllMachines: () => {
+          addAllMachinesCalled = true;
+        },
         openBag: () => {},
         addPartyPokemon: () => {},
         addRandomPartyPokemon: () => {},
@@ -316,6 +332,16 @@ describe('Custom Bot Battler & Overlay Cheat Tools', () => {
       const btnQuickPersim = container.querySelector('#btnQuickAddPersim');
       btnQuickPersim?.click();
       expect(addedItem).toEqual({ id: 'persim-berry', count: 10 });
+
+      // Test add full items button calls bridge remotely
+      const btnAddFullItems = container.querySelector('#btnAddFullItems');
+      btnAddFullItems?.click();
+      expect(addFullItemsCalled).toBe(true);
+
+      // Test add all machines button calls bridge remotely
+      const btnAddAllMachines = container.querySelector('#btnAddAllMachines');
+      btnAddAllMachines?.click();
+      expect(addAllMachinesCalled).toBe(true);
 
       // Test reset party button calls bridge remotely
       const btnResetParty = container.querySelector('#btnResetPartyPokemon');

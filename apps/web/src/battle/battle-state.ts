@@ -4,6 +4,7 @@
  */
 
 import { type BattleRng, defaultBattleRng } from './battle-rng';
+import type { ActiveMoveVfxState } from './move-vfx';
 
 export type BattleUIMode = 'message' | 'command' | 'moves' | 'bag';
 
@@ -208,6 +209,31 @@ export class BattleState {
     this.playerShinyTimer = this.playerShinyMax;
   }
 
+  // Move Visual Animation (VFX) State
+  activeMoveVfx: ActiveMoveVfxState | null = null;
+
+  // Screen Flash
+  screenFlashColor = '';
+  screenFlashTimer = 0;
+
+  triggerScreenFlash(color = 'rgba(255, 255, 255, 0.5)', duration = 8): void {
+    this.screenFlashColor = color;
+    this.screenFlashTimer = duration;
+  }
+
+  triggerScreenShake(duration = 10, amp = 5): void {
+    this.screenShakeTimer = duration;
+    this.screenShakeAmp = amp;
+  }
+
+  startMoveVfx(vfx: ActiveMoveVfxState): void {
+    this.activeMoveVfx = vfx;
+  }
+
+  stopMoveVfx(): void {
+    this.activeMoveVfx = null;
+  }
+
   // Animation tick
   tick = 0;
   isRunning = true;
@@ -317,7 +343,7 @@ export class BattleState {
   }
 
   /** Start wild Pokemon faint animation */
-  startEnemyFaint(onComplete?: () => void): void {
+  startEnemyFaint(onComplete?: () => void, isShiny = false): void {
     this.enemyFaintPhase = 'red_flash';
     this.enemyFaintTick = 0;
     this.enemyDissolveProgress = 0;
@@ -329,12 +355,12 @@ export class BattleState {
     this.enemyAttackTick = 0;
     this.enemyLungeX = 0;
     this.enemyLungeY = 0;
-    this.enemyFrozenFrame = Math.floor(this.tick / 4);
+    this.enemyFrozenFrame = Math.floor(this.tick / (isShiny ? 8 : 4));
     this.onEnemyFaintComplete = onComplete;
   }
 
   /** Start player Pokemon faint animation */
-  startPlayerFaint(onComplete?: () => void): void {
+  startPlayerFaint(onComplete?: () => void, isShiny = false): void {
     this.playerFaintPhase = 'white';
     this.playerFaintTick = 0;
     this.playerFaintScale = 1.0;
@@ -345,7 +371,7 @@ export class BattleState {
     this.playerAttackTick = 0;
     this.playerLungeX = 0;
     this.playerLungeY = 0;
-    this.playerFrozenFrame = Math.floor(this.tick / 4);
+    this.playerFrozenFrame = Math.floor(this.tick / (isShiny ? 8 : 4));
     this.onPlayerFaintComplete = onComplete;
   }
 
@@ -375,6 +401,46 @@ export class BattleState {
       this.screenShakeX = 0;
       this.screenShakeY = 0;
       this.screenShakeAmp = 0;
+    }
+
+    // Screen flash update
+    if (this.screenFlashTimer > 0) {
+      this.screenFlashTimer--;
+      if (this.screenFlashTimer === 0) {
+        this.screenFlashColor = '';
+      }
+    }
+
+    // Move VFX update
+    if (this.activeMoveVfx) {
+      const vfx = this.activeMoveVfx;
+      vfx.frameTick++;
+
+      if (vfx.frameTick >= vfx.ticksPerFrame) {
+        vfx.frameTick = 0;
+        vfx.currentFrame++;
+      }
+
+      // Trigger impact callback halfway through (or at totalFrames - 2) for smooth hit reaction
+      const impactFrame = Math.max(1, Math.floor(vfx.totalFrames * 0.5));
+      if (!vfx.impactTriggered && vfx.currentFrame >= impactFrame) {
+        vfx.impactTriggered = true;
+        if (vfx.onImpact) {
+          const imp = vfx.onImpact;
+          vfx.onImpact = undefined;
+          imp();
+        }
+      }
+
+      if (vfx.currentFrame >= vfx.totalFrames) {
+        if (!vfx.impactTriggered && vfx.onImpact) {
+          vfx.impactTriggered = true;
+          vfx.onImpact();
+        }
+        const onDone = vfx.onComplete;
+        this.activeMoveVfx = null;
+        if (onDone) onDone();
+      }
     }
 
     // 1. Player attack motion

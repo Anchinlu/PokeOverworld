@@ -1,16 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { BattleEngine } from '../src/battle/battle-engine';
-import {
-  applyEntryHazards,
-  canSwitchOut,
-  clearSideHazards,
-  getSideHazards,
-  releaseTrapsFromSide,
-  BINDING_MOVE_IDS,
-  TRAPPING_ATTACK_MOVE_IDS,
-  TRAPPING_STATUS_MOVE_IDS,
-  HAZARD_CLEARING_MOVE_IDS,
-} from '../src/battle/rules/hazard-engine';
+import { applyEntryHazards, canSwitchOut } from '../src/battle/rules/hazard-engine';
 import { processEndTurnEffects } from '../src/battle/rules/status-engine';
 import { FixedSequenceRng } from '../src/battle/battle-rng';
 import type {
@@ -81,7 +71,12 @@ describe('Field Hazards & Entry Hazards System', () => {
   it('correctly sets Stealth Rock and damages incoming Pokémon based on Rock typing', () => {
     const env = createMockEnvironment();
     const attacker = createMockBattler({ name: 'Tyranitar', types: ['Rock', 'Dark'] });
-    const defender = createMockBattler({ name: 'Charizard', types: ['Fire', 'Flying'], maxHp: 100, currentHp: 100 });
+    const defender = createMockBattler({
+      name: 'Charizard',
+      types: ['Fire', 'Flying'],
+      maxHp: 100,
+      currentHp: 100,
+    });
     const engine = new BattleEngine(attacker, defender, env);
 
     const srMove: BattleMove = {
@@ -111,7 +106,12 @@ describe('Field Hazards & Entry Hazards System', () => {
     expect(msgs[0]).toContain('(-50 HP)');
 
     // Steelix is Steel/Ground -> 0.25x weak to Rock -> 100 * 0.125 * 0.25 = 3.125 -> 3 damage
-    const steelix = createMockBattler({ name: 'Steelix', types: ['Steel', 'Ground'], maxHp: 100, currentHp: 100 });
+    const steelix = createMockBattler({
+      name: 'Steelix',
+      types: ['Steel', 'Ground'],
+      maxHp: 100,
+      currentHp: 100,
+    });
     const events2: BattleEvent[] = [];
     applyEntryHazards(steelix, 'enemy', env, events2);
     expect(steelix.currentHp).toBe(97); // 100 - 3
@@ -364,7 +364,12 @@ describe('Switch-Lock & Trapping Moves', () => {
   it('Spirit Shackle deals damage and locks opponent out of switching', () => {
     const env = createMockEnvironment();
     const attacker = createMockBattler({ name: 'Decidueye', types: ['Grass', 'Ghost'] });
-    const defender = createMockBattler({ name: 'Pikachu', types: ['Electric'], currentHp: 100, maxHp: 100 });
+    const defender = createMockBattler({
+      name: 'Pikachu',
+      types: ['Electric'],
+      currentHp: 100,
+      maxHp: 100,
+    });
     const engine = new BattleEngine(attacker, defender, env, new FixedSequenceRng([0.9, 0.9]));
 
     const shackleMove: BattleMove = {
@@ -390,7 +395,12 @@ describe('Switch-Lock & Trapping Moves', () => {
   it('Binding moves (Fire Spin, Whirlpool, Bind, Wrap) trap target and deal 1/8 HP end-turn damage', () => {
     const env = createMockEnvironment();
     const attacker = createMockBattler({ name: 'Charizard', types: ['Fire', 'Flying'] });
-    const defender = createMockBattler({ name: 'Blastoise', types: ['Water'], maxHp: 80, currentHp: 80 });
+    const defender = createMockBattler({
+      name: 'Blastoise',
+      types: ['Water'],
+      maxHp: 80,
+      currentHp: 80,
+    });
     const engine = new BattleEngine(attacker, defender, env, new FixedSequenceRng([0.1, 0.1]));
 
     const fireSpinMove: BattleMove = {

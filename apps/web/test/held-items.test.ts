@@ -605,4 +605,399 @@ describe('Held Item System (Trang bị & Vận hành vật phẩm Pokémon)', ()
       expect(getItemUsageType(findItem('nugget'))).toBe('none');
     });
   });
+
+  describe('10. Held Item Activation Dialogues & Messages (Thoại & Thông điệp vật phẩm khi kích hoạt)', () => {
+    const makeBattler = (
+      name: string,
+      speciesKey: string,
+      types: any[],
+      hp: number,
+      maxHp: number,
+      heldItem?: string | null
+    ): BattlerPokemon => ({
+      id: 1,
+      name,
+      speciesKey,
+      types,
+      level: 50,
+      currentHp: hp,
+      maxHp,
+      stats: {
+        hp: maxHp,
+        attack: 100,
+        defense: 100,
+        spAtk: 100,
+        spDef: 100,
+        speed: 100,
+        total: maxHp + 500,
+      },
+      moves: [],
+      frontSprite: '',
+      backSprite: '',
+      iconSprite: '',
+      gender: 'male',
+      isFainted: false,
+      catchRate: 45,
+      exp: 100,
+      maxExp: 200,
+      heldItem: heldItem ?? null,
+    });
+
+    it('emits precise healing dialogue for Leftovers with exact HP number', () => {
+      const snorlax = makeBattler('Snorlax', 'SNORLAX', ['Normal'], 140, 160, 'leftovers');
+      const res = processEndTurnEffects(snorlax, 'player');
+
+      expect(res).not.toBeNull();
+      expect(res?.message).toContain('Snorlax hồi phục 10 HP nhờ [Thức Ăn Thừa]!');
+      expect(res?.events.some((e) => e.message?.includes('10 HP'))).toBe(true);
+    });
+
+    it('emits precise dialogues for Black Sludge (heal for Poison, damage for non-Poison)', () => {
+      const gengar = makeBattler('Gengar', 'GENGAR', ['Ghost', 'Poison'], 100, 160, 'black-sludge');
+      const resGengar = processEndTurnEffects(gengar, 'player');
+      expect(resGengar?.message).toContain('Gengar hồi phục 10 HP nhờ [Bùn Đen]!');
+
+      const pikachu = makeBattler('Pikachu', 'PIKACHU', ['Electric'], 100, 160, 'black-sludge');
+      const resPikachu = processEndTurnEffects(pikachu, 'player');
+      expect(resPikachu?.message).toContain('Pikachu bị tổn thương 20 HP bởi [Bùn Đen]!');
+    });
+
+    it('emits end-of-turn affliction dialogues for Flame Orb and Toxic Orb', () => {
+      const ursaring = makeBattler('Ursaring', 'URSARING', ['Normal'], 100, 100, 'flame-orb');
+      ursaring.status = 'none';
+      const resFlame = processEndTurnEffects(ursaring, 'player');
+      expect(resFlame?.message).toContain('Ursaring bị bỏng bởi [Quả Cầu Lửa]!');
+      expect(ursaring.status).toBe('burn');
+
+      const gliscor = makeBattler(
+        'Gliscor',
+        'GLISCOR',
+        ['Ground', 'Flying'],
+        100,
+        100,
+        'toxic-orb'
+      );
+      gliscor.status = 'none';
+      const resToxic = processEndTurnEffects(gliscor, 'player');
+      expect(resToxic?.message).toContain('Gliscor bị trúng độc nặng bởi [Quả Cầu Độc]!');
+      expect(gliscor.status).toBe('toxic');
+    });
+
+    it('emits dialogues with exact HP for Pinch Berries when triggered', () => {
+      const pikachu = makeBattler('Pikachu', 'PIKACHU', ['Electric'], 20, 50, 'oran-berry');
+      const oranEvents = HeldItemEngine.checkHpTriggeredBerry(pikachu, 'player');
+      expect(oranEvents.length).toBe(1);
+      expect(oranEvents[0].message).toBe('Pikachu đã ăn [Quả Oran] và hồi phục 10 HP!');
+
+      const snorlax = makeBattler('Snorlax', 'SNORLAX', ['Normal'], 40, 100, 'sitrus-berry');
+      const sitrusEvents = HeldItemEngine.checkHpTriggeredBerry(snorlax, 'player');
+      expect(sitrusEvents.length).toBe(1);
+      expect(sitrusEvents[0].message).toBe('Snorlax đã ăn [Quả Sitrus] và hồi phục 25 HP!');
+    });
+
+    it('emits stat boost dialogue for pinch Stat Berries (<= 25% HP)', () => {
+      const pikachu = makeBattler('Pikachu', 'PIKACHU', ['Electric'], 20, 100, 'salac-berry');
+      const events = HeldItemEngine.checkHpTriggeredBerry(pikachu, 'player');
+      expect(events.length).toBe(1);
+      expect(events[0].message).toBe('Pikachu đã ăn [Quả Salac], Tốc độ tăng lên!');
+    });
+
+    it('emits status curing dialogues for Cheri, Lum, and Persim berries', () => {
+      const pikaPara = makeBattler('Pikachu', 'PIKACHU', ['Electric'], 50, 50, 'cheri-berry');
+      pikaPara.status = 'paralysis';
+      const cheriRes = checkPreTurnStatus(pikaPara, 'player', defaultBattleRng);
+      expect(
+        cheriRes.events.some((e) =>
+          e.message?.includes('Pikachu đã ăn [Quả Cheri] và chữa khỏi tê liệt!')
+        )
+      ).toBe(true);
+
+      const pikaLum = makeBattler('Pikachu', 'PIKACHU', ['Electric'], 50, 50, 'lum-berry');
+      pikaLum.status = 'sleep';
+      pikaLum.confusionTurns = 2;
+      const lumRes = checkPreTurnStatus(pikaLum, 'player', defaultBattleRng);
+      expect(
+        lumRes.events.some((e) =>
+          e.message?.includes('Pikachu đã ăn [Quả Lum] và chữa khỏi toàn bộ trạng thái bất thường!')
+        )
+      ).toBe(true);
+
+      const pikaPersim = makeBattler('Pikachu', 'PIKACHU', ['Electric'], 50, 50, 'persim-berry');
+      pikaPersim.status = 'none';
+      pikaPersim.confusionTurns = 3;
+      const persimRes = checkPreTurnStatus(pikaPersim, 'player', defaultBattleRng);
+      expect(
+        persimRes.events.some((e) =>
+          e.message?.includes('Pikachu đã ăn [Quả Persim] và chữa khỏi trạng thái bối rối!')
+        )
+      ).toBe(true);
+    });
+
+    it('emits Focus Sash survival dialogue when surviving lethal blow', () => {
+      const alakazam = makeBattler('Alakazam', 'ALAKAZAM', ['Psychic'], 100, 100, 'focus-sash');
+      const sashCheck = HeldItemEngine.checkFocusSash(alakazam, 250);
+      expect(sashCheck.triggered).toBe(true);
+      expect(sashCheck.message).toBe('Alakazam trụ vững với 1 HP nhờ [Dải Băng Tập Trung]!');
+    });
+
+    it('emits Rocky Helmet and Life Orb dialogues with exact HP in post-attack checks', () => {
+      const attacker = makeBattler('Pikachu', 'PIKACHU', ['Electric'], 120, 120, 'life-orb');
+      const defender = makeBattler(
+        'Cloyster',
+        'CLOYSTER',
+        ['Water', 'Ice'],
+        120,
+        120,
+        'rocky-helmet'
+      );
+      const move: BattleMove = {
+        id: 'slam',
+        name: 'Slam',
+        type: 'Normal',
+        category: 'physical',
+        power: 80,
+        accuracy: 100,
+        pp: 20,
+        maxPp: 20,
+        description: '',
+      };
+
+      const events = HeldItemEngine.checkPostAttackEffects(
+        attacker,
+        'player',
+        defender,
+        'enemy',
+        move,
+        30
+      );
+      expect(events.length).toBe(2);
+
+      // 1. Rocky Helmet counter message: 1/6 of 120 = 20 HP
+      expect(events[0].message).toBe('Pikachu bị tổn thương 20 HP bởi [Mũ Gai] của Cloyster!');
+
+      // 2. Life Orb recoil message: 1/10 of 120 = 12 HP
+      expect(events[1].message).toBe('Pikachu bị tiêu hao 12 HP bởi [Quả Cầu Sinh Mệnh]!');
+    });
+
+    it('emits Air Balloon immunity and pop dialogues', () => {
+      const heatran = makeBattler('Heatran', 'HEATRAN', ['Fire', 'Steel'], 100, 100, 'air-balloon');
+      const eqMove: BattleMove = {
+        id: 'earthquake',
+        name: 'Earthquake',
+        type: 'Ground',
+        category: 'physical',
+        power: 100,
+        accuracy: 100,
+        pp: 10,
+        maxPp: 10,
+        description: '',
+      };
+
+      // Type immunity check
+      const immunity = HeldItemEngine.checkTypeImmunity(heatran, 'enemy', eqMove, []);
+      expect(immunity.isImmune).toBe(true);
+      expect(immunity.message).toBe(
+        'Heatran né tránh hoàn toàn đòn Earthquake nhờ bay trên [Khinh Khí Cầu]!'
+      );
+
+      // Damage calculator check
+      const dmgCalc = calculateDamage(heatran, heatran, eqMove, defaultBattleRng);
+      expect(dmgCalc.damage).toBe(0);
+      expect(dmgCalc.secMsg).toContain('[Khinh Khí Cầu]');
+
+      // Popping upon taking damage from another move
+      const waterMove: BattleMove = {
+        id: 'surf',
+        name: 'Surf',
+        type: 'Water',
+        category: 'special',
+        power: 90,
+        accuracy: 100,
+        pp: 15,
+        maxPp: 15,
+        description: '',
+      };
+      const events = HeldItemEngine.checkPostAttackEffects(
+        heatran,
+        'player',
+        heatran,
+        'enemy',
+        waterMove,
+        40
+      );
+      expect(
+        events.some((e) =>
+          e.message?.includes('Khinh khí cầu [Khinh Khí Cầu] của Heatran đã bị nổ!')
+        )
+      ).toBe(true);
+      expect(heatran.heldItem).toBeNull();
+    });
+  });
+
+  describe('10. Weather & Terrain Duration Extending Held Items', () => {
+    it('extends weather and terrain duration from 5 to 8 turns when holding respective items', () => {
+      // Direct engine calculations
+      expect(HeldItemEngine.getWeatherDuration('rain', 'damp-rock')).toBe(8);
+      expect(HeldItemEngine.getWeatherDuration('rain', null)).toBe(5);
+      expect(HeldItemEngine.getWeatherDuration('rain', 'leftovers')).toBe(5);
+
+      expect(HeldItemEngine.getWeatherDuration('sun', 'heat-rock')).toBe(8);
+      expect(HeldItemEngine.getWeatherDuration('sun', null)).toBe(5);
+
+      expect(HeldItemEngine.getWeatherDuration('sandstorm', 'smooth-rock')).toBe(8);
+      expect(HeldItemEngine.getWeatherDuration('sandstorm', null)).toBe(5);
+
+      expect(HeldItemEngine.getWeatherDuration('hail', 'icy-rock')).toBe(8);
+      expect(HeldItemEngine.getWeatherDuration('hail', null)).toBe(5);
+
+      expect(HeldItemEngine.getTerrainDuration('terrain-extender')).toBe(8);
+      expect(HeldItemEngine.getTerrainDuration(null)).toBe(5);
+    });
+
+    it('sets 8 weather turns in battle when Rain Dance is used with Damp Rock', async () => {
+      const { applyStatusCategoryMove } = await import(
+        '../src/battle/rules/move-effect-engine'
+      );
+      const rainMove: BattleMove = {
+        id: 'rain_dance',
+        name: 'Rain Dance',
+        type: 'Water',
+        category: 'status',
+        power: 0,
+        accuracy: 100,
+        pp: 5,
+        maxPp: 5,
+        description: '',
+      };
+
+      const pelipper = partyPokemonToBattler(
+        createPartyPokemon('PIKACHU', 50, { heldItem: 'damp-rock' })
+      );
+      const opponent = partyPokemonToBattler(createPartyPokemon('PIDGEY', 50));
+      const env: any = { weather: { type: 'none', turnsLeft: 0 } };
+
+      const res = applyStatusCategoryMove(
+        pelipper,
+        opponent,
+        'player',
+        'enemy',
+        rainMove,
+        defaultBattleRng,
+        [],
+        env
+      );
+
+      expect(env.weather.type).toBe('rain');
+      expect(env.weather.turnsLeft).toBe(8);
+      expect(res.extraMsg).toContain('Đá Ẩm Ướt');
+    });
+
+    it('sets 8 weather turns when Drizzle ability triggers with Damp Rock', async () => {
+      const { AbilityEngine } = await import('../src/battle/rules/ability-engine');
+      const kyogre = partyPokemonToBattler(
+        createPartyPokemon('PIKACHU', 50, { heldItem: 'damp-rock' })
+      );
+      kyogre.ability = 'drizzle';
+      const opponent = partyPokemonToBattler(createPartyPokemon('PIDGEY', 50));
+      const env: any = { weather: { type: 'none', turnsLeft: 0 } };
+
+      const msgs = AbilityEngine.onSwitchIn(
+        kyogre,
+        'player',
+        opponent,
+        'enemy',
+        defaultBattleRng,
+        [],
+        env
+      );
+      expect(env.weather.type).toBe('rain');
+      expect(env.weather.turnsLeft).toBe(8);
+      expect(msgs.some((m) => m.includes('Đá Ẩm Ướt'))).toBe(true);
+    });
+  });
+
+  describe('9. Exp. Share System (Chia Sẻ Kinh Nghiệm)', () => {
+    it('distributes 50% EXP to non-battling party member holding exp-share', () => {
+      partyService.reset();
+      const leadPk = createPartyPokemon('PIKACHU', 20);
+      const benchedPk = createPartyPokemon('CHARMANDER', 15, { heldItem: 'exp-share' });
+      (partyService as any).setParty([leadPk, benchedPk]);
+
+      const leadBattler = partyPokemonToBattler(leadPk);
+      const initialBenchExp = benchedPk.exp;
+
+      // Primary battler receives 200 EXP
+      const syncResult = partyService.syncBattleResult(leadBattler, 200);
+
+      expect(syncResult.expShares.length).toBe(1);
+      expect(syncResult.expShares[0].pokemon.uid).toBe(benchedPk.uid);
+      expect(syncResult.expShares[0].expGained).toBe(100); // 50% of 200 = 100
+      expect(benchedPk.exp).toBe(initialBenchExp + 100);
+    });
+
+    it('distributes 50% EXP to all living party members when Exp. Share is in player bag', () => {
+      partyService.reset();
+      inventoryService.reset();
+      inventoryService.addItem('exp-share', 1);
+
+      const leadPk = createPartyPokemon('PIKACHU', 20);
+      const member2 = createPartyPokemon('BULBASAUR', 15);
+      const member3 = createPartyPokemon('SQUIRTLE', 15);
+      const faintedMember = createPartyPokemon('PIDGEY', 10);
+      faintedMember.currentHp = 0;
+      faintedMember.isFainted = true;
+
+      (partyService as any).setParty([leadPk, member2, member3, faintedMember]);
+
+      const leadBattler = partyPokemonToBattler(leadPk);
+      const syncResult = partyService.syncBattleResult(leadBattler, 400);
+
+      // Only member2 and member3 receive Exp Share (faintedMember excluded)
+      expect(syncResult.expShares.length).toBe(2);
+      expect(syncResult.expShares.map((s) => s.pokemon.name)).toEqual(['Bulbasaur', 'Squirtle']);
+      expect(syncResult.expShares[0].expGained).toBe(200); // 50% of 400
+      expect(syncResult.expShares[1].expGained).toBe(200);
+      expect(faintedMember.exp).toBe(0);
+    });
+
+    it('multiplies shared EXP by 1.5x when benched Pokémon holds Lucky Egg', () => {
+      partyService.reset();
+      inventoryService.reset();
+      inventoryService.addItem('exp-share', 1);
+
+      const leadPk = createPartyPokemon('PIKACHU', 20);
+      const luckyPk = createPartyPokemon('EEVEE', 12, { heldItem: 'lucky-egg' });
+      (partyService as any).setParty([leadPk, luckyPk]);
+
+      const leadBattler = partyPokemonToBattler(leadPk);
+      const syncResult = partyService.syncBattleResult(leadBattler, 200);
+
+      expect(syncResult.expShares.length).toBe(1);
+      // 50% of 200 = 100, then x1.5 from Lucky Egg = 150
+      expect(syncResult.expShares[0].expGained).toBe(150);
+    });
+  });
+
+  describe('10. Leppa Berry In-Battle Auto Trigger', () => {
+    it('automatically consumes Leppa Berry and restores 10 PP when a move drops to 0 PP', () => {
+      const battler = partyPokemonToBattler(
+        createPartyPokemon('PIKACHU', 25, { heldItem: 'leppa-berry' })
+      );
+      expect(battler.heldItem).toBe('leppa-berry');
+      expect(battler.moves.length).toBeGreaterThan(0);
+
+      // Set Move 0 to 0 PP
+      battler.moves[0].pp = 0;
+      battler.moves[0].maxPp = 15;
+
+      const events = HeldItemEngine.checkPpTriggeredBerry(battler, 'player', battler.moves[0]);
+
+      expect(events.length).toBe(1);
+      expect(battler.heldItem).toBeNull();
+      expect(battler.lastConsumedItem).toBe('leppa-berry');
+      expect(battler.moves[0].pp).toBe(10); // Restored 10 PP!
+      expect(events[0].message).toMatch(/Leppa/i);
+      expect(events[0].message).toContain('10 PP');
+    });
+  });
 });

@@ -100,7 +100,7 @@ export function createBattler(
 }
 
 export function getBattleEnvironment(
-  zone: EcologyZone,
+  zone: EcologyZone = 'meadow',
   isNearWater = false,
   inTallGrass = false
 ): BattleEnvironment {

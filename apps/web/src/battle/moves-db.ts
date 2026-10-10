@@ -79,6 +79,7 @@ export function getMovesForSpecies(
 export interface AvailableMoveEntry {
   move: BattleMove;
   level: number;
+  source?: 'level' | 'tm';
 }
 
 export function getAvailableLevelUpMoves(
@@ -101,6 +102,7 @@ export function getAvailableLevelUpMoves(
           result.push({
             move: { ...moveData },
             level: entry.level,
+            source: 'level',
           });
         }
       }
@@ -116,6 +118,7 @@ export function getAvailableLevelUpMoves(
         result.push({
           move: { ...MOVES_DB[id] },
           level: 1,
+          source: 'level',
         });
       }
     }
@@ -123,6 +126,90 @@ export function getAvailableLevelUpMoves(
 
   result.sort((a, b) => a.level - b.level);
   return result;
+}
+
+/**
+ * Returns all moves currently available for a Pokémon instance:
+ * 1. All level-up moves eligible at its current level.
+ * 2. All canonical moves taught to this specific Pokémon via TM/HM (permanently unlocked).
+ * 3. Any active equipped move to prevent move loss when swapping.
+ */
+export function getAvailableMovesForPokemon(pokemon: {
+  speciesKey: string;
+  level: number;
+  moves?: BattleMove[];
+  taughtTmMoves?: string[];
+}): AvailableMoveEntry[] {
+  const pool: AvailableMoveEntry[] = getAvailableLevelUpMoves(
+    pokemon.speciesKey,
+    pokemon.level
+  ).map((entry) => ({
+    ...entry,
+    source: 'level' as const,
+  }));
+
+  const seen = new Set<string>(pool.map((p) => p.move.id.toLowerCase()));
+
+  // 1. Taught TM moves
+  if (Array.isArray(pokemon.taughtTmMoves)) {
+    for (const moveId of pokemon.taughtTmMoves) {
+      const norm = moveId.toLowerCase();
+      const moveData = MOVES_DB[norm] || getMoveById(moveId);
+      if (moveData) {
+        const existing = pool.find((p) => p.move.id.toLowerCase() === norm);
+        if (existing) {
+          existing.source = 'tm';
+        } else if (!seen.has(norm)) {
+          seen.add(norm);
+          pool.push({
+            move: { ...moveData },
+            level: 0,
+            source: 'tm',
+          });
+        }
+      }
+    }
+  }
+
+  // 2. Any currently equipped move not in pool (e.g. legacy/special moves)
+  if (Array.isArray(pokemon.moves)) {
+    for (const m of pokemon.moves) {
+      if (m && m.id) {
+        const norm = m.id.toLowerCase();
+        if (!seen.has(norm)) {
+          seen.add(norm);
+          pool.push({
+            move: { ...m },
+            level: 0,
+            source: 'tm',
+          });
+          if (pokemon.taughtTmMoves && !pokemon.taughtTmMoves.includes(m.id)) {
+            pokemon.taughtTmMoves.push(m.id);
+          }
+        }
+      }
+    }
+  }
+
+  // Sort: Level-up moves first by level, then TM moves alphabetically by name
+  pool.sort((a, b) => {
+    const isTmA = a.source === 'tm';
+    const isTmB = b.source === 'tm';
+    if (!isTmA && !isTmB) {
+      return a.level - b.level;
+    }
+    if (!isTmA && isTmB) {
+      return -1;
+    }
+    if (isTmA && !isTmB) {
+      return 1;
+    }
+    const nameA = a.move.nameVi || a.move.name;
+    const nameB = b.move.nameVi || b.move.name;
+    return nameA.localeCompare(nameB);
+  });
+
+  return pool;
 }
 
 export function getAllMoves(): BattleMove[] {

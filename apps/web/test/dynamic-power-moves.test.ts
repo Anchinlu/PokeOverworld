@@ -277,7 +277,10 @@ describe('Dynamic Base Power Moves', () => {
       power: 40,
     });
     const rng = new FixedSequenceRng([0.99, 1.0]);
-    const defender = createMockBattler({ stats: { ...createMockBattler().stats, speed: 50 }, types: ['Normal'] });
+    const defender = createMockBattler({
+      stats: { ...createMockBattler().stats, speed: 50 },
+      types: ['Normal'],
+    });
 
     // Attacker speed 250 / Target speed 50 = 5.0 (>= 4.0) -> 150 power
     const fastAttacker = createMockBattler({ stats: { ...createMockBattler().stats, speed: 250 } });
@@ -299,14 +302,20 @@ describe('Dynamic Base Power Moves', () => {
       power: 1,
     });
     const rng = new FixedSequenceRng([0.99, 1.0]);
-    const fastDefender = createMockBattler({ stats: { ...createMockBattler().stats, speed: 200 }, types: ['Normal'] });
+    const fastDefender = createMockBattler({
+      stats: { ...createMockBattler().stats, speed: 200 },
+      types: ['Normal'],
+    });
 
     // Slow user: 20 speed. Formula: min(150, floor(25 * 200 / 20) + 1) = min(150, 251) = 150 power
     const slowAttacker = createMockBattler({ stats: { ...createMockBattler().stats, speed: 20 } });
     const highGyro = calculateDamage(slowAttacker, fastDefender, gyroBall, rng);
 
     // Fast user: 200 speed against slow target: 20 speed. Formula: floor(25 * 20 / 200) + 1 = 3 power
-    const slowDefender = createMockBattler({ stats: { ...createMockBattler().stats, speed: 20 }, types: ['Normal'] });
+    const slowDefender = createMockBattler({
+      stats: { ...createMockBattler().stats, speed: 20 },
+      types: ['Normal'],
+    });
     const fastAttacker = createMockBattler({ stats: { ...createMockBattler().stats, speed: 200 } });
     const lowGyro = calculateDamage(fastAttacker, slowDefender, gyroBall, rng);
 

@@ -1,10 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  BattleEngine,
-  createBattler,
-  getBattleEnvironment,
-  SeededBattleRng,
-} from '../src/battle';
+import { BattleEngine, createBattler, getBattleEnvironment, SeededBattleRng } from '../src/battle';
 import {
   checkPreTurnStatus,
   calculateConfusionSelfDamage,
@@ -15,7 +10,7 @@ import {
 } from '../src/battle/rules/move-effect-engine';
 
 describe('Volatile Status Mechanics: Flinch and Confusion', () => {
-  const env = getBattleEnvironment();
+  const env = getBattleEnvironment('meadow');
 
   describe('Flinch Mechanics', () => {
     it('has accurate move chance mappings for flinch moves', () => {
@@ -324,9 +319,7 @@ describe('Volatile Status Mechanics: Flinch and Confusion', () => {
       expect(player.currentHp).toBe(startingHp + expectedHeal);
       expect(endTurnRes?.message).toContain('Vòng Nước giúp');
       expect(
-        endTurnRes?.events.some(
-          (e) => e.type === 'hp_restored' && e.message.includes('Vòng Nước')
-        )
+        endTurnRes?.events.some((e) => e.type === 'hp_restored' && e.message?.includes('Vòng Nước'))
       ).toBe(true);
     });
 
@@ -416,7 +409,7 @@ describe('Volatile Status Mechanics: Flinch and Confusion', () => {
       pp: 10,
       maxPp: 10,
       description: 'Badly poisons target',
-      statusEffect: { condition: 'toxic' as const, chance: 1.0, target: 'target' as const },
+      statusEffect: { condition: 'toxic' as const, chance: 1.0, target: 'opponent' as const },
     };
 
     const confuseRayMove = {
@@ -491,5 +484,3 @@ describe('Volatile Status Mechanics: Flinch and Confusion', () => {
     });
   });
 });
-
-

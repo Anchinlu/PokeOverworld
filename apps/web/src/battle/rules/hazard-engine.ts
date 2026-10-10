@@ -3,6 +3,7 @@ import type {
   BattlerSide,
   BattleEnvironment,
   BattleSideHazards,
+  BattleSideScreens,
   BattleEvent,
 } from '../types';
 import { getTypeEffectiveness } from './type-effectiveness';
@@ -10,6 +11,7 @@ import { isGrounded } from './environment/terrain-rules';
 import { applyStatStageChange, setStatusCondition } from '../state/battle-state-reducer';
 import { AbilityEngine } from './ability-engine';
 import { BattleEventFactory } from '../state/battle-event-factory';
+import { normalizeHeldItemKey } from './held-item-engine';
 
 export const BINDING_MOVE_IDS = new Set([
   'bind',
@@ -22,17 +24,9 @@ export const BINDING_MOVE_IDS = new Set([
   'infestation',
 ]);
 
-export const TRAPPING_ATTACK_MOVE_IDS = new Set([
-  'spirit_shackle',
-  'anchor_shot',
-  'jaw_lock',
-]);
+export const TRAPPING_ATTACK_MOVE_IDS = new Set(['spirit_shackle', 'anchor_shot', 'jaw_lock']);
 
-export const TRAPPING_STATUS_MOVE_IDS = new Set([
-  'mean_look',
-  'block',
-  'spider_web',
-]);
+export const TRAPPING_STATUS_MOVE_IDS = new Set(['mean_look', 'block', 'spider_web']);
 
 export const HAZARD_SETTING_STATUS_MOVE_IDS = new Set([
   'stealth_rock',
@@ -41,10 +35,7 @@ export const HAZARD_SETTING_STATUS_MOVE_IDS = new Set([
   'sticky_web',
 ]);
 
-export const HAZARD_CLEARING_MOVE_IDS = new Set([
-  'rapid_spin',
-  'mortal_spin',
-]);
+export const HAZARD_CLEARING_MOVE_IDS = new Set(['rapid_spin', 'mortal_spin']);
 
 /**
  * Returns and initializes the side hazards structure for a given battler side.
@@ -60,6 +51,23 @@ export function getSideHazards(
   } else {
     environment.enemyHazards ??= {};
     return environment.enemyHazards;
+  }
+}
+
+/**
+ * Returns and initializes the side screens structure for a given battler side.
+ */
+export function getSideScreens(
+  environment: BattleEnvironment | undefined,
+  side: BattlerSide
+): BattleSideScreens {
+  if (!environment) return {};
+  if (side === 'player') {
+    environment.playerScreens ??= {};
+    return environment.playerScreens;
+  } else {
+    environment.enemyScreens ??= {};
+    return environment.enemyScreens;
   }
 }
 
@@ -96,7 +104,7 @@ export function canSwitchOut(pokemon: BattlerPokemon): { canSwitch: boolean; rea
     return { canSwitch: true };
   }
   // Shed Shell item allows switching regardless of trapping
-  if (pokemon.heldItem === 'shed_shell') {
+  if (normalizeHeldItemKey(pokemon.heldItem) === 'shed-shell') {
     return { canSwitch: true };
   }
   if (pokemon.isIngrained) {
@@ -152,7 +160,7 @@ export function applyEntryHazards(
   if (!hazards) return [];
 
   // Heavy-Duty Boots immunity
-  if (pokemon.heldItem === 'heavy_duty_boots') {
+  if (normalizeHeldItemKey(pokemon.heldItem) === 'heavy-duty-boots') {
     return [`${pokemon.name} nhờ [Giày Chống Gai] không bị ảnh hưởng bởi cạm bẫy trên sân!`];
   }
 
@@ -194,8 +202,7 @@ export function applyEntryHazards(
     pokemon.currentHp > 0 &&
     !pokemon.isFainted
   ) {
-    const spikeFraction =
-      hazards.spikes === 1 ? 1 / 8 : hazards.spikes === 2 ? 1 / 6 : 1 / 4;
+    const spikeFraction = hazards.spikes === 1 ? 1 / 8 : hazards.spikes === 2 ? 1 / 6 : 1 / 4;
     const dmg = Math.max(1, Math.floor(pokemon.maxHp * spikeFraction));
     pokemon.currentHp = Math.max(0, pokemon.currentHp - dmg);
     const msg = `${pokemon.name} bị chông gai đâm trúng! (-${dmg} HP)`;
@@ -254,12 +261,7 @@ export function applyEntryHazards(
   }
 
   // 4. Sticky Web (lowers Speed stage by 1 for grounded Pokémon)
-  if (
-    hazards.stickyWeb &&
-    isGrounded(pokemon) &&
-    pokemon.currentHp > 0 &&
-    !pokemon.isFainted
-  ) {
+  if (hazards.stickyWeb && isGrounded(pokemon) && pokemon.currentHp > 0 && !pokemon.isFainted) {
     if (AbilityEngine.isStatDropProtected(pokemon, 'speed', true)) {
       const protName = AbilityEngine.getDisplayName(pokemon.ability);
       const protMsg = `${pokemon.name} nhờ [${protName}] ngăn cản giảm Tốc độ!`;

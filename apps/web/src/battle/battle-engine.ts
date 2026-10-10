@@ -5,7 +5,9 @@ import type {
   BattleEnvironment,
   BattleEvent,
   BattlerSide,
+  BattleSideScreens,
 } from './types';
+import { MOVES_DB } from './moves-db';
 import { defaultBattleRng, type BattleRng } from './battle-rng';
 import { isTypeImmune } from './rules/type-effectiveness';
 import { calculateDamage } from './rules/damage-calculator';
@@ -83,6 +85,8 @@ export interface TurnResult {
   batonPassData?: Partial<BattlerPokemon>;
   battleEnded?: boolean;
   battleEndReason?: 'fled' | 'roar';
+  actionPrevented?: boolean;
+  isCharging?: boolean;
 }
 
 export interface CatchResult {
@@ -289,12 +293,7 @@ export class BattleEngine {
     }
 
     const events: BattleEvent[] = [];
-    const hazardMessages = applyEntryHazards(
-      this.enemyPokemon,
-      'enemy',
-      this.environment,
-      events
-    );
+    const hazardMessages = applyEntryHazards(this.enemyPokemon, 'enemy', this.environment, events);
 
     let abilityMessages: string[] = [];
     if (!this.enemyPokemon.isFainted) {
@@ -390,6 +389,7 @@ export class BattleEngine {
         defenderFainted: false,
         message: rechargeMsg,
         events,
+        actionPrevented: true,
       };
     }
 
@@ -405,6 +405,7 @@ export class BattleEngine {
         defenderFainted: false,
         message: noPpMsg,
         events,
+        actionPrevented: true,
       };
     }
 
@@ -421,6 +422,7 @@ export class BattleEngine {
         defenderFainted: false,
         message: failMsg,
         events,
+        actionPrevented: true,
       };
     }
 
@@ -435,6 +437,7 @@ export class BattleEngine {
         defenderFainted: false,
         message: tauntBlockedMsg,
         events,
+        actionPrevented: true,
       };
     }
 
@@ -453,6 +456,7 @@ export class BattleEngine {
         defenderFainted: false,
         message: disableMsg,
         events,
+        actionPrevented: true,
       };
     }
 
@@ -467,6 +471,7 @@ export class BattleEngine {
         defenderFainted: false,
         message: tormentBlockedMsg,
         events,
+        actionPrevented: true,
       };
     }
 
@@ -481,6 +486,25 @@ export class BattleEngine {
         defenderFainted: false,
         message: encoreBlockedMsg,
         events,
+        actionPrevented: true,
+      };
+    }
+
+    if (attacker.rampage && attacker.rampage.turnsLeft > 0 && attacker.rampage.moveId !== moveId) {
+      const rampageMoveName =
+        attacker.moves.find((m) => m.id === attacker.rampage?.moveId)?.name ??
+        attacker.rampage.moveId;
+      const rampageBlockedMsg = `${attacker.name} đang trong cơn cuồng nộ và chỉ có thể sử dụng ${rampageMoveName}!`;
+      return {
+        attackerName: attacker.name,
+        moveName: moveDisplayName,
+        damage: 0,
+        typeEffectiveness: 1.0,
+        isCritical: false,
+        defenderFainted: false,
+        message: rampageBlockedMsg,
+        events,
+        actionPrevented: true,
       };
     }
 
@@ -495,6 +519,7 @@ export class BattleEngine {
         defenderFainted: false,
         message: throatMsg,
         events,
+        actionPrevented: true,
       };
     }
 
@@ -513,6 +538,7 @@ export class BattleEngine {
           defenderFainted: false,
           message: statusResult.hinderedMessage || '',
           events,
+          actionPrevented: true,
         };
       }
       statusPrefix = statusResult.statusPrefix;
@@ -527,6 +553,12 @@ export class BattleEngine {
         defender.currentHp > 0;
       const ppCost = hasPressure ? 2 : 1;
       move.pp = Math.max(0, move.pp - ppCost);
+      if (move.pp === 0) {
+        const leppaEvents = HeldItemEngine.checkPpTriggeredBerry(attacker, attackerSide, move);
+        if (leppaEvents.length > 0) {
+          events.push(...leppaEvents);
+        }
+      }
     }
 
     // Sleep Talk handling (picks and executes another known move while asleep)
@@ -621,6 +653,7 @@ export class BattleEngine {
         defenderFainted: false,
         message: `${statusPrefix}${chargeResult.chargeMessage}`,
         events,
+        isCharging: true,
       };
     }
 
@@ -650,6 +683,41 @@ export class BattleEngine {
           events,
         };
       }
+    }
+
+    // Metronome random move execution
+    if (moveId === 'metronome') {
+      const allMoveKeys = Object.keys(MOVES_DB).filter(
+        (k) => k !== 'metronome' && k !== 'struggle'
+      );
+      if (allMoveKeys.length > 0) {
+        const pickedKey = allMoveKeys[this.rng.nextInt(0, allMoveKeys.length - 1)];
+        const pickedMove = MOVES_DB[pickedKey];
+        if (pickedMove) {
+          const metroIntro = `${statusPrefix}${attacker.name} vung Ngón Tay Ma Thuật! Chiêu thức được chọn là ${getMoveDisplayName(pickedMove)}!\n`;
+          const subResult = this.executeAttack(attacker, defender, pickedMove, true);
+          return {
+            ...subResult,
+            message: metroIntro + subResult.message,
+          };
+        }
+      }
+    }
+
+    // Focus Punch lost focus check
+    if (moveId === 'focus_punch' && attacker.damagedThisRound) {
+      const failMsg = `${statusPrefix}${attacker.name} sử dụng ${moveDisplayName}! Nhưng bị mất tập trung do nhận sát thương và không thể tung đòn!`;
+      return {
+        attackerName: attacker.name,
+        moveName: moveDisplayName,
+        damage: 0,
+        typeEffectiveness: 1.0,
+        isCritical: false,
+        defenderFainted: false,
+        message: failMsg,
+        events,
+        actionPrevented: true,
+      };
     }
 
     // 6. Defender Semi-Invulnerable bypass check
@@ -712,6 +780,20 @@ export class BattleEngine {
         (move.statusEffect !== undefined && move.statusEffect.target === 'self'));
 
     if (!isSelfTarget) {
+      const itemImmunity = HeldItemEngine.checkTypeImmunity(defender, defenderSide, move, events);
+      if (itemImmunity.isImmune) {
+        return {
+          attackerName: attacker.name,
+          moveName: moveDisplayName,
+          damage: 0,
+          typeEffectiveness: 0,
+          isCritical: false,
+          defenderFainted: false,
+          message: `${statusPrefix}${attacker.name} sử dụng ${moveDisplayName}! ${itemImmunity.message}`,
+          events,
+        };
+      }
+
       const abilityImmunity = AbilityEngine.checkTypeImmunity(
         attacker,
         defender,
@@ -821,6 +903,7 @@ export class BattleEngine {
         'stuff_cheeks',
         'refresh',
         'baton_pass',
+        'trick_room',
       ]);
 
       const isSelfTargetMove =
@@ -883,12 +966,25 @@ export class BattleEngine {
         statusRes.mustSwitch = true;
         statusRes.switchSide = attackerSide;
         statusRes.batonPassData = {
-          statStages: { ...(attacker.statStages ?? { attack: 0, defense: 0, spAtk: 0, spDef: 0, speed: 0, accuracy: 0, evasion: 0 }) },
+          statStages: {
+            ...(attacker.statStages ?? {
+              attack: 0,
+              defense: 0,
+              spAtk: 0,
+              spDef: 0,
+              speed: 0,
+              accuracy: 0,
+              evasion: 0,
+            }),
+          },
           confusionTurns: attacker.confusionTurns,
           hasAquaRing: attacker.hasAquaRing,
           isIngrained: attacker.isIngrained,
           isSeeded: attacker.isSeeded,
         };
+      } else if (moveId === 'teleport') {
+        statusRes.mustSwitch = true;
+        statusRes.switchSide = attackerSide;
       } else if (moveId === 'roar' || moveId === 'whirlwind') {
         if (AbilityEngine.normalize(defender.ability) !== 'suctioncups' && !defender.isIngrained) {
           statusRes.battleEnded = true;
@@ -899,8 +995,24 @@ export class BattleEngine {
       return statusRes;
     }
 
+    // Pledge combination check
+    if (moveId === 'grass_pledge' || moveId === 'fire_pledge' || moveId === 'water_pledge') {
+      if (this.environment.lastPledgeMove && this.environment.lastPledgeMove !== moveId) {
+        this.environment.pledgeCombo = true;
+      } else {
+        this.environment.lastPledgeMove = moveId;
+      }
+    }
+
     // 9. Damaging attack handling
-    const dmgCalc = calculateDamage(attacker, defender, move, this.rng, this.environment);
+    const dmgCalc = calculateDamage(
+      attacker,
+      defender,
+      move,
+      this.rng,
+      this.environment,
+      defenderSide
+    );
 
     if (dmgCalc.typeEffectiveness === 0) {
       const immuneMsg = `${statusPrefix}${attacker.name} sử dụng ${moveDisplayName}! Không có tác dụng lên ${defender.name}!`;
@@ -993,10 +1105,36 @@ export class BattleEngine {
       attackerFainted = true;
     }
 
-    // Apply damage and calculate actual damage dealt
-    const prevDefenderHp = defender.currentHp;
-    defender.currentHp = Math.max(0, defender.currentHp - damage);
-    const actualDamage = prevDefenderHp - defender.currentHp;
+    // Apply damage and calculate actual damage dealt (with Substitute & Endure)
+    let hitSubstitute = false;
+    let damageDealtToSub = 0;
+    let actualDamage: number;
+
+    if ((defender.substituteHp ?? 0) > 0) {
+      hitSubstitute = true;
+      const prevSubHp = defender.substituteHp!;
+      defender.substituteHp = Math.max(0, defender.substituteHp! - damage);
+      damageDealtToSub = prevSubHp - defender.substituteHp;
+      if (defender.substituteHp <= 0) {
+        defender.substituteHp = 0;
+        secMsg += ` Hình nhân thế thân của ${defender.name} đã bị phá hủy!`;
+      } else {
+        secMsg += ` Hình nhân thế thân nhận sát thương thay cho ${defender.name}!`;
+      }
+      actualDamage = 0;
+    } else {
+      const prevDefenderHp = defender.currentHp;
+      let targetHp = defender.currentHp - damage;
+      if (defender.isEndured && targetHp <= 0 && prevDefenderHp > 0) {
+        targetHp = 1;
+        secMsg += ` ${defender.name} kiên cường chịu đựng đòn đánh với 1 HP!`;
+      }
+      defender.currentHp = Math.max(0, targetHp);
+      actualDamage = prevDefenderHp - defender.currentHp;
+      if (actualDamage > 0) {
+        defender.damagedThisRound = true;
+      }
+    }
     let defenderFainted = defender.currentHp <= 0;
     if (defenderFainted) {
       defender.isFainted = true;
@@ -1055,8 +1193,8 @@ export class BattleEngine {
       );
     }
 
-    // Drain effect
-    if (move.drainPercent && move.drainPercent > 0) {
+    // Drain effect (blocked by Substitute)
+    if (move.drainPercent && move.drainPercent > 0 && !hitSubstitute && actualDamage > 0) {
       const drained = Math.max(1, Math.floor(actualDamage * move.drainPercent));
       const actualHealed = restoreHp(attacker, drained);
       secMsg += ` ${defender.name} bị hút cạn sinh lực!`;
@@ -1096,21 +1234,24 @@ export class BattleEngine {
       if (AbilityEngine.isRecoilImmune(attacker, move)) {
         secMsg += ` ${attacker.name} nhờ [${AbilityEngine.getDisplayName(attacker.ability)}] không phải chịu phản lực!`;
       } else {
-        const recoil = Math.max(1, Math.floor(actualDamage * move.recoilPercent));
-        attacker.currentHp = Math.max(0, attacker.currentHp - recoil);
-        secMsg += ` ${attacker.name} bị phản lực tổn thương!`;
-        events.push(
-          BattleEventFactory.recoilDamage(
-            attackerSide,
-            attacker.name,
-            recoil,
-            attacker.currentHp,
-            `${attacker.name} bị phản lực tổn thương!`
-          )
-        );
-        if (attacker.currentHp <= 0) {
-          attacker.isFainted = true;
-          attackerFainted = true;
+        const damageForRecoil = hitSubstitute ? damageDealtToSub : actualDamage;
+        if (damageForRecoil > 0) {
+          const recoil = Math.max(1, Math.floor(damageForRecoil * move.recoilPercent));
+          attacker.currentHp = Math.max(0, attacker.currentHp - recoil);
+          secMsg += ` ${attacker.name} bị phản lực tổn thương!`;
+          events.push(
+            BattleEventFactory.recoilDamage(
+              attackerSide,
+              attacker.name,
+              recoil,
+              attacker.currentHp,
+              `${attacker.name} bị phản lực tổn thương!`
+            )
+          );
+          if (attacker.currentHp <= 0) {
+            attacker.isFainted = true;
+            attackerFainted = true;
+          }
         }
       }
     } else if (moveId === 'explosion' || moveId === 'self_destruct') {
@@ -1121,7 +1262,7 @@ export class BattleEngine {
     }
 
     // Contact abilities trigger on attacker
-    if (actualDamage > 0) {
+    if (actualDamage > 0 && !hitSubstitute) {
       const contactMsgs = AbilityEngine.onContact(
         attacker,
         attackerSide,
@@ -1205,7 +1346,7 @@ export class BattleEngine {
 
     // Secondary effects on surviving defender
     const hasShieldDust = AbilityEngine.normalize(defender.ability) === 'shielddust';
-    if (!defenderFainted && !hasShieldDust) {
+    if (!defenderFainted && !hasShieldDust && !hitSubstitute) {
       // Secondary status effect
       if (move.statusEffect) {
         const target = move.statusEffect.target === 'self' ? attacker : defender;
@@ -1239,24 +1380,29 @@ export class BattleEngine {
           const tSide: BattlerSide = target === attacker ? attackerSide : defenderSide;
           const statVi = STAT_NAME_VI[sc.stat] ?? sc.stat;
 
-          if (
-            sc.stages < 0 &&
-            target !== attacker &&
-            AbilityEngine.isStatDropProtected(target, sc.stat, true)
-          ) {
-            const protName = AbilityEngine.getDisplayName(target.ability);
-            secMsg += ` Nhưng ${target.name} nhờ [${protName}] ngăn cản giảm ${statVi}!`;
-            events.push(
-              BattleEventFactory.abilityTriggered(
-                tSide,
-                target.name,
-                target.ability || 'Protected',
-                protName,
-                `Chặn giảm ${statVi}`,
-                `${target.name} nhờ [${protName}] ngăn cản giảm ${statVi}!`
-              )
-            );
-            continue;
+          if (sc.stages < 0 && target !== attacker) {
+            const screens =
+              tSide === 'player' ? this.environment.playerScreens : this.environment.enemyScreens;
+            if (screens && (screens.mistTurns ?? 0) > 0) {
+              secMsg += ` Nhưng Màn Sương Trắng bảo vệ ${target.name} khỏi bị giảm ${statVi}!`;
+              continue;
+            }
+
+            if (AbilityEngine.isStatDropProtected(target, sc.stat, true)) {
+              const protName = AbilityEngine.getDisplayName(target.ability);
+              secMsg += ` Nhưng ${target.name} nhờ [${protName}] ngăn cản giảm ${statVi}!`;
+              events.push(
+                BattleEventFactory.abilityTriggered(
+                  tSide,
+                  target.name,
+                  target.ability || 'Protected',
+                  protName,
+                  `Chặn giảm ${statVi}`,
+                  `${target.name} nhờ [${protName}] ngăn cản giảm ${statVi}!`
+                )
+              );
+              continue;
+            }
           }
 
           const change = applyStatStageChange(target, sc.stat, sc.stages);
@@ -1334,7 +1480,8 @@ export class BattleEngine {
     }
 
     // Post-damage special move effects (Stone Axe, Ceaseless Edge, Hazard Clearing, Trapping & Binding)
-    if (actualDamage > 0) {
+    const hitTarget = actualDamage > 0 || hitSubstitute;
+    if (hitTarget) {
       if (moveId === 'stone_axe') {
         const oppHazards = getSideHazards(this.environment, defenderSide);
         if (!oppHazards.stealthRock) {
@@ -1352,9 +1499,24 @@ export class BattleEngine {
         attacker.boundStatus = undefined;
         attacker.isSeeded = false;
         secMsg += ` ${attacker.name} đã thổi bay toàn bộ bẫy và trói buộc trên sân!`;
+        if (moveId === 'mortal_spin' && !defenderFainted && !hitSubstitute) {
+          const immunity = getStatusImmunity(defender, 'poison');
+          if (defender.status === 'none' && !immunity) {
+            setStatusCondition(defender, 'poison', 0);
+            secMsg += ` ${defender.name} đã bị trúng độc!`;
+            events.push(
+              BattleEventFactory.statusInflicted(
+                defenderSide,
+                defender.name,
+                'poison',
+                `${defender.name} đã bị trúng độc!`
+              )
+            );
+          }
+        }
       }
 
-      if (!defenderFainted && !defender.types.includes('Ghost')) {
+      if (!defenderFainted && !hitSubstitute && !defender.types.includes('Ghost')) {
         if (TRAPPING_ATTACK_MOVE_IDS.has(moveId) && !defender.isTrapped) {
           defender.isTrapped = true;
           defender.trappedBy = attackerSide;
@@ -1374,6 +1536,45 @@ export class BattleEngine {
       }
     }
 
+    // Spit Up resets stockpile count and stat boosts
+    if (moveId === 'spit_up') {
+      const count = attacker.stockpileCount ?? 0;
+      if (count > 0) {
+        applyStatStageChange(attacker, 'defense', -count);
+        applyStatStageChange(attacker, 'spDef', -count);
+        attacker.stockpileCount = 0;
+        secMsg += ` Năng lượng tích trữ đã được giải phóng hoàn toàn!`;
+      }
+    }
+
+    // Rampage moves (Outrage, Thrash, Petal Dance, Raging Fury) lock-in & fatigue confusion
+    const RAMPAGE_MOVES = new Set(['outrage', 'thrash', 'petal_dance', 'raging_fury']);
+    if (RAMPAGE_MOVES.has(moveId)) {
+      if (!attacker.rampage) {
+        attacker.rampage = { moveId, turnsLeft: this.rng.nextInt(2, 3) - 1 };
+      } else {
+        attacker.rampage.turnsLeft--;
+        if (attacker.rampage.turnsLeft <= 0) {
+          attacker.rampage = undefined;
+          if (
+            (attacker.confusionTurns ?? 0) <= 0 &&
+            AbilityEngine.normalize(attacker.ability) !== 'owntempo'
+          ) {
+            attacker.confusionTurns = this.rng.nextInt(2, 4);
+            secMsg += ` ${attacker.name} đã rơi vào trạng thái bối rối do mệt mỏi!`;
+            events.push(
+              BattleEventFactory.statusInflicted(
+                attackerSide,
+                attacker.name,
+                'confusion',
+                `${attacker.name} đã rơi vào trạng thái bối rối do mệt mỏi!`
+              )
+            );
+          }
+        }
+      }
+    }
+
     // Item interaction damaging moves (Knock Off, Fling, Poltergeist, Thief, Covet, Bug Bite, Pluck, Incinerate)
     if (actualDamage > 0) {
       if (moveId === 'knock_off') {
@@ -1381,7 +1582,10 @@ export class BattleEngine {
           const itemDisplayName = getHeldItemDisplayName(defender.heldItem);
           defender.heldItem = null;
           secMsg += ` ${attacker.name} đã đánh rơi [${itemDisplayName}] của ${defender.name}!`;
-        } else if (defender.heldItem && AbilityEngine.normalize(defender.ability) === 'stickyhold') {
+        } else if (
+          defender.heldItem &&
+          AbilityEngine.normalize(defender.ability) === 'stickyhold'
+        ) {
           secMsg += ` Nhưng ${defender.name} nhờ [Dính Chặt] giữ chặt vật phẩm của mình!`;
         }
       } else if (moveId === 'fling') {
@@ -1484,6 +1688,11 @@ export class BattleEngine {
       );
       if (heldEffects.length > 0) {
         events.push(...heldEffects);
+        for (const ev of heldEffects) {
+          if (ev.message) {
+            secMsg += ` ${ev.message}`;
+          }
+        }
         if (attacker.currentHp <= 0) attackerFainted = true;
         if (defender.currentHp <= 0) defenderFainted = true;
       }
@@ -1558,16 +1767,29 @@ export class BattleEngine {
     );
   }
 
-  public getEnemyAction(): BattleMove {
-    if (this.enemyPokemon.chargingMove) {
-      return this.enemyPokemon.chargingMove.move;
+  public getForcedMove(battler: BattlerPokemon): BattleMove | null {
+    if (battler.chargingMove) {
+      return battler.chargingMove.move;
     }
-    // Encore forces repeat of move
-    if (this.enemyPokemon.encore && this.enemyPokemon.encore.turnsLeft > 0) {
-      const encoreMove = this.enemyPokemon.moves.find(
-        (m) => m.id.toLowerCase() === this.enemyPokemon.encore!.moveId.toLowerCase() && m.pp > 0
+    if (battler.rampage && battler.rampage.turnsLeft > 0) {
+      const rampageMove = battler.moves.find(
+        (m) => m.id.toLowerCase() === battler.rampage!.moveId.toLowerCase()
+      );
+      if (rampageMove) return rampageMove;
+    }
+    if (battler.encore && battler.encore.turnsLeft > 0) {
+      const encoreMove = battler.moves.find(
+        (m) => m.id.toLowerCase() === battler.encore!.moveId.toLowerCase() && m.pp > 0
       );
       if (encoreMove) return encoreMove;
+    }
+    return null;
+  }
+
+  public getEnemyAction(): BattleMove {
+    const forcedMove = this.getForcedMove(this.enemyPokemon);
+    if (forcedMove) {
+      return forcedMove;
     }
     let validMoves = this.enemyPokemon.moves.filter((m) => m.pp > 0);
     // Disable filter
@@ -1709,9 +1931,48 @@ export class BattleEngine {
         if (tType === 'electric') messages.push('Dòng điện trên mặt đất đã biến mất!');
         else if (tType === 'grassy') messages.push('Thảm cỏ xanh trên mặt đất đã biến mất!');
         else if (tType === 'misty') messages.push('Màn sương mù trên mặt đất đã tan biến!');
-        else if (tType === 'psychic') messages.push('Năng lượng tâm linh trên mặt đất đã biến mất!');
+        else if (tType === 'psychic')
+          messages.push('Năng lượng tâm linh trên mặt đất đã biến mất!');
       }
     }
+
+    if (this.environment.trickRoomTurns && this.environment.trickRoomTurns > 0) {
+      this.environment.trickRoomTurns--;
+      if (this.environment.trickRoomTurns <= 0) {
+        messages.push('Không gian bị bóp méo đã trở lại bình thường!');
+      }
+    }
+
+    const tickScreens = (screens?: BattleSideScreens, isPlayer?: boolean) => {
+      if (!screens) return;
+      const targetLabel = isPlayer ? 'của bạn' : 'của đối thủ';
+      if (screens.reflectTurns && screens.reflectTurns > 0) {
+        screens.reflectTurns--;
+        if (screens.reflectTurns <= 0) {
+          messages.push(`Bức tường Phản Chiếu ${targetLabel} đã tan biến!`);
+        }
+      }
+      if (screens.lightScreenTurns && screens.lightScreenTurns > 0) {
+        screens.lightScreenTurns--;
+        if (screens.lightScreenTurns <= 0) {
+          messages.push(`Bức tường Màn Ánh Sáng ${targetLabel} đã tan biến!`);
+        }
+      }
+      if (screens.mistTurns && screens.mistTurns > 0) {
+        screens.mistTurns--;
+        if (screens.mistTurns <= 0) {
+          messages.push(`Màn Sương Trắng ${targetLabel} đã tan biến!`);
+        }
+      }
+      if (screens.tailwindTurns && screens.tailwindTurns > 0) {
+        screens.tailwindTurns--;
+        if (screens.tailwindTurns <= 0) {
+          messages.push(`Luồng Gió Thuận ${targetLabel} đã ngừng thổi!`);
+        }
+      }
+    };
+    tickScreens(this.environment.playerScreens, true);
+    tickScreens(this.environment.enemyScreens, false);
 
     return messages;
   }
@@ -1720,6 +1981,8 @@ export class BattleEngine {
     this.playerPokemon.isProtected = false;
     this.enemyPokemon.isProtected = false;
     resetRoundCombatFlags(this.playerPokemon, this.enemyPokemon);
+    this.environment.pledgeCombo = false;
+    this.environment.lastPledgeMove = undefined;
     return this.tickEnvironmentRound();
   }
 }

@@ -176,6 +176,14 @@ export interface BattlerPokemon {
   throatChopTurns?: number;
   uproarTurns?: number;
   lastUsedMoveId?: string;
+  substituteHp?: number;
+  isEndured?: boolean;
+  stockpileCount?: number;
+  rampage?: {
+    moveId: string;
+    turnsLeft: number;
+  };
+  damagedThisRound?: boolean;
 }
 
 export interface BoundStatus {
@@ -190,6 +198,13 @@ export interface BattleSideHazards {
   spikes?: number;
   toxicSpikes?: number;
   stickyWeb?: boolean;
+}
+
+export interface BattleSideScreens {
+  reflectTurns?: number;
+  lightScreenTurns?: number;
+  mistTurns?: number;
+  tailwindTurns?: number;
 }
 
 export type BattlePhase =
@@ -222,5 +237,9 @@ export interface BattleEnvironment {
   };
   playerHazards?: BattleSideHazards;
   enemyHazards?: BattleSideHazards;
+  playerScreens?: BattleSideScreens;
+  enemyScreens?: BattleSideScreens;
+  trickRoomTurns?: number;
   pledgeCombo?: boolean;
+  lastPledgeMove?: string;
 }

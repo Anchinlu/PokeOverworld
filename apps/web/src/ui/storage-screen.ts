@@ -16,12 +16,15 @@ import { STORAGE_ASSETS, POKEMON_ASSETS } from '../assets';
 import { battleSePlayer } from '../audio';
 import { showBerryToast } from './toast';
 import { PokemonSpriteAnimator } from './pokedex';
-import { getAvailableLevelUpMoves, MOVES_DB } from '../battle/moves-db';
+import { getAvailableMovesForPokemon, MOVES_DB } from '../battle/moves-db';
 import { TYPE_ICO_INDICES } from '../battle/type-chart';
 import type { BattleMove } from '../battle/types';
 import { NATURES_TABLE, type StatKey } from '@pokemon/shared-types';
 import { findItem } from '../data/items-db';
 import { getAbilityDisplay } from '../battle/rules/ability-engine';
+import { canPokemonEvolve, getAvailableEvolutions } from '../domain/pokemon/evolution-rules';
+import { EvolutionScreen } from './evolution-screen';
+import { pokemonCatalog } from '../data';
 
 const STORAGE_TYPE_INDICES: Record<string, number> = {
   normal: 0,
@@ -104,6 +107,7 @@ export class StorageScreen {
   // Detail Summary Sprite Animator
   private summaryAnimator: PokemonSpriteAnimator | null = null;
   private summaryPokemon: PartyPokemon | null = null;
+  private summaryKeyListener: ((e: KeyboardEvent) => void) | null = null;
   private fightButtonsImg: HTMLImageElement | null = null;
   private activeMoveDrag: {
     source: 'active' | 'pool';
@@ -316,6 +320,10 @@ export class StorageScreen {
                   <canvas id="storageSummarySprite" class="summary-sprite" width="100" height="100"></canvas>
                 </div>
                 <div id="storageSummaryTypes" class="summary-types"></div>
+                <button class="summary-btn-evolve" id="btnStorageSummaryEvolve" style="display: none;" title="Tiến hóa Pokémon này! (Nhấn phím R)">
+                  <span class="evolve-label" id="storageSummaryEvolveLabel">TIẾN HÓA</span>
+                  <span class="evo-key-hint">R</span>
+                </button>
                 <div class="summary-meta-box">
                   <!-- Origin & Item Group -->
                   <div class="summary-meta-group">
@@ -1444,6 +1452,54 @@ export class StorageScreen {
     this.summaryPokemon = pokemon;
     this.renderSummaryMoves(pokemon);
 
+    // Evolution Eligibility Check & Button Binding
+    const btnEvolve = modal.querySelector<HTMLButtonElement>('#btnStorageSummaryEvolve');
+    const evolveLabel = modal.querySelector<HTMLElement>('#storageSummaryEvolveLabel');
+    const evoCheck = canPokemonEvolve(pokemon);
+    const availableEvos = getAvailableEvolutions(pokemon);
+
+    if (btnEvolve) {
+      if (evoCheck.canEvolve && evoCheck.evolution) {
+        btnEvolve.style.display = 'flex';
+        const targetSpecies = pokemonCatalog.getBySpeciesKey(evoCheck.evolution.targetSpeciesKey);
+        const targetName = targetSpecies?.name || evoCheck.evolution.targetSpeciesKey;
+        if (evolveLabel) {
+          evolveLabel.textContent = `TIẾN HÓA THÀNH ${targetName.toUpperCase()}`;
+        }
+        btnEvolve.onclick = (e) => {
+          e.stopPropagation();
+          const targetEvo = availableEvos[0] || evoCheck.evolution!;
+          this.closeSummaryModal();
+          EvolutionScreen.getInstance().open(pokemon, targetEvo, () => {
+            this.openSummaryModal(pokemon);
+            this.render();
+          });
+        };
+      } else {
+        btnEvolve.style.display = 'none';
+      }
+    }
+
+    // Invisible keyboard shortcut 'R' to trigger evolution if eligible
+    if (this.summaryKeyListener) {
+      window.removeEventListener('keydown', this.summaryKeyListener);
+      this.summaryKeyListener = null;
+    }
+    this.summaryKeyListener = (e: KeyboardEvent) => {
+      if (e.key === 'r' || e.key === 'R') {
+        const target = e.target as HTMLElement | null;
+        if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+          return;
+        }
+        if (btnEvolve && btnEvolve.style.display !== 'none') {
+          e.preventDefault();
+          e.stopPropagation();
+          btnEvolve.click();
+        }
+      }
+    };
+    window.addEventListener('keydown', this.summaryKeyListener);
+
     modal.style.display = 'flex';
   }
 
@@ -1543,6 +1599,18 @@ export class StorageScreen {
 
           slotEl.appendChild(canvas);
 
+          // If this move was taught via TM, display a TM indicator badge
+          const isTaughtTm = pokemon.taughtTmMoves?.some(
+            (id) => id.toLowerCase() === move.id.toLowerCase()
+          );
+          if (isTaughtTm) {
+            const tmBadge = document.createElement('span');
+            tmBadge.className = 'active-move-tm-badge';
+            tmBadge.textContent = 'TM';
+            tmBadge.title = 'Chiêu thức đã học từ Đĩa Kỹ Thuật (TM/HM)';
+            slotEl.appendChild(tmBadge);
+          }
+
           // Pointer-based Drag & Drop (matching storage-party-slot and storage-grid-slot)
           this.attachMovePointerDrag(slotEl, 'active', move, i, pokemon);
         } else {
@@ -1554,10 +1622,15 @@ export class StorageScreen {
       }
     }
 
-    // 2. Render Level-up Move Pool
+    // 2. Render Move Pool (Level-up + Taught TMs)
     if (poolEl) {
       poolEl.innerHTML = '';
-      const pool = getAvailableLevelUpMoves(pokemon.speciesKey, pokemon.level);
+      const pool = getAvailableMovesForPokemon(pokemon);
+
+      const tmCount = pool.filter((p) => p.source === 'tm').length;
+      if (poolLvEl) {
+        poolLvEl.innerHTML = `${pokemon.level}${tmCount > 0 ? `<span class="pool-tm-badge-header" style="margin-left:6px;color:#38bdf8;font-size:12px;">• ${tmCount} TM</span>` : ''}`;
+      }
 
       if (pool.length === 0) {
         poolEl.innerHTML = `<div class="pool-empty">Không có chiêu thức nào khả dụng ở cấp này.</div>`;
@@ -1566,12 +1639,13 @@ export class StorageScreen {
 
       for (const entry of pool) {
         const isEquipped = pokemon.moves.some((m) => m.id === entry.move.id);
+        const isTm = entry.source === 'tm';
         const cardEl = document.createElement('div');
-        cardEl.className = `summary-pool-card ${isEquipped ? 'equipped' : ''}`;
+        cardEl.className = `summary-pool-card ${isEquipped ? 'equipped' : ''} ${isTm ? 'tm-move' : ''}`;
 
         const lvBadge = document.createElement('span');
-        lvBadge.className = 'pool-lv-badge';
-        lvBadge.textContent = `Lv.${entry.level}`;
+        lvBadge.className = `pool-lv-badge ${isTm ? 'tm' : ''}`;
+        lvBadge.textContent = isTm ? '💿 TM' : `Lv.${entry.level}`;
 
         const canvas = document.createElement('canvas');
         canvas.className = 'pool-fight-canvas';
@@ -1587,7 +1661,9 @@ export class StorageScreen {
         cardEl.appendChild(lvBadge);
         cardEl.appendChild(canvas);
 
-        cardEl.title = `Kéo thả vào ô chiêu thức bên trái để trang bị ${entry.move.nameVi || entry.move.name}`;
+        cardEl.title = isTm
+          ? `Chiêu đã học qua TM: ${entry.move.nameVi || entry.move.name} (Kéo thả để trang bị miễn phí)`
+          : `Kéo thả vào ô chiêu thức bên trái để trang bị ${entry.move.nameVi || entry.move.name}`;
 
         // Pointer-based Drag & Drop (matching storage-party-slot and storage-grid-slot)
         this.attachMovePointerDrag(cardEl, 'pool', entry.move, undefined, pokemon);
@@ -1880,6 +1956,10 @@ export class StorageScreen {
   }
 
   private closeSummaryModal(): void {
+    if (this.summaryKeyListener) {
+      window.removeEventListener('keydown', this.summaryKeyListener);
+      this.summaryKeyListener = null;
+    }
     this.hideMoveDetailPopup();
     this.removeMoveDragGhost();
     this.clearMoveDragOver();

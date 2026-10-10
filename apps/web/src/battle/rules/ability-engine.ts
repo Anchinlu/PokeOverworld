@@ -16,6 +16,7 @@ import {
   clearStatusCondition,
   STAT_NAME_VI,
 } from '../state/battle-state-reducer';
+import { HeldItemEngine } from './held-item-engine';
 
 export const ABILITY_NAMES_VI: Record<string, string> = {
   overgrow: 'Tươi Tốt',
@@ -512,8 +513,12 @@ export class AbilityEngine {
     // 5. Weather switch-in abilities
     if (environment) {
       if (key === 'drizzle' && environment.weather?.type !== 'rain') {
-        environment.weather = { type: 'rain', turnsLeft: 5 };
-        const msg = `${pokemon.name} kích hoạt [${nameVi}] làm cơn mưa bắt đầu rơi!`;
+        const turns = HeldItemEngine.getWeatherDuration('rain', pokemon.heldItem);
+        environment.weather = { type: 'rain', turnsLeft: turns };
+        let msg = `${pokemon.name} kích hoạt [${nameVi}] làm cơn mưa bắt đầu rơi!`;
+        if (turns === 8) {
+          msg += ' [Đá Ẩm Ướt] đã kéo dài cơn mưa lên 8 lượt!';
+        }
         messages.push(msg);
         events.push(
           BattleEventFactory.abilityTriggered(
@@ -526,8 +531,12 @@ export class AbilityEngine {
           )
         );
       } else if (key === 'drought' && environment.weather?.type !== 'sun') {
-        environment.weather = { type: 'sun', turnsLeft: 5 };
-        const msg = `${pokemon.name} kích hoạt [${nameVi}] làm ánh mặt trời trở nên gay gắt!`;
+        const turns = HeldItemEngine.getWeatherDuration('sun', pokemon.heldItem);
+        environment.weather = { type: 'sun', turnsLeft: turns };
+        let msg = `${pokemon.name} kích hoạt [${nameVi}] làm ánh mặt trời trở nên gay gắt!`;
+        if (turns === 8) {
+          msg += ' [Đá Tỏa Nhiệt] đã kéo dài thời gian nắng lên 8 lượt!';
+        }
         messages.push(msg);
         events.push(
           BattleEventFactory.abilityTriggered(
@@ -540,8 +549,12 @@ export class AbilityEngine {
           )
         );
       } else if (key === 'sandstream' && environment.weather?.type !== 'sandstorm') {
-        environment.weather = { type: 'sandstorm', turnsLeft: 5 };
-        const msg = `${pokemon.name} kích hoạt [${nameVi}] làm bão cát nổi lên dữ dội!`;
+        const turns = HeldItemEngine.getWeatherDuration('sandstorm', pokemon.heldItem);
+        environment.weather = { type: 'sandstorm', turnsLeft: turns };
+        let msg = `${pokemon.name} kích hoạt [${nameVi}] làm bão cát nổi lên dữ dội!`;
+        if (turns === 8) {
+          msg += ' [Đá Mịn Màng] đã kéo dài bão cát lên 8 lượt!';
+        }
         messages.push(msg);
         events.push(
           BattleEventFactory.abilityTriggered(
@@ -554,8 +567,12 @@ export class AbilityEngine {
           )
         );
       } else if (key === 'snowwarning' && environment.weather?.type !== 'hail') {
-        environment.weather = { type: 'hail', turnsLeft: 5 };
-        const msg = `${pokemon.name} kích hoạt [${nameVi}] làm mưa tuyết bắt đầu rơi!`;
+        const turns = HeldItemEngine.getWeatherDuration('hail', pokemon.heldItem);
+        environment.weather = { type: 'hail', turnsLeft: turns };
+        let msg = `${pokemon.name} kích hoạt [${nameVi}] làm mưa tuyết bắt đầu rơi!`;
+        if (turns === 8) {
+          msg += ' [Đá Băng Giá] đã kéo dài thời gian tuyết rơi lên 8 lượt!';
+        }
         messages.push(msg);
         events.push(
           BattleEventFactory.abilityTriggered(
@@ -571,8 +588,12 @@ export class AbilityEngine {
 
       // 6. Terrain switch-in abilities
       if (key === 'electricsurge' && environment.terrain?.type !== 'electric') {
-        environment.terrain = { type: 'electric', turnsLeft: 5 };
-        const msg = `${pokemon.name} kích hoạt [${nameVi}] làm điện trường bao phủ mặt đất!`;
+        const turns = HeldItemEngine.getTerrainDuration(pokemon.heldItem);
+        environment.terrain = { type: 'electric', turnsLeft: turns };
+        let msg = `${pokemon.name} kích hoạt [${nameVi}] làm điện trường bao phủ mặt đất!`;
+        if (turns === 8) {
+          msg += ' [Dụng Cụ Mở Rộng] đã kéo dài địa hình điện lên 8 lượt!';
+        }
         messages.push(msg);
         events.push(
           BattleEventFactory.abilityTriggered(
@@ -585,8 +606,12 @@ export class AbilityEngine {
           )
         );
       } else if (key === 'grassysurge' && environment.terrain?.type !== 'grassy') {
-        environment.terrain = { type: 'grassy', turnsLeft: 5 };
-        const msg = `${pokemon.name} kích hoạt [${nameVi}] làm thảm cỏ xanh tươi tốt mọc lên!`;
+        const turns = HeldItemEngine.getTerrainDuration(pokemon.heldItem);
+        environment.terrain = { type: 'grassy', turnsLeft: turns };
+        let msg = `${pokemon.name} kích hoạt [${nameVi}] làm thảm cỏ xanh tươi tốt mọc lên!`;
+        if (turns === 8) {
+          msg += ' [Dụng Cụ Mở Rộng] đã kéo dài địa hình cỏ lên 8 lượt!';
+        }
         messages.push(msg);
         events.push(
           BattleEventFactory.abilityTriggered(
@@ -599,8 +624,12 @@ export class AbilityEngine {
           )
         );
       } else if (key === 'mistysurge' && environment.terrain?.type !== 'misty') {
-        environment.terrain = { type: 'misty', turnsLeft: 5 };
-        const msg = `${pokemon.name} kích hoạt [${nameVi}] làm sương mù giăng kín mặt đất!`;
+        const turns = HeldItemEngine.getTerrainDuration(pokemon.heldItem);
+        environment.terrain = { type: 'misty', turnsLeft: turns };
+        let msg = `${pokemon.name} kích hoạt [${nameVi}] làm sương mù giăng kín mặt đất!`;
+        if (turns === 8) {
+          msg += ' [Dụng Cụ Mở Rộng] đã kéo dài địa hình sương mù lên 8 lượt!';
+        }
         messages.push(msg);
         events.push(
           BattleEventFactory.abilityTriggered(
@@ -613,8 +642,12 @@ export class AbilityEngine {
           )
         );
       } else if (key === 'psychicsurge' && environment.terrain?.type !== 'psychic') {
-        environment.terrain = { type: 'psychic', turnsLeft: 5 };
-        const msg = `${pokemon.name} kích hoạt [${nameVi}] làm trường tâm linh bao phủ mặt đất!`;
+        const turns = HeldItemEngine.getTerrainDuration(pokemon.heldItem);
+        environment.terrain = { type: 'psychic', turnsLeft: turns };
+        let msg = `${pokemon.name} kích hoạt [${nameVi}] làm trường tâm linh bao phủ mặt đất!`;
+        if (turns === 8) {
+          msg += ' [Dụng Cụ Mở Rộng] đã kéo dài địa hình tâm linh lên 8 lượt!';
+        }
         messages.push(msg);
         events.push(
           BattleEventFactory.abilityTriggered(

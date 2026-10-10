@@ -27,14 +27,44 @@ describe('Advanced Battle Mechanics & Move Engine (Step 5)', () => {
       // Turn 1: Charge
       const res1 = engine.executeAttack(player, enemy, solarBeam);
       expect(res1.damage).toBe(0);
+      expect(res1.isCharging).toBe(true);
       expect(player.chargingMove).toBeDefined();
       expect(res1.message).toContain('đang hấp thụ ánh sáng mặt trời');
 
       // Turn 2: Strike
       const res2 = engine.executeAttack(player, enemy, solarBeam);
       expect(res2.damage).toBeGreaterThan(0);
+      expect(res2.isCharging).toBeFalsy();
       expect(player.chargingMove).toBeUndefined();
       expect(res2.message).toContain('sử dụng Tia Sáng Mặt Trời');
+    });
+
+    it('Solar Beam strikes in a single turn without charging under Sunny weather', () => {
+      const sunnyEnv = {
+        ...env,
+        weather: { type: 'sun' as const, turnsLeft: 5 },
+      };
+      const player = createBattler('BULBASAUR', 50, true);
+      const enemy = createBattler('PIDGEY', 50, false);
+      const engine = new BattleEngine(player, enemy, sunnyEnv);
+
+      const solarBeam: BattleMove = {
+        id: 'solar_beam',
+        name: 'Solar Beam (Tia Sáng Mặt Trời)',
+        nameVi: 'Tia Sáng Mặt Trời',
+        type: 'Grass',
+        category: 'special',
+        power: 120,
+        accuracy: 100,
+        pp: 10,
+        maxPp: 10,
+        description: 'Lượt 1 nạp năng lượng mặt trời, lượt 2 phóng đòn.',
+      };
+
+      const res = engine.executeAttack(player, enemy, solarBeam);
+      expect(res.isCharging).toBeFalsy();
+      expect(player.chargingMove).toBeUndefined();
+      expect(res.damage).toBeGreaterThan(0);
     });
 
     it('Skull Bash raises Defense on turn 1 and strikes on turn 2', () => {
@@ -58,11 +88,70 @@ describe('Advanced Battle Mechanics & Move Engine (Step 5)', () => {
       const prevDefStage = player.statStages?.defense ?? 0;
       const res1 = engine.executeAttack(player, enemy, skullBash);
       expect(res1.damage).toBe(0);
+      expect(res1.isCharging).toBe(true);
       expect(player.statStages?.defense).toBe(prevDefStage + 1);
       expect(res1.message).toContain('thu đầu vào');
 
       const res2 = engine.executeAttack(player, enemy, skullBash);
       expect(res2.damage).toBeGreaterThan(0);
+      expect(res2.isCharging).toBeFalsy();
+    });
+
+    it('Meteor Beam raises Sp. Atk on turn 1 and strikes on turn 2', () => {
+      const player = createBattler('OMASTAR', 50, true);
+      const enemy = createBattler('PIDGEY', 50, false);
+      const engine = new BattleEngine(player, enemy, env);
+
+      const meteorBeam: BattleMove = {
+        id: 'meteor_beam',
+        name: 'Meteor Beam',
+        nameVi: 'Chùm Thiên Thạch',
+        type: 'Rock',
+        category: 'special',
+        power: 120,
+        accuracy: 90,
+        pp: 10,
+        maxPp: 10,
+        description: 'Lượt 1 tích tụ năng lượng tăng SpA, lượt 2 tấn công.',
+      };
+
+      const prevSpAtk = player.statStages?.spAtk ?? 0;
+      const res1 = engine.executeAttack(player, enemy, meteorBeam);
+      expect(res1.damage).toBe(0);
+      expect(res1.isCharging).toBe(true);
+      expect(player.statStages?.spAtk).toBe(prevSpAtk + 1);
+
+      const res2 = engine.executeAttack(player, enemy, meteorBeam);
+      expect(res2.damage).toBeGreaterThan(0);
+      expect(res2.isCharging).toBeFalsy();
+    });
+
+    it('Electro Shot strikes in 1 turn under Rain without charging', () => {
+      const rainEnv = {
+        ...env,
+        weather: { type: 'rain' as const, turnsLeft: 5 },
+      };
+      const player = createBattler('ARCHALUDON', 50, true);
+      const enemy = createBattler('PIDGEY', 50, false);
+      const engine = new BattleEngine(player, enemy, rainEnv);
+
+      const electroShot: BattleMove = {
+        id: 'electro_shot',
+        name: 'Electro Shot',
+        nameVi: 'Bắn Điện',
+        type: 'Electric',
+        category: 'special',
+        power: 130,
+        accuracy: 100,
+        pp: 10,
+        maxPp: 10,
+        description: 'Tích tụ điện hoặc bắn ngay trong mưa.',
+      };
+
+      const res = engine.executeAttack(player, enemy, electroShot);
+      expect(res.isCharging).toBeFalsy();
+      expect(player.chargingMove).toBeUndefined();
+      expect(res.damage).toBeGreaterThan(0);
     });
 
     it('Fly grants semi-invulnerability on turn 1 dodging normal moves, and lands on turn 2', () => {
@@ -510,7 +599,7 @@ describe('Advanced Battle Mechanics & Move Engine (Step 5)', () => {
           type: 'Fighting',
           category: 'physical',
           power: 10,
-          accuracy: 90,
+          accuracy: 100,
           pp: 10,
           maxPp: 10,
           description: 'Kicks 3 times',
@@ -521,7 +610,7 @@ describe('Advanced Battle Mechanics & Move Engine (Step 5)', () => {
           type: 'Ice',
           category: 'physical',
           power: 20,
-          accuracy: 90,
+          accuracy: 100,
           pp: 10,
           maxPp: 10,
           description: 'Triple spinning kick',
@@ -532,7 +621,7 @@ describe('Advanced Battle Mechanics & Move Engine (Step 5)', () => {
           type: 'Water',
           category: 'physical',
           power: 30,
-          accuracy: 95,
+          accuracy: 100,
           pp: 10,
           maxPp: 10,
           description: 'Hits target 3 times in rapid succession',
@@ -552,4 +641,3 @@ describe('Advanced Battle Mechanics & Move Engine (Step 5)', () => {
     });
   });
 });
-

@@ -270,15 +270,17 @@ export class DebugOverlayController {
       });
     });
 
-    // Battle trigger (standard test battle)
     const btnTestBattle = this.overlayEl.querySelector<HTMLButtonElement>('#btnTestBattle');
     const selectBattleShiny = this.overlayEl.querySelector<HTMLSelectElement>('#selectBattleShiny');
     const selectBattleOverlay =
       this.overlayEl.querySelector<HTMLSelectElement>('#selectBattleOverlay');
+    const selectBattleWeather =
+      this.overlayEl.querySelector<HTMLSelectElement>('#selectBattleWeather');
     btnTestBattle?.addEventListener('click', () => {
       const overlay = selectBattleOverlay?.value || 'auto';
       const isShiny = selectBattleShiny?.value === 'shiny';
-      this.bridge.startTestBattle(overlay, isShiny);
+      const weather = selectBattleWeather?.value || 'none';
+      this.bridge.startTestBattle(overlay, isShiny, weather);
     });
 
     // Custom Bot Battle Spawner
@@ -309,9 +311,12 @@ export class DebugOverlayController {
     const selectBotMove4 = this.overlayEl.querySelector<HTMLSelectElement>('#selectBotMove4');
     const selectBattleOverlay =
       this.overlayEl.querySelector<HTMLSelectElement>('#selectBattleOverlay');
+    const selectBattleWeather =
+      this.overlayEl.querySelector<HTMLSelectElement>('#selectBattleWeather');
 
     const btnPresetFlinch = this.overlayEl.querySelector<HTMLButtonElement>('#btnPresetFlinch');
-    const btnPresetConfusion = this.overlayEl.querySelector<HTMLButtonElement>('#btnPresetConfusion');
+    const btnPresetConfusion =
+      this.overlayEl.querySelector<HTMLButtonElement>('#btnPresetConfusion');
     const btnPresetStatus = this.overlayEl.querySelector<HTMLButtonElement>('#btnPresetStatus');
     const btnPresetDamage = this.overlayEl.querySelector<HTMLButtonElement>('#btnPresetDamage');
     const btnStartBotBattle = this.overlayEl.querySelector<HTMLButtonElement>('#btnStartBotBattle');
@@ -372,6 +377,7 @@ export class DebugOverlayController {
       ].filter(Boolean) as string[];
 
       const overlay = selectBattleOverlay?.value || 'auto';
+      const weather = selectBattleWeather?.value || 'none';
 
       this.bridge.startCustomBotBattle({
         speciesKey,
@@ -380,6 +386,7 @@ export class DebugOverlayController {
         ability,
         moves,
         overlay,
+        weather,
       });
     });
   }
@@ -391,7 +398,8 @@ export class DebugOverlayController {
     const selectPartyForm = this.overlayEl.querySelector<HTMLSelectElement>('#selectPartyForm');
     const inputPartyLevel = this.overlayEl.querySelector<HTMLInputElement>('#inputPartyLevel');
 
-    const btnAddPartyPokemon = this.overlayEl.querySelector<HTMLButtonElement>('#btnAddPartyPokemon');
+    const btnAddPartyPokemon =
+      this.overlayEl.querySelector<HTMLButtonElement>('#btnAddPartyPokemon');
     const btnAddRandomPartyPokemon = this.overlayEl.querySelector<HTMLButtonElement>(
       '#btnAddRandomPartyPokemon'
     );
@@ -431,7 +439,11 @@ export class DebugOverlayController {
   private bindBagControls(): void {
     if (!this.overlayEl) return;
     const btnOpenBagDirect = this.overlayEl.querySelector<HTMLButtonElement>('#btnOpenBagDirect');
-    const btnAddStarterItems = this.overlayEl.querySelector<HTMLButtonElement>('#btnAddStarterItems');
+    const btnAddFullItems = this.overlayEl.querySelector<HTMLButtonElement>('#btnAddFullItems');
+    const btnAddAllMachines =
+      this.overlayEl.querySelector<HTMLButtonElement>('#btnAddAllMachines');
+    const btnAddStarterItems =
+      this.overlayEl.querySelector<HTMLButtonElement>('#btnAddStarterItems');
     const btnAddAllBalls = this.overlayEl.querySelector<HTMLButtonElement>('#btnAddAllBalls');
 
     const selectBagItem = this.overlayEl.querySelector<HTMLSelectElement>('#selectBagItem');
@@ -449,6 +461,14 @@ export class DebugOverlayController {
       this.bridge.openBag();
     });
 
+    btnAddFullItems?.addEventListener('click', () => {
+      this.bridge.addFullItems();
+    });
+
+    btnAddAllMachines?.addEventListener('click', () => {
+      this.bridge.addAllMachines();
+    });
+
     btnAddStarterItems?.addEventListener('click', () => {
       this.bridge.addStarterItems();
     });
@@ -460,7 +480,10 @@ export class DebugOverlayController {
     btnAddCustomBagItem?.addEventListener('click', () => {
       const itemId = selectBagItem?.value;
       if (!itemId) return;
-      const count = Math.max(1, Math.min(999, parseInt(inputBagItemCount?.value || '10', 10) || 10));
+      const count = Math.max(
+        1,
+        Math.min(999, parseInt(inputBagItemCount?.value || '10', 10) || 10)
+      );
       this.bridge.addItemToBag(itemId, count);
       const itemDef = getItemById(itemId) || findItem(itemId);
       const itemName = itemDef?.nameVi || itemDef?.name || itemId;
@@ -606,7 +629,9 @@ export class DebugOverlayController {
     for (const fn of this.cleanupFns) {
       try {
         fn();
-      } catch {}
+      } catch {
+        // Ignore cleanup error
+      }
     }
     this.cleanupFns = [];
     if (this.overlayEl) {

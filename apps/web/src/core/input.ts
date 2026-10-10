@@ -52,16 +52,20 @@ export class InputManager {
 
   /** Clean up event listeners. */
   public destroy(): void {
-    window.removeEventListener('keydown', this.handleKeyDown);
-    window.removeEventListener('keyup', this.handleKeyUp);
-    window.removeEventListener('blur', this.handleBlur);
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('keydown', this.handleKeyDown);
+      window.removeEventListener('keyup', this.handleKeyUp);
+      window.removeEventListener('blur', this.handleBlur);
+    }
     this.actionListeners = [];
   }
 
   private attachListeners(): void {
-    window.addEventListener('keydown', this.handleKeyDown);
-    window.addEventListener('keyup', this.handleKeyUp);
-    window.addEventListener('blur', this.handleBlur);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('keydown', this.handleKeyDown);
+      window.addEventListener('keyup', this.handleKeyUp);
+      window.addEventListener('blur', this.handleBlur);
+    }
   }
 
   private handleKeyDown = (e: KeyboardEvent): void => {

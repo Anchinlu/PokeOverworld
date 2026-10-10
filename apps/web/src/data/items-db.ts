@@ -1,4 +1,5 @@
 import rawItemsData from '@pokemon/game-data/items-db.json';
+import { getItemEffectDef } from '../domain/inventory/item-catalog-effects';
 
 export interface ItemData {
   id: string;
@@ -26,7 +27,12 @@ export function getAllItems(): ItemData[] {
 }
 
 export function getItemById(id: string): ItemData | undefined {
-  return ITEMS_DB[id];
+  if (!id) return undefined;
+  return (
+    ITEMS_DB[id] ||
+    ITEMS_DB[id.toLowerCase()] ||
+    ITEMS_DB[id.toLowerCase().replace(/_/g, '-')]
+  );
 }
 
 export interface BagPocketDef {
@@ -165,11 +171,14 @@ const GENERAL_HOLDABLE_SLUGS = new Set([
  */
 export function isHoldableItem(item?: ItemData | null): boolean {
   if (!item) return false;
+  const slug = (item.slug || item.id || '').toLowerCase().replace(/_/g, '-');
+  if (slug.endsWith('-mint')) {
+    return false;
+  }
   const cat = (item.category || '').toLowerCase();
   if (cat === 'hold' || cat === 'berries' || cat === 'berry' || cat === 'mail') {
     return true;
   }
-  const slug = (item.slug || item.id || '').toLowerCase().replace(/_/g, '-');
   if (GENERAL_HOLDABLE_SLUGS.has(slug)) {
     return true;
   }
@@ -193,6 +202,10 @@ export function isHoldableItem(item?: ItemData | null): boolean {
  */
 export function isUsableItem(item?: ItemData | null): boolean {
   if (!item) return false;
+  const slug = (item.slug || item.id || '').toLowerCase().replace(/_/g, '-');
+  if (getItemEffectDef(slug)) {
+    return true;
+  }
   const cat = (item.category || '').toLowerCase();
   if (
     cat === 'medicine' ||
@@ -208,9 +221,12 @@ export function isUsableItem(item?: ItemData | null): boolean {
   ) {
     return true;
   }
-  const slug = (item.slug || item.id || '').toLowerCase().replace(/_/g, '-');
   if (
     slug.endsWith('-stone') ||
+    slug.endsWith('-mint') ||
+    slug.endsWith('-flute') ||
+    slug.includes('bottle-cap') ||
+    slug.startsWith('ability-') ||
     slug === 'black-augurite' ||
     slug === 'auspicious-armor' ||
     slug === 'malicious-armor' ||

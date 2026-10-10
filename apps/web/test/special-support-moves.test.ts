@@ -1,6 +1,10 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { BattleEngine } from '../src/battle/battle-engine';
 import { FixedSequenceRng } from '../src/battle/battle-rng';
+import { PartyScreen } from '../src/ui/party-screen';
+import { partyService } from '../src/domain/party/party-service';
+import { BattleState } from '../src/battle/battle-state';
+import { BattleController } from '../src/battle/battle-controller';
 import type {
   BattlerPokemon,
   BattleMove,
@@ -398,7 +402,11 @@ describe('Special Support Moves', () => {
     const env = createMockEnvironment();
     const rng = new FixedSequenceRng([0.99, 1.0, 0]);
 
-    const awakePlayer = createMockBattler({ name: 'Snorlax', status: 'none', moves: [snore, sleepTalk] });
+    const awakePlayer = createMockBattler({
+      name: 'Snorlax',
+      status: 'none',
+      moves: [snore, sleepTalk],
+    });
     const enemy = createMockBattler({ name: 'Machamp' });
     const engine = new BattleEngine(awakePlayer, enemy, env, rng);
 
@@ -514,4 +522,115 @@ describe('Special Support Moves', () => {
     expect(vsRes.damage).toBeGreaterThan(0);
     expect(vsRes.mustSwitch).toBe(true);
   });
+
+  it('BattleController triggers interactive switch and transfers baton pass data upon using Baton Pass', () => {
+    const p1 = {
+      uid: 'ninjask-123',
+      id: 1,
+      name: 'Ninjask',
+      speciesKey: 'NINJASK',
+      level: 50,
+      currentHp: 150,
+      maxHp: 150,
+      types: ['Bug', 'Flying'],
+      moves: [
+        {
+          id: 'baton_pass',
+          name: 'Baton Pass',
+          type: 'Normal',
+          category: 'status',
+          power: 0,
+          accuracy: 100,
+          pp: 40,
+          maxPp: 40,
+        },
+      ],
+      stats: { hp: 150, attack: 100, defense: 100, spAtk: 100, spDef: 100, speed: 200, total: 750 },
+    } as any;
+
+    const p2 = {
+      uid: 'marowak-456',
+      id: 2,
+      name: 'Marowak',
+      speciesKey: 'MAROWAK',
+      level: 50,
+      currentHp: 160,
+      maxHp: 160,
+      types: ['Ground'],
+      moves: [],
+      stats: { hp: 160, attack: 120, defense: 140, spAtk: 80, spDef: 100, speed: 80, total: 680 },
+    } as any;
+
+    (partyService as any).state.pokemon = [p1, p2];
+
+    const party = partyService.getParty();
+    const ninjaskBattler = createMockBattler({
+      name: 'Ninjask',
+      uid: party[0].uid,
+      statStages: { attack: 2, defense: 0, spAtk: 0, spDef: 0, speed: 4, accuracy: 0, evasion: 0 },
+      hasAquaRing: true,
+      moves: [
+        {
+          id: 'baton_pass',
+          name: 'Baton Pass',
+          type: 'Normal',
+          category: 'status',
+          power: 0,
+          accuracy: 100,
+          pp: 40,
+          maxPp: 40,
+          description: 'Passes stat changes to replacement.',
+        },
+      ],
+    });
+    const enemyBattler = createMockBattler({ name: 'Golem' });
+    const engine = new BattleEngine(
+      ninjaskBattler,
+      enemyBattler,
+      createMockEnvironment(),
+      new FixedSequenceRng([0.5])
+    );
+    const state = new BattleState(engine.rng);
+    const mockCanvas: any = {
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      getBoundingClientRect: () => ({ left: 0, top: 0, width: 512, height: 384 }),
+    };
+
+    let selectCallback: ((pk: any) => void) | undefined;
+    const fakePartyScreen = {
+      openForBattleSelect: vi.fn((opts: any) => {
+        selectCallback = opts.onSelect;
+      }),
+    };
+    const getInstanceSpy = vi
+      .spyOn(PartyScreen, 'getInstance')
+      .mockReturnValue(fakePartyScreen as any);
+
+    const controller = new BattleController(state, engine, mockCanvas, () => {});
+    vi.spyOn(controller, 'queueMessage').mockImplementation((_msg, _mode, onFinish) => {
+      onFinish?.();
+    });
+
+    // Execute Baton Pass
+    const move = ninjaskBattler.moves[0];
+    (controller as any).handlePlayerMove(move);
+
+    // Verify Party selection was opened!
+    expect(fakePartyScreen.openForBattleSelect).toHaveBeenCalled();
+    expect(selectCallback).toBeDefined();
+
+    // Player selects Marowak from party
+    selectCallback!(party[1]);
+
+    // Active Pokémon should now be Marowak with Baton Pass inherited stats!
+    expect(engine.playerPokemon.name).toBe('Marowak');
+    expect(engine.playerPokemon.statStages?.speed).toBe(4);
+    expect(engine.playerPokemon.statStages?.attack).toBe(2);
+    expect(engine.playerPokemon.hasAquaRing).toBe(true);
+
+    getInstanceSpy.mockRestore();
+    controller.destroy();
+  });
 });
+

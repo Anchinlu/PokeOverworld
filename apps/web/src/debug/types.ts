@@ -5,6 +5,7 @@ export interface CustomBotConfig {
   ability?: string;
   moves?: string[];
   overlay?: string;
+  weather?: string;
 }
 
 export interface DebugMonitorUpdate {
@@ -25,13 +26,15 @@ export interface DebugMonitorUpdate {
  */
 export interface DebugBridge {
   // Battle & Custom Bot Spawner
-  startTestBattle(overlay?: string, isShiny?: boolean): void;
+  startTestBattle(overlay?: string, isShiny?: boolean, weather?: string): void;
   startCustomBotBattle(config: CustomBotConfig): void;
 
   // Bag & Items
   addItemToBag(itemId: string, count: number): void;
   addStarterItems(): void;
   addAllBalls(): void;
+  addAllMachines(): void;
+  addFullItems(): void;
   openBag(): void;
 
   // Party Management

@@ -16,11 +16,7 @@ import {
   getStatMultiplier,
 } from '../state/battle-state-reducer';
 
-import {
-  HeldItemEngine,
-  normalizeHeldItemKey,
-  getHeldItemDisplayName,
-} from './held-item-engine';
+import { HeldItemEngine } from './held-item-engine';
 import { AbilityEngine } from './ability-engine';
 // Environment rules (weather & terrain integration)
 import {
@@ -98,10 +94,7 @@ export function getStatusImmunity(
  * Calculates self-inflicted confusion damage using official Gen 7 mechanics:
  * 40 Power physical neutral attack against user's own Attack and Defense.
  */
-export function calculateConfusionSelfDamage(
-  attacker: BattlerPokemon,
-  rng: BattleRng
-): number {
+export function calculateConfusionSelfDamage(attacker: BattlerPokemon, rng: BattleRng): number {
   ensureBattlerState(attacker);
   const level = attacker.level;
   const atkStage = attacker.statStages?.attack ?? 0;
@@ -131,23 +124,14 @@ export function checkPreTurnStatus(
   let statusPrefix = '';
 
   // 0. Check Status Curing Berry (Cheri, Chesto, Pecha, Rawst, Aspear, Lum, Persim)
-  const heldKey = normalizeHeldItemKey(attacker.heldItem);
-  if (
-    (heldKey === 'persim-berry' || heldKey === 'lum-berry') &&
-    (attacker.confusionTurns ?? 0) > 0
-  ) {
-    const itemName = getHeldItemDisplayName(attacker.heldItem);
-    attacker.heldItem = null;
-    attacker.confusionTurns = 0;
-    const cureMsg = `${attacker.name} đã ăn quả ${itemName} và chữa khỏi trạng thái bối rối! `;
-    events.push(BattleEventFactory.statusCured(attackerSide, attacker.name, 'confusion', cureMsg));
-    statusPrefix += cureMsg;
-  }
-
   const berryCureEvents = HeldItemEngine.checkStatusTriggeredBerry(attacker, attackerSide);
   if (berryCureEvents.length > 0) {
     events.push(...berryCureEvents);
-    statusPrefix += `${berryCureEvents[0].message ?? ''} `;
+    for (const ev of berryCureEvents) {
+      if (ev.message) {
+        statusPrefix += `${ev.message} `;
+      }
+    }
   }
 
   // 1. Sleep handling
@@ -545,11 +529,20 @@ export function processEndTurnEffects(
     }
   }
 
-  // Held item end-of-turn effects (Leftovers, Black Sludge, Pinch Berries)
+  // Held item end-of-turn effects (Leftovers, Black Sludge, Flame Orb, Toxic Orb, Pinch Berries)
   if (!defenderFainted && target.currentHp > 0) {
     const heldItemEvents = HeldItemEngine.processEndTurnHeldItem(target, targetSide);
     if (heldItemEvents.length > 0) {
       events.push(...heldItemEvents);
+      for (const ev of heldItemEvents) {
+        if (ev.message) {
+          messageText = messageText ? `${messageText} ${ev.message}` : ev.message;
+        }
+      }
+      if (target.currentHp <= 0) {
+        defenderFainted = true;
+        target.isFainted = true;
+      }
     }
   }
 

@@ -20,8 +20,8 @@ import {
 import { getStatusImmunity } from './status-engine';
 import { AbilityEngine } from './ability-engine';
 import { getWeatherAccuracyOverride } from './environment';
-import { getSideHazards } from './hazard-engine';
-import { consumeBerry, isBerryItem, getHeldItemDisplayName } from './held-item-engine';
+import { getSideHazards, getSideScreens } from './hazard-engine';
+import { consumeBerry, isBerryItem, getHeldItemDisplayName, HeldItemEngine } from './held-item-engine';
 
 export const SOUND_BASED_MOVE_IDS = new Set([
   'growl',
@@ -85,6 +85,8 @@ export const PROTECT_MOVE_IDS = new Set([
 export const TWO_TURN_MOVE_IDS = new Set([
   'solar_beam',
   'solarbeam',
+  'solar_blade',
+  'solarblade',
   'skull_bash',
   'fly',
   'dig',
@@ -95,6 +97,11 @@ export const TWO_TURN_MOVE_IDS = new Set([
   'shadow_force',
   'phantom_force',
   'geomancy',
+  'freeze_shock',
+  'ice_burn',
+  'meteor_beam',
+  'electro_shot',
+  'electroshot',
 ]);
 
 /** Move IDs that can cause target to flinch, with base chances */
@@ -251,13 +258,36 @@ export function handleTwoTurnMoveCharge(
     let chargeMsg = '';
     let stance: 'flying' | 'underground' | 'underwater' | 'high' | undefined = undefined;
 
-    if (moveId === 'solar_beam' || moveId === 'solarbeam') {
-      // In sun, Solar Beam fires in a single turn without charging
+    if (
+      moveId === 'solar_beam' ||
+      moveId === 'solarbeam' ||
+      moveId === 'solar_blade' ||
+      moveId === 'solarblade'
+    ) {
+      // In sun, Solar Beam and Solar Blade fire in a single turn without charging
       if (environment?.weather?.type === 'sun') {
         return { isCharging: false };
       }
       attacker.chargingMove = { move, turn: 1 };
       chargeMsg = `${attacker.name} đang hấp thụ ánh sáng mặt trời!`;
+    } else if (moveId === 'electro_shot' || moveId === 'electroshot') {
+      // In rain, Electro Shot fires in a single turn without charging
+      if (environment?.weather?.type === 'rain') {
+        return { isCharging: false };
+      }
+      attacker.chargingMove = { move, turn: 1 };
+      const change = applyStatStageChange(attacker, 'spAtk', 1);
+      chargeMsg = `${attacker.name} đang tích tụ điện tích cực mạnh! Công ĐB của ${attacker.name} tăng lên!`;
+      events.push(
+        BattleEventFactory.statStageChanged(
+          attackerSide,
+          attacker.name,
+          'spAtk',
+          change,
+          attacker.statStages!.spAtk,
+          `Công ĐB của ${attacker.name} tăng lên!`
+        )
+      );
     } else if (moveId === 'skull_bash') {
       attacker.chargingMove = { move, turn: 1 };
       const change = applyStatStageChange(attacker, 'defense', 1);
@@ -272,6 +302,26 @@ export function handleTwoTurnMoveCharge(
           `Phòng thủ của ${attacker.name} tăng lên!`
         )
       );
+    } else if (moveId === 'meteor_beam') {
+      attacker.chargingMove = { move, turn: 1 };
+      const change = applyStatStageChange(attacker, 'spAtk', 1);
+      chargeMsg = `${attacker.name} tràn ngập năng lượng vũ trụ! Công ĐB của ${attacker.name} tăng lên!`;
+      events.push(
+        BattleEventFactory.statStageChanged(
+          attackerSide,
+          attacker.name,
+          'spAtk',
+          change,
+          attacker.statStages!.spAtk,
+          `Công ĐB của ${attacker.name} tăng lên!`
+        )
+      );
+    } else if (moveId === 'freeze_shock') {
+      attacker.chargingMove = { move, turn: 1 };
+      chargeMsg = `${attacker.name} bị bao phủ bởi dòng điện đóng băng!`;
+    } else if (moveId === 'ice_burn') {
+      attacker.chargingMove = { move, turn: 1 };
+      chargeMsg = `${attacker.name} bị bao phủ bởi ngọn lửa băng giá!`;
     } else if (moveId === 'fly') {
       stance = 'flying';
       attacker.chargingMove = { move, turn: 1, semiInvulnerable: 'flying' };
@@ -458,6 +508,149 @@ export function applyStatusCategoryMove(
       attacker.safeguardTurns = 5;
       extraMsg += ` Màn Hộ Thể huyền bí bao bọc phe của ${attacker.name}!`;
     }
+  } else if (moveId === 'mist') {
+    const screens = getSideScreens(environment, attackerSide);
+    if ((screens.mistTurns ?? 0) > 0) {
+      extraMsg += ` Nhưng Màn Sương Trắng đã bao bọc phe này rồi!`;
+    } else {
+      screens.mistTurns = 5;
+      extraMsg += ` Màn Sương Trắng bao bọc phe của ${attacker.name}, ngăn chặn đối thủ giảm chỉ số!`;
+    }
+  } else if (moveId === 'reflect') {
+    const screens = getSideScreens(environment, attackerSide);
+    if ((screens.reflectTurns ?? 0) > 0) {
+      extraMsg += ` Nhưng Phản Chiếu đã bảo vệ phe này rồi!`;
+    } else {
+      screens.reflectTurns = 5;
+      extraMsg += ` Bức tường Phản Chiếu được dựng lên, giảm một nửa sát thương vật lý cho phe của ${attacker.name}!`;
+    }
+  } else if (moveId === 'light_screen') {
+    const screens = getSideScreens(environment, attackerSide);
+    if ((screens.lightScreenTurns ?? 0) > 0) {
+      extraMsg += ` Nhưng Màn Ánh Sáng đã bảo vệ phe này rồi!`;
+    } else {
+      screens.lightScreenTurns = 5;
+      extraMsg += ` Bức tường Màn Ánh Sáng được dựng lên, giảm một nửa sát thương đặc biệt cho phe của ${attacker.name}!`;
+    }
+  } else if (moveId === 'tailwind') {
+    const screens = getSideScreens(environment, attackerSide);
+    if ((screens.tailwindTurns ?? 0) > 0) {
+      extraMsg += ` Nhưng Gió Thuận đã thổi ở phe này rồi!`;
+    } else {
+      screens.tailwindTurns = 4;
+      extraMsg += ` Luồng gió thuận thổi mạnh sau lưng phe của ${attacker.name}, nhân đôi Tốc độ trong 4 lượt!`;
+    }
+  } else if (moveId === 'focus_energy') {
+    attacker.critStage = (attacker.critStage ?? 0) + 2;
+    extraMsg += ` ${attacker.name} tập trung cao độ, tỉ lệ đánh chí mạng tăng mạnh!`;
+  } else if (moveId === 'substitute') {
+    const cost = Math.floor(attacker.maxHp * 0.25);
+    if ((attacker.substituteHp ?? 0) > 0) {
+      extraMsg += ` Nhưng ${attacker.name} đã có hình nhân thế thân rồi!`;
+    } else if (attacker.currentHp <= cost) {
+      extraMsg += ` Nhưng thất bại! HP không đủ để tạo hình nhân thế thân!`;
+    } else {
+      attacker.currentHp -= cost;
+      attacker.substituteHp = cost;
+      extraMsg += ` ${attacker.name} hi sinh một phần HP để tạo ra hình nhân thế thân!`;
+      events.push(
+        BattleEventFactory.damageDealt(
+          attackerSide,
+          attacker.name,
+          cost,
+          attacker.currentHp,
+          attacker.maxHp,
+          1.0,
+          false,
+          1,
+          ''
+        )
+      );
+    }
+  } else if (moveId === 'endure') {
+    attacker.isEndured = true;
+    extraMsg += ` ${attacker.name} gồng mình chuẩn bị chịu đựng đòn đánh!`;
+  } else if (moveId === 'stockpile') {
+    const count = attacker.stockpileCount ?? 0;
+    if (count >= 3) {
+      extraMsg += ` Nhưng ${attacker.name} không thể tích trữ thêm được nữa (đã đạt tối đa 3 lần)!`;
+    } else {
+      attacker.stockpileCount = count + 1;
+      const defChange = applyStatStageChange(attacker, 'defense', 1);
+      const spDefChange = applyStatStageChange(attacker, 'spDef', 1);
+      extraMsg += ` ${attacker.name} đã tích trữ năng lượng (Lần ${attacker.stockpileCount}/3)! Chỉ số Phòng thủ và Thủ ĐB tăng lên!`;
+      events.push(
+        BattleEventFactory.statStageChanged(
+          attackerSide,
+          attacker.name,
+          'defense',
+          defChange,
+          attacker.statStages!.defense,
+          `Phòng thủ của ${attacker.name} tăng lên!`
+        ),
+        BattleEventFactory.statStageChanged(
+          attackerSide,
+          attacker.name,
+          'spDef',
+          spDefChange,
+          attacker.statStages!.spDef,
+          `Thủ ĐB của ${attacker.name} tăng lên!`
+        )
+      );
+    }
+  } else if (moveId === 'swallow') {
+    const count = attacker.stockpileCount ?? 0;
+    if (count <= 0) {
+      extraMsg += ` Nhưng thất bại! ${attacker.name} chưa tích trữ năng lượng nào!`;
+    } else {
+      const healRatios = [0, 0.25, 0.5, 1.0];
+      const healAmount = Math.max(1, Math.floor(attacker.maxHp * healRatios[count]));
+      const actualHealed = restoreHp(attacker, healAmount);
+      applyStatStageChange(attacker, 'defense', -count);
+      applyStatStageChange(attacker, 'spDef', -count);
+      attacker.stockpileCount = 0;
+      extraMsg += ` ${attacker.name} nuốt năng lượng đã tích trữ và hồi phục ${actualHealed} HP!`;
+      events.push(
+        BattleEventFactory.hpRestored(
+          attackerSide,
+          attacker.name,
+          actualHealed,
+          attacker.currentHp,
+          attacker.maxHp,
+          'move',
+          `${attacker.name} nuốt năng lượng và hồi phục HP!`
+        ),
+        BattleEventFactory.statStageChanged(
+          attackerSide,
+          attacker.name,
+          'defense',
+          -count,
+          attacker.statStages!.defense,
+          `Phòng thủ của ${attacker.name} trở lại bình thường!`
+        ),
+        BattleEventFactory.statStageChanged(
+          attackerSide,
+          attacker.name,
+          'spDef',
+          -count,
+          attacker.statStages!.spDef,
+          `Thủ ĐB của ${attacker.name} trở lại bình thường!`
+        )
+      );
+    }
+  } else if (moveId === 'teleport') {
+    extraMsg += ` ${attacker.name} dịch chuyển tức thời khỏi giao tranh!`;
+  } else if (moveId === 'trick_room') {
+    if (environment) {
+      if ((environment.trickRoomTurns ?? 0) > 0) {
+        environment.trickRoomTurns = 0;
+        extraMsg += ' Không gian trở lại bình thường!';
+      } else {
+        environment.trickRoomTurns = 5;
+        extraMsg +=
+          ' Không gian xung quanh bị bóp méo! Pokémon chậm hơn sẽ hành động trước trong 5 lượt!';
+      }
+    }
   } else if (moveId === 'heal_bell' || moveId === 'aromatherapy') {
     const isBell = moveId === 'heal_bell';
     const soundMsg = isBell ? 'Tiếng chuông thanh khiết' : 'Hương thơm thảo mộc';
@@ -545,29 +738,61 @@ export function applyStatusCategoryMove(
       extraMsg += ` ${attacker.name} ${verb} ${defender.name} khỏi trận đấu!`;
     }
   } else if (moveId === 'sunny_day') {
-    if (environment) environment.weather = { type: 'sun', turnsLeft: 5 };
+    const turns = HeldItemEngine.getWeatherDuration('sun', attacker.heldItem);
+    if (environment) environment.weather = { type: 'sun', turnsLeft: turns };
     extraMsg += ' Ánh nắng mặt trời trở nên gay gắt!';
+    if (turns === 8) {
+      extraMsg += ' [Đá Tỏa Nhiệt] đã kéo dài thời gian nắng lên 8 lượt!';
+    }
   } else if (moveId === 'rain_dance') {
-    if (environment) environment.weather = { type: 'rain', turnsLeft: 5 };
+    const turns = HeldItemEngine.getWeatherDuration('rain', attacker.heldItem);
+    if (environment) environment.weather = { type: 'rain', turnsLeft: turns };
     extraMsg += ' Trời bắt đầu đổ mưa rào lớn!';
+    if (turns === 8) {
+      extraMsg += ' [Đá Ẩm Ướt] đã kéo dài thời gian mưa lên 8 lượt!';
+    }
   } else if (moveId === 'sandstorm') {
-    if (environment) environment.weather = { type: 'sandstorm', turnsLeft: 5 };
+    const turns = HeldItemEngine.getWeatherDuration('sandstorm', attacker.heldItem);
+    if (environment) environment.weather = { type: 'sandstorm', turnsLeft: turns };
     extraMsg += ' Cơn bão cát dữ dội bắt đầu hoành hành!';
+    if (turns === 8) {
+      extraMsg += ' [Đá Mịn Màng] đã kéo dài thời gian bão cát lên 8 lượt!';
+    }
   } else if (moveId === 'snowscape' || moveId === 'hail') {
-    if (environment) environment.weather = { type: 'hail', turnsLeft: 5 };
+    const turns = HeldItemEngine.getWeatherDuration('hail', attacker.heldItem);
+    if (environment) environment.weather = { type: 'hail', turnsLeft: turns };
     extraMsg += ' Mưa tuyết và mưa đá bắt đầu rơi dày đặc!';
+    if (turns === 8) {
+      extraMsg += ' [Đá Băng Giá] đã kéo dài thời gian tuyết rơi lên 8 lượt!';
+    }
   } else if (moveId === 'electric_terrain') {
-    if (environment) environment.terrain = { type: 'electric', turnsLeft: 5 };
+    const turns = HeldItemEngine.getTerrainDuration(attacker.heldItem);
+    if (environment) environment.terrain = { type: 'electric', turnsLeft: turns };
     extraMsg += ' Dòng điện bao phủ khắp mặt đất!';
+    if (turns === 8) {
+      extraMsg += ' [Dụng Cụ Mở Rộng] đã kéo dài địa hình điện lên 8 lượt!';
+    }
   } else if (moveId === 'grassy_terrain') {
-    if (environment) environment.terrain = { type: 'grassy', turnsLeft: 5 };
+    const turns = HeldItemEngine.getTerrainDuration(attacker.heldItem);
+    if (environment) environment.terrain = { type: 'grassy', turnsLeft: turns };
     extraMsg += ' Thảm cỏ xanh mướt bao phủ khắp mặt đất!';
+    if (turns === 8) {
+      extraMsg += ' [Dụng Cụ Mở Rộng] đã kéo dài địa hình cỏ lên 8 lượt!';
+    }
   } else if (moveId === 'misty_terrain') {
-    if (environment) environment.terrain = { type: 'misty', turnsLeft: 5 };
+    const turns = HeldItemEngine.getTerrainDuration(attacker.heldItem);
+    if (environment) environment.terrain = { type: 'misty', turnsLeft: turns };
     extraMsg += ' Màn sương mù huyền bí bao phủ khắp mặt đất!';
+    if (turns === 8) {
+      extraMsg += ' [Dụng Cụ Mở Rộng] đã kéo dài địa hình sương mù lên 8 lượt!';
+    }
   } else if (moveId === 'psychic_terrain') {
-    if (environment) environment.terrain = { type: 'psychic', turnsLeft: 5 };
+    const turns = HeldItemEngine.getTerrainDuration(attacker.heldItem);
+    if (environment) environment.terrain = { type: 'psychic', turnsLeft: turns };
     extraMsg += ' Năng lượng tâm linh kỳ dị bao phủ khắp mặt đất!';
+    if (turns === 8) {
+      extraMsg += ' [Dụng Cụ Mở Rộng] đã kéo dài địa hình tâm linh lên 8 lượt!';
+    }
   } else if (moveId === 'stealth_rock') {
     const oppHazards = getSideHazards(environment, defenderSide);
     if (oppHazards.stealthRock) {
@@ -798,24 +1023,28 @@ export function applyStatusCategoryMove(
       const tSide: BattlerSide = target === attacker ? attackerSide : defenderSide;
       const statVi = STAT_NAME_VI[sc.stat] ?? sc.stat;
 
-      if (
-        sc.stages < 0 &&
-        target !== attacker &&
-        AbilityEngine.isStatDropProtected(target, sc.stat, true)
-      ) {
-        const protName = AbilityEngine.getDisplayName(target.ability);
-        extraMsg += ` Nhưng ${target.name} nhờ [${protName}] ngăn cản giảm ${statVi}!`;
-        events.push(
-          BattleEventFactory.abilityTriggered(
-            tSide,
-            target.name,
-            target.ability || 'Protected',
-            protName,
-            `Chặn giảm ${statVi}`,
-            `${target.name} nhờ [${protName}] ngăn cản giảm ${statVi}!`
-          )
-        );
-        continue;
+      if (sc.stages < 0 && target !== attacker) {
+        const screens = tSide === 'player' ? environment?.playerScreens : environment?.enemyScreens;
+        if (screens && (screens.mistTurns ?? 0) > 0) {
+          extraMsg += ` Nhưng Màn Sương Trắng bảo vệ ${target.name} khỏi bị giảm ${statVi}!`;
+          continue;
+        }
+
+        if (AbilityEngine.isStatDropProtected(target, sc.stat, true)) {
+          const protName = AbilityEngine.getDisplayName(target.ability);
+          extraMsg += ` Nhưng ${target.name} nhờ [${protName}] ngăn cản giảm ${statVi}!`;
+          events.push(
+            BattleEventFactory.abilityTriggered(
+              tSide,
+              target.name,
+              target.ability || 'Protected',
+              protName,
+              `Chặn giảm ${statVi}`,
+              `${target.name} nhờ [${protName}] ngăn cản giảm ${statVi}!`
+            )
+          );
+          continue;
+        }
       }
 
       const change = applyStatStageChange(target, sc.stat, sc.stages);

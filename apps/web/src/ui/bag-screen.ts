@@ -7,6 +7,8 @@
 import { inventoryService } from '../domain/inventory/inventory-service';
 import { partyService } from '../domain/party/party-service';
 import { applyItemToPartyPokemon } from '../domain/inventory/item-effects';
+import { getItemEffectDef, STONE_EVOLUTIONS } from '../domain/inventory/item-catalog-effects';
+import { EvolutionScreen } from './evolution-screen';
 import { BAG_ASSETS } from '../assets';
 import {
   BAG_POCKETS,
@@ -575,13 +577,39 @@ export class BagScreen {
       return;
     }
 
+    const effDef = getItemEffectDef(selected.item.slug || selected.item.id);
+    if (effDef && effDef.targetScope === 'battler') {
+      showBerryToast(
+        `⚠️ ${selected.item.nameVi || selected.item.name} chỉ có thể sử dụng trong lượt chiến đấu!`,
+        '#f59e0b'
+      );
+      return;
+    }
+
     // Đóng túi đồ và mở trực tiếp Màn hình Đội hình (Party Screen) ở chế độ Dùng vật phẩm
     this.close(false);
     PartyScreen.getInstance().openForSelect({
       mode: 'use_item',
       item: selected,
-      onSelect: (pk, _slotIndex) => {
-        const result = applyItemToPartyPokemon(selected.item, pk);
+      onSelect: (pk, _slotIndex, moveIndex) => {
+        const itemDef = getItemEffectDef(selected.item.id);
+        if (itemDef?.evolutionStone) {
+          const targetKey = STONE_EVOLUTIONS[itemDef.evolutionStone]?.[pk.speciesKey.toUpperCase()];
+          if (targetKey) {
+            inventoryService.removeItem(selected.rawId, 1);
+            PartyScreen.getInstance().close();
+            EvolutionScreen.getInstance().open(
+              pk,
+              { targetSpeciesKey: targetKey, method: 'stone', descriptionVi: 'Dùng Đá Tiến Hóa' },
+              () => {
+                this.open(this.openOptions ?? undefined);
+              }
+            );
+            return;
+          }
+        }
+
+        const result = applyItemToPartyPokemon(selected.item, pk, undefined, moveIndex);
         if (result.success) {
           // Trừ 1 số lượng vật phẩm khỏi túi đồ
           inventoryService.removeItem(selected.rawId, 1);

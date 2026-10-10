@@ -1,4 +1,441 @@
-## Cập nhật lần cuối: 2026-10-09 (Bỏ Icon/Emoji Thoại Thuốc Hồi Phục & Sửa Lỗi Không Hiện Sprite Pokémon Khi Ra Trận / Đổi Chỗ)
+## Cập nhật lần cuối: 2026-10-10 (Tiến Hóa Bằng Đá / Vật Phẩm Yêu Cầu Cầm Nắm & Tiêu Hao Khi Tiến Hóa)
+
+### 0.95. Chuẩn Hóa Tiến Hóa Đá/Vật Phẩm Qua Cơ Chế Cầm Nắm (Held Item) & Tự Động Tiêu Hao:
+
+- **Trạng thái:** Đã hoàn thành 100%. 39 tệp test suite (467/467 tests), Typecheck (`npm run typecheck`) đạt **0 errors / 0 warnings**.
+- **Yêu cầu người dùng:** Đối với các Pokémon dùng đá tiến hóa hoặc cần vật phẩm, người chơi phải cho Pokémon giữ vật phẩm đó mới được tiến hóa và vật phẩm sẽ bị tiêu hao khi tiến hóa.
+- **Chi tiết đã thực hiện:**
+  1. **Quy Tắc Tiến Hóa Cầm Nắm ([evolution-rules.ts](file:///e:/Pokemon/apps/web/src/domain/pokemon/evolution-rules.ts)):**
+     - Bổ sung helper `isPokemonHoldingItem(pokemon, requiredItem)` và `normalizeItemKey`: chuẩn hóa so sánh mã vật phẩm không phân biệt định dạng (ví dụ `thunder-stone`, `thunder_stone`).
+     - Cập nhật `canPokemonEvolve(pokemon)`:
+       + Đối với nhánh tiến hóa `stone` hoặc `item`, chỉ cho phép tiến hóa khi Pokémon **đang cầm giữ vật phẩm yêu cầu** (`pokemon.heldItem`).
+       + Nếu chưa giữ: Thông báo lý do rõ ràng `Cần cho Pokémon giữ ${requiredItemNameVi} để tiến hóa`.
+     - Cập nhật `getAvailableEvolutions(pokemon)`: Lọc chính xác các nhánh tiến hóa tương ứng với vật phẩm Pokémon đang cầm.
+  2. **Tiêu Hao Vật Phẩm Khi Tiến Hóa ([evolution-rules.ts](file:///e:/Pokemon/apps/web/src/domain/pokemon/evolution-rules.ts)):**
+     - Trong `applyEvolution(pokemon, targetSpeciesKey)`: Khi tiến hóa hoàn tất, nếu nhánh tiến hóa yêu cầu đá/vật phẩm, vật phẩm đang giữ trên Pokémon tự động bị tiêu hao (`pokemon.heldItem = null`).
+     - Loại bỏ việc trừ trùng lặp trong túi đồ (`inventoryService.removeItem`) tại [party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts), [storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts) và [evolution-notification.ts](file:///e:/Pokemon/apps/web/src/ui/evolution-notification.ts), vì vật phẩm đã được trừ khỏi túi đồ ngay khi người chơi cho Pokémon giữ vật phẩm qua giao diện Túi đồ.
+  3. **Kiểm Thử & Đảm Bảo Độ Ổn Định ([evolution.test.ts](file:///e:/Pokemon/apps/web/test/evolution.test.ts), [evolution-notification.test.ts](file:///e:/Pokemon/apps/web/test/evolution-notification.test.ts)):**
+     - Kiểm thử Pikachu chỉ tiến hóa khi cầm `thunder-stone`, không tiến hóa nếu chưa cầm.
+     - Kiểm thử Eevee tiến hóa đa nhánh tùy theo loại đá đang cầm (`water-stone` -> Vaporeon, `thunder-stone` -> Jolteon, `fire-stone` -> Flareon).
+     - Kiểm thử vật phẩm được tự động tiêu hao sau khi `applyEvolution`.
+     - Toàn bộ 467/467 tests pass 100%, 0 lỗi TypeScript.
+
+---
+
+## Cập nhật trước đó: 2026-10-10 (Khắc Phục 100% Lỗi TypeScript Trong Test Suite)
+
+### 0.94. Chuẩn Hóa Type Safety & Khắc Phục Lỗi TypeScript Trong Test Suite:
+
+- **Trạng thái:** Đã hoàn thành 100%. Typecheck (`npx tsc --noEmit`) đạt **0 errors / 0 warnings**, 39/39 tệp test suite (466/466 tests) đạt kết quả **PASS 100%**.
+- **Vấn đề từ IDE / Người dùng:** Danh sách lỗi type trong hai tệp test:
+  1. `screens-trickroom-substitute.test.ts`: Thiếu `description` trong các khai báo `BattleMove`, thiếu `total` trong `PokemonStats`, sai kiểu `id` (string thay vì number), thiếu `target` trong `MoveStatusEffect`, sai literal value `target: "target"` thay vì `"opponent"`.
+  2. `special-support-moves.test.ts`: Thiếu `description` ở chiêu `baton_pass`, `statStages` có thể là undefined.
+- **Chi tiết đã thực hiện:**
+  1. **[screens-trickroom-substitute.test.ts](file:///e:/Pokemon/apps/web/test/screens-trickroom-substitute.test.ts):**
+     - Sửa `createMockBattler`: `id: 1` (number), `speciesKey: 'PIKACHU'`, `stats.total: 600`, bổ sung các trường bắt buộc của `BattlerPokemon` (`frontSprite`, `backSprite`, `iconSprite`, `gender`, `catchRate`, `exp`, `maxExp`).
+     - Bổ sung trường bắt buộc `description: string` cho tất cả các khai báo `BattleMove` inline (`mortalSpin`, `dummyMove`, `trickRoomMove`, `tackle`, `swift`, `subMove`, `flamethrower`, `endureMove`, `lethalMove`, `stockpile`, `swallow`, `outrage`, `gigaDrain`, `braveBird`, `takeDownNormal`, `firePledge`, `grassPledge`, `metronomeMove`, `reflectMove`, `lightScreenMove`, `mistMove`, `physicalAtk`, `specialAtk`, `growlDebuff`).
+     - Chuẩn hóa `MoveStatusEffect.target: 'opponent'` ở chiêu `flamethrower`.
+     - Sửa `statChanges.target: 'opponent'` ở chiêu `growlDebuff`.
+  2. **[special-support-moves.test.ts](file:///e:/Pokemon/apps/web/test/special-support-moves.test.ts):**
+     - Bổ sung `description: 'Passes stat changes to replacement.'` cho chiêu `baton_pass`.
+     - Dùng optional chaining `engine.playerPokemon.statStages?.speed` và `engine.playerPokemon.statStages?.attack`.
+  3. **Kiểm tra & Xác thực:**
+     - `npx tsc --noEmit` hoàn thành với mã thoát 0 (0 error).
+     - Chạy lại các bài test, toàn bộ 36/36 tests trong 2 tệp đều pass 100%.
+
+---
+
+## Cập nhật trước đó: 2026-10-10 (Nút Tiến Hóa Xanh Dương Pixel, Giữ Avatar Icon Pokémon, & Badge Phím Tắt [R] Trực Quan)
+
+### 0.93. Tinh Chỉnh Giao Diện Nút Tiến Hóa Xanh Dương Pixel, Giữ Avatar Pokémon & Bổ Sung Badge Phím Tắt [R] Trực Quan:
+
+- **Trạng thái:** Đã hoàn thành 100%. 39 tệp test suite (466/466 tests), Typecheck (`npm run typecheck`), Build (`npm run build`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:**
+  1. Loại bỏ các ký hiệu/icon tự thêm ở nút tiến hóa, đổi màu nút thành màu xanh dương pixel retro.
+  2. Tại hộp thoại thông báo tiến hóa: Giữ nguyên icon avatar của Pokémon, chỉ loại bỏ các ký hiệu tự đưa vào (như icon `✨` lấp lánh ở tiêu đề).
+  3. Bổ sung nút / huy hiệu phím tắt `[R]` trực quan trên nút tiến hóa để người chơi nhận diện và bấm phím tắt thuận tiện.
+- **Chi tiết đã thực hiện:**
+  1. **Nút Tiến Hóa Màu Xanh Dương Retro RPG ([style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Đổi bảng màu của `.summary-btn-evolve` và `.evo-notify-btn-evolve` sang màu xanh dương pixel cổ điển: Nền `#0284c7`, viền nổi `#7dd3fc`, bóng pixel 3D `#075985` và viền đổ bóng đen `#000`, chữ trắng `#ffffff`.
+     - Loại bỏ hoàn toàn các ký hiệu lấp lánh (`.evolve-sparkle`) và mũi tên (`.evolve-arrow`), nút hiển thị chữ thuần túy `TIẾN HÓA` kèm huy hiệu phím tắt `[R]`.
+  2. **Huy Hiệu Phím Tắt Pixel Retro [R] Trực Quan ([style.css](file:///e:/Pokemon/apps/web/src/style.css), [evolution-notification.ts](file:///e:/Pokemon/apps/web/src/ui/evolution-notification.ts), [party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts), [storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts)):**
+     - Thiết kế `.evo-key-hint`: Khung phím bấm retro pixel nhỏ gọn (`#0f172a`), viền vàng `#facc15`, chữ vàng `#fef08a`, đổ bóng pixel 3D nổi bật. Khi hover đổi màu sáng tương tác.
+     - Tích hợp badge `<span class="evo-key-hint">R</span>` trực tiếp trên:
+       - Nút `#btnEvoNotifyAction` ở hộp thoại thông báo tiến hóa mép trái.
+       - Nút `#btnPartySummaryEvolve` trong bảng chi tiết Pokémon thuộc Đội hình (Party Screen).
+       - Nút `#btnStorageSummaryEvolve` trong bảng chi tiết Pokémon thuộc Máy tính PC (Storage Screen).
+  3. **Giữ Avatar Pokémon & Tinh Gọn Hộp Thoại Thông Báo ([evolution-notification.ts](file:///e:/Pokemon/apps/web/src/ui/evolution-notification.ts)):**
+     - Giữ nguyên vẹn khung icon avatar Pokémon (`.evo-notify-icon-frame` chứa `<img>` sprite icon của chính Pokémon đó và sao shiny nếu có).
+     - Tiêu đề chỉ giữ chữ thuần túy `TIẾN HÓA KHẢ DỤNG`, loại bỏ các biểu tượng thừa thãi.
+  4. **Kiểm Thử & Đảm Bảo Độ Ổn Định:**
+     - Cập nhật unit test `test/evolution-notification.test.ts` (10/10 tests pass) xác thực avatar icon Pokémon, badge phím tắt `[R]`, và chức năng bấm phím `R`.
+     - Toàn bộ 466/466 tests trong 39 test files đều pass 100%, 0 lỗi TypeScript compilation, build bundle production thành công.
+
+---
+
+## Cập nhật trước đó: 2026-10-10 (Nút Tiến Hóa Pixel Chi Tiết, Đóng PartyScreen Khi Tiến Hóa, & Âm Thanh Evolution start.ogg / Evolution.ogg)
+
+### 0.92. Triển Khai & Hoàn Thiện Hộp Thông Báo Tiến Hóa Pixel Mép Trái, Chuỗi Diễn Hoạt Hạ Cánh, Nút Pixel & Tích Hợp Âm Thanh Bản Quyền Retro:
+
+- **Trạng thái:** Đã hoàn thành 100%. 39 tệp test suite (466/466 tests), Typecheck (`npm run typecheck`), Lint (`npm run lint`), Build (`npm run build`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:**
+  1. Hộp thông báo chuyển qua **mép bên trái ở giữa màn hình** (`left: 24px; top: 50%; transform: translateY(-50%)`).
+  2. Bố cục hộp thông báo pixel ngay ngắn, thanh thời gian vẫn cứ chạy đều khi trỏ chuột vào.
+  3. Thu nhỏ Pokémon trong màn hình tiến hóa lại một chút (scale `2.4`) để vừa vặn, không bị quá to.
+  4. Khi tiến hóa xong thì cho Pokémon đã tiến hóa **rớt / hạ cánh từ từ xuống vị trí ban đầu** của Pokémon chưa tiến hóa (`startY = 255`).
+  5. Cập nhật Pokémon đi theo (Follower): Đồng bộ ngay sang loài mới khi Pokémon đang đi theo tiến hóa.
+  6. **Nút tiến hóa ở chi tiết Pokémon:** Thiết kế lại hoàn toàn theo phong cách pixel retro RPG.
+  7. **Sửa luồng đóng Party Screen:** Khi bấm nút Tiến Hóa từ bảng chi tiết trong Đội hình thì phải đóng luôn toàn bộ Party Screen (thay vì chỉ đóng modal chi tiết khiến Party Screen vẫn mở phía dưới).
+  8. **Bổ sung 2 tệp âm thanh bản quyền retro:**
+     - `Audio/SE/Evolution start.ogg`: Phát khi hộp thông báo tiến hóa xuất hiện.
+     - `Audio/SE/Evolution.ogg`: Phát khi mở giao diện màn hình tiến hóa và bắt đầu chuỗi hoạt họa.
+- **Chi tiết đã thực hiện:**
+  1. **Nút Tiến Hóa Pixel Retro RPG ([style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Thiết kế lại `.summary-btn-evolve` với viền pixel vuông vắn (`border: 2px solid #fef08a; border-radius: 0;`), đổ bóng nổi 3D pixel cứng đa lớp (`inset 1px 1px 0 #fff, inset -1px -1px 0 #b45309, 2px 2px 0 #000, 3px 3px 0 #78350f`), font chữ cổ điển `'Power Clear', 'VT323', monospace`.
+     - Phản hồi tương tác pixel: Khi hover chuyển nền vàng sáng nhích nhẹ (-1px, -1px), khi active nhấn lún (1px, 1px) chuẩn RPG.
+  2. **Đóng Toàn Bộ Party Screen Khi Bắt Đầu Tiến Hóa ([party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts)):**
+     - Khi nhấp `btnPartySummaryEvolve`, gọi `this.close(false)` đóng toàn bộ backdrop và màn hình Party Screen, nhường toàn bộ khung nhìn cho `EvolutionScreen`.
+     - Sau khi kết thúc tiến hóa, trạng thái đội hình được làm mới (`this.render()`) và người chơi trở lại bản đồ Overworld trơn tru.
+  3. **Tích Hợp Âm Thanh SE Tiến Hóa Retro ([evolution-notification.ts](file:///e:/Pokemon/apps/web/src/ui/evolution-notification.ts), [evolution-screen.ts](file:///e:/Pokemon/apps/web/src/ui/evolution-screen.ts)):**
+     - `EvolutionNotificationManager`: Phát bản nhạc báo hiệu `Audio/SE/Evolution start.ogg` ngay khi banner xuất hiện.
+     - `EvolutionScreen`: Phát bản nhạc nền tiến hóa kinh điển `Audio/SE/Evolution.ogg` ngay khi mở màn hình, tự động dừng nhạc khi tiến hóa hoàn tất (phase `revealed` và `finishAndClose`) để tiếng kêu (cry) và khúc ca khải hoàn `Audio/SE/Evolution success.ogg` vang lên rõ ràng.
+  4. **Kiểm Thử Toàn Diện & Chuẩn Hóa:**
+     - Đạt 100% 466/466 tests pass, 0 lỗi TypeScript, 0 lỗi ESLint, build production thành công.
+
+---
+
+## Cập nhật trước đó: 2026-10-10 (Triển Khai Tính Năng Tiến Hóa Pokémon: Nút Tiến Hóa Tại Chi Tiết & Màn Animation Tiến Hóa Chuẩn Kịch Bản Retro)
+
+### 0.91. Triển Khai Tính Năng Tiến Hóa Pokémon & Màn Hình Diễn Hoạt Tiến Hóa Chuẩn Kịch Bản (Pokémon Evolution System & Retro Animated Sequence):
+
+- **Trạng thái:** Đã hoàn thành 100%. 38 tệp test suite (455/455 tests), Typecheck (`npm run typecheck:web`), Lint (`npm run lint`), Build (`npm run build:web`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** Triển khai tiến hóa cho Pokémon khi đạt đến cấp độ yêu cầu hoặc đạt điều kiện tiến hóa (đá tiến hóa). Tại chi tiết Pokémon sẽ có nút Tiến Hóa. Khi tiến hóa sẽ mở màn Evolution (sử dụng nền `Graphics/Evolution/evolution_bg.gif`) diễn ra theo đúng kịch bản:
+  1. Pokémon xuất hiện ở phần dưới màn hình.
+  2. Cơ thể bắt đầu phát sáng dần dần thành một quả cầu ánh sáng, từ từ bay lên tới giữa màn hình.
+  3. Tại giữa màn hình, thay phiên Pokémon chưa tiến hóa và dạng tiến hóa tiếp theo sẽ xuất hiện thay phiên nhau (nhịp độ dồn dập).
+  4. Sau đó quả cầu mở ra, khôi phục về dạng tiến hóa đầy đủ không còn phát sáng.
+  5. Phát âm thanh tiếng kêu (Cry) của loài mới và khúc ca khải hoàn mừng tiến hóa thành công.
+- **Chi tiết đã thực hiện:**
+  1. **Động Cơ & Quy Tắc Tiến Hóa Chuẩn Thế Hệ 1 ([evolution-rules.ts](file:///e:/Pokemon/apps/web/src/domain/pokemon/evolution-rules.ts)):**
+     - Xây dựng từ điển dữ liệu toàn diện `GEN1_EVOLUTIONS` bao gồm toàn bộ 70 nhánh tiến hóa của 151 loài Pokémon Gen 1:
+       - Tiến hóa theo Cấp độ (Level-up): Bulbasaur $\to$ Ivysaur (Lv.16) $\to$ Venusaur (Lv.32), Charmander $\to$ Charmeleon (Lv.16) $\to$ Charizard (Lv.36), Squirtle $\to$ Wartortle (Lv.16) $\to$ Blastoise (Lv.36), Caterpie (Lv.7) $\to$ Metapod (Lv.10) $\to$ Butterfree, Magikarp (Lv.20) $\to$ Gyarados, Dratini (Lv.30) $\to$ Dragonair (Lv.55) $\to$ Dragonite, Alakazam/Machamp/Golem/Gengar (Lv.36), v.v.
+       - Tiến hóa theo Đá Nguyên Tố (Evolution Stones): Pikachu $\to$ Raichu (Đá Sét), Vulpix/Growlithe (Đá Lửa), Poliwhirl/Shellder/Staryu (Đá Nước), Gloom/Weepinbell/Exeggcute (Đá Lá), Clefairy/Jigglypuff/Nidorina/Nidorino (Đá Mặt Trăng), Eevee đa nhánh $\to$ Vaporeon (Đá Nước) / Jolteon (Đá Sét) / Flareon (Đá Lửa).
+     - Hàm `canPokemonEvolve(pokemon)`: Kiểm tra thông minh cấp độ và vật phẩm trong túi đồ (`inventoryService.hasItem`).
+     - Hàm `applyEvolution(pokemon, targetSpeciesKey)`: Biến đổi loài, cập nhật tên/giữ nguyên biệt danh, tính toán lại toàn bộ chỉ số thực tế theo Base Stats mới bằng `recalculatePartyPokemonStats` và điều chỉnh HP tương ứng.
+  2. **Giao Diện & Chuỗi Hoạt Họa Màn Evolution ([evolution-screen.ts](file:///e:/Pokemon/apps/web/src/ui/evolution-screen.ts)):**
+     - Sử dụng hình nền động không gian chuẩn tỉ lệ `Graphics/Evolution/evolution_bg.gif` (512x384).
+     - Bộ máy dựng Canvas 2D mượt mà 60FPS với máy trạng thái 5 giai đoạn:
+       - **Giai đoạn 1 (Intro):** Pokémon ban đầu xuất hiện ở tọa độ dưới (`y: 275px`). Hộp thoại retro: `"Ồ? ${pokemon.name} đang có điều gì đó kỳ lạ xảy ra..."`. Phát âm thanh lấp lánh nhẹ (`Audio/SE/Shiny sparkle.ogg`).
+       - **Giai đoạn 2 (Glowing & Ascending):** Cơ thể Pokémon phát sáng trắng chói lọi, chuyển hóa thành một quả cầu ánh sáng rực rỡ (radiant energy sphere với vầng hào quang corona) và từ từ bay lơ lửng từ dưới lên đúng tâm điểm màn hình (`y: 165px`) kèm chuỗi âm hưởng cao độ thăng tiến.
+       - **Giai đoạn 3 (Morphing Alternation):** Quả cầu ánh sáng nhấp nháy dồn dập tại tâm điểm. Sprite dạng trước và dạng sau tiến hóa xuất hiện luân phiên chớp nhoáng với tần số tăng tốc từ 320ms rút ngắn dần xuống 60ms kèm âm hưởng nhịp dao động liên tục.
+       - **Giai đoạn 4 (Supernova Burst):** Quả cầu bùng nổ mở ra với làn sóng ánh sáng trắng chói lòa và các vòng sóng xung kích tỏa ra toàn màn hình.
+       - **Giai đoạn 5 (Restoration & Fanfare):** Khi ánh sáng tan đi, dạng tiến hóa mới xuất hiện hoàn mỹ ở trung tâm màn hình trong màu sắc nguyên bản, không còn phát sáng. Ngay lập tức phát tiếng kêu dũng mãnh của loài mới (`Audio/Cries/${species}.ogg`) cùng bản nhạc chiến thắng khải hoàn (`Audio/SE/Battle capture success.ogg`), mưa hạt kim tuyến chúc mừng và hiển thị nút `"TIẾP TỤC"`.
+  3. **Tích Hợp Nút Tiến Hóa Nổi Bật Tại Chi Tiết Pokémon ([party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts), [storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts), [bag-screen.ts](file:///e:/Pokemon/apps/web/src/ui/bag-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - Tại bảng Chi Tiết Pokémon (cả trong Đội Hình lẫn Máy Tính PC Storage): Khi Pokémon đạt cấp độ hoặc có đủ đá trong túi, xuất hiện nút bấm gradient phát sáng neon lấp lánh `.summary-btn-evolve` (`"✨ TIẾN HÓA THÀNH [TÊN] ➔"`).
+     - Nhấp nút sẽ mở ngay màn Evolution kịch bản hoạt họa.
+     - Khi sử dụng Đá Tiến Hóa trực tiếp từ Ba Lô (Bag Screen), hệ thống cũng tự động kích hoạt màn Evolution sống động tương tự.
+  4. **Bộ Test Suite Tự Động Toàn Diện ([evolution.test.ts](file:///e:/Pokemon/apps/web/test/evolution.test.ts)):**
+     - Đã thêm 13 bài test bao quát kiểm tra logic cấp độ, đá tiến hóa, tiến hóa đa nhánh Eevee, tính toán lại chỉ số và bảo lưu biệt danh Pokémon. Đạt 100% 455/455 tests passed.
+
+---
+
+## Cập nhật trước đó: 2026-10-10 (Chuẩn Hóa Chiêu Thức Tích Lượt 2 Turn: Lượt 1 Hấp Thụ Năng Lượng Không Phát Động Animation, Lượt 2 Mới Tấn Công)
+
+### 0.90. Chuẩn Hóa Chiêu Thức Tích Lượt 2 Turn & Triệt Tiêu Lặp Animation Ở Lượt Tích Tụ (Two-Turn Moves Charge & Animation Execution Pipeline):
+
+- **Trạng thái:** Đã hoàn thành 100%. 37 tệp test suite (442/442 tests), Typecheck (`npm run typecheck:web`), Lint (`npm run lint`), Build (`npm run build:web`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** Các chiêu thức cần tích lượt như Tia Sáng Mặt Trời (Solar Beam) cần giai đoạn hấp thụ 1 lượt, ở lượt sau mới phát động animation còn lượt 1 thì không (trước đó animation phát động ở cả 2 lượt). Rà soát và điều chỉnh cho tất cả các trường hợp chiêu 2 lượt khác trong game.
+- **Chi tiết đã thực hiện:**
+  1. **Mở Rộng Danh Mục Chiêu 2 Lượt ([move-effect-engine.ts](file:///e:/Pokemon/apps/web/src/battle/rules/move-effect-engine.ts)):**
+     - Rà soát và cập nhật đầy đủ tập hợp `TWO_TURN_MOVE_IDS`:
+       - Nhóm hấp thụ ánh sáng / năng lượng: `solar_beam`, `solarbeam`, `solar_blade`, `solarblade`.
+       - Nhóm tích tụ nguyên tố & tăng chỉ số lượt 1: `skull_bash` (+1 Phòng thủ lượt 1), `meteor_beam` (+1 Công ĐB lượt 1), `electro_shot` / `electroshot` (+1 Công ĐB lượt 1).
+       - Nhóm phóng thích năng lượng cực đại: `sky_attack`, `razor_wind`, `freeze_shock`, `ice_burn`, `geomancy`.
+       - Nhóm bán bất tử (Semi-invulnerable): `fly`, `bounce` (trên không), `dig` (dưới lòng đất), `dive` (dưới nước), `shadow_force`, `phantom_force` (bóng tối).
+     - Tích hợp chuẩn xác ngoại lệ thời tiết:
+       - Trong trời Nắng (`sun`): `solar_beam` và `solar_blade` kích hoạt và tấn công ngay trong 1 lượt duy nhất mà không cần tích tụ.
+       - Trong trời Mưa (`rain`): `electro_shot` phóng tia điện cực mạnh ngay trong 1 lượt duy nhất mà không cần tích tụ.
+  2. **Gắn Cờ Chỉ Báo Tích Lượt Trong Động Cơ Trận Đấu ([battle-engine.ts](file:///e:/Pokemon/apps/web/src/battle/battle-engine.ts)):**
+     - Bổ sung trường `isCharging?: boolean;` vào giao diện `TurnResult`.
+     - Trong `executeAttack`, khi `chargeResult.isCharging` là true ở lượt 1, trả về `isCharging: true` cùng lượng sát thương 0 và thông điệp tương ứng (ví dụ: `"${attacker.name} đang hấp thụ ánh sáng mặt trời!"`).
+  3. **Kiểm Soát Animation & Đòn Lao Trong Bộ Điều Khiển Trận Đấu ([battle-controller.ts](file:///e:/Pokemon/apps/web/src/battle/battle-controller.ts)):**
+     - Tại `executePlayerAttack` và `executeEnemyAttack`:
+       - Thêm rào chắn kiểm tra: nếu `result.isCharging || result.events.some(ev => ev.type === 'charge_begin')`, đây là giai đoạn tích tụ / nạp năng lượng của lượt 1.
+       - **Triệt tiêu hoàn toàn:** Không gọi `startPlayerAttack`/`startEnemyAttack` (không lunge lao tới), không gọi `playMoveVfx` (không hiển thị hiệu ứng đồ họa vệt đòn đánh hay làm rung màn hình), không kích hoạt phản ứng trúng đòn của đối thủ.
+       - **Xử lý hiệu ứng tăng chỉ số:** Kích hoạt sự kiện thay đổi chỉ số của lượt 1 (như Skull Bash tăng Def, Meteor Beam tăng SpAtk...) và phát âm thanh tăng chỉ số (`Audio/SE/Stat rise.ogg`).
+       - Hiển thị thông báo hấp thụ/tích năng lượng và kết thúc lượt nạp một cách mượt mà.
+     - Ở Lượt 2: Khi tung đòn thực sự, `result.isCharging` là false/undefined, hệ thống mới chính thức phát động animation chiêu thức đầy đủ (`playMoveVfx`), đòn lao và tính sát thương lên đối thủ.
+  4. **Bộ Test Suite Tự Động Toàn Diện ([battle-advanced-moves.test.ts](file:///e:/Pokemon/apps/web/test/battle-advanced-moves.test.ts)):**
+     - Kiểm thử Solar Beam: Lượt 1 trả về `isCharging: true`, sát thương = 0; Lượt 2 tung đòn `isCharging: false`, sát thương > 0.
+     - Kiểm thử ngoại lệ thời tiết Nắng: Solar Beam bắn ngay trong 1 lượt, `isCharging: false`, gây sát thương ngay.
+     - Kiểm thử Skull Bash: Lượt 1 `isCharging: true`, tăng 1 bậc Phòng thủ; Lượt 2 tung đòn gây sát thương.
+     - Kiểm thử Meteor Beam: Lượt 1 `isCharging: true`, tăng 1 bậc Công ĐB; Lượt 2 tung đòn gây sát thương.
+     - Kiểm thử Electro Shot trong Mưa: Bắn ngay trong 1 lượt không cần nạp, gây sát thương ngay.
+     - Đạt 100% 442/442 test cases passed.
+
+---
+
+## Cập nhật trước đó: 2026-10-10 (Ghi Nhận Chiêu Đã Dạy Bằng TM Vào Chi Tiết Pokémon & Mở Rộng Kho Chiêu Thức Để Tự Do Đổi Chiêu Không Tốn Thêm Đĩa)
+
+### 0.89. Ghi Nhận Chiêu Đã Dạy Bằng TM Vào Chi Tiết Pokémon & Mở Rộng Kho Chiêu Thức Tự Do Đổi Chiêu (Permanent TM Move Pool & Free Relearner System):
+
+- **Trạng thái:** Đã hoàn thành 100%. 37 tệp test suite (439/439 tests), Typecheck (`npm run typecheck:web`), Lint (`npm run lint`), Build (`npm run build:web`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** Bổ sung thêm ở chi tiết Pokémon các move đã được dạy bởi TM; Pokémon được dùng TM sẽ ghi nhận vào danh sách move, vì đã được dạy nên người chơi có thể tự do đổi chiêu mà không phải tốn thêm nhiều tài nguyên (đĩa TM).
+- **Chi tiết đã thực hiện:**
+  1. **Mở Rộng Dữ Liệu Thực Thể Pokémon ([party-state.ts](file:///e:/Pokemon/apps/web/src/domain/party/party-state.ts)):**
+     - Bổ sung trường `taughtTmMoves?: string[]` vào kiểu dữ liệu `PartyPokemon` và cấu hình tạo Pokémon trong `createPartyPokemon`.
+     - Tự động lưu trữ và đồng bộ vĩnh viễn danh sách ID các chiêu đã học qua TM/HM cho từng cá thể Pokémon vào LocalStorage và Save State.
+  2. **Động Cơ Ghi Nhận & Phòng Chống Lãng Phí Tài Nguyên ([item-effects.ts](file:///e:/Pokemon/apps/web/src/domain/inventory/item-effects.ts)):**
+     - Trong `applyItemToPartyPokemon`: Khi dạy chiêu TM thành công cho Pokémon, tự động lưu ID chiêu vào `pokemon.taughtTmMoves`. Dù sau này Pokémon có thay thế chiêu đó bằng chiêu khác ở 4 ô đang dùng thì chiêu TM vẫn tồn tại vĩnh viễn trong kho chiêu đã mở khóa.
+     - Trong `canUseItemOnPartyPokemon`: Kiểm tra `pokemon.taughtTmMoves`. Nếu Pokémon đã từng được dạy chiêu này trước đó nhưng hiện không trang bị ở 4 ô hoạt động, hệ thống từ chối dùng thêm đĩa TM kèm thông báo hướng dẫn chu đáo: `"${pokemon.name} đã được dạy chiêu ${moveName} từ trước! Bạn có thể vào mục Chi Tiết Pokémon để trang bị lại mà không cần tốn đĩa TM!"`. Giúp người chơi không bị lãng phí tài nguyên đĩa TM trùng lặp.
+  3. **Hợp Nhất Kho Chiêu Thức Đã Học ([moves-db.ts](file:///e:/Pokemon/apps/web/src/battle/moves-db.ts)):**
+     - Bổ sung trường `source?: 'level' | 'tm'` trong `AvailableMoveEntry`.
+     - Phát triển hàm `getAvailableMovesForPokemon(pokemon)`:
+       - Tự động tổng hợp toàn bộ chiêu thức theo cấp độ khả dụng ($\le$ level hiện tại).
+       - Tự động nạp toàn bộ các chiêu đã được dạy từ TM trong `pokemon.taughtTmMoves` với nguồn gốc `source: 'tm'`.
+       - Bảo lưu bất kỳ chiêu đang kích hoạt nào ngoài bảng cấp độ để đảm bảo người chơi không bao giờ bị mất chiêu khi kéo thả đổi vị trí.
+       - Sắp xếp trực quan: các chiêu theo cấp độ trước, tiếp theo là nhóm các chiêu đã học qua TM được gom nhóm rõ ràng.
+  4. **Giao Diện Chi Tiết Pokémon Trong Đội Hình & Kho Chứa PC ([party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts), [storage-screen.ts](file:///e:/Pokemon/apps/web/src/ui/storage-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
+     - **Ở 4 ô chiêu thức trang bị bên trái:** Nếu chiêu thức nào từng được dạy từ TM, hiển thị huy hiệu `TM` nhỏ màu xanh ngọc thanh lịch (`active-move-tm-badge`) ở góc trên bên phải kèm chú giải (tooltip) trực quan.
+     - **Ở Kho Chiêu Thức (Move Pool) bên phải:**
+       - Các chiêu học từ TM hiển thị huy hiệu `💿 TM` phát sáng xanh neon (`pool-lv-badge tm`), viền thẻ màu xanh dương (`summary-pool-card tm-move`).
+       - Header bảng kho chiêu tự động hiển thị số lượng chiêu TM đã mở khóa (Ví dụ: `≤ Lv.25 • 2 TM`).
+       - Người chơi có thể tự do **kéo thả (Drag & Drop)** bất kỳ chiêu TM nào vào 4 ô chiêu thức bên trái để thay đổi bộ chiêu hoàn toàn MIỄN PHÍ mà không tốn thêm bất kỳ vật phẩm hay đĩa TM nào!
+  5. **Bổ Sung Danh Mục TM/HM Vào Pokédex ([pokedex-view.ts](file:///e:/Pokemon/apps/web/src/ui/pokedex/pokedex-view.ts)):**
+     - Trong mục "Chiêu thức học được" của từng Pokémon trong Pokédex, chia thành 2 phân đoạn rõ ràng:
+       - `⬆️ CHIÊU THEO CẤP ĐỘ`: Các chiêu học được khi tăng cấp.
+       - `💿 CHIÊU HỌC QUA ĐĨA KỸ THUẬT (TM/HM)`: Toàn bộ các chiêu tương thích mà loài Pokémon đó có thể học được từ cơ sở dữ liệu pokemondb.net, hiển thị đầy đủ nhãn `TM`, tên chiêu, hệ nguyên tố, phân loại, sức mạnh, độ chính xác và điểm PP.
+  6. **Bộ Test Suite Tự Động Toàn Diện:**
+     - Bổ sung test case chuyên biệt trong `item-effects.test.ts` xác thực:
+       - Chiêu TM được ghi nhận chuẩn xác vào `taughtTmMoves`.
+       - Chiêu TM xuất hiện đầy đủ trong `getAvailableMovesForPokemon`.
+       - Khi gỡ chiêu khỏi 4 ô trang bị, chiêu TM vẫn được bảo lưu vĩnh viễn trong kho chiêu.
+       - Chặn dùng lại đĩa TM trùng lặp đối với chiêu đã mở khóa và hiển thị thông báo hướng dẫn vào mục Chi tiết Pokémon.
+
+---
+
+## Cập nhật trước đó: 2026-10-10 (Chuẩn Hóa Khả Năng Học TM/HM Chuẩn pokemondb.net & Kéo Dài Lượt Thời Tiết/Địa Hình Theo Vật Phẩm Cầm Nắm)
+
+### 0.88. Chuẩn Hóa Danh Sách Học Chiêu TM/HM Chuẩn pokemondb.net & Kéo Dài Lượt Thời Tiết 8 Lượt Khi Mang Vật Phẩm (TM Learnset Compatibility & Weather Duration Held Items):
+
+- **Trạng thái:** Đã hoàn thành 100%. 37 tệp test suite (438/438 tests), Typecheck (`npm run typecheck:web`), Lint (`npm run lint`), Build (`npm run build:web`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:**
+  1. Pokémon dùng TM tùy tiện là không ổn, tra cứu website https://pokemondb.net/ để lấy đầy đủ nhánh "Moves learnt by TM" cho từng Pokémon và bổ sung vào cơ sở dữ liệu để kiểm soát Pokémon nào học được TM nào.
+  2. Vật phẩm duy trì thời tiết (ví dụ: Đá Ẩm Ướt / Damp Rock) khi Pokémon mang vào dùng Vũ Điệu Mưa (Rain Dance) vẫn chỉ duy trì 5 lượt thay vì kéo dài hiệu lực. Cần sửa logic để tăng số lượt khi mang item tương ứng.
+- **Chi tiết đã thực hiện:**
+  1. **Đồng Bộ Dữ Liệu Học TM/HM Chuẩn pokemondb.net ([pokemon-db.json](file:///e:/Pokemon/packages/game-data/pokemon-db.json) & [pokemon.ts](file:///e:/Pokemon/packages/shared-types/pokemon.ts)):**
+     - Tạo công cụ tự động hóa crawler đồng bộ chuẩn xác toàn bộ 151 loài Pokémon thế hệ 1 qua 3 thế hệ trên pokemondb.net (Gen 9, Gen 7 TM, Gen 6 HM) với 9.504 lượt ánh xạ move canonical.
+     - Lưu trữ trường dữ liệu `tmMoves: string[]` trực tiếp trong từng loài Pokémon ở `pokemon-db.json`.
+     - Phản ánh chuẩn mực hạn chế chiêu thức canon: Caterpie, Metapod, Ditto có 0 chiêu TM; Magikarp chỉ học được 2 chiêu (`facade`, `hydro_pump`); Pikachu học 69 chiêu (gồm Tia Chớp Sét, Sấm Sét, Sắt Đuôi... nhưng TUYỆT ĐỐI không học được Phun Lửa hay Động Đất); Mew học được 276 chiêu.
+  2. **Động Cơ Kiểm Duyệt Tương Thích TM/HM ([item-effects.ts](file:///e:/Pokemon/apps/web/src/domain/inventory/item-effects.ts)):**
+     - Bổ sung mã kết quả `'ERR_INCOMPATIBLE'` vào `ItemResultCode`.
+     - Trong `canUseItemOnPartyPokemon`: Kiểm tra `species.tmMoves?.includes(moveId)`. Nếu loài không nằm trong danh sách học chiêu, từ chối với lý do rõ ràng: `"${pokemon.name} không thể học chiêu thức ${move.nameVi} từ ${item.nameVi}!"`.
+  3. **Động Cơ Kéo Dài Thời Gian Thời Tiết & Địa Hình Theo Vật Phẩm Cầm Nắm ([held-item-engine.ts](file:///e:/Pokemon/apps/web/src/battle/rules/held-item-engine.ts)):**
+     - Đặt tên hiển thị tiếng Việt chuẩn mực: `damp-rock` ("Đá Ẩm Ướt"), `heat-rock` ("Đá Nóng"), `smooth-rock` ("Đá Nhẵn"), `icy-rock` ("Đá Băng"), `terrain-extender` ("Khuếch Đại Địa Hình").
+     - Thêm phương thức `HeldItemEngine.getWeatherDuration(weatherType, heldItem)`: trả về **8 lượt** nếu mang đúng loại đá thời tiết tương ứng (`damp-rock` cho mưa rào/mưa lớn, `heat-rock` cho nắng gắt, `smooth-rock` cho bão cát, `icy-rock` cho tuyết rơi/mưa đá), và **5 lượt** theo mặc định.
+     - Thêm phương thức `HeldItemEngine.getTerrainDuration(heldItem)`: trả về **8 lượt** nếu mang `terrain-extender`, và **5 lượt** theo mặc định.
+  4. **Tích Hợp Vào Chiêu Thức & Đặc Tính Thời Tiết/Địa Hình ([move-effect-engine.ts](file:///e:/Pokemon/apps/web/src/battle/rules/move-effect-engine.ts) & [ability-engine.ts](file:///e:/Pokemon/apps/web/src/battle/rules/ability-engine.ts)):**
+     - **Chiêu thức thời tiết & địa hình:** `rain_dance`, `sunny_day`, `sandstorm`, `snowscape`/`hail` và các chiêu địa hình (`electric_terrain`, `grassy_terrain`, `psychic_terrain`, `misty_terrain`) tự động kiểm tra item cầm nắm của Pokémon ra chiêu. Khi kéo dài thành 8 lượt, hệ thống hiển thị thông báo bổ sung sinh động: `"[Đá Ẩm Ướt] đã kéo dài thời gian mưa lên 8 lượt!"`.
+     - **Đặc tính triệu hồi thời tiết & địa hình khi ra trận:** `drizzle`, `drought`, `sandstream`, `snowwarning` và các đặc tính Surge (`electricsurge`, `grassysurge`, `psychicsurge`, `mistysurge`) tự động kiểm tra `pokemon.heldItem` để thiết lập 8 lượt và thông báo vật phẩm kéo dài hiệu lực.
+  5. **Bộ Test Suite Tự Động Hoàn Hảo ([item-effects.test.ts](file:///e:/Pokemon/apps/web/test/item-effects.test.ts) & [held-items.test.ts](file:///e:/Pokemon/apps/web/test/held-items.test.ts)):**
+     - Thêm test suite kiểm tra tương thích TM: Magikarp bị từ chối khi học TM35 Phun Lửa nhưng được phép học TM Hydro Pump; Charizard học thành công TM38 Fire Blast.
+     - Thêm test suite `10. Weather & Terrain Duration Extending Held Items`: kiểm tra Rain Dance tạo mưa 5 lượt mặc định, nhưng khi mang `damp-rock` tạo mưa 8 lượt; Drizzle tạo mưa 5 lượt mặc định, nhưng khi mang `damp-rock` tạo mưa 8 lượt.
+
+---
+
+### 0.87. Bổ Sung Nút Cheat Full Đĩa Kỹ Thuật TM/HM & Động Cơ Dạy Chiêu Thức (TM/HM Move Teaching & Overlay Cheat Tool):
+
+- **Trạng thái:** Đã hoàn thành 100%. 37 tệp test suite (434/434 tests), Typecheck (`npm run typecheck:web`), Lint (`npm run lint`), Build (`npm run build:web`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** Thêm 1 nút ở overlay để full các đĩa move cho Pokémon học.
+- **Chi tiết đã thực hiện:**
+  1. **Tạo & Đồng Bộ Toàn Bộ 108 Đĩa Kỹ Thuật Vào Cơ Sở Dữ Liệu ([items-db.json](file:///e:/Pokemon/packages/game-data/items-db.json)):**
+     - Đã thêm đầy đủ 100 TMs (`tm01` đến `tm100`) và 8 HMs (`hm01` đến `hm08`) vào cơ sở dữ liệu vật phẩm.
+     - Phân loại chuẩn vào danh mục `'machine'` (`categoryName: 'TMs & HMs'`, `categoryVi: 'Đĩa Kỹ Năng (TM/HM)'`), thuộc Ngăn 3 của Ba Lô (`machines` / `ĐĨA CHIÊU`).
+     - Tự động map sprite theo đúng hệ nguyên tố từ `Graphics/Items/` (ví dụ `machine_ELECTRIC.png` cho Thunderbolt TM24, `machine_FIRE.png` cho Flamethrower TM35, `machine_hm_WATER.png` cho Surf HM03...).
+  2. **Động Cơ Học & Ghi Nhớ Chiêu Thức ([item-catalog-effects.ts](file:///e:/Pokemon/apps/web/src/domain/inventory/item-catalog-effects.ts) & [item-effects.ts](file:///e:/Pokemon/apps/web/src/domain/inventory/item-effects.ts)):**
+     - Bổ sung trường `teachMove?: string` trong `ItemEffectDef` và thiết lập từ điển `TM_MOVE_MAPPING` liên kết 108 đĩa TM/HM với ID chiêu tương ứng trong `MOVES_DB`.
+     - Trong `canUseItemOnPartyPokemon`: Kiểm tra xem Pokémon trong đội hình đã học chiêu đó chưa; nếu đã biết thì từ chối kèm lý do thân thiện (`"Pikachu đã thành thạo chiêu thức Phóng Điện rồi!"`).
+     - Trong `applyItemToPartyPokemon`:
+       - Nếu Pokémon có ít hơn 4 chiêu: thêm chiêu mới vào bộ chiêu thức và thiết lập đầy đủ PP tối đa.
+       - Nếu Pokémon đã đủ 4 chiêu: tự động ghi đè thay thế chiêu thứ 4 và hiển thị thông báo chi tiết: `"🎉 Pikachu đã quên [Chiêu cũ] và học thành công chiêu thức [Chiêu mới]!"`.
+  3. **Mở Rộng Dịch Vụ Ba Lô ([inventory-service.ts](file:///e:/Pokemon/apps/web/src/domain/inventory/inventory-service.ts)):**
+     - Thêm phương thức `addAllMachines(quantity = 1): number` tự động nạp toàn bộ 108 đĩa TM/HM vào ngăn Ba Lô.
+  4. **Giao Diện Overlay & Điều Khiển ([debug-template.ts](file:///e:/Pokemon/apps/web/src/debug/debug-template.ts), [debug-controller.ts](file:///e:/Pokemon/apps/web/src/debug/debug-controller.ts), [bootstrap.ts](file:///e:/Pokemon/apps/web/src/bootstrap.ts)):**
+     - Thêm nút bấm chuyên dụng `#btnAddAllMachines` ("💿 Full Đĩa Kỹ Thuật TM/HM (x1)") với giao diện gradient cyan nổi bật (`linear-gradient(135deg, #0ea5e9, #0284c7)`) đặt ngay dưới nút Full Item trong nhóm `🎒 Kiểm thử & Thêm Vật Phẩm` của debug overlay (`#testOverlay`).
+     - Bấm nút lập tức thêm toàn bộ 108 đĩa chiêu vào túi đồ và hiển thị Toast thông báo xanh dương sống động: `"💿 Đã cung cấp Full 108 Đĩa Kỹ Thuật (TM/HM) vào ngăn Đĩa Chiêu!"`.
+  5. **Bộ Test Tự Động Toàn Diện:**
+     - Bổ sung test kiểm thử nút bấm và remote bridge trong `custom-bot-spawner.test.ts`.
+     - Bổ sung 3 test case chuyên biệt trong `item-effects.test.ts` xác thực: thêm 108 đĩa chiêu vào ngăn 3, dạy chiêu cho Pokémon có < 4 chiêu, chặn dạy lại chiêu đã biết, và tự động thay thế chiêu thứ 4 khi đã đầy 4 chiêu.
+
+---
+
+## Cập nhật trước đó: 2026-10-10 (Bổ Sung Icon Thời Tiết & Huy Hiệu Lượt Tồn Tại Trên Mép Trên Màn Hình Trận Đấu)
+
+### 0.86. Bổ Sung Huy Hiệu Icon Thời Tiết & Đếm Số Lượt Tồn Tại Trận Đấu (Battle Screen Weather HUD Indicator):
+
+- **Trạng thái:** Đã hoàn thành 100%. 37 tệp test suite (431/431 tests), Typecheck (`npm run typecheck:web`), Lint (`npm run lint`), Build (`npm run build:web`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** Bổ sung icon hiển thị thời tiết tương ứng cùng với số lượt tồn tại kèm icon nằm trên mép trên ở giữa màn hình (từ tài nguyên `Graphics/weather/*.png`).
+- **Phân tích thiết kế & Tọa độ hiển thị:**
+  1. **Tài nguyên đồ họa:** Khai thác toàn bộ 9 biểu tượng thời tiết 50x50 pixel art chất lượng cao trong thư mục `Graphics/weather`:
+     - `sun` / `sunny` $\rightarrow$ `SongSun.png` (Nắng gắt)
+     - `rain` $\rightarrow$ `SongRain.png` (Mưa rào)
+     - `heavy_rain` $\rightarrow$ `SongHeavyRain.png` (Mưa bão lớn)
+     - `storm` / `thunderstorm` $\rightarrow$ `SongStorm.png` (Bão sấm sét)
+     - `sandstorm` $\rightarrow$ `SongSandstorm.png` (Bão cát)
+     - `hail` / `blizzard` $\rightarrow$ `SongBlizzard.png` (Mưa đá / Bão tuyết)
+     - `snow` $\rightarrow$ `SongSnow.png` (Tuyết rơi)
+     - `fog` $\rightarrow$ `SongFog.png` (Sương mù)
+     - `clear` / `clearing` $\rightarrow$ `SongClearing.png` (Trong lành)
+  2. **Vị trí hiển thị mép trên ở giữa màn hình:**
+     - Kích thước canvas trận chiến là 512x384. Khu vực trung tâm mép trên (`centerX = 256`, `y = 6`) hoàn toàn thông thoáng, không bị che bởi khung thông tin địch (Databox địch ở góc trái `y = 34..70`) hay người chơi (ở góc dưới phải).
+     - Thiết kế dạng viên nang (capsule pill) bo tròn 14px mềm mại (`bw = 98`, `bh = 28`, `bx = 207`, `by = 6`), nền kính mờ sắc nét `rgba(15, 23, 42, 0.92)` kết hợp dải màu gradient và đường viền phát sáng phù hợp theo từng loại thời tiết.
+     - Phía trái hiển thị icon thời tiết (22x22px), phía phải hiển thị 2 dòng chữ nổi bật:
+       - Dòng 1: Tên thời tiết tiếng Việt viết hoa sắc nét (Ví dụ: `NẮNG`, `MƯA`, `BÃO CÁT`, `MƯA ĐÁ`...).
+       - Dòng 2: Số lượt còn lại (`5 LƯỢT`) kèm hiệu ứng nhấp nháy đỏ báo động khi chỉ còn `1 LƯỢT`.
+  3. **Hiệu ứng chuyển động mượt mà (Animations & Transitions):**
+     - Tự động trượt nhẹ từ trên xuống đồng bộ khi màn chắn đen mở ra (`enemyDataboxProgress`).
+     - Tự động trượt lên ẩn đi khi máy quay zoom vào Pokémon để ném bóng bắt (`captureZoomProgress`).
+     - Tự động ẩn khi không có thời tiết (`weather.type === 'none'` hoặc `turnsLeft <= 0`).
+  4. **Tích hợp Debug & Kiểm Thử:**
+     - Thêm dropdown chọn thời tiết trong Overlay `#testOverlay` để kiểm thử nhanh mọi dạng thời tiết trong trận chiến.
+     - Cập nhật plugin Vite `emitLegacyGraphicsPlugin` đóng gói đầy đủ thư mục `weather` vào production bundle `dist`.
+     - Bổ sung bộ test suite chuyên biệt `weather-indicator.test.ts` (8 bài test) xác thực toàn diện: phân giải tài nguyên icon, bảng màu WEATHER_THEMES, vị trí capsule ở giữa mép trên, trạng thái ẩn khi không có thời tiết, trạng thái cảnh báo khi còn 1 lượt và cơ chế bộ nhớ đệm hình ảnh (cache).
+
+---
+
+## Cập nhật trước đó: 2026-10-10 (Áp Dụng Hoàn Thiện Toàn Bộ Logic Vật Phẩm: Kẹo Exp/Rare Candy, Bạc Hà Tính Cách, Đá Tiến Hóa, Nắp Chai IVs, Quả Mọng EV)
+
+### 0.85. Hoàn Thiện Động Cơ Xử Lý Hiệu Ứng Toàn Bộ Vật Phẩm (Full Item Effects & Usability Overhaul):
+
+- **Trạng thái:** Đã hoàn thành 100%. 36 tệp test suite (423/423 tests), Typecheck (`npm run typecheck:web`), Lint (`npm run lint`), Build (`npm run build:web`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** Các vật phẩm kẹo candy không dùng được cho Pokémon, vật phẩm thay đổi tính cách (mints) chưa dùng được, kiểm tra và hoàn thiện toàn bộ logic sử dụng vật phẩm trong game.
+- **Nguyên nhân gốc rễ & Phân tích cơ chế:**
+  1. Trong `ITEM_EFFECTS_REGISTRY` trước đây chỉ khai báo một số ít Potion, Revive và Rare Candy đơn lẻ. Toàn bộ 5 loại Kẹo Exp (`exp-candy-xs`, `s`, `m`, `l`, `xl`), 21 loại Bạc hà tính cách (`mint`), Đá tiến hóa, Nắp chai Hyper Training, quả mọng giảm EV hoàn toàn chưa được đăng ký trong registry hiệu ứng.
+  2. Hàm `canUseItemOnPartyPokemon()` trả về lỗi `ERR_WRONG_CONTEXT` ("Vật phẩm này không thể sử dụng trực tiếp trên Pokémon!") đối với bất kỳ vật phẩm nào thiếu định nghĩa `def`.
+  3. Trong `items-db.ts`, hàm `isUsableItem()` trước đây chỉ kiểm tra một số danh mục cứng, khiến các vật phẩm thuộc `general` (như Đá tiến hóa, Nắp chai, Sáo chữa trạng thái) bị chặn sử dụng trực tiếp từ túi đồ.
+- **Chi tiết đã thực hiện:**
+  1. **Tích Hợp Toàn Diện Nhóm Kẹo Exp & Kẹo Hiếm ([item-catalog-effects.ts](file:///e:/Pokemon/apps/web/src/domain/inventory/item-catalog-effects.ts) & [item-effects.ts](file:///e:/Pokemon/apps/web/src/domain/inventory/item-effects.ts)):**
+     - Đăng ký đầy đủ `exp-candy-xs` (+100 EXP), `exp-candy-s` (+800 EXP), `exp-candy-m` (+3,000 EXP), `exp-candy-l` (+10,000 EXP), `exp-candy-xl` (+30,000 EXP).
+     - Hỗ trợ thăng nhiều cấp độ liên tục nếu tích lũy đủ EXP, tính toán lại EXP sang cấp kế tiếp chuẩn theo Growth Rate đường cong kinh nghiệm của loài Pokémon, tăng máu tương ứng và giới hạn chuẩn tại Lv.100.
+     - Cập nhật Rare Candy: reset thanh kinh nghiệm về 0 cho cấp mới và tăng 1 cấp mượt mà.
+  2. **Tích Hợp 21 Loại Bạc Hà Thay Đổi Tính Cách (Nature Mints):**
+     - Đăng ký toàn bộ 21 loại bạc hà: `adamant-mint`, `modest-mint`, `timid-mint`, `jolly-mint`, `bold-mint`, `calm-mint`, v.v.
+     - Kiểm tra nếu Pokémon đã mang tính cách đó thì trả về thông báo tránh lãng phí.
+     - Khi sử dụng: cập nhật `pokemon.nature`, tự động tính toán lại chỉ số với hệ số nhân 1.1 / 0.9 của Nature mới qua `recalculatePartyPokemonStats()`.
+  3. **Tích Hợp Nhóm Đá Tiến Hóa Chuẩn (Evolution Stones):**
+     - Xây dựng bảng tra cứu tiến hóa đá chuẩn `STONE_EVOLUTIONS`: Fire Stone (Vulpix, Growlithe, Eevee), Water Stone (Poliwhirl, Shellder, Staryu, Eevee), Thunder Stone (Pikachu, Eevee), Leaf Stone (Gloom, Weepinbell, Exeggcute), Moon Stone (Nidorina, Nidorino, Clefairy, Jigglypuff), v.v.
+     - Khi dùng đúng đá: Pokémon tiến hóa sang loài mới, cập nhật tên/loài/hệ/chỉ số và hiển thị thông báo chúc mừng tiến hóa rực rỡ.
+  4. **Tích Hợp Nhóm Huấn Luyện IVs (Bottle Cap / Nắp Chai) & Đặc Tính (Ability):**
+     - `gold-bottle-cap`: Luyện toàn bộ 6 chỉ số IVs lên mức hoàn hảo 31.
+     - `bottle-cap`: Luyện chỉ số IV chưa tối đa lên 31.
+     - `ability-capsule` & `ability-patch`: Hỗ trợ kích hoạt/chuyển đổi đặc tính.
+  5. **Tích Hợp Quả Mọng Giảm Điểm Nỗ Lực (EV Reset Berries) & Đặc Sản:**
+     - `pomeg-berry` (-10 HP EV), `kelpsy-berry` (-10 Atk EV), `qualot-berry` (-10 Def EV), `hondew-berry` (-10 SpAtk EV), `grepa-berry` (-10 SpDef EV), `tamato-berry` (-10 Speed EV).
+     - `rage-candy-bar`, `lumiose-galette`, `shalour-sable`, `pewter-crunchies`: Chữa toàn bộ trạng thái bất thường.
+     - `pp-up` & `pp-max`: Tăng tối đa 3 nấc giới hạn PP cho chiêu thức (+20% mỗi nấc).
+  6. **Cải Tiến Trải Nghiệm Túi Đồ & Điều Khiển Bàn Phím ([bag-screen.ts](file:///e:/Pokemon/apps/web/src/ui/bag-screen.ts) & [party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts)):**
+     - Tự động nhận diện mọi vật phẩm có định nghĩa hiệu ứng trong `isUsableItem()`.
+     - Chặn cảnh báo sớm ngay trong túi đồ nếu người chơi cố bấm dùng vật phẩm chỉ dùng trong trận (X-Attack, X-Defense).
+     - Cho phép bấm Enter / Space xác nhận ngay nút hành động "Dùng vật phẩm" trên màn hình Đội hình khi điều khiển bằng phím.
+  7. **Kiểm Thử Toàn Diện & Đảm Bảo Chất Lượng:**
+     - Bổ sung 6 bài kiểm thử chuyên sâu mới trong [item-effects.test.ts](file:///e:/Pokemon/apps/web/test/item-effects.test.ts).
+     - `npm run test:web` $\rightarrow$ 36/36 files, 423/423 tests PASS 100%.
+     - `npm run typecheck:web` $\rightarrow$ PASS 0 lỗi TypeScript.
+     - `npm run lint` $\rightarrow$ PASS 0 lỗi ESLint.
+     - `npm run build:web` $\rightarrow$ Production build thành công 100%.
+
+---
+
+## Cập nhật trước đó: 2026-10-10 (Thêm Nút Overlay Cung Cấp Full Item x1 Cho Người Chơi)
+
+### 0.84. Bổ Sung Nút Cheat Debug "💎 Cung Cấp Full Item (x1)" Trong Overlay:
+
+- **Trạng thái:** Đã hoàn thành 100%. 36 tệp test suite (417/417 tests), Typecheck (`npm run typecheck:web`), Lint (`npm run lint`), Build (`npm run build:web`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** Thêm nút ở overlay để cung cấp full item cho người chơi, số lượng x1 mỗi loại.
+- **Chi tiết đã thực hiện:**
+  1. **Thêm Phương Thức `addFullItems(quantity = 1)` Trong [inventory-service.ts](file:///e:/Pokemon/apps/web/src/domain/inventory/inventory-service.ts):**
+     - Quét toàn bộ 574+ vật phẩm có trong catalog game (`getAllCatalogItems()`), chuẩn hóa ID (`normalizeItemId()`).
+     - Đảm bảo mỗi vật phẩm trong túi có số lượng ít nhất là 1 (`quantity`).
+     - Áp dụng cơ chế cập nhật hàng loạt (batch update) và chỉ gọi `notify()` duy nhất 1 lần ở cuối tiến trình để đảm bảo hiệu năng, không gây giật lag hay re-render 574 lần.
+  2. **Mở Rộng Giao Diện `DebugBridge` & Kết Nối Trong [bootstrap.ts](file:///e:/Pokemon/apps/web/src/bootstrap.ts):**
+     - Bổ sung `addFullItems(): void` vào interface [types.ts](file:///e:/Pokemon/apps/web/src/debug/types.ts).
+     - Định nghĩa handler trong `bootstrap.ts`: gọi `inventoryService.addFullItems(1)` và hiển thị thông báo Toast `showBerryToast("Đã nhận đầy đủ toàn bộ vật phẩm (x1 mỗi loại)!")`.
+  3. **Tích Hợp Nút Bấm Vào Giao Diện Overlay Debug ([debug-template.ts](file:///e:/Pokemon/apps/web/src/debug/debug-template.ts) & [debug-controller.ts](file:///e:/Pokemon/apps/web/src/debug/debug-controller.ts)):**
+     - Đặt nút `#btnAddFullItems` (`💎 Cung cấp Full Item (x1)`) tại khu vực quản lý túi đồ `🎒 Kiểm thử & Thêm Vật Phẩm` trong overlay `#testOverlay`.
+     - Nút bấm được tạo kiểu với gradient bắt mắt, tooltip mô tả rõ ràng.
+     - Lắng nghe sự kiện click và kích hoạt qua `this.bridge.addFullItems()`.
+  4. **Bổ Sung Kiểm Thử Tự Động:**
+     - [item-effects.test.ts](file:///e:/Pokemon/apps/web/test/item-effects.test.ts): Kiểm tra `inventoryService.addFullItems(1)` cấp phát đầy đủ toàn bộ catalog (>570 items) với số lượng x1, không làm giảm số lượng nếu đã có sẵn.
+     - [custom-bot-spawner.test.ts](file:///e:/Pokemon/apps/web/test/custom-bot-spawner.test.ts): Kiểm tra nút `#btnAddFullItems` gọi thành công `bridge.addFullItems()`.
+  5. **Kiểm Thử & Đảm Bảo Chất Lượng:**
+     - `npm run test:web` $\rightarrow$ 36/36 test files, 417/417 unit tests PASS 100%.
+     - `npm run typecheck:web` $\rightarrow$ PASS 0 lỗi TypeScript.
+     - `npm run lint` $\rightarrow$ PASS 0 lỗi ESLint.
+     - `npm run build:web` $\rightarrow$ Production build thành công 100%.
+
+---
+
+## Cập nhật trước đó: 2026-10-10 (Sửa Lỗi Animation Các Move Tự Dùng Lên Bản Thân / Bảo Vệ Lại Xuất Hiện Trên Người Đối Phương)
+
+### 0.83. Chuẩn Hóa Vị Trí Hiển Thị Animation Cho Kĩ Năng Tự Dùng Lên Bản Thân (Self-Targeting Move Animation Positioning):
+
+- **Trạng thái:** Đã hoàn thành 100%. 36 tệp test suite (416/416 tests), Typecheck (`npm run typecheck:web`), Lint (`npm run lint`), Build (`npm run build:web`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** Các chiêu thức như Bảo Vệ (Protect) hoặc các chiêu thức dùng lên bản thân khi thi triển animation thì lại xuất hiện trên người đối phương.
+- **Nguyên nhân gốc rễ & Phân tích cơ chế:**
+  1. Trong hệ thống [move-vfx.ts](file:///e:/Pokemon/apps/web/src/battle/move-vfx.ts), cơ chế mặc định `buildVfxDefFromDbEntry()` và `TYPE_FALLBACK_VFX` gán giá trị `target: 'defender'`.
+  2. Danh sách kiểm tra chiêu thức tự dùng `SELF_HEAL_KEYWORDS` trước đây rất sơ sài (chỉ gồm một số từ khóa hồi máu), hoàn toàn không chứa `protect`, `detect`, `substitute`, `light_screen`, `reflect`, `barrier`, `safeguard`, `bulk_up`, `dragon_dance`, v.v.
+  3. Khi `BattleController.playMoveVfx()` được gọi, do `vfxDef.target` trả về `'defender'`, tọa độ mục tiêu `(targetX, targetY)` được gán thành tọa độ của đối thủ (`defenderCenter`). Kết quả là lá chắn Protect hay các hiệu ứng buff rơi thẳng lên đầu Pokémon đối phương thay vì bao bọc lấy bản thân Pokémon đang thi triển!
+- **Chi tiết đã thực hiện:**
+  1. **Xây Dựng Cơ Chế Nhận Diện Chiêu Thức Bản Thân `isSelfTargetMove` ([move-vfx.ts](file:///e:/Pokemon/apps/web/src/battle/move-vfx.ts)):**
+     - Tạo bảng tra cứu toàn diện `SELF_TARGET_MOVE_IDS` gồm hơn 100 chiêu thức phòng vệ (`protect`, `detect`, `spiky_shield`, `endure`, `baneful_bunker`...), tăng chỉ số (`swords_dance`, `dragon_dance`, `bulk_up`, `calm_mind`, `iron_defense`, `harden`...), dựng rào chắn (`light_screen`, `reflect`, `safeguard`, `barrier`...), thay thế / chuyển giao (`substitute`, `baton_pass`, `teleport`...), và hồi phục.
+     - Tích hợp kiểm tra động `isSelfTargetMove(move)`: tự động phân loại nếu là đòn trạng thái có `statChanges` toàn bộ `target === 'self'`, có `healPercent > 0`, có `statusEffect.target === 'self'`, hoặc chứa các từ khóa phòng thủ/buff.
+  2. **Bảo Đảm Tuyệt Đối `target: 'attacker'` Cho Toàn Bộ Chiêu Bản Thân:**
+     - Trong `resolveMoveVfx()`: Bất kỳ chiêu thức nào thỏa mãn `isSelfTargetMove(move)` đều được ghi đè `target = 'attacker'` và loại bỏ `screenShake` (tránh rung lắc màn hình như bị dính sát thương).
+     - Bổ sung cấu hình animation chuẩn RPG Maker XP trong `MOVE_VFX_REGISTRY` cho: `protect` (PRAS- Protect.png, 5 frames), `detect` (PRAS- Detect.png, 10 frames), `substitute` (PRAS- Substitute.png), `swords_dance`, `dragon_dance`, `light_screen`, `reflect`, `barrier`, `safeguard`, `harden`, `iron_defense`, `calm_mind`, `bulk_up`, `baton_pass`, `teleport`.
+     - Loại bỏ `giga_drain` khỏi registry thủ công để chiêu thức này sử dụng đúng sprite đòn đánh hút máu `PRAS- Giga Drain.png` nhắm vào đối thủ.
+  3. **Đồng Bộ Tọa Độ Trung Tâm Trong [battle-controller.ts](file:///e:/Pokemon/apps/web/src/battle/battle-controller.ts):**
+     - Trong `playMoveVfx()`: Nếu `isSelfTargetMove(move)` hoặc `vfxDef.target === 'attacker'`, tọa độ `(targetX, targetY)` lập tức được cố định vào `attackerCenter` (Player: `{x: 130, y: 215}`, Enemy: `{x: 380, y: 115}`).
+     - Tích hợp âm thanh lấp lánh nhẹ nhàng (`Audio/SE/Shiny sparkle.ogg`) cho các đòn buff/phòng vệ tự thân nếu không có SE riêng, thay vì phát tiếng bóng va đập mạnh (`Battle ball hit.ogg`).
+  4. **Bổ Sung Kiểm Thử Tự Động Trong [move-vfx.test.ts](file:///e:/Pokemon/apps/web/test/move-vfx.test.ts):**
+     - Kiểm tra phân loại chính xác `isSelfTargetMove` đối với Protect, Detect, Swords Dance, Iron Defense, Calm Mind, Substitute, Recover và Tackle.
+     - Kiểm tra `resolveMoveVfx()` trả về `target: 'attacker'` cho các chiêu bản thân.
+     - Kiểm tra trực tiếp tọa độ của `BattleController`: khi người chơi dùng Protect, VFX nằm tại `(130, 215)`; khi đối thủ dùng Protect, VFX nằm tại `(380, 115)`.
+  5. **Kiểm Thử & Đảm Bảo Chất Lượng:**
+     - `npm run test:web` $\rightarrow$ 36/36 test files, 416/416 unit tests PASS 100%.
+     - `npm run typecheck:web` $\rightarrow$ PASS 0 lỗi TypeScript.
+     - `npm run lint` $\rightarrow$ PASS 0 lỗi ESLint.
+     - `npm run build:web` $\rightarrow$ Production build thành công 100%.
+
+---
+
+## Cập nhật trước đó: 2026-10-10 (Sửa Lỗi Kĩ Năng Chuyển Đổi Pokémon Như Chuyền Gậy / Baton Pass Chỉ Có Thoại Không Đổi Pokémon)
+
+### 0.82. Kích Hoạt Đổi Pokémon Tương Tác & Chuyển Giao Trạng Thái Cho Kĩ Năng Chuyển Đổi (Baton Pass, U-turn, Volt Switch, Teleport):
+
+- **Trạng thái:** Đã hoàn thành 100%. 36 tệp test suite (413/413 tests), Typecheck (`npm run typecheck:web`), Lint (`npm run lint`), Build (`npm run build:web`) đạt kết quả **PASS 100%**.
+- **Yêu cầu người dùng:** Kĩ năng chuyển đổi Pokémon như Chuyền Gậy (Baton Pass) có thông báo thoại nhưng không đổi Pokémon.
+- **Nguyên nhân gốc rễ & Phân tích cơ chế:**
+  1. Trong `BattleEngine.executeAttack()`, các đòn chuyển đổi như `baton_pass`, `u_turn`, `volt_switch`, `flip_turn`, `teleport` đã tính toán đúng `mustSwitch = true`, `switchSide = 'player'`, kèm toàn bộ dữ liệu buff kế thừa `batonPassData` (statStages, Aqua Ring, Ingrain, Leech Seed, Confusion).
+  2. Tuy nhiên, trong [battle-controller.ts](file:///e:/Pokemon/apps/web/src/battle/battle-controller.ts), phương thức `handlePlayerMove()` trước đây chỉ kiểm tra `fainted` của hai bên mà hoàn toàn bỏ qua cờ `mustSwitch`. Dẫn tới sau khi thoại tung đòn kết thúc, vòng đấu lập tức chuyển tiếp lượt đánh hoặc kết thúc round mà không mở màn hình PartyScreen để người chơi chọn Pokémon đổi vào.
+- **Chi tiết đã thực hiện:**
+  1. **Thêm Cơ Chế `handleActionSwitch` & `handleEnemyActionSwitch` Trong [battle-controller.ts](file:///e:/Pokemon/apps/web/src/battle/battle-controller.ts):**
+     - Khi `firstRes` hoặc `secondRes` có `mustSwitch && switchSide === 'player'`:
+       - Kiểm tra đội hình xem có Pokémon khác còn sống không (`hasAliveSwitch`). Nếu không có ai, xuất thông báo không còn đồng đội để đổi và tiếp tục trận đấu.
+       - Nếu có đồng đội khả dụng: Mở giao diện `PartyScreen.getInstance().openForBattleSelect(...)` để người chơi tương tác chọn Pokémon đưa vào sân.
+       - Khi người chơi chọn Pokémon: Rút Pokémon cũ về, gọi `this.engine.switchPlayerPokemon(selectedPk, batonPassData)` để chuyển giao toàn bộ stat boost và trạng thái của Baton Pass. Cập nhật HP Bar, HUD và nạp Sprite của Pokémon mới, sau đó chạy animation ném bóng ra sân `startPlayerSendOut()`.
+       - Nếu người chơi đi trước: Sau khi đổi xong, đối thủ sẽ tiếp tục đánh vào Pokémon mới vừa ra sân (chuẩn luật Pokémon). Nếu người chơi đi sau: Kết thúc round và xử lý các hiệu ứng cuối lượt (status, weather, terrain).
+     - Hỗ trợ đổi Pokémon cho đối thủ (`handleEnemyActionSwitch`) và xử lý chạy trốn khi đối thủ dùng Teleport trong trận hoang dã.
+  2. **Bổ Sung Kiểm Thử Tự Động Toàn Diện Trong [special-support-moves.test.ts](file:///e:/Pokemon/apps/web/test/special-support-moves.test.ts):**
+     - Thêm test case tích hợp mô phỏng trọn vẹn luồng Ninjask dùng Baton Pass (+2 Atk, +4 Spd, Aqua Ring), `PartyScreen.getInstance().openForBattleSelect` được kích hoạt, chọn Marowak và xác nhận Marowak kế thừa hoàn hảo toàn bộ chỉ số buff.
+  3. **Kiểm Thử & Đảm Bảo Chất Lượng:**
+     - `npm run test:web` $\rightarrow$ 36/36 test files, 413/413 unit tests PASS 100%.
+     - `npm run typecheck:web` $\rightarrow$ PASS 0 lỗi TypeScript.
+     - `npm run lint` $\rightarrow$ PASS 0 lỗi ESLint.
+     - `npm run build:web` $\rightarrow$ Production build thành công 100%.
+
+---
+
+## Cập nhật trước đó: 2026-10-09 (Bỏ Icon/Emoji Thoại Thuốc Hồi Phục & Sửa Lỗi Không Hiện Sprite Pokémon Khi Ra Trận / Đổi Chỗ)
 
 ### 0.81. Loại Bỏ Icon Emoji Khỏi Dòng Thoại Dược Phẩm & Khắc Phục Lỗi Hiển Thị Sprite Pokémon Khi Ra Trận (Recovery Text Clean & Battler Sprite Fix):
 

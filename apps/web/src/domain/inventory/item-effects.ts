@@ -1,6 +1,7 @@
 /**
  * Unified Data-Driven Item Effects Engine
- * Processes all item actions (Medicine, Berries, Vitamins, Rare Candies, Battle Items)
+ * Processes all item actions (Medicine, Berries, Vitamins, Rare Candies, Exp Candies,
+ * Nature Mints, Evolution Stones, Hyper Training, Battle Boosters)
  * via the declarative ITEM_EFFECTS_REGISTRY.
  * Returns structured result codes and clean events for both Overworld and Battle.
  */
@@ -10,12 +11,18 @@ import { recalculatePartyPokemonStats } from '../party/party-state';
 import {
   addEffortValues,
   createDefaultEvs,
+  createDefaultIvs,
   MAX_EV_PER_STAT,
   MAX_TOTAL_EV,
 } from '../party/pokemon-stats';
 import type { BattlerPokemon } from '../../battle/types';
 import type { ItemData } from '../../data/items-db';
-import { getItemEffectDef } from './item-catalog-effects';
+import { getItemEffectDef, STONE_EVOLUTIONS, isMoveTargetItem } from './item-catalog-effects';
+export { isMoveTargetItem };
+import { NATURES_TABLE, type StatKey } from '@pokemon/shared-types';
+import { pokemonCatalog } from '../../data';
+import { normalizeGrowthRate, getExpToNextLevel } from '../pokemon/pokemon-exp';
+import { getMoveById } from '../../battle/moves-db';
 
 export type ItemResultCode =
   | 'SUCCESS'
@@ -30,6 +37,7 @@ export type ItemResultCode =
   | 'ERR_STAGE_MAX'
   | 'ERR_CRIT_STAGE_MAX'
   | 'ERR_WRONG_CONTEXT'
+  | 'ERR_INCOMPATIBLE'
   | 'ERR_NO_EFFECT';
 
 export interface ItemActionResult {
@@ -67,7 +75,8 @@ function normalizeKey(item: ItemData): string {
 export function canUseItemOnPartyPokemon(
   item: ItemData,
   pokemon: PartyPokemon,
-  partyMembers?: readonly PartyPokemon[] | PartyPokemon[]
+  partyMembers?: readonly PartyPokemon[] | PartyPokemon[],
+  targetMoveIndex?: number
 ): ItemEligibilityResult {
   const key = normalizeKey(item);
   const def = getItemEffectDef(key);
@@ -155,8 +164,8 @@ export function canUseItemOnPartyPokemon(
     return { canUse: true, code: 'SUCCESS' };
   }
 
-  // 4. Rare Candy Level Up check
-  if (def.levelUp !== undefined) {
+  // 4. Rare Candy & Exp Candies Level Up check
+  if (def.levelUp !== undefined || def.addExp !== undefined) {
     if (pokemon.level >= 100) {
       return {
         canUse: false,
@@ -167,7 +176,20 @@ export function canUseItemOnPartyPokemon(
     return { canUse: true, code: 'SUCCESS' };
   }
 
-  // 5. Stat Boost Vitamins (EV)
+  // 5. Nature Mints check
+  if (def.natureMint !== undefined) {
+    if (pokemon.nature === def.natureMint) {
+      const natureData = NATURES_TABLE[def.natureMint] ?? NATURES_TABLE.Hardy;
+      return {
+        canUse: false,
+        code: 'ERR_NO_EFFECT',
+        reason: `${name} vốn đã mang tính cách ${natureData.nameVi} (${def.natureMint}) rồi!`,
+      };
+    }
+    return { canUse: true, code: 'SUCCESS' };
+  }
+
+  // 6. Stat Boost Vitamins (EV)
   if (def.addEv) {
     if (!pokemon.evs) pokemon.evs = createDefaultEvs();
     const totalEv = Object.values(pokemon.evs).reduce((a, b) => a + b, 0);
@@ -189,16 +211,178 @@ export function canUseItemOnPartyPokemon(
     return { canUse: true, code: 'SUCCESS' };
   }
 
-  // 6. PP Restorers
+  // 7. EV-reducing Berries
+  if (def.subEv) {
+    if (!pokemon.evs) pokemon.evs = createDefaultEvs();
+    if (pokemon.evs[def.subEv.stat] <= 0) {
+      const label = STAT_LABELS_VI[def.subEv.stat] || def.subEv.stat;
+      return {
+        canUse: false,
+        code: 'ERR_NO_EFFECT',
+        reason: `Điểm nỗ lực ${label} của ${name} vốn đã ở mức 0!`,
+      };
+    }
+    return { canUse: true, code: 'SUCCESS' };
+  }
+
+  // 8. PP Restorers
   if (def.restorePp) {
-    const hasDepleted = pokemon.moves.some((m) => m.pp < m.maxPp);
-    if (!hasDepleted) {
+    if (def.restorePp.target === 'single') {
+      if (targetMoveIndex !== undefined) {
+        const move = pokemon.moves[targetMoveIndex];
+        if (!move) {
+          return {
+            canUse: false,
+            code: 'ERR_NO_EFFECT',
+            reason: `Không tìm thấy chiêu thức thứ ${targetMoveIndex + 1} của ${name}!`,
+          };
+        }
+        if (move.pp >= move.maxPp) {
+          return {
+            canUse: false,
+            code: 'ERR_PP_FULL',
+            reason: `Chiêu thức ${move.nameVi || move.name} của ${name} đã đầy PP (${move.pp}/${move.maxPp})!`,
+          };
+        }
+        return { canUse: true, code: 'SUCCESS' };
+      }
+      const hasDepleted = pokemon.moves.some((m) => m.pp < m.maxPp);
+      if (!hasDepleted) {
+        return {
+          canUse: false,
+          code: 'ERR_PP_FULL',
+          reason: `Tất cả chiêu thức của ${name} đều đã đầy PP!`,
+        };
+      }
+      return { canUse: true, code: 'SUCCESS' };
+    } else {
+      const hasDepleted = pokemon.moves.some((m) => m.pp < m.maxPp);
+      if (!hasDepleted) {
+        return {
+          canUse: false,
+          code: 'ERR_PP_FULL',
+          reason: `Tất cả chiêu thức của ${name} đều đã đầy PP!`,
+        };
+      }
+      return { canUse: true, code: 'SUCCESS' };
+    }
+  }
+
+  // 9. PP Enhancers (PP Up & PP Max)
+  if (def.boostMaxPp) {
+    if (targetMoveIndex !== undefined) {
+      const move = pokemon.moves[targetMoveIndex];
+      if (!move) {
+        return {
+          canUse: false,
+          code: 'ERR_NO_EFFECT',
+          reason: `Không tìm thấy chiêu thức thứ ${targetMoveIndex + 1} của ${name}!`,
+        };
+      }
+      const count = (move as { ppUpCount?: number }).ppUpCount ?? 0;
+      if (count >= 3) {
+        return {
+          canUse: false,
+          code: 'ERR_PP_FULL',
+          reason: `Chiêu thức ${move.nameVi || move.name} của ${name} đã đạt giới hạn PP tối đa (3/3)!`,
+        };
+      }
+      return { canUse: true, code: 'SUCCESS' };
+    }
+    const hasEligible = pokemon.moves.some(
+      (m) => ((m as { ppUpCount?: number }).ppUpCount ?? 0) < 3
+    );
+    if (!hasEligible) {
       return {
         canUse: false,
         code: 'ERR_PP_FULL',
-        reason: `Tất cả chiêu thức của ${name} đều đã đầy PP!`,
+        reason: `Tất cả chiêu thức của ${name} đều đã đạt giới hạn PP tối đa!`,
       };
     }
+    return { canUse: true, code: 'SUCCESS' };
+  }
+
+  // 10. Evolution Stones
+  if (def.evolutionStone) {
+    const targetKey = STONE_EVOLUTIONS[def.evolutionStone]?.[pokemon.speciesKey.toUpperCase()];
+    if (!targetKey) {
+      return {
+        canUse: false,
+        code: 'ERR_NO_EFFECT',
+        reason: `Vật phẩm này không có tác dụng với ${name}!`,
+      };
+    }
+    return { canUse: true, code: 'SUCCESS' };
+  }
+
+  // 11. Hyper Training (Bottle Caps)
+  if (def.ivHyperTraining) {
+    if (!pokemon.ivs) pokemon.ivs = createDefaultIvs(0);
+    const allMax = Object.values(pokemon.ivs).every((v) => v >= 31);
+    if (allMax) {
+      return {
+        canUse: false,
+        code: 'ERR_NO_EFFECT',
+        reason: `Toàn bộ chỉ số cá thể (IVs) của ${name} đã đạt mức tối đa 31!`,
+      };
+    }
+    return { canUse: true, code: 'SUCCESS' };
+  }
+
+  // 12. Ability Modifier
+  if (def.abilityModifier) {
+    return { canUse: true, code: 'SUCCESS' };
+  }
+
+  // 13. Move Teaching (TM/HM)
+  if (def.teachMove) {
+    const move = getMoveById(def.teachMove);
+    const moveName = move ? move.nameVi || move.name : def.teachMove;
+    const targetMoveId = def.teachMove.toLowerCase();
+    const itemName = item.nameVi || item.name;
+
+    // Species TM compatibility check from Pokédex database
+    const species =
+      pokemonCatalog.getBySpeciesKey(pokemon.speciesKey) ??
+      pokemonCatalog.getById(pokemon.speciesId);
+    if (species && Array.isArray(species.tmMoves)) {
+      const isCompatible = species.tmMoves.some((m) => {
+        const normM = m.toLowerCase().replace(/_/g, '-');
+        const normTarget = targetMoveId.replace(/_/g, '-');
+        return normM === normTarget || normM.replace(/-/g, '') === normTarget.replace(/-/g, '');
+      });
+      if (!isCompatible) {
+        return {
+          canUse: false,
+          code: 'ERR_INCOMPATIBLE',
+          reason: `${name} không thể học chiêu thức ${moveName} từ ${itemName}!`,
+        };
+      }
+    }
+
+    const alreadyKnows = pokemon.moves.some((m) => {
+      const mId = (m.id || (m as { moveId?: string }).moveId || '').toLowerCase();
+      return mId === targetMoveId;
+    });
+    if (alreadyKnows) {
+      return {
+        canUse: false,
+        code: 'ERR_NO_EFFECT',
+        reason: `${name} đã thành thạo chiêu thức ${moveName} rồi!`,
+      };
+    }
+
+    const alreadyTaught = pokemon.taughtTmMoves?.some(
+      (m) => m.toLowerCase() === targetMoveId
+    );
+    if (alreadyTaught) {
+      return {
+        canUse: false,
+        code: 'ERR_NO_EFFECT',
+        reason: `${name} đã được dạy chiêu ${moveName} từ trước! Bạn có thể vào mục Chi Tiết Pokémon để trang bị lại mà không cần tốn đĩa TM!`,
+      };
+    }
+
     return { canUse: true, code: 'SUCCESS' };
   }
 
@@ -215,9 +399,10 @@ export function canUseItemOnPartyPokemon(
 export function applyItemToPartyPokemon(
   item: ItemData,
   pokemon: PartyPokemon,
-  partyMembers?: readonly PartyPokemon[] | PartyPokemon[]
+  partyMembers?: readonly PartyPokemon[] | PartyPokemon[],
+  targetMoveIndex?: number
 ): ItemActionResult {
-  const check = canUseItemOnPartyPokemon(item, pokemon, partyMembers);
+  const check = canUseItemOnPartyPokemon(item, pokemon, partyMembers, targetMoveIndex);
   if (!check.canUse) {
     return {
       success: false,
@@ -296,7 +481,9 @@ export function applyItemToPartyPokemon(
 
   // 4. Rare Candy
   if (def.levelUp !== undefined) {
-    const { hpGained } = recalculatePartyPokemonStats(pokemon, pokemon.level + def.levelUp);
+    const targetLevel = Math.min(100, pokemon.level + def.levelUp);
+    const { hpGained } = recalculatePartyPokemonStats(pokemon, targetLevel);
+    pokemon.exp = 0;
     return {
       success: true,
       code: 'SUCCESS',
@@ -305,7 +492,74 @@ export function applyItemToPartyPokemon(
     };
   }
 
-  // 5. Stat Boost Vitamins (EV)
+  // 5. Exp Candies (XS, S, M, L, XL)
+  if (def.addExp !== undefined) {
+    const expToAdd = def.addExp;
+    const oldLevel = pokemon.level;
+    let currentExp = pokemon.exp + expToAdd;
+    let newLevel = pokemon.level;
+    let totalHpGained = 0;
+
+    const species =
+      pokemonCatalog.getBySpeciesKey(pokemon.speciesKey) ??
+      pokemonCatalog.getBySpeciesKey('PIKACHU')!;
+    const growthRate = normalizeGrowthRate(species.growthRate);
+
+    while (newLevel < 100) {
+      const needed = getExpToNextLevel(growthRate, newLevel);
+      if (currentExp >= needed) {
+        currentExp -= needed;
+        newLevel++;
+        const { hpGained } = recalculatePartyPokemonStats(pokemon, newLevel);
+        totalHpGained += hpGained;
+      } else {
+        break;
+      }
+    }
+
+    if (newLevel >= 100) {
+      pokemon.level = 100;
+      pokemon.exp = 0;
+      pokemon.maxExp = 0;
+      recalculatePartyPokemonStats(pokemon, 100);
+    } else {
+      pokemon.exp = currentExp;
+      pokemon.maxExp = getExpToNextLevel(growthRate, pokemon.level);
+    }
+
+    if (newLevel > oldLevel) {
+      return {
+        success: true,
+        code: 'SUCCESS',
+        message: `Đã dùng ${itemName}! ${name} nhận được +${expToAdd} EXP và thăng cấp lên Lv.${pokemon.level}!`,
+        hpRecovered: totalHpGained,
+        details: { oldLevel, newLevel: pokemon.level, expAdded: expToAdd },
+      };
+    } else {
+      return {
+        success: true,
+        code: 'SUCCESS',
+        message: `Đã dùng ${itemName}! ${name} nhận được +${expToAdd} EXP (${pokemon.exp}/${pokemon.maxExp})!`,
+        details: { level: pokemon.level, expAdded: expToAdd },
+      };
+    }
+  }
+
+  // 6. Nature Mints (Bạc hà tính cách)
+  if (def.natureMint !== undefined) {
+    const oldNature = pokemon.nature;
+    pokemon.nature = def.natureMint;
+    const { oldStats, newStats } = recalculatePartyPokemonStats(pokemon);
+    const natureData = NATURES_TABLE[def.natureMint] ?? NATURES_TABLE.Hardy;
+    return {
+      success: true,
+      code: 'SUCCESS',
+      message: `Đã dùng ${itemName}! Tính cách của ${name} đã chuyển đổi thành ${natureData.nameVi} (${def.natureMint})!`,
+      details: { oldNature, newNature: def.natureMint, oldStats, newStats },
+    };
+  }
+
+  // 7. Stat Boost Vitamins (EV)
   if (def.addEv) {
     if (!pokemon.evs) pokemon.evs = createDefaultEvs();
     const addedEv = addEffortValues(pokemon.evs, def.addEv.stat, def.addEv.amount);
@@ -326,28 +580,219 @@ export function applyItemToPartyPokemon(
     };
   }
 
-  // 6. PP Restorers
+  // 8. EV-reducing Berries
+  if (def.subEv) {
+    if (!pokemon.evs) pokemon.evs = createDefaultEvs();
+    const oldEv = pokemon.evs[def.subEv.stat];
+    const newEv = Math.max(0, oldEv - def.subEv.amount);
+    pokemon.evs[def.subEv.stat] = newEv;
+    const reduced = oldEv - newEv;
+    const { oldStats, newStats } = recalculatePartyPokemonStats(pokemon);
+    const statLabel = STAT_LABELS_VI[def.subEv.stat] || def.subEv.stat;
+    return {
+      success: true,
+      code: 'SUCCESS',
+      message: `Đã dùng ${itemName}! Điểm nỗ lực ${statLabel} của ${name} đã giảm (${oldEv} ➔ ${newEv}, -${reduced} EV)!`,
+      details: { stat: def.subEv.stat, reduced, oldStats, newStats },
+    };
+  }
+
+  // 9. PP Restorers
   if (def.restorePp) {
     if (def.restorePp.target === 'single') {
-      const move = pokemon.moves.find((m) => m.pp < m.maxPp);
+      const move =
+        targetMoveIndex !== undefined
+          ? pokemon.moves[targetMoveIndex]
+          : pokemon.moves.find((m) => m.pp < m.maxPp);
       if (move) {
+        const oldPp = move.pp;
         const amt = def.restorePp.amount === 'max' ? move.maxPp : def.restorePp.amount;
         move.pp = Math.min(move.maxPp, move.pp + amt);
+        const restored = move.pp - oldPp;
         return {
           success: true,
           code: 'SUCCESS',
-          message: `Đã dùng ${itemName}! Phục hồi PP cho chiêu ${move.nameVi || move.name} của ${name}!`,
+          message: `Đã dùng ${itemName}! Phục hồi +${restored} PP cho chiêu ${move.nameVi || move.name} của ${name} (${move.pp}/${move.maxPp})!`,
         };
       }
+      return {
+        success: false,
+        code: 'ERR_PP_FULL',
+        message: `Chiêu thức đã đầy PP!`,
+      };
     } else {
+      let totalRestored = 0;
       for (const m of pokemon.moves) {
+        const oldPp = m.pp;
         const amt = def.restorePp.amount === 'max' ? m.maxPp : def.restorePp.amount;
         m.pp = Math.min(m.maxPp, m.pp + amt);
+        totalRestored += m.pp - oldPp;
       }
       return {
         success: true,
         code: 'SUCCESS',
-        message: `Đã dùng ${itemName}! Đã phục hồi PP cho toàn bộ chiêu thức của ${name}!`,
+        message: `Đã dùng ${itemName}! Đã phục hồi PP cho toàn bộ chiêu thức của ${name} (+${totalRestored} PP)!`,
+      };
+    }
+  }
+
+  // 10. PP Enhancers (PP Up & PP Max)
+  if (def.boostMaxPp) {
+    const move =
+      targetMoveIndex !== undefined
+        ? pokemon.moves[targetMoveIndex]
+        : pokemon.moves.find(
+            (m) => ((m as { ppUpCount?: number }).ppUpCount ?? 0) < 3
+          );
+    if (move) {
+      const moveExt = move as { ppUpCount?: number; baseMaxPp?: number };
+      const currentCount = moveExt.ppUpCount ?? 0;
+      if (currentCount >= 3) {
+        return {
+          success: false,
+          code: 'ERR_PP_FULL',
+          message: `Chiêu thức ${move.nameVi || move.name} đã đạt giới hạn nâng cấp PP tối đa (3/3)!`,
+        };
+      }
+      const basePp = moveExt.baseMaxPp ?? move.maxPp;
+      moveExt.baseMaxPp = basePp;
+      const boostStep = Math.max(1, Math.floor(basePp * 0.2));
+
+      if (def.boostMaxPp === 'max') {
+        const remainingSteps = 3 - currentCount;
+        moveExt.ppUpCount = 3;
+        move.maxPp += boostStep * remainingSteps;
+        move.pp = Math.min(move.maxPp, move.pp + boostStep * remainingSteps);
+      } else {
+        moveExt.ppUpCount = currentCount + 1;
+        move.maxPp += boostStep;
+        move.pp = Math.min(move.maxPp, move.pp + boostStep);
+      }
+
+      return {
+        success: true,
+        code: 'SUCCESS',
+        message: `Đã dùng ${itemName}! Giới hạn PP của chiêu ${move.nameVi || move.name} tăng lên ${move.maxPp} PP (Cấp ${moveExt.ppUpCount}/3)!`,
+      };
+    }
+    return {
+      success: false,
+      code: 'ERR_PP_FULL',
+      message: `Tất cả chiêu thức đã đạt giới hạn PP tối đa!`,
+    };
+  }
+
+  // 11. Evolution Stones
+  if (def.evolutionStone) {
+    const targetKey = STONE_EVOLUTIONS[def.evolutionStone]?.[pokemon.speciesKey.toUpperCase()];
+    if (targetKey) {
+      const targetSpecies = pokemonCatalog.getBySpeciesKey(targetKey);
+      if (targetSpecies) {
+        const oldSpeciesName = pokemon.name;
+        const isDefaultName = !pokemon.nickname || pokemon.nickname === oldSpeciesName;
+        pokemon.speciesId = targetSpecies.id;
+        pokemon.speciesKey = targetSpecies.speciesKey;
+        if (isDefaultName) {
+          pokemon.name = targetSpecies.name;
+        }
+        pokemon.types = [...targetSpecies.types];
+        if (targetSpecies.ability) {
+          pokemon.ability = targetSpecies.ability;
+        }
+        const { hpGained } = recalculatePartyPokemonStats(pokemon, pokemon.level);
+        return {
+          success: true,
+          code: 'SUCCESS',
+          message: `✨ Chúc mừng! ${oldSpeciesName} đã tiến hóa thành công thành ${targetSpecies.name}!`,
+          hpRecovered: hpGained,
+          details: { evolvedSpecies: targetSpecies.speciesKey },
+        };
+      }
+    }
+  }
+
+  // 12. Hyper Training (Bottle Caps)
+  if (def.ivHyperTraining) {
+    if (!pokemon.ivs) pokemon.ivs = createDefaultIvs(0);
+    if (def.ivHyperTraining === 'all') {
+      pokemon.ivs.hp = 31;
+      pokemon.ivs.attack = 31;
+      pokemon.ivs.defense = 31;
+      pokemon.ivs.spAtk = 31;
+      pokemon.ivs.spDef = 31;
+      pokemon.ivs.speed = 31;
+      const { oldStats, newStats } = recalculatePartyPokemonStats(pokemon);
+      return {
+        success: true,
+        code: 'SUCCESS',
+        message: `Đã dùng ${itemName}! Toàn bộ 6 chỉ số cá thể (IVs) của ${name} đã được huấn luyện đạt mức hoàn hảo 31!`,
+        details: { oldStats, newStats },
+      };
+    } else {
+      const statList: StatKey[] = ['hp', 'attack', 'defense', 'spAtk', 'spDef', 'speed'];
+      const targetStat = statList.find((s) => pokemon.ivs[s] < 31) || 'hp';
+      pokemon.ivs[targetStat] = 31;
+      const { oldStats, newStats } = recalculatePartyPokemonStats(pokemon);
+      const label = STAT_LABELS_VI[targetStat] || targetStat;
+      return {
+        success: true,
+        code: 'SUCCESS',
+        message: `Đã dùng ${itemName}! Chỉ số IV ${label} của ${name} đã đạt mức tối đa 31!`,
+        details: { stat: targetStat, oldStats, newStats },
+      };
+    }
+  }
+
+  // 13. Ability Modifier
+  if (def.abilityModifier) {
+    return {
+      success: true,
+      code: 'SUCCESS',
+      message: `Đã dùng ${itemName}! Đặc tính của ${name} đã được kích hoạt thành công!`,
+    };
+  }
+
+  // 14. Move Teaching (TM/HM)
+  if (def.teachMove) {
+    const move = getMoveById(def.teachMove);
+    if (!move) {
+      return {
+        success: false,
+        code: 'ERR_NO_EFFECT',
+        message: `Không tìm thấy dữ liệu chiêu thức ${def.teachMove}!`,
+      };
+    }
+    const moveName = move.nameVi || move.name;
+    const moveId = move.id;
+
+    // Permanently record this move into taught TM moves pool!
+    if (!pokemon.taughtTmMoves) {
+      pokemon.taughtTmMoves = [];
+    }
+    const normTarget = moveId.toLowerCase();
+    if (!pokemon.taughtTmMoves.some((id) => id.toLowerCase() === normTarget)) {
+      pokemon.taughtTmMoves.push(moveId);
+    }
+
+    if (pokemon.moves.length < 4) {
+      pokemon.moves.push({ ...move });
+      return {
+        success: true,
+        code: 'SUCCESS',
+        message: `🎉 ${name} đã học thành công chiêu thức ${moveName}!`,
+      };
+    } else {
+      const replacedMove = pokemon.moves[3];
+      const replacedName =
+        replacedMove?.nameVi ||
+        replacedMove?.name ||
+        (replacedMove as { moveId?: string })?.moveId ||
+        'chiêu cũ';
+      pokemon.moves[3] = { ...move };
+      return {
+        success: true,
+        code: 'SUCCESS',
+        message: `🎉 ${name} đã quên ${replacedName} và học thành công chiêu thức ${moveName}!`,
       };
     }
   }

@@ -89,7 +89,11 @@ describe('Item Interaction Moves', () => {
     expect(res.message).toContain('hoán đổi vật phẩm cho nhau');
 
     // Fails if Sticky Hold is present
-    const stickyDefender = createMockBattler({ name: 'Muk', ability: 'Sticky Hold', heldItem: 'black-sludge' });
+    const stickyDefender = createMockBattler({
+      name: 'Muk',
+      ability: 'Sticky Hold',
+      heldItem: 'black-sludge',
+    });
     const engine2 = new BattleEngine(attacker, stickyDefender, env);
     const resSticky = engine2.executeAttack(attacker, stickyDefender, trickMove);
     expect(resSticky.message).toContain('Dính Chặt');
@@ -106,7 +110,12 @@ describe('Item Interaction Moves', () => {
   it('Thief and Covet steal held item when user has none, blocked by Sticky Hold', () => {
     const env = createMockEnvironment();
     const attacker = createMockBattler({ name: 'Weavile', heldItem: null });
-    const defender = createMockBattler({ name: 'Pikachu', heldItem: 'light-ball', maxHp: 100, currentHp: 100 });
+    const defender = createMockBattler({
+      name: 'Pikachu',
+      heldItem: 'light-ball',
+      maxHp: 100,
+      currentHp: 100,
+    });
     const engine = new BattleEngine(attacker, defender, env, new FixedSequenceRng([0.1, 0.1]));
 
     const thiefMove: BattleMove = {
@@ -135,8 +144,18 @@ describe('Item Interaction Moves', () => {
 
     // Cannot steal if defender has Sticky Hold
     attacker.heldItem = null;
-    const stickyDefender = createMockBattler({ ability: 'Sticky Hold', heldItem: 'sitrus-berry', maxHp: 100, currentHp: 100 });
-    const engine3 = new BattleEngine(attacker, stickyDefender, env, new FixedSequenceRng([0.1, 0.1]));
+    const stickyDefender = createMockBattler({
+      ability: 'Sticky Hold',
+      heldItem: 'sitrus-berry',
+      maxHp: 100,
+      currentHp: 100,
+    });
+    const engine3 = new BattleEngine(
+      attacker,
+      stickyDefender,
+      env,
+      new FixedSequenceRng([0.1, 0.1])
+    );
     const resSticky = engine3.executeAttack(attacker, stickyDefender, thiefMove);
     expect(stickyDefender.heldItem).toBe('sitrus-berry');
     expect(resSticky.message).toContain('Dính Chặt');
@@ -145,8 +164,18 @@ describe('Item Interaction Moves', () => {
   it('Knock Off gets 1.5x power and knocks off item, unless target has Sticky Hold', () => {
     const env = createMockEnvironment();
     const attacker = createMockBattler({ name: 'Bisharp' });
-    const defenderWithItem = createMockBattler({ name: 'Gengar', heldItem: 'focus-sash', maxHp: 200, currentHp: 200 });
-    const defenderNoItem = createMockBattler({ name: 'Gengar', heldItem: null, maxHp: 200, currentHp: 200 });
+    const defenderWithItem = createMockBattler({
+      name: 'Gengar',
+      heldItem: 'focus-sash',
+      maxHp: 200,
+      currentHp: 200,
+    });
+    const defenderNoItem = createMockBattler({
+      name: 'Gengar',
+      heldItem: null,
+      maxHp: 200,
+      currentHp: 200,
+    });
 
     const knockOffMove: BattleMove = {
       id: 'knock_off',
@@ -161,19 +190,39 @@ describe('Item Interaction Moves', () => {
     };
 
     // Attack defender with item
-    const engine1 = new BattleEngine(attacker, defenderWithItem, env, new FixedSequenceRng([0.1, 0.1]));
+    const engine1 = new BattleEngine(
+      attacker,
+      defenderWithItem,
+      env,
+      new FixedSequenceRng([0.1, 0.1])
+    );
     const res1 = engine1.executeAttack(attacker, defenderWithItem, knockOffMove);
     expect(defenderWithItem.heldItem).toBeNull();
     expect(res1.message).toContain('đã đánh rơi');
 
     // Attack defender without item
-    const engine2 = new BattleEngine(attacker, defenderNoItem, env, new FixedSequenceRng([0.1, 0.1]));
+    const engine2 = new BattleEngine(
+      attacker,
+      defenderNoItem,
+      env,
+      new FixedSequenceRng([0.1, 0.1])
+    );
     const res2 = engine2.executeAttack(attacker, defenderNoItem, knockOffMove);
     expect(res1.damage).toBeGreaterThan(res2.damage);
 
     // Target with Sticky Hold does not lose item and takes normal damage
-    const stickyDefender = createMockBattler({ ability: 'Sticky Hold', heldItem: 'leftovers', maxHp: 200, currentHp: 200 });
-    const engine3 = new BattleEngine(attacker, stickyDefender, env, new FixedSequenceRng([0.1, 0.1]));
+    const stickyDefender = createMockBattler({
+      ability: 'Sticky Hold',
+      heldItem: 'leftovers',
+      maxHp: 200,
+      currentHp: 200,
+    });
+    const engine3 = new BattleEngine(
+      attacker,
+      stickyDefender,
+      env,
+      new FixedSequenceRng([0.1, 0.1])
+    );
     const res3 = engine3.executeAttack(attacker, stickyDefender, knockOffMove);
     expect(stickyDefender.heldItem).toBe('leftovers');
     expect(res3.message).toContain('Dính Chặt');
@@ -182,7 +231,12 @@ describe('Item Interaction Moves', () => {
   it('Bug Bite and Pluck eat the defender berry and gain its effect', () => {
     const env = createMockEnvironment();
     const attacker = createMockBattler({ name: 'Scizor', maxHp: 100, currentHp: 50 });
-    const defender = createMockBattler({ name: 'Shuckle', heldItem: 'sitrus-berry', maxHp: 100, currentHp: 100 });
+    const defender = createMockBattler({
+      name: 'Shuckle',
+      heldItem: 'sitrus-berry',
+      maxHp: 100,
+      currentHp: 100,
+    });
     const engine = new BattleEngine(attacker, defender, env, new FixedSequenceRng([0.1, 0.1]));
 
     const bugBiteMove: BattleMove = {
@@ -209,7 +263,12 @@ describe('Item Interaction Moves', () => {
   it('Incinerate burns and destroys opponent held berry', () => {
     const env = createMockEnvironment();
     const attacker = createMockBattler({ name: 'Charizard' });
-    const defender = createMockBattler({ name: 'Venusaur', heldItem: 'lum-berry', maxHp: 100, currentHp: 100 });
+    const defender = createMockBattler({
+      name: 'Venusaur',
+      heldItem: 'lum-berry',
+      maxHp: 100,
+      currentHp: 100,
+    });
     const engine = new BattleEngine(attacker, defender, env, new FixedSequenceRng([0.1, 0.1]));
 
     const incinerateMove: BattleMove = {
@@ -263,7 +322,13 @@ describe('Item Interaction Moves', () => {
   it('Fling with Flame Orb burns the defender', () => {
     const env = createMockEnvironment();
     const attacker = createMockBattler({ name: 'Gengar', heldItem: 'flame-orb' });
-    const defender = createMockBattler({ name: 'NormalTarget', types: ['Normal'], status: 'none', maxHp: 100, currentHp: 100 });
+    const defender = createMockBattler({
+      name: 'NormalTarget',
+      types: ['Normal'],
+      status: 'none',
+      maxHp: 100,
+      currentHp: 100,
+    });
     const engine = new BattleEngine(attacker, defender, env, new FixedSequenceRng([0.1, 0.1]));
 
     const flingMove: BattleMove = {
@@ -285,7 +350,11 @@ describe('Item Interaction Moves', () => {
 
   it('Recycle recovers the last consumed item', () => {
     const env = createMockEnvironment();
-    const attacker = createMockBattler({ name: 'Snorlax', heldItem: null, lastConsumedItem: 'sitrus-berry' });
+    const attacker = createMockBattler({
+      name: 'Snorlax',
+      heldItem: null,
+      lastConsumedItem: 'sitrus-berry',
+    });
     const defender = createMockBattler();
     const engine = new BattleEngine(attacker, defender, env);
 
@@ -350,8 +419,18 @@ describe('Item Interaction Moves', () => {
   it('Poltergeist deals high damage if defender holds item, fails if defender holds no item', () => {
     const env = createMockEnvironment();
     const attacker = createMockBattler({ name: 'Chandelure', types: ['Ghost', 'Fire'] });
-    const defenderWithItem = createMockBattler({ name: 'Lucario', heldItem: 'life-orb', maxHp: 150, currentHp: 150 });
-    const defenderNoItem = createMockBattler({ name: 'Lucario', heldItem: null, maxHp: 150, currentHp: 150 });
+    const defenderWithItem = createMockBattler({
+      name: 'Lucario',
+      heldItem: 'life-orb',
+      maxHp: 150,
+      currentHp: 150,
+    });
+    const defenderNoItem = createMockBattler({
+      name: 'Lucario',
+      heldItem: null,
+      maxHp: 150,
+      currentHp: 150,
+    });
 
     const poltergeistMove: BattleMove = {
       id: 'poltergeist',
@@ -366,14 +445,24 @@ describe('Item Interaction Moves', () => {
     };
 
     // Target with item takes damage and keeps item
-    const engine1 = new BattleEngine(attacker, defenderWithItem, env, new FixedSequenceRng([0.1, 0.1]));
+    const engine1 = new BattleEngine(
+      attacker,
+      defenderWithItem,
+      env,
+      new FixedSequenceRng([0.1, 0.1])
+    );
     const res1 = engine1.executeAttack(attacker, defenderWithItem, poltergeistMove);
     expect(res1.damage).toBeGreaterThan(0);
     expect(defenderWithItem.heldItem).toBe('life-orb');
     expect(res1.message).toContain('bị tấn công bởi chính');
 
     // Target with no item causes Poltergeist to fail
-    const engine2 = new BattleEngine(attacker, defenderNoItem, env, new FixedSequenceRng([0.1, 0.1]));
+    const engine2 = new BattleEngine(
+      attacker,
+      defenderNoItem,
+      env,
+      new FixedSequenceRng([0.1, 0.1])
+    );
     const res2 = engine2.executeAttack(attacker, defenderNoItem, poltergeistMove);
     expect(res2.damage).toBe(0);
     expect(res2.message).toContain('không mang vật phẩm nào!');

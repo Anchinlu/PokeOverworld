@@ -9,7 +9,7 @@ import type { PartyPokemon } from '../domain/party/party-state';
 import { PARTY_ASSETS, POKEMON_ASSETS } from '../assets';
 import { showBerryToast } from './toast';
 import { PokemonSpriteAnimator } from './pokedex';
-import { getAvailableLevelUpMoves, MOVES_DB } from '../battle/moves-db';
+import { getAvailableMovesForPokemon, MOVES_DB } from '../battle/moves-db';
 import { TYPE_ICO_INDICES } from '../battle/type-chart';
 import type { BattleMove } from '../battle/types';
 import { battleSePlayer } from '../audio';
@@ -18,6 +18,11 @@ import { findItem } from '../data/items-db';
 import { inventoryService } from '../domain/inventory/inventory-service';
 import { BagScreen, type BagItemEntry } from './bag-screen';
 import { getAbilityDisplay } from '../battle/rules/ability-engine';
+import { canPokemonEvolve, getAvailableEvolutions } from '../domain/pokemon/evolution-rules';
+import { EvolutionScreen } from './evolution-screen';
+import { pokemonCatalog } from '../data';
+import { isMoveTargetItem } from '../domain/inventory/item-effects';
+import { getItemEffectDef } from '../domain/inventory/item-catalog-effects';
 
 export interface BattleSelectOptions {
   currentBattlerUid?: string;
@@ -30,7 +35,7 @@ export interface PartySelectOptions {
   prompt?: string;
   item?: BagItemEntry;
   currentBattlerUid?: string;
-  onSelect: (selectedPk: PartyPokemon, slotIndex: number) => void;
+  onSelect: (selectedPk: PartyPokemon, slotIndex: number, moveIndex?: number) => void;
   onCancel?: () => void;
 }
 
@@ -87,6 +92,7 @@ export class PartyScreen {
   private activeMenuIndex: number | null = null;
   private summaryPokemon: PartyPokemon | null = null;
   private summaryAnimator: PokemonSpriteAnimator | null = null;
+  private summaryKeyListener: ((e: KeyboardEvent) => void) | null = null;
   private fightButtonsImg: HTMLImageElement | null = null;
   private activeMoveDrag: {
     source: 'active' | 'pool';
@@ -168,6 +174,7 @@ export class PartyScreen {
     this.swapSourceIndex = null;
     this.activeMenuIndex = null;
     this.closeSummaryModal();
+    this.closeMoveSelectModal();
     if (this.backdropEl) {
       this.backdropEl.style.display = 'none';
     }
@@ -244,6 +251,25 @@ export class PartyScreen {
             <span class="action-btn-text">Đóng</span>
           </button>
         </div>
+
+        <!-- Move Selection Modal (for Ether / PP Up / PP Max / Leppa Berry) -->
+        <div class="party-move-select-modal" id="partyMoveSelectModal" style="display: none;">
+          <div class="party-move-select-card">
+            <div class="party-move-select-header">
+              <div class="party-move-select-title-group">
+                <span class="party-move-select-title" id="partyMoveSelectTitle">CHỌN CHIÊU THỨC</span>
+                <span class="party-move-select-subtitle" id="partyMoveSelectSubtitle">Chọn chiêu để sử dụng vật phẩm</span>
+              </div>
+              <button class="party-move-select-close" id="btnPartyMoveSelectClose" title="Hủy (Esc)">✕</button>
+            </div>
+            <div class="party-move-select-list" id="partyMoveSelectList">
+              <!-- Render 1-4 moves dynamically -->
+            </div>
+            <div class="party-move-select-footer">
+              <span class="party-move-select-hint">Nhấp vào chiêu thức để sử dụng vật phẩm</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Detail Summary Modal (100% Matching PC Storage Layout) -->
@@ -264,6 +290,10 @@ export class PartyScreen {
                   <canvas id="partySummarySprite" class="summary-sprite" width="100" height="100"></canvas>
                 </div>
                 <div id="partySummaryTypes" class="summary-types"></div>
+                <button class="summary-btn-evolve" id="btnPartySummaryEvolve" style="display: none;" title="Tiến hóa Pokémon này! (Nhấn phím R)">
+                  <span class="evolve-label" id="partySummaryEvolveLabel">TIẾN HÓA</span>
+                  <span class="evo-key-hint">R</span>
+                </button>
                 <div class="summary-meta-box">
                   <!-- Origin & Item Group -->
                   <div class="summary-meta-group">
@@ -517,6 +547,18 @@ export class PartyScreen {
             // mode is 'use_item' or 'give_item'
             const cb = this.selectOptions.onSelect;
             const slotIdx = this.activeMenuIndex;
+            const currentItem = this.selectOptions.item?.item;
+            const itemKey = currentItem ? currentItem.slug || currentItem.id : '';
+
+            if (this.selectOptions.mode === 'use_item' && itemKey && isMoveTargetItem(itemKey)) {
+              this.activeMenuIndex = null;
+              this.render();
+              this.openMoveSelectModal(pk, slotIdx, (moveIdx) => {
+                cb(pk, slotIdx, moveIdx);
+              });
+              return;
+            }
+
             this.activeMenuIndex = null;
             this.render();
             cb(pk, slotIdx);
@@ -623,6 +665,12 @@ export class PartyScreen {
       if (!this.isOpen) return;
 
       if (e.code === 'Escape' || e.code === 'KeyP') {
+        const moveSelectModal = this.backdropEl?.querySelector<HTMLElement>('#partyMoveSelectModal');
+        if (moveSelectModal && moveSelectModal.style.display !== 'none') {
+          this.closeMoveSelectModal();
+          e.preventDefault();
+          return;
+        }
         const movePopup = this.backdropEl?.querySelector<HTMLElement>('#partyMoveDetailPopup');
         if (movePopup && movePopup.style.display !== 'none') {
           this.hideMoveDetailPopup();
@@ -651,8 +699,21 @@ export class PartyScreen {
         return;
       }
 
-      // If a modal or menu is open, handle esc only
-      if (this.summaryPokemon || this.activeMenuIndex !== null) return;
+      // If summary modal is open, handle esc only
+      if (this.summaryPokemon) return;
+
+      // If context action menu is active during item/battle selection, Enter/Space triggers the primary action
+      if (this.activeMenuIndex !== null) {
+        if (e.code === 'Enter' || e.code === 'Space') {
+          if (this.selectOptions) {
+            const btn = this.backdropEl?.querySelector<HTMLButtonElement>('#btnActionSendOut');
+            btn?.click();
+            e.preventDefault();
+            return;
+          }
+        }
+        return;
+      }
 
       // 2x3 Grid + Cancel button keyboard navigation
       if (e.code === 'ArrowRight') {
@@ -1183,6 +1244,58 @@ export class PartyScreen {
     // Render active moves and level-up move pool
     this.renderSummaryMoves(pokemon);
 
+    // Evolution Eligibility Check & Button Binding
+    const btnEvolve = modal.querySelector<HTMLButtonElement>('#btnPartySummaryEvolve');
+    const evolveLabel = modal.querySelector<HTMLElement>('#partySummaryEvolveLabel');
+    const evoCheck = canPokemonEvolve(pokemon);
+    const availableEvos = getAvailableEvolutions(pokemon);
+
+    if (btnEvolve) {
+      if (evoCheck.canEvolve && evoCheck.evolution) {
+        btnEvolve.style.display = 'flex';
+        const targetSpecies = pokemonCatalog.getBySpeciesKey(evoCheck.evolution.targetSpeciesKey);
+        const targetName = targetSpecies?.name || evoCheck.evolution.targetSpeciesKey;
+        if (evolveLabel) {
+          evolveLabel.textContent = `TIẾN HÓA THÀNH ${targetName.toUpperCase()}`;
+        }
+        btnEvolve.onclick = (e) => {
+          e.stopPropagation();
+          const targetEvo = availableEvos[0] || evoCheck.evolution!;
+          // Close entire party screen so evolution screen takes over cleanly
+          this.close(false);
+          EvolutionScreen.getInstance().open(pokemon, targetEvo, () => {
+            this.render();
+            if (this.onLeaderChangeCallback) {
+              const leader = partyService.getLeader();
+              if (leader) this.onLeaderChangeCallback(leader);
+            }
+          });
+        };
+      } else {
+        btnEvolve.style.display = 'none';
+      }
+    }
+
+    // Invisible keyboard shortcut 'R' to trigger evolution if eligible
+    if (this.summaryKeyListener) {
+      window.removeEventListener('keydown', this.summaryKeyListener);
+      this.summaryKeyListener = null;
+    }
+    this.summaryKeyListener = (e: KeyboardEvent) => {
+      if (e.key === 'r' || e.key === 'R') {
+        const target = e.target as HTMLElement | null;
+        if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+          return;
+        }
+        if (btnEvolve && btnEvolve.style.display !== 'none') {
+          e.preventDefault();
+          e.stopPropagation();
+          btnEvolve.click();
+        }
+      }
+    };
+    window.addEventListener('keydown', this.summaryKeyListener);
+
     modal.style.display = 'flex';
   }
 
@@ -1282,6 +1395,18 @@ export class PartyScreen {
 
           slotEl.appendChild(canvas);
 
+          // If this move was taught via TM, display a TM indicator badge
+          const isTaughtTm = pokemon.taughtTmMoves?.some(
+            (id) => id.toLowerCase() === move.id.toLowerCase()
+          );
+          if (isTaughtTm) {
+            const tmBadge = document.createElement('span');
+            tmBadge.className = 'active-move-tm-badge';
+            tmBadge.textContent = 'TM';
+            tmBadge.title = 'Chiêu thức đã học từ Đĩa Kỹ Thuật (TM/HM)';
+            slotEl.appendChild(tmBadge);
+          }
+
           this.attachMovePointerDrag(slotEl, 'active', move, i, pokemon);
         } else {
           slotEl.classList.add('empty');
@@ -1292,10 +1417,15 @@ export class PartyScreen {
       }
     }
 
-    // 2. Render Level-up Move Pool
+    // 2. Render Move Pool (Level-up + Taught TMs)
     if (poolEl) {
       poolEl.innerHTML = '';
-      const pool = getAvailableLevelUpMoves(pokemon.speciesKey, pokemon.level);
+      const pool = getAvailableMovesForPokemon(pokemon);
+
+      const tmCount = pool.filter((p) => p.source === 'tm').length;
+      if (poolLvEl) {
+        poolLvEl.innerHTML = `${pokemon.level}${tmCount > 0 ? `<span class="pool-tm-badge-header" style="margin-left:6px;color:#38bdf8;font-size:12px;">• ${tmCount} TM</span>` : ''}`;
+      }
 
       if (pool.length === 0) {
         poolEl.innerHTML = `<div class="pool-empty">Không có chiêu thức nào khả dụng ở cấp này.</div>`;
@@ -1304,12 +1434,13 @@ export class PartyScreen {
 
       for (const entry of pool) {
         const isEquipped = pokemon.moves.some((m) => m.id === entry.move.id);
+        const isTm = entry.source === 'tm';
         const cardEl = document.createElement('div');
-        cardEl.className = `summary-pool-card ${isEquipped ? 'equipped' : ''}`;
+        cardEl.className = `summary-pool-card ${isEquipped ? 'equipped' : ''} ${isTm ? 'tm-move' : ''}`;
 
         const lvBadge = document.createElement('span');
-        lvBadge.className = 'pool-lv-badge';
-        lvBadge.textContent = `Lv.${entry.level}`;
+        lvBadge.className = `pool-lv-badge ${isTm ? 'tm' : ''}`;
+        lvBadge.textContent = isTm ? '💿 TM' : `Lv.${entry.level}`;
 
         const canvas = document.createElement('canvas');
         canvas.className = 'pool-fight-canvas';
@@ -1325,7 +1456,9 @@ export class PartyScreen {
         cardEl.appendChild(lvBadge);
         cardEl.appendChild(canvas);
 
-        cardEl.title = `Kéo thả vào ô chiêu thức bên trái để trang bị ${entry.move.nameVi || entry.move.name}`;
+        cardEl.title = isTm
+          ? `Chiêu đã học qua TM: ${entry.move.nameVi || entry.move.name} (Kéo thả để trang bị miễn phí)`
+          : `Kéo thả vào ô chiêu thức bên trái để trang bị ${entry.move.nameVi || entry.move.name}`;
 
         this.attachMovePointerDrag(cardEl, 'pool', entry.move, undefined, pokemon);
 
@@ -1617,6 +1750,10 @@ export class PartyScreen {
   }
 
   private closeSummaryModal(): void {
+    if (this.summaryKeyListener) {
+      window.removeEventListener('keydown', this.summaryKeyListener);
+      this.summaryKeyListener = null;
+    }
     this.hideMoveDetailPopup();
     this.removeMoveDragGhost();
     this.clearMoveDragOver();
@@ -1625,6 +1762,122 @@ export class PartyScreen {
     this.summaryPokemon = null;
     const modal = this.backdropEl?.querySelector('#partySummaryModal') as HTMLElement;
     if (modal) modal.style.display = 'none';
+  }
+
+  public closeMoveSelectModal(): void {
+    const modal = this.backdropEl?.querySelector<HTMLElement>('#partyMoveSelectModal');
+    if (modal) {
+      modal.style.display = 'none';
+    }
+  }
+
+  private openMoveSelectModal(
+    pokemon: PartyPokemon,
+    _slotIndex: number,
+    onMoveSelected: (moveIndex: number) => void
+  ): void {
+    if (!this.backdropEl) return;
+    const modal = this.backdropEl.querySelector<HTMLElement>('#partyMoveSelectModal');
+    if (!modal) return;
+
+    const titleEl = modal.querySelector<HTMLElement>('#partyMoveSelectTitle');
+    const subtitleEl = modal.querySelector<HTMLElement>('#partyMoveSelectSubtitle');
+    const listEl = modal.querySelector<HTMLElement>('#partyMoveSelectList');
+    const closeBtn = modal.querySelector<HTMLElement>('#btnPartyMoveSelectClose');
+    if (!listEl) return;
+
+    const itemEntry = this.selectOptions?.item;
+    const itemName = itemEntry?.item?.nameVi || itemEntry?.item?.name || 'Vật phẩm';
+    const itemSlug = itemEntry?.item?.slug || itemEntry?.item?.id || '';
+    const def = getItemEffectDef(itemSlug);
+
+    if (titleEl) {
+      titleEl.textContent = `DÙNG ${itemName.toUpperCase()}`;
+    }
+    if (subtitleEl) {
+      subtitleEl.textContent = `Chọn chiêu thức của ${pokemon.name} để áp dụng:`;
+    }
+
+    listEl.innerHTML = '';
+
+    pokemon.moves.forEach((move, moveIdx) => {
+      const moveExt = move as { ppUpCount?: number };
+      const currentPpUp = moveExt.ppUpCount ?? 0;
+      const isPpFull = move.pp >= move.maxPp;
+      const isMaxPpUp = currentPpUp >= 3;
+
+      let isEligible = true;
+      let statusBadge = '';
+
+      if (def?.restorePp && def.restorePp.target === 'single') {
+        if (isPpFull) {
+          isEligible = false;
+          statusBadge = '<span class="move-row-badge full">ĐẦY PP</span>';
+        }
+      } else if (def?.boostMaxPp) {
+        if (isMaxPpUp) {
+          isEligible = false;
+          statusBadge = '<span class="move-row-badge max">TỐI ĐA (3/3)</span>';
+        } else {
+          statusBadge = `<span class="move-row-badge ppup">PP Up: ${currentPpUp}/3</span>`;
+        }
+      }
+
+      const typeKey = (move.type || 'normal').toLowerCase();
+      const typeNameVi = TYPE_NAME_VI[typeKey] || move.type?.toUpperCase() || 'THƯỜNG';
+      const typeIconIdx = STORAGE_TYPE_INDICES[typeKey] ?? 0;
+      const iconY = typeIconIdx * 28;
+
+      const ppPct = move.maxPp > 0 ? Math.max(0, Math.min(100, (move.pp / move.maxPp) * 100)) : 0;
+      const ppColor = ppPct > 50 ? '#22c55e' : ppPct > 20 ? '#eab308' : '#ef4444';
+
+      const row = document.createElement('div');
+      row.className = `party-move-select-row ${!isEligible ? 'disabled' : ''}`;
+      row.innerHTML = `
+        <div class="move-row-type-badge">
+          <span class="storage-type-icon" style="background-position: 0 -${iconY}px;"></span>
+          <span class="type-name">${typeNameVi}</span>
+        </div>
+        <div class="move-row-info">
+          <div class="move-row-names">
+            <span class="move-name-vi">${move.nameVi || move.name}</span>
+            ${move.nameVi && move.name !== move.nameVi ? `<span class="move-name-en">(${move.name})</span>` : ''}
+            ${statusBadge}
+          </div>
+          <div class="move-row-pp-wrap">
+            <div class="move-pp-bar-track">
+              <div class="move-pp-bar-fill" style="width: ${ppPct}%; background-color: ${ppColor};"></div>
+            </div>
+            <span class="move-pp-text">PP: <strong>${move.pp}</strong> / ${move.maxPp}</span>
+          </div>
+        </div>
+      `;
+
+      row.addEventListener('click', () => {
+        if (!isEligible) {
+          if (def?.restorePp && isPpFull) {
+            showBerryToast(`⚠️ Chiêu thức ${move.nameVi || move.name} đã đầy PP (${move.pp}/${move.maxPp})!`, '#f59e0b');
+          } else if (def?.boostMaxPp && isMaxPpUp) {
+            showBerryToast(`⚠️ Chiêu thức ${move.nameVi || move.name} đã đạt giới hạn PP tối đa (3/3)!`, '#f59e0b');
+          }
+          battleSePlayer.playSound('Audio/SE/buzzer.ogg', 0.8);
+          return;
+        }
+        battleSePlayer.playSound('Audio/SE/Battle catch click.ogg', 0.85);
+        this.closeMoveSelectModal();
+        onMoveSelected(moveIdx);
+      });
+
+      listEl.appendChild(row);
+    });
+
+    if (closeBtn) {
+      closeBtn.onclick = () => {
+        this.closeMoveSelectModal();
+      };
+    }
+
+    modal.style.display = 'flex';
   }
 }
 

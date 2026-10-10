@@ -4,7 +4,12 @@
  */
 
 import { type InventoryState, createDefaultInventoryState } from './inventory-state';
-import { findItem, getItemPocketIndex, type ItemData } from '../../data/items-db';
+import {
+  findItem,
+  getItemPocketIndex,
+  getAllItems as getAllCatalogItems,
+  type ItemData,
+} from '../../data/items-db';
 
 export interface PocketItemEntry {
   rawId: string;
@@ -97,6 +102,49 @@ export class InventoryService {
   }
 
   /**
+   * Provides full items across all pockets with a specified quantity (default: 1).
+   * Ensures every item in the game database exists in the player's inventory.
+   */
+  public addFullItems(quantity = 1): number {
+    const all = getAllCatalogItems();
+    let updatedCount = 0;
+    for (const item of all) {
+      const canonical = this.canonicalizeKey(item.id);
+      const current = this.state.items[canonical] ?? 0;
+      if (current < quantity) {
+        this.state.items[canonical] = quantity;
+        updatedCount++;
+      }
+    }
+    if (updatedCount > 0) {
+      this.notify();
+    }
+    return all.length;
+  }
+
+  /**
+   * Provides all 108 Technical Machines (TM01 - TM100) and Hidden Machines (HM01 - HM08).
+   * Ensures every move disc exists in the player's inventory with the specified quantity (default: 1).
+   */
+  public addAllMachines(quantity = 1): number {
+    const all = getAllCatalogItems();
+    const machines = all.filter((it) => it.category === 'machine');
+    let updatedCount = 0;
+    for (const item of machines) {
+      const canonical = this.canonicalizeKey(item.id);
+      const current = this.state.items[canonical] ?? 0;
+      if (current < quantity) {
+        this.state.items[canonical] = quantity;
+        updatedCount++;
+      }
+    }
+    if (updatedCount > 0) {
+      this.notify();
+    }
+    return machines.length;
+  }
+
+  /**
    * Retrieves all items categorized into their respective pockets with metadata.
    */
   public getInventoryEntries(): PocketItemEntry[] {
@@ -133,6 +181,11 @@ export class InventoryService {
 
   public reset(): void {
     this.state = { items: this.canonicalizeItems(createDefaultInventoryState().items) };
+    this.notify();
+  }
+
+  public clear(): void {
+    this.state = { items: {} };
     this.notify();
   }
 }

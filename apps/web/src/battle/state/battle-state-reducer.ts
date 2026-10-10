@@ -71,6 +71,8 @@ export function ensureBattlerState(battler: BattlerPokemon): void {
   battler.isTormented ??= false;
   battler.throatChopTurns ??= 0;
   battler.uproarTurns ??= 0;
+  battler.isEndured ??= false;
+  battler.stockpileCount ??= 0;
 }
 
 /**
@@ -81,11 +83,15 @@ export function resetRoundCombatFlags(player: BattlerPokemon, enemy: BattlerPoke
   player.hasActedThisRound = false;
   player.firstTurnInBattle = false;
   player.isProtected = false;
+  player.isEndured = false;
+  player.damagedThisRound = false;
 
   enemy.isFlinched = false;
   enemy.hasActedThisRound = false;
   enemy.firstTurnInBattle = false;
   enemy.isProtected = false;
+  enemy.isEndured = false;
+  enemy.damagedThisRound = false;
 }
 
 /**

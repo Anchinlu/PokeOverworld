@@ -159,6 +159,19 @@ export function createDebugOverlayHtml(): string {
           <option value="mountain_rocks">🪨 Mỏm đá (Mountain Rocks)</option>
         </select>
       </div>
+      <div class="actions-row" style="margin-top: 4px; display: flex; gap: 6px;">
+        <select id="selectBattleWeather" style="flex: 1; padding: 4px 6px; font-size: 11px; border-radius: 6px; background: rgba(30, 41, 59, 0.85); color: #fff; border: 1px solid rgba(255,255,255,0.18);" title="Chọn thời tiết trận đấu">
+          <option value="none">🌤️ Thời tiết: Mặc định</option>
+          <option value="sun">☀️ Nắng gắt (Sun)</option>
+          <option value="rain">🌧️ Mưa rào (Rain)</option>
+          <option value="sandstorm">🌪️ Bão cát (Sandstorm)</option>
+          <option value="hail">❄️ Mưa đá (Hail)</option>
+          <option value="snow">🌨️ Tuyết rơi (Snow)</option>
+          <option value="heavy_rain">⛈️ Mưa lớn (Heavy Rain)</option>
+          <option value="storm">⚡ Bão sấm sét (Storm)</option>
+          <option value="fog">🌫️ Sương mù (Fog)</option>
+        </select>
+      </div>
 
       <!-- Custom Bot Battle Spawner (Bot Test Chiêu Thức) -->
       <div class="bot-debug-box" style="margin-top: 6px; padding: 10px; border-radius: var(--radius-sm); background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(239, 68, 68, 0.4); display: flex; flex-direction: column; gap: 8px;">
@@ -275,6 +288,12 @@ export function createDebugOverlayHtml(): string {
           <button type="button" class="btn-action-secondary" id="btnQuickAddLum" style="font-size: 9.5px; padding: 3px 4px; text-align: left;" title="+10 Quả Lum Berry (Trị Mọi Trạng Thái)">🍈 +10 Lum Berry</button>
           <button type="button" class="btn-action-secondary" id="btnQuickAddFullRestore" style="font-size: 9.5px; padding: 3px 4px; text-align: left;" title="+10 Full Restore (Hồi máu & giải trạng thái)">💊 +10 Full Restore</button>
           <button type="button" class="btn-action-secondary" id="btnQuickAddRareCandy" style="font-size: 9.5px; padding: 3px 4px; text-align: left;" title="+20 Rare Candy (Tăng cấp)">🍬 +20 Rare Candy</button>
+        </div>
+
+        <!-- Full Item Packages -->
+        <div class="actions-row" style="margin-top: 4px; display: flex; flex-direction: column; gap: 4px;">
+          <button class="btn-action-primary" id="btnAddFullItems" style="font-size: 10.5px; padding: 5px 8px; width: 100%; background: linear-gradient(135deg, #a855f7, #7c3aed); box-shadow: 0 2px 8px rgba(168,85,247,0.35);" title="Cung cấp đầy đủ toàn bộ hơn 680 vật phẩm trong game (mỗi loại x1)">💎 Cung cấp Full Item (x1)</button>
+          <button class="btn-action-primary" id="btnAddAllMachines" style="font-size: 10.5px; padding: 5px 8px; width: 100%; background: linear-gradient(135deg, #0ea5e9, #0284c7); box-shadow: 0 2px 8px rgba(14,165,233,0.35);" title="Cung cấp đầy đủ 108 Đĩa Kỹ Thuật (TM01 - TM100 & HM01 - HM08) để dạy chiêu thức cho Pokémon">💿 Full Đĩa Kỹ Thuật TM/HM (x1)</button>
         </div>
 
         <!-- Starter Item Packages -->

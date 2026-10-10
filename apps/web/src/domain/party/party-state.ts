@@ -51,6 +51,7 @@ export interface PartyPokemon {
   isFainted: boolean;
   caughtTime: number;
   caughtLevel: number;
+  taughtTmMoves?: string[];
 }
 
 export interface PartyState {
@@ -76,6 +77,7 @@ export function createPartyPokemon(
     ivs?: Partial<PokemonStatValues> | 'perfect' | 'random';
     evs?: Partial<PokemonStatValues>;
     nature?: NatureName;
+    taughtTmMoves?: string[];
   }
 ): PartyPokemon {
   const data =
@@ -137,6 +139,7 @@ export function createPartyPokemon(
     isFainted: false,
     caughtTime: Date.now(),
     caughtLevel: level,
+    taughtTmMoves: options?.taughtTmMoves ? [...options.taughtTmMoves] : [],
   };
 }
 

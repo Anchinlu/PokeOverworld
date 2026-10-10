@@ -47,11 +47,122 @@ export function getHoveredCommandIndex(x: number, y: number): number {
   return -1;
 }
 
+export interface WeatherTheme {
+  labelVi: string;
+  badgeBorder: string;
+  badgeGlow: string;
+  textColor: string;
+  bgGradient: [string, string];
+}
+
+export const WEATHER_THEMES: Record<string, WeatherTheme> = {
+  sun: {
+    labelVi: 'NẮNG',
+    badgeBorder: '#f59e0b',
+    badgeGlow: 'rgba(245, 158, 11, 0.45)',
+    textColor: '#fde047',
+    bgGradient: ['rgba(30, 20, 10, 0.92)', 'rgba(69, 26, 3, 0.88)'],
+  },
+  sunny: {
+    labelVi: 'NẮNG',
+    badgeBorder: '#f59e0b',
+    badgeGlow: 'rgba(245, 158, 11, 0.45)',
+    textColor: '#fde047',
+    bgGradient: ['rgba(30, 20, 10, 0.92)', 'rgba(69, 26, 3, 0.88)'],
+  },
+  rain: {
+    labelVi: 'MƯA',
+    badgeBorder: '#3b82f6',
+    badgeGlow: 'rgba(59, 130, 246, 0.45)',
+    textColor: '#93c5fd',
+    bgGradient: ['rgba(15, 23, 42, 0.92)', 'rgba(29, 78, 216, 0.88)'],
+  },
+  heavy_rain: {
+    labelVi: 'MƯA LỚN',
+    badgeBorder: '#2563eb',
+    badgeGlow: 'rgba(37, 99, 235, 0.5)',
+    textColor: '#60a5fa',
+    bgGradient: ['rgba(15, 23, 42, 0.94)', 'rgba(30, 58, 138, 0.9)'],
+  },
+  heavyrain: {
+    labelVi: 'MƯA LỚN',
+    badgeBorder: '#2563eb',
+    badgeGlow: 'rgba(37, 99, 235, 0.5)',
+    textColor: '#60a5fa',
+    bgGradient: ['rgba(15, 23, 42, 0.94)', 'rgba(30, 58, 138, 0.9)'],
+  },
+  storm: {
+    labelVi: 'BÃO SẤM',
+    badgeBorder: '#8b5cf6',
+    badgeGlow: 'rgba(139, 92, 246, 0.45)',
+    textColor: '#c4b5fd',
+    bgGradient: ['rgba(24, 16, 45, 0.94)', 'rgba(76, 29, 149, 0.9)'],
+  },
+  thunderstorm: {
+    labelVi: 'BÃO SẤM',
+    badgeBorder: '#8b5cf6',
+    badgeGlow: 'rgba(139, 92, 246, 0.45)',
+    textColor: '#c4b5fd',
+    bgGradient: ['rgba(24, 16, 45, 0.94)', 'rgba(76, 29, 149, 0.9)'],
+  },
+  sandstorm: {
+    labelVi: 'BÃO CÁT',
+    badgeBorder: '#d97706',
+    badgeGlow: 'rgba(217, 119, 6, 0.45)',
+    textColor: '#fcd34d',
+    bgGradient: ['rgba(41, 29, 12, 0.92)', 'rgba(120, 53, 15, 0.88)'],
+  },
+  hail: {
+    labelVi: 'MƯA ĐÁ',
+    badgeBorder: '#06b6d4',
+    badgeGlow: 'rgba(6, 182, 212, 0.45)',
+    textColor: '#67e8f9',
+    bgGradient: ['rgba(8, 30, 48, 0.92)', 'rgba(14, 116, 144, 0.88)'],
+  },
+  blizzard: {
+    labelVi: 'BÃO TUYẾT',
+    badgeBorder: '#38bdf8',
+    badgeGlow: 'rgba(56, 189, 248, 0.45)',
+    textColor: '#7dd3fc',
+    bgGradient: ['rgba(12, 34, 56, 0.92)', 'rgba(3, 105, 161, 0.88)'],
+  },
+  snow: {
+    labelVi: 'TUYẾT',
+    badgeBorder: '#a5f3fc',
+    badgeGlow: 'rgba(165, 243, 252, 0.45)',
+    textColor: '#e0f2fe',
+    bgGradient: ['rgba(15, 32, 45, 0.92)', 'rgba(8, 77, 107, 0.88)'],
+  },
+  fog: {
+    labelVi: 'SƯƠNG MÙ',
+    badgeBorder: '#94a3b8',
+    badgeGlow: 'rgba(148, 163, 184, 0.35)',
+    textColor: '#e2e8f0',
+    bgGradient: ['rgba(30, 41, 59, 0.92)', 'rgba(51, 65, 85, 0.88)'],
+  },
+  clearing: {
+    labelVi: 'TRONG LÀNH',
+    badgeBorder: '#10b981',
+    badgeGlow: 'rgba(16, 185, 129, 0.45)',
+    textColor: '#6ee7b7',
+    bgGradient: ['rgba(6, 44, 34, 0.92)', 'rgba(4, 120, 87, 0.88)'],
+  },
+  clear: {
+    labelVi: 'TRONG LÀNH',
+    badgeBorder: '#10b981',
+    badgeGlow: 'rgba(16, 185, 129, 0.45)',
+    textColor: '#6ee7b7',
+    bgGradient: ['rgba(6, 44, 34, 0.92)', 'rgba(4, 120, 87, 0.88)'],
+  },
+};
+
 export class BattleRenderer {
   private ctx: CanvasRenderingContext2D;
   private assets: BattleAssets;
   private engine: BattleEngine;
   private disableCanvasText: boolean;
+
+  private weatherIconCache = new Map<string, HTMLImageElement>();
 
   private offscreenCanvas = document.createElement('canvas');
   private offscreenCtx = this.offscreenCanvas.getContext('2d', { willReadFrequently: true })!;
@@ -205,6 +316,17 @@ export class BattleRenderer {
       this.drawBattleShinySparkles(ctx, 130, 220, state.playerShinyTimer, state.playerShinyMax);
     }
 
+    // Move visual animation (VFX)
+    this.drawMoveVfx(ctx, state);
+
+    // Screen flash overlay
+    if (state.screenFlashTimer > 0 && state.screenFlashColor) {
+      ctx.save();
+      ctx.fillStyle = state.screenFlashColor;
+      ctx.fillRect(0, 0, CANVAS_W, BOTTOM_PANEL_Y);
+      ctx.restore();
+    }
+
     ctx.restore();
 
     if (state.isIntro) {
@@ -213,8 +335,58 @@ export class BattleRenderer {
 
     this.renderEnemyDatabox(ctx, 0, 1, state);
     this.renderPlayerDatabox(ctx, 252, 197, state);
+    this.drawWeatherIndicator(ctx, state);
     this.drawAbilityBanner(ctx, state);
     this.renderBottomPanel(ctx, state);
+  }
+
+  // ---- Move Visual Animation (VFX) ----
+
+  private drawMoveVfx(ctx: CanvasRenderingContext2D, state: BattleState): void {
+    const vfx = state.activeMoveVfx;
+    if (!vfx || !isLoaded(vfx.image)) return;
+
+    const cellW = vfx.cellWidth > 0 ? vfx.cellWidth : 192;
+    const cellH = vfx.cellHeight > 0 ? vfx.cellHeight : 192;
+    const imgW = vfx.image.width || 960;
+    const imgH = vfx.image.height || 192;
+
+    const cols =
+      vfx.columns > 0 ? vfx.columns : Math.max(1, Math.floor(imgW / cellW));
+    const rows = Math.max(1, Math.floor(imgH / cellH));
+    const totalCells = cols * rows;
+
+    const frameIdx = vfx.currentFrame;
+    const safeCellIdx = totalCells > 0 ? frameIdx % totalCells : 0;
+    const col = safeCellIdx % cols;
+    const row = Math.floor(safeCellIdx / cols);
+
+    const sx = col * cellW;
+    const sy = row * cellH;
+    if (sx + cellW > imgW || sy + cellH > imgH) return;
+
+    let posX = vfx.targetX;
+    let posY = vfx.targetY;
+    if (vfx.isProjectile) {
+      const p = Math.min(
+        1.0,
+        (frameIdx + vfx.frameTick / vfx.ticksPerFrame) / Math.max(1, vfx.totalFrames)
+      );
+      posX = vfx.startX + (vfx.targetX - vfx.startX) * p;
+      posY = vfx.startY + (vfx.targetY - vfx.startY) * p;
+    }
+
+    const dw = Math.round(cellW * vfx.scale);
+    const dh = Math.round(cellH * vfx.scale);
+    const dx = Math.round(posX - dw / 2);
+    const dy = Math.round(posY - dh / 2);
+
+    ctx.save();
+    if (vfx.blendMode && vfx.blendMode !== 'source-over') {
+      ctx.globalCompositeOperation = vfx.blendMode;
+    }
+    ctx.drawImage(vfx.image, sx, sy, cellW, cellH, dx, dy, dw, dh);
+    ctx.restore();
   }
 
   // ---- Background ----
@@ -272,12 +444,14 @@ export class BattleRenderer {
       const frameH = img.height;
       const frameW = frameH;
       const totalFrames = Math.max(1, Math.floor(img.width / frameH));
+      const isShiny = this.engine.enemyPokemon.isShiny;
+      const divisor = isShiny ? 8 : 4;
       // Freeze sprite animation completely when dead/fainting
       const frameIdx = isEnemyFainting
         ? state.enemyFrozenFrame !== null
           ? state.enemyFrozenFrame % totalFrames
           : 0
-        : Math.floor(state.tick / 4) % totalFrames;
+        : Math.floor(state.tick / divisor) % totalFrames;
       const sx = frameIdx * frameW;
 
       // Apply capture shrink scale
@@ -493,12 +667,14 @@ export class BattleRenderer {
       const frameH = img.height;
       const frameW = frameH;
       const totalFrames = Math.max(1, Math.floor(img.width / frameH));
+      const isShiny = this.engine.playerPokemon.isShiny;
+      const divisor = isShiny ? 8 : 4;
       // Freeze sprite animation completely when dead/fainting
       const frameIdx = isPlayerFainting
         ? state.playerFrozenFrame !== null
           ? state.playerFrozenFrame % totalFrames
           : 0
-        : Math.floor(state.tick / 4) % totalFrames;
+        : Math.floor(state.tick / divisor) % totalFrames;
       const sx = frameIdx * frameW;
       const dw = Math.round(frameW * scaleX);
       const dh = Math.round(frameH * scaleY);
@@ -1815,6 +1991,121 @@ export class BattleRenderer {
       ctx.shadowColor = 'rgba(0, 0, 0, 0.95)';
       ctx.fillText(abilityNameVi, textX, drawY + 44);
     }
+
+    ctx.restore();
+  }
+
+  public getWeatherIconImage(weatherType: string): HTMLImageElement {
+    const key = (weatherType || '').toLowerCase().trim().replace(/[\s-]/g, '_');
+    let img = this.weatherIconCache.get(key);
+    if (!img) {
+      img = new Image();
+      img.src = BATTLE_ASSETS.getWeatherIcon(key);
+      this.weatherIconCache.set(key, img);
+    }
+    return img;
+  }
+
+  /**
+   * Draws the active weather HUD indicator badge centered at the top edge of the battle screen.
+   * Displays the authentic 50x50 weather icon and remaining turn count.
+   */
+  public drawWeatherIndicator(ctx: CanvasRenderingContext2D, state: BattleState): void {
+    const weather = this.engine.environment?.weather;
+    if (!weather || !weather.type || weather.type === 'none' || weather.turnsLeft <= 0) {
+      return;
+    }
+
+    // Hide during early intro before shutters open
+    if (state.enemyDataboxProgress <= 0) {
+      return;
+    }
+
+    const rawType = (weather.type || '').toLowerCase().trim().replace(/[\s-]/g, '_');
+    const theme = WEATHER_THEMES[rawType] || WEATHER_THEMES.sun;
+
+    // Intro slide & capture zoom animations
+    const t = Math.max(0, Math.min(1, state.enemyDataboxProgress));
+    const e = 1 - Math.pow(1 - t, 3);
+    const introOffsetY = Math.round((1 - e) * -45);
+
+    const zoomT = state.captureZoomProgress;
+    const zoomE = zoomT < 0.5 ? 2 * zoomT * zoomT : 1 - Math.pow(-2 * zoomT + 2, 2) / 2;
+    const zoomOffsetY = Math.round(zoomE * -45);
+
+    const baseY = 6;
+    const drawY = baseY + introOffsetY + zoomOffsetY;
+    if (drawY < -35) return;
+
+    const bw = 98;
+    const bh = 28;
+    const bx = Math.round(CANVAS_W / 2 - bw / 2); // 256 - 49 = 207
+
+    ctx.save();
+
+    // Expiring state (last turn alert pulse)
+    const isExpiring = weather.turnsLeft <= 1;
+    const pulseFactor = isExpiring ? 0.5 + 0.5 * Math.sin(state.tick * 0.25) : 1;
+
+    // Badge Shadow & Outer Glow
+    ctx.shadowColor = isExpiring
+      ? `rgba(239, 68, 68, ${(0.45 * pulseFactor).toFixed(2)})`
+      : theme.badgeGlow;
+    ctx.shadowBlur = 6;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 1;
+
+    // Pill Background
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+    this.drawRoundedRect(ctx, bx, drawY, bw, bh, 14);
+    ctx.fill();
+
+    // Subtle weather gradient fill
+    const bgGrad = ctx.createLinearGradient(bx, drawY, bx + bw, drawY + bh);
+    bgGrad.addColorStop(0, theme.bgGradient[0]);
+    bgGrad.addColorStop(1, theme.bgGradient[1]);
+    ctx.fillStyle = bgGrad;
+    this.drawRoundedRect(ctx, bx, drawY, bw, bh, 14);
+    ctx.fill();
+
+    // Border
+    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = isExpiring && pulseFactor > 0.6 ? '#ef4444' : theme.badgeBorder;
+    this.drawRoundedRect(ctx, bx, drawY, bw, bh, 14);
+    ctx.stroke();
+
+    // Clear shadow for crisp inner elements
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+
+    // Weather Icon (22x22 on left side)
+    const iconImg = this.getWeatherIconImage(rawType);
+    const ix = bx + 5;
+    const iy = drawY + 3;
+    if (isLoaded(iconImg)) {
+      ctx.drawImage(iconImg, 0, 0, iconImg.width, iconImg.height, ix, iy, 22, 22);
+    }
+
+    // Weather Name (Header)
+    const tx = bx + 32;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.font = `bold 11px ${BATTLE_FONT}`;
+    // 1px black drop shadow
+    ctx.fillStyle = '#000000';
+    ctx.fillText(theme.labelVi, tx + 1, drawY + 10);
+    ctx.fillStyle = theme.textColor;
+    ctx.fillText(theme.labelVi, tx, drawY + 9);
+
+    // Turn Count (Sub-header)
+    const turnsLabel = Number.isFinite(weather.turnsLeft)
+      ? `${weather.turnsLeft} LƯỢT`
+      : 'VÔ HẠN';
+    ctx.font = `bold 12px ${BATTLE_FONT}`;
+    ctx.fillStyle = '#000000';
+    ctx.fillText(turnsLabel, tx + 1, drawY + 21);
+    ctx.fillStyle = isExpiring && pulseFactor > 0.5 ? '#fca5a5' : '#ffffff';
+    ctx.fillText(turnsLabel, tx, drawY + 20);
 
     ctx.restore();
   }

@@ -882,76 +882,160 @@ export class PokedexView {
     container.innerHTML = '';
 
     const moves = pokemon.moves || [];
-    if (moves.length === 0) {
+    const tmMoves = pokemon.tmMoves || [];
+
+    if (moves.length === 0 && tmMoves.length === 0) {
       container.innerHTML =
         '<div class="info-moves-empty">Chưa có dữ liệu chiêu thức theo cấp cho Pokémon này.</div>';
       return;
     }
 
-    moves.forEach((m) => {
-      const moveDb = MOVES_DB[m.moveId];
-      const row = document.createElement('div');
-      row.className = 'info-move-row';
-      const desc =
-        moveDb?.descriptionVi ||
-        moveDb?.description ||
-        moveDb?.descriptionEn ||
-        'Không có mô tả cho chiêu thức này.';
-      row.title = `${m.nameVi} (${m.nameEn}) - Cấp độ: ${m.level}\n${desc}`;
+    if (moves.length > 0) {
+      const secHeader = document.createElement('div');
+      secHeader.className = 'info-moves-section-header';
+      secHeader.innerHTML = `<span>⬆️ CHIÊU THEO CẤP ĐỘ</span><span style="color:#64748b;font-size:11px;">(${moves.length})</span>`;
+      container.appendChild(secHeader);
 
-      const lvlEl = document.createElement('span');
-      lvlEl.className = 'im-col-lvl';
-      lvlEl.innerText = m.level === 1 ? 'Lv. 1' : `Lv. ${m.level}`;
+      moves.forEach((m) => {
+        const moveDb = MOVES_DB[m.moveId];
+        const row = document.createElement('div');
+        row.className = 'info-move-row';
+        const desc =
+          moveDb?.descriptionVi ||
+          moveDb?.description ||
+          moveDb?.descriptionEn ||
+          'Không có mô tả cho chiêu thức này.';
+        row.title = `${m.nameVi} (${m.nameEn}) - Cấp độ: ${m.level}\n${desc}`;
 
-      const nameGroup = document.createElement('div');
-      nameGroup.className = 'im-col-name';
+        const lvlEl = document.createElement('span');
+        lvlEl.className = 'im-col-lvl';
+        lvlEl.innerText = m.level === 1 ? 'Lv. 1' : `Lv. ${m.level}`;
 
-      const nameVi = document.createElement('span');
-      nameVi.className = 'info-move-name-vi';
-      nameVi.innerText = m.nameVi || m.nameEn;
+        const nameGroup = document.createElement('div');
+        nameGroup.className = 'im-col-name';
 
-      const nameEn = document.createElement('span');
-      nameEn.className = 'info-move-name-en';
-      nameEn.innerText = m.nameEn;
+        const nameVi = document.createElement('span');
+        nameVi.className = 'info-move-name-vi';
+        nameVi.innerText = m.nameVi || m.nameEn;
 
-      nameGroup.appendChild(nameVi);
-      nameGroup.appendChild(nameEn);
+        const nameEn = document.createElement('span');
+        nameEn.className = 'info-move-name-en';
+        nameEn.innerText = m.nameEn;
 
-      const typeCol = document.createElement('div');
-      typeCol.className = 'im-col-type';
-      const badgeCanvas = document.createElement('canvas');
-      badgeCanvas.className = 'info-move-type-badge';
-      const typeIdx = TYPE_INDICES[m.type] ?? 0;
-      TypeBadgeRenderer.renderBadge(badgeCanvas, typeIdx);
-      typeCol.appendChild(badgeCanvas);
+        nameGroup.appendChild(nameVi);
+        nameGroup.appendChild(nameEn);
 
-      const catCol = document.createElement('div');
-      catCol.className = 'im-col-cat';
-      const catKey = (moveDb?.category || 'physical').toLowerCase();
-      const catTitle = getMoveCategoryLabel(catKey);
-      catCol.innerHTML = `<div class="info-move-cat-icon ${catKey}" title="${catTitle}"></div>`;
+        const typeCol = document.createElement('div');
+        typeCol.className = 'im-col-type';
+        const badgeCanvas = document.createElement('canvas');
+        badgeCanvas.className = 'info-move-type-badge';
+        const typeIdx = TYPE_INDICES[m.type] ?? 0;
+        TypeBadgeRenderer.renderBadge(badgeCanvas, typeIdx);
+        typeCol.appendChild(badgeCanvas);
 
-      const pwrCol = document.createElement('span');
-      pwrCol.className = 'im-col-pwr';
-      pwrCol.innerText = moveDb && moveDb.power > 0 ? String(moveDb.power) : '—';
+        const catCol = document.createElement('div');
+        catCol.className = 'im-col-cat';
+        const catKey = (moveDb?.category || 'physical').toLowerCase();
+        const catTitle = getMoveCategoryLabel(catKey);
+        catCol.innerHTML = `<div class="info-move-cat-icon ${catKey}" title="${catTitle}"></div>`;
 
-      const accCol = document.createElement('span');
-      accCol.className = 'im-col-acc';
-      accCol.innerText = moveDb && moveDb.accuracy > 0 ? `${moveDb.accuracy}%` : '—';
+        const pwrCol = document.createElement('span');
+        pwrCol.className = 'im-col-pwr';
+        pwrCol.innerText = moveDb && moveDb.power > 0 ? String(moveDb.power) : '—';
 
-      const ppCol = document.createElement('span');
-      ppCol.className = 'im-col-pp';
-      ppCol.innerText = moveDb ? String(moveDb.pp) : '—';
+        const accCol = document.createElement('span');
+        accCol.className = 'im-col-acc';
+        accCol.innerText = moveDb && moveDb.accuracy > 0 ? `${moveDb.accuracy}%` : '—';
 
-      row.appendChild(lvlEl);
-      row.appendChild(nameGroup);
-      row.appendChild(typeCol);
-      row.appendChild(catCol);
-      row.appendChild(pwrCol);
-      row.appendChild(accCol);
-      row.appendChild(ppCol);
+        const ppCol = document.createElement('span');
+        ppCol.className = 'im-col-pp';
+        ppCol.innerText = moveDb ? String(moveDb.pp) : '—';
 
-      container.appendChild(row);
-    });
+        row.appendChild(lvlEl);
+        row.appendChild(nameGroup);
+        row.appendChild(typeCol);
+        row.appendChild(catCol);
+        row.appendChild(pwrCol);
+        row.appendChild(accCol);
+        row.appendChild(ppCol);
+
+        container.appendChild(row);
+      });
+    }
+
+    if (tmMoves.length > 0) {
+      const tmHeader = document.createElement('div');
+      tmHeader.className = 'info-moves-section-header tm-header';
+      tmHeader.innerHTML = `<span>💿 CHIÊU HỌC QUA ĐĨA KỸ THUẬT (TM/HM)</span><span style="color:#0284c7;font-size:11px;">(${tmMoves.length})</span>`;
+      container.appendChild(tmHeader);
+
+      tmMoves.forEach((tmId) => {
+        const moveDb = MOVES_DB[tmId] || MOVES_DB[tmId.toLowerCase().replace(/-/g, '_')];
+        if (!moveDb) return;
+
+        const row = document.createElement('div');
+        row.className = 'info-move-row tm-row';
+        const desc =
+          moveDb.descriptionVi ||
+          moveDb.description ||
+          moveDb.descriptionEn ||
+          'Không có mô tả cho chiêu thức này.';
+        row.title = `${moveDb.nameVi || moveDb.name} (${moveDb.nameEn || moveDb.name}) - Học qua Đĩa Kỹ Thuật TM/HM\n${desc}`;
+
+        const lvlEl = document.createElement('span');
+        lvlEl.className = 'im-col-lvl tm-col';
+        lvlEl.innerText = 'TM';
+
+        const nameGroup = document.createElement('div');
+        nameGroup.className = 'im-col-name';
+
+        const nameVi = document.createElement('span');
+        nameVi.className = 'info-move-name-vi';
+        nameVi.innerText = moveDb.nameVi || moveDb.name;
+
+        const nameEn = document.createElement('span');
+        nameEn.className = 'info-move-name-en';
+        nameEn.innerText = moveDb.nameEn || moveDb.name;
+
+        nameGroup.appendChild(nameVi);
+        nameGroup.appendChild(nameEn);
+
+        const typeCol = document.createElement('div');
+        typeCol.className = 'im-col-type';
+        const badgeCanvas = document.createElement('canvas');
+        badgeCanvas.className = 'info-move-type-badge';
+        const typeIdx = TYPE_INDICES[moveDb.type] ?? 0;
+        TypeBadgeRenderer.renderBadge(badgeCanvas, typeIdx);
+        typeCol.appendChild(badgeCanvas);
+
+        const catCol = document.createElement('div');
+        catCol.className = 'im-col-cat';
+        const catKey = (moveDb.category || 'physical').toLowerCase();
+        const catTitle = getMoveCategoryLabel(catKey);
+        catCol.innerHTML = `<div class="info-move-cat-icon ${catKey}" title="${catTitle}"></div>`;
+
+        const pwrCol = document.createElement('span');
+        pwrCol.className = 'im-col-pwr';
+        pwrCol.innerText = moveDb.power > 0 ? String(moveDb.power) : '—';
+
+        const accCol = document.createElement('span');
+        accCol.className = 'im-col-acc';
+        accCol.innerText = moveDb.accuracy > 0 ? `${moveDb.accuracy}%` : '—';
+
+        const ppCol = document.createElement('span');
+        ppCol.className = 'im-col-pp';
+        ppCol.innerText = String(moveDb.pp);
+
+        row.appendChild(lvlEl);
+        row.appendChild(nameGroup);
+        row.appendChild(typeCol);
+        row.appendChild(catCol);
+        row.appendChild(pwrCol);
+        row.appendChild(accCol);
+        row.appendChild(ppCol);
+
+        container.appendChild(row);
+      });
+    }
   }
 }

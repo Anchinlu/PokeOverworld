@@ -283,6 +283,7 @@ export interface PokemonSpeciesData {
   eggGroups?: string;
   genderRatio?: string;
   moves?: PokemonLearnMove[];
+  tmMoves?: string[];
 }
 
 export interface PokemonLearnMove {

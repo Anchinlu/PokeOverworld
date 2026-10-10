@@ -699,7 +699,13 @@ describe('BattleEnvironmentRules Unit Tests', () => {
       };
 
       const dmgNoTerrain = calculateDamage(attacker, defender, risingVoltage, rng, envNone).damage;
-      const dmgElecTerrain = calculateDamage(attacker, defender, risingVoltage, rng, envElec).damage;
+      const dmgElecTerrain = calculateDamage(
+        attacker,
+        defender,
+        risingVoltage,
+        rng,
+        envElec
+      ).damage;
 
       // 140 power * 1.5x electric terrain damage multiplier = ~3x total damage!
       expect(dmgElecTerrain).toBeGreaterThan(dmgNoTerrain * 2.5);
@@ -724,8 +730,20 @@ describe('BattleEnvironmentRules Unit Tests', () => {
         playerBase: 'grass',
         terrain: { type: 'psychic', turnsLeft: 5 },
       };
-      const dmgExpBase = calculateDamage(psychicAttacker, fightingDefender, expandingForce, rng, envNone).damage;
-      const dmgExpBoosted = calculateDamage(psychicAttacker, fightingDefender, expandingForce, rng, envPsychic).damage;
+      const dmgExpBase = calculateDamage(
+        psychicAttacker,
+        fightingDefender,
+        expandingForce,
+        rng,
+        envNone
+      ).damage;
+      const dmgExpBoosted = calculateDamage(
+        psychicAttacker,
+        fightingDefender,
+        expandingForce,
+        rng,
+        envPsychic
+      ).damage;
       expect(dmgExpBoosted).toBeGreaterThan(dmgExpBase * 2.0); // 1.5x power * 1.5x psychic terrain boost = 2.25x
     });
 
@@ -751,4 +769,3 @@ describe('BattleEnvironmentRules Unit Tests', () => {
     });
   });
 });
-

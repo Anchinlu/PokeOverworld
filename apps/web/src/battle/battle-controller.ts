@@ -26,6 +26,7 @@ import { showBerryToast } from '../ui/toast';
 import type { BagItemEntry } from '../ui/bag-screen';
 import { normalizeBallKey } from '../assets';
 import { moveAnimationManager } from './move-animation-manager';
+import { resolveMoveVfx, moveVfxCache, isSelfTargetMove } from './move-vfx';
 import { getPokeballData, getBaseCatchRate } from './pokeball-db';
 import { battleSePlayer, battleBgmPlayer } from '../audio';
 import { pokemonCatalog } from '../data';
@@ -297,8 +298,9 @@ export class BattleController {
 
   private handleCommandClick(x: number, y: number): void {
     const player = this.engine.playerPokemon;
-    if (player.chargingMove) {
-      this.handlePlayerMove(player.chargingMove.move);
+    const forcedMove = this.engine.getForcedMove(player);
+    if (forcedMove) {
+      this.handlePlayerMove(forcedMove);
       return;
     }
     if (player.mustRecharge) {
@@ -444,14 +446,14 @@ export class BattleController {
       mode: 'use_item',
       prompt,
       item: bagEntry,
-      onSelect: (selectedPk, _slotIndex) => {
-        const check = canUseItemOnPartyPokemon(item, selectedPk, partyService.getParty());
+      onSelect: (selectedPk, _slotIndex, moveIndex) => {
+        const check = canUseItemOnPartyPokemon(item, selectedPk, partyService.getParty(), moveIndex);
         if (!check.canUse) {
           showBerryToast(`⚠️ ${check.reason}`, '#ef4444');
           return;
         }
 
-        const result = applyItemToPartyPokemon(item, selectedPk, partyService.getParty());
+        const result = applyItemToPartyPokemon(item, selectedPk, partyService.getParty(), moveIndex);
         if (!result.success) {
           showBerryToast(`⚠️ ${result.message}`, '#ef4444');
           return;
@@ -494,6 +496,12 @@ export class BattleController {
   }
 
   private handleMovesClick(x: number, y: number): void {
+    const forcedMove = this.engine.getForcedMove(this.engine.playerPokemon);
+    if (forcedMove) {
+      this.handlePlayerMove(forcedMove);
+      return;
+    }
+
     // Cancel button (right column: 398..508, 296..380)
     if (x >= 398 && y >= 296 && y <= 380) {
       this.state.uiMode = 'command';
@@ -598,7 +606,7 @@ export class BattleController {
           this.endBattle('victory', undefined, expGained);
         });
       });
-    });
+    }, enemy.isShiny);
   }
 
   private handlePlayerFainted(player: BattlerPokemon): void {
@@ -610,7 +618,7 @@ export class BattleController {
       } else {
         this.queueMessage(`${player.name} đã ngất xỉu!`, 'end', () => this.endBattle('defeated'));
       }
-    });
+    }, player.isShiny);
   }
 
   private executePlayerAttack(move: BattleMove, onDone: (result: TurnResult) => void): void {
@@ -618,20 +626,60 @@ export class BattleController {
     const enemy = this.engine.enemyPokemon;
 
     const result = this.engine.executeAttack(player, enemy, move);
-    const animPlan = moveAnimationManager.resolveAnimationPlan(move, result.damage > 0);
     this.syncActiveBattlerToParty();
+
+    const isActionHindered =
+      result.actionPrevented ||
+      result.events.some((ev) => ev.type === 'status_hindered' || ev.type === 'recharge_hindered');
+
+    if (isActionHindered) {
+      // Pokémon is incapacitated (sleep, freeze, full paralysis, flinch, confusion, recharge, etc.):
+      // Do not lunge forward, do not trigger move VFX.
+      const selfDmgEvent = result.events.find(
+        (ev) => ev.type === 'damage_dealt' && ev.targetSide === 'player'
+      );
+      if (selfDmgEvent) {
+        // Confusion self-harm reaction
+        this.state.startPlayerHit();
+        this.state.targetPlayerHpPct = player.currentHp / player.maxHp;
+        battleSePlayer.playSound('Audio/SE/Battle ball hit.ogg', 0.5);
+      }
+      this.queueMessage(result.message, 'message', () => {
+        onDone(result);
+      });
+      return;
+    }
+
+    if (result.isCharging || result.events.some((ev) => ev.type === 'charge_begin')) {
+      // Turn 1 charging phase (e.g. Solar Beam absorbing light, Skull Bash/Meteor Beam/Electro Shot charging, Fly/Dig):
+      // Do NOT lunge forward, do NOT trigger attack VFX or defender hit reactions.
+      if (result.events && result.events.length > 0) {
+        this.triggerAbilityEvents(result.events);
+        const hasStatRise = result.events.some((ev) => ev.type === 'stat_stage_changed');
+        if (hasStatRise) {
+          battleSePlayer.playSound('Audio/SE/Stat rise.ogg', 0.45);
+        }
+      }
+      this.queueMessage(result.message, 'message', () => {
+        onDone(result);
+      });
+      return;
+    }
+
+    const animPlan = moveAnimationManager.resolveAnimationPlan(move, result.damage > 0);
 
     this.state.startPlayerAttack({
       lunge: animPlan.attackerLunges,
       onHit: () => {
-        if (animPlan.defenderTakesHit) {
-          this.state.startEnemyHit();
-        }
+        this.playMoveVfx(move, 'player', () => {
+          if (animPlan.defenderTakesHit) {
+            this.state.startEnemyHit();
+          }
+          this.state.targetEnemyHpPct = enemy.currentHp / enemy.maxHp;
+          this.state.targetPlayerHpPct = player.currentHp / player.maxHp;
+        });
       },
     });
-
-    this.state.targetEnemyHpPct = enemy.currentHp / enemy.maxHp;
-    this.state.targetPlayerHpPct = player.currentHp / player.maxHp;
 
     if (result.events && result.events.length > 0) {
       this.triggerAbilityEvents(result.events);
@@ -657,20 +705,58 @@ export class BattleController {
     const player = this.engine.playerPokemon;
 
     const result = this.engine.executeAttack(enemy, player, move);
-    const animPlan = moveAnimationManager.resolveAnimationPlan(move, result.damage > 0);
     this.syncActiveBattlerToParty();
+
+    const isActionHindered =
+      result.actionPrevented ||
+      result.events.some((ev) => ev.type === 'status_hindered' || ev.type === 'recharge_hindered');
+
+    if (isActionHindered) {
+      // Enemy is incapacitated: Do not lunge, do not trigger move VFX.
+      const selfDmgEvent = result.events.find(
+        (ev) => ev.type === 'damage_dealt' && ev.targetSide === 'enemy'
+      );
+      if (selfDmgEvent) {
+        // Confusion self-harm reaction
+        this.state.startEnemyHit();
+        this.state.targetEnemyHpPct = enemy.currentHp / enemy.maxHp;
+        battleSePlayer.playSound('Audio/SE/Battle ball hit.ogg', 0.5);
+      }
+      this.queueMessage(result.message, 'message', () => {
+        onDone(result);
+      });
+      return;
+    }
+
+    if (result.isCharging || result.events.some((ev) => ev.type === 'charge_begin')) {
+      // Turn 1 charging phase: Do NOT lunge forward, do NOT trigger attack VFX or defender hit reactions.
+      if (result.events && result.events.length > 0) {
+        this.triggerAbilityEvents(result.events);
+        const hasStatRise = result.events.some((ev) => ev.type === 'stat_stage_changed');
+        if (hasStatRise) {
+          battleSePlayer.playSound('Audio/SE/Stat rise.ogg', 0.45);
+        }
+      }
+      this.queueMessage(result.message, 'message', () => {
+        onDone(result);
+      });
+      return;
+    }
+
+    const animPlan = moveAnimationManager.resolveAnimationPlan(move, result.damage > 0);
 
     this.state.startEnemyAttack({
       lunge: animPlan.attackerLunges,
       onHit: () => {
-        if (animPlan.defenderTakesHit) {
-          this.state.startPlayerHit();
-        }
+        this.playMoveVfx(move, 'enemy', () => {
+          if (animPlan.defenderTakesHit) {
+            this.state.startPlayerHit();
+          }
+          this.state.targetPlayerHpPct = player.currentHp / player.maxHp;
+          this.state.targetEnemyHpPct = enemy.currentHp / enemy.maxHp;
+        });
       },
     });
-
-    this.state.targetPlayerHpPct = player.currentHp / player.maxHp;
-    this.state.targetEnemyHpPct = enemy.currentHp / enemy.maxHp;
 
     if (result.events && result.events.length > 0) {
       this.triggerAbilityEvents(result.events);
@@ -691,14 +777,94 @@ export class BattleController {
     });
   }
 
+  /** Plays visual sprite sheet animation and handles screen shake/flash */
+  private playMoveVfx(
+    move: BattleMove,
+    attackerSide: 'player' | 'enemy',
+    onImpact: () => void,
+    onComplete?: () => void
+  ): void {
+    const vfxDef = resolveMoveVfx(move);
+    if (!vfxDef) {
+      onImpact();
+      onComplete?.();
+      return;
+    }
+
+    const playerCenter = { x: 130, y: 215 };
+    const enemyCenter = { x: 380, y: 115 };
+
+    const attackerCenter = attackerSide === 'player' ? playerCenter : enemyCenter;
+    const defenderCenter = attackerSide === 'player' ? enemyCenter : playerCenter;
+
+    const startX = attackerCenter.x;
+    let startY = attackerCenter.y;
+    let targetX = defenderCenter.x;
+    let targetY = defenderCenter.y;
+
+    const isSelf = isSelfTargetMove(move) || vfxDef.target === 'attacker';
+
+    if (isSelf) {
+      targetX = attackerCenter.x;
+      targetY = attackerCenter.y;
+    }
+
+    if (vfxDef.yOffset) {
+      targetY += vfxDef.yOffset;
+      startY += vfxDef.yOffset;
+    }
+
+    const image = moveVfxCache.getImage(vfxDef.spriteUrl);
+
+    // Audio cue
+    if (vfxDef.soundEffect) {
+      battleSePlayer.playSound(vfxDef.soundEffect, 0.6);
+    } else if (isSelf) {
+      battleSePlayer.playSound('Audio/SE/Shiny sparkle.ogg', 0.45);
+    } else if (vfxDef.target === 'defender' || vfxDef.target === 'projectile') {
+      battleSePlayer.playSound('Audio/SE/Battle ball hit.ogg', 0.5);
+    }
+
+    // Screen effects
+    if (vfxDef.screenFlash) {
+      this.state.triggerScreenFlash(vfxDef.screenFlash.color, vfxDef.screenFlash.durationTicks);
+    }
+    if (vfxDef.screenShake) {
+      this.state.triggerScreenShake(vfxDef.screenShake.durationTicks, vfxDef.screenShake.amp);
+    }
+
+    this.state.startMoveVfx({
+      image,
+      cellWidth: vfxDef.cellWidth,
+      cellHeight: vfxDef.cellHeight,
+      columns: vfxDef.columns ?? 5,
+      totalFrames: vfxDef.totalFrames,
+      currentFrame: 0,
+      frameTick: 0,
+      ticksPerFrame: vfxDef.ticksPerFrame,
+      startX,
+      startY,
+      targetX,
+      targetY,
+      isProjectile: vfxDef.target === 'projectile',
+      scale: vfxDef.scale ?? 1.0,
+      blendMode: vfxDef.blendMode ?? 'source-over',
+      onImpact,
+      onComplete,
+    });
+  }
+
   private handlePlayerMove(move: BattleMove): void {
     this.state.uiMode = 'message';
     const player = this.engine.playerPokemon;
     const enemy = this.engine.enemyPokemon;
 
+    const forcedMove = this.engine.getForcedMove(player);
+    const chosenMove = forcedMove ?? move;
+
     // Struggle fallback if all player moves have 0 PP
     const hasAnyPp = player.moves.some((m) => m.pp > 0);
-    const effectivePlayerMove = hasAnyPp ? move : STRUGGLE_MOVE;
+    const effectivePlayerMove = hasAnyPp ? chosenMove : STRUGGLE_MOVE;
 
     const enemyMove = this.engine.getEnemyAction();
     const firstSide = this.engine.getFirstAttacker(effectivePlayerMove, enemyMove);
@@ -715,22 +881,37 @@ export class BattleController {
           return;
         }
 
-        // 2. Enemy attacks second
-        setTimeout(() => {
-          this.executeEnemyAttack(enemyMove, (secondRes) => {
-            if (secondRes.defenderFainted || player.currentHp <= 0) {
-              this.handlePlayerFainted(player);
-              return;
-            }
-            if (secondRes.attackerFainted || enemy.currentHp <= 0) {
-              this.handleEnemyFainted(enemy, player);
-              return;
-            }
+        const proceedToEnemyAttack = () => {
+          setTimeout(() => {
+            const activePlayer = this.engine.playerPokemon;
+            this.executeEnemyAttack(enemyMove, (secondRes) => {
+              if (secondRes.defenderFainted || activePlayer.currentHp <= 0) {
+                this.handlePlayerFainted(activePlayer);
+                return;
+              }
+              if (secondRes.attackerFainted || enemy.currentHp <= 0) {
+                this.handleEnemyFainted(enemy, activePlayer);
+                return;
+              }
 
-            // Both survived: resolve persistent end-turn effects
-            this.resolveRoundEndEffects(player, enemy);
-          });
-        }, 400);
+              if (secondRes.mustSwitch && secondRes.switchSide === 'enemy') {
+                this.handleEnemyActionSwitch(secondRes, () => {
+                  this.resolveRoundEndEffects(activePlayer, this.engine.enemyPokemon);
+                });
+                return;
+              }
+
+              // Both survived: resolve persistent end-turn effects
+              this.resolveRoundEndEffects(activePlayer, enemy);
+            });
+          }, 400);
+        };
+
+        if (firstRes.mustSwitch && firstRes.switchSide === 'player') {
+          this.handleActionSwitch(firstRes.batonPassData, proceedToEnemyAttack);
+        } else {
+          proceedToEnemyAttack();
+        }
       });
     } else {
       // 1. Enemy attacks first
@@ -744,24 +925,136 @@ export class BattleController {
           return;
         }
 
-        // 2. Player attacks second
-        setTimeout(() => {
-          this.executePlayerAttack(effectivePlayerMove, (secondRes) => {
-            if (secondRes.defenderFainted || enemy.currentHp <= 0) {
-              this.handleEnemyFainted(enemy, player);
-              return;
-            }
-            if (secondRes.attackerFainted || player.currentHp <= 0) {
-              this.handlePlayerFainted(player);
-              return;
-            }
+        const proceedToPlayerAttack = () => {
+          setTimeout(() => {
+            this.executePlayerAttack(effectivePlayerMove, (secondRes) => {
+              if (secondRes.defenderFainted || enemy.currentHp <= 0) {
+                this.handleEnemyFainted(enemy, player);
+                return;
+              }
+              if (secondRes.attackerFainted || player.currentHp <= 0) {
+                this.handlePlayerFainted(player);
+                return;
+              }
 
-            // Both survived: resolve persistent end-turn effects
-            this.resolveRoundEndEffects(player, enemy);
-          });
-        }, 400);
+              if (secondRes.mustSwitch && secondRes.switchSide === 'player') {
+                this.handleActionSwitch(secondRes.batonPassData, () => {
+                  this.resolveRoundEndEffects(this.engine.playerPokemon, enemy);
+                });
+                return;
+              }
+
+              // Both survived: resolve persistent end-turn effects
+              this.resolveRoundEndEffects(player, enemy);
+            });
+          }, 400);
+        };
+
+        if (firstRes.mustSwitch && firstRes.switchSide === 'enemy') {
+          this.handleEnemyActionSwitch(firstRes, proceedToPlayerAttack);
+        } else {
+          proceedToPlayerAttack();
+        }
       });
     }
+  }
+
+  /** Handles interactive Pokémon switching triggered by Baton Pass, U-turn, Volt Switch, etc. */
+  private handleActionSwitch(
+    batonPassData?: Partial<BattlerPokemon>,
+    onComplete?: () => void
+  ): void {
+    const activeUid = this.engine.playerPokemon.uid;
+    const party = partyService.getParty();
+    const hasAliveSwitch = party.some(
+      (p) => p.uid !== activeUid && p.currentHp > 0 && !p.isFainted
+    );
+
+    if (!hasAliveSwitch) {
+      this.queueMessage(
+        `${this.engine.playerPokemon.name} không còn đồng đội nào khác trong đội để đổi vào!`,
+        'message',
+        () => {
+          onComplete?.();
+        }
+      );
+      return;
+    }
+
+    this.syncActiveBattlerToParty();
+    PartyScreen.getInstance().openForBattleSelect({
+      currentBattlerUid: activeUid,
+      onSelect: (selectedPk) => {
+        partyService.syncBattleResult(this.engine.playerPokemon, 0);
+        const newBattler = partyPokemonToBattler(selectedPk);
+        const oldName = this.engine.playerPokemon.name;
+        this.state.uiMode = 'message';
+        this.state.isPlayerPokemonSentOut = false;
+        this.state.isPlayerSendingOut = false;
+
+        const switchMsg = batonPassData
+          ? `${oldName} chuyền gậy và quay lại!`
+          : `${oldName}, quay lại!`;
+
+        this.queueMessage(switchMsg, 'message', () => {
+          const switchRes = this.engine.switchPlayerPokemon(newBattler, batonPassData);
+          if (this.renderer) {
+            this.renderer.updatePlayerSprite(newBattler.backSprite);
+            this.renderer.updatePlayerBall(newBattler.pokeball ?? 'POKEBALL');
+          }
+          this.state.playerHpPct = newBattler.currentHp / newBattler.maxHp;
+          this.state.targetPlayerHpPct = this.state.playerHpPct;
+          this.state.playerHurtFlash = 0;
+          this.state.startPlayerSendOut();
+
+          this.queueMessage(`Tiến lên! ${newBattler.name}!`, 'message', () => {
+            if (switchRes.events.length > 0) {
+              this.triggerAbilityEvents(switchRes.events);
+            }
+            if (newBattler.isFainted) {
+              this.queueMessage(`${newBattler.name} đã ngất xỉu!`, 'message', () => {
+                this.handleForceSwitch();
+              });
+              return;
+            }
+            if (switchRes.messages.length > 0) {
+              this.queueMessage(switchRes.messages.join(' '), 'message', () => {
+                onComplete?.();
+              });
+            } else {
+              onComplete?.();
+            }
+          });
+        });
+      },
+      onCancel: () => {
+        const stillAlive = partyService
+          .getParty()
+          .some((p) => p.uid !== activeUid && p.currentHp > 0 && !p.isFainted);
+        if (stillAlive) {
+          setTimeout(() => this.handleActionSwitch(batonPassData, onComplete), 100);
+        } else {
+          onComplete?.();
+        }
+      },
+    });
+  }
+
+  /** Handles enemy switch out triggers (Teleport in wild, etc.) */
+  private handleEnemyActionSwitch(result: TurnResult, onComplete: () => void): void {
+    const enemy = this.engine.enemyPokemon;
+    if (
+      result.moveName?.toLowerCase().includes('teleport') ||
+      result.moveName?.toLowerCase().includes('dịch chuyển')
+    ) {
+      this.queueMessage(`${enemy.name} đã dịch chuyển trốn thoát khỏi trận đấu!`, 'end', () => {
+        this.endBattle('fled');
+      });
+      return;
+    }
+    this.queueMessage(`${enemy.name} không có đồng đội nào khác để đổi vào!`, 'message', () => {
+      onComplete();
+    });
   }
 
   private handleEnemyTurn(): void {

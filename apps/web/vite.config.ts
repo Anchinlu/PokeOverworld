@@ -68,10 +68,12 @@ function emitLegacyGraphicsPlugin(): Plugin {
     'Battle animations',
     'Items',
     'Move',
+    'Animations',
     'Party',
     'Bag',
     'Storage',
     'Intro',
+    'weather',
   ];
 
   return {
@@ -208,7 +210,11 @@ export default defineConfig({
           ) {
             return 'pokemon-data';
           }
-          if (normalized.includes('moves-db.json') || normalized.includes('/battle/moves-db')) {
+          if (
+            normalized.includes('moves-db.json') ||
+            normalized.includes('move-animations-db.json') ||
+            normalized.includes('/battle/moves-db')
+          ) {
             return 'moves-data';
           }
           if (normalized.includes('items-db.json') || normalized.includes('/data/items-db')) {
@@ -220,12 +226,10 @@ export default defineConfig({
           if (
             normalized.includes('/src/battle/') ||
             normalized.includes('party-screen') ||
-            normalized.includes('bag-screen')
+            normalized.includes('bag-screen') ||
+            normalized.includes('/pokedex')
           ) {
             return 'gameplay-ui';
-          }
-          if (normalized.includes('/pokedex')) {
-            return 'pokedex';
           }
         },
       },

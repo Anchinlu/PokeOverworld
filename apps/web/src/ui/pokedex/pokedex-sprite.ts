@@ -96,9 +96,18 @@ export class PokemonSpriteAnimator {
     this.ctx.imageSmoothingEnabled = false;
   }
 
-  load(src: string): void {
+  getFrameDuration(): number {
+    return this.frameDuration;
+  }
+
+  load(src: string, isShiny?: boolean): void {
     this.stop();
-    const img = new Image();
+    const shiny = isShiny ?? /shiny/i.test(src);
+    this.frameDuration = shiny ? 90 : 45;
+    const img =
+      typeof Image !== 'undefined'
+        ? new Image()
+        : ({ src: '', complete: true, width: 960, height: 96 } as unknown as HTMLImageElement);
     img.src = src;
     img.onload = () => {
       this.img = img;

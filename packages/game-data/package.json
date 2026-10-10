@@ -13,6 +13,7 @@
     "./encounters.json": "./encounters.json",
     "./pokemon-db.json": "./pokemon-db.json",
     "./moves-db.json": "./moves-db.json",
+    "./move-animations-db.json": "./move-animations-db.json",
     "./items-db.json": "./items-db.json",
     "./unmatched-items.json": "./unmatched-items.json"
   }

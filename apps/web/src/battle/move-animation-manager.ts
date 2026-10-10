@@ -1,4 +1,5 @@
 import type { BattleMove, MoveCategory } from './types';
+import { resolveMoveVfx, type MoveVfxDef } from './move-vfx';
 
 export interface MoveAnimationPlan {
   /** Move category: 'physical' | 'special' | 'status' */
@@ -7,6 +8,8 @@ export interface MoveAnimationPlan {
   attackerLunges: boolean;
   /** Whether the target takes a damage reaction (knockback jitter + hurt flash) */
   defenderTakesHit: boolean;
+  /** Visual sprite sheet animation VFX definition */
+  vfx?: MoveVfxDef | null;
   /** Identifier for future custom battle animation effects (e.g. 'SOLAR_BEAM', 'FLY', 'SURF') */
   customAnimationId?: string;
   /** Optional metadata for future particle / FX systems */
@@ -65,12 +68,15 @@ export class MoveAnimationManager {
     // Baseline default configuration according to move category:
     let basePlan: MoveAnimationPlan;
 
+    const vfx = resolveMoveVfx(move);
+
     switch (move.category) {
       case 'physical':
         basePlan = {
           category: 'physical',
           attackerLunges: true,
           defenderTakesHit: damageDealt,
+          vfx,
         };
         break;
 
@@ -80,6 +86,7 @@ export class MoveAnimationManager {
           // Special moves cast from position without physical forward lunging
           attackerLunges: false,
           defenderTakesHit: damageDealt,
+          vfx,
         };
         break;
 
@@ -90,6 +97,7 @@ export class MoveAnimationManager {
           // Status moves apply buffs/debuffs/auras without physical lunging or damage knockback
           attackerLunges: false,
           defenderTakesHit: false,
+          vfx,
         };
         break;
     }

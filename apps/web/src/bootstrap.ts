@@ -17,6 +17,7 @@ import {
   initPartyMapHud,
   playGameIntro,
   showTitleScreen,
+  initEvolutionNotification,
 } from './ui';
 import { initDesktopShell } from './shell/desktop';
 import type { Direction } from '@pokemon/shared-types';
@@ -33,16 +34,12 @@ import { getMoveById } from './battle/moves-db';
 import { createBattler } from './battle/battle-factory';
 import type { BattleMove, BattlerPokemon } from './battle/types';
 import { battleSePlayer } from './audio/battle-se';
-import {
-  DebugOverlayController,
-  type DebugBridge,
-  type CustomBotConfig,
-} from './debug';
+import { DebugOverlayController, type DebugBridge, type CustomBotConfig } from './debug';
 
 declare global {
   interface Window {
-    startBattle: (overlay?: string) => void;
-    startCustomBattle: (customBattler: BattlerPokemon, overlay?: string) => void;
+    startBattle: (overlay?: string, isShiny?: boolean, weather?: string) => void;
+    startCustomBattle: (customBattler: BattlerPokemon, overlay?: string, weather?: string) => void;
     saveGame: () => SaveGameData;
     loadGame: () => SaveGameData | null;
     replayIntro: () => void;
@@ -120,8 +117,8 @@ export async function bootstrap(): Promise<void> {
 
     // Wire Debug Overlay via decoupled Remote Action Bridge
     const debugBridge: DebugBridge = {
-      startTestBattle: (overlay, isShiny) => {
-        session.startTestBattle(overlay, isShiny);
+      startTestBattle: (overlay, isShiny, weather) => {
+        session.startTestBattle(overlay, isShiny, weather);
       },
       startCustomBotBattle: (config: CustomBotConfig) => {
         const customMoves = (config.moves || [])
@@ -140,7 +137,7 @@ export async function bootstrap(): Promise<void> {
           customMoves.length > 0 ? customMoves : undefined
         );
 
-        session.startCustomBattle(customBattler, config.overlay);
+        session.startCustomBattle(customBattler, config.overlay, config.weather);
         showBerryToast(
           `🤖 Khởi động trận đấu với Bot ${customBattler.name} (Lv.${config.level})!`,
           '#ef4444'
@@ -200,12 +197,29 @@ export async function bootstrap(): Promise<void> {
         }
         showBerryToast('⚾ Đã bổ sung 50x các loại Bóng Poké vào túi!', '#38bdf8');
       },
+      addFullItems: () => {
+        const total = inventoryService.addFullItems(1);
+        showBerryToast(
+          `💎 Đã cung cấp Full ${total} vật phẩm (x1 mỗi loại) vào toàn bộ 8 ngăn túi!`,
+          '#a855f7'
+        );
+      },
+      addAllMachines: () => {
+        const total = inventoryService.addAllMachines(1);
+        showBerryToast(
+          `💿 Đã cung cấp Full ${total} Đĩa Kỹ Thuật (TM/HM) vào ngăn Đĩa Chiêu!`,
+          '#0ea5e9'
+        );
+      },
       openBag: () => {
         openBagScreen();
       },
       addPartyPokemon: (speciesKey, level, isShiny) => {
         if (partyService.isPartyFull()) {
-          showBerryToast('⚠️ Đội hình đã đầy (tối đa 6 Pokémon)! Hãy xóa bớt hoặc reset.', '#ef4444');
+          showBerryToast(
+            '⚠️ Đội hình đã đầy (tối đa 6 Pokémon)! Hãy xóa bớt hoặc reset.',
+            '#ef4444'
+          );
           return;
         }
         const newPk = createPartyPokemon(speciesKey, level, { isShiny });
@@ -296,13 +310,13 @@ export async function bootstrap(): Promise<void> {
         window.loadGame();
       },
       setRenderOption: (key, value) => {
-        renderer.setOptions({ [key]: value } as any);
+        renderer.setOptions({ [key]: value } as Parameters<typeof renderer.setOptions>[0]);
       },
       setBerryCycle: (seconds) => {
         renderer.setBerryCycle(seconds);
       },
       setBerryStageOverride: (stage) => {
-        renderer.setBerryStageOverride(stage as any);
+        renderer.setBerryStageOverride(stage);
       },
       isCollisionEnabled: () => debugController?.isCollisionEnabled() ?? true,
     };
@@ -311,11 +325,15 @@ export async function bootstrap(): Promise<void> {
     debugController.mount(app);
     setOverworldUiVisible(true);
 
-    window.startBattle = (overlay?: string, isShiny?: boolean) => {
-      session.startTestBattle(overlay || 'auto', isShiny ?? false);
+    window.startBattle = (overlay?: string, isShiny?: boolean, weather?: string) => {
+      session.startTestBattle(overlay || 'auto', isShiny ?? false, weather);
     };
-    window.startCustomBattle = (customBattler: BattlerPokemon, overlay?: string) => {
-      session.startCustomBattle(customBattler, overlay || 'auto');
+    window.startCustomBattle = (
+      customBattler: BattlerPokemon,
+      overlay?: string,
+      weather?: string
+    ) => {
+      session.startCustomBattle(customBattler, overlay || 'auto', weather);
     };
     window.saveGame = () => {
       const res = saveGameRepository.save('slot_1', {
@@ -347,16 +365,12 @@ export async function bootstrap(): Promise<void> {
       showBerryToast(`👑 ${newLeader.name} đang dẫn đầu đội hình!`, '#38bdf8');
     });
     initBagScreen();
+    initEvolutionNotification();
 
     // Synchronize initial overworld follower with active party follower
+    session.syncFollowerFromParty();
     const starterFollower = partyService.getActiveFollower() || partyService.getLeader();
     if (starterFollower) {
-      session.follower.setPokemon(
-        starterFollower.speciesKey,
-        !!starterFollower.isShiny,
-        starterFollower.nickname || starterFollower.name
-      );
-      session.follower.visible = true;
       partyService.setActiveFollowerUid(starterFollower.uid);
     }
 
@@ -381,12 +395,7 @@ export async function bootstrap(): Promise<void> {
       }
 
       partyService.setActiveFollowerUid(pokemon.uid);
-      session.follower.setPokemon(
-        pokemon.speciesKey,
-        !!pokemon.isShiny,
-        pokemon.nickname || pokemon.name
-      );
-      session.follower.visible = true;
+      session.syncFollowerFromParty();
 
       battleSePlayer.playFollowerSummon(pokemon.speciesKey, !!pokemon.isShiny);
 

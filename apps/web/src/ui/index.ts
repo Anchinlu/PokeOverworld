@@ -11,3 +11,5 @@ export * from './party-map-hud';
 export * from './pokemon-radar-chart';
 export * from './game-intro';
 export * from './title-screen';
+export * from './evolution-screen';
+export * from './evolution-notification';

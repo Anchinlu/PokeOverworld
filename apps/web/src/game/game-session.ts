@@ -7,8 +7,15 @@ import type { BerryBushEntity, WildPokemonEntity, WorldChunk } from '../maps/chu
 import { interactWithBerryBush } from '../ui/berry-panel';
 import { sampleEcology, getEcologyZone } from '../maps/ecology';
 import { isNearWater } from '../maps/terrain-rules';
-import { BattleScreen, createBattler, getBattleEnvironment, type BattlerPokemon } from '../battle';
+import {
+  BattleScreen,
+  createBattler,
+  getBattleEnvironment,
+  type BattlerPokemon,
+  type BattleEnvironment,
+} from '../battle';
 import { showBerryToast } from '../ui/toast';
+import { checkPartyEvolutionNotifications } from '../ui/evolution-notification';
 import { playEncounterTransition } from '../ui/encounter-transition';
 import { battleBgmPlayer, overworldShinyAudio } from '../audio';
 import {
@@ -40,6 +47,34 @@ export class GameSession {
     this.player = new Player(initRoadCenter, 0, 0);
     this.follower = new Follower(initRoadCenter, -1, 0);
     this.camera.snapTo(this.player);
+
+    // Keep overworld follower synchronized with party state changes (e.g., evolution)
+    this.syncFollowerFromParty();
+    partyService.subscribe(() => {
+      this.syncFollowerFromParty();
+    });
+  }
+
+  /**
+   * Synchronizes the overworld follower with the designated active party follower or leader.
+   * If a Pokémon evolves, this instantly updates its overworld sprite sheet, shiny sparkles, and nickname.
+   */
+  public syncFollowerFromParty(): void {
+    const activeFollower = partyService.getActiveFollower() || partyService.getLeader();
+    if (!activeFollower) return;
+
+    const targetSpecies = activeFollower.speciesKey.toUpperCase();
+    const targetShiny = !!activeFollower.isShiny;
+    const targetNickname = activeFollower.nickname || activeFollower.name;
+
+    if (
+      this.follower.speciesKey !== targetSpecies ||
+      this.follower.isShiny !== targetShiny ||
+      this.follower.nickname !== targetNickname
+    ) {
+      this.follower.setPokemon(targetSpecies, targetShiny, targetNickname);
+    }
+    this.follower.visible = true;
   }
 
   public update(dtScale: number, collisionEnabled = true): { pChunkX: number; pChunkY: number } {
@@ -134,7 +169,8 @@ export class GameSession {
   public startWildBattle(
     wp: Pick<WildPokemonEntity, 'gx' | 'gy' | 'speciesKey' | 'level'> & Partial<WildPokemonEntity>,
     chunk?: WorldChunk,
-    overlayOverride?: string
+    overlayOverride?: string,
+    weatherOverride?: string
   ): void {
     if (this.isBattling) return;
     this.isBattling = true;
@@ -161,6 +197,12 @@ export class GameSession {
         if (overlayOverride && overlayOverride !== 'auto') {
           env.foregroundOverlay = overlayOverride;
         }
+        if (weatherOverride && weatherOverride !== 'none') {
+          env.weather = {
+            type: weatherOverride as NonNullable<BattleEnvironment['weather']>['type'],
+            turnsLeft: 5,
+          };
+        }
 
         // 1. Get first alive Pokémon in Party
         let activePk = partyService.getFirstAlivePokemon();
@@ -186,12 +228,30 @@ export class GameSession {
           // Sync battle HP, PP, and EXP back into party
           const finalBattler = result.activePlayerPokemon ?? playerBattler;
           const expGained = result.outcome === 'victory' ? (result.expGained ?? 0) : 0;
-          const { leveledUp, newLevel } = partyService.syncBattleResult(finalBattler, expGained);
-          if (leveledUp) {
+          const syncResult = partyService.syncBattleResult(finalBattler, expGained);
+          if (syncResult.leveledUp) {
             showBerryToast(
-              `🎉 ${finalBattler.name} đã lên cấp ${newLevel}! Toàn bộ chỉ số chiến đấu đã tăng!`,
+              `🎉 ${finalBattler.name} đã lên cấp ${syncResult.newLevel}! Toàn bộ chỉ số chiến đấu đã tăng!`,
               '#22c55e'
             );
+            checkPartyEvolutionNotifications();
+          }
+
+          if (syncResult.expShares && syncResult.expShares.length > 0) {
+            for (const share of syncResult.expShares) {
+              if (share.leveledUp) {
+                showBerryToast(
+                  `🎉 (Exp. Share) ${share.pokemon.name} đã nhận ${share.expGained} EXP và lên cấp ${share.newLevel}!`,
+                  '#3b82f6'
+                );
+              } else {
+                showBerryToast(
+                  `✨ (Exp. Share) ${share.pokemon.name} nhận được +${share.expGained} EXP!`,
+                  '#60a5fa'
+                );
+              }
+            }
+            checkPartyEvolutionNotifications();
           }
 
           if (result.outcome === 'caught') {
@@ -224,9 +284,9 @@ export class GameSession {
               }
             }
           } else if (result.outcome === 'victory') {
-            if (leveledUp) {
+            if (syncResult.leveledUp) {
               showBerryToast(
-                `⚔️ Chiến thắng! ${playerBattler.name} đã lên cấp ${newLevel}!`,
+                `⚔️ Chiến thắng! ${playerBattler.name} đã lên cấp ${syncResult.newLevel}!`,
                 '#facc15'
               );
             } else {
@@ -253,7 +313,11 @@ export class GameSession {
     });
   }
 
-  public startTestBattle(overlayOverride?: string, isEnemyShiny = false): void {
+  public startTestBattle(
+    overlayOverride?: string,
+    isEnemyShiny = false,
+    weatherOverride?: string
+  ): void {
     const testRoster = [
       'PIDGEY',
       'RATTATA',
@@ -276,12 +340,13 @@ export class GameSession {
       Math.floor(this.player.gx / 16),
       Math.floor(this.player.gy / 16)
     );
-    this.startWildBattle(mockWp, chunk, overlayOverride);
+    this.startWildBattle(mockWp, chunk, overlayOverride, weatherOverride);
   }
 
   public startCustomBattle(
     customBattler: BattlerPokemon,
-    overlayOverride?: string
+    overlayOverride?: string,
+    weatherOverride?: string
   ): void {
     if (this.isBattling) return;
     this.isBattling = true;
@@ -302,6 +367,12 @@ export class GameSession {
         if (overlayOverride && overlayOverride !== 'auto') {
           env.foregroundOverlay = overlayOverride;
         }
+        if (weatherOverride && weatherOverride !== 'none') {
+          env.weather = {
+            type: weatherOverride as NonNullable<BattleEnvironment['weather']>['type'],
+            turnsLeft: 5,
+          };
+        }
 
         // 1. Get first alive Pokémon in Party
         let activePk = partyService.getFirstAlivePokemon();
@@ -320,12 +391,30 @@ export class GameSession {
           // Sync battle HP, PP, and EXP back into party
           const finalBattler = result.activePlayerPokemon ?? playerBattler;
           const expGained = result.outcome === 'victory' ? (result.expGained ?? 0) : 0;
-          const { leveledUp, newLevel } = partyService.syncBattleResult(finalBattler, expGained);
-          if (leveledUp) {
+          const syncResult = partyService.syncBattleResult(finalBattler, expGained);
+          if (syncResult.leveledUp) {
             showBerryToast(
-              `🎉 ${finalBattler.name} đã lên cấp ${newLevel}! Toàn bộ chỉ số chiến đấu đã tăng!`,
+              `🎉 ${finalBattler.name} đã lên cấp ${syncResult.newLevel}! Toàn bộ chỉ số chiến đấu đã tăng!`,
               '#22c55e'
             );
+            checkPartyEvolutionNotifications();
+          }
+
+          if (syncResult.expShares && syncResult.expShares.length > 0) {
+            for (const share of syncResult.expShares) {
+              if (share.leveledUp) {
+                showBerryToast(
+                  `🎉 (Exp. Share) ${share.pokemon.name} đã nhận ${share.expGained} EXP và lên cấp ${share.newLevel}!`,
+                  '#3b82f6'
+                );
+              } else {
+                showBerryToast(
+                  `✨ (Exp. Share) ${share.pokemon.name} nhận được +${share.expGained} EXP!`,
+                  '#60a5fa'
+                );
+              }
+            }
+            checkPartyEvolutionNotifications();
           }
 
           if (result.outcome === 'caught') {
@@ -351,14 +440,14 @@ export class GameSession {
                   '#38bdf8'
                 );
               } else {
-                showBerryToast(
-                  `⚠️ Không thể lưu ${customBattler.name} vì PC đã đầy!`,
-                  '#ef4444'
-                );
+                showBerryToast(`⚠️ Không thể lưu ${customBattler.name} vì PC đã đầy!`, '#ef4444');
               }
             }
           } else if (result.outcome === 'victory') {
-            showBerryToast(`⚔️ Đã đánh bại Bot ${customBattler.name}! (+${expGained} EXP)`, '#38bdf8');
+            showBerryToast(
+              `⚔️ Đã đánh bại Bot ${customBattler.name}! (+${expGained} EXP)`,
+              '#38bdf8'
+            );
           } else if (result.outcome === 'defeated') {
             showBerryToast(`💥 ${playerBattler.name} đã ngất xỉu!`, '#ef4444');
           }
