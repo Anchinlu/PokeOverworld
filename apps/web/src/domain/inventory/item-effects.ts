@@ -17,8 +17,8 @@ import {
 } from '../party/pokemon-stats';
 import type { BattlerPokemon } from '../../battle/types';
 import type { ItemData } from '../../data/items-db';
-import { getItemEffectDef, STONE_EVOLUTIONS, isMoveTargetItem } from './item-catalog-effects';
-export { isMoveTargetItem };
+import { getItemEffectDef, STONE_EVOLUTIONS, isMoveTargetItem, isTmItem } from './item-catalog-effects';
+export { isMoveTargetItem, isTmItem };
 import { NATURES_TABLE, type StatKey } from '@pokemon/shared-types';
 import { pokemonCatalog } from '../../data';
 import { normalizeGrowthRate, getExpToNextLevel } from '../pokemon/pokemon-exp';
@@ -381,6 +381,16 @@ export function canUseItemOnPartyPokemon(
         code: 'ERR_NO_EFFECT',
         reason: `${name} đã được dạy chiêu ${moveName} từ trước! Bạn có thể vào mục Chi Tiết Pokémon để trang bị lại mà không cần tốn đĩa TM!`,
       };
+    }
+
+    if (targetMoveIndex !== undefined) {
+      if (targetMoveIndex < 0 || targetMoveIndex >= pokemon.moves.length) {
+        return {
+          canUse: false,
+          code: 'ERR_NO_EFFECT',
+          reason: `Vị trí chiêu thức không hợp lệ!`,
+        };
+      }
     }
 
     return { canUse: true, code: 'SUCCESS' };
@@ -774,7 +784,11 @@ export function applyItemToPartyPokemon(
       pokemon.taughtTmMoves.push(moveId);
     }
 
-    if (pokemon.moves.length < 4) {
+    // If Pokemon has < 4 moves AND no specific move replacement index is targeted:
+    if (
+      pokemon.moves.length < 4 &&
+      (targetMoveIndex === undefined || targetMoveIndex >= pokemon.moves.length)
+    ) {
       pokemon.moves.push({ ...move });
       return {
         success: true,
@@ -782,13 +796,22 @@ export function applyItemToPartyPokemon(
         message: `🎉 ${name} đã học thành công chiêu thức ${moveName}!`,
       };
     } else {
-      const replacedMove = pokemon.moves[3];
+      // Replace targeted move (or default to slot 3 if unspecified and full)
+      const replaceIdx =
+        targetMoveIndex !== undefined &&
+        targetMoveIndex >= 0 &&
+        targetMoveIndex < pokemon.moves.length
+          ? targetMoveIndex
+          : pokemon.moves.length >= 4
+            ? 3
+            : pokemon.moves.length - 1;
+      const replacedMove = pokemon.moves[replaceIdx];
       const replacedName =
         replacedMove?.nameVi ||
         replacedMove?.name ||
         (replacedMove as { moveId?: string })?.moveId ||
         'chiêu cũ';
-      pokemon.moves[3] = { ...move };
+      pokemon.moves[replaceIdx] = { ...move };
       return {
         success: true,
         code: 'SUCCESS',

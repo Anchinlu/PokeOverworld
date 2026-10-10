@@ -392,11 +392,23 @@ export function getItemEffectDef(idOrSlug: string): ItemEffectDef | undefined {
 
 /**
  * Checks whether an item requires selecting a specific move from a Pokémon
- * (e.g., Ether, Max Ether, Leppa Berry for single move PP restoration, or PP Up/PP Max).
+ * (e.g., Ether, Max Ether, Leppa Berry for single move PP restoration, PP Up/PP Max, or TM/HM move teaching).
  */
 export function isMoveTargetItem(idOrSlug: string): boolean {
   const def = getItemEffectDef(idOrSlug);
   if (!def) return false;
-  return (def.restorePp?.target === 'single') || (def.boostMaxPp !== undefined);
+  return (
+    def.restorePp?.target === 'single' ||
+    def.boostMaxPp !== undefined ||
+    Boolean(def.teachMove)
+  );
+}
+
+/**
+ * Checks whether an item is a Technical Machine (TM) or Hidden Machine (HM) that teaches a move.
+ */
+export function isTmItem(idOrSlug: string): boolean {
+  const def = getItemEffectDef(idOrSlug);
+  return Boolean(def?.teachMove);
 }
 

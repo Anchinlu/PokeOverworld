@@ -14,7 +14,7 @@ import {
 } from '../src/domain/party/party-state';
 import type { BattlerPokemon } from '../src/battle/types';
 import { findItem, type ItemData } from '../src/data/items-db';
-import { getAvailableMovesForPokemon } from '../src/battle/moves-db';
+import { getAvailableMovesForPokemon, getMoveDisplayNames } from '../src/battle/moves-db';
 
 describe('Item Effects Engine & Inventory Deduction', () => {
   let pikachu: PartyPokemon;
@@ -461,6 +461,45 @@ describe('Item Effects Engine & Inventory Deduction', () => {
     expect(res.message).toContain('đã quên');
   });
 
+  it('allows player to proactively choose which move to replace when teaching TM', () => {
+    pikachu.moves = [
+      { id: 'tackle', name: 'Tackle', description: '', type: 'Normal', category: 'physical', power: 40, accuracy: 100, pp: 35, maxPp: 35 },
+      { id: 'quick_attack', name: 'Quick Attack', description: '', type: 'Normal', category: 'physical', power: 40, accuracy: 100, pp: 30, maxPp: 30 },
+      { id: 'thunder_shock', name: 'Thunder Shock', description: '', type: 'Electric', category: 'special', power: 40, accuracy: 100, pp: 30, maxPp: 30 },
+      { id: 'growl', name: 'Growl', description: '', type: 'Normal', category: 'status', power: 0, accuracy: 100, pp: 40, maxPp: 40 },
+    ];
+
+    const tm25 = findItem('tm25') as ItemData; // Thunder
+    expect(tm25).toBeDefined();
+
+    // Player proactively selects move index 1 (Quick Attack) to replace with Thunder
+    const checkChoice = canUseItemOnPartyPokemon(tm25, pikachu, undefined, 1);
+    expect(checkChoice.canUse).toBe(true);
+
+    const res = applyItemToPartyPokemon(tm25, pikachu, undefined, 1);
+    expect(res.success).toBe(true);
+    expect(res.message).toContain('Quick Attack');
+    expect(res.message).toContain('Sấm Sét');
+
+    // Move 1 was replaced by Thunder
+    expect(pikachu.moves[1].id).toBe('thunder');
+    // Other moves remain unaffected
+    expect(pikachu.moves[0].id).toBe('tackle');
+    expect(pikachu.moves[2].id).toBe('thunder_shock');
+    expect(pikachu.moves[3].id).toBe('growl');
+  });
+
+  it('rejects invalid targetMoveIndex outside move range when teaching TM', () => {
+    pikachu.moves = [
+      { id: 'tackle', name: 'Tackle', description: '', type: 'Normal', category: 'physical', power: 40, accuracy: 100, pp: 35, maxPp: 35 },
+    ];
+    const tm24 = findItem('tm24') as ItemData; // Thunderbolt
+
+    const checkInvalid = canUseItemOnPartyPokemon(tm24, pikachu, undefined, 10);
+    expect(checkInvalid.canUse).toBe(false);
+    expect(checkInvalid.reason).toContain('không hợp lệ');
+  });
+
   it('rejects teaching TM moves if Pokemon species is incompatible per Pokédex learnset', () => {
     const tm26 = findItem('tm26') as ItemData; // Earthquake
     const tm35 = findItem('tm35') as ItemData; // Flamethrower
@@ -642,6 +681,30 @@ describe('Item Effects Engine & Inventory Deduction', () => {
       expect(checkFull.canUse).toBe(false);
       expect(checkFull.code).toBe('ERR_PP_FULL');
       expect(checkFull.reason).toContain('tối đa');
+    });
+
+    it('correctly formats move display names without duplicating Vietnamese or English text', () => {
+      // 1. Move like Ancient Power which has "Ancient Power (Sức Mạnh Cổ Đại)" in DB
+      const ancientPowerNames = getMoveDisplayNames({
+        id: 'ancientpower',
+        name: 'Ancient Power (Sức Mạnh Cổ Đại)',
+        nameVi: 'Sức Mạnh Cổ Đại',
+        nameEn: 'Ancient Power',
+      });
+      expect(ancientPowerNames.nameVi).toBe('Sức Mạnh Cổ Đại');
+      expect(ancientPowerNames.nameEn).toBe('Ancient Power');
+      // Must NOT contain nested parentheses or duplicated Vietnamese
+      expect(ancientPowerNames.nameEn).not.toContain('Sức Mạnh Cổ Đại');
+
+      // 2. Move with DB lookup by ID
+      const dbLookup = getMoveDisplayNames({ id: 'ancientpower', name: 'Ancient Power (Sức Mạnh Cổ Đại)' });
+      expect(dbLookup.nameVi).toBe('Sức Mạnh Cổ Đại');
+      expect(dbLookup.nameEn).toBe('Ancient Power');
+
+      // 3. Move without English translation or where English is identical
+      const singleLang = getMoveDisplayNames({ name: 'Tackle' });
+      expect(singleLang.nameVi).toBe('Tackle');
+      expect(singleLang.nameEn).toBe('');
     });
   });
 });

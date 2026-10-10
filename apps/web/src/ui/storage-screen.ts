@@ -16,7 +16,7 @@ import { STORAGE_ASSETS, POKEMON_ASSETS } from '../assets';
 import { battleSePlayer } from '../audio';
 import { showBerryToast } from './toast';
 import { PokemonSpriteAnimator } from './pokedex';
-import { getAvailableMovesForPokemon, MOVES_DB } from '../battle/moves-db';
+import { getAvailableMovesForPokemon, MOVES_DB, getMoveDisplayNames } from '../battle/moves-db';
 import { TYPE_ICO_INDICES } from '../battle/type-chart';
 import type { BattleMove } from '../battle/types';
 import { NATURES_TABLE, type StatKey } from '@pokemon/shared-types';
@@ -1875,8 +1875,7 @@ export class StorageScreen {
     const descEl = popup.querySelector('#moveDetailDesc');
 
     // Names
-    const viName = dbMove.nameVi || dbMove.name.replace(/\s*\([^)]*\)/, '') || move.name;
-    const enName = dbMove.nameEn || (dbMove.name.match(/\(([^)]+)\)/)?.[1] ?? '');
+    const { nameVi: viName, nameEn: enName } = getMoveDisplayNames(dbMove);
     if (nameViEl) nameViEl.textContent = viName;
     if (nameEnEl) nameEnEl.textContent = enName ? `(${enName})` : '';
 

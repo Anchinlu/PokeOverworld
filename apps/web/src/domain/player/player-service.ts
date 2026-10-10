@@ -112,7 +112,10 @@ export class PlayerService {
 
   // --- Storage Persistence ---
 
+  public static disableDirectStorageWrites: boolean = false;
+
   public saveToStorage(): void {
+    if (PlayerService.disableDirectStorageWrites) return;
     try {
       if (typeof localStorage !== 'undefined') {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(this.profile));

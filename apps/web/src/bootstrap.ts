@@ -26,6 +26,7 @@ import {
   playerService,
   inventoryService,
   saveGameRepository,
+  autosaveCoordinator,
   createPartyPokemon,
   type SaveGameData,
 } from './domain';
@@ -54,9 +55,10 @@ export async function bootstrap(): Promise<void> {
     throw new Error('Application root element was not found.');
   }
 
-  // 1. Scaffold UI
+  // 1. Scaffold UI & Initialize Autosave Coordinator
   app.innerHTML = createOverlayTemplate();
   initDesktopShell();
+  autosaveCoordinator.init();
 
   const canvas = document.querySelector<HTMLCanvasElement>('#gameCanvas')!;
   const loadingOverlay = document.querySelector<HTMLDivElement>('#loadingOverlay');
@@ -336,11 +338,16 @@ export async function bootstrap(): Promise<void> {
       session.startCustomBattle(customBattler, overlay || 'auto', weather);
     };
     window.saveGame = () => {
+      playerService.updatePosition(session.player.gx, session.player.gy, session.player.direction);
       const res = saveGameRepository.save('slot_1', {
-        position: {
-          gx: session.player.gx,
-          gy: session.player.gy,
-          direction: session.player.direction,
+        saveMain: true,
+        savePc: true,
+        worldData: {
+          position: {
+            gx: session.player.gx,
+            gy: session.player.gy,
+            direction: session.player.direction,
+          },
         },
       });
       showBerryToast(`💾 Đã lưu tiến trình game (Slot 1)!`, '#22c55e');
@@ -352,6 +359,7 @@ export async function bootstrap(): Promise<void> {
         if (data.world?.position) {
           const dir = (data.world.position.direction ?? 0) as Direction;
           session.player.snapTo(data.world.position.gx, data.world.position.gy, dir);
+          session.follower.snapTo(data.world.position.gx, data.world.position.gy - 1, dir);
         }
         showBerryToast(`📂 Đã nạp lại dữ liệu lưu game!`, '#38bdf8');
       } else {

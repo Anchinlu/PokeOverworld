@@ -12,4 +12,5 @@ export * from './inventory/inventory-service';
 export * from './inventory/item-effects';
 export * from './save/save-state';
 export * from './save/save-repository';
+export * from './save/autosave-coordinator';
 export * from './pc/pc-storage-service';

@@ -92,7 +92,35 @@ export class PcStorageService {
     return { currentBoxIndex: 0, boxes: this.createDefaultBoxes() };
   }
 
+  public static disableDirectStorageWrites: boolean = false;
+
+  public getState(): PcStorageState {
+    return this.state;
+  }
+
+  public loadFromState(state: PcStorageState): void {
+    if (Array.isArray(state?.boxes) && state.boxes.length === TOTAL_BOXES) {
+      for (const box of state.boxes) {
+        if (!Array.isArray(box.slots) || box.slots.length !== BOX_CAPACITY) {
+          const newSlots = Array<PartyPokemon | null>(BOX_CAPACITY).fill(null);
+          if (Array.isArray(box.slots)) {
+            for (let s = 0; s < Math.min(box.slots.length, BOX_CAPACITY); s++) {
+              newSlots[s] = box.slots[s];
+            }
+          }
+          box.slots = newSlots;
+        }
+      }
+      this.state = {
+        currentBoxIndex: Math.max(0, Math.min(TOTAL_BOXES - 1, state.currentBoxIndex ?? 0)),
+        boxes: state.boxes,
+      };
+      this.notify();
+    }
+  }
+
   private saveToStorage(): void {
+    if (PcStorageService.disableDirectStorageWrites) return;
     if (typeof localStorage === 'undefined') return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));

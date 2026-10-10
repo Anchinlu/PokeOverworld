@@ -9,7 +9,7 @@ import type { PartyPokemon } from '../domain/party/party-state';
 import { PARTY_ASSETS, POKEMON_ASSETS } from '../assets';
 import { showBerryToast } from './toast';
 import { PokemonSpriteAnimator } from './pokedex';
-import { getAvailableMovesForPokemon, MOVES_DB } from '../battle/moves-db';
+import { getAvailableMovesForPokemon, MOVES_DB, getMoveById, getMoveDisplayNames } from '../battle/moves-db';
 import { TYPE_ICO_INDICES } from '../battle/type-chart';
 import type { BattleMove } from '../battle/types';
 import { battleSePlayer } from '../audio';
@@ -21,7 +21,7 @@ import { getAbilityDisplay } from '../battle/rules/ability-engine';
 import { canPokemonEvolve, getAvailableEvolutions } from '../domain/pokemon/evolution-rules';
 import { EvolutionScreen } from './evolution-screen';
 import { pokemonCatalog } from '../data';
-import { isMoveTargetItem } from '../domain/inventory/item-effects';
+import { isMoveTargetItem, isTmItem, canUseItemOnPartyPokemon } from '../domain/inventory/item-effects';
 import { getItemEffectDef } from '../domain/inventory/item-catalog-effects';
 
 export interface BattleSelectOptions {
@@ -81,6 +81,12 @@ const TYPE_NAME_VI: Record<string, string> = {
   dragon: 'RỒNG',
   dark: 'BÓNG TỐI',
   fairy: 'TIÊN',
+};
+
+const CATEGORY_NAMES_VI: Record<string, string> = {
+  physical: 'Vật Lý',
+  special: 'Đặc Biệt',
+  status: 'Biến Hóa',
 };
 
 export class PartyScreen {
@@ -251,23 +257,23 @@ export class PartyScreen {
             <span class="action-btn-text">Đóng</span>
           </button>
         </div>
+      </div>
 
-        <!-- Move Selection Modal (for Ether / PP Up / PP Max / Leppa Berry) -->
-        <div class="party-move-select-modal" id="partyMoveSelectModal" style="display: none;">
-          <div class="party-move-select-card">
-            <div class="party-move-select-header">
-              <div class="party-move-select-title-group">
-                <span class="party-move-select-title" id="partyMoveSelectTitle">CHỌN CHIÊU THỨC</span>
-                <span class="party-move-select-subtitle" id="partyMoveSelectSubtitle">Chọn chiêu để sử dụng vật phẩm</span>
-              </div>
-              <button class="party-move-select-close" id="btnPartyMoveSelectClose" title="Hủy (Esc)">✕</button>
+      <!-- Move Selection Modal (for TM/HM Learning & PP Restoration) -->
+      <div class="party-move-select-modal" id="partyMoveSelectModal" style="display: none;">
+        <div class="party-move-select-card">
+          <div class="party-move-select-header">
+            <div class="party-move-select-title-group">
+              <span class="party-move-select-title" id="partyMoveSelectTitle">CHỌN CHIÊU THỨC</span>
+              <span class="party-move-select-subtitle" id="partyMoveSelectSubtitle">Chọn chiêu để sử dụng vật phẩm</span>
             </div>
-            <div class="party-move-select-list" id="partyMoveSelectList">
-              <!-- Render 1-4 moves dynamically -->
-            </div>
-            <div class="party-move-select-footer">
-              <span class="party-move-select-hint">Nhấp vào chiêu thức để sử dụng vật phẩm</span>
-            </div>
+            <button class="party-move-select-close" id="btnPartyMoveSelectClose" title="Hủy (Esc)">✕</button>
+          </div>
+          <div class="party-move-select-list" id="partyMoveSelectList">
+            <!-- Render moves dynamically in a spacious 2x2 grid -->
+          </div>
+          <div class="party-move-select-footer">
+            <span class="party-move-select-hint">Nhấp vào chiêu thức để sử dụng vật phẩm</span>
           </div>
         </div>
       </div>
@@ -551,6 +557,15 @@ export class PartyScreen {
             const itemKey = currentItem ? currentItem.slug || currentItem.id : '';
 
             if (this.selectOptions.mode === 'use_item' && itemKey && isMoveTargetItem(itemKey)) {
+              if (isTmItem(itemKey) && currentItem) {
+                const canUseCheck = canUseItemOnPartyPokemon(currentItem, pk);
+                if (!canUseCheck.canUse) {
+                  battleSePlayer.playSound('Audio/SE/buzzer.ogg', 0.8);
+                  showBerryToast(`⚠️ ${canUseCheck.reason || 'Pokémon không thể học chiêu thức này!'}`, '#ef4444');
+                  return;
+                }
+              }
+
               this.activeMenuIndex = null;
               this.render();
               this.openMoveSelectModal(pk, slotIdx, (moveIdx) => {
@@ -1669,8 +1684,7 @@ export class PartyScreen {
     const descEl = popup.querySelector('#partyMoveDetailDesc');
 
     // Names
-    const viName = dbMove.nameVi || dbMove.name.replace(/\s*\([^)]*\)/, '') || move.name;
-    const enName = dbMove.nameEn || (dbMove.name.match(/\(([^)]+)\)/)?.[1] ?? '');
+    const { nameVi: viName, nameEn: enName } = getMoveDisplayNames(dbMove);
     if (nameViEl) nameViEl.textContent = viName;
     if (nameEnEl) nameEnEl.textContent = enName ? `(${enName})` : '';
 
@@ -1774,7 +1788,7 @@ export class PartyScreen {
   private openMoveSelectModal(
     pokemon: PartyPokemon,
     _slotIndex: number,
-    onMoveSelected: (moveIndex: number) => void
+    onMoveSelected: (moveIndex?: number) => void
   ): void {
     if (!this.backdropEl) return;
     const modal = this.backdropEl.querySelector<HTMLElement>('#partyMoveSelectModal');
@@ -1783,6 +1797,7 @@ export class PartyScreen {
     const titleEl = modal.querySelector<HTMLElement>('#partyMoveSelectTitle');
     const subtitleEl = modal.querySelector<HTMLElement>('#partyMoveSelectSubtitle');
     const listEl = modal.querySelector<HTMLElement>('#partyMoveSelectList');
+    const hintEl = modal.querySelector<HTMLElement>('.party-move-select-hint');
     const closeBtn = modal.querySelector<HTMLElement>('#btnPartyMoveSelectClose');
     if (!listEl) return;
 
@@ -1790,92 +1805,246 @@ export class PartyScreen {
     const itemName = itemEntry?.item?.nameVi || itemEntry?.item?.name || 'Vật phẩm';
     const itemSlug = itemEntry?.item?.slug || itemEntry?.item?.id || '';
     const def = getItemEffectDef(itemSlug);
-
-    if (titleEl) {
-      titleEl.textContent = `DÙNG ${itemName.toUpperCase()}`;
-    }
-    if (subtitleEl) {
-      subtitleEl.textContent = `Chọn chiêu thức của ${pokemon.name} để áp dụng:`;
-    }
+    const isTm = isTmItem(itemSlug);
+    const newMove = def?.teachMove ? getMoveById(def.teachMove) : undefined;
 
     listEl.innerHTML = '';
 
-    pokemon.moves.forEach((move, moveIdx) => {
-      const moveExt = move as { ppUpCount?: number };
-      const currentPpUp = moveExt.ppUpCount ?? 0;
-      const isPpFull = move.pp >= move.maxPp;
-      const isMaxPpUp = currentPpUp >= 3;
+    if (isTm && newMove) {
+      // =========================================================================
+      // TM / HM Move Teaching & Replacement Interface
+      // =========================================================================
+      const newMoveTypeKey = (newMove.type || 'normal').toLowerCase();
+      const newMoveTypeNameVi = TYPE_NAME_VI[newMoveTypeKey] || newMove.type?.toUpperCase() || 'THƯỜNG';
+      const newMoveTypeIconIdx = STORAGE_TYPE_INDICES[newMoveTypeKey] ?? 0;
+      const newMoveIconY = newMoveTypeIconIdx * 28;
+      const newMoveCatKey = (newMove.category || 'physical').toLowerCase();
+      const newMoveCatNameVi = CATEGORY_NAMES_VI[newMoveCatKey] || 'Vật Lý';
 
-      let isEligible = true;
-      let statusBadge = '';
+      const newMoveNames = getMoveDisplayNames(newMove);
 
-      if (def?.restorePp && def.restorePp.target === 'single') {
-        if (isPpFull) {
-          isEligible = false;
-          statusBadge = '<span class="move-row-badge full">ĐẦY PP</span>';
-        }
-      } else if (def?.boostMaxPp) {
-        if (isMaxPpUp) {
-          isEligible = false;
-          statusBadge = '<span class="move-row-badge max">TỐI ĐA (3/3)</span>';
-        } else {
-          statusBadge = `<span class="move-row-badge ppup">PP Up: ${currentPpUp}/3</span>`;
-        }
+      if (titleEl) {
+        titleEl.textContent = `HỌC CHIÊU THỨC - ${itemName.toUpperCase()}`;
+      }
+      if (subtitleEl) {
+        subtitleEl.textContent = `${pokemon.name} đang học chiêu thức từ Đĩa Kỹ Thuật:`;
+      }
+      if (hintEl) {
+        hintEl.textContent =
+          pokemon.moves.length >= 4
+            ? 'Nhấp vào một chiêu thức để quên và học chiêu thức mới'
+            : 'Nhấp vào ô mới để thêm chiêu, hoặc chọn một chiêu để thay thế';
       }
 
-      const typeKey = (move.type || 'normal').toLowerCase();
-      const typeNameVi = TYPE_NAME_VI[typeKey] || move.type?.toUpperCase() || 'THƯỜNG';
-      const typeIconIdx = STORAGE_TYPE_INDICES[typeKey] ?? 0;
-      const iconY = typeIconIdx * 28;
-
-      const ppPct = move.maxPp > 0 ? Math.max(0, Math.min(100, (move.pp / move.maxPp) * 100)) : 0;
-      const ppColor = ppPct > 50 ? '#22c55e' : ppPct > 20 ? '#eab308' : '#ef4444';
-
-      const row = document.createElement('div');
-      row.className = `party-move-select-row ${!isEligible ? 'disabled' : ''}`;
-      row.innerHTML = `
-        <div class="move-row-type-badge">
-          <span class="storage-type-icon" style="background-position: 0 -${iconY}px;"></span>
-          <span class="type-name">${typeNameVi}</span>
+      // 1. New Move Preview Card
+      const previewEl = document.createElement('div');
+      previewEl.className = 'party-move-new-preview';
+      previewEl.innerHTML = `
+        <div class="preview-col-main">
+          <div class="preview-badge-row">
+            <span class="preview-tag-tm">⚡ ĐĨA TM</span>
+            <div class="move-row-type-badge">
+              <span class="storage-type-icon" style="background-position: 0 -${newMoveIconY}px;"></span>
+              <span class="type-name">${newMoveTypeNameVi}</span>
+            </div>
+            <span class="preview-cat-badge ${newMoveCatKey}">${newMoveCatNameVi}</span>
+          </div>
+          <div class="preview-name-row">
+            <span class="preview-name-vi">${newMoveNames.nameVi}</span>
+            ${newMoveNames.nameEn ? `<span class="preview-name-en">(${newMoveNames.nameEn})</span>` : ''}
+          </div>
+          ${(newMove.descriptionVi || newMove.description) ? `<div class="preview-desc-text">"${newMove.descriptionVi || newMove.description}"</div>` : ''}
         </div>
-        <div class="move-row-info">
-          <div class="move-row-names">
-            <span class="move-name-vi">${move.nameVi || move.name}</span>
-            ${move.nameVi && move.name !== move.nameVi ? `<span class="move-name-en">(${move.name})</span>` : ''}
+        <div class="preview-col-stats">
+          <div class="stat-pill"><span>Uy lực:</span> <strong>${newMove.power > 0 ? newMove.power : '--'}</strong></div>
+          <div class="stat-pill"><span>Chính xác:</span> <strong>${newMove.accuracy ? newMove.accuracy + '%' : '--'}</strong></div>
+          <div class="stat-pill"><span>PP:</span> <strong>${newMove.maxPp}/${newMove.maxPp}</strong></div>
+        </div>
+      `;
+      listEl.appendChild(previewEl);
+
+      // 2. If Pokemon has < 4 moves: Allow learning directly into empty slot!
+      if (pokemon.moves.length < 4) {
+        const emptySlotBtn = document.createElement('div');
+        emptySlotBtn.className = 'party-move-empty-slot-btn';
+        emptySlotBtn.innerHTML = `
+          <span class="empty-btn-icon">➕</span>
+          <div class="empty-btn-info">
+            <div class="empty-btn-title">Học vào ô chiêu thức mới (Ô ${pokemon.moves.length + 1}/4)</div>
+            <div class="empty-btn-desc">Học trực tiếp không cần quên bất kỳ chiêu thức nào đang có</div>
+          </div>
+        `;
+        emptySlotBtn.addEventListener('click', () => {
+          battleSePlayer.playSound('Audio/SE/Battle catch click.ogg', 0.85);
+          this.closeMoveSelectModal();
+          onMoveSelected(undefined);
+        });
+        listEl.appendChild(emptySlotBtn);
+
+        const dividerEl = document.createElement('div');
+        dividerEl.className = 'party-move-section-divider';
+        dividerEl.innerHTML = `<span>HOẶC CHỌN 1 CHIÊU BÊN DƯỚI ĐỂ QUÊN VÀ THAY THẾ:</span>`;
+        listEl.appendChild(dividerEl);
+      } else {
+        // If 4 moves: Full Notice Banner
+        const fullNotice = document.createElement('div');
+        fullNotice.className = 'party-move-full-notice';
+        fullNotice.innerHTML = `
+          <span class="notice-icon">⚠️</span>
+          <div class="notice-text">
+            <strong>${pokemon.name}</strong> đã học đủ 4 chiêu thức! Chọn 1 chiêu bên dưới để <strong>QUÊN</strong> và thay thế bằng <strong>${newMoveNames.nameVi}</strong>:
+          </div>
+        `;
+        listEl.appendChild(fullNotice);
+      }
+
+      // 3. Render existing moves as replacement targets in a 2x2 grid
+      const gridEl = document.createElement('div');
+      gridEl.className = 'party-move-grid';
+
+      pokemon.moves.forEach((move, moveIdx) => {
+        const moveNames = getMoveDisplayNames(move);
+        const typeKey = (move.type || 'normal').toLowerCase();
+        const typeNameVi = TYPE_NAME_VI[typeKey] || move.type?.toUpperCase() || 'THƯỜNG';
+        const typeIconIdx = STORAGE_TYPE_INDICES[typeKey] ?? 0;
+        const iconY = typeIconIdx * 28;
+        const catKey = (move.category || 'physical').toLowerCase();
+        const catNameVi = CATEGORY_NAMES_VI[catKey] || 'Vật Lý';
+
+        const row = document.createElement('div');
+        row.className = 'party-move-select-row replace-target';
+        row.innerHTML = `
+          <div class="move-card-header">
+            <div class="move-row-type-badge">
+              <span class="storage-type-icon" style="background-position: 0 -${iconY}px;"></span>
+              <span class="type-name">${typeNameVi}</span>
+            </div>
+            <span class="move-cat-tag ${catKey}">${catNameVi}</span>
+            <span class="move-row-badge replace">SẼ BỊ QUÊN</span>
+          </div>
+          <div class="move-card-body">
+            <span class="move-name-vi">${moveNames.nameVi}</span>
+            ${moveNames.nameEn ? `<span class="move-name-en">(${moveNames.nameEn})</span>` : ''}
+          </div>
+          <div class="move-card-footer">
+            <span class="move-power-text">Uy lực: <strong>${move.power > 0 ? move.power : '--'}</strong></span>
+            <span class="move-pp-text">PP: <strong>${move.pp}</strong> / ${move.maxPp}</span>
+          </div>
+        `;
+
+        row.addEventListener('click', () => {
+          battleSePlayer.playSound('Audio/SE/Battle catch click.ogg', 0.85);
+          this.closeMoveSelectModal();
+          onMoveSelected(moveIdx);
+        });
+
+        gridEl.appendChild(row);
+      });
+
+      listEl.appendChild(gridEl);
+    } else {
+      // =========================================================================
+      // PP Recovery / PP Boost Interface (Ether / Leppa Berry / PP Up / PP Max)
+      // =========================================================================
+      if (titleEl) {
+        titleEl.textContent = `DÙNG ${itemName.toUpperCase()}`;
+      }
+      if (subtitleEl) {
+        subtitleEl.textContent = `Chọn chiêu thức của ${pokemon.name} để áp dụng:`;
+      }
+      if (hintEl) {
+        hintEl.textContent = 'Nhấp vào chiêu thức để sử dụng vật phẩm';
+      }
+
+      const gridEl = document.createElement('div');
+      gridEl.className = 'party-move-grid';
+
+      pokemon.moves.forEach((move, moveIdx) => {
+        const moveNames = getMoveDisplayNames(move);
+        const moveExt = move as { ppUpCount?: number };
+        const currentPpUp = moveExt.ppUpCount ?? 0;
+        const isPpFull = move.pp >= move.maxPp;
+        const isMaxPpUp = currentPpUp >= 3;
+
+        let isEligible = true;
+        let statusBadge = '';
+
+        if (def?.restorePp && def.restorePp.target === 'single') {
+          if (isPpFull) {
+            isEligible = false;
+            statusBadge = '<span class="move-row-badge full">ĐẦY PP</span>';
+          }
+        } else if (def?.boostMaxPp) {
+          if (isMaxPpUp) {
+            isEligible = false;
+            statusBadge = '<span class="move-row-badge max">TỐI ĐA (3/3)</span>';
+          } else {
+            statusBadge = `<span class="move-row-badge ppup">PP Up: ${currentPpUp}/3</span>`;
+          }
+        }
+
+        const typeKey = (move.type || 'normal').toLowerCase();
+        const typeNameVi = TYPE_NAME_VI[typeKey] || move.type?.toUpperCase() || 'THƯỜNG';
+        const typeIconIdx = STORAGE_TYPE_INDICES[typeKey] ?? 0;
+        const iconY = typeIconIdx * 28;
+
+        const ppPct = move.maxPp > 0 ? Math.max(0, Math.min(100, (move.pp / move.maxPp) * 100)) : 0;
+        const ppColor = ppPct > 50 ? '#22c55e' : ppPct > 20 ? '#eab308' : '#ef4444';
+
+        const row = document.createElement('div');
+        row.className = `party-move-select-row ${!isEligible ? 'disabled' : ''}`;
+        row.innerHTML = `
+          <div class="move-card-header">
+            <div class="move-row-type-badge">
+              <span class="storage-type-icon" style="background-position: 0 -${iconY}px;"></span>
+              <span class="type-name">${typeNameVi}</span>
+            </div>
             ${statusBadge}
           </div>
-          <div class="move-row-pp-wrap">
+          <div class="move-card-body">
+            <span class="move-name-vi">${moveNames.nameVi}</span>
+            ${moveNames.nameEn ? `<span class="move-name-en">(${moveNames.nameEn})</span>` : ''}
+          </div>
+          <div class="move-card-footer pp-footer">
             <div class="move-pp-bar-track">
               <div class="move-pp-bar-fill" style="width: ${ppPct}%; background-color: ${ppColor};"></div>
             </div>
             <span class="move-pp-text">PP: <strong>${move.pp}</strong> / ${move.maxPp}</span>
           </div>
-        </div>
-      `;
+        `;
 
-      row.addEventListener('click', () => {
-        if (!isEligible) {
-          if (def?.restorePp && isPpFull) {
-            showBerryToast(`⚠️ Chiêu thức ${move.nameVi || move.name} đã đầy PP (${move.pp}/${move.maxPp})!`, '#f59e0b');
-          } else if (def?.boostMaxPp && isMaxPpUp) {
-            showBerryToast(`⚠️ Chiêu thức ${move.nameVi || move.name} đã đạt giới hạn PP tối đa (3/3)!`, '#f59e0b');
+        row.addEventListener('click', () => {
+          if (!isEligible) {
+            if (def?.restorePp && isPpFull) {
+              showBerryToast(`⚠️ Chiêu thức ${moveNames.nameVi} đã đầy PP (${move.pp}/${move.maxPp})!`, '#f59e0b');
+            } else if (def?.boostMaxPp && isMaxPpUp) {
+              showBerryToast(`⚠️ Chiêu thức ${moveNames.nameVi} đã đạt giới hạn PP tối đa (3/3)!`, '#f59e0b');
+            }
+            battleSePlayer.playSound('Audio/SE/buzzer.ogg', 0.8);
+            return;
           }
-          battleSePlayer.playSound('Audio/SE/buzzer.ogg', 0.8);
-          return;
-        }
-        battleSePlayer.playSound('Audio/SE/Battle catch click.ogg', 0.85);
-        this.closeMoveSelectModal();
-        onMoveSelected(moveIdx);
+          battleSePlayer.playSound('Audio/SE/Battle catch click.ogg', 0.85);
+          this.closeMoveSelectModal();
+          onMoveSelected(moveIdx);
+        });
+
+        gridEl.appendChild(row);
       });
 
-      listEl.appendChild(row);
-    });
+      listEl.appendChild(gridEl);
+    }
 
     if (closeBtn) {
       closeBtn.onclick = () => {
         this.closeMoveSelectModal();
       };
     }
+
+    modal.onclick = (e) => {
+      if (e.target === modal) {
+        this.closeMoveSelectModal();
+      }
+    };
 
     modal.style.display = 'flex';
   }

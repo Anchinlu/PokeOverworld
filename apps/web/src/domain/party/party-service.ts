@@ -455,7 +455,10 @@ export class PartyService {
 
   // --- Persistence ---
 
+  public static disableDirectStorageWrites: boolean = false;
+
   public saveToStorage(): void {
+    if (PartyService.disableDirectStorageWrites) return;
     try {
       if (typeof localStorage !== 'undefined') {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state.pokemon));

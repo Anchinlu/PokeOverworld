@@ -24,8 +24,10 @@ import {
   partyPokemonToBattler,
   createPartyPokemon,
   pcStorageService,
+  autosaveCoordinator,
 } from '../domain';
 import { defaultRng } from '../core/rng';
+import type { Direction } from '@pokemon/shared-types';
 
 export class GameSession {
   public seed: number;
@@ -43,9 +45,14 @@ export class GameSession {
     this.input = new InputManager();
     this.chunkManager = new ChunkManager(this.seed);
 
-    const initRoadCenter = getRoadCenterX(0, this.seed);
-    this.player = new Player(initRoadCenter, 0, 0);
-    this.follower = new Follower(initRoadCenter, -1, 0);
+    const savedPos = playerService.getProfile().position;
+    const hasSavedPos = Boolean(savedPos && (savedPos.gx !== 0 || savedPos.gy !== 0));
+    const initGX = hasSavedPos ? savedPos.gx : getRoadCenterX(0, this.seed);
+    const initGY = hasSavedPos ? savedPos.gy : 0;
+    const initDir = (hasSavedPos ? (savedPos.direction ?? 0) : 0) as Direction;
+
+    this.player = new Player(initGX, initGY, initDir);
+    this.follower = new Follower(initGX, initGY - 1, initDir);
     this.camera.snapTo(this.player);
 
     // Keep overworld follower synchronized with party state changes (e.g., evolution)
@@ -128,6 +135,7 @@ export class GameSession {
     }
     if (stepCompleted) {
       this.follower.completeStep();
+      playerService.updatePosition(this.player.gx, this.player.gy, this.player.direction);
 
       // Check encounter collision when step completes
       if (Date.now() - this.lastBattleEndTime > 1500) {
@@ -174,6 +182,7 @@ export class GameSession {
   ): void {
     if (this.isBattling) return;
     this.isBattling = true;
+    autosaveCoordinator.lockBattle();
 
     // Freeze player movement immediately
     this.player.isMoving = false;
@@ -308,6 +317,9 @@ export class GameSession {
               }
             }
           }
+
+          // Conclude battle: unlock autosave and flush post-battle progress
+          autosaveCoordinator.unlockBattle();
         });
       },
     });
@@ -350,6 +362,7 @@ export class GameSession {
   ): void {
     if (this.isBattling) return;
     this.isBattling = true;
+    autosaveCoordinator.lockBattle();
 
     // Freeze player movement immediately
     this.player.isMoving = false;
@@ -451,6 +464,9 @@ export class GameSession {
           } else if (result.outcome === 'defeated') {
             showBerryToast(`💥 ${playerBattler.name} đã ngất xỉu!`, '#ef4444');
           }
+
+          // Conclude custom battle: unlock autosave and flush post-battle progress
+          autosaveCoordinator.unlockBattle();
         });
       },
     });

@@ -220,3 +220,45 @@ export function getMoveById(id: string): BattleMove | undefined {
   const norm = id.toLowerCase().replace(/-/g, '_');
   return MOVES_DB[norm] || MOVES_DB[id];
 }
+
+export function getMoveDisplayNames(move: {
+  id?: string;
+  name: string;
+  nameVi?: string;
+  nameEn?: string;
+}): { nameVi: string; nameEn: string } {
+  const normId = move.id ? move.id.toLowerCase().replace(/-/g, '_') : '';
+  const db = (normId && MOVES_DB[normId]) || (move.id && MOVES_DB[move.id]) || move;
+
+  let vi = db.nameVi || move.nameVi || '';
+  let en = db.nameEn || move.nameEn || '';
+
+  // If vi is not set, check if db.name has "(...)" which usually contains the Vietnamese translation
+  if (!vi) {
+    const match = db.name.match(/\(([^)]+)\)/);
+    if (match) {
+      vi = match[1].trim();
+    } else {
+      vi = db.name.trim();
+    }
+  } else {
+    // If vi itself has "(...)", strip it
+    vi = vi.replace(/\s*\([^)]*\).*/, '').trim();
+  }
+
+  // If en is not set, extract from db.name by stripping whatever is inside "(...)"
+  if (!en) {
+    en = db.name.replace(/\s*\([^)]*\).*/, '').trim();
+  } else {
+    // If en still has "(...)", strip it
+    en = en.replace(/\s*\([^)]*\).*/, '').trim();
+  }
+
+  // If en is identical to vi (case-insensitive), no need to display English
+  if (en.toLowerCase() === vi.toLowerCase()) {
+    en = '';
+  }
+
+  return { nameVi: vi, nameEn: en };
+}
+
