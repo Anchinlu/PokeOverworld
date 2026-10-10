@@ -70,12 +70,19 @@ export interface SaveOptions {
   worldData?: SaveGameData['world'];
 }
 
+export type SaveResult = SaveGameData & {
+  success: boolean;
+  mainSuccess: boolean;
+  pcSuccess?: boolean;
+};
+
 export class SaveGameRepository {
   private adapter: SaveStorageAdapter;
   private player: PlayerService;
   private party: PartyService;
   private inventory: InventoryService;
   private pcStorage: PcStorageService;
+  private worldDataProvider: (() => SaveGameData['world']) | null = null;
 
   public static readonly MIGRATION_FLAG_KEY = 'pokemon_savegame_migrated_v3';
 
@@ -93,6 +100,10 @@ export class SaveGameRepository {
     this.pcStorage = options?.pcStorage ?? pcStorageService;
   }
 
+  public setWorldDataProvider(provider: () => SaveGameData['world']): void {
+    this.worldDataProvider = provider;
+  }
+
   public getSlotStorageKey(slotId: string): string {
     return `pokemon_savegame_${slotId}`;
   }
@@ -107,7 +118,7 @@ export class SaveGameRepository {
 
   /**
    * Safely writes a payload to storage with .bak backup of valid prior payload.
-   * Traps QuotaExceededError to prevent unhandled crashes.
+   * Traps QuotaExceededError to prevent unhandled crashes and returns boolean success.
    */
   public safeSetItem(key: string, value: string): boolean {
     try {
@@ -172,7 +183,9 @@ export class SaveGameRepository {
    * - Profile: 'pokemon_player_profile_v1'
    * - PC: 'pokemon_pc_storage_v1'
    * - Legacy Slot: 'pokemon_savegame_${slotId}' (to harvest inventory and position)
-   * Does NOT delete legacy keys, sets migration flag 'pokemon_savegame_migrated_v3'.
+   *
+   * Safety guard (Issue 5): If slotId already has version >= 3, aborts immediately
+   * so stale legacy keys never overwrite newer active V3 progress.
    */
   public migrateLegacyData(slotId: string = DEFAULT_SAVE_SLOT): boolean {
     const migrated = this.adapter.getItem(SaveGameRepository.MIGRATION_FLAG_KEY);
@@ -180,19 +193,7 @@ export class SaveGameRepository {
       return false;
     }
 
-    const legacyPartyRaw = this.adapter.getItem('pokemon_player_party_v1');
-    const legacyProfileRaw = this.adapter.getItem('pokemon_player_profile_v1');
-    const legacyPcRaw = this.adapter.getItem('pokemon_pc_storage_v1');
     const legacySlotRaw = this.adapter.getItem(this.getSlotStorageKey(slotId));
-
-    if (!legacyPartyRaw && !legacyProfileRaw && !legacyPcRaw && !legacySlotRaw) {
-      // Clean slate - mark as migrated
-      this.adapter.setItem(SaveGameRepository.MIGRATION_FLAG_KEY, 'true');
-      return false;
-    }
-
-    console.info('[SaveGameRepository] Starting legacy migration to Version 3...');
-
     let legacySlotData: any = null;
     if (legacySlotRaw) {
       try {
@@ -201,6 +202,25 @@ export class SaveGameRepository {
         // legacy slot invalid
       }
     }
+
+    // Safety guard: If slot_1 is already Version 3, DO NOT overwrite with old keys!
+    if (legacySlotData?.metadata?.version && legacySlotData.metadata.version >= CURRENT_SAVE_VERSION) {
+      console.info('[SaveGameRepository] Target slot is already Version 3; skipping legacy migration.');
+      this.adapter.setItem(SaveGameRepository.MIGRATION_FLAG_KEY, 'true');
+      return false;
+    }
+
+    const legacyPartyRaw = this.adapter.getItem('pokemon_player_party_v1');
+    const legacyProfileRaw = this.adapter.getItem('pokemon_player_profile_v1');
+    const legacyPcRaw = this.adapter.getItem('pokemon_pc_storage_v1');
+
+    if (!legacyPartyRaw && !legacyProfileRaw && !legacyPcRaw && !legacySlotRaw) {
+      // Clean slate - mark as migrated
+      this.adapter.setItem(SaveGameRepository.MIGRATION_FLAG_KEY, 'true');
+      return false;
+    }
+
+    console.info('[SaveGameRepository] Starting legacy migration to Version 3...');
 
     // 1. Party: prefer active pokemon_player_party_v1, fallback to legacy slot party
     let party = this.party.getParty();
@@ -303,6 +323,8 @@ export class SaveGameRepository {
       party: [...party],
       inventory,
       world: {
+        seed: legacySlotData?.world?.seed ?? 101,
+        worldGenVersion: legacySlotData?.world?.worldGenVersion ?? 1,
         position,
       },
     };
@@ -317,14 +339,43 @@ export class SaveGameRepository {
   }
 
   /**
+   * Safely purges legacy storage keys (pokemon_pc_storage_v1, pokemon_player_party_v1, pokemon_player_profile_v1)
+   * once Version 3 has been confirmed saved and verified on disk.
+   * Frees up ~1.6MB to 3.2MB of critical localStorage quota.
+   */
+  public cleanupLegacyKeys(slotId: string = DEFAULT_SAVE_SLOT): boolean {
+    const mainRaw = this.safeGetItem(this.getSlotStorageKey(slotId));
+    if (!mainRaw) return false;
+
+    try {
+      const parsed = JSON.parse(mainRaw);
+      if (!parsed?.metadata?.version || parsed.metadata.version < CURRENT_SAVE_VERSION) {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+
+    // Check if PC partition is also saved
+    const pcRaw = this.safeGetItem(this.getPcStorageKey(slotId));
+    if (!pcRaw) return false;
+
+    // Purge obsolete legacy keys
+    this.adapter.removeItem('pokemon_pc_storage_v1');
+    this.adapter.removeItem('pokemon_player_party_v1');
+    this.adapter.removeItem('pokemon_player_profile_v1');
+    console.info('[SaveGameRepository] Legacy storage keys successfully purged to free quota.');
+    return true;
+  }
+
+  /**
    * Captures snapshot of domain states and writes to storage.
-   * By default, saves the lightweight main payload (~20KB).
-   * PC partition (~1.6MB) is only written when options.savePc is explicitly true.
+   * Returns SaveResult with boolean success flags for both main and PC partitions.
    */
   public save(
     slotId: string = DEFAULT_SAVE_SLOT,
     optionsOrWorld?: SaveOptions | SaveGameData['world']
-  ): SaveGameData {
+  ): SaveResult {
     let options: SaveOptions = { saveMain: true, savePc: false };
     if (optionsOrWorld) {
       if ('saveMain' in optionsOrWorld || 'savePc' in optionsOrWorld || 'worldData' in optionsOrWorld) {
@@ -348,6 +399,8 @@ export class SaveGameRepository {
     const leader = this.party.getLeader();
     const pcCount = this.pcStorage.getTotalStoredCount();
     let pcSavedAt = Date.now();
+    let pcSuccess = true;
+    let mainSuccess = true;
 
     // 1. Write PC partition if requested
     if (options.savePc) {
@@ -358,7 +411,7 @@ export class SaveGameRepository {
         savedAt: pcSavedAt,
         storage: pcState,
       };
-      this.safeSetItem(this.getPcStorageKey(slotId), JSON.stringify(pcPayload));
+      pcSuccess = this.safeSetItem(this.getPcStorageKey(slotId), JSON.stringify(pcPayload));
     } else {
       // Retain existing pcSavedAt from metadata if known
       const existing = this.listSaves().find((m) => m.slotId === slotId);
@@ -367,7 +420,16 @@ export class SaveGameRepository {
       }
     }
 
-    // 2. Write Main Partition
+    // 2. Resolve world data
+    const resolvedWorldData: SaveGameData['world'] =
+      options.worldData ??
+      (this.worldDataProvider ? this.worldDataProvider() : undefined) ?? {
+        seed: 101,
+        worldGenVersion: 1,
+        position: profile.position,
+      };
+
+    // 3. Write Main Partition
     const metadata: SaveGameMetadata = {
       version: CURRENT_SAVE_VERSION,
       savedAt: Date.now(),
@@ -391,18 +453,25 @@ export class SaveGameRepository {
       },
       party,
       inventory,
-      world: options.worldData ?? {
-        position: profile.position,
-      },
+      world: resolvedWorldData,
     };
 
     if (options.saveMain !== false) {
       const payload = JSON.stringify(saveData);
-      this.safeSetItem(this.getSlotStorageKey(slotId), payload);
-      this.updateIndex(metadata);
+      mainSuccess = this.safeSetItem(this.getSlotStorageKey(slotId), payload);
+      if (mainSuccess) {
+        this.updateIndex(metadata);
+      }
     }
 
-    return saveData;
+    const overallSuccess = (options.saveMain === false || mainSuccess) && (!options.savePc || pcSuccess);
+
+    return {
+      ...saveData,
+      success: overallSuccess,
+      mainSuccess,
+      pcSuccess: options.savePc ? pcSuccess : undefined,
+    };
   }
 
   /**
@@ -421,12 +490,14 @@ export class SaveGameRepository {
     const success = this.safeSetItem(this.getPcStorageKey(slotId), JSON.stringify(pcPayload));
 
     // Update metadata in index if available
-    const saves = this.listSaves();
-    const meta = saves.find((m) => m.slotId === slotId);
-    if (meta) {
-      meta.pcCount = pcCount;
-      meta.pcSavedAt = now;
-      this.adapter.setItem(this.getIndexStorageKey(), JSON.stringify(saves));
+    if (success) {
+      const saves = this.listSaves();
+      const meta = saves.find((m) => m.slotId === slotId);
+      if (meta) {
+        meta.pcCount = pcCount;
+        meta.pcSavedAt = now;
+        this.adapter.setItem(this.getIndexStorageKey(), JSON.stringify(saves));
+      }
     }
     return success;
   }

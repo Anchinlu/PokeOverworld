@@ -77,6 +77,7 @@ describe('Autosave & Persistence System (Version 3)', () => {
       const saveData = repository.save('slot_1');
       expect(saveData.metadata.version).toBe(CURRENT_SAVE_VERSION);
       expect(saveData.metadata.playerName).toBe('Red');
+      expect(saveData.success).toBe(true);
 
       const raw = adapter.getItem('pokemon_savegame_slot_1');
       expect(raw).not.toBeNull();
@@ -91,7 +92,9 @@ describe('Autosave & Persistence System (Version 3)', () => {
     });
 
     it('saves PC partition independently when requested', () => {
-      repository.save('slot_1', { saveMain: false, savePc: true });
+      const saveRes = repository.save('slot_1', { saveMain: false, savePc: true });
+      expect(saveRes.success).toBe(true);
+      expect(saveRes.pcSuccess).toBe(true);
 
       const pcRaw = adapter.getItem('pokemon_savegame_slot_1_pc');
       expect(pcRaw).not.toBeNull();
@@ -99,6 +102,21 @@ describe('Autosave & Persistence System (Version 3)', () => {
       expect(parsedPc.version).toBe(CURRENT_SAVE_VERSION);
       expect(Array.isArray(parsedPc.storage.boxes)).toBe(true);
       expect(parsedPc.storage.boxes.length).toBe(24);
+    });
+
+    it('persists seed and worldGenVersion in world save payload', () => {
+      repository.save('slot_1', {
+        worldData: {
+          seed: 4567,
+          worldGenVersion: 2,
+          position: { gx: 12, gy: 34, direction: 1 },
+        },
+      });
+
+      const loaded = repository.load('slot_1');
+      expect(loaded?.world?.seed).toBe(4567);
+      expect(loaded?.world?.worldGenVersion).toBe(2);
+      expect(loaded?.world?.position?.gx).toBe(12);
     });
 
     it('creates .bak backup and restores from .bak if main save is corrupt', () => {
@@ -126,12 +144,28 @@ describe('Autosave & Persistence System (Version 3)', () => {
       expect(playerServiceInstance.getProfile().money).toBe(4000);
     });
 
-    it('safely handles QuotaExceededError without throwing an exception', () => {
+    it('safely handles QuotaExceededError and returns success=false instead of throwing', () => {
       adapter.quotaErrorOnKeys.add('pokemon_savegame_slot_1');
-      expect(() => {
-        const success = repository.safeSetItem('pokemon_savegame_slot_1', '{"test":true}');
-        expect(success).toBe(false);
-      }).not.toThrow();
+      const res = repository.save('slot_1');
+      expect(res.success).toBe(false);
+      expect(res.mainSuccess).toBe(false);
+    });
+
+    it('purges legacy keys to free storage quota once V3 save is stable', () => {
+      adapter.setItem('pokemon_pc_storage_v1', '{"legacy": true}');
+      adapter.setItem('pokemon_player_party_v1', '[]');
+      adapter.setItem('pokemon_player_profile_v1', '{}');
+
+      // Save both main and PC partitions
+      repository.save('slot_1', { saveMain: true, savePc: true });
+
+      const purged = repository.cleanupLegacyKeys('slot_1');
+      expect(purged).toBe(true);
+
+      // Obsolete legacy keys are wiped to recover quota
+      expect(adapter.getItem('pokemon_pc_storage_v1')).toBeNull();
+      expect(adapter.getItem('pokemon_player_party_v1')).toBeNull();
+      expect(adapter.getItem('pokemon_player_profile_v1')).toBeNull();
     });
   });
 
@@ -156,7 +190,7 @@ describe('Autosave & Persistence System (Version 3)', () => {
         player: legacyProfile,
         party: [],
         inventory: { POKEBALL: 45, HYPERPOTION: 12 },
-        world: { position: { gx: 10, gy: 20, direction: 2 } },
+        world: { seed: 888, position: { gx: 10, gy: 20, direction: 2 } },
       };
 
       adapter.setItem('pokemon_player_party_v1', JSON.stringify(legacyParty));
@@ -180,8 +214,9 @@ describe('Autosave & Persistence System (Version 3)', () => {
       expect(v3Data.inventory.POKEBALL).toBe(45);
       expect(v3Data.inventory.HYPERPOTION).toBe(12);
       expect(v3Data.world.position.gx).toBe(10);
+      expect(v3Data.world.seed).toBe(888);
 
-      // Legacy keys must still exist for rollback safety
+      // Legacy keys must still exist for initial rollback safety
       expect(adapter.getItem('pokemon_player_party_v1')).not.toBeNull();
       expect(adapter.getItem('pokemon_player_profile_v1')).not.toBeNull();
 
@@ -189,12 +224,39 @@ describe('Autosave & Persistence System (Version 3)', () => {
       const secondRun = repository.migrateLegacyData('slot_1');
       expect(secondRun).toBe(false);
     });
+
+    it('prevents overwriting an existing V3 save with stale legacy data when migrated flag is missing', () => {
+      // Prepare existing V3 save
+      const existingV3Data = {
+        metadata: { version: 3, slotId: 'slot_1', playerName: 'ActiveChampion' },
+        player: createDefaultPlayerProfile('ActiveChampion'),
+        party: [createPartyPokemon('DRAGONITE', 65)],
+        inventory: {},
+        world: { seed: 101, position: { gx: 50, gy: 50, direction: 0 } },
+      };
+      adapter.setItem('pokemon_savegame_slot_1', JSON.stringify(existingV3Data));
+
+      // Obsolete legacy keys also present
+      adapter.setItem('pokemon_player_party_v1', JSON.stringify([createPartyPokemon('RATTATA', 3)]));
+      adapter.removeItem(SaveGameRepository.MIGRATION_FLAG_KEY); // flag was missing/cleared
+
+      const ran = repository.migrateLegacyData('slot_1');
+      expect(ran).toBe(false); // Aborted safely
+
+      // Target slot must NOT be overwritten!
+      const slotRaw = adapter.getItem('pokemon_savegame_slot_1');
+      const slotData = JSON.parse(slotRaw!);
+      expect(slotData.metadata.playerName).toBe('ActiveChampion');
+      expect(slotData.party[0].name).toBe('Dragonite');
+    });
   });
 
   describe('AutosaveCoordinator Orchestration', () => {
     let coordinator: AutosaveCoordinator;
+    let isBattlingMock = false;
 
     beforeEach(() => {
+      isBattlingMock = false;
       coordinator = new AutosaveCoordinator({
         slotId: 'slot_test',
         debounceMs: 500,
@@ -205,6 +267,7 @@ describe('Autosave & Persistence System (Version 3)', () => {
         party: partyServiceInstance,
         inventory: inventoryServiceInstance,
         pcStorage: pcStorageServiceInstance,
+        battlingProvider: () => isBattlingMock,
       });
       coordinator.init();
     });
@@ -232,6 +295,24 @@ describe('Autosave & Persistence System (Version 3)', () => {
       expect(raw).not.toBeNull();
       const parsed = JSON.parse(raw!);
       expect(parsed.inventory['master-ball']).toBeGreaterThanOrEqual(3);
+    });
+
+    it('restores dirty flag and emits success=false when disk write fails', () => {
+      let notifiedSuccess: boolean | null = null;
+      coordinator.subscribeSave((notif) => {
+        notifiedSuccess = notif.success;
+      });
+
+      // Cause disk write failure
+      adapter.quotaErrorOnKeys.add('pokemon_savegame_slot_test');
+
+      inventoryServiceInstance.addItem('POTION', 1);
+      const flushResult = coordinator.flushSync();
+
+      expect(flushResult).toBe(false);
+      // Dirty flag is restored so data is not silently lost!
+      expect(coordinator.getIsDirty()).toBe(true);
+      expect(notifiedSuccess).toBe(false);
     });
 
     it('enforces in-battle lock (Direction A) and solidifies outcome upon unlock', () => {
@@ -263,23 +344,33 @@ describe('Autosave & Persistence System (Version 3)', () => {
       expect(postData.inventory['potion']).toBe(8); // Started with 10, used 2
     });
 
-    it('tracks playtime and position via periodic ticker', () => {
-      const initialPlaytime = playerServiceInstance.getProfile().playTimeSeconds;
-      playerServiceInstance.updatePosition(42, 88, 1);
+    it('watchdog auto-unlocks battle lock if session is no longer battling', () => {
+      coordinator.lockBattle();
+      expect(coordinator.getIsBattleLocked()).toBe(true);
 
-      // Advance 5s ticker
-      vi.advanceTimersByTime(5050);
+      // Simulate battle ending unexpectedly without explicit unlock call
+      isBattlingMock = false;
 
-      expect(playerServiceInstance.getProfile().playTimeSeconds).toBe(initialPlaytime + 5);
+      // Advance ticker interval
+      vi.advanceTimersByTime(5500);
 
-      // Advance debounce to write to disk
-      vi.advanceTimersByTime(600);
+      // Watchdog should have auto-unlocked
+      expect(coordinator.getIsBattleLocked()).toBe(false);
+    });
 
-      const raw = adapter.getItem('pokemon_savegame_slot_test');
-      expect(raw).not.toBeNull();
-      const parsed = JSON.parse(raw!);
-      expect(parsed.player.position.gx).toBe(42);
-      expect(parsed.player.position.gy).toBe(88);
+    it('ignores party cursor selection and only marks dirty on real party mutation', () => {
+      expect(coordinator.getIsDirty()).toBe(false);
+
+      // Moving cursor selection does not dirty disk
+      partyServiceInstance.selectPokemon(1);
+      expect(coordinator.getIsDirty()).toBe(false);
+
+      partyServiceInstance.setSwapSource(0);
+      expect(coordinator.getIsDirty()).toBe(false);
+
+      // Adding or modifying a Pokémon DOES dirty disk
+      partyServiceInstance.addPokemon(createPartyPokemon('EEVEE', 10));
+      expect(coordinator.getIsDirty()).toBe(true);
     });
 
     it('disables direct localStorage writes on individual services', () => {

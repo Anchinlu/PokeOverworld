@@ -60,6 +60,18 @@ export class GameSession {
     partyService.subscribe(() => {
       this.syncFollowerFromParty();
     });
+
+    // Provide active battle watchdog and dynamic world data provider
+    autosaveCoordinator.setBattlingProvider(() => this.isBattling);
+    autosaveCoordinator.setWorldDataProvider(() => ({
+      seed: this.seed,
+      worldGenVersion: 1,
+      position: {
+        gx: this.player.gx,
+        gy: this.player.gy,
+        direction: this.player.direction,
+      },
+    }));
   }
 
   /**
@@ -231,95 +243,99 @@ export class GameSession {
         );
 
         new BattleScreen(playerBattler, wildBattler, env, (result) => {
-          this.isBattling = false;
-          this.lastBattleEndTime = Date.now();
+          try {
+            this.isBattling = false;
+            this.lastBattleEndTime = Date.now();
 
-          // Sync battle HP, PP, and EXP back into party
-          const finalBattler = result.activePlayerPokemon ?? playerBattler;
-          const expGained = result.outcome === 'victory' ? (result.expGained ?? 0) : 0;
-          const syncResult = partyService.syncBattleResult(finalBattler, expGained);
-          if (syncResult.leveledUp) {
-            showBerryToast(
-              `🎉 ${finalBattler.name} đã lên cấp ${syncResult.newLevel}! Toàn bộ chỉ số chiến đấu đã tăng!`,
-              '#22c55e'
-            );
-            checkPartyEvolutionNotifications();
-          }
-
-          if (syncResult.expShares && syncResult.expShares.length > 0) {
-            for (const share of syncResult.expShares) {
-              if (share.leveledUp) {
-                showBerryToast(
-                  `🎉 (Exp. Share) ${share.pokemon.name} đã nhận ${share.expGained} EXP và lên cấp ${share.newLevel}!`,
-                  '#3b82f6'
-                );
-              } else {
-                showBerryToast(
-                  `✨ (Exp. Share) ${share.pokemon.name} nhận được +${share.expGained} EXP!`,
-                  '#60a5fa'
-                );
-              }
-            }
-            checkPartyEvolutionNotifications();
-          }
-
-          if (result.outcome === 'caught') {
-            const caughtPk = createPartyPokemon(wildBattler.speciesKey, wildBattler.level, {
-              isShiny: wildBattler.isShiny,
-              ivs: wildBattler.ivs,
-              nature: wildBattler.nature,
-            });
-            caughtPk.currentHp = Math.max(1, wildBattler.currentHp);
-            playerService.incrementCaught();
-
-            if (!partyService.isPartyFull()) {
-              partyService.addPokemon(caughtPk);
-              showBerryToast(
-                `🎉 Đã thu phục thành công ${wildBattler.name} và thêm vào Đội hình (${partyService.getPartySize()}/6)!`,
-                '#22c55e'
-              );
-            } else {
-              const depositRes = pcStorageService.depositPokemon(caughtPk);
-              if (depositRes.success) {
-                showBerryToast(
-                  `🎉 Đã thu phục thành công ${wildBattler.name}! Đội hình đã đầy (6/6), đã chuyển vào PC (${depositRes.boxName})!`,
-                  '#38bdf8'
-                );
-              } else {
-                showBerryToast(
-                  `⚠️ Đội hình và toàn bộ Hộp PC đều đã đầy! Không thể chứa thêm ${wildBattler.name}!`,
-                  '#ef4444'
-                );
-              }
-            }
-          } else if (result.outcome === 'victory') {
+            // Sync battle HP, PP, and EXP back into party
+            const finalBattler = result.activePlayerPokemon ?? playerBattler;
+            const expGained = result.outcome === 'victory' ? (result.expGained ?? 0) : 0;
+            const syncResult = partyService.syncBattleResult(finalBattler, expGained);
             if (syncResult.leveledUp) {
               showBerryToast(
-                `⚔️ Chiến thắng! ${playerBattler.name} đã lên cấp ${syncResult.newLevel}!`,
-                '#facc15'
+                `🎉 ${finalBattler.name} đã lên cấp ${syncResult.newLevel}! Toàn bộ chỉ số chiến đấu đã tăng!`,
+                '#22c55e'
               );
-            } else {
-              showBerryToast(`⚔️ Đã đánh bại ${wildBattler.name}! (+${expGained} EXP)`, '#38bdf8');
+              checkPartyEvolutionNotifications();
             }
-          } else if (result.outcome === 'defeated') {
-            showBerryToast(`💥 ${playerBattler.name} đã ngất xỉu!`, '#ef4444');
-          }
 
-          if (result.outcome === 'caught' || result.outcome === 'victory') {
-            if (chunk && chunk.wildPokemon) {
-              const idx = chunk.wildPokemon.findIndex(
-                (p) =>
-                  p === (wp as unknown) ||
-                  (p.gx === wp.gx && p.gy === wp.gy && p.speciesKey === wp.speciesKey)
-              );
-              if (idx !== -1) {
-                chunk.wildPokemon.splice(idx, 1);
+            if (syncResult.expShares && syncResult.expShares.length > 0) {
+              for (const share of syncResult.expShares) {
+                if (share.leveledUp) {
+                  showBerryToast(
+                    `🎉 (Exp. Share) ${share.pokemon.name} đã nhận ${share.expGained} EXP và lên cấp ${share.newLevel}!`,
+                    '#3b82f6'
+                  );
+                } else {
+                  showBerryToast(
+                    `✨ (Exp. Share) ${share.pokemon.name} nhận được +${share.expGained} EXP!`,
+                    '#60a5fa'
+                  );
+                }
+              }
+              checkPartyEvolutionNotifications();
+            }
+
+            if (result.outcome === 'caught') {
+              const caughtPk = createPartyPokemon(wildBattler.speciesKey, wildBattler.level, {
+                isShiny: wildBattler.isShiny,
+                ivs: wildBattler.ivs,
+                nature: wildBattler.nature,
+              });
+              caughtPk.currentHp = Math.max(1, wildBattler.currentHp);
+              playerService.incrementCaught();
+
+              if (!partyService.isPartyFull()) {
+                partyService.addPokemon(caughtPk);
+                showBerryToast(
+                  `🎉 Đã thu phục thành công ${wildBattler.name} và thêm vào Đội hình (${partyService.getPartySize()}/6)!`,
+                  '#22c55e'
+                );
+              } else {
+                const depositRes = pcStorageService.depositPokemon(caughtPk);
+                if (depositRes.success) {
+                  showBerryToast(
+                    `🎉 Đã thu phục thành công ${wildBattler.name}! Đội hình đã đầy (6/6), đã chuyển vào PC (${depositRes.boxName})!`,
+                    '#38bdf8'
+                  );
+                } else {
+                  showBerryToast(
+                    `⚠️ Đội hình và toàn bộ Hộp PC đều đã đầy! Không thể chứa thêm ${wildBattler.name}!`,
+                    '#ef4444'
+                  );
+                }
+              }
+            } else if (result.outcome === 'victory') {
+              if (syncResult.leveledUp) {
+                showBerryToast(
+                  `⚔️ Chiến thắng! ${playerBattler.name} đã lên cấp ${syncResult.newLevel}!`,
+                  '#facc15'
+                );
+              } else {
+                showBerryToast(`⚔️ Đã đánh bại ${wildBattler.name}! (+${expGained} EXP)`, '#38bdf8');
+              }
+            } else if (result.outcome === 'defeated') {
+              showBerryToast(`💥 ${playerBattler.name} đã ngất xỉu!`, '#ef4444');
+            }
+
+            if (result.outcome === 'caught' || result.outcome === 'victory') {
+              if (chunk && chunk.wildPokemon) {
+                const idx = chunk.wildPokemon.findIndex(
+                  (p) =>
+                    p === (wp as unknown) ||
+                    (p.gx === wp.gx && p.gy === wp.gy && p.speciesKey === wp.speciesKey)
+                );
+                if (idx !== -1) {
+                  chunk.wildPokemon.splice(idx, 1);
+                }
               }
             }
+          } catch (err) {
+            console.error('[GameSession] Error finalizing wild battle outcome:', err);
+          } finally {
+            // Conclude battle: always unlock autosave and flush post-battle progress safely
+            autosaveCoordinator.unlockBattle();
           }
-
-          // Conclude battle: unlock autosave and flush post-battle progress
-          autosaveCoordinator.unlockBattle();
         });
       },
     });
@@ -398,75 +414,79 @@ export class GameSession {
         const playerBattler = partyPokemonToBattler(activePk);
 
         new BattleScreen(playerBattler, customBattler, env, (result) => {
-          this.isBattling = false;
-          this.lastBattleEndTime = Date.now();
+          try {
+            this.isBattling = false;
+            this.lastBattleEndTime = Date.now();
 
-          // Sync battle HP, PP, and EXP back into party
-          const finalBattler = result.activePlayerPokemon ?? playerBattler;
-          const expGained = result.outcome === 'victory' ? (result.expGained ?? 0) : 0;
-          const syncResult = partyService.syncBattleResult(finalBattler, expGained);
-          if (syncResult.leveledUp) {
-            showBerryToast(
-              `🎉 ${finalBattler.name} đã lên cấp ${syncResult.newLevel}! Toàn bộ chỉ số chiến đấu đã tăng!`,
-              '#22c55e'
-            );
-            checkPartyEvolutionNotifications();
-          }
-
-          if (syncResult.expShares && syncResult.expShares.length > 0) {
-            for (const share of syncResult.expShares) {
-              if (share.leveledUp) {
-                showBerryToast(
-                  `🎉 (Exp. Share) ${share.pokemon.name} đã nhận ${share.expGained} EXP và lên cấp ${share.newLevel}!`,
-                  '#3b82f6'
-                );
-              } else {
-                showBerryToast(
-                  `✨ (Exp. Share) ${share.pokemon.name} nhận được +${share.expGained} EXP!`,
-                  '#60a5fa'
-                );
-              }
-            }
-            checkPartyEvolutionNotifications();
-          }
-
-          if (result.outcome === 'caught') {
-            const caughtPk = createPartyPokemon(customBattler.speciesKey, customBattler.level, {
-              isShiny: customBattler.isShiny,
-              ivs: customBattler.ivs,
-              nature: customBattler.nature,
-            });
-            caughtPk.currentHp = Math.max(1, customBattler.currentHp);
-            playerService.incrementCaught();
-
-            if (!partyService.isPartyFull()) {
-              partyService.addPokemon(caughtPk);
+            // Sync battle HP, PP, and EXP back into party
+            const finalBattler = result.activePlayerPokemon ?? playerBattler;
+            const expGained = result.outcome === 'victory' ? (result.expGained ?? 0) : 0;
+            const syncResult = partyService.syncBattleResult(finalBattler, expGained);
+            if (syncResult.leveledUp) {
               showBerryToast(
-                `🎉 Đã thu phục thành công ${customBattler.name} và thêm vào Đội hình (${partyService.getPartySize()}/6)!`,
+                `🎉 ${finalBattler.name} đã lên cấp ${syncResult.newLevel}! Toàn bộ chỉ số chiến đấu đã tăng!`,
                 '#22c55e'
               );
-            } else {
-              const depositRes = pcStorageService.depositPokemon(caughtPk);
-              if (depositRes.success) {
+              checkPartyEvolutionNotifications();
+            }
+
+            if (syncResult.expShares && syncResult.expShares.length > 0) {
+              for (const share of syncResult.expShares) {
+                if (share.leveledUp) {
+                  showBerryToast(
+                    `🎉 (Exp. Share) ${share.pokemon.name} đã nhận ${share.expGained} EXP và lên cấp ${share.newLevel}!`,
+                    '#3b82f6'
+                  );
+                } else {
+                  showBerryToast(
+                    `✨ (Exp. Share) ${share.pokemon.name} nhận được +${share.expGained} EXP!`,
+                    '#60a5fa'
+                  );
+                }
+              }
+              checkPartyEvolutionNotifications();
+            }
+
+            if (result.outcome === 'caught') {
+              const caughtPk = createPartyPokemon(customBattler.speciesKey, customBattler.level, {
+                isShiny: customBattler.isShiny,
+                ivs: customBattler.ivs,
+                nature: customBattler.nature,
+              });
+              caughtPk.currentHp = Math.max(1, customBattler.currentHp);
+              playerService.incrementCaught();
+
+              if (!partyService.isPartyFull()) {
+                partyService.addPokemon(caughtPk);
                 showBerryToast(
-                  `🎉 Đã thu phục thành công ${customBattler.name}! Đã chuyển vào PC (${depositRes.boxName})!`,
-                  '#38bdf8'
+                  `🎉 Đã thu phục thành công ${customBattler.name} và thêm vào Đội hình (${partyService.getPartySize()}/6)!`,
+                  '#22c55e'
                 );
               } else {
-                showBerryToast(`⚠️ Không thể lưu ${customBattler.name} vì PC đã đầy!`, '#ef4444');
+                const depositRes = pcStorageService.depositPokemon(caughtPk);
+                if (depositRes.success) {
+                  showBerryToast(
+                    `🎉 Đã thu phục thành công ${customBattler.name}! Đã chuyển vào PC (${depositRes.boxName})!`,
+                    '#38bdf8'
+                  );
+                } else {
+                  showBerryToast(`⚠️ Không thể lưu ${customBattler.name} vì PC đã đầy!`, '#ef4444');
+                }
               }
+            } else if (result.outcome === 'victory') {
+              showBerryToast(
+                `⚔️ Đã đánh bại Bot ${customBattler.name}! (+${expGained} EXP)`,
+                '#38bdf8'
+              );
+            } else if (result.outcome === 'defeated') {
+              showBerryToast(`💥 ${playerBattler.name} đã ngất xỉu!`, '#ef4444');
             }
-          } else if (result.outcome === 'victory') {
-            showBerryToast(
-              `⚔️ Đã đánh bại Bot ${customBattler.name}! (+${expGained} EXP)`,
-              '#38bdf8'
-            );
-          } else if (result.outcome === 'defeated') {
-            showBerryToast(`💥 ${playerBattler.name} đã ngất xỉu!`, '#ef4444');
+          } catch (err) {
+            console.error('[GameSession] Error finalizing custom battle outcome:', err);
+          } finally {
+            // Conclude custom battle: always unlock autosave and flush post-battle progress safely
+            autosaveCoordinator.unlockBattle();
           }
-
-          // Conclude custom battle: unlock autosave and flush post-battle progress
-          autosaveCoordinator.unlockBattle();
         });
       },
     });
@@ -554,6 +574,8 @@ export class GameSession {
     }
     this.chunkManager.reset(this.seed);
     this.resetPlayer();
+    playerService.updatePosition(this.player.gx, this.player.gy, this.player.direction);
+    autosaveCoordinator.flushImmediate('regenerate_map');
   }
 
   public resetPlayer(): void {

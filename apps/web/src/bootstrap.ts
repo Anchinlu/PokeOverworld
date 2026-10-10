@@ -114,6 +114,12 @@ export async function bootstrap(): Promise<void> {
     isWorldLaunched = true;
 
     let currentSeed = seedOverride ?? 101;
+    if (seedOverride === undefined && saveGameRepository.hasSave('slot_1')) {
+      const preview = saveGameRepository.load('slot_1');
+      if (preview?.world?.seed) {
+        currentSeed = preview.world.seed;
+      }
+    }
     const session = new GameSession(currentSeed);
     const renderer = new GameRenderer(canvas, assetLoader);
 
@@ -343,6 +349,8 @@ export async function bootstrap(): Promise<void> {
         saveMain: true,
         savePc: true,
         worldData: {
+          seed: session.seed,
+          worldGenVersion: 1,
           position: {
             gx: session.player.gx,
             gy: session.player.gy,
@@ -350,12 +358,20 @@ export async function bootstrap(): Promise<void> {
           },
         },
       });
-      showBerryToast(`💾 Đã lưu tiến trình game (Slot 1)!`, '#22c55e');
+      if (res.success) {
+        showBerryToast(`💾 Đã lưu tiến trình game (Slot 1)!`, '#22c55e');
+      } else {
+        showBerryToast(`⚠️ Lưu game thất bại! Bộ nhớ lưu trữ có thể đã đầy.`, '#ef4444');
+      }
       return res;
     };
     window.loadGame = () => {
       const data = saveGameRepository.load('slot_1');
       if (data) {
+        if (data.world?.seed && data.world.seed !== session.seed) {
+          session.regenerate(data.world.seed);
+          renderer.clearCache();
+        }
         if (data.world?.position) {
           const dir = (data.world.position.direction ?? 0) as Direction;
           session.player.snapTo(data.world.position.gx, data.world.position.gy, dir);

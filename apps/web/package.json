@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "@pokemon/game-data": "*",
-    "@pokemon/shared-types": "*"
+    "@pokemon/shared-types": "*",
+    "@tauri-apps/api": "^2.12.2"
   },
   "devDependencies": {
     "@types/node": "^24.11.0",

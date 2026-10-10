@@ -5,17 +5,20 @@
  * Responsibilities:
  * - Single point of persistence: coordinates Party, Player, Inventory, PC Storage, and World.
  * - Non-blocking debounce (1s) & throttle (5s max wait) with zero UI hitching.
+ * - Immediate flush capability for critical actions (items, healing, PC operations).
+ * - Safe write failure detection & retry: restores dirty flags if QuotaExceeded occurs.
  * - Independent PC Storage partition saving only on actual PC mutations.
- * - In-battle save lock (Direction A): protects state from mid-battle volatility.
- * - Window lifecycle safety (flush on beforeunload, pagehide, visibilitychange, Tauri close).
+ * - In-battle save lock (Direction A) with watchdog escape route.
+ * - Tauri v2 & browser lifecycle hooks (beforeunload, pagehide, visibilitychange, onCloseRequested).
  * - Restoring safety flags to prevent loops.
+ * - Fingerprinted party listener to prevent UI cursor movements from dirtying disk.
  */
 
 import {
   saveGameRepository,
   SaveGameRepository,
 } from './save-repository';
-import { DEFAULT_SAVE_SLOT } from './save-state';
+import { DEFAULT_SAVE_SLOT, type SaveGameData } from './save-state';
 import { partyService, PartyService } from '../party/party-service';
 import { playerService, PlayerService } from '../player/player-service';
 import { inventoryService, InventoryService } from '../inventory/inventory-service';
@@ -31,6 +34,8 @@ export interface AutosaveOptions {
   player?: PlayerService;
   inventory?: InventoryService;
   pcStorage?: PcStorageService;
+  battlingProvider?: () => boolean;
+  worldDataProvider?: () => SaveGameData['world'];
 }
 
 export interface SaveNotification {
@@ -38,6 +43,7 @@ export interface SaveNotification {
   mainSaved: boolean;
   pcSaved: boolean;
   timestamp: number;
+  error?: string;
 }
 
 export class AutosaveCoordinator {
@@ -57,15 +63,23 @@ export class AutosaveCoordinator {
   private mainDirty = false;
   private pcDirty = false;
   private lastSaveTimestamp = 0;
+  private saveSuccessCount = 0;
 
   private debounceTimer: any = null;
   private maxWaitTimer: any = null;
   private tickerTimer: any = null;
+  private retryTimer: any = null;
+  private retryAttempts = 0;
+
+  private lastPlaytimeTimestamp = Date.now();
+  private lastPartyFingerprint = '';
 
   private isInitialized = false;
   private unsubs: (() => void)[] = [];
   private lifecycleCleanups: (() => void)[] = [];
   private saveListeners: Set<(notif: SaveNotification) => void> = new Set();
+  private battlingProvider: (() => boolean) | null = null;
+  private worldDataProvider: (() => SaveGameData['world']) | null = null;
 
   constructor(options?: AutosaveOptions) {
     this.slotId = options?.slotId ?? DEFAULT_SAVE_SLOT;
@@ -78,11 +92,27 @@ export class AutosaveCoordinator {
     this.player = options?.player ?? playerService;
     this.inventory = options?.inventory ?? inventoryService;
     this.pcStorage = options?.pcStorage ?? pcStorageService;
+
+    if (options?.battlingProvider) {
+      this.battlingProvider = options.battlingProvider;
+    }
+    if (options?.worldDataProvider) {
+      this.worldDataProvider = options.worldDataProvider;
+    }
+  }
+
+  public setBattlingProvider(fn: () => boolean): void {
+    this.battlingProvider = fn;
+  }
+
+  public setWorldDataProvider(fn: () => SaveGameData['world']): void {
+    this.worldDataProvider = fn;
+    this.repository.setWorldDataProvider(fn);
   }
 
   /**
    * Initializes the coordinator:
-   * 1. Disables direct localStorage writes across all individual services.
+   * 1. Disables direct localStorage writes across individual services.
    * 2. Migrates legacy storage formats (if needed).
    * 3. Loads saved state into memory (if present).
    * 4. Binds reactive listeners, periodic ticker, and window close events.
@@ -115,10 +145,17 @@ export class AutosaveCoordinator {
       }
     }
 
+    // Capture initial party fingerprint
+    this.lastPartyFingerprint = this.getPartyFingerprint();
+
     // 4. Attach domain subscribers
     this.unsubs.push(
       this.party.subscribe(() => {
-        if (!this.isRestoring) {
+        if (this.isRestoring) return;
+        // Check if actual Pokemon data changed vs pure UI selection index
+        const currentFp = this.getPartyFingerprint();
+        if (currentFp !== this.lastPartyFingerprint) {
+          this.lastPartyFingerprint = currentFp;
           this.markMainDirty('party');
         }
       })
@@ -148,7 +185,8 @@ export class AutosaveCoordinator {
       })
     );
 
-    // 5. Periodic Ticker (playtime & position updates)
+    // 5. Periodic Ticker (playtime & watchdog)
+    this.lastPlaytimeTimestamp = Date.now();
     this.tickerTimer = setInterval(() => {
       this.handleTicker();
     }, this.tickerIntervalMs);
@@ -160,24 +198,52 @@ export class AutosaveCoordinator {
     console.info('[AutosaveCoordinator] Initialized successfully for slot:', this.slotId);
   }
 
+  private getPartyFingerprint(): string {
+    const party = this.party.getParty();
+    return party
+      .map(
+        (p) =>
+          `${p.uid}:${p.currentHp}:${p.level}:${p.exp}:${p.heldItem ?? ''}:${(p.moves ?? [])
+            .map((m) => m.pp)
+            .join(',')}`
+      )
+      .join('|');
+  }
+
   private handleTicker(): void {
     if (this.isRestoring) return;
-    const seconds = Math.round(this.tickerIntervalMs / 1000);
-    this.player.addPlayTime(seconds);
-    // Mark main dirty to preserve elapsed playtime and position
-    this.markMainDirty('ticker');
+
+    // 1. Compute exact elapsed playtime (only if window is active)
+    const now = Date.now();
+    const elapsed = now - this.lastPlaytimeTimestamp;
+    this.lastPlaytimeTimestamp = now;
+
+    const isHidden = typeof document !== 'undefined' && document.visibilityState === 'hidden';
+    if (!isHidden && elapsed > 0) {
+      const seconds = Math.floor(elapsed / 1000);
+      if (seconds > 0) {
+        this.player.addPlayTime(seconds);
+        this.markMainDirty('ticker_playtime');
+      }
+    }
+
+    // 2. Watchdog: check if battle locked while battle is actually over
+    if (this.isBattleLocked && this.battlingProvider && !this.battlingProvider()) {
+      console.warn('[AutosaveCoordinator] Watchdog detected orphaned battle lock! Force unlocking.');
+      this.unlockBattle();
+    }
   }
 
   private setupLifecycleHooks(): void {
     if (typeof window === 'undefined') return;
 
     const onUnload = () => {
-      this.flushSync();
+      this.flushSync('window_unload');
     };
 
     const onVisibilityChange = () => {
       if (typeof document !== 'undefined' && document.visibilityState === 'hidden') {
-        this.flushSync();
+        this.flushSync('visibility_hidden');
       }
     };
 
@@ -191,16 +257,24 @@ export class AutosaveCoordinator {
       document.removeEventListener('visibilitychange', onVisibilityChange);
     });
 
-    // Tauri-specific close request listener if present
-    const tauriWindow = (window as any)?.__TAURI__?.window?.appWindow;
-    if (tauriWindow && typeof tauriWindow.onCloseRequested === 'function') {
-      try {
-        tauriWindow.onCloseRequested(async () => {
-          this.flushSync();
+    // Tauri v2 Window Close Requested Hook
+    const isTauri = typeof window !== 'undefined' && ('__TAURI_INTERNALS__' in window || '__TAURI__' in window);
+    if (isTauri) {
+      import('@tauri-apps/api/window')
+        .then(({ getCurrentWindow }) => {
+          const win = getCurrentWindow();
+          return win.onCloseRequested(async () => {
+            this.flushSync('tauri_onCloseRequested');
+          });
+        })
+        .then((unlisten) => {
+          if (typeof unlisten === 'function') {
+            this.lifecycleCleanups.push(unlisten);
+          }
+        })
+        .catch((tErr) => {
+          console.warn('[AutosaveCoordinator] Tauri onCloseRequested hook registration notice:', tErr);
         });
-      } catch (tErr) {
-        console.warn('[AutosaveCoordinator] Tauri onCloseRequested hook warning:', tErr);
-      }
     }
   }
 
@@ -233,22 +307,30 @@ export class AutosaveCoordinator {
       clearTimeout(this.debounceTimer);
     }
     this.debounceTimer = setTimeout(() => {
-      this.flushSync();
+      this.flushSync('debounced');
     }, this.debounceMs);
 
     // Ensure throttle max wait
     if (!this.maxWaitTimer) {
       this.maxWaitTimer = setTimeout(() => {
-        this.flushSync();
+        this.flushSync('max_wait_throttle');
       }, this.maxWaitMs);
     }
   }
 
   /**
-   * Immediately flushes any pending changes to disk synchronously.
-   * Safe to call during window unload or before major game events.
+   * Immediately flushes any pending changes without debounce wait.
+   * Ideal for critical events (item use, evolution, PC operations).
    */
-  public flushSync(): boolean {
+  public flushImmediate(reason?: string): boolean {
+    return this.flushSync(reason ?? 'immediate');
+  }
+
+  /**
+   * Synchronously flushes any pending changes to disk.
+   * Handles QuotaExceededError by restoring dirty flags and scheduling retry with backoff.
+   */
+  public flushSync(_reason?: string): boolean {
     if (this.debounceTimer) {
       clearTimeout(this.debounceTimer);
       this.debounceTimer = null;
@@ -269,8 +351,6 @@ export class AutosaveCoordinator {
 
     const saveMain = this.mainDirty;
     const savePc = this.pcDirty;
-    this.mainDirty = false;
-    this.pcDirty = false;
 
     let pcSuccess = true;
     let mainSuccess = true;
@@ -278,21 +358,56 @@ export class AutosaveCoordinator {
     try {
       if (savePc) {
         pcSuccess = this.repository.savePcOnly(this.slotId);
+        if (pcSuccess) {
+          this.pcDirty = false;
+        } else {
+          // Restore dirty flag on failure!
+          this.pcDirty = true;
+        }
       }
 
       if (saveMain) {
-        this.repository.save(this.slotId, {
+        const worldData = this.worldDataProvider ? this.worldDataProvider() : undefined;
+        const res = this.repository.save(this.slotId, {
           saveMain: true,
           savePc: false,
+          worldData,
         });
+        mainSuccess = res.mainSuccess;
+        if (mainSuccess) {
+          this.mainDirty = false;
+        } else {
+          // Restore dirty flag on failure!
+          this.mainDirty = true;
+        }
       }
 
-      this.lastSaveTimestamp = Date.now();
+      const overallSuccess = (savePc ? pcSuccess : true) && (saveMain ? mainSuccess : true);
+
+      if (overallSuccess) {
+        this.retryAttempts = 0;
+        if (this.retryTimer) {
+          clearTimeout(this.retryTimer);
+          this.retryTimer = null;
+        }
+        this.lastSaveTimestamp = Date.now();
+        this.saveSuccessCount++;
+
+        // Once confirmed stable with at least 2 successful saves, purge legacy keys to free quota
+        if (this.saveSuccessCount >= 2) {
+          this.repository.cleanupLegacyKeys(this.slotId);
+        }
+      } else {
+        console.warn(`[AutosaveCoordinator] Save write failed (main: ${mainSuccess}, pc: ${pcSuccess}). Scheduling retry.`);
+        this.scheduleRetry();
+      }
+
       const notif: SaveNotification = {
-        success: pcSuccess && mainSuccess,
+        success: overallSuccess,
         mainSaved: saveMain,
         pcSaved: savePc,
-        timestamp: this.lastSaveTimestamp,
+        timestamp: Date.now(),
+        error: overallSuccess ? undefined : 'Storage write failed (QuotaExceeded or I/O error)',
       };
 
       this.saveListeners.forEach((fn) => {
@@ -303,23 +418,34 @@ export class AutosaveCoordinator {
         }
       });
 
-      return true;
+      return overallSuccess;
     } catch (err) {
       console.error('[AutosaveCoordinator] Error during flushSync:', err);
       // Restore dirty flags if write failed
       if (saveMain) this.mainDirty = true;
       if (savePc) this.pcDirty = true;
+      this.scheduleRetry();
       return false;
     }
   }
 
+  private scheduleRetry(): void {
+    if (this.retryTimer) return;
+    this.retryAttempts++;
+    const delay = Math.min(30000, 2000 * Math.pow(1.5, this.retryAttempts - 1));
+    this.retryTimer = setTimeout(() => {
+      this.retryTimer = null;
+      this.flushSync('retry_backoff');
+    }, delay);
+  }
+
   /**
    * Locks autosave during an ongoing battle (Direction A).
-   * First flushes any pre-battle state cleanly, then prevents in-battle disk writes.
+   * First flushes pre-battle state cleanly, then prevents in-battle disk writes.
    */
   public lockBattle(): void {
     // Flush cleanly before battle begins
-    this.flushSync();
+    this.flushSync('pre_battle');
     this.isBattleLocked = true;
   }
 
@@ -330,7 +456,7 @@ export class AutosaveCoordinator {
   public unlockBattle(): void {
     this.isBattleLocked = false;
     this.mainDirty = true;
-    this.flushSync();
+    this.flushSync('post_battle');
   }
 
   public getIsBattleLocked(): boolean {
@@ -358,11 +484,12 @@ export class AutosaveCoordinator {
    * Cleanup all listeners and timers.
    */
   public dispose(): void {
-    this.flushSync();
+    this.flushSync('dispose');
 
     if (this.debounceTimer) clearTimeout(this.debounceTimer);
     if (this.maxWaitTimer) clearTimeout(this.maxWaitTimer);
     if (this.tickerTimer) clearInterval(this.tickerTimer);
+    if (this.retryTimer) clearTimeout(this.retryTimer);
 
     this.unsubs.forEach((unsub) => unsub());
     this.unsubs = [];
