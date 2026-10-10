@@ -276,25 +276,34 @@ describe('Autosave & Persistence System (Version 3)', () => {
       coordinator.dispose();
     });
 
-    it('debounces domain mutations and flushes to disk automatically', () => {
+    it('flushes immediately on critical domain events (inventory and pc)', () => {
       expect(coordinator.getIsDirty()).toBe(false);
 
-      // 1. Mutate inventory
+      // Mutating inventory flushes immediately
       inventoryServiceInstance.addItem('MASTERBALL', 3);
-      expect(coordinator.getIsDirty()).toBe(true);
+      expect(coordinator.getIsDirty()).toBe(false); // flushed right away!
 
-      // Before debounce completes: not yet written
-      expect(adapter.getItem('pokemon_savegame_slot_test')).toBeNull();
-
-      // Fast-forward debounce timer (500ms)
-      vi.advanceTimersByTime(550);
-
-      // Now written!
-      expect(coordinator.getIsDirty()).toBe(false);
       const raw = adapter.getItem('pokemon_savegame_slot_test');
       expect(raw).not.toBeNull();
       const parsed = JSON.parse(raw!);
       expect(parsed.inventory['master-ball']).toBeGreaterThanOrEqual(3);
+    });
+
+    it('debounces player background updates and flushes after timer', () => {
+      expect(coordinator.getIsDirty()).toBe(false);
+
+      // Player service mutations without immediate flag use debouncer
+      coordinator.markMainDirty('player_walk');
+      expect(coordinator.getIsDirty()).toBe(true);
+
+      // Before timer finishes: not yet written
+      expect(adapter.getItem('pokemon_savegame_slot_test')).toBeNull();
+
+      // Advance debounce timer (500ms)
+      vi.advanceTimersByTime(550);
+
+      expect(coordinator.getIsDirty()).toBe(false);
+      expect(adapter.getItem('pokemon_savegame_slot_test')).not.toBeNull();
     });
 
     it('restores dirty flag and emits success=false when disk write fails', () => {
@@ -306,7 +315,7 @@ describe('Autosave & Persistence System (Version 3)', () => {
       // Cause disk write failure
       adapter.quotaErrorOnKeys.add('pokemon_savegame_slot_test');
 
-      inventoryServiceInstance.addItem('POTION', 1);
+      coordinator.markMainDirty('test');
       const flushResult = coordinator.flushSync();
 
       expect(flushResult).toBe(false);
@@ -358,7 +367,7 @@ describe('Autosave & Persistence System (Version 3)', () => {
       expect(coordinator.getIsBattleLocked()).toBe(false);
     });
 
-    it('ignores party cursor selection and only marks dirty on real party mutation', () => {
+    it('ignores party cursor selection but detects any Pokemon mutation via JSON fingerprint', () => {
       expect(coordinator.getIsDirty()).toBe(false);
 
       // Moving cursor selection does not dirty disk
@@ -368,9 +377,33 @@ describe('Autosave & Persistence System (Version 3)', () => {
       partyServiceInstance.setSwapSource(0);
       expect(coordinator.getIsDirty()).toBe(false);
 
-      // Adding or modifying a Pokémon DOES dirty disk
-      partyServiceInstance.addPokemon(createPartyPokemon('EEVEE', 10));
-      expect(coordinator.getIsDirty()).toBe(true);
+      // Mutating Pokemon moves, species, or status DOES immediately dirty and flush
+      const leader = partyServiceInstance.getLeader()!;
+      leader.nickname = 'Sparky';
+      partyServiceInstance.notify();
+
+      const raw = adapter.getItem('pokemon_savegame_slot_test');
+      expect(raw).not.toBeNull();
+      const parsed = JSON.parse(raw!);
+      expect(parsed.party[0].nickname).toBe('Sparky');
+    });
+
+    it('clamps playtime accumulation to prevent sleep explosion', () => {
+      const initialPlaytime = playerServiceInstance.getProfile().playTimeSeconds;
+
+      // Simulate clock jumping 8 hours (e.g. computer sleep)
+      let mockTime = Date.now();
+      vi.spyOn(Date, 'now').mockImplementation(() => mockTime);
+
+      // Clock jumps 8 hours
+      mockTime += 8 * 3600 * 1000;
+
+      // Trigger the next single ticker interval (5,050ms)
+      vi.advanceTimersByTime(5050);
+
+      // Playtime must be clamped to at most 2 ticker intervals (10s), NOT 28,800s!
+      const finalPlaytime = playerServiceInstance.getProfile().playTimeSeconds;
+      expect(finalPlaytime - initialPlaytime).toBeLessThanOrEqual(20);
     });
 
     it('disables direct localStorage writes on individual services', () => {

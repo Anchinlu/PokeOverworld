@@ -558,6 +558,20 @@ export class SaveGameRepository {
     return this.safeGetItem(this.getSlotStorageKey(slotId)) !== null;
   }
 
+  /**
+   * Safely reads only the world seed from stored JSON without dispatching state to services.
+   */
+  public getSavedWorldSeed(slotId: string = DEFAULT_SAVE_SLOT): number | null {
+    const raw = this.safeGetItem(this.getSlotStorageKey(slotId));
+    if (!raw) return null;
+    try {
+      const data = JSON.parse(raw) as SaveGameData;
+      return typeof data?.world?.seed === 'number' ? data.world.seed : null;
+    } catch {
+      return null;
+    }
+  }
+
   public deleteSave(slotId: string = DEFAULT_SAVE_SLOT): boolean {
     const mainKey = this.getSlotStorageKey(slotId);
     const pcKey = this.getPcStorageKey(slotId);

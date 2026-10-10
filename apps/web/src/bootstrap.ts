@@ -114,10 +114,10 @@ export async function bootstrap(): Promise<void> {
     isWorldLaunched = true;
 
     let currentSeed = seedOverride ?? 101;
-    if (seedOverride === undefined && saveGameRepository.hasSave('slot_1')) {
-      const preview = saveGameRepository.load('slot_1');
-      if (preview?.world?.seed) {
-        currentSeed = preview.world.seed;
+    if (seedOverride === undefined) {
+      const savedSeed = saveGameRepository.getSavedWorldSeed('slot_1');
+      if (savedSeed !== null) {
+        currentSeed = savedSeed;
       }
     }
     const session = new GameSession(currentSeed);

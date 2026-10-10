@@ -156,7 +156,8 @@ export class AutosaveCoordinator {
         const currentFp = this.getPartyFingerprint();
         if (currentFp !== this.lastPartyFingerprint) {
           this.lastPartyFingerprint = currentFp;
-          this.markMainDirty('party');
+          this.markMainDirty('party_mutation');
+          this.flushImmediate('party_mutation');
         }
       })
     );
@@ -173,6 +174,7 @@ export class AutosaveCoordinator {
       this.inventory.subscribe(() => {
         if (!this.isRestoring) {
           this.markMainDirty('inventory');
+          this.flushImmediate('inventory_changed');
         }
       })
     );
@@ -181,6 +183,7 @@ export class AutosaveCoordinator {
       this.pcStorage.subscribe(() => {
         if (!this.isRestoring) {
           this.markPcDirty('pcStorage');
+          this.flushImmediate('pc_operation');
         }
       })
     );
@@ -199,15 +202,7 @@ export class AutosaveCoordinator {
   }
 
   private getPartyFingerprint(): string {
-    const party = this.party.getParty();
-    return party
-      .map(
-        (p) =>
-          `${p.uid}:${p.currentHp}:${p.level}:${p.exp}:${p.heldItem ?? ''}:${(p.moves ?? [])
-            .map((m) => m.pp)
-            .join(',')}`
-      )
-      .join('|');
+    return JSON.stringify(this.party.getParty());
   }
 
   private handleTicker(): void {
@@ -220,7 +215,11 @@ export class AutosaveCoordinator {
 
     const isHidden = typeof document !== 'undefined' && document.visibilityState === 'hidden';
     if (!isHidden && elapsed > 0) {
-      const seconds = Math.floor(elapsed / 1000);
+      // Cap at at most 2 ticker intervals to prevent counting hours of computer sleep as gameplay
+      const maxAllowedSeconds = Math.round((this.tickerIntervalMs / 1000) * 2);
+      const rawSeconds = Math.floor(elapsed / 1000);
+      const seconds = Math.min(rawSeconds, maxAllowedSeconds);
+
       if (seconds > 0) {
         this.player.addPlayTime(seconds);
         this.markMainDirty('ticker_playtime');
@@ -264,7 +263,11 @@ export class AutosaveCoordinator {
         .then(({ getCurrentWindow }) => {
           const win = getCurrentWindow();
           return win.onCloseRequested(async () => {
-            this.flushSync('tauri_onCloseRequested');
+            try {
+              this.flushSync('tauri_onCloseRequested');
+            } catch (err) {
+              console.warn('[AutosaveCoordinator] Error in onCloseRequested flush:', err);
+            }
           });
         })
         .then((unlisten) => {
