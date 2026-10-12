@@ -264,6 +264,12 @@ export interface PokemonSprites {
   cry?: string;
 }
 
+export interface PokemonAbilities {
+  primary: string;
+  secondary?: string;
+  hidden?: string;
+}
+
 export interface PokemonSpeciesData {
   id: number;
   name: string;
@@ -276,6 +282,8 @@ export interface PokemonSpeciesData {
   height?: number;
   weight?: number;
   ability?: string;
+  abilities?: PokemonAbilities;
+  teraType?: PokemonType;
   catchRate?: number;
   baseFriendship?: number;
   growthRate?: string;

@@ -129,17 +129,20 @@ export class SaveGameRepository {
           JSON.parse(existing);
           this.adapter.setItem(`${key}.bak`, existing);
         } catch {
-          console.warn(`[SaveGameRepository] Existing data for ${key} was corrupt; skipped .bak update.`);
+          console.warn(
+            `[SaveGameRepository] Existing data for ${key} was corrupt; skipped .bak update.`
+          );
         }
       }
       this.adapter.setItem(key, value);
       return true;
-    } catch (e: any) {
+    } catch (e: unknown) {
+      const err = e as { name?: string; code?: number; number?: number } | null;
       if (
-        e?.name === 'QuotaExceededError' ||
-        e?.name === 'NS_ERROR_DOM_QUOTA_REACHED' ||
-        e?.code === 22 ||
-        e?.number === -2147024882
+        err?.name === 'QuotaExceededError' ||
+        err?.name === 'NS_ERROR_DOM_QUOTA_REACHED' ||
+        err?.code === 22 ||
+        err?.number === -2147024882
       ) {
         console.error(`[SaveGameRepository] Storage Quota Exceeded when saving ${key}:`, e);
       } else {
@@ -194,18 +197,41 @@ export class SaveGameRepository {
     }
 
     const legacySlotRaw = this.adapter.getItem(this.getSlotStorageKey(slotId));
-    let legacySlotData: any = null;
+    interface LegacySlotPayload {
+      metadata?: { version?: number };
+      party?: import('../party/party-state').PartyPokemon[];
+      player?: {
+        name?: string;
+        inventory?: Record<string, number>;
+        position?: { gx: number; gy: number; direction: number };
+        [key: string]: unknown;
+      };
+      inventory?: Record<string, number>;
+      world?: {
+        position?: { gx: number; gy: number; direction: number };
+        seed?: number;
+        worldGenVersion?: number;
+        [key: string]: unknown;
+      };
+      [key: string]: unknown;
+    }
+    let legacySlotData: LegacySlotPayload | null = null;
     if (legacySlotRaw) {
       try {
-        legacySlotData = JSON.parse(legacySlotRaw);
+        legacySlotData = JSON.parse(legacySlotRaw) as LegacySlotPayload;
       } catch {
         // legacy slot invalid
       }
     }
 
     // Safety guard: If slot_1 is already Version 3, DO NOT overwrite with old keys!
-    if (legacySlotData?.metadata?.version && legacySlotData.metadata.version >= CURRENT_SAVE_VERSION) {
-      console.info('[SaveGameRepository] Target slot is already Version 3; skipping legacy migration.');
+    if (
+      legacySlotData?.metadata?.version &&
+      legacySlotData.metadata.version >= CURRENT_SAVE_VERSION
+    ) {
+      console.info(
+        '[SaveGameRepository] Target slot is already Version 3; skipping legacy migration.'
+      );
       this.adapter.setItem(SaveGameRepository.MIGRATION_FLAG_KEY, 'true');
       return false;
     }
@@ -230,8 +256,14 @@ export class SaveGameRepository {
         if (Array.isArray(parsedParty) && parsedParty.length > 0) {
           party = parsedParty;
         }
-      } catch {}
-    } else if (legacySlotData && Array.isArray(legacySlotData.party) && legacySlotData.party.length > 0) {
+      } catch {
+        // Ignore invalid legacy party JSON
+      }
+    } else if (
+      legacySlotData &&
+      Array.isArray(legacySlotData.party) &&
+      legacySlotData.party.length > 0
+    ) {
       party = legacySlotData.party;
     }
 
@@ -243,7 +275,9 @@ export class SaveGameRepository {
         if (parsedProfile && parsedProfile.name) {
           profile = { ...profile, ...parsedProfile };
         }
-      } catch {}
+      } catch {
+        // Ignore invalid legacy profile JSON
+      }
     } else if (legacySlotData && legacySlotData.player) {
       profile = { ...profile, ...legacySlotData.player };
     }
@@ -252,15 +286,17 @@ export class SaveGameRepository {
     let inventory = this.inventory.getAllItems();
     if (legacySlotData?.inventory && Object.keys(legacySlotData.inventory).length > 0) {
       inventory = legacySlotData.inventory;
-    } else if (legacySlotData?.player?.inventory && Object.keys(legacySlotData.player.inventory).length > 0) {
+    } else if (
+      legacySlotData?.player?.inventory &&
+      Object.keys(legacySlotData.player.inventory).length > 0
+    ) {
       inventory = legacySlotData.player.inventory;
     } else if (profile.inventory && Object.keys(profile.inventory).length > 0) {
       inventory = profile.inventory;
     }
 
     // 4. Position: legacy slot world position, fallback to player position
-    const position =
-      legacySlotData?.world?.position ||
+    const position = legacySlotData?.world?.position ||
       legacySlotData?.player?.position ||
       profile.position || { gx: 0, gy: 0, direction: 0 };
     profile = { ...profile, position };
@@ -378,7 +414,11 @@ export class SaveGameRepository {
   ): SaveResult {
     let options: SaveOptions = { saveMain: true, savePc: false };
     if (optionsOrWorld) {
-      if ('saveMain' in optionsOrWorld || 'savePc' in optionsOrWorld || 'worldData' in optionsOrWorld) {
+      if (
+        'saveMain' in optionsOrWorld ||
+        'savePc' in optionsOrWorld ||
+        'worldData' in optionsOrWorld
+      ) {
         options = {
           saveMain: optionsOrWorld.saveMain ?? true,
           savePc: optionsOrWorld.savePc ?? false,
@@ -421,8 +461,7 @@ export class SaveGameRepository {
     }
 
     // 2. Resolve world data
-    const resolvedWorldData: SaveGameData['world'] =
-      options.worldData ??
+    const resolvedWorldData: SaveGameData['world'] = options.worldData ??
       (this.worldDataProvider ? this.worldDataProvider() : undefined) ?? {
         seed: 101,
         worldGenVersion: 1,
@@ -464,7 +503,8 @@ export class SaveGameRepository {
       }
     }
 
-    const overallSuccess = (options.saveMain === false || mainSuccess) && (!options.savePc || pcSuccess);
+    const overallSuccess =
+      (options.saveMain === false || mainSuccess) && (!options.savePc || pcSuccess);
 
     return {
       ...saveData,
@@ -543,7 +583,10 @@ export class SaveGameRepository {
             this.pcStorage.loadFromState(pcData.storage);
           }
         } catch (pcErr) {
-          console.warn(`[SaveGameRepository] Failed to load PC partition for slot ${slotId}:`, pcErr);
+          console.warn(
+            `[SaveGameRepository] Failed to load PC partition for slot ${slotId}:`,
+            pcErr
+          );
         }
       }
 

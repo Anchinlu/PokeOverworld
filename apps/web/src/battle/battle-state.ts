@@ -5,6 +5,8 @@
 
 import { type BattleRng, defaultBattleRng } from './battle-rng';
 import type { ActiveMoveVfxState } from './move-vfx';
+import type { CustomMoveAnimationInstance } from './custom-animations';
+import { battleAnimationPlayer } from './animation';
 
 export type BattleUIMode = 'message' | 'command' | 'moves' | 'bag';
 
@@ -152,6 +154,8 @@ export class BattleState {
   hoveredCommandIdx = 0; // 0: FIGHT, 1: BAG, 2: POKÉMON, 3: RUN
   hoveredMoveIdx = -1; // 0..3: Move index, -1: none
   hoveredCancel = false;
+  hoveredTerastal = false;
+  terastalRequested = false;
 
   // Typing state
   isTyping = false;
@@ -211,6 +215,7 @@ export class BattleState {
 
   // Move Visual Animation (VFX) State
   activeMoveVfx: ActiveMoveVfxState | null = null;
+  activeCustomMoveAnim: CustomMoveAnimationInstance | null = null;
 
   // Screen Flash
   screenFlashColor = '';
@@ -232,6 +237,14 @@ export class BattleState {
 
   stopMoveVfx(): void {
     this.activeMoveVfx = null;
+  }
+
+  startCustomMoveAnimation(anim: CustomMoveAnimationInstance): void {
+    this.activeCustomMoveAnim = anim;
+  }
+
+  stopCustomMoveAnimation(): void {
+    this.activeCustomMoveAnim = null;
   }
 
   // Animation tick
@@ -376,12 +389,15 @@ export class BattleState {
   }
 
   /** Advance tick and animate smooth HP bars + flash timers */
-  update(): void {
-    this.updateTick();
+  update(dtMs = 16.67): void {
+    this.updateTick(dtMs);
   }
 
-  updateTick(): void {
+  updateTick(dtMs = 16.67): void {
     this.tick++;
+
+    // Advance timeline battle animation player independent of monitor refresh rate
+    battleAnimationPlayer.update(dtMs);
 
     if (this.isIntro) {
       this.introProgress = Math.min(1.0, this.introProgress + INTRO_PROGRESS_STEP);
@@ -440,6 +456,14 @@ export class BattleState {
         const onDone = vfx.onComplete;
         this.activeMoveVfx = null;
         if (onDone) onDone();
+      }
+    }
+
+    // Custom Move Animation update
+    if (this.activeCustomMoveAnim) {
+      this.activeCustomMoveAnim.update(this);
+      if (this.activeCustomMoveAnim.isComplete) {
+        this.activeCustomMoveAnim = null;
       }
     }
 

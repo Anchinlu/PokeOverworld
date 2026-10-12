@@ -11,6 +11,7 @@ import type { GameRenderer } from '../rendering';
 import { TERRAIN } from '@pokemon/game-data';
 import { sampleEcology, getEcologyZone } from '../maps/ecology';
 import { BERRY_STAGES } from '../maps/berry-data';
+import { AnimationGallery } from '../battle/animation';
 
 const TERRAIN_NAMES: Record<number, string> = {
   [TERRAIN.GRASS]: 'Đồng cỏ',
@@ -274,13 +275,21 @@ export class DebugOverlayController {
     const selectBattleShiny = this.overlayEl.querySelector<HTMLSelectElement>('#selectBattleShiny');
     const selectBattleOverlay =
       this.overlayEl.querySelector<HTMLSelectElement>('#selectBattleOverlay');
+    const selectBattleEnv = this.overlayEl.querySelector<HTMLSelectElement>('#selectBattleEnv');
     const selectBattleWeather =
       this.overlayEl.querySelector<HTMLSelectElement>('#selectBattleWeather');
     btnTestBattle?.addEventListener('click', () => {
       const overlay = selectBattleOverlay?.value || 'auto';
       const isShiny = selectBattleShiny?.value === 'shiny';
       const weather = selectBattleWeather?.value || 'none';
-      this.bridge.startTestBattle(overlay, isShiny, weather);
+      const envPreset = selectBattleEnv?.value || 'auto';
+      this.bridge.startTestBattle(overlay, isShiny, weather, envPreset);
+    });
+
+    const btnOpenAnimGallery =
+      this.overlayEl.querySelector<HTMLButtonElement>('#btnOpenAnimGallery');
+    btnOpenAnimGallery?.addEventListener('click', () => {
+      AnimationGallery.open();
     });
 
     // Custom Bot Battle Spawner
@@ -440,8 +449,7 @@ export class DebugOverlayController {
     if (!this.overlayEl) return;
     const btnOpenBagDirect = this.overlayEl.querySelector<HTMLButtonElement>('#btnOpenBagDirect');
     const btnAddFullItems = this.overlayEl.querySelector<HTMLButtonElement>('#btnAddFullItems');
-    const btnAddAllMachines =
-      this.overlayEl.querySelector<HTMLButtonElement>('#btnAddAllMachines');
+    const btnAddAllMachines = this.overlayEl.querySelector<HTMLButtonElement>('#btnAddAllMachines');
     const btnAddStarterItems =
       this.overlayEl.querySelector<HTMLButtonElement>('#btnAddStarterItems');
     const btnAddAllBalls = this.overlayEl.querySelector<HTMLButtonElement>('#btnAddAllBalls');

@@ -1,0 +1,87 @@
+{
+  "NORMAL": {
+    "physicalmove": "tackle",
+    "specialmove": "swift",
+    "statusmove": "growl"
+  },
+  "FIRE": {
+    "physicalmove": "fire_punch",
+    "specialmove": "flamethrower",
+    "statusmove": "will_o_wisp"
+  },
+  "WATER": {
+    "physicalmove": "water_pulse",
+    "specialmove": "water_gun",
+    "statusmove": "rain_dance"
+  },
+  "ELECTRIC": {
+    "physicalmove": "thunder_punch",
+    "specialmove": "thunderbolt",
+    "statusmove": "thunder_wave"
+  },
+  "GRASS": {
+    "physicalmove": "razor_leaf",
+    "specialmove": "mega_drain",
+    "statusmove": "spore"
+  },
+  "ICE": {
+    "physicalmove": "ice_punch",
+    "specialmove": "icy_wind",
+    "statusmove": "hail"
+  },
+  "FIGHTING": {
+    "physicalmove": "double_kick",
+    "specialmove": "close_combat",
+    "statusmove": "bulk_up"
+  },
+  "POISON": {
+    "physicalmove": "poison_tail",
+    "specialmove": "sludge_bomb",
+    "statusmove": "poison_gas"
+  },
+  "GROUND": {
+    "physicalmove": "sandattack",
+    "specialmove": "sandstorm",
+    "statusmove": "sandattack"
+  },
+  "FLYING": {
+    "physicalmove": "wing_attack",
+    "specialmove": "gust",
+    "statusmove": "whirlwind"
+  },
+  "PSYCHIC": {
+    "physicalmove": "psycho_cut",
+    "specialmove": "psychic",
+    "statusmove": "amnesia"
+  },
+  "BUG": {
+    "physicalmove": "x_scissor",
+    "specialmove": "signal_beam",
+    "statusmove": "string_shot"
+  },
+  "ROCK": {
+    "physicalmove": "rock_throw",
+    "specialmove": "ancientpower",
+    "statusmove": "stealth_rock"
+  },
+  "GHOST": {
+    "physicalmove": "shadow_ball",
+    "specialmove": "shadow_ball",
+    "statusmove": "confuse_ray"
+  },
+  "DRAGON": {
+    "physicalmove": "dragon_claw",
+    "specialmove": "dragon_rage",
+    "statusmove": "dragon_dance"
+  },
+  "STEEL": {
+    "physicalmove": "iron_head",
+    "specialmove": "metal_claw",
+    "statusmove": "harden"
+  },
+  "DARK": {
+    "physicalmove": "bite",
+    "specialmove": "crunch",
+    "statusmove": "fake_tears"
+  }
+}

@@ -633,4 +633,3 @@ describe('Special Support Moves', () => {
     controller.destroy();
   });
 });
-

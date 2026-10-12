@@ -1,0 +1,2490 @@
+{
+  "0": {
+    "id": "0",
+    "name": "Common:HealthUp",
+    "graphic": "leech-seed",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 3
+  },
+  "1": {
+    "id": "1",
+    "name": "Common:HealthDown",
+    "graphic": "!",
+    "position": 1,
+    "frameCount": 11,
+    "timingCount": 1
+  },
+  "2": {
+    "id": "2",
+    "name": "Common:StatUp",
+    "graphic": "!",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "3": {
+    "id": "3",
+    "name": "Common:StatDown",
+    "graphic": "!",
+    "position": 1,
+    "frameCount": 11,
+    "timingCount": 1
+  },
+  "4": {
+    "id": "4",
+    "name": "Common:Sleep",
+    "graphic": "028-State01",
+    "position": 1,
+    "frameCount": 12,
+    "timingCount": 1
+  },
+  "5": {
+    "id": "5",
+    "name": "Common:Poison",
+    "graphic": "State1",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "6": {
+    "id": "6",
+    "name": "Common:Toxic",
+    "graphic": "State1",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "7": {
+    "id": "7",
+    "name": "Common:Burn",
+    "graphic": "Flames",
+    "position": 1,
+    "frameCount": 14,
+    "timingCount": 1
+  },
+  "8": {
+    "id": "8",
+    "name": "Common:Paralysis",
+    "graphic": "Struggle",
+    "position": 1,
+    "frameCount": 12,
+    "timingCount": 1
+  },
+  "9": {
+    "id": "9",
+    "name": "Common:Frozen",
+    "graphic": "016-Ice01",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "10": {
+    "id": "10",
+    "name": "Common:Confusion",
+    "graphic": "confused",
+    "position": 1,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "11": {
+    "id": "11",
+    "name": "Common:Attract",
+    "graphic": "poi.hear.mus",
+    "position": 1,
+    "frameCount": 18,
+    "timingCount": 1
+  },
+  "12": {
+    "id": "12",
+    "name": "Common:Shiny",
+    "graphic": "leech-seed",
+    "position": 1,
+    "frameCount": 11,
+    "timingCount": 1
+  },
+  "13": {
+    "id": "13",
+    "name": "Common:SuperShiny",
+    "graphic": "leech-seed",
+    "position": 1,
+    "frameCount": 11,
+    "timingCount": 1
+  },
+  "14": {
+    "id": "14",
+    "name": "Common:Shadow",
+    "graphic": "leech-seed",
+    "position": 1,
+    "frameCount": 11,
+    "timingCount": 1
+  },
+  "15": {
+    "id": "15",
+    "name": "Common:ParentalBond",
+    "graphic": "Tackle_B",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "16": {
+    "id": "16",
+    "name": "",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 1,
+    "timingCount": 0
+  },
+  "17": {
+    "id": "17",
+    "name": "Common:Sun",
+    "graphic": "weather",
+    "position": 4,
+    "frameCount": 16,
+    "timingCount": 0
+  },
+  "18": {
+    "id": "18",
+    "name": "Common:Rain",
+    "graphic": "weather",
+    "position": 4,
+    "frameCount": 10,
+    "timingCount": 0
+  },
+  "19": {
+    "id": "19",
+    "name": "Common:Sandstorm",
+    "graphic": "weather",
+    "position": 4,
+    "frameCount": 10,
+    "timingCount": 0
+  },
+  "20": {
+    "id": "20",
+    "name": "Common:Hail",
+    "graphic": "weather",
+    "position": 4,
+    "frameCount": 13,
+    "timingCount": 0
+  },
+  "21": {
+    "id": "21",
+    "name": "Common:ShadowSky",
+    "graphic": "weather",
+    "position": 4,
+    "frameCount": 10,
+    "timingCount": 0
+  },
+  "22": {
+    "id": "22",
+    "name": "",
+    "graphic": "",
+    "position": 1,
+    "frameCount": 1,
+    "timingCount": 0
+  },
+  "23": {
+    "id": "23",
+    "name": "Move:ABSORB",
+    "graphic": "leech-seed",
+    "position": 3,
+    "frameCount": 18,
+    "timingCount": 6
+  },
+  "24": {
+    "id": "24",
+    "name": "Move:ACID",
+    "graphic": "poison2",
+    "position": 3,
+    "frameCount": 16,
+    "timingCount": 2
+  },
+  "25": {
+    "id": "25",
+    "name": "Move:ACIDARMOR",
+    "graphic": "poison3",
+    "position": 1,
+    "frameCount": 13,
+    "timingCount": 3
+  },
+  "26": {
+    "id": "26",
+    "name": "Move:ACIDSPRAY",
+    "graphic": "fly copy",
+    "position": 1,
+    "frameCount": 9,
+    "timingCount": 1
+  },
+  "27": {
+    "id": "27",
+    "name": "Move:ACROBATICS",
+    "graphic": "finger.spoon",
+    "position": 1,
+    "frameCount": 7,
+    "timingCount": 1
+  },
+  "28": {
+    "id": "28",
+    "name": "Move:ACUPRESSURE",
+    "graphic": "mixed status",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "29": {
+    "id": "29",
+    "name": "Move:AERIALACE",
+    "graphic": "Aerial Ace",
+    "position": 2,
+    "frameCount": 12,
+    "timingCount": 1
+  },
+  "30": {
+    "id": "30",
+    "name": "OppMove:AERIALACE",
+    "graphic": "Aerial Ace",
+    "position": 3,
+    "frameCount": 12,
+    "timingCount": 1
+  },
+  "31": {
+    "id": "31",
+    "name": "Move:AGILITY",
+    "graphic": "!",
+    "position": 2,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "32": {
+    "id": "32",
+    "name": "Move:ALLYSWITCH",
+    "graphic": "anim sheet",
+    "position": 2,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "33": {
+    "id": "33",
+    "name": "Move:AMNESIA",
+    "graphic": "mixed",
+    "position": 1,
+    "frameCount": 7,
+    "timingCount": 1
+  },
+  "34": {
+    "id": "34",
+    "name": "Move:ANCIENTPOWER",
+    "graphic": "Ancient-PowerFilesheet",
+    "position": 3,
+    "frameCount": 32,
+    "timingCount": 2
+  },
+  "35": {
+    "id": "35",
+    "name": "Move:AQUARING",
+    "graphic": "fly copy",
+    "position": 3,
+    "frameCount": 6,
+    "timingCount": 1
+  },
+  "36": {
+    "id": "36",
+    "name": "Move:AROMATHERAPY",
+    "graphic": "Anima (1)",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "37": {
+    "id": "37",
+    "name": "Move:AURORABEAM",
+    "graphic": "023-Burst01",
+    "position": 3,
+    "frameCount": 16,
+    "timingCount": 2
+  },
+  "38": {
+    "id": "38",
+    "name": "Move:BARRIER",
+    "graphic": "anim sheet",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "39": {
+    "id": "39",
+    "name": "Move:BEATUP",
+    "graphic": "many",
+    "position": 1,
+    "frameCount": 4,
+    "timingCount": 1
+  },
+  "40": {
+    "id": "40",
+    "name": "Beat Up hit 2",
+    "graphic": "many",
+    "position": 1,
+    "frameCount": 4,
+    "timingCount": 1
+  },
+  "41": {
+    "id": "41",
+    "name": "Beat Up hit 3",
+    "graphic": "many",
+    "position": 1,
+    "frameCount": 4,
+    "timingCount": 1
+  },
+  "42": {
+    "id": "42",
+    "name": "Beat Up hit 4",
+    "graphic": "many",
+    "position": 1,
+    "frameCount": 4,
+    "timingCount": 1
+  },
+  "43": {
+    "id": "43",
+    "name": "Beat Up hit 5",
+    "graphic": "many",
+    "position": 1,
+    "frameCount": 4,
+    "timingCount": 1
+  },
+  "44": {
+    "id": "44",
+    "name": "Beat Up hit 6",
+    "graphic": "many",
+    "position": 1,
+    "frameCount": 4,
+    "timingCount": 1
+  },
+  "45": {
+    "id": "45",
+    "name": "Move:BIND",
+    "graphic": "Struggle",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 3
+  },
+  "46": {
+    "id": "46",
+    "name": "Common:Bind",
+    "graphic": "Struggle",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 3
+  },
+  "47": {
+    "id": "47",
+    "name": "Move:BITE",
+    "graphic": "Crunch",
+    "position": 1,
+    "frameCount": 14,
+    "timingCount": 1
+  },
+  "48": {
+    "id": "48",
+    "name": "Move:BLASTBURN",
+    "graphic": "Firebird",
+    "position": 3,
+    "frameCount": 17,
+    "timingCount": 1
+  },
+  "49": {
+    "id": "49",
+    "name": "Move:BLOCK",
+    "graphic": "block",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "50": {
+    "id": "50",
+    "name": "Move:BLUEFLARE",
+    "graphic": "anim sheet.2",
+    "position": 1,
+    "frameCount": 12,
+    "timingCount": 1
+  },
+  "51": {
+    "id": "51",
+    "name": "Move:BODYSLAM",
+    "graphic": "003-Attack01",
+    "position": 1,
+    "frameCount": 5,
+    "timingCount": 1
+  },
+  "52": {
+    "id": "52",
+    "name": "Move:BRICKBREAK",
+    "graphic": "many",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 1
+  },
+  "53": {
+    "id": "53",
+    "name": "Move:BUBBLE",
+    "graphic": "008-Weapon03",
+    "position": 3,
+    "frameCount": 13,
+    "timingCount": 1
+  },
+  "54": {
+    "id": "54",
+    "name": "Move:BUBBLEBEAM",
+    "graphic": "018-Water01",
+    "position": 3,
+    "frameCount": 16,
+    "timingCount": 6
+  },
+  "55": {
+    "id": "55",
+    "name": "Move:BULKUP",
+    "graphic": "animsheet",
+    "position": 1,
+    "frameCount": 18,
+    "timingCount": 3
+  },
+  "56": {
+    "id": "56",
+    "name": "Move:BULLETPUNCH",
+    "graphic": "punches",
+    "position": 1,
+    "frameCount": 12,
+    "timingCount": 1
+  },
+  "57": {
+    "id": "57",
+    "name": "Move:BULLETSEED",
+    "graphic": "leech-seed",
+    "position": 3,
+    "frameCount": 11,
+    "timingCount": 7
+  },
+  "58": {
+    "id": "58",
+    "name": "Bullet Seed hit 2",
+    "graphic": "leech-seed",
+    "position": 3,
+    "frameCount": 11,
+    "timingCount": 7
+  },
+  "59": {
+    "id": "59",
+    "name": "Bullet Seed hit 3",
+    "graphic": "leech-seed",
+    "position": 3,
+    "frameCount": 11,
+    "timingCount": 7
+  },
+  "60": {
+    "id": "60",
+    "name": "Bullet Seed hit 4",
+    "graphic": "leech-seed",
+    "position": 3,
+    "frameCount": 11,
+    "timingCount": 7
+  },
+  "61": {
+    "id": "61",
+    "name": "Bullet Seed hit 5",
+    "graphic": "leech-seed",
+    "position": 3,
+    "frameCount": 11,
+    "timingCount": 7
+  },
+  "62": {
+    "id": "62",
+    "name": "Move:CHARGE",
+    "graphic": "electric2",
+    "position": 2,
+    "frameCount": 12,
+    "timingCount": 5
+  },
+  "63": {
+    "id": "63",
+    "name": "Move:CHARM",
+    "graphic": "electric2",
+    "position": 1,
+    "frameCount": 11,
+    "timingCount": 0
+  },
+  "64": {
+    "id": "64",
+    "name": "Move:CLEARSMOG",
+    "graphic": "fly copy",
+    "position": 3,
+    "frameCount": 7,
+    "timingCount": 1
+  },
+  "65": {
+    "id": "65",
+    "name": "Move:CLOSECOMBAT",
+    "graphic": "finger.spoon",
+    "position": 1,
+    "frameCount": 14,
+    "timingCount": 1
+  },
+  "66": {
+    "id": "66",
+    "name": "Move:COMETPUNCH",
+    "graphic": "003-Attack01",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 3
+  },
+  "67": {
+    "id": "67",
+    "name": "Comet Punch hit 2",
+    "graphic": "003-Attack01",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 3
+  },
+  "68": {
+    "id": "68",
+    "name": "Comet Punch hit 3",
+    "graphic": "003-Attack01",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 3
+  },
+  "69": {
+    "id": "69",
+    "name": "Comet Punch hit 4",
+    "graphic": "003-Attack01",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 3
+  },
+  "70": {
+    "id": "70",
+    "name": "Comet Punch hit 5",
+    "graphic": "003-Attack01",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 3
+  },
+  "71": {
+    "id": "71",
+    "name": "Move:CONFUSERAY",
+    "graphic": "estranho",
+    "position": 3,
+    "frameCount": 18,
+    "timingCount": 2
+  },
+  "72": {
+    "id": "72",
+    "name": "Move:COTTONGUARD",
+    "graphic": "animsheet",
+    "position": 2,
+    "frameCount": 8,
+    "timingCount": 1
+  },
+  "73": {
+    "id": "73",
+    "name": "Move:COTTONSPORE",
+    "graphic": "Special5",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "74": {
+    "id": "74",
+    "name": "Move:COUNTER",
+    "graphic": "punches",
+    "position": 3,
+    "frameCount": 7,
+    "timingCount": 1
+  },
+  "75": {
+    "id": "75",
+    "name": "Move:CRUNCH",
+    "graphic": "teeth",
+    "position": 1,
+    "frameCount": 14,
+    "timingCount": 1
+  },
+  "76": {
+    "id": "76",
+    "name": "Move:CRUSHCLAW",
+    "graphic": "dragon claw",
+    "position": 1,
+    "frameCount": 11,
+    "timingCount": 2
+  },
+  "77": {
+    "id": "77",
+    "name": "Move:CURSE",
+    "graphic": "ghost1",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 1
+  },
+  "78": {
+    "id": "78",
+    "name": "Move:CUT",
+    "graphic": "004-Attack02",
+    "position": 1,
+    "frameCount": 9,
+    "timingCount": 3
+  },
+  "79": {
+    "id": "79",
+    "name": "Move:DEFENSECURL",
+    "graphic": "fly copy",
+    "position": 2,
+    "frameCount": 7,
+    "timingCount": 1
+  },
+  "80": {
+    "id": "80",
+    "name": "Move:DETECT",
+    "graphic": "anim sheet",
+    "position": 3,
+    "frameCount": 7,
+    "timingCount": 1
+  },
+  "81": {
+    "id": "81",
+    "name": "Move:DISABLE",
+    "graphic": "leech-seed",
+    "position": 3,
+    "frameCount": 7,
+    "timingCount": 1
+  },
+  "82": {
+    "id": "82",
+    "name": "Move:DIZZYPUNCH",
+    "graphic": "punches",
+    "position": 1,
+    "frameCount": 18,
+    "timingCount": 1
+  },
+  "83": {
+    "id": "83",
+    "name": "Move:DOUBLEEDGE",
+    "graphic": "Divine_Smash",
+    "position": 3,
+    "frameCount": 11,
+    "timingCount": 2
+  },
+  "84": {
+    "id": "84",
+    "name": "Move:DOUBLEKICK",
+    "graphic": "normal1",
+    "position": 1,
+    "frameCount": 6,
+    "timingCount": 2
+  },
+  "85": {
+    "id": "85",
+    "name": "Double Kick hit 2",
+    "graphic": "normal1",
+    "position": 1,
+    "frameCount": 6,
+    "timingCount": 2
+  },
+  "86": {
+    "id": "86",
+    "name": "Move:DOUBLESLAP",
+    "graphic": "many",
+    "position": 1,
+    "frameCount": 9,
+    "timingCount": 2
+  },
+  "87": {
+    "id": "87",
+    "name": "DoubleSlap hit 2",
+    "graphic": "many",
+    "position": 1,
+    "frameCount": 9,
+    "timingCount": 2
+  },
+  "88": {
+    "id": "88",
+    "name": "DoubleSlap hit 3",
+    "graphic": "many",
+    "position": 1,
+    "frameCount": 9,
+    "timingCount": 2
+  },
+  "89": {
+    "id": "89",
+    "name": "DoubleSlap hit 4",
+    "graphic": "many",
+    "position": 1,
+    "frameCount": 9,
+    "timingCount": 2
+  },
+  "90": {
+    "id": "90",
+    "name": "DoubleSlap hit 5",
+    "graphic": "many",
+    "position": 1,
+    "frameCount": 9,
+    "timingCount": 2
+  },
+  "91": {
+    "id": "91",
+    "name": "Move:DRAGONBREATH",
+    "graphic": "fire5",
+    "position": 3,
+    "frameCount": 9,
+    "timingCount": 1
+  },
+  "92": {
+    "id": "92",
+    "name": "Move:DRAGONCLAW",
+    "graphic": "poison",
+    "position": 1,
+    "frameCount": 5,
+    "timingCount": 2
+  },
+  "93": {
+    "id": "93",
+    "name": "Move:DRAGONDANCE",
+    "graphic": "electric1",
+    "position": 1,
+    "frameCount": 13,
+    "timingCount": 1
+  },
+  "94": {
+    "id": "94",
+    "name": "Move:DRAGONRAGE",
+    "graphic": "fire5",
+    "position": 3,
+    "frameCount": 9,
+    "timingCount": 1
+  },
+  "95": {
+    "id": "95",
+    "name": "Move:DYNAMICPUNCH",
+    "graphic": "punches",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 1
+  },
+  "96": {
+    "id": "96",
+    "name": "Move:EMBER",
+    "graphic": "Flames",
+    "position": 3,
+    "frameCount": 13,
+    "timingCount": 1
+  },
+  "97": {
+    "id": "97",
+    "name": "Move:ENCORE",
+    "graphic": "BABACOMETRO",
+    "position": 3,
+    "frameCount": 19,
+    "timingCount": 1
+  },
+  "98": {
+    "id": "98",
+    "name": "Move:ENERGYBALL",
+    "graphic": "fly copy",
+    "position": 1,
+    "frameCount": 11,
+    "timingCount": 1
+  },
+  "99": {
+    "id": "99",
+    "name": "Move:ERUPTION",
+    "graphic": "fire5",
+    "position": 3,
+    "frameCount": 11,
+    "timingCount": 4
+  },
+  "100": {
+    "id": "100",
+    "name": "Move:EXPLOSION",
+    "graphic": "Fire3",
+    "position": 1,
+    "frameCount": 18,
+    "timingCount": 4
+  },
+  "101": {
+    "id": "101",
+    "name": "Move:FAKEOUT",
+    "graphic": "Fakeout",
+    "position": 1,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "102": {
+    "id": "102",
+    "name": "Move:FAKETEARS",
+    "graphic": "poison2",
+    "position": 2,
+    "frameCount": 10,
+    "timingCount": 3
+  },
+  "103": {
+    "id": "103",
+    "name": "Move:FIERYDANCE",
+    "graphic": "fly copy",
+    "position": 1,
+    "frameCount": 13,
+    "timingCount": 1
+  },
+  "104": {
+    "id": "104",
+    "name": "Move:FINALGAMBIT",
+    "graphic": "finger.spoon",
+    "position": 1,
+    "frameCount": 21,
+    "timingCount": 1
+  },
+  "105": {
+    "id": "105",
+    "name": "Move:FIREBLAST",
+    "graphic": "fire blast",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "106": {
+    "id": "106",
+    "name": "Move:FIREFANG",
+    "graphic": "element fangs",
+    "position": 1,
+    "frameCount": 13,
+    "timingCount": 1
+  },
+  "107": {
+    "id": "107",
+    "name": "Move:FIREPLEDGE",
+    "graphic": "anim sheet.2",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 1
+  },
+  "108": {
+    "id": "108",
+    "name": "Move:FIREPUNCH",
+    "graphic": "punches",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 2
+  },
+  "109": {
+    "id": "109",
+    "name": "Move:FIRESPIN",
+    "graphic": "grass2",
+    "position": 1,
+    "frameCount": 12,
+    "timingCount": 1
+  },
+  "110": {
+    "id": "110",
+    "name": "Common:FireSpin",
+    "graphic": "fly copy",
+    "position": 1,
+    "frameCount": 7,
+    "timingCount": 1
+  },
+  "111": {
+    "id": "111",
+    "name": "Move:FLAIL",
+    "graphic": "finger.spoon",
+    "position": 3,
+    "frameCount": 24,
+    "timingCount": 1
+  },
+  "112": {
+    "id": "112",
+    "name": "Move:FLAMEBURST",
+    "graphic": "Flames",
+    "position": 1,
+    "frameCount": 9,
+    "timingCount": 2
+  },
+  "113": {
+    "id": "113",
+    "name": "Move:FLAMECHARGE",
+    "graphic": "Flames",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "114": {
+    "id": "114",
+    "name": "Move:FLAMEWHEEL",
+    "graphic": "punches",
+    "position": 3,
+    "frameCount": 12,
+    "timingCount": 1
+  },
+  "115": {
+    "id": "115",
+    "name": "OppMove:FLAMEWHEEL",
+    "graphic": "punches",
+    "position": 3,
+    "frameCount": 12,
+    "timingCount": 1
+  },
+  "116": {
+    "id": "116",
+    "name": "Move:FLAMETHROWER",
+    "graphic": "Flames",
+    "position": 1,
+    "frameCount": 16,
+    "timingCount": 1
+  },
+  "117": {
+    "id": "117",
+    "name": "OppMove:FLAMETHROWER",
+    "graphic": "Flames",
+    "position": 1,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "118": {
+    "id": "118",
+    "name": "Move:FLASH",
+    "graphic": "Light1",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "119": {
+    "id": "119",
+    "name": "Move:FLY",
+    "graphic": "fly copy",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "120": {
+    "id": "120",
+    "name": "Fly charging",
+    "graphic": "fly copy",
+    "position": 2,
+    "frameCount": 9,
+    "timingCount": 1
+  },
+  "121": {
+    "id": "121",
+    "name": "Move:FOCUSENERGY",
+    "graphic": "Fire3",
+    "position": 2,
+    "frameCount": 10,
+    "timingCount": 3
+  },
+  "122": {
+    "id": "122",
+    "name": "Move:FOLLOWME",
+    "graphic": "finger.spoon",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "123": {
+    "id": "123",
+    "name": "OppMove:FOLLOWME",
+    "graphic": "finger.spoon",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "124": {
+    "id": "124",
+    "name": "Move:FORESIGHT",
+    "graphic": "normal1",
+    "position": 1,
+    "frameCount": 12,
+    "timingCount": 0
+  },
+  "125": {
+    "id": "125",
+    "name": "Move:FRENZYPLANT",
+    "graphic": "grass2",
+    "position": 3,
+    "frameCount": 17,
+    "timingCount": 2
+  },
+  "126": {
+    "id": "126",
+    "name": "Move:FURYATTACK",
+    "graphic": "003-Attack01",
+    "position": 3,
+    "frameCount": 8,
+    "timingCount": 2
+  },
+  "127": {
+    "id": "127",
+    "name": "Fury Attack hit 2",
+    "graphic": "003-Attack01",
+    "position": 3,
+    "frameCount": 8,
+    "timingCount": 2
+  },
+  "128": {
+    "id": "128",
+    "name": "Fury Attack hit 3",
+    "graphic": "003-Attack01",
+    "position": 3,
+    "frameCount": 8,
+    "timingCount": 2
+  },
+  "129": {
+    "id": "129",
+    "name": "Fury Attack hit 4",
+    "graphic": "003-Attack01",
+    "position": 3,
+    "frameCount": 8,
+    "timingCount": 2
+  },
+  "130": {
+    "id": "130",
+    "name": "Fury Attack hit 5",
+    "graphic": "003-Attack01",
+    "position": 3,
+    "frameCount": 8,
+    "timingCount": 2
+  },
+  "131": {
+    "id": "131",
+    "name": "OppMove:FURYATTACK",
+    "graphic": "003-Attack01",
+    "position": 3,
+    "frameCount": 8,
+    "timingCount": 2
+  },
+  "132": {
+    "id": "132",
+    "name": "Fury Attack hit 2 opp",
+    "graphic": "003-Attack01",
+    "position": 3,
+    "frameCount": 8,
+    "timingCount": 2
+  },
+  "133": {
+    "id": "133",
+    "name": "Fury Attack hit 3 opp",
+    "graphic": "003-Attack01",
+    "position": 3,
+    "frameCount": 8,
+    "timingCount": 2
+  },
+  "134": {
+    "id": "134",
+    "name": "Fury Attack hit 4 opp",
+    "graphic": "003-Attack01",
+    "position": 3,
+    "frameCount": 8,
+    "timingCount": 2
+  },
+  "135": {
+    "id": "135",
+    "name": "Fury Attack hit 5 opp",
+    "graphic": "003-Attack01",
+    "position": 3,
+    "frameCount": 8,
+    "timingCount": 2
+  },
+  "136": {
+    "id": "136",
+    "name": "Move:FURYCUTTER",
+    "graphic": "Sword6",
+    "position": 1,
+    "frameCount": 7,
+    "timingCount": 1
+  },
+  "137": {
+    "id": "137",
+    "name": "Move:FURYSWIPES",
+    "graphic": "Scratch + Shadow Claw",
+    "position": 1,
+    "frameCount": 14,
+    "timingCount": 1
+  },
+  "138": {
+    "id": "138",
+    "name": "Fury Swipes hit 2",
+    "graphic": "Scratch + Shadow Claw",
+    "position": 1,
+    "frameCount": 14,
+    "timingCount": 1
+  },
+  "139": {
+    "id": "139",
+    "name": "Fury Swipes hit 3",
+    "graphic": "Scratch + Shadow Claw",
+    "position": 1,
+    "frameCount": 14,
+    "timingCount": 1
+  },
+  "140": {
+    "id": "140",
+    "name": "Fury Swipes hit 4",
+    "graphic": "Scratch + Shadow Claw",
+    "position": 1,
+    "frameCount": 14,
+    "timingCount": 1
+  },
+  "141": {
+    "id": "141",
+    "name": "Fury Swipes hit 5",
+    "graphic": "Scratch + Shadow Claw",
+    "position": 1,
+    "frameCount": 14,
+    "timingCount": 1
+  },
+  "142": {
+    "id": "142",
+    "name": "Move:FUTURESIGHT",
+    "graphic": "face and eye",
+    "position": 2,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "143": {
+    "id": "143",
+    "name": "Future Sight hit",
+    "graphic": "face and eye",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "144": {
+    "id": "144",
+    "name": "Move:GASTROACID",
+    "graphic": "fly copy",
+    "position": 1,
+    "frameCount": 11,
+    "timingCount": 1
+  },
+  "145": {
+    "id": "145",
+    "name": "Move:GIGADRAIN",
+    "graphic": "rockice",
+    "position": 3,
+    "frameCount": 10,
+    "timingCount": 4
+  },
+  "146": {
+    "id": "146",
+    "name": "Move:GLARE",
+    "graphic": "face and eye",
+    "position": 3,
+    "frameCount": 6,
+    "timingCount": 1
+  },
+  "147": {
+    "id": "147",
+    "name": "Move:GRASSWHISTLE",
+    "graphic": "normal1",
+    "position": 3,
+    "frameCount": 16,
+    "timingCount": 0
+  },
+  "148": {
+    "id": "148",
+    "name": "Move:GROWL",
+    "graphic": "Growl",
+    "position": 2,
+    "frameCount": 8,
+    "timingCount": 1
+  },
+  "149": {
+    "id": "149",
+    "name": "OppMove:GROWL",
+    "graphic": "Growl",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 1
+  },
+  "150": {
+    "id": "150",
+    "name": "Move:GRUDGE",
+    "graphic": "ghost1",
+    "position": 1,
+    "frameCount": 12,
+    "timingCount": 1
+  },
+  "151": {
+    "id": "151",
+    "name": "Move:GUST",
+    "graphic": "Gust",
+    "position": 1,
+    "frameCount": 26,
+    "timingCount": 2
+  },
+  "152": {
+    "id": "152",
+    "name": "OppMove:GUST",
+    "graphic": "Gust",
+    "position": 1,
+    "frameCount": 26,
+    "timingCount": 2
+  },
+  "153": {
+    "id": "153",
+    "name": "Move:HAIL",
+    "graphic": "weather",
+    "position": 4,
+    "frameCount": 13,
+    "timingCount": 1
+  },
+  "154": {
+    "id": "154",
+    "name": "Move:HARDEN",
+    "graphic": "anim sheet",
+    "position": 2,
+    "frameCount": 8,
+    "timingCount": 1
+  },
+  "155": {
+    "id": "155",
+    "name": "Move:HEADBUTT",
+    "graphic": "003-Attack01",
+    "position": 1,
+    "frameCount": 6,
+    "timingCount": 1
+  },
+  "156": {
+    "id": "156",
+    "name": "Move:HEATWAVE",
+    "graphic": "011-Weapon06",
+    "position": 3,
+    "frameCount": 22,
+    "timingCount": 4
+  },
+  "157": {
+    "id": "157",
+    "name": "Move:HIGHJUMPKICK",
+    "graphic": "normal1",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 2
+  },
+  "158": {
+    "id": "158",
+    "name": "Move:HORNATTACK",
+    "graphic": "Cosmo-01",
+    "position": 3,
+    "frameCount": 6,
+    "timingCount": 1
+  },
+  "159": {
+    "id": "159",
+    "name": "Move:HYDROPUMP",
+    "graphic": "icewater",
+    "position": 1,
+    "frameCount": 17,
+    "timingCount": 3
+  },
+  "160": {
+    "id": "160",
+    "name": "Move:HYPERFANG",
+    "graphic": "normal2",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 1
+  },
+  "161": {
+    "id": "161",
+    "name": "Move:ICEBALL",
+    "graphic": "icewater",
+    "position": 3,
+    "frameCount": 13,
+    "timingCount": 2
+  },
+  "162": {
+    "id": "162",
+    "name": "Move:ICEFANG",
+    "graphic": "element fangs",
+    "position": 1,
+    "frameCount": 13,
+    "timingCount": 1
+  },
+  "163": {
+    "id": "163",
+    "name": "Move:ICEPUNCH",
+    "graphic": "punches",
+    "position": 1,
+    "frameCount": 11,
+    "timingCount": 1
+  },
+  "164": {
+    "id": "164",
+    "name": "Move:ICICLESPEAR",
+    "graphic": "rockice",
+    "position": 3,
+    "frameCount": 6,
+    "timingCount": 3
+  },
+  "165": {
+    "id": "165",
+    "name": "Icicle Spear hit 2",
+    "graphic": "rockice",
+    "position": 3,
+    "frameCount": 6,
+    "timingCount": 3
+  },
+  "166": {
+    "id": "166",
+    "name": "Icicle Spear hit 3",
+    "graphic": "rockice",
+    "position": 3,
+    "frameCount": 6,
+    "timingCount": 3
+  },
+  "167": {
+    "id": "167",
+    "name": "Icicle Spear hit 4",
+    "graphic": "rockice",
+    "position": 3,
+    "frameCount": 6,
+    "timingCount": 3
+  },
+  "168": {
+    "id": "168",
+    "name": "Icicle Spear hit 5",
+    "graphic": "rockice",
+    "position": 3,
+    "frameCount": 6,
+    "timingCount": 3
+  },
+  "169": {
+    "id": "169",
+    "name": "Move:ICYWIND",
+    "graphic": "Ice1",
+    "position": 3,
+    "frameCount": 11,
+    "timingCount": 2
+  },
+  "170": {
+    "id": "170",
+    "name": "Move:INFERNO",
+    "graphic": "Flames",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "171": {
+    "id": "171",
+    "name": "Move:IRONHEAD",
+    "graphic": "Iron Head",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 1
+  },
+  "172": {
+    "id": "172",
+    "name": "Move:JUMPKICK",
+    "graphic": "normal1",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 1
+  },
+  "173": {
+    "id": "173",
+    "name": "Move:KARATECHOP",
+    "graphic": "many",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 2
+  },
+  "174": {
+    "id": "174",
+    "name": "Move:KINESIS",
+    "graphic": "finger.spoon",
+    "position": 1,
+    "frameCount": 9,
+    "timingCount": 1
+  },
+  "175": {
+    "id": "175",
+    "name": "Move:LEAFBLADE",
+    "graphic": "Sword5",
+    "position": 1,
+    "frameCount": 24,
+    "timingCount": 5
+  },
+  "176": {
+    "id": "176",
+    "name": "Move:LEECHLIFE",
+    "graphic": "rockice",
+    "position": 3,
+    "frameCount": 12,
+    "timingCount": 3
+  },
+  "177": {
+    "id": "177",
+    "name": "Move:LEECHSEED",
+    "graphic": "leech-seed",
+    "position": 3,
+    "frameCount": 24,
+    "timingCount": 0
+  },
+  "178": {
+    "id": "178",
+    "name": "OppMove:LEECHSEED",
+    "graphic": "leech-seed",
+    "position": 3,
+    "frameCount": 24,
+    "timingCount": 0
+  },
+  "179": {
+    "id": "179",
+    "name": "Common:LeechSeed",
+    "graphic": "leech-seed",
+    "position": 3,
+    "frameCount": 20,
+    "timingCount": 0
+  },
+  "180": {
+    "id": "180",
+    "name": "Move:LEER",
+    "graphic": "leer",
+    "position": 3,
+    "frameCount": 5,
+    "timingCount": 1
+  },
+  "181": {
+    "id": "181",
+    "name": "OppMove:LEER",
+    "graphic": "leer",
+    "position": 3,
+    "frameCount": 5,
+    "timingCount": 1
+  },
+  "182": {
+    "id": "182",
+    "name": "Move:LICK",
+    "graphic": "ghost1",
+    "position": 1,
+    "frameCount": 7,
+    "timingCount": 0
+  },
+  "183": {
+    "id": "183",
+    "name": "Move:LIGHTSCREEN",
+    "graphic": "anim sheet",
+    "position": 1,
+    "frameCount": 11,
+    "timingCount": 2
+  },
+  "184": {
+    "id": "184",
+    "name": "Move:LOCKON",
+    "graphic": "mixed",
+    "position": 1,
+    "frameCount": 30,
+    "timingCount": 1
+  },
+  "185": {
+    "id": "185",
+    "name": "Move:LOVELYKISS",
+    "graphic": "poi.hear.mus",
+    "position": 3,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "186": {
+    "id": "186",
+    "name": "Move:LOWKICK",
+    "graphic": "normal1",
+    "position": 1,
+    "frameCount": 6,
+    "timingCount": 1
+  },
+  "187": {
+    "id": "187",
+    "name": "Move:LUCKYCHANT",
+    "graphic": "anim sheet",
+    "position": 3,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "188": {
+    "id": "188",
+    "name": "Move:MACHPUNCH",
+    "graphic": "punches",
+    "position": 1,
+    "frameCount": 14,
+    "timingCount": 1
+  },
+  "189": {
+    "id": "189",
+    "name": "Move:MAGICCOAT",
+    "graphic": "anim sheet",
+    "position": 1,
+    "frameCount": 11,
+    "timingCount": 3
+  },
+  "190": {
+    "id": "190",
+    "name": "Move:MEANLOOK",
+    "graphic": "face and eye",
+    "position": 1,
+    "frameCount": 6,
+    "timingCount": 0
+  },
+  "191": {
+    "id": "191",
+    "name": "Move:MEGADRAIN",
+    "graphic": "rockice",
+    "position": 3,
+    "frameCount": 10,
+    "timingCount": 4
+  },
+  "192": {
+    "id": "192",
+    "name": "OppMove:MEGADRAIN",
+    "graphic": "leech-seed",
+    "position": 3,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "193": {
+    "id": "193",
+    "name": "Move:MEGAHORN",
+    "graphic": "poison3",
+    "position": 3,
+    "frameCount": 12,
+    "timingCount": 3
+  },
+  "194": {
+    "id": "194",
+    "name": "Move:MEGAKICK",
+    "graphic": "003-Attack01",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 2
+  },
+  "195": {
+    "id": "195",
+    "name": "Move:MEGAPUNCH",
+    "graphic": "punches",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "196": {
+    "id": "196",
+    "name": "Move:METALCLAW",
+    "graphic": "dragon claw",
+    "position": 3,
+    "frameCount": 9,
+    "timingCount": 2
+  },
+  "197": {
+    "id": "197",
+    "name": "Move:METEORMASH",
+    "graphic": "punches",
+    "position": 3,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "198": {
+    "id": "198",
+    "name": "Move:METRONOME",
+    "graphic": "finger.spoon",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "199": {
+    "id": "199",
+    "name": "OppMove:METRONOME",
+    "graphic": "finger.spoon",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "200": {
+    "id": "200",
+    "name": "Move:MIST",
+    "graphic": "fly copy",
+    "position": 1,
+    "frameCount": 9,
+    "timingCount": 1
+  },
+  "201": {
+    "id": "201",
+    "name": "Move:MISTBALL",
+    "graphic": "fly copy",
+    "position": 3,
+    "frameCount": 12,
+    "timingCount": 1
+  },
+  "202": {
+    "id": "202",
+    "name": "Move:MOONLIGHT",
+    "graphic": "normal2",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "203": {
+    "id": "203",
+    "name": "Move:MORNINGSUN",
+    "graphic": "Heal3",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "204": {
+    "id": "204",
+    "name": "Move:NIGHTMARE",
+    "graphic": "022-Darkness01",
+    "position": 1,
+    "frameCount": 12,
+    "timingCount": 0
+  },
+  "205": {
+    "id": "205",
+    "name": "Move:OUTRAGE",
+    "graphic": "Fogo - 01",
+    "position": 3,
+    "frameCount": 13,
+    "timingCount": 5
+  },
+  "206": {
+    "id": "206",
+    "name": "Move:OVERHEAT",
+    "graphic": "fire4",
+    "position": 3,
+    "frameCount": 12,
+    "timingCount": 1
+  },
+  "207": {
+    "id": "207",
+    "name": "Move:PAYDAY",
+    "graphic": "008-Weapon03",
+    "position": 3,
+    "frameCount": 10,
+    "timingCount": 4
+  },
+  "208": {
+    "id": "208",
+    "name": "Move:PETALDANCE",
+    "graphic": "Anima (1)",
+    "position": 1,
+    "frameCount": 12,
+    "timingCount": 1
+  },
+  "209": {
+    "id": "209",
+    "name": "Move:PINMISSILE",
+    "graphic": "poison3",
+    "position": 3,
+    "frameCount": 10,
+    "timingCount": 6
+  },
+  "210": {
+    "id": "210",
+    "name": "Pin Missile hit 2",
+    "graphic": "poison3",
+    "position": 3,
+    "frameCount": 10,
+    "timingCount": 6
+  },
+  "211": {
+    "id": "211",
+    "name": "Pin Missile hit 3",
+    "graphic": "poison3",
+    "position": 3,
+    "frameCount": 10,
+    "timingCount": 6
+  },
+  "212": {
+    "id": "212",
+    "name": "Pin Missile hit 4",
+    "graphic": "poison3",
+    "position": 3,
+    "frameCount": 10,
+    "timingCount": 6
+  },
+  "213": {
+    "id": "213",
+    "name": "Pin Missile hit 5",
+    "graphic": "poison3",
+    "position": 3,
+    "frameCount": 10,
+    "timingCount": 6
+  },
+  "214": {
+    "id": "214",
+    "name": "Move:POISONFANG",
+    "graphic": "element fangs",
+    "position": 1,
+    "frameCount": 14,
+    "timingCount": 1
+  },
+  "215": {
+    "id": "215",
+    "name": "Move:POISONGAS",
+    "graphic": "poison",
+    "position": 3,
+    "frameCount": 14,
+    "timingCount": 1
+  },
+  "216": {
+    "id": "216",
+    "name": "Move:POISONPOWDER",
+    "graphic": "Special5",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "217": {
+    "id": "217",
+    "name": "Move:POISONSTING",
+    "graphic": "003-Attack01",
+    "position": 3,
+    "frameCount": 10,
+    "timingCount": 2
+  },
+  "218": {
+    "id": "218",
+    "name": "OppMove:POISONSTING",
+    "graphic": "003-Attack01",
+    "position": 3,
+    "frameCount": 10,
+    "timingCount": 2
+  },
+  "219": {
+    "id": "219",
+    "name": "Move:POISONTAIL",
+    "graphic": "firepoison",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 2
+  },
+  "220": {
+    "id": "220",
+    "name": "Move:POUND",
+    "graphic": "many",
+    "position": 1,
+    "frameCount": 6,
+    "timingCount": 1
+  },
+  "221": {
+    "id": "221",
+    "name": "Move:PSYCHIC",
+    "graphic": "efftest4",
+    "position": 1,
+    "frameCount": 18,
+    "timingCount": 1
+  },
+  "222": {
+    "id": "222",
+    "name": "Move:PSYCHOCUT",
+    "graphic": "Psycho Cut",
+    "position": 1,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "223": {
+    "id": "223",
+    "name": "OppMove:PSYCHOCUT",
+    "graphic": "Psycho Cut",
+    "position": 3,
+    "frameCount": 19,
+    "timingCount": 1
+  },
+  "224": {
+    "id": "224",
+    "name": "Move:QUICKATTACK",
+    "graphic": "Tackle_B",
+    "position": 1,
+    "frameCount": 14,
+    "timingCount": 1
+  },
+  "225": {
+    "id": "225",
+    "name": "Move:RAINDANCE",
+    "graphic": "weather",
+    "position": 4,
+    "frameCount": 10,
+    "timingCount": 0
+  },
+  "226": {
+    "id": "226",
+    "name": "Move:RAZORLEAF",
+    "graphic": "grass",
+    "position": 3,
+    "frameCount": 13,
+    "timingCount": 5
+  },
+  "227": {
+    "id": "227",
+    "name": "Move:REFLECT",
+    "graphic": "normal2",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 1
+  },
+  "228": {
+    "id": "228",
+    "name": "Move:REST",
+    "graphic": "fly copy",
+    "position": 1,
+    "frameCount": 9,
+    "timingCount": 1
+  },
+  "229": {
+    "id": "229",
+    "name": "Move:ROAR",
+    "graphic": "Growl",
+    "position": 1,
+    "frameCount": 5,
+    "timingCount": 1
+  },
+  "230": {
+    "id": "230",
+    "name": "OppMove:ROAR",
+    "graphic": "Growl",
+    "position": 1,
+    "frameCount": 4,
+    "timingCount": 1
+  },
+  "231": {
+    "id": "231",
+    "name": "Move:ROCKSMASH",
+    "graphic": "rockice",
+    "position": 1,
+    "frameCount": 7,
+    "timingCount": 2
+  },
+  "232": {
+    "id": "232",
+    "name": "Move:ROCKTHROW",
+    "graphic": "Earth1",
+    "position": 3,
+    "frameCount": 8,
+    "timingCount": 2
+  },
+  "233": {
+    "id": "233",
+    "name": "Move:ROLLINGKICK",
+    "graphic": "normal1",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 1
+  },
+  "234": {
+    "id": "234",
+    "name": "Move:SANDATTACK",
+    "graphic": "Sand-Attack",
+    "position": 3,
+    "frameCount": 16,
+    "timingCount": 1
+  },
+  "235": {
+    "id": "235",
+    "name": "OppMove:SANDATTACK",
+    "graphic": "Sand-Attack",
+    "position": 3,
+    "frameCount": 16,
+    "timingCount": 1
+  },
+  "236": {
+    "id": "236",
+    "name": "Move:SANDSTORM",
+    "graphic": "weather",
+    "position": 4,
+    "frameCount": 10,
+    "timingCount": 0
+  },
+  "237": {
+    "id": "237",
+    "name": "Move:SCARYFACE",
+    "graphic": "normal2",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 1
+  },
+  "238": {
+    "id": "238",
+    "name": "Move:SCRATCH",
+    "graphic": "scratchbattle",
+    "position": 1,
+    "frameCount": 11,
+    "timingCount": 1
+  },
+  "239": {
+    "id": "239",
+    "name": "Move:SCREECH",
+    "graphic": "Growl",
+    "position": 3,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "240": {
+    "id": "240",
+    "name": "Move:SELFDESTRUCT",
+    "graphic": "030-Explosion01",
+    "position": 1,
+    "frameCount": 17,
+    "timingCount": 5
+  },
+  "241": {
+    "id": "241",
+    "name": "Move:SHADOWBALL",
+    "graphic": "009-Weapon04",
+    "position": 3,
+    "frameCount": 14,
+    "timingCount": 1
+  },
+  "242": {
+    "id": "242",
+    "name": "Move:SIGNALBEAM",
+    "graphic": "Ultra Beam",
+    "position": 1,
+    "frameCount": 20,
+    "timingCount": 2
+  },
+  "243": {
+    "id": "243",
+    "name": "Move:SILVERWIND",
+    "graphic": "Heal5",
+    "position": 1,
+    "frameCount": 9,
+    "timingCount": 1
+  },
+  "244": {
+    "id": "244",
+    "name": "Move:SING",
+    "graphic": "poi.hear.mus",
+    "position": 1,
+    "frameCount": 60,
+    "timingCount": 1
+  },
+  "245": {
+    "id": "245",
+    "name": "OppMove:SING",
+    "graphic": "poi.hear.mus",
+    "position": 1,
+    "frameCount": 41,
+    "timingCount": 1
+  },
+  "246": {
+    "id": "246",
+    "name": "Move:SKETCH",
+    "graphic": "normal2",
+    "position": 1,
+    "frameCount": 18,
+    "timingCount": 4
+  },
+  "247": {
+    "id": "247",
+    "name": "Move:SLAM",
+    "graphic": "003-Attack01",
+    "position": 1,
+    "frameCount": 5,
+    "timingCount": 1
+  },
+  "248": {
+    "id": "248",
+    "name": "Move:SLASH",
+    "graphic": "zan03",
+    "position": 1,
+    "frameCount": 6,
+    "timingCount": 1
+  },
+  "249": {
+    "id": "249",
+    "name": "Move:SLEEPPOWDER",
+    "graphic": "Special5",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "250": {
+    "id": "250",
+    "name": "Move:SLUDGE",
+    "graphic": "State1",
+    "position": 3,
+    "frameCount": 14,
+    "timingCount": 2
+  },
+  "251": {
+    "id": "251",
+    "name": "Move:SLUDGEBOMB",
+    "graphic": "poison4",
+    "position": 3,
+    "frameCount": 17,
+    "timingCount": 3
+  },
+  "252": {
+    "id": "252",
+    "name": "Move:SMOG",
+    "graphic": "poison",
+    "position": 1,
+    "frameCount": 9,
+    "timingCount": 1
+  },
+  "253": {
+    "id": "253",
+    "name": "Move:SMOKESCREEN",
+    "graphic": "Anima (2)",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "254": {
+    "id": "254",
+    "name": "Move:SPIDERWEB",
+    "graphic": "ghost2",
+    "position": 3,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "255": {
+    "id": "255",
+    "name": "Move:SPIKECANNON",
+    "graphic": "poison3",
+    "position": 3,
+    "frameCount": 6,
+    "timingCount": 3
+  },
+  "256": {
+    "id": "256",
+    "name": "Spike Cannon hit 2",
+    "graphic": "poison3",
+    "position": 3,
+    "frameCount": 6,
+    "timingCount": 3
+  },
+  "257": {
+    "id": "257",
+    "name": "Spike Cannon hit 3",
+    "graphic": "poison3",
+    "position": 3,
+    "frameCount": 6,
+    "timingCount": 3
+  },
+  "258": {
+    "id": "258",
+    "name": "Spike Cannon hit 4",
+    "graphic": "poison3",
+    "position": 3,
+    "frameCount": 6,
+    "timingCount": 3
+  },
+  "259": {
+    "id": "259",
+    "name": "Spike Cannon hit 5",
+    "graphic": "poison3",
+    "position": 3,
+    "frameCount": 6,
+    "timingCount": 3
+  },
+  "260": {
+    "id": "260",
+    "name": "Move:SPIKES",
+    "graphic": "normal2",
+    "position": 3,
+    "frameCount": 14,
+    "timingCount": 4
+  },
+  "261": {
+    "id": "261",
+    "name": "Move:SPLASH",
+    "graphic": "poison2",
+    "position": 2,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "262": {
+    "id": "262",
+    "name": "Move:SPORE",
+    "graphic": "Special5",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "263": {
+    "id": "263",
+    "name": "Move:STEALTHROCK",
+    "graphic": "Rock Tomb",
+    "position": 4,
+    "frameCount": 30,
+    "timingCount": 1
+  },
+  "264": {
+    "id": "264",
+    "name": "OppMove:STEALTHROCK",
+    "graphic": "Rock Tomb",
+    "position": 4,
+    "frameCount": 30,
+    "timingCount": 1
+  },
+  "265": {
+    "id": "265",
+    "name": "Move:STOMP",
+    "graphic": "normal1",
+    "position": 1,
+    "frameCount": 6,
+    "timingCount": 1
+  },
+  "266": {
+    "id": "266",
+    "name": "Move:STRINGSHOT",
+    "graphic": "water3",
+    "position": 3,
+    "frameCount": 16,
+    "timingCount": 2
+  },
+  "267": {
+    "id": "267",
+    "name": "Move:STRUGGLE",
+    "graphic": "Struggle",
+    "position": 2,
+    "frameCount": 10,
+    "timingCount": 0
+  },
+  "268": {
+    "id": "268",
+    "name": "Move:STUNSPORE",
+    "graphic": "Special5",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "269": {
+    "id": "269",
+    "name": "Move:SUNNYDAY",
+    "graphic": "weather",
+    "position": 4,
+    "frameCount": 16,
+    "timingCount": 0
+  },
+  "270": {
+    "id": "270",
+    "name": "Move:SUPERSONIC",
+    "graphic": "Struggle",
+    "position": 3,
+    "frameCount": 13,
+    "timingCount": 1
+  },
+  "271": {
+    "id": "271",
+    "name": "Move:SWAGGER",
+    "graphic": "mixed status",
+    "position": 1,
+    "frameCount": 18,
+    "timingCount": 1
+  },
+  "272": {
+    "id": "272",
+    "name": "Move:SWEETKISS",
+    "graphic": "electric2",
+    "position": 1,
+    "frameCount": 19,
+    "timingCount": 1
+  },
+  "273": {
+    "id": "273",
+    "name": "Move:SWIFT",
+    "graphic": "007-Weapon02",
+    "position": 3,
+    "frameCount": 12,
+    "timingCount": 4
+  },
+  "274": {
+    "id": "274",
+    "name": "Move:SWORDSDANCE",
+    "graphic": "fly copy",
+    "position": 1,
+    "frameCount": 12,
+    "timingCount": 1
+  },
+  "275": {
+    "id": "275",
+    "name": "Move:TACKLE",
+    "graphic": "Tackle_B",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "276": {
+    "id": "276",
+    "name": "Move:TAILGLOW",
+    "graphic": "Light1",
+    "position": 1,
+    "frameCount": 16,
+    "timingCount": 1
+  },
+  "277": {
+    "id": "277",
+    "name": "Move:TAILWHIP",
+    "graphic": "Struggle",
+    "position": 1,
+    "frameCount": 16,
+    "timingCount": 0
+  },
+  "278": {
+    "id": "278",
+    "name": "Move:TELEPORT",
+    "graphic": "!",
+    "position": 1,
+    "frameCount": 7,
+    "timingCount": 1
+  },
+  "279": {
+    "id": "279",
+    "name": "Move:THUNDER",
+    "graphic": "Trovao",
+    "position": 1,
+    "frameCount": 13,
+    "timingCount": 1
+  },
+  "280": {
+    "id": "280",
+    "name": "Move:THUNDERBOLT",
+    "graphic": "017-Thunder01",
+    "position": 1,
+    "frameCount": 12,
+    "timingCount": 1
+  },
+  "281": {
+    "id": "281",
+    "name": "Move:THUNDERFANG",
+    "graphic": "element fangs",
+    "position": 1,
+    "frameCount": 14,
+    "timingCount": 2
+  },
+  "282": {
+    "id": "282",
+    "name": "Move:THUNDERPUNCH",
+    "graphic": "punches",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 2
+  },
+  "283": {
+    "id": "283",
+    "name": "Move:THUNDERSHOCK",
+    "graphic": "electric1",
+    "position": 1,
+    "frameCount": 13,
+    "timingCount": 1
+  },
+  "284": {
+    "id": "284",
+    "name": "Move:THUNDERWAVE",
+    "graphic": "T. Shock",
+    "position": 1,
+    "frameCount": 16,
+    "timingCount": 1
+  },
+  "285": {
+    "id": "285",
+    "name": "Move:TOXIC",
+    "graphic": "State1",
+    "position": 1,
+    "frameCount": 18,
+    "timingCount": 3
+  },
+  "286": {
+    "id": "286",
+    "name": "Move:TRICKROOM",
+    "graphic": "mixed status",
+    "position": 3,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "287": {
+    "id": "287",
+    "name": "Move:TWINEEDLE",
+    "graphic": "poison3",
+    "position": 3,
+    "frameCount": 8,
+    "timingCount": 4
+  },
+  "288": {
+    "id": "288",
+    "name": "Twineedle hit 2",
+    "graphic": "poison3",
+    "position": 3,
+    "frameCount": 8,
+    "timingCount": 4
+  },
+  "289": {
+    "id": "289",
+    "name": "Move:TWISTER",
+    "graphic": "water3",
+    "position": 1,
+    "frameCount": 17,
+    "timingCount": 5
+  },
+  "290": {
+    "id": "290",
+    "name": "Move:VINEWHIP",
+    "graphic": "003-Attack01",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 1
+  },
+  "291": {
+    "id": "291",
+    "name": "Move:WATERGUN",
+    "graphic": "fly copy",
+    "position": 3,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "292": {
+    "id": "292",
+    "name": "OppMove:WATERGUN",
+    "graphic": "fly copy",
+    "position": 3,
+    "frameCount": 16,
+    "timingCount": 1
+  },
+  "293": {
+    "id": "293",
+    "name": "Move:WATERPULSE",
+    "graphic": "Water pulse",
+    "position": 3,
+    "frameCount": 19,
+    "timingCount": 0
+  },
+  "294": {
+    "id": "294",
+    "name": "Move:WHIRLWIND",
+    "graphic": "Wind1",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 1
+  },
+  "295": {
+    "id": "295",
+    "name": "Move:WILLOWISP",
+    "graphic": "015-Fire01",
+    "position": 3,
+    "frameCount": 7,
+    "timingCount": 1
+  },
+  "296": {
+    "id": "296",
+    "name": "Move:WINGATTACK",
+    "graphic": "Wind1",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 2
+  },
+  "297": {
+    "id": "297",
+    "name": "Move:WRAP",
+    "graphic": "Struggle",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 3
+  },
+  "298": {
+    "id": "298",
+    "name": "Common:Wrap",
+    "graphic": "Struggle",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 3
+  },
+  "299": {
+    "id": "299",
+    "name": "Move:WRINGOUT",
+    "graphic": "Fakeout",
+    "position": 1,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "300": {
+    "id": "300",
+    "name": "Move:XSCISSOR",
+    "graphic": "X-Scizzor",
+    "position": 1,
+    "frameCount": 5,
+    "timingCount": 1
+  },
+  "301": {
+    "id": "301",
+    "name": "Move:ZAPCANNON",
+    "graphic": "Thunder2",
+    "position": 1,
+    "frameCount": 9,
+    "timingCount": 1
+  },
+  "302": {
+    "id": "302",
+    "name": "",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 1,
+    "timingCount": 0
+  },
+  "303": {
+    "id": "303",
+    "name": "",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 1,
+    "timingCount": 0
+  },
+  "304": {
+    "id": "304",
+    "name": "",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 1,
+    "timingCount": 0
+  },
+  "305": {
+    "id": "305",
+    "name": "",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 1,
+    "timingCount": 0
+  },
+  "306": {
+    "id": "306",
+    "name": "",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 1,
+    "timingCount": 0
+  },
+  "307": {
+    "id": "307",
+    "name": "",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 1,
+    "timingCount": 0
+  },
+  "308": {
+    "id": "308",
+    "name": "",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 1,
+    "timingCount": 0
+  },
+  "309": {
+    "id": "309",
+    "name": "",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 1,
+    "timingCount": 0
+  },
+  "310": {
+    "id": "310",
+    "name": "",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 1,
+    "timingCount": 0
+  }
+}

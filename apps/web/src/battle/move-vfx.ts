@@ -60,6 +60,30 @@ class MoveVfxAssetCache {
 
 export const moveVfxCache = new MoveVfxAssetCache();
 
+/** Clamps a legacy VFX center so its rendered rectangle stays in the viewport. */
+export function clampMoveVfxCenter(
+  centerX: number,
+  centerY: number,
+  drawWidth: number,
+  drawHeight: number,
+  viewportWidth: number,
+  viewportHeight: number
+): { x: number; y: number } {
+  const halfWidth = drawWidth / 2;
+  const halfHeight = drawHeight / 2;
+
+  return {
+    x:
+      drawWidth >= viewportWidth
+        ? viewportWidth / 2
+        : Math.max(halfWidth, Math.min(viewportWidth - halfWidth, centerX)),
+    y:
+      drawHeight >= viewportHeight
+        ? viewportHeight / 2
+        : Math.max(halfHeight, Math.min(viewportHeight - halfHeight, centerY)),
+  };
+}
+
 /** Dedicated move animation definitions */
 export const MOVE_VFX_REGISTRY: Record<string, MoveVfxDef> = {
   // --- 1. Electric Moves ---
@@ -380,6 +404,8 @@ export const MOVE_VFX_REGISTRY: Record<string, MoveVfxDef> = {
     ticksPerFrame: 4,
     target: 'projectile',
     blendMode: 'lighter',
+    // Keep the projectile readable while leaving enough room above/below the
+    // 288px battle viewport during its launch from the player.
     scale: 1.1,
     screenShake: { amp: 4, durationTicks: 12 },
     screenFlash: { color: 'rgba(74, 222, 128, 0.35)', durationTicks: 12 },
@@ -668,6 +694,118 @@ export const MOVE_VFX_REGISTRY: Record<string, MoveVfxDef> = {
     blendMode: 'lighter',
     scale: 1.05,
     screenFlash: { color: 'rgba(192, 132, 252, 0.4)', durationTicks: 14 },
+  },
+  u_turn: {
+    spriteUrl: 'Graphics/Animations/efftest4.png',
+    cellWidth: 192,
+    cellHeight: 192,
+    columns: 5,
+    totalFrames: 8,
+    ticksPerFrame: 4,
+    target: 'defender',
+    scale: 1.1,
+    screenShake: { amp: 4, durationTicks: 12 },
+  },
+  volt_switch: {
+    spriteUrl: 'Graphics/Animations/Thunder.png',
+    cellWidth: 192,
+    cellHeight: 192,
+    columns: 5,
+    totalFrames: 8,
+    ticksPerFrame: 4,
+    target: 'defender',
+    blendMode: 'lighter',
+    scale: 1.15,
+    screenFlash: { color: 'rgba(250, 204, 21, 0.4)', durationTicks: 12 },
+  },
+  flip_turn: {
+    spriteUrl: 'Graphics/Animations/018-Water01.png',
+    cellWidth: 192,
+    cellHeight: 192,
+    columns: 5,
+    totalFrames: 8,
+    ticksPerFrame: 4,
+    target: 'defender',
+    scale: 1.1,
+    screenShake: { amp: 3, durationTicks: 10 },
+  },
+  roar: {
+    spriteUrl: 'Graphics/Animations/Growl.png',
+    cellWidth: 192,
+    cellHeight: 192,
+    columns: 4,
+    totalFrames: 6,
+    ticksPerFrame: 5,
+    target: 'defender',
+    scale: 1.25,
+    screenShake: { amp: 5, durationTicks: 16 },
+  },
+  whirlwind: {
+    spriteUrl: 'Graphics/Animations/water3.png',
+    cellWidth: 192,
+    cellHeight: 192,
+    columns: 5,
+    totalFrames: 8,
+    ticksPerFrame: 4,
+    target: 'defender',
+    scale: 1.2,
+    screenShake: { amp: 4, durationTicks: 14 },
+  },
+  dragon_tail: {
+    spriteUrl: 'Graphics/Animations/Sword5.png',
+    cellWidth: 192,
+    cellHeight: 192,
+    columns: 5,
+    totalFrames: 8,
+    ticksPerFrame: 4,
+    target: 'defender',
+    scale: 1.15,
+    screenShake: { amp: 5, durationTicks: 14 },
+    screenFlash: { color: 'rgba(168, 85, 247, 0.35)', durationTicks: 12 },
+  },
+  circle_throw: {
+    spriteUrl: 'Graphics/Animations/003-Attack01.png',
+    cellWidth: 192,
+    cellHeight: 192,
+    columns: 5,
+    totalFrames: 8,
+    ticksPerFrame: 4,
+    target: 'defender',
+    scale: 1.15,
+    screenShake: { amp: 5, durationTicks: 14 },
+  },
+  parting_shot: {
+    spriteUrl: 'Graphics/Animations/022-Darkness01.png',
+    cellWidth: 192,
+    cellHeight: 192,
+    columns: 5,
+    totalFrames: 8,
+    ticksPerFrame: 4,
+    target: 'defender',
+    blendMode: 'lighter',
+    scale: 1.1,
+  },
+  chilly_reception: {
+    spriteUrl: 'Graphics/Animations/anim sheet.png',
+    cellWidth: 192,
+    cellHeight: 192,
+    columns: 5,
+    totalFrames: 8,
+    ticksPerFrame: 4,
+    target: 'attacker',
+    blendMode: 'lighter',
+    scale: 1.1,
+    screenFlash: { color: 'rgba(56, 189, 248, 0.35)', durationTicks: 14 },
+  },
+  shed_tail: {
+    spriteUrl: 'Graphics/Animations/PRAS- Substitute.png',
+    cellWidth: 192,
+    cellHeight: 192,
+    columns: 2,
+    totalFrames: 2,
+    ticksPerFrame: 10,
+    target: 'attacker',
+    scale: 1.0,
   },
   synthesis: {
     spriteUrl: 'Graphics/Animations/anim sheet.png',
@@ -962,6 +1100,7 @@ export const SELF_TARGET_MOVE_IDS = new Set<string>([
   'baton_pass',
   'teleport',
   'shed_tail',
+  'chilly_reception',
   'metronome',
   'transform',
   'conversion',
@@ -1178,4 +1317,3 @@ export function resolveMoveVfx(move: BattleMove): MoveVfxDef | null {
 
   return vfx;
 }
-

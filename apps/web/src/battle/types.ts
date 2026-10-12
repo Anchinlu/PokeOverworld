@@ -108,8 +108,13 @@ export interface BattlerPokemon {
   name: string;
   speciesKey: string;
   ability?: string;
+  abilitySlot?: 'primary' | 'secondary' | 'hidden';
   isShiny?: boolean;
   types: PokemonType[];
+  teraType?: PokemonType;
+  originalTypes?: PokemonType[];
+  isTerastallized?: boolean;
+  canTerastallize?: boolean;
   level: number;
   currentHp: number;
   maxHp: number;
@@ -222,7 +227,10 @@ export type BattlePhase =
   | 'victory'
   | 'ended';
 
+export type BattleEnvPresetId = 'field' | 'forest' | 'water' | 'mountain';
+
 export interface BattleEnvironment {
+  preset?: BattleEnvPresetId;
   background: string;
   enemyBase: string;
   playerBase: string;

@@ -1488,7 +1488,10 @@ export class StorageScreen {
     this.summaryKeyListener = (e: KeyboardEvent) => {
       if (e.key === 'r' || e.key === 'R') {
         const target = e.target as HTMLElement | null;
-        if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+        if (
+          target &&
+          (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)
+        ) {
           return;
         }
         if (btnEvolve && btnEvolve.style.display !== 'none') {

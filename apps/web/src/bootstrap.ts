@@ -125,8 +125,8 @@ export async function bootstrap(): Promise<void> {
 
     // Wire Debug Overlay via decoupled Remote Action Bridge
     const debugBridge: DebugBridge = {
-      startTestBattle: (overlay, isShiny, weather) => {
-        session.startTestBattle(overlay, isShiny, weather);
+      startTestBattle: (overlay, isShiny, weather, envPreset) => {
+        session.startTestBattle(overlay, isShiny, weather, envPreset);
       },
       startCustomBotBattle: (config: CustomBotConfig) => {
         const customMoves = (config.moves || [])
@@ -333,8 +333,13 @@ export async function bootstrap(): Promise<void> {
     debugController.mount(app);
     setOverworldUiVisible(true);
 
-    window.startBattle = (overlay?: string, isShiny?: boolean, weather?: string) => {
-      session.startTestBattle(overlay || 'auto', isShiny ?? false, weather);
+    window.startBattle = (
+      overlay?: string,
+      isShiny?: boolean,
+      weather?: string,
+      envPreset?: string
+    ) => {
+      session.startTestBattle(overlay || 'auto', isShiny ?? false, weather, envPreset);
     };
     window.startCustomBattle = (
       customBattler: BattlerPokemon,

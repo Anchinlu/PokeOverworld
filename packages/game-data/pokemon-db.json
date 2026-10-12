@@ -7,10 +7,7 @@
       "id": 1,
       "name": "Bulbasaur",
       "speciesKey": "BULBASAUR",
-      "types": [
-        "Grass",
-        "Poison"
-      ],
+      "types": ["Grass", "Poison"],
       "stats": {
         "hp": 45,
         "attack": 49,
@@ -205,16 +202,18 @@
         "venoshock",
         "weather_ball",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "overgrow",
+        "hidden": "chlorophyll"
+      },
+      "teraType": "Grass"
     },
     "2": {
       "id": 2,
       "name": "Ivysaur",
       "speciesKey": "IVYSAUR",
-      "types": [
-        "Grass",
-        "Poison"
-      ],
+      "types": ["Grass", "Poison"],
       "stats": {
         "hp": 60,
         "attack": 62,
@@ -410,16 +409,18 @@
         "venoshock",
         "weather_ball",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "overgrow",
+        "hidden": "chlorophyll"
+      },
+      "teraType": "Grass"
     },
     "3": {
       "id": 3,
       "name": "Venusaur",
       "speciesKey": "VENUSAUR",
-      "types": [
-        "Grass",
-        "Poison"
-      ],
+      "types": ["Grass", "Poison"],
       "stats": {
         "hp": 80,
         "attack": 82,
@@ -626,15 +627,18 @@
         "venoshock",
         "weather_ball",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "overgrow",
+        "hidden": "chlorophyll"
+      },
+      "teraType": "Grass"
     },
     "4": {
       "id": 4,
       "name": "Charmander",
       "speciesKey": "CHARMANDER",
-      "types": [
-        "Fire"
-      ],
+      "types": ["Fire"],
       "stats": {
         "hp": 39,
         "attack": 52,
@@ -814,15 +818,18 @@
         "weather_ball",
         "will_o_wisp",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "blaze",
+        "hidden": "solar-power"
+      },
+      "teraType": "Fire"
     },
     "5": {
       "id": 5,
       "name": "Charmeleon",
       "speciesKey": "CHARMELEON",
-      "types": [
-        "Fire"
-      ],
+      "types": ["Fire"],
       "stats": {
         "hp": 58,
         "attack": 64,
@@ -1001,16 +1008,18 @@
         "weather_ball",
         "will_o_wisp",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "blaze",
+        "hidden": "solar-power"
+      },
+      "teraType": "Fire"
     },
     "6": {
       "id": 6,
       "name": "Charizard",
       "speciesKey": "CHARIZARD",
-      "types": [
-        "Fire",
-        "Flying"
-      ],
+      "types": ["Fire", "Flying"],
       "stats": {
         "hp": 78,
         "attack": 84,
@@ -1222,15 +1231,18 @@
         "weather_ball",
         "will_o_wisp",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "blaze",
+        "hidden": "solar-power"
+      },
+      "teraType": "Fire"
     },
     "7": {
       "id": 7,
       "name": "Squirtle",
       "speciesKey": "SQUIRTLE",
-      "types": [
-        "Water"
-      ],
+      "types": ["Water"],
       "stats": {
         "hp": 44,
         "attack": 48,
@@ -1398,15 +1410,18 @@
         "whirlpool",
         "work_up",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "torrent",
+        "hidden": "rain-dish"
+      },
+      "teraType": "Water"
     },
     "8": {
       "id": 8,
       "name": "Wartortle",
       "speciesKey": "WARTORTLE",
-      "types": [
-        "Water"
-      ],
+      "types": ["Water"],
       "stats": {
         "hp": 59,
         "attack": 63,
@@ -1574,15 +1589,18 @@
         "whirlpool",
         "work_up",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "torrent",
+        "hidden": "rain-dish"
+      },
+      "teraType": "Water"
     },
     "9": {
       "id": 9,
       "name": "Blastoise",
       "speciesKey": "BLASTOISE",
-      "types": [
-        "Water"
-      ],
+      "types": ["Water"],
       "stats": {
         "hp": 79,
         "attack": 83,
@@ -1767,15 +1785,18 @@
         "whirlpool",
         "work_up",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "torrent",
+        "hidden": "rain-dish"
+      },
+      "teraType": "Water"
     },
     "10": {
       "id": 10,
       "name": "Caterpie",
       "speciesKey": "CATERPIE",
-      "types": [
-        "Bug"
-      ],
+      "types": ["Bug"],
       "stats": {
         "hp": 45,
         "attack": 30,
@@ -1828,15 +1849,18 @@
           "type": "Bug"
         }
       ],
-      "tmMoves": []
+      "tmMoves": [],
+      "abilities": {
+        "primary": "shield-dust",
+        "hidden": "run-away"
+      },
+      "teraType": "Bug"
     },
     "11": {
       "id": 11,
       "name": "Metapod",
       "speciesKey": "METAPOD",
-      "types": [
-        "Bug"
-      ],
+      "types": ["Bug"],
       "stats": {
         "hp": 50,
         "attack": 20,
@@ -1875,16 +1899,17 @@
           "type": "Normal"
         }
       ],
-      "tmMoves": []
+      "tmMoves": [],
+      "abilities": {
+        "primary": "shed-skin"
+      },
+      "teraType": "Bug"
     },
     "12": {
       "id": 12,
       "name": "Butterfree",
       "speciesKey": "BUTTERFREE",
-      "types": [
-        "Bug",
-        "Flying"
-      ],
+      "types": ["Bug", "Flying"],
       "stats": {
         "hp": 60,
         "attack": 45,
@@ -2087,16 +2112,18 @@
         "toxic",
         "u_turn",
         "venoshock"
-      ]
+      ],
+      "abilities": {
+        "primary": "compound-eyes",
+        "hidden": "tinted-lens"
+      },
+      "teraType": "Bug"
     },
     "13": {
       "id": 13,
       "name": "Weedle",
       "speciesKey": "WEEDLE",
-      "types": [
-        "Bug",
-        "Poison"
-      ],
+      "types": ["Bug", "Poison"],
       "stats": {
         "hp": 40,
         "attack": 35,
@@ -2142,19 +2169,18 @@
           "type": "Bug"
         }
       ],
-      "tmMoves": [
-        "electroweb",
-        "facade"
-      ]
+      "tmMoves": ["electroweb", "facade"],
+      "abilities": {
+        "primary": "shield-dust",
+        "hidden": "run-away"
+      },
+      "teraType": "Bug"
     },
     "14": {
       "id": 14,
       "name": "Kakuna",
       "speciesKey": "KAKUNA",
-      "types": [
-        "Bug",
-        "Poison"
-      ],
+      "types": ["Bug", "Poison"],
       "stats": {
         "hp": 45,
         "attack": 25,
@@ -2207,20 +2233,17 @@
           "type": "Normal"
         }
       ],
-      "tmMoves": [
-        "electroweb",
-        "facade",
-        "iron_defense"
-      ]
+      "tmMoves": ["electroweb", "facade", "iron_defense"],
+      "abilities": {
+        "primary": "shed-skin"
+      },
+      "teraType": "Bug"
     },
     "15": {
       "id": 15,
       "name": "Beedrill",
       "speciesKey": "BEEDRILL",
-      "types": [
-        "Bug",
-        "Poison"
-      ],
+      "types": ["Bug", "Poison"],
       "stats": {
         "hp": 65,
         "attack": 90,
@@ -2383,16 +2406,18 @@
         "u_turn",
         "venoshock",
         "x_scissor"
-      ]
+      ],
+      "abilities": {
+        "primary": "swarm",
+        "hidden": "sniper"
+      },
+      "teraType": "Bug"
     },
     "16": {
       "id": 16,
       "name": "Pidgey",
       "speciesKey": "PIDGEY",
-      "types": [
-        "Normal",
-        "Flying"
-      ],
+      "types": ["Normal", "Flying"],
       "stats": {
         "hp": 40,
         "attack": 45,
@@ -2543,16 +2568,19 @@
         "u_turn",
         "whirlwind",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "keen-eye",
+        "secondary": "tangled-feet",
+        "hidden": "big-pecks"
+      },
+      "teraType": "Normal"
     },
     "17": {
       "id": 17,
       "name": "Pidgeotto",
       "speciesKey": "PIDGEOTTO",
-      "types": [
-        "Normal",
-        "Flying"
-      ],
+      "types": ["Normal", "Flying"],
       "stats": {
         "hp": 63,
         "attack": 60,
@@ -2706,16 +2734,19 @@
         "u_turn",
         "whirlwind",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "keen-eye",
+        "secondary": "tangled-feet",
+        "hidden": "big-pecks"
+      },
+      "teraType": "Normal"
     },
     "18": {
       "id": 18,
       "name": "Pidgeot",
       "speciesKey": "PIDGEOT",
-      "types": [
-        "Normal",
-        "Flying"
-      ],
+      "types": ["Normal", "Flying"],
       "stats": {
         "hp": 83,
         "attack": 80,
@@ -2871,15 +2902,19 @@
         "u_turn",
         "whirlwind",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "keen-eye",
+        "secondary": "tangled-feet",
+        "hidden": "big-pecks"
+      },
+      "teraType": "Normal"
     },
     "19": {
       "id": 19,
       "name": "Rattata",
       "speciesKey": "RATTATA",
-      "types": [
-        "Normal"
-      ],
+      "types": ["Normal"],
       "stats": {
         "hp": 30,
         "attack": 56,
@@ -3049,15 +3084,19 @@
         "u_turn",
         "wild_charge",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "run-away",
+        "secondary": "guts",
+        "hidden": "hustle"
+      },
+      "teraType": "Normal"
     },
     "20": {
       "id": 20,
       "name": "Raticate",
       "speciesKey": "RATICATE",
-      "types": [
-        "Normal"
-      ],
+      "types": ["Normal"],
       "stats": {
         "hp": 55,
         "attack": 81,
@@ -3263,16 +3302,19 @@
         "venoshock",
         "wild_charge",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "run-away",
+        "secondary": "guts",
+        "hidden": "hustle"
+      },
+      "teraType": "Normal"
     },
     "21": {
       "id": 21,
       "name": "Spearow",
       "speciesKey": "SPEAROW",
-      "types": [
-        "Normal",
-        "Flying"
-      ],
+      "types": ["Normal", "Flying"],
       "stats": {
         "hp": 40,
         "attack": 60,
@@ -3421,16 +3463,18 @@
         "tri_attack",
         "u_turn",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "keen-eye",
+        "hidden": "sniper"
+      },
+      "teraType": "Normal"
     },
     "22": {
       "id": 22,
       "name": "Fearow",
       "speciesKey": "FEAROW",
-      "types": [
-        "Normal",
-        "Flying"
-      ],
+      "types": ["Normal", "Flying"],
       "stats": {
         "hp": 65,
         "attack": 90,
@@ -3609,15 +3653,18 @@
         "tri_attack",
         "u_turn",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "keen-eye",
+        "hidden": "sniper"
+      },
+      "teraType": "Normal"
     },
     "23": {
       "id": 23,
       "name": "Ekans",
       "speciesKey": "EKANS",
-      "types": [
-        "Poison"
-      ],
+      "types": ["Poison"],
       "stats": {
         "hp": 35,
         "attack": 60,
@@ -3799,15 +3846,19 @@
         "toxic_spikes",
         "trailblaze",
         "venoshock"
-      ]
+      ],
+      "abilities": {
+        "primary": "intimidate",
+        "secondary": "shed-skin",
+        "hidden": "unnerve"
+      },
+      "teraType": "Poison"
     },
     "24": {
       "id": 24,
       "name": "Arbok",
       "speciesKey": "ARBOK",
-      "types": [
-        "Poison"
-      ],
+      "types": ["Poison"],
       "stats": {
         "hp": 60,
         "attack": 95,
@@ -3996,15 +4047,19 @@
         "toxic_spikes",
         "trailblaze",
         "venoshock"
-      ]
+      ],
+      "abilities": {
+        "primary": "intimidate",
+        "secondary": "shed-skin",
+        "hidden": "unnerve"
+      },
+      "teraType": "Poison"
     },
     "25": {
       "id": 25,
       "name": "Pikachu",
       "speciesKey": "PIKACHU",
-      "types": [
-        "Electric"
-      ],
+      "types": ["Electric"],
       "stats": {
         "hp": 35,
         "attack": 55,
@@ -4197,15 +4252,18 @@
         "upper_hand",
         "volt_switch",
         "wild_charge"
-      ]
+      ],
+      "abilities": {
+        "primary": "static",
+        "hidden": "lightning-rod"
+      },
+      "teraType": "Electric"
     },
     "26": {
       "id": 26,
       "name": "Raichu",
       "speciesKey": "RAICHU",
-      "types": [
-        "Electric"
-      ],
+      "types": ["Electric"],
       "stats": {
         "hp": 60,
         "attack": 90,
@@ -4413,15 +4471,18 @@
         "upper_hand",
         "volt_switch",
         "wild_charge"
-      ]
+      ],
+      "abilities": {
+        "primary": "static",
+        "hidden": "lightning-rod"
+      },
+      "teraType": "Electric"
     },
     "27": {
       "id": 27,
       "name": "Sandshrew",
       "speciesKey": "SANDSHREW",
-      "types": [
-        "Ground"
-      ],
+      "types": ["Ground"],
       "stats": {
         "hp": 50,
         "attack": 75,
@@ -4658,15 +4719,18 @@
         "triple_axel",
         "work_up",
         "x_scissor"
-      ]
+      ],
+      "abilities": {
+        "primary": "sand-veil",
+        "hidden": "sand-rush"
+      },
+      "teraType": "Ground"
     },
     "28": {
       "id": 28,
       "name": "Sandslash",
       "speciesKey": "SANDSLASH",
-      "types": [
-        "Ground"
-      ],
+      "types": ["Ground"],
       "stats": {
         "hp": 75,
         "attack": 100,
@@ -4915,15 +4979,18 @@
         "triple_axel",
         "work_up",
         "x_scissor"
-      ]
+      ],
+      "abilities": {
+        "primary": "sand-veil",
+        "hidden": "sand-rush"
+      },
+      "teraType": "Ground"
     },
     "29": {
       "id": 29,
       "name": "Nidoran♀",
       "speciesKey": "NIDORANfE",
-      "types": [
-        "Poison"
-      ],
+      "types": ["Poison"],
       "stats": {
         "hp": 55,
         "attack": 47,
@@ -5087,15 +5154,19 @@
         "toxic",
         "venoshock",
         "water_pulse"
-      ]
+      ],
+      "abilities": {
+        "primary": "poison-point",
+        "secondary": "rivalry",
+        "hidden": "hustle"
+      },
+      "teraType": "Poison"
     },
     "30": {
       "id": 30,
       "name": "Nidorina",
       "speciesKey": "NIDORINA",
-      "types": [
-        "Poison"
-      ],
+      "types": ["Poison"],
       "stats": {
         "hp": 70,
         "attack": 62,
@@ -5259,16 +5330,19 @@
         "toxic",
         "venoshock",
         "water_pulse"
-      ]
+      ],
+      "abilities": {
+        "primary": "poison-point",
+        "secondary": "rivalry",
+        "hidden": "hustle"
+      },
+      "teraType": "Poison"
     },
     "31": {
       "id": 31,
       "name": "Nidoqueen",
       "speciesKey": "NIDOQUEEN",
-      "types": [
-        "Poison",
-        "Ground"
-      ],
+      "types": ["Poison", "Ground"],
       "stats": {
         "hp": 90,
         "attack": 92,
@@ -5483,15 +5557,19 @@
         "toxic",
         "venoshock",
         "water_pulse"
-      ]
+      ],
+      "abilities": {
+        "primary": "poison-point",
+        "secondary": "rivalry",
+        "hidden": "sheer-force"
+      },
+      "teraType": "Poison"
     },
     "32": {
       "id": 32,
       "name": "Nidoran♂",
       "speciesKey": "NIDORANmA",
-      "types": [
-        "Poison"
-      ],
+      "types": ["Poison"],
       "stats": {
         "hp": 46,
         "attack": 57,
@@ -5656,15 +5734,19 @@
         "toxic",
         "venoshock",
         "water_pulse"
-      ]
+      ],
+      "abilities": {
+        "primary": "poison-point",
+        "secondary": "rivalry",
+        "hidden": "hustle"
+      },
+      "teraType": "Poison"
     },
     "33": {
       "id": 33,
       "name": "Nidorino",
       "speciesKey": "NIDORINO",
-      "types": [
-        "Poison"
-      ],
+      "types": ["Poison"],
       "stats": {
         "hp": 61,
         "attack": 72,
@@ -5829,16 +5911,19 @@
         "toxic",
         "venoshock",
         "water_pulse"
-      ]
+      ],
+      "abilities": {
+        "primary": "poison-point",
+        "secondary": "rivalry",
+        "hidden": "hustle"
+      },
+      "teraType": "Poison"
     },
     "34": {
       "id": 34,
       "name": "Nidoking",
       "speciesKey": "NIDOKING",
-      "types": [
-        "Poison",
-        "Ground"
-      ],
+      "types": ["Poison", "Ground"],
       "stats": {
         "hp": 81,
         "attack": 102,
@@ -6054,15 +6139,19 @@
         "toxic",
         "venoshock",
         "water_pulse"
-      ]
+      ],
+      "abilities": {
+        "primary": "poison-point",
+        "secondary": "rivalry",
+        "hidden": "sheer-force"
+      },
+      "teraType": "Poison"
     },
     "35": {
       "id": 35,
       "name": "Clefairy",
       "speciesKey": "CLEFAIRY",
-      "types": [
-        "Fairy"
-      ],
+      "types": ["Fairy"],
       "stats": {
         "hp": 70,
         "attack": 45,
@@ -6299,15 +6388,19 @@
         "water_pulse",
         "work_up",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "cute-charm",
+        "secondary": "magic-guard",
+        "hidden": "friend-guard"
+      },
+      "teraType": "Fairy"
     },
     "36": {
       "id": 36,
       "name": "Clefable",
       "speciesKey": "CLEFABLE",
-      "types": [
-        "Fairy"
-      ],
+      "types": ["Fairy"],
       "stats": {
         "hp": 95,
         "attack": 70,
@@ -6555,15 +6648,19 @@
         "water_pulse",
         "work_up",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "cute-charm",
+        "secondary": "magic-guard",
+        "hidden": "unaware"
+      },
+      "teraType": "Fairy"
     },
     "37": {
       "id": 37,
       "name": "Vulpix",
       "speciesKey": "VULPIX",
-      "types": [
-        "Fire"
-      ],
+      "types": ["Fire"],
       "stats": {
         "hp": 38,
         "attack": 41,
@@ -6775,15 +6872,18 @@
         "weather_ball",
         "will_o_wisp",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "flash-fire",
+        "hidden": "drought"
+      },
+      "teraType": "Fire"
     },
     "38": {
       "id": 38,
       "name": "Ninetales",
       "speciesKey": "NINETALES",
-      "types": [
-        "Fire"
-      ],
+      "types": ["Fire"],
       "stats": {
         "hp": 73,
         "attack": 76,
@@ -6922,16 +7022,18 @@
         "weather_ball",
         "will_o_wisp",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "flash-fire",
+        "hidden": "drought"
+      },
+      "teraType": "Fire"
     },
     "39": {
       "id": 39,
       "name": "Jigglypuff",
       "speciesKey": "JIGGLYPUFF",
-      "types": [
-        "Normal",
-        "Fairy"
-      ],
+      "types": ["Normal", "Fairy"],
       "stats": {
         "hp": 115,
         "attack": 45,
@@ -7188,16 +7290,19 @@
         "wild_charge",
         "work_up",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "cute-charm",
+        "secondary": "competitive",
+        "hidden": "friend-guard"
+      },
+      "teraType": "Normal"
     },
     "40": {
       "id": 40,
       "name": "Wigglytuff",
       "speciesKey": "WIGGLYTUFF",
-      "types": [
-        "Normal",
-        "Fairy"
-      ],
+      "types": ["Normal", "Fairy"],
       "stats": {
         "hp": 140,
         "attack": 70,
@@ -7458,16 +7563,19 @@
         "wild_charge",
         "work_up",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "cute-charm",
+        "secondary": "competitive",
+        "hidden": "frisk"
+      },
+      "teraType": "Normal"
     },
     "41": {
       "id": 41,
       "name": "Zubat",
       "speciesKey": "ZUBAT",
-      "types": [
-        "Poison",
-        "Flying"
-      ],
+      "types": ["Poison", "Flying"],
       "stats": {
         "hp": 40,
         "attack": 45,
@@ -7638,16 +7746,18 @@
         "venoshock",
         "whirlwind",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "inner-focus",
+        "hidden": "infiltrator"
+      },
+      "teraType": "Poison"
     },
     "42": {
       "id": 42,
       "name": "Golbat",
       "speciesKey": "GOLBAT",
-      "types": [
-        "Poison",
-        "Flying"
-      ],
+      "types": ["Poison", "Flying"],
       "stats": {
         "hp": 75,
         "attack": 80,
@@ -7829,16 +7939,18 @@
         "whirlwind",
         "x_scissor",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "inner-focus",
+        "hidden": "infiltrator"
+      },
+      "teraType": "Poison"
     },
     "43": {
       "id": 43,
       "name": "Oddish",
       "speciesKey": "ODDISH",
-      "types": [
-        "Grass",
-        "Poison"
-      ],
+      "types": ["Grass", "Poison"],
       "stats": {
         "hp": 45,
         "attack": 50,
@@ -8012,16 +8124,18 @@
         "toxic",
         "trailblaze",
         "venoshock"
-      ]
+      ],
+      "abilities": {
+        "primary": "chlorophyll",
+        "hidden": "run-away"
+      },
+      "teraType": "Grass"
     },
     "44": {
       "id": 44,
       "name": "Gloom",
       "speciesKey": "GLOOM",
-      "types": [
-        "Grass",
-        "Poison"
-      ],
+      "types": ["Grass", "Poison"],
       "stats": {
         "hp": 60,
         "attack": 65,
@@ -8198,16 +8312,18 @@
         "toxic",
         "trailblaze",
         "venoshock"
-      ]
+      ],
+      "abilities": {
+        "primary": "chlorophyll",
+        "hidden": "stench"
+      },
+      "teraType": "Grass"
     },
     "45": {
       "id": 45,
       "name": "Vileplume",
       "speciesKey": "VILEPLUME",
-      "types": [
-        "Grass",
-        "Poison"
-      ],
+      "types": ["Grass", "Poison"],
       "stats": {
         "hp": 75,
         "attack": 80,
@@ -8391,16 +8507,18 @@
         "trailblaze",
         "venoshock",
         "weather_ball"
-      ]
+      ],
+      "abilities": {
+        "primary": "chlorophyll",
+        "hidden": "effect-spore"
+      },
+      "teraType": "Grass"
     },
     "46": {
       "id": 46,
       "name": "Paras",
       "speciesKey": "PARAS",
-      "types": [
-        "Bug",
-        "Grass"
-      ],
+      "types": ["Bug", "Grass"],
       "stats": {
         "hp": 35,
         "attack": 70,
@@ -8528,16 +8646,19 @@
         "toxic",
         "venoshock",
         "x_scissor"
-      ]
+      ],
+      "abilities": {
+        "primary": "effect-spore",
+        "secondary": "dry-skin",
+        "hidden": "damp"
+      },
+      "teraType": "Bug"
     },
     "47": {
       "id": 47,
       "name": "Parasect",
       "speciesKey": "PARASECT",
-      "types": [
-        "Bug",
-        "Grass"
-      ],
+      "types": ["Bug", "Grass"],
       "stats": {
         "hp": 60,
         "attack": 95,
@@ -8667,16 +8788,19 @@
         "toxic",
         "venoshock",
         "x_scissor"
-      ]
+      ],
+      "abilities": {
+        "primary": "effect-spore",
+        "secondary": "dry-skin",
+        "hidden": "damp"
+      },
+      "teraType": "Bug"
     },
     "48": {
       "id": 48,
       "name": "Venonat",
       "speciesKey": "VENONAT",
-      "types": [
-        "Bug",
-        "Poison"
-      ],
+      "types": ["Bug", "Poison"],
       "stats": {
         "hp": 60,
         "attack": 55,
@@ -8850,16 +8974,19 @@
         "toxic_spikes",
         "venoshock",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "compound-eyes",
+        "secondary": "tinted-lens",
+        "hidden": "run-away"
+      },
+      "teraType": "Bug"
     },
     "49": {
       "id": 49,
       "name": "Venomoth",
       "speciesKey": "VENOMOTH",
-      "types": [
-        "Bug",
-        "Poison"
-      ],
+      "types": ["Bug", "Poison"],
       "stats": {
         "hp": 70,
         "attack": 65,
@@ -9052,15 +9179,19 @@
         "u_turn",
         "venoshock",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "shield-dust",
+        "secondary": "tinted-lens",
+        "hidden": "wonder-skin"
+      },
+      "teraType": "Bug"
     },
     "50": {
       "id": 50,
       "name": "Diglett",
       "speciesKey": "DIGLETT",
-      "types": [
-        "Ground"
-      ],
+      "types": ["Ground"],
       "stats": {
         "hp": 10,
         "attack": 55,
@@ -9248,15 +9379,19 @@
         "toxic",
         "uproar",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "sand-veil",
+        "secondary": "arena-trap",
+        "hidden": "sand-force"
+      },
+      "teraType": "Ground"
     },
     "51": {
       "id": 51,
       "name": "Dugtrio",
       "speciesKey": "DUGTRIO",
-      "types": [
-        "Ground"
-      ],
+      "types": ["Ground"],
       "stats": {
         "hp": 35,
         "attack": 100,
@@ -9462,15 +9597,19 @@
         "tri_attack",
         "uproar",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "sand-veil",
+        "secondary": "arena-trap",
+        "hidden": "sand-force"
+      },
+      "teraType": "Ground"
     },
     "52": {
       "id": 52,
       "name": "Meowth",
       "speciesKey": "MEOWTH",
-      "types": [
-        "Normal"
-      ],
+      "types": ["Normal"],
       "stats": {
         "hp": 40,
         "attack": 45,
@@ -9691,15 +9830,19 @@
         "water_pulse",
         "work_up",
         "x_scissor"
-      ]
+      ],
+      "abilities": {
+        "primary": "pickup",
+        "secondary": "technician",
+        "hidden": "unnerve"
+      },
+      "teraType": "Normal"
     },
     "53": {
       "id": 53,
       "name": "Persian",
       "speciesKey": "PERSIAN",
-      "types": [
-        "Normal"
-      ],
+      "types": ["Normal"],
       "stats": {
         "hp": 65,
         "attack": 70,
@@ -9927,15 +10070,19 @@
         "u_turn",
         "water_pulse",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "limber",
+        "secondary": "technician",
+        "hidden": "unnerve"
+      },
+      "teraType": "Normal"
     },
     "54": {
       "id": 54,
       "name": "Psyduck",
       "speciesKey": "PSYDUCK",
-      "types": [
-        "Water"
-      ],
+      "types": ["Water"],
       "stats": {
         "hp": 50,
         "attack": 52,
@@ -10144,15 +10291,19 @@
         "waterfall",
         "whirlpool",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "damp",
+        "secondary": "cloud-nine",
+        "hidden": "swift-swim"
+      },
+      "teraType": "Water"
     },
     "55": {
       "id": 55,
       "name": "Golduck",
       "speciesKey": "GOLDUCK",
-      "types": [
-        "Water"
-      ],
+      "types": ["Water"],
       "stats": {
         "hp": 80,
         "attack": 82,
@@ -10381,15 +10532,19 @@
         "waterfall",
         "whirlpool",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "damp",
+        "secondary": "cloud-nine",
+        "hidden": "swift-swim"
+      },
+      "teraType": "Water"
     },
     "56": {
       "id": 56,
       "name": "Mankey",
       "speciesKey": "MANKEY",
-      "types": [
-        "Fighting"
-      ],
+      "types": ["Fighting"],
       "stats": {
         "hp": 40,
         "attack": 80,
@@ -10613,15 +10768,19 @@
         "u_turn",
         "uproar",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "vital-spirit",
+        "secondary": "anger-point",
+        "hidden": "defiant"
+      },
+      "teraType": "Fighting"
     },
     "57": {
       "id": 57,
       "name": "Primeape",
       "speciesKey": "PRIMEAPE",
-      "types": [
-        "Fighting"
-      ],
+      "types": ["Fighting"],
       "stats": {
         "hp": 65,
         "attack": 105,
@@ -10856,15 +11015,19 @@
         "uproar",
         "vacuum_wave",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "vital-spirit",
+        "secondary": "anger-point",
+        "hidden": "defiant"
+      },
+      "teraType": "Fighting"
     },
     "58": {
       "id": 58,
       "name": "Growlithe",
       "speciesKey": "GROWLITHE",
-      "types": [
-        "Fire"
-      ],
+      "types": ["Fire"],
       "stats": {
         "hp": 55,
         "attack": 70,
@@ -11077,15 +11240,19 @@
         "toxic",
         "wild_charge",
         "will_o_wisp"
-      ]
+      ],
+      "abilities": {
+        "primary": "intimidate",
+        "secondary": "flash-fire",
+        "hidden": "justified"
+      },
+      "teraType": "Fire"
     },
     "59": {
       "id": 59,
       "name": "Arcanine",
       "speciesKey": "ARCANINE",
-      "types": [
-        "Fire"
-      ],
+      "types": ["Fire"],
       "stats": {
         "hp": 90,
         "attack": 110,
@@ -11308,15 +11475,19 @@
         "toxic",
         "wild_charge",
         "will_o_wisp"
-      ]
+      ],
+      "abilities": {
+        "primary": "intimidate",
+        "secondary": "flash-fire",
+        "hidden": "justified"
+      },
+      "teraType": "Fire"
     },
     "60": {
       "id": 60,
       "name": "Poliwag",
       "speciesKey": "POLIWAG",
-      "types": [
-        "Water"
-      ],
+      "types": ["Water"],
       "stats": {
         "hp": 40,
         "attack": 50,
@@ -11478,15 +11649,19 @@
         "waterfall",
         "weather_ball",
         "whirlpool"
-      ]
+      ],
+      "abilities": {
+        "primary": "water-absorb",
+        "secondary": "damp",
+        "hidden": "swift-swim"
+      },
+      "teraType": "Water"
     },
     "61": {
       "id": 61,
       "name": "Poliwhirl",
       "speciesKey": "POLIWHIRL",
-      "types": [
-        "Water"
-      ],
+      "types": ["Water"],
       "stats": {
         "hp": 65,
         "attack": 65,
@@ -11659,16 +11834,19 @@
         "waterfall",
         "weather_ball",
         "whirlpool"
-      ]
+      ],
+      "abilities": {
+        "primary": "water-absorb",
+        "secondary": "damp",
+        "hidden": "swift-swim"
+      },
+      "teraType": "Water"
     },
     "62": {
       "id": 62,
       "name": "Poliwrath",
       "speciesKey": "POLIWRATH",
-      "types": [
-        "Water",
-        "Fighting"
-      ],
+      "types": ["Water", "Fighting"],
       "stats": {
         "hp": 90,
         "attack": 95,
@@ -11807,15 +11985,19 @@
         "weather_ball",
         "whirlpool",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "water-absorb",
+        "secondary": "damp",
+        "hidden": "swift-swim"
+      },
+      "teraType": "Water"
     },
     "63": {
       "id": 63,
       "name": "Abra",
       "speciesKey": "ABRA",
-      "types": [
-        "Psychic"
-      ],
+      "types": ["Psychic"],
       "stats": {
         "hp": 25,
         "attack": 20,
@@ -11908,15 +12090,19 @@
         "tri_attack",
         "trick_room",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "synchronize",
+        "secondary": "inner-focus",
+        "hidden": "magic-guard"
+      },
+      "teraType": "Psychic"
     },
     "64": {
       "id": 64,
       "name": "Kadabra",
       "speciesKey": "KADABRA",
-      "types": [
-        "Psychic"
-      ],
+      "types": ["Psychic"],
       "stats": {
         "hp": 40,
         "attack": 35,
@@ -12074,15 +12260,19 @@
         "tri_attack",
         "trick_room",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "synchronize",
+        "secondary": "inner-focus",
+        "hidden": "magic-guard"
+      },
+      "teraType": "Psychic"
     },
     "65": {
       "id": 65,
       "name": "Alakazam",
       "speciesKey": "ALAKAZAM",
-      "types": [
-        "Psychic"
-      ],
+      "types": ["Psychic"],
       "stats": {
         "hp": 55,
         "attack": 50,
@@ -12244,15 +12434,19 @@
         "tri_attack",
         "trick_room",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "synchronize",
+        "secondary": "inner-focus",
+        "hidden": "magic-guard"
+      },
+      "teraType": "Psychic"
     },
     "66": {
       "id": 66,
       "name": "Machop",
       "speciesKey": "MACHOP",
-      "types": [
-        "Fighting"
-      ],
+      "types": ["Fighting"],
       "stats": {
         "hp": 70,
         "attack": 80,
@@ -12433,15 +12627,19 @@
         "thunder_punch",
         "toxic",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "guts",
+        "secondary": "no-guard",
+        "hidden": "steadfast"
+      },
+      "teraType": "Fighting"
     },
     "67": {
       "id": 67,
       "name": "Machoke",
       "speciesKey": "MACHOKE",
-      "types": [
-        "Fighting"
-      ],
+      "types": ["Fighting"],
       "stats": {
         "hp": 80,
         "attack": 100,
@@ -12622,15 +12820,19 @@
         "thunder_punch",
         "toxic",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "guts",
+        "secondary": "no-guard",
+        "hidden": "steadfast"
+      },
+      "teraType": "Fighting"
     },
     "68": {
       "id": 68,
       "name": "Machamp",
       "speciesKey": "MACHAMP",
-      "types": [
-        "Fighting"
-      ],
+      "types": ["Fighting"],
       "stats": {
         "hp": 90,
         "attack": 130,
@@ -12822,16 +13024,19 @@
         "thunder_punch",
         "toxic",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "guts",
+        "secondary": "no-guard",
+        "hidden": "steadfast"
+      },
+      "teraType": "Fighting"
     },
     "69": {
       "id": 69,
       "name": "Bellsprout",
       "speciesKey": "BELLSPROUT",
-      "types": [
-        "Grass",
-        "Poison"
-      ],
+      "types": ["Grass", "Poison"],
       "stats": {
         "hp": 50,
         "attack": 75,
@@ -13019,16 +13224,18 @@
         "trailblaze",
         "venoshock",
         "weather_ball"
-      ]
+      ],
+      "abilities": {
+        "primary": "chlorophyll",
+        "hidden": "gluttony"
+      },
+      "teraType": "Grass"
     },
     "70": {
       "id": 70,
       "name": "Weepinbell",
       "speciesKey": "WEEPINBELL",
-      "types": [
-        "Grass",
-        "Poison"
-      ],
+      "types": ["Grass", "Poison"],
       "stats": {
         "hp": 65,
         "attack": 90,
@@ -13219,16 +13426,18 @@
         "trailblaze",
         "venoshock",
         "weather_ball"
-      ]
+      ],
+      "abilities": {
+        "primary": "chlorophyll",
+        "hidden": "gluttony"
+      },
+      "teraType": "Grass"
     },
     "71": {
       "id": 71,
       "name": "Victreebel",
       "speciesKey": "VICTREEBEL",
-      "types": [
-        "Grass",
-        "Poison"
-      ],
+      "types": ["Grass", "Poison"],
       "stats": {
         "hp": 80,
         "attack": 105,
@@ -13429,16 +13638,18 @@
         "trailblaze",
         "venoshock",
         "weather_ball"
-      ]
+      ],
+      "abilities": {
+        "primary": "chlorophyll",
+        "hidden": "gluttony"
+      },
+      "teraType": "Grass"
     },
     "72": {
       "id": 72,
       "name": "Tentacool",
       "speciesKey": "TENTACOOL",
-      "types": [
-        "Water",
-        "Poison"
-      ],
+      "types": ["Water", "Poison"],
       "stats": {
         "hp": 40,
         "attack": 40,
@@ -13628,16 +13839,19 @@
         "water_pulse",
         "waterfall",
         "whirlpool"
-      ]
+      ],
+      "abilities": {
+        "primary": "clear-body",
+        "secondary": "liquid-ooze",
+        "hidden": "rain-dish"
+      },
+      "teraType": "Water"
     },
     "73": {
       "id": 73,
       "name": "Tentacruel",
       "speciesKey": "TENTACRUEL",
-      "types": [
-        "Water",
-        "Poison"
-      ],
+      "types": ["Water", "Poison"],
       "stats": {
         "hp": 80,
         "attack": 70,
@@ -13839,16 +14053,19 @@
         "waterfall",
         "weather_ball",
         "whirlpool"
-      ]
+      ],
+      "abilities": {
+        "primary": "clear-body",
+        "secondary": "liquid-ooze",
+        "hidden": "rain-dish"
+      },
+      "teraType": "Water"
     },
     "74": {
       "id": 74,
       "name": "Geodude",
       "speciesKey": "GEODUDE",
-      "types": [
-        "Rock",
-        "Ground"
-      ],
+      "types": ["Rock", "Ground"],
       "stats": {
         "hp": 40,
         "attack": 80,
@@ -14049,16 +14266,19 @@
         "toxic",
         "volt_switch",
         "wild_charge"
-      ]
+      ],
+      "abilities": {
+        "primary": "rock-head",
+        "secondary": "sturdy",
+        "hidden": "sand-veil"
+      },
+      "teraType": "Rock"
     },
     "75": {
       "id": 75,
       "name": "Graveler",
       "speciesKey": "GRAVELER",
-      "types": [
-        "Rock",
-        "Ground"
-      ],
+      "types": ["Rock", "Ground"],
       "stats": {
         "hp": 55,
         "attack": 95,
@@ -14264,16 +14484,19 @@
         "toxic",
         "volt_switch",
         "wild_charge"
-      ]
+      ],
+      "abilities": {
+        "primary": "rock-head",
+        "secondary": "sturdy",
+        "hidden": "sand-veil"
+      },
+      "teraType": "Rock"
     },
     "76": {
       "id": 76,
       "name": "Golem",
       "speciesKey": "GOLEM",
-      "types": [
-        "Rock",
-        "Ground"
-      ],
+      "types": ["Rock", "Ground"],
       "stats": {
         "hp": 80,
         "attack": 120,
@@ -14484,15 +14707,19 @@
         "toxic",
         "volt_switch",
         "wild_charge"
-      ]
+      ],
+      "abilities": {
+        "primary": "rock-head",
+        "secondary": "sturdy",
+        "hidden": "sand-veil"
+      },
+      "teraType": "Rock"
     },
     "77": {
       "id": 77,
       "name": "Ponyta",
       "speciesKey": "PONYTA",
-      "types": [
-        "Fire"
-      ],
+      "types": ["Fire"],
       "stats": {
         "hp": 50,
         "attack": 85,
@@ -14610,15 +14837,19 @@
         "toxic",
         "wild_charge",
         "will_o_wisp"
-      ]
+      ],
+      "abilities": {
+        "primary": "run-away",
+        "secondary": "flash-fire",
+        "hidden": "flame-body"
+      },
+      "teraType": "Fire"
     },
     "78": {
       "id": 78,
       "name": "Rapidash",
       "speciesKey": "RAPIDASH",
-      "types": [
-        "Fire"
-      ],
+      "types": ["Fire"],
       "stats": {
         "hp": 65,
         "attack": 100,
@@ -14742,16 +14973,19 @@
         "toxic",
         "wild_charge",
         "will_o_wisp"
-      ]
+      ],
+      "abilities": {
+        "primary": "run-away",
+        "secondary": "flash-fire",
+        "hidden": "flame-body"
+      },
+      "teraType": "Fire"
     },
     "79": {
       "id": 79,
       "name": "Slowpoke",
       "speciesKey": "SLOWPOKE",
-      "types": [
-        "Water",
-        "Psychic"
-      ],
+      "types": ["Water", "Psychic"],
       "stats": {
         "hp": 90,
         "attack": 65,
@@ -14946,16 +15180,19 @@
         "weather_ball",
         "whirlpool",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "oblivious",
+        "secondary": "own-tempo",
+        "hidden": "regenerator"
+      },
+      "teraType": "Water"
     },
     "80": {
       "id": 80,
       "name": "Slowbro",
       "speciesKey": "SLOWBRO",
-      "types": [
-        "Water",
-        "Psychic"
-      ],
+      "types": ["Water", "Psychic"],
       "stats": {
         "hp": 95,
         "attack": 75,
@@ -15194,16 +15431,19 @@
         "weather_ball",
         "whirlpool",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "oblivious",
+        "secondary": "own-tempo",
+        "hidden": "regenerator"
+      },
+      "teraType": "Water"
     },
     "81": {
       "id": 81,
       "name": "Magnemite",
       "speciesKey": "MAGNEMITE",
-      "types": [
-        "Electric",
-        "Steel"
-      ],
+      "types": ["Electric", "Steel"],
       "stats": {
         "hp": 25,
         "attack": 35,
@@ -15390,16 +15630,19 @@
         "toxic",
         "volt_switch",
         "wild_charge"
-      ]
+      ],
+      "abilities": {
+        "primary": "magnet-pull",
+        "secondary": "sturdy",
+        "hidden": "analytic"
+      },
+      "teraType": "Electric"
     },
     "82": {
       "id": 82,
       "name": "Magneton",
       "speciesKey": "MAGNETON",
-      "types": [
-        "Electric",
-        "Steel"
-      ],
+      "types": ["Electric", "Steel"],
       "stats": {
         "hp": 50,
         "attack": 60,
@@ -15596,16 +15839,19 @@
         "tri_attack",
         "volt_switch",
         "wild_charge"
-      ]
+      ],
+      "abilities": {
+        "primary": "magnet-pull",
+        "secondary": "sturdy",
+        "hidden": "analytic"
+      },
+      "teraType": "Electric"
     },
     "83": {
       "id": 83,
       "name": "Farfetch'd",
       "speciesKey": "FARFETCHD",
-      "types": [
-        "Normal",
-        "Flying"
-      ],
+      "types": ["Normal", "Flying"],
       "stats": {
         "hp": 52,
         "attack": 90,
@@ -15813,16 +16059,19 @@
         "u_turn",
         "vacuum_wave",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "keen-eye",
+        "secondary": "inner-focus",
+        "hidden": "defiant"
+      },
+      "teraType": "Normal"
     },
     "84": {
       "id": 84,
       "name": "Doduo",
       "speciesKey": "DODUO",
-      "types": [
-        "Normal",
-        "Flying"
-      ],
+      "types": ["Normal", "Flying"],
       "stats": {
         "hp": 35,
         "attack": 85,
@@ -15993,16 +16242,19 @@
         "toxic",
         "uproar",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "run-away",
+        "secondary": "early-bird",
+        "hidden": "tangled-feet"
+      },
+      "teraType": "Normal"
     },
     "85": {
       "id": 85,
       "name": "Dodrio",
       "speciesKey": "DODRIO",
-      "types": [
-        "Normal",
-        "Flying"
-      ],
+      "types": ["Normal", "Flying"],
       "stats": {
         "hp": 60,
         "attack": 110,
@@ -16184,15 +16436,19 @@
         "tri_attack",
         "uproar",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "run-away",
+        "secondary": "early-bird",
+        "hidden": "tangled-feet"
+      },
+      "teraType": "Normal"
     },
     "86": {
       "id": 86,
       "name": "Seel",
       "speciesKey": "SEEL",
-      "types": [
-        "Water"
-      ],
+      "types": ["Water"],
       "stats": {
         "hp": 65,
         "attack": 45,
@@ -16400,16 +16656,19 @@
         "waterfall",
         "weather_ball",
         "whirlpool"
-      ]
+      ],
+      "abilities": {
+        "primary": "thick-fat",
+        "secondary": "hydration",
+        "hidden": "ice-body"
+      },
+      "teraType": "Water"
     },
     "87": {
       "id": 87,
       "name": "Dewgong",
       "speciesKey": "DEWGONG",
-      "types": [
-        "Water",
-        "Ice"
-      ],
+      "types": ["Water", "Ice"],
       "stats": {
         "hp": 90,
         "attack": 70,
@@ -16618,15 +16877,19 @@
         "waterfall",
         "weather_ball",
         "whirlpool"
-      ]
+      ],
+      "abilities": {
+        "primary": "thick-fat",
+        "secondary": "hydration",
+        "hidden": "ice-body"
+      },
+      "teraType": "Water"
     },
     "88": {
       "id": 88,
       "name": "Grimer",
       "speciesKey": "GRIMER",
-      "types": [
-        "Poison"
-      ],
+      "types": ["Poison"],
       "stats": {
         "hp": 80,
         "attack": 80,
@@ -16851,15 +17114,19 @@
         "toxic",
         "venoshock",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "stench",
+        "secondary": "sticky-hold",
+        "hidden": "poison-touch"
+      },
+      "teraType": "Poison"
     },
     "89": {
       "id": 89,
       "name": "Muk",
       "speciesKey": "MUK",
-      "types": [
-        "Poison"
-      ],
+      "types": ["Poison"],
       "stats": {
         "hp": 105,
         "attack": 105,
@@ -17091,15 +17358,19 @@
         "toxic_spikes",
         "venoshock",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "stench",
+        "secondary": "sticky-hold",
+        "hidden": "poison-touch"
+      },
+      "teraType": "Poison"
     },
     "90": {
       "id": 90,
       "name": "Shellder",
       "speciesKey": "SHELLDER",
-      "types": [
-        "Water"
-      ],
+      "types": ["Water"],
       "stats": {
         "hp": 30,
         "attack": 65,
@@ -17279,16 +17550,19 @@
         "water_pulse",
         "waterfall",
         "whirlpool"
-      ]
+      ],
+      "abilities": {
+        "primary": "shell-armor",
+        "secondary": "skill-link",
+        "hidden": "overcoat"
+      },
+      "teraType": "Water"
     },
     "91": {
       "id": 91,
       "name": "Cloyster",
       "speciesKey": "CLOYSTER",
-      "types": [
-        "Water",
-        "Ice"
-      ],
+      "types": ["Water", "Ice"],
       "stats": {
         "hp": 50,
         "attack": 95,
@@ -17500,16 +17774,19 @@
         "waterfall",
         "weather_ball",
         "whirlpool"
-      ]
+      ],
+      "abilities": {
+        "primary": "shell-armor",
+        "secondary": "skill-link",
+        "hidden": "overcoat"
+      },
+      "teraType": "Water"
     },
     "92": {
       "id": 92,
       "name": "Gastly",
       "speciesKey": "GASTLY",
-      "types": [
-        "Ghost",
-        "Poison"
-      ],
+      "types": ["Ghost", "Poison"],
       "stats": {
         "hp": 30,
         "attack": 35,
@@ -17685,16 +17962,17 @@
         "trick_room",
         "venoshock",
         "will_o_wisp"
-      ]
+      ],
+      "abilities": {
+        "primary": "levitate"
+      },
+      "teraType": "Ghost"
     },
     "93": {
       "id": 93,
       "name": "Haunter",
       "speciesKey": "HAUNTER",
-      "types": [
-        "Ghost",
-        "Poison"
-      ],
+      "types": ["Ghost", "Poison"],
       "stats": {
         "hp": 45,
         "attack": 50,
@@ -17899,16 +18177,17 @@
         "trick_room",
         "venoshock",
         "will_o_wisp"
-      ]
+      ],
+      "abilities": {
+        "primary": "levitate"
+      },
+      "teraType": "Ghost"
     },
     "94": {
       "id": 94,
       "name": "Gengar",
       "speciesKey": "GENGAR",
-      "types": [
-        "Ghost",
-        "Poison"
-      ],
+      "types": ["Ghost", "Poison"],
       "stats": {
         "hp": 60,
         "attack": 65,
@@ -18127,16 +18406,17 @@
         "trick_room",
         "venoshock",
         "will_o_wisp"
-      ]
+      ],
+      "abilities": {
+        "primary": "cursed-body"
+      },
+      "teraType": "Ghost"
     },
     "95": {
       "id": 95,
       "name": "Onix",
       "speciesKey": "ONIX",
-      "types": [
-        "Rock",
-        "Ground"
-      ],
+      "types": ["Rock", "Ground"],
       "stats": {
         "hp": 35,
         "attack": 45,
@@ -18323,15 +18603,19 @@
         "taunt",
         "torment",
         "toxic"
-      ]
+      ],
+      "abilities": {
+        "primary": "rock-head",
+        "secondary": "sturdy",
+        "hidden": "weak-armor"
+      },
+      "teraType": "Rock"
     },
     "96": {
       "id": 96,
       "name": "Drowzee",
       "speciesKey": "DROWZEE",
-      "types": [
-        "Psychic"
-      ],
+      "types": ["Psychic"],
       "stats": {
         "hp": 60,
         "attack": 48,
@@ -18539,15 +18823,19 @@
         "trick",
         "trick_room",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "insomnia",
+        "secondary": "forewarn",
+        "hidden": "inner-focus"
+      },
+      "teraType": "Psychic"
     },
     "97": {
       "id": 97,
       "name": "Hypno",
       "speciesKey": "HYPNO",
-      "types": [
-        "Psychic"
-      ],
+      "types": ["Psychic"],
       "stats": {
         "hp": 85,
         "attack": 73,
@@ -18769,15 +19057,19 @@
         "trick",
         "trick_room",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "insomnia",
+        "secondary": "forewarn",
+        "hidden": "inner-focus"
+      },
+      "teraType": "Psychic"
     },
     "98": {
       "id": 98,
       "name": "Krabby",
       "speciesKey": "KRABBY",
-      "types": [
-        "Water"
-      ],
+      "types": ["Water"],
       "stats": {
         "hp": 30,
         "attack": 105,
@@ -18948,15 +19240,19 @@
         "toxic",
         "water_pulse",
         "x_scissor"
-      ]
+      ],
+      "abilities": {
+        "primary": "hyper-cutter",
+        "secondary": "shell-armor",
+        "hidden": "sheer-force"
+      },
+      "teraType": "Water"
     },
     "99": {
       "id": 99,
       "name": "Kingler",
       "speciesKey": "KINGLER",
-      "types": [
-        "Water"
-      ],
+      "types": ["Water"],
       "stats": {
         "hp": 55,
         "attack": 130,
@@ -19144,15 +19440,19 @@
         "toxic",
         "water_pulse",
         "x_scissor"
-      ]
+      ],
+      "abilities": {
+        "primary": "hyper-cutter",
+        "secondary": "shell-armor",
+        "hidden": "sheer-force"
+      },
+      "teraType": "Water"
     },
     "100": {
       "id": 100,
       "name": "Voltorb",
       "speciesKey": "VOLTORB",
-      "types": [
-        "Electric"
-      ],
+      "types": ["Electric"],
       "stats": {
         "hp": 40,
         "attack": 30,
@@ -19359,15 +19659,19 @@
         "toxic",
         "volt_switch",
         "wild_charge"
-      ]
+      ],
+      "abilities": {
+        "primary": "soundproof",
+        "secondary": "static",
+        "hidden": "aftermath"
+      },
+      "teraType": "Electric"
     },
     "101": {
       "id": 101,
       "name": "Electrode",
       "speciesKey": "ELECTRODE",
-      "types": [
-        "Electric"
-      ],
+      "types": ["Electric"],
       "stats": {
         "hp": 60,
         "attack": 50,
@@ -19586,16 +19890,19 @@
         "toxic",
         "volt_switch",
         "wild_charge"
-      ]
+      ],
+      "abilities": {
+        "primary": "soundproof",
+        "secondary": "static",
+        "hidden": "aftermath"
+      },
+      "teraType": "Electric"
     },
     "102": {
       "id": 102,
       "name": "Exeggcute",
       "speciesKey": "EXEGGCUTE",
-      "types": [
-        "Grass",
-        "Psychic"
-      ],
+      "types": ["Grass", "Psychic"],
       "stats": {
         "hp": 60,
         "attack": 40,
@@ -19775,16 +20082,18 @@
         "trick_room",
         "uproar",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "chlorophyll",
+        "hidden": "harvest"
+      },
+      "teraType": "Grass"
     },
     "103": {
       "id": 103,
       "name": "Exeggutor",
       "speciesKey": "EXEGGUTOR",
-      "types": [
-        "Grass",
-        "Psychic"
-      ],
+      "types": ["Grass", "Psychic"],
       "stats": {
         "hp": 95,
         "attack": 95,
@@ -20021,15 +20330,18 @@
         "trick_room",
         "uproar",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "chlorophyll",
+        "hidden": "harvest"
+      },
+      "teraType": "Grass"
     },
     "104": {
       "id": 104,
       "name": "Cubone",
       "speciesKey": "CUBONE",
-      "types": [
-        "Ground"
-      ],
+      "types": ["Ground"],
       "stats": {
         "hp": 50,
         "attack": 50,
@@ -20220,15 +20532,19 @@
         "thief",
         "thunder_punch",
         "toxic"
-      ]
+      ],
+      "abilities": {
+        "primary": "rock-head",
+        "secondary": "lightning-rod",
+        "hidden": "battle-armor"
+      },
+      "teraType": "Ground"
     },
     "105": {
       "id": 105,
       "name": "Marowak",
       "speciesKey": "MAROWAK",
-      "types": [
-        "Ground"
-      ],
+      "types": ["Ground"],
       "stats": {
         "hp": 60,
         "attack": 80,
@@ -20436,15 +20752,19 @@
         "thunderbolt",
         "toxic",
         "will_o_wisp"
-      ]
+      ],
+      "abilities": {
+        "primary": "rock-head",
+        "secondary": "lightning-rod",
+        "hidden": "battle-armor"
+      },
+      "teraType": "Ground"
     },
     "106": {
       "id": 106,
       "name": "Hitmonlee",
       "speciesKey": "HITMONLEE",
-      "types": [
-        "Fighting"
-      ],
+      "types": ["Fighting"],
       "stats": {
         "hp": 50,
         "attack": 120,
@@ -20660,15 +20980,19 @@
         "uproar",
         "vacuum_wave",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "limber",
+        "secondary": "reckless",
+        "hidden": "unburden"
+      },
+      "teraType": "Fighting"
     },
     "107": {
       "id": 107,
       "name": "Hitmonchan",
       "speciesKey": "HITMONCHAN",
-      "types": [
-        "Fighting"
-      ],
+      "types": ["Fighting"],
       "stats": {
         "hp": 50,
         "attack": 105,
@@ -20897,15 +21221,19 @@
         "uproar",
         "vacuum_wave",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "keen-eye",
+        "secondary": "iron-fist",
+        "hidden": "inner-focus"
+      },
+      "teraType": "Fighting"
     },
     "108": {
       "id": 108,
       "name": "Lickitung",
       "speciesKey": "LICKITUNG",
-      "types": [
-        "Normal"
-      ],
+      "types": ["Normal"],
       "stats": {
         "hp": 90,
         "attack": 55,
@@ -21043,15 +21371,19 @@
         "thunderbolt",
         "toxic",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "own-tempo",
+        "secondary": "oblivious",
+        "hidden": "cloud-nine"
+      },
+      "teraType": "Normal"
     },
     "109": {
       "id": 109,
       "name": "Koffing",
       "speciesKey": "KOFFING",
-      "types": [
-        "Poison"
-      ],
+      "types": ["Poison"],
       "stats": {
         "hp": 40,
         "attack": 65,
@@ -21240,15 +21572,19 @@
         "toxic_spikes",
         "venoshock",
         "will_o_wisp"
-      ]
+      ],
+      "abilities": {
+        "primary": "levitate",
+        "secondary": "neutralizing-gas",
+        "hidden": "stench"
+      },
+      "teraType": "Poison"
     },
     "110": {
       "id": 110,
       "name": "Weezing",
       "speciesKey": "WEEZING",
-      "types": [
-        "Poison"
-      ],
+      "types": ["Poison"],
       "stats": {
         "hp": 65,
         "attack": 90,
@@ -21453,16 +21789,19 @@
         "toxic_spikes",
         "venoshock",
         "will_o_wisp"
-      ]
+      ],
+      "abilities": {
+        "primary": "levitate",
+        "secondary": "neutralizing-gas",
+        "hidden": "stench"
+      },
+      "teraType": "Poison"
     },
     "111": {
       "id": 111,
       "name": "Rhyhorn",
       "speciesKey": "RHYHORN",
-      "types": [
-        "Ground",
-        "Rock"
-      ],
+      "types": ["Ground", "Rock"],
       "stats": {
         "hp": 80,
         "attack": 85,
@@ -21666,16 +22005,19 @@
         "thunderbolt",
         "toxic",
         "uproar"
-      ]
+      ],
+      "abilities": {
+        "primary": "lightning-rod",
+        "secondary": "rock-head",
+        "hidden": "reckless"
+      },
+      "teraType": "Ground"
     },
     "112": {
       "id": 112,
       "name": "Rhydon",
       "speciesKey": "RHYDON",
-      "types": [
-        "Ground",
-        "Rock"
-      ],
+      "types": ["Ground", "Rock"],
       "stats": {
         "hp": 105,
         "attack": 130,
@@ -21904,15 +22246,19 @@
         "thunderbolt",
         "toxic",
         "uproar"
-      ]
+      ],
+      "abilities": {
+        "primary": "lightning-rod",
+        "secondary": "rock-head",
+        "hidden": "reckless"
+      },
+      "teraType": "Ground"
     },
     "113": {
       "id": 113,
       "name": "Chansey",
       "speciesKey": "CHANSEY",
-      "types": [
-        "Normal"
-      ],
+      "types": ["Normal"],
       "stats": {
         "hp": 250,
         "attack": 5,
@@ -22175,15 +22521,19 @@
         "wild_charge",
         "work_up",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "natural-cure",
+        "secondary": "serene-grace",
+        "hidden": "healer"
+      },
+      "teraType": "Normal"
     },
     "114": {
       "id": 114,
       "name": "Tangela",
       "speciesKey": "TANGELA",
-      "types": [
-        "Grass"
-      ],
+      "types": ["Grass"],
       "stats": {
         "hp": 65,
         "attack": 55,
@@ -22305,15 +22655,19 @@
         "swords_dance",
         "thief",
         "toxic"
-      ]
+      ],
+      "abilities": {
+        "primary": "chlorophyll",
+        "secondary": "leaf-guard",
+        "hidden": "regenerator"
+      },
+      "teraType": "Grass"
     },
     "115": {
       "id": 115,
       "name": "Kangaskhan",
       "speciesKey": "KANGASKHAN",
-      "types": [
-        "Normal"
-      ],
+      "types": ["Normal"],
       "stats": {
         "hp": 105,
         "attack": 95,
@@ -22498,15 +22852,19 @@
         "water_pulse",
         "whirlpool",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "early-bird",
+        "secondary": "scrappy",
+        "hidden": "inner-focus"
+      },
+      "teraType": "Normal"
     },
     "116": {
       "id": 116,
       "name": "Horsea",
       "speciesKey": "HORSEA",
-      "types": [
-        "Water"
-      ],
+      "types": ["Water"],
       "stats": {
         "hp": 30,
         "attack": 40,
@@ -22672,15 +23030,19 @@
         "waterfall",
         "weather_ball",
         "whirlpool"
-      ]
+      ],
+      "abilities": {
+        "primary": "swift-swim",
+        "secondary": "sniper",
+        "hidden": "damp"
+      },
+      "teraType": "Water"
     },
     "117": {
       "id": 117,
       "name": "Seadra",
       "speciesKey": "SEADRA",
-      "types": [
-        "Water"
-      ],
+      "types": ["Water"],
       "stats": {
         "hp": 55,
         "attack": 65,
@@ -22850,15 +23212,19 @@
         "waterfall",
         "weather_ball",
         "whirlpool"
-      ]
+      ],
+      "abilities": {
+        "primary": "poison-point",
+        "secondary": "sniper",
+        "hidden": "damp"
+      },
+      "teraType": "Water"
     },
     "118": {
       "id": 118,
       "name": "Goldeen",
       "speciesKey": "GOLDEEN",
-      "types": [
-        "Water"
-      ],
+      "types": ["Water"],
       "stats": {
         "hp": 45,
         "attack": 67,
@@ -23006,15 +23372,19 @@
         "toxic",
         "water_pulse",
         "waterfall"
-      ]
+      ],
+      "abilities": {
+        "primary": "swift-swim",
+        "secondary": "water-veil",
+        "hidden": "lightning-rod"
+      },
+      "teraType": "Water"
     },
     "119": {
       "id": 119,
       "name": "Seaking",
       "speciesKey": "SEAKING",
-      "types": [
-        "Water"
-      ],
+      "types": ["Water"],
       "stats": {
         "hp": 80,
         "attack": 92,
@@ -23164,15 +23534,19 @@
         "toxic",
         "water_pulse",
         "waterfall"
-      ]
+      ],
+      "abilities": {
+        "primary": "swift-swim",
+        "secondary": "water-veil",
+        "hidden": "lightning-rod"
+      },
+      "teraType": "Water"
     },
     "120": {
       "id": 120,
       "name": "Staryu",
       "speciesKey": "STARYU",
-      "types": [
-        "Water"
-      ],
+      "types": ["Water"],
       "stats": {
         "hp": 30,
         "attack": 45,
@@ -23351,16 +23725,19 @@
         "water_pulse",
         "waterfall",
         "whirlpool"
-      ]
+      ],
+      "abilities": {
+        "primary": "illuminate",
+        "secondary": "natural-cure",
+        "hidden": "analytic"
+      },
+      "teraType": "Water"
     },
     "121": {
       "id": 121,
       "name": "Starmie",
       "speciesKey": "STARMIE",
-      "types": [
-        "Water",
-        "Psychic"
-      ],
+      "types": ["Water", "Psychic"],
       "stats": {
         "hp": 60,
         "attack": 75,
@@ -23573,16 +23950,19 @@
         "waterfall",
         "whirlpool",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "illuminate",
+        "secondary": "natural-cure",
+        "hidden": "analytic"
+      },
+      "teraType": "Water"
     },
     "122": {
       "id": 122,
       "name": "Mr. Mime",
       "speciesKey": "MRMIME",
-      "types": [
-        "Psychic",
-        "Fairy"
-      ],
+      "types": ["Psychic", "Fairy"],
       "stats": {
         "hp": 40,
         "attack": 45,
@@ -23814,16 +24194,19 @@
         "trick_room",
         "triple_axel",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "soundproof",
+        "secondary": "filter",
+        "hidden": "technician"
+      },
+      "teraType": "Psychic"
     },
     "123": {
       "id": 123,
       "name": "Scyther",
       "speciesKey": "SCYTHER",
-      "types": [
-        "Bug",
-        "Flying"
-      ],
+      "types": ["Bug", "Flying"],
       "stats": {
         "hp": 70,
         "attack": 110,
@@ -24004,16 +24387,19 @@
         "u_turn",
         "vacuum_wave",
         "x_scissor"
-      ]
+      ],
+      "abilities": {
+        "primary": "swarm",
+        "secondary": "technician",
+        "hidden": "steadfast"
+      },
+      "teraType": "Bug"
     },
     "124": {
       "id": 124,
       "name": "Jynx",
       "speciesKey": "JYNX",
-      "types": [
-        "Ice",
-        "Psychic"
-      ],
+      "types": ["Ice", "Psychic"],
       "stats": {
         "hp": 65,
         "attack": 50,
@@ -24208,15 +24594,19 @@
         "toxic",
         "trick_room",
         "water_pulse"
-      ]
+      ],
+      "abilities": {
+        "primary": "oblivious",
+        "secondary": "forewarn",
+        "hidden": "dry-skin"
+      },
+      "teraType": "Ice"
     },
     "125": {
       "id": 125,
       "name": "Electabuzz",
       "speciesKey": "ELECTABUZZ",
-      "types": [
-        "Electric"
-      ],
+      "types": ["Electric"],
       "stats": {
         "hp": 65,
         "attack": 83,
@@ -24419,15 +24809,18 @@
         "uproar",
         "volt_switch",
         "wild_charge"
-      ]
+      ],
+      "abilities": {
+        "primary": "static",
+        "hidden": "vital-spirit"
+      },
+      "teraType": "Electric"
     },
     "126": {
       "id": 126,
       "name": "Magmar",
       "speciesKey": "MAGMAR",
-      "types": [
-        "Fire"
-      ],
+      "types": ["Fire"],
       "stats": {
         "hp": 65,
         "attack": 95,
@@ -24629,15 +25022,18 @@
         "toxic",
         "uproar",
         "will_o_wisp"
-      ]
+      ],
+      "abilities": {
+        "primary": "flame-body",
+        "hidden": "vital-spirit"
+      },
+      "teraType": "Fire"
     },
     "127": {
       "id": 127,
       "name": "Pinsir",
       "speciesKey": "PINSIR",
-      "types": [
-        "Bug"
-      ],
+      "types": ["Bug"],
       "stats": {
         "hp": 65,
         "attack": 125,
@@ -24802,15 +25198,19 @@
         "thief",
         "toxic",
         "x_scissor"
-      ]
+      ],
+      "abilities": {
+        "primary": "hyper-cutter",
+        "secondary": "mold-breaker",
+        "hidden": "moxie"
+      },
+      "teraType": "Bug"
     },
     "128": {
       "id": 128,
       "name": "Tauros",
       "speciesKey": "TAUROS",
-      "types": [
-        "Normal"
-      ],
+      "types": ["Normal"],
       "stats": {
         "hp": 75,
         "attack": 100,
@@ -25007,15 +25407,19 @@
         "wild_charge",
         "work_up",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "intimidate",
+        "secondary": "anger-point",
+        "hidden": "sheer-force"
+      },
+      "teraType": "Normal"
     },
     "129": {
       "id": 129,
       "name": "Magikarp",
       "speciesKey": "MAGIKARP",
-      "types": [
-        "Water"
-      ],
+      "types": ["Water"],
       "stats": {
         "hp": 20,
         "attack": 10,
@@ -25061,19 +25465,18 @@
           "type": "Normal"
         }
       ],
-      "tmMoves": [
-        "facade",
-        "hydro_pump"
-      ]
+      "tmMoves": ["facade", "hydro_pump"],
+      "abilities": {
+        "primary": "swift-swim",
+        "hidden": "rattled"
+      },
+      "teraType": "Water"
     },
     "130": {
       "id": 130,
       "name": "Gyarados",
       "speciesKey": "GYARADOS",
-      "types": [
-        "Water",
-        "Flying"
-      ],
+      "types": ["Water", "Flying"],
       "stats": {
         "hp": 95,
         "attack": 125,
@@ -25266,16 +25669,18 @@
         "water_pulse",
         "waterfall",
         "whirlpool"
-      ]
+      ],
+      "abilities": {
+        "primary": "intimidate",
+        "hidden": "moxie"
+      },
+      "teraType": "Water"
     },
     "131": {
       "id": 131,
       "name": "Lapras",
       "speciesKey": "LAPRAS",
-      "types": [
-        "Water",
-        "Ice"
-      ],
+      "types": ["Water", "Ice"],
       "stats": {
         "hp": 130,
         "attack": 85,
@@ -25488,15 +25893,19 @@
         "weather_ball",
         "whirlpool",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "water-absorb",
+        "secondary": "shell-armor",
+        "hidden": "hydration"
+      },
+      "teraType": "Water"
     },
     "132": {
       "id": 132,
       "name": "Ditto",
       "speciesKey": "DITTO",
-      "types": [
-        "Normal"
-      ],
+      "types": ["Normal"],
       "stats": {
         "hp": 48,
         "attack": 48,
@@ -25535,15 +25944,18 @@
           "type": "Normal"
         }
       ],
-      "tmMoves": []
+      "tmMoves": [],
+      "abilities": {
+        "primary": "limber",
+        "hidden": "imposter"
+      },
+      "teraType": "Normal"
     },
     "133": {
       "id": 133,
       "name": "Eevee",
       "speciesKey": "EEVEE",
-      "types": [
-        "Normal"
-      ],
+      "types": ["Normal"],
       "stats": {
         "hp": 55,
         "attack": 55,
@@ -25699,15 +26111,19 @@
         "trailblaze",
         "weather_ball",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "run-away",
+        "secondary": "adaptability",
+        "hidden": "anticipation"
+      },
+      "teraType": "Normal"
     },
     "134": {
       "id": 134,
       "name": "Vaporeon",
       "speciesKey": "VAPOREON",
-      "types": [
-        "Water"
-      ],
+      "types": ["Water"],
       "stats": {
         "hp": 130,
         "attack": 65,
@@ -25899,15 +26315,18 @@
         "weather_ball",
         "whirlpool",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "water-absorb",
+        "hidden": "hydration"
+      },
+      "teraType": "Water"
     },
     "135": {
       "id": 135,
       "name": "Jolteon",
       "speciesKey": "JOLTEON",
-      "types": [
-        "Electric"
-      ],
+      "types": ["Electric"],
       "stats": {
         "hp": 65,
         "attack": 65,
@@ -26100,15 +26519,18 @@
         "weather_ball",
         "wild_charge",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "volt-absorb",
+        "hidden": "quick-feet"
+      },
+      "teraType": "Electric"
     },
     "136": {
       "id": 136,
       "name": "Flareon",
       "speciesKey": "FLAREON",
-      "types": [
-        "Fire"
-      ],
+      "types": ["Fire"],
       "stats": {
         "hp": 65,
         "attack": 130,
@@ -26294,15 +26716,18 @@
         "weather_ball",
         "will_o_wisp",
         "work_up"
-      ]
+      ],
+      "abilities": {
+        "primary": "flash-fire",
+        "hidden": "guts"
+      },
+      "teraType": "Fire"
     },
     "137": {
       "id": 137,
       "name": "Porygon",
       "speciesKey": "PORYGON",
-      "types": [
-        "Normal"
-      ],
+      "types": ["Normal"],
       "stats": {
         "hp": 65,
         "attack": 60,
@@ -26494,16 +26919,19 @@
         "trick_room",
         "volt_switch",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "trace",
+        "secondary": "download",
+        "hidden": "analytic"
+      },
+      "teraType": "Normal"
     },
     "138": {
       "id": 138,
       "name": "Omanyte",
       "speciesKey": "OMANYTE",
-      "types": [
-        "Rock",
-        "Water"
-      ],
+      "types": ["Rock", "Water"],
       "stats": {
         "hp": 35,
         "attack": 40,
@@ -26671,16 +27099,19 @@
         "toxic",
         "water_pulse",
         "waterfall"
-      ]
+      ],
+      "abilities": {
+        "primary": "swift-swim",
+        "secondary": "shell-armor",
+        "hidden": "weak-armor"
+      },
+      "teraType": "Rock"
     },
     "139": {
       "id": 139,
       "name": "Omastar",
       "speciesKey": "OMASTAR",
-      "types": [
-        "Rock",
-        "Water"
-      ],
+      "types": ["Rock", "Water"],
       "stats": {
         "hp": 70,
         "attack": 60,
@@ -26860,16 +27291,19 @@
         "toxic",
         "water_pulse",
         "waterfall"
-      ]
+      ],
+      "abilities": {
+        "primary": "swift-swim",
+        "secondary": "shell-armor",
+        "hidden": "weak-armor"
+      },
+      "teraType": "Rock"
     },
     "140": {
       "id": 140,
       "name": "Kabuto",
       "speciesKey": "KABUTO",
-      "types": [
-        "Rock",
-        "Water"
-      ],
+      "types": ["Rock", "Water"],
       "stats": {
         "hp": 30,
         "attack": 80,
@@ -27041,16 +27475,19 @@
         "toxic",
         "water_pulse",
         "waterfall"
-      ]
+      ],
+      "abilities": {
+        "primary": "swift-swim",
+        "secondary": "battle-armor",
+        "hidden": "weak-armor"
+      },
+      "teraType": "Rock"
     },
     "141": {
       "id": 141,
       "name": "Kabutops",
       "speciesKey": "KABUTOPS",
-      "types": [
-        "Rock",
-        "Water"
-      ],
+      "types": ["Rock", "Water"],
       "stats": {
         "hp": 60,
         "attack": 115,
@@ -27254,16 +27691,19 @@
         "water_pulse",
         "waterfall",
         "x_scissor"
-      ]
+      ],
+      "abilities": {
+        "primary": "swift-swim",
+        "secondary": "battle-armor",
+        "hidden": "weak-armor"
+      },
+      "teraType": "Rock"
     },
     "142": {
       "id": 142,
       "name": "Aerodactyl",
       "speciesKey": "AERODACTYL",
-      "types": [
-        "Rock",
-        "Flying"
-      ],
+      "types": ["Rock", "Flying"],
       "stats": {
         "hp": 80,
         "attack": 105,
@@ -27456,15 +27896,19 @@
         "torment",
         "toxic",
         "whirlwind"
-      ]
+      ],
+      "abilities": {
+        "primary": "rock-head",
+        "secondary": "pressure",
+        "hidden": "unnerve"
+      },
+      "teraType": "Rock"
     },
     "143": {
       "id": 143,
       "name": "Snorlax",
       "speciesKey": "SNORLAX",
-      "types": [
-        "Normal"
-      ],
+      "types": ["Normal"],
       "stats": {
         "hp": 160,
         "attack": 110,
@@ -27772,16 +28216,19 @@
         "wild_charge",
         "work_up",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "immunity",
+        "secondary": "thick-fat",
+        "hidden": "gluttony"
+      },
+      "teraType": "Normal"
     },
     "144": {
       "id": 144,
       "name": "Articuno",
       "speciesKey": "ARTICUNO",
-      "types": [
-        "Ice",
-        "Flying"
-      ],
+      "types": ["Ice", "Flying"],
       "stats": {
         "hp": 90,
         "attack": 85,
@@ -27999,16 +28446,18 @@
         "u_turn",
         "water_pulse",
         "weather_ball"
-      ]
+      ],
+      "abilities": {
+        "primary": "pressure",
+        "hidden": "snow-cloak"
+      },
+      "teraType": "Ice"
     },
     "145": {
       "id": 145,
       "name": "Zapdos",
       "speciesKey": "ZAPDOS",
-      "types": [
-        "Electric",
-        "Flying"
-      ],
+      "types": ["Electric", "Flying"],
       "stats": {
         "hp": 90,
         "attack": 90,
@@ -28226,16 +28675,18 @@
         "volt_switch",
         "weather_ball",
         "wild_charge"
-      ]
+      ],
+      "abilities": {
+        "primary": "pressure",
+        "hidden": "static"
+      },
+      "teraType": "Electric"
     },
     "146": {
       "id": 146,
       "name": "Moltres",
       "speciesKey": "MOLTRES",
-      "types": [
-        "Fire",
-        "Flying"
-      ],
+      "types": ["Fire", "Flying"],
       "stats": {
         "hp": 90,
         "attack": 100,
@@ -28452,15 +28903,18 @@
         "u_turn",
         "weather_ball",
         "will_o_wisp"
-      ]
+      ],
+      "abilities": {
+        "primary": "pressure",
+        "hidden": "flame-body"
+      },
+      "teraType": "Fire"
     },
     "147": {
       "id": 147,
       "name": "Dratini",
       "speciesKey": "DRATINI",
-      "types": [
-        "Dragon"
-      ],
+      "types": ["Dragon"],
       "stats": {
         "hp": 41,
         "attack": 64,
@@ -28636,15 +29090,18 @@
         "water_pulse",
         "waterfall",
         "whirlpool"
-      ]
+      ],
+      "abilities": {
+        "primary": "shed-skin",
+        "hidden": "marvel-scale"
+      },
+      "teraType": "Dragon"
     },
     "148": {
       "id": 148,
       "name": "Dragonair",
       "speciesKey": "DRAGONAIR",
-      "types": [
-        "Dragon"
-      ],
+      "types": ["Dragon"],
       "stats": {
         "hp": 61,
         "attack": 84,
@@ -28821,16 +29278,18 @@
         "waterfall",
         "weather_ball",
         "whirlpool"
-      ]
+      ],
+      "abilities": {
+        "primary": "shed-skin",
+        "hidden": "marvel-scale"
+      },
+      "teraType": "Dragon"
     },
     "149": {
       "id": 149,
       "name": "Dragonite",
       "speciesKey": "DRAGONITE",
-      "types": [
-        "Dragon",
-        "Flying"
-      ],
+      "types": ["Dragon", "Flying"],
       "stats": {
         "hp": 91,
         "attack": 134,
@@ -29059,15 +29518,18 @@
         "weather_ball",
         "whirlpool",
         "whirlwind"
-      ]
+      ],
+      "abilities": {
+        "primary": "inner-focus",
+        "hidden": "multiscale"
+      },
+      "teraType": "Dragon"
     },
     "150": {
       "id": 150,
       "name": "Mewtwo",
       "speciesKey": "MEWTWO",
-      "types": [
-        "Psychic"
-      ],
+      "types": ["Psychic"],
       "stats": {
         "hp": 106,
         "attack": 110,
@@ -29310,15 +29772,18 @@
         "weather_ball",
         "will_o_wisp",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "pressure",
+        "hidden": "unnerve"
+      },
+      "teraType": "Psychic"
     },
     "151": {
       "id": 151,
       "name": "Mew",
       "speciesKey": "MEW",
-      "types": [
-        "Psychic"
-      ],
+      "types": ["Psychic"],
       "stats": {
         "hp": 100,
         "attack": 100,
@@ -29711,7 +30176,11 @@
         "work_up",
         "x_scissor",
         "zen_headbutt"
-      ]
+      ],
+      "abilities": {
+        "primary": "synchronize"
+      },
+      "teraType": "Psychic"
     }
   }
 }

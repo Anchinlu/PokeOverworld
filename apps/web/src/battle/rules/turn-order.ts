@@ -42,6 +42,14 @@ export function calculateEffectiveSpeed(
 /**
  * Determines whether the player or enemy attacks first.
  */
+export const PHAZING_NEGATIVE_PRIORITY_MOVE_IDS = new Set([
+  'roar',
+  'whirlwind',
+  'dragon_tail',
+  'circle_throw',
+  'teleport',
+]);
+
 export function determineTurnOrder(
   playerPokemon: BattlerPokemon,
   playerMove: BattleMove,
@@ -55,6 +63,9 @@ export function determineTurnOrder(
 
   if (PROTECT_MOVE_IDS.has(playerMove.id.toLowerCase())) pPri = 4;
   if (PROTECT_MOVE_IDS.has(enemyMove.id.toLowerCase())) ePri = 4;
+
+  if (PHAZING_NEGATIVE_PRIORITY_MOVE_IDS.has(playerMove.id.toLowerCase())) pPri = -6;
+  if (PHAZING_NEGATIVE_PRIORITY_MOVE_IDS.has(enemyMove.id.toLowerCase())) ePri = -6;
 
   if (pPri !== ePri) {
     return pPri > ePri ? 'player' : 'enemy';

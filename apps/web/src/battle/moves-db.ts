@@ -261,4 +261,3 @@ export function getMoveDisplayNames(move: {
 
   return { nameVi: vi, nameEn: en };
 }
-

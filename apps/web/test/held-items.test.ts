@@ -855,9 +855,7 @@ describe('Held Item System (Trang bị & Vận hành vật phẩm Pokémon)', ()
     });
 
     it('sets 8 weather turns in battle when Rain Dance is used with Damp Rock', async () => {
-      const { applyStatusCategoryMove } = await import(
-        '../src/battle/rules/move-effect-engine'
-      );
+      const { applyStatusCategoryMove } = await import('../src/battle/rules/move-effect-engine');
       const rainMove: BattleMove = {
         id: 'rain_dance',
         name: 'Rain Dance',

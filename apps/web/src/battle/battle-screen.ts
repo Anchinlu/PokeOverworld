@@ -21,6 +21,7 @@ import { BattleTextOverlay } from './battle-text-overlay';
 import { pokemonCryPlayer } from '../ui/pokedex/pokemon-cry';
 import { battleBgmPlayer, battleSePlayer } from '../audio';
 import { BATTLE_ASSETS } from '../assets';
+import { battleAnimationPlayer } from './animation';
 
 export interface BattleScreenResult {
   outcome: 'caught' | 'victory' | 'fled' | 'defeated';
@@ -47,12 +48,13 @@ export class BattleScreen {
     playerPokemon: BattlerPokemon,
     wildPokemon: BattlerPokemon,
     environment: BattleEnvironment,
-    onComplete: (result: BattleScreenResult) => void
+    onComplete: (result: BattleScreenResult) => void,
+    isWild: boolean = true
   ) {
     this.onComplete = onComplete;
 
     // 1. Engine (pure game logic)
-    this.engine = new BattleEngine(playerPokemon, wildPokemon, environment);
+    this.engine = new BattleEngine(playerPokemon, wildPokemon, environment, undefined, isWild);
 
     // 2. State
     this.state = new BattleState(this.engine.rng);
@@ -117,10 +119,17 @@ export class BattleScreen {
     this.loop();
   }
 
-  private loop = (): void => {
+  private lastTimestamp = 0;
+
+  private loop = (timestamp?: number): void => {
     if (!this.state.isRunning) return;
 
-    this.state.updateTick();
+    const now = typeof timestamp === 'number' ? timestamp : performance.now();
+    const dtMs =
+      this.lastTimestamp > 0 ? Math.min(100, Math.max(1, now - this.lastTimestamp)) : 16.67;
+    this.lastTimestamp = now;
+
+    this.state.updateTick(dtMs);
 
     // Play wild Pokémon cry and shiny sparkle when it appears in the intro (introProgress >= 0.55)
     if (this.state.isIntro && this.state.introProgress >= 0.55 && !this.state.wildCryPlayed) {
@@ -177,6 +186,7 @@ export class BattleScreen {
     if (this.animFrameId) {
       cancelAnimationFrame(this.animFrameId);
     }
+    battleAnimationPlayer.stop();
     pokemonCryPlayer.stop();
     battleBgmPlayer.stopBgm(600);
     this.textOverlay.destroy();

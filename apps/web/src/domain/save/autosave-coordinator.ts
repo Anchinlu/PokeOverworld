@@ -14,10 +14,7 @@
  * - Fingerprinted party listener to prevent UI cursor movements from dirtying disk.
  */
 
-import {
-  saveGameRepository,
-  SaveGameRepository,
-} from './save-repository';
+import { saveGameRepository, SaveGameRepository } from './save-repository';
 import { DEFAULT_SAVE_SLOT, type SaveGameData } from './save-state';
 import { partyService, PartyService } from '../party/party-service';
 import { playerService, PlayerService } from '../player/player-service';
@@ -65,10 +62,10 @@ export class AutosaveCoordinator {
   private lastSaveTimestamp = 0;
   private saveSuccessCount = 0;
 
-  private debounceTimer: any = null;
-  private maxWaitTimer: any = null;
-  private tickerTimer: any = null;
-  private retryTimer: any = null;
+  private debounceTimer: ReturnType<typeof setTimeout> | null = null;
+  private maxWaitTimer: ReturnType<typeof setTimeout> | null = null;
+  private tickerTimer: ReturnType<typeof setInterval> | null = null;
+  private retryTimer: ReturnType<typeof setTimeout> | null = null;
   private retryAttempts = 0;
 
   private lastPlaytimeTimestamp = Date.now();
@@ -228,7 +225,9 @@ export class AutosaveCoordinator {
 
     // 2. Watchdog: check if battle locked while battle is actually over
     if (this.isBattleLocked && this.battlingProvider && !this.battlingProvider()) {
-      console.warn('[AutosaveCoordinator] Watchdog detected orphaned battle lock! Force unlocking.');
+      console.warn(
+        '[AutosaveCoordinator] Watchdog detected orphaned battle lock! Force unlocking.'
+      );
       this.unlockBattle();
     }
   }
@@ -257,7 +256,8 @@ export class AutosaveCoordinator {
     });
 
     // Tauri v2 Window Close Requested Hook
-    const isTauri = typeof window !== 'undefined' && ('__TAURI_INTERNALS__' in window || '__TAURI__' in window);
+    const isTauri =
+      typeof window !== 'undefined' && ('__TAURI_INTERNALS__' in window || '__TAURI__' in window);
     if (isTauri) {
       import('@tauri-apps/api/window')
         .then(({ getCurrentWindow }) => {
@@ -276,7 +276,10 @@ export class AutosaveCoordinator {
           }
         })
         .catch((tErr) => {
-          console.warn('[AutosaveCoordinator] Tauri onCloseRequested hook registration notice:', tErr);
+          console.warn(
+            '[AutosaveCoordinator] Tauri onCloseRequested hook registration notice:',
+            tErr
+          );
         });
     }
   }
@@ -401,7 +404,9 @@ export class AutosaveCoordinator {
           this.repository.cleanupLegacyKeys(this.slotId);
         }
       } else {
-        console.warn(`[AutosaveCoordinator] Save write failed (main: ${mainSuccess}, pc: ${pcSuccess}). Scheduling retry.`);
+        console.warn(
+          `[AutosaveCoordinator] Save write failed (main: ${mainSuccess}, pc: ${pcSuccess}). Scheduling retry.`
+        );
         this.scheduleRetry();
       }
 

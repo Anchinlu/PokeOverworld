@@ -1,9 +1,6 @@
 import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest';
 import { BATTLE_ASSETS } from '../src/assets';
-import {
-  BattleRenderer,
-  WEATHER_THEMES,
-} from '../src/battle/battle-renderer';
+import { BattleRenderer, WEATHER_THEMES } from '../src/battle/battle-renderer';
 import { BattleState } from '../src/battle/battle-state';
 import { BattleEngine } from '../src/battle/battle-engine';
 import { createBattler } from '../src/battle/battle-factory';

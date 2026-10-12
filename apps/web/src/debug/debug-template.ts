@@ -160,6 +160,13 @@ export function createDebugOverlayHtml(): string {
         </select>
       </div>
       <div class="actions-row" style="margin-top: 4px; display: flex; gap: 6px;">
+        <select id="selectBattleEnv" style="flex: 1.1; padding: 4px 6px; font-size: 11px; border-radius: 6px; background: rgba(30, 41, 59, 0.85); color: #fff; border: 1px solid rgba(255,255,255,0.18);" title="Chọn môi trường chiến đấu">
+          <option value="auto">🗺️ Môi trường: Tự động</option>
+          <option value="field">🌿 Cánh đồng (Field)</option>
+          <option value="forest">🌲 Rừng rậm (Forest)</option>
+          <option value="water">🌊 Sông biển (Water)</option>
+          <option value="mountain">⛰️ Núi non (Mountain)</option>
+        </select>
         <select id="selectBattleWeather" style="flex: 1; padding: 4px 6px; font-size: 11px; border-radius: 6px; background: rgba(30, 41, 59, 0.85); color: #fff; border: 1px solid rgba(255,255,255,0.18);" title="Chọn thời tiết trận đấu">
           <option value="none">🌤️ Thời tiết: Mặc định</option>
           <option value="sun">☀️ Nắng gắt (Sun)</option>
@@ -172,6 +179,8 @@ export function createDebugOverlayHtml(): string {
           <option value="fog">🌫️ Sương mù (Fog)</option>
         </select>
       </div>
+
+      <button class="btn-action-primary" id="btnOpenAnimGallery" style="margin-top: 6px; width: 100%; background: linear-gradient(135deg, #0284c7, #38bdf8); color: #0f172a; font-weight: 700; font-size: 11px; padding: 6px 10px; box-shadow: 0 2px 8px rgba(56,189,248,0.4);">🎬 Mở Gallery Test Battle Animation</button>
 
       <!-- Custom Bot Battle Spawner (Bot Test Chiêu Thức) -->
       <div class="bot-debug-box" style="margin-top: 6px; padding: 10px; border-radius: var(--radius-sm); background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(239, 68, 68, 0.4); display: flex; flex-direction: column; gap: 8px;">
@@ -293,7 +302,7 @@ export function createDebugOverlayHtml(): string {
         <!-- Full Item Packages -->
         <div class="actions-row" style="margin-top: 4px; display: flex; flex-direction: column; gap: 4px;">
           <button class="btn-action-primary" id="btnAddFullItems" style="font-size: 10.5px; padding: 5px 8px; width: 100%; background: linear-gradient(135deg, #a855f7, #7c3aed); box-shadow: 0 2px 8px rgba(168,85,247,0.35);" title="Cung cấp đầy đủ toàn bộ hơn 680 vật phẩm trong game (mỗi loại x1)">💎 Cung cấp Full Item (x1)</button>
-          <button class="btn-action-primary" id="btnAddAllMachines" style="font-size: 10.5px; padding: 5px 8px; width: 100%; background: linear-gradient(135deg, #0ea5e9, #0284c7); box-shadow: 0 2px 8px rgba(14,165,233,0.35);" title="Cung cấp đầy đủ 108 Đĩa Kỹ Thuật (TM01 - TM100 & HM01 - HM08) để dạy chiêu thức cho Pokémon">💿 Full Đĩa Kỹ Thuật TM/HM (x1)</button>
+          <button class="btn-action-primary" id="btnAddAllMachines" style="font-size: 10.5px; padding: 5px 8px; width: 100%; background: linear-gradient(135deg, #0ea5e9, #0284c7); box-shadow: 0 2px 8px rgba(14,165,233,0.35);" title="Cung cấp đầy đủ 237 Đĩa Kỹ Thuật (TM001 - TM229 & HM01 - HM08) để dạy chiêu thức cho Pokémon">💿 Full Đĩa Kỹ Thuật TM/HM (x1)</button>
         </div>
 
         <!-- Starter Item Packages -->

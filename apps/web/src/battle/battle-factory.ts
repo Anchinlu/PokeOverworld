@@ -27,7 +27,8 @@ export function createBattler(
   customIvs?: PokemonStatValues,
   customNature?: NatureName,
   customAbility?: string,
-  customMoves?: BattleMove[]
+  customMoves?: BattleMove[],
+  customAbilitySlot?: 'primary' | 'secondary' | 'hidden'
 ): BattlerPokemon {
   const data =
     pokemonCatalog.getBySpeciesKey(speciesKey) ?? pokemonCatalog.getBySpeciesKey('PIKACHU')!;
@@ -60,13 +61,46 @@ export function createBattler(
   const nature: NatureName =
     customNature ?? ALL_NATURES[defaultRng.nextInt(0, ALL_NATURES.length - 1)];
 
+  // Resolve Ability and AbilitySlot
+  let abilitySlot: 'primary' | 'secondary' | 'hidden' = customAbilitySlot ?? 'primary';
+  let chosenAbility = customAbility;
+
+  if (customAbility) {
+    if (data.abilities) {
+      if (customAbility === data.abilities.hidden) {
+        abilitySlot = 'hidden';
+      } else if (customAbility === data.abilities.secondary) {
+        abilitySlot = 'secondary';
+      } else {
+        abilitySlot = 'primary';
+      }
+    }
+  } else if (data.abilities) {
+    if (customAbilitySlot) {
+      chosenAbility = data.abilities[customAbilitySlot] ?? data.abilities.primary;
+    } else if (data.abilities.secondary && defaultRng.next() < 0.5) {
+      abilitySlot = 'secondary';
+      chosenAbility = data.abilities.secondary;
+    } else {
+      abilitySlot = 'primary';
+      chosenAbility = data.abilities.primary;
+    }
+  } else {
+    chosenAbility = data.ability ?? 'none';
+  }
+
   return {
     id: data.id,
     name: data.name,
     speciesKey: data.speciesKey,
-    ability: customAbility ?? data.ability ?? 'none',
+    ability: chosenAbility ?? 'none',
+    abilitySlot,
     isShiny,
     types: [...data.types],
+    teraType: data.teraType ?? data.types[0] ?? 'Normal',
+    originalTypes: [...data.types],
+    isTerastallized: false,
+    canTerastallize: true,
     level,
     currentHp: maxHp,
     maxHp,
@@ -106,6 +140,7 @@ export function getBattleEnvironment(
 ): BattleEnvironment {
   if (isNearWater || zone === 'wetland') {
     return {
+      preset: 'water',
       background: 'Water.png',
       enemyBase: 'Water.png',
       playerBase: 'Water.png',
@@ -114,22 +149,26 @@ export function getBattleEnvironment(
   }
 
   switch (zone) {
-    case 'dense_forest':
+    case 'dense_forest': {
       return {
+        preset: 'forest',
         background: 'Forest.png',
         enemyBase: 'ForestGrass.png',
         playerBase: 'ForestGrass.png',
         foregroundOverlay: 'grass_tall',
       };
+    }
     case 'hill_edge':
       return {
+        preset: 'mountain',
         background: 'Mountain.png',
-        enemyBase: 'MountainGrass.png',
-        playerBase: 'MountainGrass.png',
+        enemyBase: 'Mountain.png',
+        playerBase: 'Mountain.png',
         foregroundOverlay: 'mountain_rocks',
       };
     case 'dryland':
       return {
+        preset: 'field',
         background: 'Field.png',
         enemyBase: 'FieldDirt.png',
         playerBase: 'FieldDirt.png',
@@ -138,6 +177,7 @@ export function getBattleEnvironment(
     case 'meadow':
     default:
       return {
+        preset: 'field',
         background: 'Field.png',
         enemyBase: 'FieldGrass.png',
         playerBase: 'FieldGrass.png',

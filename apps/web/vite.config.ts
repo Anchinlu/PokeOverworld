@@ -210,11 +210,10 @@ export default defineConfig({
           ) {
             return 'pokemon-data';
           }
-          if (
-            normalized.includes('moves-db.json') ||
-            normalized.includes('move-animations-db.json') ||
-            normalized.includes('/battle/moves-db')
-          ) {
+          if (normalized.includes('move-animations-db.json')) {
+            return 'move-animations-data';
+          }
+          if (normalized.includes('moves-db.json') || normalized.includes('/battle/moves-db')) {
             return 'moves-data';
           }
           if (normalized.includes('items-db.json') || normalized.includes('/data/items-db')) {

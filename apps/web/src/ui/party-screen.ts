@@ -9,7 +9,12 @@ import type { PartyPokemon } from '../domain/party/party-state';
 import { PARTY_ASSETS, POKEMON_ASSETS } from '../assets';
 import { showBerryToast } from './toast';
 import { PokemonSpriteAnimator } from './pokedex';
-import { getAvailableMovesForPokemon, MOVES_DB, getMoveById, getMoveDisplayNames } from '../battle/moves-db';
+import {
+  getAvailableMovesForPokemon,
+  MOVES_DB,
+  getMoveById,
+  getMoveDisplayNames,
+} from '../battle/moves-db';
 import { TYPE_ICO_INDICES } from '../battle/type-chart';
 import type { BattleMove } from '../battle/types';
 import { battleSePlayer } from '../audio';
@@ -21,7 +26,11 @@ import { getAbilityDisplay } from '../battle/rules/ability-engine';
 import { canPokemonEvolve, getAvailableEvolutions } from '../domain/pokemon/evolution-rules';
 import { EvolutionScreen } from './evolution-screen';
 import { pokemonCatalog } from '../data';
-import { isMoveTargetItem, isTmItem, canUseItemOnPartyPokemon } from '../domain/inventory/item-effects';
+import {
+  isMoveTargetItem,
+  isTmItem,
+  canUseItemOnPartyPokemon,
+} from '../domain/inventory/item-effects';
 import { getItemEffectDef } from '../domain/inventory/item-catalog-effects';
 
 export interface BattleSelectOptions {
@@ -561,7 +570,10 @@ export class PartyScreen {
                 const canUseCheck = canUseItemOnPartyPokemon(currentItem, pk);
                 if (!canUseCheck.canUse) {
                   battleSePlayer.playSound('Audio/SE/buzzer.ogg', 0.8);
-                  showBerryToast(`⚠️ ${canUseCheck.reason || 'Pokémon không thể học chiêu thức này!'}`, '#ef4444');
+                  showBerryToast(
+                    `⚠️ ${canUseCheck.reason || 'Pokémon không thể học chiêu thức này!'}`,
+                    '#ef4444'
+                  );
                   return;
                 }
               }
@@ -680,7 +692,8 @@ export class PartyScreen {
       if (!this.isOpen) return;
 
       if (e.code === 'Escape' || e.code === 'KeyP') {
-        const moveSelectModal = this.backdropEl?.querySelector<HTMLElement>('#partyMoveSelectModal');
+        const moveSelectModal =
+          this.backdropEl?.querySelector<HTMLElement>('#partyMoveSelectModal');
         if (moveSelectModal && moveSelectModal.style.display !== 'none') {
           this.closeMoveSelectModal();
           e.preventDefault();
@@ -1299,7 +1312,10 @@ export class PartyScreen {
     this.summaryKeyListener = (e: KeyboardEvent) => {
       if (e.key === 'r' || e.key === 'R') {
         const target = e.target as HTMLElement | null;
-        if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+        if (
+          target &&
+          (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)
+        ) {
           return;
         }
         if (btnEvolve && btnEvolve.style.display !== 'none') {
@@ -1815,7 +1831,8 @@ export class PartyScreen {
       // TM / HM Move Teaching & Replacement Interface
       // =========================================================================
       const newMoveTypeKey = (newMove.type || 'normal').toLowerCase();
-      const newMoveTypeNameVi = TYPE_NAME_VI[newMoveTypeKey] || newMove.type?.toUpperCase() || 'THƯỜNG';
+      const newMoveTypeNameVi =
+        TYPE_NAME_VI[newMoveTypeKey] || newMove.type?.toUpperCase() || 'THƯỜNG';
       const newMoveTypeIconIdx = STORAGE_TYPE_INDICES[newMoveTypeKey] ?? 0;
       const newMoveIconY = newMoveTypeIconIdx * 28;
       const newMoveCatKey = (newMove.category || 'physical').toLowerCase();
@@ -1853,7 +1870,7 @@ export class PartyScreen {
             <span class="preview-name-vi">${newMoveNames.nameVi}</span>
             ${newMoveNames.nameEn ? `<span class="preview-name-en">(${newMoveNames.nameEn})</span>` : ''}
           </div>
-          ${(newMove.descriptionVi || newMove.description) ? `<div class="preview-desc-text">"${newMove.descriptionVi || newMove.description}"</div>` : ''}
+          ${newMove.descriptionVi || newMove.description ? `<div class="preview-desc-text">"${newMove.descriptionVi || newMove.description}"</div>` : ''}
         </div>
         <div class="preview-col-stats">
           <div class="stat-pill"><span>Uy lực:</span> <strong>${newMove.power > 0 ? newMove.power : '--'}</strong></div>
@@ -2016,9 +2033,15 @@ export class PartyScreen {
         row.addEventListener('click', () => {
           if (!isEligible) {
             if (def?.restorePp && isPpFull) {
-              showBerryToast(`⚠️ Chiêu thức ${moveNames.nameVi} đã đầy PP (${move.pp}/${move.maxPp})!`, '#f59e0b');
+              showBerryToast(
+                `⚠️ Chiêu thức ${moveNames.nameVi} đã đầy PP (${move.pp}/${move.maxPp})!`,
+                '#f59e0b'
+              );
             } else if (def?.boostMaxPp && isMaxPpUp) {
-              showBerryToast(`⚠️ Chiêu thức ${moveNames.nameVi} đã đạt giới hạn PP tối đa (3/3)!`, '#f59e0b');
+              showBerryToast(
+                `⚠️ Chiêu thức ${moveNames.nameVi} đã đạt giới hạn PP tối đa (3/3)!`,
+                '#f59e0b'
+              );
             }
             battleSePlayer.playSound('Audio/SE/buzzer.ogg', 0.8);
             return;

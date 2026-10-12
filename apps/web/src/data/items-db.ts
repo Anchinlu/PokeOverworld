@@ -29,9 +29,7 @@ export function getAllItems(): ItemData[] {
 export function getItemById(id: string): ItemData | undefined {
   if (!id) return undefined;
   return (
-    ITEMS_DB[id] ||
-    ITEMS_DB[id.toLowerCase()] ||
-    ITEMS_DB[id.toLowerCase().replace(/_/g, '-')]
+    ITEMS_DB[id] || ITEMS_DB[id.toLowerCase()] || ITEMS_DB[id.toLowerCase().replace(/_/g, '-')]
   );
 }
 

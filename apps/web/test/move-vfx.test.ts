@@ -5,6 +5,7 @@ import {
   TYPE_FALLBACK_VFX,
   moveVfxCache,
   isSelfTargetMove,
+  clampMoveVfxCenter,
 } from '../src/battle/move-vfx';
 import { MoveAnimationManager } from '../src/battle/move-animation-manager';
 import { BattleState } from '../src/battle/battle-state';
@@ -168,6 +169,27 @@ describe('Move Visual FX (VFX) & Animation Engine', () => {
         maxPp: 10,
       });
       expect(resolveMoveVfx(recover)?.target).toBe('attacker');
+    });
+
+    it('keeps Energy Ball mapped to the travelling projectile VFX definition', () => {
+      const energyBall = defMove({
+        id: 'energy_ball',
+        name: 'Energy Ball',
+        type: 'Grass',
+        category: 'special',
+        power: 90,
+        accuracy: 100,
+        pp: 10,
+        maxPp: 10,
+      });
+
+      expect(resolveMoveVfx(energyBall)?.target).toBe('projectile');
+      expect(resolveMoveVfx(energyBall)?.scale).toBe(1.1);
+    });
+
+    it('keeps legacy projectile cells inside the battle viewport', () => {
+      expect(clampMoveVfxCenter(130, 215, 173, 173, 512, 288)).toEqual({ x: 130, y: 201.5 });
+      expect(clampMoveVfxCenter(380, 115, 173, 173, 512, 288)).toEqual({ x: 380, y: 115 });
     });
 
     it('resolves authentic animations from Essentials database (e.g. discharge, future_sight)', () => {
@@ -597,14 +619,86 @@ describe('Move Visual FX (VFX) & Animation Engine', () => {
 
   describe('Self-Targeting Move Animations (Protect, Buffs, Recovery, Screens)', () => {
     it('classifies self-targeting moves correctly with isSelfTargetMove', () => {
-      const protect = defMove({ id: 'protect', name: 'Protect', type: 'Normal', category: 'status', power: 0, accuracy: 100, pp: 10, maxPp: 10 });
-      const detect = defMove({ id: 'detect', name: 'Detect', type: 'Fighting', category: 'status', power: 0, accuracy: 100, pp: 5, maxPp: 5 });
-      const swordsDance = defMove({ id: 'swords_dance', name: 'Swords Dance', type: 'Normal', category: 'status', power: 0, accuracy: 100, pp: 20, maxPp: 20 });
-      const ironDefense = defMove({ id: 'iron_defense', name: 'Iron Defense', type: 'Steel', category: 'status', power: 0, accuracy: 100, pp: 15, maxPp: 15 });
-      const calmMind = defMove({ id: 'calm_mind', name: 'Calm Mind', type: 'Psychic', category: 'status', power: 0, accuracy: 100, pp: 20, maxPp: 20 });
-      const substitute = defMove({ id: 'substitute', name: 'Substitute', type: 'Normal', category: 'status', power: 0, accuracy: 100, pp: 10, maxPp: 10 });
-      const recover = defMove({ id: 'recover', name: 'Recover', type: 'Normal', category: 'status', power: 0, accuracy: 100, pp: 10, maxPp: 10 });
-      const tackle = defMove({ id: 'tackle', name: 'Tackle', type: 'Normal', category: 'physical', power: 40, accuracy: 100, pp: 35, maxPp: 35 });
+      const protect = defMove({
+        id: 'protect',
+        name: 'Protect',
+        type: 'Normal',
+        category: 'status',
+        power: 0,
+        accuracy: 100,
+        pp: 10,
+        maxPp: 10,
+      });
+      const detect = defMove({
+        id: 'detect',
+        name: 'Detect',
+        type: 'Fighting',
+        category: 'status',
+        power: 0,
+        accuracy: 100,
+        pp: 5,
+        maxPp: 5,
+      });
+      const swordsDance = defMove({
+        id: 'swords_dance',
+        name: 'Swords Dance',
+        type: 'Normal',
+        category: 'status',
+        power: 0,
+        accuracy: 100,
+        pp: 20,
+        maxPp: 20,
+      });
+      const ironDefense = defMove({
+        id: 'iron_defense',
+        name: 'Iron Defense',
+        type: 'Steel',
+        category: 'status',
+        power: 0,
+        accuracy: 100,
+        pp: 15,
+        maxPp: 15,
+      });
+      const calmMind = defMove({
+        id: 'calm_mind',
+        name: 'Calm Mind',
+        type: 'Psychic',
+        category: 'status',
+        power: 0,
+        accuracy: 100,
+        pp: 20,
+        maxPp: 20,
+      });
+      const substitute = defMove({
+        id: 'substitute',
+        name: 'Substitute',
+        type: 'Normal',
+        category: 'status',
+        power: 0,
+        accuracy: 100,
+        pp: 10,
+        maxPp: 10,
+      });
+      const recover = defMove({
+        id: 'recover',
+        name: 'Recover',
+        type: 'Normal',
+        category: 'status',
+        power: 0,
+        accuracy: 100,
+        pp: 10,
+        maxPp: 10,
+      });
+      const tackle = defMove({
+        id: 'tackle',
+        name: 'Tackle',
+        type: 'Normal',
+        category: 'physical',
+        power: 40,
+        accuracy: 100,
+        pp: 35,
+        maxPp: 35,
+      });
 
       expect(isSelfTargetMove(protect)).toBe(true);
       expect(isSelfTargetMove(detect)).toBe(true);
@@ -617,10 +711,46 @@ describe('Move Visual FX (VFX) & Animation Engine', () => {
     });
 
     it('resolves self moves to target: "attacker" so animations render on the user instead of opponent', () => {
-      const protect = defMove({ id: 'protect', name: 'Protect', type: 'Normal', category: 'status', power: 0, accuracy: 100, pp: 10, maxPp: 10 });
-      const detect = defMove({ id: 'detect', name: 'Detect', type: 'Fighting', category: 'status', power: 0, accuracy: 100, pp: 5, maxPp: 5 });
-      const swordsDance = defMove({ id: 'swords_dance', name: 'Swords Dance', type: 'Normal', category: 'status', power: 0, accuracy: 100, pp: 20, maxPp: 20 });
-      const substitute = defMove({ id: 'substitute', name: 'Substitute', type: 'Normal', category: 'status', power: 0, accuracy: 100, pp: 10, maxPp: 10 });
+      const protect = defMove({
+        id: 'protect',
+        name: 'Protect',
+        type: 'Normal',
+        category: 'status',
+        power: 0,
+        accuracy: 100,
+        pp: 10,
+        maxPp: 10,
+      });
+      const detect = defMove({
+        id: 'detect',
+        name: 'Detect',
+        type: 'Fighting',
+        category: 'status',
+        power: 0,
+        accuracy: 100,
+        pp: 5,
+        maxPp: 5,
+      });
+      const swordsDance = defMove({
+        id: 'swords_dance',
+        name: 'Swords Dance',
+        type: 'Normal',
+        category: 'status',
+        power: 0,
+        accuracy: 100,
+        pp: 20,
+        maxPp: 20,
+      });
+      const substitute = defMove({
+        id: 'substitute',
+        name: 'Substitute',
+        type: 'Normal',
+        category: 'status',
+        power: 0,
+        accuracy: 100,
+        pp: 10,
+        maxPp: 10,
+      });
 
       expect(resolveMoveVfx(protect)?.target).toBe('attacker');
       expect(resolveMoveVfx(detect)?.target).toBe('attacker');
@@ -640,16 +770,25 @@ describe('Move Visual FX (VFX) & Animation Engine', () => {
       } as unknown as HTMLCanvasElement;
 
       const controller = new BattleController(state, engine, mockCanvas, () => {});
-      const protect = defMove({ id: 'protect', name: 'Protect', type: 'Normal', category: 'status', power: 0, accuracy: 100, pp: 10, maxPp: 10 });
+      const protect = defMove({
+        id: 'protect',
+        name: 'Protect',
+        type: 'Normal',
+        category: 'status',
+        power: 0,
+        accuracy: 100,
+        pp: 10,
+        maxPp: 10,
+      });
 
-      // 1. Player uses Protect -> animation must be positioned at playerCenter (130, 215)
-      (controller as any).playMoveVfx(protect, 'player', () => {});
+      // 1. Player uses Protect -> legacy VFX must be positioned at playerCenter (130, 215)
+      (controller as any).playLegacyMoveVfx(protect, 'player', () => {});
       expect(state.activeMoveVfx).toBeDefined();
       expect(state.activeMoveVfx?.targetX).toBe(130);
       expect(state.activeMoveVfx?.targetY).toBe(215);
 
-      // 2. Enemy uses Protect -> animation must be positioned at enemyCenter (380, 115)
-      (controller as any).playMoveVfx(protect, 'enemy', () => {});
+      // 2. Enemy uses Protect -> legacy VFX must be positioned at enemyCenter (380, 115)
+      (controller as any).playLegacyMoveVfx(protect, 'enemy', () => {});
       expect(state.activeMoveVfx).toBeDefined();
       expect(state.activeMoveVfx?.targetX).toBe(380);
       expect(state.activeMoveVfx?.targetY).toBe(115);

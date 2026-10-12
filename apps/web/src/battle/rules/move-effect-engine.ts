@@ -21,7 +21,12 @@ import { getStatusImmunity } from './status-engine';
 import { AbilityEngine } from './ability-engine';
 import { getWeatherAccuracyOverride } from './environment';
 import { getSideHazards, getSideScreens } from './hazard-engine';
-import { consumeBerry, isBerryItem, getHeldItemDisplayName, HeldItemEngine } from './held-item-engine';
+import {
+  consumeBerry,
+  isBerryItem,
+  getHeldItemDisplayName,
+  HeldItemEngine,
+} from './held-item-engine';
 
 export const SOUND_BASED_MOVE_IDS = new Set([
   'growl',
@@ -730,8 +735,31 @@ export function applyStatusCategoryMove(
     }
   } else if (moveId === 'baton_pass') {
     extraMsg += ` ${attacker.name} chuẩn bị truyền lại sức mạnh và chuyển lượt cho đồng đội!`;
+  } else if (moveId === 'parting_shot') {
+    extraMsg += ` ${attacker.name} làm giảm chỉ số của ${defender.name} rồi rút lui!`;
+  } else if (moveId === 'chilly_reception') {
+    if (environment) {
+      environment.weather = { type: 'hail', turnsLeft: 5 };
+    }
+    extraMsg += ` ${attacker.name} tạo ra bão tuyết và chuẩn bị đổi chỗ cho đồng đội!`;
+  } else if (moveId === 'shed_tail') {
+    const cost = Math.floor(attacker.maxHp / 2);
+    if (attacker.currentHp <= cost) {
+      extraMsg += ` Nhưng ${attacker.name} không đủ HP để rụng đuôi tạo Thế Thân!`;
+    } else {
+      attacker.currentHp -= cost;
+      attacker.substituteHp = Math.floor(attacker.maxHp / 4);
+      extraMsg += ` ${attacker.name} hy sinh nửa lượng HP để rụng đuôi tạo Thế Thân cho đồng đội!`;
+    }
   } else if (moveId === 'roar' || moveId === 'whirlwind') {
-    if (AbilityEngine.normalize(defender.ability) === 'suctioncups' || defender.isIngrained) {
+    const isSoundproof =
+      moveId === 'roar' && AbilityEngine.normalize(defender.ability) === 'soundproof';
+    if (isSoundproof) {
+      extraMsg += ` Nhưng đặc tính Cách Âm của ${defender.name} ngăn chặn chiêu thức âm thanh!`;
+    } else if (
+      AbilityEngine.normalize(defender.ability) === 'suctioncups' ||
+      defender.isIngrained
+    ) {
       extraMsg += ` Nhưng ${defender.name} bám chặt vào mặt đất nên không bị thổi bay!`;
     } else {
       const verb = moveId === 'roar' ? 'gầm vang xua đuổi' : 'thổi bay';

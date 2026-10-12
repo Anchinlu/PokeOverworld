@@ -313,10 +313,7 @@ export class PartyService {
    * Syncs the end-of-battle state (HP, PP, status, EXP gained) back into the corresponding PartyPokemon.
    * Also distributes Exp. Share to other eligible party members if held or present in bag.
    */
-  public syncBattleResult(
-    battler: BattlerPokemon,
-    expGained = 0
-  ): BattleSyncResult {
+  public syncBattleResult(battler: BattlerPokemon, expGained = 0): BattleSyncResult {
     // Find the matching pokemon strictly by UID or fallback to species and level without arbitrary pokemon[0] overwrite
     const partyMember =
       (battler.uid ? this.state.pokemon.find((p) => p.uid === battler.uid) : null) ??
@@ -366,8 +363,7 @@ export class PartyService {
 
     if (expGained > 0) {
       const hasExpShareInBag =
-        inventoryService.hasItem('exp-share') ||
-        inventoryService.hasItem('expshare');
+        inventoryService.hasItem('exp-share') || inventoryService.hasItem('expshare');
       const hasExpCharm = inventoryService.hasItem('exp-charm');
 
       for (const pk of this.state.pokemon) {

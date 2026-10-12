@@ -53,7 +53,6 @@ function createMockBattler(partial: Partial<BattlerPokemon> = {}): MockBattlerPo
     status: 'none',
     statusTurns: 0,
     sleepTurns: 0,
-    toxicTurns: 0,
     confusionTurns: 0,
     isFainted: false,
     ...partial,

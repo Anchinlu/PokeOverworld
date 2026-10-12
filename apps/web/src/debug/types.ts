@@ -26,7 +26,7 @@ export interface DebugMonitorUpdate {
  */
 export interface DebugBridge {
   // Battle & Custom Bot Spawner
-  startTestBattle(overlay?: string, isShiny?: boolean, weather?: string): void;
+  startTestBattle(overlay?: string, isShiny?: boolean, weather?: string, envPreset?: string): void;
   startCustomBotBattle(config: CustomBotConfig): void;
 
   // Bag & Items

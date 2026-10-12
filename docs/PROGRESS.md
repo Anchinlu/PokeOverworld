@@ -1,4 +1,104 @@
-## Cập nhật lần cuối: 2026-10-10 (Tiến Hóa Bằng Đá / Vật Phẩm Yêu Cầu Cầm Nắm & Tiêu Hao Khi Tiến Hóa)
+## Cập nhật lần cuối: 2026-10-12 (Chuẩn Hóa Tọa Độ 4-Focus Animation Essentials, Battler Geometry & Khắc Phục Lỗi TypeScript Test Suite)
+
+### 0.98. Chuẩn Hóa Tọa Độ 4-Focus Battle Animation Theo Chuẩn Essentials & Sửa Lỗi TypeScript Test Suite:
+
+- **Trạng thái:** Hoàn thành 100%. Chuỗi CI (`npm run ci`) đạt chuẩn 100% (Validate schemas, ESLint 0 errors / 0 warnings, Prettier 100%, Typecheck sạch 0 lỗi, 47/47 tệp test - 557/557 tests pass, Production build thành công).
+- **Yêu cầu & Vấn đề giải quyết:**
+  1. **Lỗi Lệch Tọa Độ Hoạt Họa Trận Đấu (Battle Animation Misplacement):**
+     - Các hoạt họa như Flamethrower, Water Gun, Bite/Crunch bị văng ra rìa màn hình hoặc gắn nhầm vào bản thân người thi triển thay vì mục tiêu.
+     - Nguyên nhân: Trước đó mọi focus (`user`, `target`, `both`) đều bị chiếu sai qua phép biến đổi đường thẳng User $\to$ Target và cộng thêm `SRC_USER`/`SRC_TARGET`, đồng thời đảo ngược tọa độ X toàn cục cho đối thủ khiến các hoạt họa target bị đẩy ra ngoài vùng hiển thị 512×288.
+  2. **Chuẩn Hóa Hệ Thống Tọa Độ 4-Focus Chuẩn Pokémon Essentials ([coordinate-transformer.ts](file:///e:/Pokemon/apps/web/src/battle/animation/coordinate-transformer.ts)):**
+     - Tái cấu trúc logic tính toán tọa độ theo đúng chuẩn Essentials (`007_BattleAnimationPlayer.rb`):
+       + `focus: 'user'`: Neo trực tiếp vào vị trí người ra đòn (`userPos.x + (celX - SRC_USER.x)`, `userPos.y + (celY - SRC_USER.y)`).
+       + `focus: 'target'`: Neo trực tiếp vào vị trí mục tiêu (`targetPos.x + (celX - SRC_TARGET.x)`, `targetPos.y + (celY - SRC_TARGET.y)`).
+       + `focus: 'both'`: Nội suy tuyến tính theo quỹ đạo ảo kết nối giữa user và target (`transformPoint(SRC_USER, SRC_TARGET, userPos, targetPos, celX, celY)`).
+       + `focus: 'screen'`: Co giãn trực tiếp từ canvas ảo 512×384 sang viewport 512×288 (`(celX * canvasWidth) / 512`, `(celY * canvasHeight) / 384`).
+     - Chuẩn hóa hình học vị trí Pokémon (`BattlerGeometry`):
+       + Export `DEFAULT_PLAYER_GEOMETRY`, `DEFAULT_ENEMY_GEOMETRY` và `getBattlerCenter()`.
+       + Loại bỏ việc đảo `-celX` toàn cục đối với đối thủ.
+  3. **Tối Ưu Hiển Thị & Visual QA Gallery ([cel-renderer.ts](file:///e:/Pokemon/apps/web/src/battle/animation/cel-renderer.ts), [animation-gallery.ts](file:///e:/Pokemon/apps/web/src/battle/animation/animation-gallery.ts)):**
+     - Đảo ngược cờ `mirror` của cel đối với đối thủ **chỉ khi** `cel.focus === 'both'` (đảo chiều đường đạn projectile), bảo toàn nguyên vẹn hướng lật gốc cho các cels thuộc `user`, `target`, và `screen`.
+     - Gallery chuyển sang canvas 512×288 kèm CSS pixelated scaling và đồng bộ bục đứng platform theo đúng battler center.
+  4. **Khắc Phục Lỗi TypeScript Test Suite ([screens-trickroom-substitute.test.ts](file:///e:/Pokemon/apps/web/test/screens-trickroom-substitute.test.ts)):**
+     - Loại bỏ thuộc tính không hợp lệ `toxicTurns: 0` trên `MockBattlerPokemon`.
+  5. **Bộ Unit Test Chuyên Sâu ([battle-timeline-animations.test.ts](file:///e:/Pokemon/apps/web/test/battle-timeline-animations.test.ts)):**
+     - Bổ sung 5 bài test thực tế cho các chiêu: Flamethrower (focus target), Water Gun (focus both), Absorb (focus user/target), Thunderbolt, Bite/Crunch, battler geometry và screen focus scaling. Toàn bộ 15/15 tests pass.
+
+---
+
+## Cập nhật trước đó: 2026-10-11 (Hệ Thống Battle Animation Timeline Essentials/EBDX, Trích Xuất 311 Animations, 212 Moves & Gallery Visual QA)
+
+### 0.97. Triển Khai Hệ Thống Battle Animation Timeline (Essentials/EBDX Engine):
+
+- **Trạng thái:** Hoàn thành 100% tất cả các phase. Chuỗi CI (`npm run ci`) đạt chuẩn 100% (Validate schemas, ESLint 0 errors / 0 warnings, Prettier 100%, Typecheck sạch, 47/47 tệp test - 552/552 tests pass, Production build thành công).
+- **Yêu cầu & Mục tiêu thực hiện:**
+  1. **Không đọc trực tiếp Marshal trong TypeScript runtime:**
+     - Tạo công cụ chuyển đổi ngoại tuyến [scripts/animation/import_source_animations.py](file:///e:/Pokemon/scripts/animation/import_source_animations.py) với monkey-patch Ruby Marshal reader giải quyết triệt để lỗi unmarshal `TYPE_UCLASS`.
+     - Xuất thành công toàn bộ 311 animations từ `PkmnAnimations.rxdata` thành 311 file JSON riêng lẻ tại `packages/game-data/animations/[id].json` kèm `manifest.json`.
+     - Xuất mapping 212 moves tiêu chuẩn và 18 biến thể `opponentMoves` sang [move-animation-map.json](file:///e:/Pokemon/packages/game-data/move-animation-map.json).
+     - Trích xuất bảng fallback 17 hệ nguyên bản từ `animationmap.ebdx` sang [animation-fallbacks.json](file:///e:/Pokemon/packages/game-data/animation-fallbacks.json).
+     - Sinh metadata atlas hình học chính xác cho 95 sprite sheet tại [animation-atlas.json](file:///e:/Pokemon/packages/game-data/animation-atlas.json).
+  2. **Kiến Trúc Runtime Animation Player Độc Lập Refresh Rate:**
+     - Xây dựng module dùng chung [apps/web/src/battle/animation/](file:///e:/Pokemon/apps/web/src/battle/animation/):
+       + [types.ts](file:///e:/Pokemon/apps/web/src/battle/animation/types.ts): Định nghĩa kiểu dữ liệu `AnimationCel`, `AnimationFrame`, `AnimationTimingEvent`, `BattleAnimationDefinition`, `BattleAnimationRequest`.
+       + [animation-registry.ts](file:///e:/Pokemon/apps/web/src/battle/animation/animation-registry.ts): Single source of truth phân giải `moveId` -> `animationId` với lazy loading glob từng animation, hỗ trợ cả định dạng gạch dưới và viết liền, opponent variants, và fallback theo hệ/category.
+       + [animation-player.ts](file:///e:/Pokemon/apps/web/src/battle/animation/animation-player.ts): Player tính frame theo elapsed time (`elapsedMs * fps`), độc lập hoàn toàn với tần số quét (60Hz, 120Hz, 144Hz), phân tách rõ ràng lớp hiển thị trước và sau Pokémon battler (`renderBehind`, `renderAbove`).
+       + [cel-renderer.ts](file:///e:/Pokemon/apps/web/src/battle/animation/cel-renderer.ts): Render từng cel lên canvas: vị trí, góc xoay, tỷ lệ phóng to/thu nhỏ, lật gương khi địch dùng, độ trong suốt, blend mode (normal, additive, multiply) và hiệu ứng chớp màu (flash).
+       + [coordinate-transformer.ts](file:///e:/Pokemon/apps/web/src/battle/animation/coordinate-transformer.ts): Chuyển đổi tọa độ nguồn (user, target, both, screen) sang tọa độ canvas thực tế của người chơi `(130, 215)` và đối thủ `(380, 115)`.
+       + [layer-manager.ts](file:///e:/Pokemon/apps/web/src/battle/animation/layer-manager.ts): Phân loại cels theo độ sâu ưu tiên (priority 0/2 vẽ sau battler, priority 1/3 vẽ trước battler).
+       + [timing-events.ts](file:///e:/Pokemon/apps/web/src/battle/animation/timing-events.ts): Xử lý âm thanh SE và chớp màn hình / Pokémon theo đúng timeline frame.
+       + [animation-assets.ts](file:///e:/Pokemon/apps/web/src/battle/animation/animation-assets.ts): Nạp trước và cache bitmap thông qua Asset Registry an toàn trên cả trình duyệt và Vitest/Node.
+  3. **Tích Hợp Battle Screen & Tách Biệt Nghiêm Ngặt Battle Logic:**
+     - Kết nối [battle-controller.ts](file:///e:/Pokemon/apps/web/src/battle/battle-controller.ts), [battle-state.ts](file:///e:/Pokemon/apps/web/src/battle/battle-state.ts), [battle-renderer.ts](file:///e:/Pokemon/apps/web/src/battle/battle-renderer.ts) và [battle-screen.ts](file:///e:/Pokemon/apps/web/src/battle/battle-screen.ts).
+     - Truyền `dtMs` tính từ elapsed timestamp trong vòng lặp game, loại bỏ hoàn toàn việc đếm frame theo số lần gọi `requestAnimationFrame`.
+     - Phân tầng hiển thị đa lớp: `renderBehind` vẽ sau nền nhưng trước Pokémon battler; `renderAbove` vẽ đè lên Pokémon battler.
+     - Giữ trọn vẹn 100% tính độc lập của logic sát thương, status, Ability và turn order — animation player chỉ nhận request và phát callback `onHit` / `onComplete`.
+  4. **Phòng Thử Nghiệm Visual QA Debug Gallery ([animation-gallery.ts](file:///e:/Pokemon/apps/web/src/battle/animation/animation-gallery.ts)):**
+     - Tạo giao diện Visual QA Gallery với danh sách toàn bộ 212 chiêu thức, nút Play/Pause/Replay/Next/Prev frame.
+     - Tùy chọn phe tấn công (Player / Enemy mirror), thanh trượt tua frame trực quan (scrubber), tùy chỉnh tốc độ phát (0.25x - 2.0x).
+     - HUD hiển thị chi tiết: Animation ID, Graphic Asset Key, Atlas Geometry, Thời lượng (ms), Số cels đang hoạt động tại frame hiện tại kèm thông số pattern, góc xoay, độ phóng, blend mode, và focus point.
+     - Tích hợp nút mở nhanh trong menu Debug (`🎬 Mở Gallery Test Battle Animation`) và lệnh `window.__openAnimationGallery()`.
+  5. **Kiểm Thử Toàn Diện & CI Gate:**
+     - Bộ unit test chuyên biệt [battle-timeline-animations.test.ts](file:///e:/Pokemon/apps/web/test/battle-timeline-animations.test.ts) kiểm tra toàn diện 10 tiêu chí: Mapping, Biến thể đối thủ, Fallback hệ/category, Kích thước Atlas, Tọa độ chiếu, Phân tầng Layer, Tính độc lập tần số quét.
+     - Toàn bộ 47 tệp test suites (552/552 tests) trong monorepo vượt qua 100%.
+
+---
+
+## Cập nhật trước đó: 2026-10-11 (Triển Khai Dữ Liệu Gen 9, Tích Hợp Ability Slot, Tối Ưu Chunk & Đạt Chuẩn CI 100%)
+
+### 0.96. Triển Khai Dữ Liệu Gen 9, Tích Hợp Ability Slot Battle Factory & Clean CI Suite:
+
+- **Trạng thái:** Đạt chuẩn 100% toàn bộ chuỗi CI (`npm run ci`):
+  + **Validate Schemas:** PASS 100% (`validate-schemas.mjs`).
+  + **Linter:** PASS (0 errors, 0 warnings trong `eslint .`).
+  + **Code Formatter:** PASS 100% (`prettier --check` toàn bộ repo).
+  + **Typecheck:** PASS (0 errors trong `tsc --noEmit`).
+  + **Test Suite:** PASS 100% (46/46 tệp test, 542/542 tests pass).
+  + **Production Build:** PASS (Tất cả bundle chunks đều < 500 kB, không còn bất kỳ cảnh báo chunk size nào).
+- **Yêu cầu & Vấn đề giải quyết:**
+  1. **Khắc phục tích hợp Ability Slot trong Battle:**
+     - Hoàn thiện [battle-factory.ts](file:///e:/Pokemon/apps/web/src/battle/battle-factory.ts): `createBattler()` sử dụng trực tiếp mô hình hỗ trợ 3 slot Ability từ `data.abilities` (`primary`, `secondary?`, `hidden?`). Tự động phân bổ ngẫu nhiên 50/50 giữa Primary và Secondary nếu loài có 2 Ability thường, hỗ trợ tham số `customAbilitySlot` ('primary' | 'secondary' | 'hidden') và tự động suy luận slot khi truyền `customAbility`.
+     - Sử dụng `defaultRng` cho việc sinh cá thể battler nhằm bảo toàn trọn vẹn chuỗi hạt giống của `BattleRng` trong suốt quá trình tính toán chiến đấu.
+     - Cập nhật [party-state.ts](file:///e:/Pokemon/apps/web/src/domain/party/party-state.ts): `partyPokemonToBattler()` fallback an toàn theo `data.abilities[slot]`.
+  2. **Dữ liệu Pokémon Gen 9 Chuẩn Hóa:**
+     - Mô hình hỗ trợ 3 slot Ability (`primary`, `secondary?`, `hidden?`) cho 151 Pokémon theo Scarlet/Violet DLC. Đối với các loài chỉ có 1 Ability tự nhiên trong canon, mô hình giữ đúng cấu trúc nguyên bản (chỉ có `primary`).
+     - Base Stats 151 Pokémon đồng bộ khớp 100% chuẩn Gen 9.
+  3. **Mở Rộng Danh Mục TM001–TM229 & Alias Tương Thích:**
+     - Đăng ký đủ 229 Đĩa Kỹ Thuật TM (`tm001`–`tm229`) trong [items-db.json](file:///e:/Pokemon/packages/game-data/items-db.json) và ánh xạ [item-catalog-effects.ts](file:///e:/Pokemon/apps/web/src/domain/inventory/item-catalog-effects.ts), giữ tương thích ngược toàn bộ `tm01`–`tm100` và `hm01`–`hm08`.
+  4. **Cơ Chế Terastallization Trong Battle & Giao Diện:**
+     - Giới hạn 1 lần/trận/bên; chuyển hệ phòng thủ thành đơn hệ `teraType`; STAB Terastal 2.0x (nếu trùng hệ gốc) hoặc 1.5x; chiêu `tera_blast` thích ứng hệ và category; nút bấm pha lê `💎 TERASTAL` và huy hiệu Databox trực quan.
+  5. **Tối Ưu Phân Mảnh Bundle Chunks ([vite.config.ts](file:///e:/Pokemon/apps/web/vite.config.ts)):**
+     - Tách `move-animations-db.json` sang chunk riêng biệt `move-animations-data` (~166 kB), đưa chunk `moves-data` từ 587 kB xuống còn ~420 kB. Toàn bộ bundle đều nằm dưới ngưỡng cảnh báo 500 kB.
+  6. **Làm Sạch Toàn Diện Linter & Formatter:**
+     - Khắc phục 2 lỗi empty catch block và type `any` trong [save-repository.ts](file:///e:/Pokemon/apps/web/src/domain/save/save-repository.ts).
+     - Khắc phục các cảnh báo `any` trong [autosave-coordinator.ts](file:///e:/Pokemon/apps/web/src/domain/save/autosave-coordinator.ts) bằng kiểu `ReturnType<typeof setTimeout>`.
+     - Khắc phục useless assignments trong custom animations ([flamethrower.ts](file:///e:/Pokemon/apps/web/src/battle/custom-animations/flamethrower.ts), [hydro-pump.ts](file:///e:/Pokemon/apps/web/src/battle/custom-animations/hydro-pump.ts), [shadow-ball.ts](file:///e:/Pokemon/apps/web/src/battle/custom-animations/shadow-ball.ts)).
+     - Khắc phục unused variables/imports trong [battle-environment-presets.test.ts](file:///e:/Pokemon/apps/web/test/battle-environment-presets.test.ts) và [gen9-mechanics.test.ts](file:///e:/Pokemon/apps/web/test/gen9-mechanics.test.ts).
+     - Đồng bộ code style Prettier trên toàn bộ 40+ tệp tin.
+
+---
+
+## Cập nhật trước đó: 2026-10-10 (Tiến Hóa Bằng Đá / Vật Phẩm Yêu Cầu Cầm Nắm & Tiêu Hao Khi Tiến Hóa)
 
 ### 0.95. Chuẩn Hóa Tiến Hóa Đá/Vật Phẩm Qua Cơ Chế Cầm Nắm (Held Item) & Tự Động Tiêu Hao:
 

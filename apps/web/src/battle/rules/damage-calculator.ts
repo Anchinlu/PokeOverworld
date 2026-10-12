@@ -111,7 +111,12 @@ export function calculateSingleHitBaseDamage(
   move: BattleMove,
   effectivePower: number
 ): { baseDmg: number; atk: number; def: number } {
-  const isSpecial = move.category === 'special';
+  let isSpecial = move.category === 'special';
+  if (move.id.toLowerCase() === 'tera_blast' && attacker.isTerastallized) {
+    if (attacker.stats.attack > attacker.stats.spAtk) {
+      isSpecial = false;
+    }
+  }
   const rawAtk = isSpecial ? attacker.stats.spAtk : attacker.stats.attack;
   const rawDef = isSpecial ? defender.stats.spDef : defender.stats.defense;
   const atkStage = isSpecial
@@ -164,7 +169,11 @@ export function calculateDamage(
   let effectiveMoveType: PokemonType = move.type;
   let effectivePower = move.power;
 
-  if (moveId === 'weather_ball') {
+  if (moveId === 'tera_blast') {
+    if (attacker.isTerastallized && attacker.teraType) {
+      effectiveMoveType = attacker.teraType;
+    }
+  } else if (moveId === 'weather_ball') {
     if (environment?.weather && environment.weather.type !== 'none') {
       effectivePower = 100;
       if (environment.weather.type === 'sun') effectiveMoveType = 'Fire';
@@ -333,14 +342,24 @@ export function calculateDamage(
     }
   }
 
+  let effectiveCategory = move.category;
+  if (moveId === 'tera_blast' && attacker.isTerastallized) {
+    if (attacker.stats.attack > attacker.stats.spAtk) {
+      effectiveCategory = 'physical';
+    }
+  }
+
   const effectiveMove: BattleMove = {
     ...move,
+    category: effectiveCategory,
     type: effectiveMoveType,
     power: effectivePower,
   };
 
   const isStruggle = move.id === 'struggle';
-  const typeEff = isStruggle ? 1.0 : getTypeEffectiveness(effectiveMove.type, defender.types);
+  const defenderTypes =
+    defender.isTerastallized && defender.teraType ? [defender.teraType] : defender.types;
+  const typeEff = isStruggle ? 1.0 : getTypeEffectiveness(effectiveMove.type, defenderTypes);
 
   if (typeEff === 0) {
     return {
@@ -571,12 +590,23 @@ export function calculateDamage(
     );
 
     const hasAdaptability = AbilityEngine.normalize(attacker.ability) === 'adaptability';
-    const stab =
-      !isStruggle && attacker.types.includes(effectiveMove.type)
-        ? hasAdaptability
-          ? 2.0
-          : 1.5
-        : 1.0;
+    let stab = 1.0;
+    if (!isStruggle) {
+      const origTypes = attacker.originalTypes ?? attacker.types;
+      if (attacker.isTerastallized && attacker.teraType) {
+        if (effectiveMove.type === attacker.teraType) {
+          if (origTypes.includes(attacker.teraType)) {
+            stab = hasAdaptability ? 2.25 : 2.0;
+          } else {
+            stab = hasAdaptability ? 2.0 : 1.5;
+          }
+        } else if (origTypes.includes(effectiveMove.type)) {
+          stab = hasAdaptability ? 2.0 : 1.5;
+        }
+      } else if (attacker.types.includes(effectiveMove.type)) {
+        stab = hasAdaptability ? 2.0 : 1.5;
+      }
+    }
     const hasSuperLuck = AbilityEngine.normalize(attacker.ability) === 'superluck';
     const totalCritStage =
       (attacker.critStage ?? 0) + (move.highCrit ? 1 : 0) + (hasSuperLuck ? 1 : 0);

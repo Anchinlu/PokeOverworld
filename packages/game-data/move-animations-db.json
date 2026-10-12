@@ -15,10 +15,7 @@
     "category": "special",
     "graphic": "leech-seed.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Absorb2",
-      "Saint7"
-    ]
+    "soundEffects": ["Absorb2", "Saint7"]
   },
   "accelerock": {
     "moveId": "accelerock",
@@ -27,10 +24,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind7.ogg",
-      "Blow6.ogg"
-    ]
+    "soundEffects": ["Wind7.ogg", "Blow6.ogg"]
   },
   "acid": {
     "moveId": "acid",
@@ -39,10 +33,7 @@
     "category": "special",
     "graphic": "poison2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "throw",
-      "Poison"
-    ]
+    "soundEffects": ["throw", "Poison"]
   },
   "acid_armor": {
     "moveId": "acid_armor",
@@ -51,11 +42,7 @@
     "category": "status",
     "graphic": "poison3.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Pollen",
-      "throw",
-      "Sound2"
-    ]
+    "soundEffects": ["Pollen", "throw", "Sound2"]
   },
   "acid_downpour": {
     "moveId": "acid_downpour",
@@ -73,9 +60,7 @@
     "category": "special",
     "graphic": "fly copy.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Substitute.mp3"
-    ]
+    "soundEffects": ["Substitute.mp3"]
   },
   "acrobatics": {
     "moveId": "acrobatics",
@@ -84,9 +69,7 @@
     "category": "physical",
     "graphic": "finger.spoon.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Take Down.mp3"
-    ]
+    "soundEffects": ["Take Down.mp3"]
   },
   "acupressure": {
     "moveId": "acupressure",
@@ -95,9 +78,7 @@
     "category": "status",
     "graphic": "mixed status.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Acupressure.mp3"
-    ]
+    "soundEffects": ["Acupressure.mp3"]
   },
   "aerial_ace": {
     "moveId": "aerial_ace",
@@ -106,9 +87,7 @@
     "category": "physical",
     "graphic": "Aerial Ace.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Ace.wav"
-    ]
+    "soundEffects": ["Ace.wav"]
   },
   "aeroblast": {
     "moveId": "aeroblast",
@@ -117,9 +96,7 @@
     "category": "special",
     "graphic": "PRAS- Aeroblast.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Aeroblast.wav"
-    ]
+    "soundEffects": ["PRSFX- Aeroblast.wav"]
   },
   "after_you": {
     "moveId": "after_you",
@@ -137,9 +114,7 @@
     "category": "status",
     "graphic": "!.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Psych Up.mp3"
-    ]
+    "soundEffects": ["Psych Up.mp3"]
   },
   "air_cutter": {
     "moveId": "air_cutter",
@@ -148,9 +123,7 @@
     "category": "special",
     "graphic": "Divine_Smash.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Whirlwind.mp3"
-    ]
+    "soundEffects": ["Whirlwind.mp3"]
   },
   "air_slash": {
     "moveId": "air_slash",
@@ -159,9 +132,7 @@
     "category": "special",
     "graphic": "Aerial Ace.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind7.ogg"
-    ]
+    "soundEffects": ["Wind7.ogg"]
   },
   "all_out_pummeling": {
     "moveId": "all_out_pummeling",
@@ -170,9 +141,7 @@
     "category": "physical",
     "graphic": "PRAS- All Out Pummeling.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- All-Out Pummeling.wav"
-    ]
+    "soundEffects": ["PRSFX- All-Out Pummeling.wav"]
   },
   "alluring_voice": {
     "moveId": "alluring_voice",
@@ -190,9 +159,7 @@
     "category": "status",
     "graphic": "anim sheet.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Uproar.mp3"
-    ]
+    "soundEffects": ["Uproar.mp3"]
   },
   "amnesia": {
     "moveId": "amnesia",
@@ -201,9 +168,7 @@
     "category": "status",
     "graphic": "mixed.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Yawn.mp3"
-    ]
+    "soundEffects": ["Yawn.mp3"]
   },
   "anchor_shot": {
     "moveId": "anchor_shot",
@@ -212,9 +177,7 @@
     "category": "physical",
     "graphic": "PRAS- Anchor Shot.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Anchor Shot.wav"
-    ]
+    "soundEffects": ["PRSFX- Anchor Shot.wav"]
   },
   "ancient_power": {
     "moveId": "ancient_power",
@@ -223,10 +186,7 @@
     "category": "special",
     "graphic": "Ancient-PowerFilesheet.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Earth4.ogg",
-      "Earth5.ogg"
-    ]
+    "soundEffects": ["Earth4.ogg", "Earth5.ogg"]
   },
   "apple_acid": {
     "moveId": "apple_acid",
@@ -253,9 +213,7 @@
     "category": "physical",
     "graphic": "PRAS- Aqua Jet.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Aqua Jet.wav"
-    ]
+    "soundEffects": ["PRSFX- Aqua Jet.wav"]
   },
   "aqua_ring": {
     "moveId": "aqua_ring",
@@ -264,9 +222,7 @@
     "category": "status",
     "graphic": "fly copy.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Weatherball.mp3"
-    ]
+    "soundEffects": ["Weatherball.mp3"]
   },
   "aqua_step": {
     "moveId": "aqua_step",
@@ -284,9 +240,7 @@
     "category": "physical",
     "graphic": "electric1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Water3.ogg"
-    ]
+    "soundEffects": ["Water3.ogg"]
   },
   "arm_thrust": {
     "moveId": "arm_thrust",
@@ -295,9 +249,7 @@
     "category": "physical",
     "graphic": "WaterBubbles.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow5.ogg"
-    ]
+    "soundEffects": ["Blow5.ogg"]
   },
   "armor_cannon": {
     "moveId": "armor_cannon",
@@ -315,9 +267,7 @@
     "category": "status",
     "graphic": "Anima (1).png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint8"
-    ]
+    "soundEffects": ["Saint8"]
   },
   "aromatic_mist": {
     "moveId": "aromatic_mist",
@@ -326,9 +276,7 @@
     "category": "status",
     "graphic": "Special5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind8.ogg"
-    ]
+    "soundEffects": ["Wind8.ogg"]
   },
   "assist": {
     "moveId": "assist",
@@ -337,9 +285,7 @@
     "category": "status",
     "graphic": "WaterBubbles.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "assurance": {
     "moveId": "assurance",
@@ -348,9 +294,7 @@
     "category": "physical",
     "graphic": "WaterBubbles.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow4.ogg"
-    ]
+    "soundEffects": ["Blow4.ogg"]
   },
   "astonish": {
     "moveId": "astonish",
@@ -359,9 +303,7 @@
     "category": "physical",
     "graphic": "WaterBubbles.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Collapse1.ogg"
-    ]
+    "soundEffects": ["Collapse1.ogg"]
   },
   "astral_barrage": {
     "moveId": "astral_barrage",
@@ -388,9 +330,7 @@
     "category": "status",
     "graphic": "poi.hear.mus.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind5.ogg"
-    ]
+    "soundEffects": ["Wind5.ogg"]
   },
   "aura_sphere": {
     "moveId": "aura_sphere",
@@ -399,9 +339,7 @@
     "category": "special",
     "graphic": "efftest4.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint8.ogg"
-    ]
+    "soundEffects": ["Saint8.ogg"]
   },
   "aura_wheel": {
     "moveId": "aura_wheel",
@@ -419,10 +357,7 @@
     "category": "special",
     "graphic": "023-Burst01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine",
-      "Fire3"
-    ]
+    "soundEffects": ["Twine", "Fire3"]
   },
   "aurora_veil": {
     "moveId": "aurora_veil",
@@ -440,9 +375,7 @@
     "category": "status",
     "graphic": "Iron Head.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "avalanche": {
     "moveId": "avalanche",
@@ -451,9 +384,7 @@
     "category": "physical",
     "graphic": "icewater.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder9.ogg"
-    ]
+    "soundEffects": ["Thunder9.ogg"]
   },
   "axe_kick": {
     "moveId": "axe_kick",
@@ -471,10 +402,7 @@
     "category": "status",
     "graphic": "animsheet.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sword1.ogg",
-      "Sword2.ogg"
-    ]
+    "soundEffects": ["Sword1.ogg", "Sword2.ogg"]
   },
   "baddy_bad": {
     "moveId": "baddy_bad",
@@ -492,10 +420,7 @@
     "category": "status",
     "graphic": "normal2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Stare.ogg",
-      "Sword1.ogg"
-    ]
+    "soundEffects": ["Stare.ogg", "Sword1.ogg"]
   },
   "barb_barrage": {
     "moveId": "barb_barrage",
@@ -522,9 +447,7 @@
     "category": "status",
     "graphic": "anim sheet.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Flash2.ogg"
-    ]
+    "soundEffects": ["Flash2.ogg"]
   },
   "baton_pass": {
     "moveId": "baton_pass",
@@ -533,9 +456,7 @@
     "category": "status",
     "graphic": "Cups + Musical Notes.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Up.ogg"
-    ]
+    "soundEffects": ["Up.ogg"]
   },
   "beak_blast": {
     "moveId": "beak_blast",
@@ -544,9 +465,7 @@
     "category": "physical",
     "graphic": "Fogo - 01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Fire3.ogg"
-    ]
+    "soundEffects": ["Fire3.ogg"]
   },
   "beat_up": {
     "moveId": "beat_up",
@@ -555,9 +474,7 @@
     "category": "physical",
     "graphic": "many.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow4"
-    ]
+    "soundEffects": ["Blow4"]
   },
   "behemoth_bash": {
     "moveId": "behemoth_bash",
@@ -584,9 +501,7 @@
     "category": "special",
     "graphic": "WaterBubbles.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash10.ogg"
-    ]
+    "soundEffects": ["Slash10.ogg"]
   },
   "belly_drum": {
     "moveId": "belly_drum",
@@ -595,10 +510,7 @@
     "category": "status",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow5.ogg",
-      "Blow6.ogg"
-    ]
+    "soundEffects": ["Blow5.ogg", "Blow6.ogg"]
   },
   "bestow": {
     "moveId": "bestow",
@@ -607,9 +519,7 @@
     "category": "status",
     "graphic": "011-Weapon06.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sound2.ogg"
-    ]
+    "soundEffects": ["Sound2.ogg"]
   },
   "bide": {
     "moveId": "bide",
@@ -618,9 +528,7 @@
     "category": "physical",
     "graphic": "fly copy.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sand.ogg"
-    ]
+    "soundEffects": ["Sand.ogg"]
   },
   "bind": {
     "moveId": "bind",
@@ -629,9 +537,7 @@
     "category": "physical",
     "graphic": "Struggle.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash10"
-    ]
+    "soundEffects": ["Slash10"]
   },
   "bite": {
     "moveId": "bite",
@@ -640,9 +546,7 @@
     "category": "physical",
     "graphic": "Crunch.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sword2.ogg"
-    ]
+    "soundEffects": ["Sword2.ogg"]
   },
   "bitter_blade": {
     "moveId": "bitter_blade",
@@ -669,9 +573,7 @@
     "category": "physical",
     "graphic": "PRAS- Black Hole Eclipse.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Black Hole Eclipse.wav"
-    ]
+    "soundEffects": ["PRSFX- Black Hole Eclipse.wav"]
   },
   "blast_burn": {
     "moveId": "blast_burn",
@@ -680,9 +582,7 @@
     "category": "special",
     "graphic": "Firebird.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Fire2"
-    ]
+    "soundEffects": ["Fire2"]
   },
   "blaze_kick": {
     "moveId": "blaze_kick",
@@ -691,9 +591,7 @@
     "category": "physical",
     "graphic": "WaterBubbles.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Fire1.ogg"
-    ]
+    "soundEffects": ["Fire1.ogg"]
   },
   "blazing_torque": {
     "moveId": "blazing_torque",
@@ -720,9 +618,7 @@
     "category": "special",
     "graphic": "weather.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind8.ogg"
-    ]
+    "soundEffects": ["Wind8.ogg"]
   },
   "block": {
     "moveId": "block",
@@ -731,9 +627,7 @@
     "category": "status",
     "graphic": "block.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "buzzer.wav"
-    ]
+    "soundEffects": ["buzzer.wav"]
   },
   "blood_moon": {
     "moveId": "blood_moon",
@@ -751,9 +645,7 @@
     "category": "physical",
     "graphic": "PRAS- Bloom Doom.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Bloom Doom.wav"
-    ]
+    "soundEffects": ["PRSFX- Bloom Doom.wav"]
   },
   "blue_flare": {
     "moveId": "blue_flare",
@@ -762,9 +654,7 @@
     "category": "special",
     "graphic": "anim sheet.2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slam.mp3"
-    ]
+    "soundEffects": ["Slam.mp3"]
   },
   "body_press": {
     "moveId": "body_press",
@@ -782,9 +672,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Damage1"
-    ]
+    "soundEffects": ["Damage1"]
   },
   "bolt_beak": {
     "moveId": "bolt_beak",
@@ -802,10 +690,7 @@
     "category": "physical",
     "graphic": "Trovao.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder4.ogg",
-      "Thunder9.ogg"
-    ]
+    "soundEffects": ["Thunder4.ogg", "Thunder9.ogg"]
   },
   "bone_club": {
     "moveId": "bone_club",
@@ -814,9 +699,7 @@
     "category": "physical",
     "graphic": "WaterBubbles.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow1.ogg"
-    ]
+    "soundEffects": ["Blow1.ogg"]
   },
   "bone_rush": {
     "moveId": "bone_rush",
@@ -825,9 +708,7 @@
     "category": "physical",
     "graphic": "WaterBubbles.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow1.ogg"
-    ]
+    "soundEffects": ["Blow1.ogg"]
   },
   "bonemerang": {
     "moveId": "bonemerang",
@@ -836,9 +717,7 @@
     "category": "physical",
     "graphic": "WaterBubbles.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow5.ogg"
-    ]
+    "soundEffects": ["Blow5.ogg"]
   },
   "boomburst": {
     "moveId": "boomburst",
@@ -847,9 +726,7 @@
     "category": "special",
     "graphic": "Cosmo-01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "bounce": {
     "moveId": "bounce",
@@ -858,11 +735,7 @@
     "category": "physical",
     "graphic": "fly copy.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind5.ogg",
-      "Wind7.ogg",
-      "Blow4.ogg"
-    ]
+    "soundEffects": ["Wind5.ogg", "Wind7.ogg", "Blow4.ogg"]
   },
   "bouncy_bubble": {
     "moveId": "bouncy_bubble",
@@ -889,10 +762,7 @@
     "category": "physical",
     "graphic": "Special5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind5.ogg",
-      "Fire3.ogg"
-    ]
+    "soundEffects": ["Wind5.ogg", "Fire3.ogg"]
   },
   "breaking_swipe": {
     "moveId": "breaking_swipe",
@@ -910,9 +780,7 @@
     "category": "physical",
     "graphic": "PRAS- Breakneck Blitz.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Breakneck Blitz.wav"
-    ]
+    "soundEffects": ["PRSFX- Breakneck Blitz.wav"]
   },
   "brick_break": {
     "moveId": "brick_break",
@@ -921,9 +789,7 @@
     "category": "physical",
     "graphic": "many.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow7"
-    ]
+    "soundEffects": ["Blow7"]
   },
   "brine": {
     "moveId": "brine",
@@ -932,9 +798,7 @@
     "category": "special",
     "graphic": "icewater.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Water1.ogg"
-    ]
+    "soundEffects": ["Water1.ogg"]
   },
   "brutal_swing": {
     "moveId": "brutal_swing",
@@ -943,9 +807,7 @@
     "category": "physical",
     "graphic": "PRAS- Brutal Swing.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Brutal Swing.wav"
-    ]
+    "soundEffects": ["PRSFX- Brutal Swing.wav"]
   },
   "bubble": {
     "moveId": "bubble",
@@ -954,9 +816,7 @@
     "category": "special",
     "graphic": "008-Weapon03.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Water5"
-    ]
+    "soundEffects": ["Water5"]
   },
   "bubble_beam": {
     "moveId": "bubble_beam",
@@ -965,10 +825,7 @@
     "category": "special",
     "graphic": "018-Water01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Water5",
-      "Blow1"
-    ]
+    "soundEffects": ["Water5", "Blow1"]
   },
   "bug_bite": {
     "moveId": "bug_bite",
@@ -977,9 +834,7 @@
     "category": "physical",
     "graphic": "Crunch.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "bug_buzz": {
     "moveId": "bug_buzz",
@@ -988,9 +843,7 @@
     "category": "special",
     "graphic": "Psycho Cut.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint1.ogg"
-    ]
+    "soundEffects": ["Saint1.ogg"]
   },
   "bulk_up": {
     "moveId": "bulk_up",
@@ -999,9 +852,7 @@
     "category": "status",
     "graphic": "animsheet.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "fog2.mp3"
-    ]
+    "soundEffects": ["fog2.mp3"]
   },
   "bulldoze": {
     "moveId": "bulldoze",
@@ -1019,9 +870,7 @@
     "category": "physical",
     "graphic": "punches.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Comet Punch.mp3"
-    ]
+    "soundEffects": ["Comet Punch.mp3"]
   },
   "bullet_seed": {
     "moveId": "bullet_seed",
@@ -1030,10 +879,7 @@
     "category": "physical",
     "graphic": "leech-seed.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "throw",
-      "Knock"
-    ]
+    "soundEffects": ["throw", "Knock"]
   },
   "burn_up": {
     "moveId": "burn_up",
@@ -1042,9 +888,7 @@
     "category": "special",
     "graphic": "PRAS- Burn Up.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Burn Up.wav"
-    ]
+    "soundEffects": ["PRSFX- Burn Up.wav"]
   },
   "burning_bulwark": {
     "moveId": "burning_bulwark",
@@ -1080,10 +924,7 @@
     "category": "status",
     "graphic": "018-Water01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sleep.ogg",
-      "Black.png"
-    ]
+    "soundEffects": ["Sleep.ogg", "Black.png"]
   },
   "camouflage": {
     "moveId": "camouflage",
@@ -1101,9 +942,7 @@
     "category": "status",
     "graphic": "WaterBubbles.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint7.ogg"
-    ]
+    "soundEffects": ["Saint7.ogg"]
   },
   "catastropika": {
     "moveId": "catastropika",
@@ -1112,9 +951,7 @@
     "category": "physical",
     "graphic": "PRAS- Catastropika.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Catastropika.wav"
-    ]
+    "soundEffects": ["PRSFX- Catastropika.wav"]
   },
   "ceaseless_edge": {
     "moveId": "ceaseless_edge",
@@ -1141,9 +978,7 @@
     "category": "status",
     "graphic": "electric2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder3"
-    ]
+    "soundEffects": ["Thunder3"]
   },
   "charge_beam": {
     "moveId": "charge_beam",
@@ -1152,10 +987,7 @@
     "category": "special",
     "graphic": "017-Thunder01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder9.ogg",
-      "Collapse1.ogg"
-    ]
+    "soundEffects": ["Thunder9.ogg", "Collapse1.ogg"]
   },
   "charm": {
     "moveId": "charm",
@@ -1173,9 +1005,7 @@
     "category": "special",
     "graphic": "normal1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint6.ogg"
-    ]
+    "soundEffects": ["Saint6.ogg"]
   },
   "chilling_water": {
     "moveId": "chilling_water",
@@ -1202,9 +1032,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow6.ogg"
-    ]
+    "soundEffects": ["Blow6.ogg"]
   },
   "chloroblast": {
     "moveId": "chloroblast",
@@ -1222,9 +1050,7 @@
     "category": "physical",
     "graphic": "electric1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "clamp": {
     "moveId": "clamp",
@@ -1233,9 +1059,7 @@
     "category": "physical",
     "graphic": "Psycho Cut.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Water3.ogg"
-    ]
+    "soundEffects": ["Water3.ogg"]
   },
   "clanging_scales": {
     "moveId": "clanging_scales",
@@ -1244,10 +1068,7 @@
     "category": "special",
     "graphic": "Hypnosis + Lock on.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder9.ogg",
-      "Explosion4.ogg"
-    ]
+    "soundEffects": ["Thunder9.ogg", "Explosion4.ogg"]
   },
   "clangorous_soul": {
     "moveId": "clangorous_soul",
@@ -1274,9 +1095,7 @@
     "category": "special",
     "graphic": "fly copy.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Snore.mp3"
-    ]
+    "soundEffects": ["Snore.mp3"]
   },
   "close_combat": {
     "moveId": "close_combat",
@@ -1285,9 +1104,7 @@
     "category": "physical",
     "graphic": "finger.spoon.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Comet Punch.mp3"
-    ]
+    "soundEffects": ["Comet Punch.mp3"]
   },
   "coaching": {
     "moveId": "coaching",
@@ -1305,9 +1122,7 @@
     "category": "status",
     "graphic": "electric1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "collision_course": {
     "moveId": "collision_course",
@@ -1334,9 +1149,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow1"
-    ]
+    "soundEffects": ["Blow1"]
   },
   "comeuppance": {
     "moveId": "comeuppance",
@@ -1354,10 +1167,7 @@
     "category": "status",
     "graphic": "WaterBubbles.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sword1.ogg",
-      "Stare.ogg"
-    ]
+    "soundEffects": ["Sword1.ogg", "Stare.ogg"]
   },
   "confuse_ray": {
     "moveId": "confuse_ray",
@@ -1366,10 +1176,7 @@
     "category": "status",
     "graphic": "estranho.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine",
-      "Confuse"
-    ]
+    "soundEffects": ["Twine", "Confuse"]
   },
   "confusion": {
     "moveId": "confusion",
@@ -1387,9 +1194,7 @@
     "category": "physical",
     "graphic": "Cosmo-01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "continental_crush": {
     "moveId": "continental_crush",
@@ -1407,9 +1212,7 @@
     "category": "status",
     "graphic": "023-Burst01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Up.ogg"
-    ]
+    "soundEffects": ["Up.ogg"]
   },
   "conversion_2": {
     "moveId": "conversion_2",
@@ -1418,9 +1221,7 @@
     "category": "status",
     "graphic": "023-Burst01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "copycat": {
     "moveId": "copycat",
@@ -1429,9 +1230,7 @@
     "category": "status",
     "graphic": "007-Weapon02.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "core_enforcer": {
     "moveId": "core_enforcer",
@@ -1467,10 +1266,7 @@
     "category": "status",
     "graphic": "Cosmo-01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg",
-      "Thunder1.ogg"
-    ]
+    "soundEffects": ["Twine.ogg", "Thunder1.ogg"]
   },
   "cotton_guard": {
     "moveId": "cotton_guard",
@@ -1479,9 +1275,7 @@
     "category": "status",
     "graphic": "animsheet.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Substitute.mp3"
-    ]
+    "soundEffects": ["Substitute.mp3"]
   },
   "cotton_spore": {
     "moveId": "cotton_spore",
@@ -1490,9 +1284,7 @@
     "category": "status",
     "graphic": "Special5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sand"
-    ]
+    "soundEffects": ["Sand"]
   },
   "counter": {
     "moveId": "counter",
@@ -1501,9 +1293,7 @@
     "category": "physical",
     "graphic": "punches.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "MiningCollapse.mp3"
-    ]
+    "soundEffects": ["MiningCollapse.mp3"]
   },
   "court_change": {
     "moveId": "court_change",
@@ -1521,9 +1311,7 @@
     "category": "physical",
     "graphic": "electric2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "crabhammer": {
     "moveId": "crabhammer",
@@ -1532,9 +1320,7 @@
     "category": "physical",
     "graphic": "fly copy.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow4.ogg"
-    ]
+    "soundEffects": ["Blow4.ogg"]
   },
   "crafty_shield": {
     "moveId": "crafty_shield",
@@ -1543,9 +1329,7 @@
     "category": "status",
     "graphic": "normal2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sound2.ogg"
-    ]
+    "soundEffects": ["Sound2.ogg"]
   },
   "cross_chop": {
     "moveId": "cross_chop",
@@ -1554,9 +1338,7 @@
     "category": "physical",
     "graphic": "many.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash2.ogg"
-    ]
+    "soundEffects": ["Slash2.ogg"]
   },
   "cross_poison": {
     "moveId": "cross_poison",
@@ -1565,9 +1347,7 @@
     "category": "physical",
     "graphic": "Aerial Ace.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash2.ogg"
-    ]
+    "soundEffects": ["Slash2.ogg"]
   },
   "crunch": {
     "moveId": "crunch",
@@ -1576,9 +1356,7 @@
     "category": "physical",
     "graphic": "teeth.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Super Fang.mp3"
-    ]
+    "soundEffects": ["Super Fang.mp3"]
   },
   "crush_claw": {
     "moveId": "crush_claw",
@@ -1587,9 +1365,7 @@
     "category": "physical",
     "graphic": "dragon claw.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash.mp3"
-    ]
+    "soundEffects": ["Slash.mp3"]
   },
   "crush_grip": {
     "moveId": "crush_grip",
@@ -1598,9 +1374,7 @@
     "category": "physical",
     "graphic": "WaterBubbles.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow3.ogg"
-    ]
+    "soundEffects": ["Blow3.ogg"]
   },
   "curse": {
     "moveId": "curse",
@@ -1609,9 +1383,7 @@
     "category": "status",
     "graphic": "ghost1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Darkness6"
-    ]
+    "soundEffects": ["Darkness6"]
   },
   "cut": {
     "moveId": "cut",
@@ -1620,11 +1392,7 @@
     "category": "physical",
     "graphic": "004-Attack02.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash10",
-      "Slash2",
-      "Slash11"
-    ]
+    "soundEffects": ["Slash10", "Slash2", "Slash11"]
   },
   "dark_pulse": {
     "moveId": "dark_pulse",
@@ -1633,10 +1401,7 @@
     "category": "special",
     "graphic": "022-Darkness01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint1.ogg",
-      "Slash9.ogg"
-    ]
+    "soundEffects": ["Saint1.ogg", "Slash9.ogg"]
   },
   "dark_void": {
     "moveId": "dark_void",
@@ -1645,9 +1410,7 @@
     "category": "status",
     "graphic": "022-Darkness01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Explosion6.ogg"
-    ]
+    "soundEffects": ["Explosion6.ogg"]
   },
   "darkest_lariat": {
     "moveId": "darkest_lariat",
@@ -1665,9 +1428,7 @@
     "category": "special",
     "graphic": "PRAS- Dazzling Gleam.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Dazzling Gleam.wav"
-    ]
+    "soundEffects": ["PRSFX- Dazzling Gleam.wav"]
   },
   "decorate": {
     "moveId": "decorate",
@@ -1694,9 +1455,7 @@
     "category": "status",
     "graphic": "fly copy.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Defense Curl.mp3"
-    ]
+    "soundEffects": ["Defense Curl.mp3"]
   },
   "defog": {
     "moveId": "defog",
@@ -1705,9 +1464,7 @@
     "category": "status",
     "graphic": "fly copy.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sand.ogg"
-    ]
+    "soundEffects": ["Sand.ogg"]
   },
   "destiny_bond": {
     "moveId": "destiny_bond",
@@ -1716,10 +1473,7 @@
     "category": "status",
     "graphic": "008-Weapon03.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Stare.ogg",
-      "Saint4.ogg"
-    ]
+    "soundEffects": ["Stare.ogg", "Saint4.ogg"]
   },
   "detect": {
     "moveId": "detect",
@@ -1728,9 +1482,7 @@
     "category": "status",
     "graphic": "anim sheet.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Flash2.ogg"
-    ]
+    "soundEffects": ["Flash2.ogg"]
   },
   "devastating_drake": {
     "moveId": "devastating_drake",
@@ -1739,9 +1491,7 @@
     "category": "physical",
     "graphic": "PRAS- Devastating Drake.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Devastating Drake.wav"
-    ]
+    "soundEffects": ["PRSFX- Devastating Drake.wav"]
   },
   "diamond_storm": {
     "moveId": "diamond_storm",
@@ -1759,9 +1509,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow4.ogg"
-    ]
+    "soundEffects": ["Blow4.ogg"]
   },
   "dire_claw": {
     "moveId": "dire_claw",
@@ -1779,9 +1527,7 @@
     "category": "status",
     "graphic": "leech-seed.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sword2.ogg"
-    ]
+    "soundEffects": ["Sword2.ogg"]
   },
   "disarming_voice": {
     "moveId": "disarming_voice",
@@ -1790,14 +1536,7 @@
     "category": "special",
     "graphic": "normal1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg",
-      "Up.ogg",
-      "Ice8.ogg",
-      "Darkness6.ogg",
-      "Sleep.ogg",
-      "Sound2.ogg"
-    ]
+    "soundEffects": ["Twine.ogg", "Up.ogg", "Ice8.ogg", "Darkness6.ogg", "Sleep.ogg", "Sound2.ogg"]
   },
   "discharge": {
     "moveId": "discharge",
@@ -1806,11 +1545,7 @@
     "category": "special",
     "graphic": "electric1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint8.ogg",
-      "Thunder9.ogg",
-      "Thunder4.ogg"
-    ]
+    "soundEffects": ["Saint8.ogg", "Thunder9.ogg", "Thunder4.ogg"]
   },
   "dive": {
     "moveId": "dive",
@@ -1819,9 +1554,7 @@
     "category": "physical",
     "graphic": "008-Weapon03.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow4.ogg"
-    ]
+    "soundEffects": ["Blow4.ogg"]
   },
   "dizzy_punch": {
     "moveId": "dizzy_punch",
@@ -1830,9 +1563,7 @@
     "category": "physical",
     "graphic": "punches.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Dizzy Punch.mp3"
-    ]
+    "soundEffects": ["Dizzy Punch.mp3"]
   },
   "doodle": {
     "moveId": "doodle",
@@ -1850,9 +1581,7 @@
     "category": "special",
     "graphic": "Anima (2).png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder1.ogg"
-    ]
+    "soundEffects": ["Thunder1.ogg"]
   },
   "double_hit": {
     "moveId": "double_hit",
@@ -1861,9 +1590,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow5.ogg"
-    ]
+    "soundEffects": ["Blow5.ogg"]
   },
   "double_iron_bash": {
     "moveId": "double_iron_bash",
@@ -1881,9 +1608,7 @@
     "category": "physical",
     "graphic": "normal1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow3"
-    ]
+    "soundEffects": ["Blow3"]
   },
   "double_shock": {
     "moveId": "double_shock",
@@ -1901,9 +1626,7 @@
     "category": "physical",
     "graphic": "many.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow5"
-    ]
+    "soundEffects": ["Blow5"]
   },
   "double_team": {
     "moveId": "double_team",
@@ -1921,10 +1644,7 @@
     "category": "physical",
     "graphic": "Divine_Smash.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "throw",
-      "Damage1"
-    ]
+    "soundEffects": ["throw", "Damage1"]
   },
   "draco_meteor": {
     "moveId": "draco_meteor",
@@ -1933,11 +1653,7 @@
     "category": "special",
     "graphic": "015-Fire01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder1.ogg",
-      "Explosion2.ogg",
-      "Explosion3.ogg"
-    ]
+    "soundEffects": ["Thunder1.ogg", "Explosion2.ogg", "Explosion3.ogg"]
   },
   "dragon_ascent": {
     "moveId": "dragon_ascent",
@@ -1946,9 +1662,7 @@
     "category": "physical",
     "graphic": "PRAS- Dragon Ascent.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Dragon Ascent.wav"
-    ]
+    "soundEffects": ["PRSFX- Dragon Ascent.wav"]
   },
   "dragon_breath": {
     "moveId": "dragon_breath",
@@ -1957,9 +1671,7 @@
     "category": "special",
     "graphic": "fire5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Fire4"
-    ]
+    "soundEffects": ["Fire4"]
   },
   "dragon_cheer": {
     "moveId": "dragon_cheer",
@@ -1977,10 +1689,7 @@
     "category": "physical",
     "graphic": "poison.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder4",
-      "Slash9"
-    ]
+    "soundEffects": ["Thunder4", "Slash9"]
   },
   "dragon_dance": {
     "moveId": "dragon_dance",
@@ -1989,9 +1698,7 @@
     "category": "status",
     "graphic": "electric1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine"
-    ]
+    "soundEffects": ["Twine"]
   },
   "dragon_darts": {
     "moveId": "dragon_darts",
@@ -2027,10 +1734,7 @@
     "category": "special",
     "graphic": "015-Fire01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg",
-      "Fire4.ogg"
-    ]
+    "soundEffects": ["Twine.ogg", "Fire4.ogg"]
   },
   "dragon_rage": {
     "moveId": "dragon_rage",
@@ -2039,9 +1743,7 @@
     "category": "special",
     "graphic": "fire5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Fire6"
-    ]
+    "soundEffects": ["Fire6"]
   },
   "dragon_rush": {
     "moveId": "dragon_rush",
@@ -2050,11 +1752,7 @@
     "category": "physical",
     "graphic": "grass2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg",
-      "Fire1.ogg",
-      "Explosion1.ogg"
-    ]
+    "soundEffects": ["Twine.ogg", "Fire1.ogg", "Explosion1.ogg"]
   },
   "dragon_tail": {
     "moveId": "dragon_tail",
@@ -2063,9 +1761,7 @@
     "category": "physical",
     "graphic": "Sword5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash9.ogg"
-    ]
+    "soundEffects": ["Slash9.ogg"]
   },
   "drain_punch": {
     "moveId": "drain_punch",
@@ -2074,10 +1770,7 @@
     "category": "physical",
     "graphic": "finger.spoon.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow6.ogg",
-      "Recovery.ogg"
-    ]
+    "soundEffects": ["Blow6.ogg", "Recovery.ogg"]
   },
   "draining_kiss": {
     "moveId": "draining_kiss",
@@ -2086,10 +1779,7 @@
     "category": "special",
     "graphic": "electric2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint1.ogg",
-      "Recovery.ogg"
-    ]
+    "soundEffects": ["Saint1.ogg", "Recovery.ogg"]
   },
   "dream_eater": {
     "moveId": "dream_eater",
@@ -2098,9 +1788,7 @@
     "category": "special",
     "graphic": "028-State01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Water3.ogg"
-    ]
+    "soundEffects": ["Water3.ogg"]
   },
   "drill_peck": {
     "moveId": "drill_peck",
@@ -2109,10 +1797,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "MiningCollapse.mp3",
-      "Water3.ogg"
-    ]
+    "soundEffects": ["MiningCollapse.mp3", "Water3.ogg"]
   },
   "drill_run": {
     "moveId": "drill_run",
@@ -2121,10 +1806,7 @@
     "category": "physical",
     "graphic": "WaterBubbles.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Water1.ogg",
-      "MiningCollapse.mp3"
-    ]
+    "soundEffects": ["Water1.ogg", "MiningCollapse.mp3"]
   },
   "drum_beating": {
     "moveId": "drum_beating",
@@ -2142,9 +1824,7 @@
     "category": "physical",
     "graphic": "normal2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Earth5.ogg"
-    ]
+    "soundEffects": ["Earth5.ogg"]
   },
   "dual_wingbeat": {
     "moveId": "dual_wingbeat",
@@ -2171,9 +1851,7 @@
     "category": "physical",
     "graphic": "punches.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Take Down.mp3"
-    ]
+    "soundEffects": ["Take Down.mp3"]
   },
   "earth_power": {
     "moveId": "earth_power",
@@ -2182,10 +1860,7 @@
     "category": "special",
     "graphic": "fire5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Explosion1.ogg",
-      "Fire1.ogg"
-    ]
+    "soundEffects": ["Explosion1.ogg", "Fire1.ogg"]
   },
   "earthquake": {
     "moveId": "earthquake",
@@ -2194,10 +1869,7 @@
     "category": "physical",
     "graphic": "Rock Tomb.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "MiningCollapse.mp3",
-      "Earth4.ogg"
-    ]
+    "soundEffects": ["MiningCollapse.mp3", "Earth4.ogg"]
   },
   "echoed_voice": {
     "moveId": "echoed_voice",
@@ -2215,10 +1887,7 @@
     "category": "status",
     "graphic": "007-Weapon02.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder4.ogg",
-      "Thunder3.ogg"
-    ]
+    "soundEffects": ["Thunder4.ogg", "Thunder3.ogg"]
   },
   "eerie_spell": {
     "moveId": "eerie_spell",
@@ -2236,10 +1905,7 @@
     "category": "physical",
     "graphic": "fly copy.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Explosion3.ogg",
-      "Water1.ogg"
-    ]
+    "soundEffects": ["Explosion3.ogg", "Water1.ogg"]
   },
   "electric_terrain": {
     "moveId": "electric_terrain",
@@ -2266,10 +1932,7 @@
     "category": "special",
     "graphic": "electric1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg",
-      "Thunder1.ogg"
-    ]
+    "soundEffects": ["Twine.ogg", "Thunder1.ogg"]
   },
   "electro_drift": {
     "moveId": "electro_drift",
@@ -2296,10 +1959,7 @@
     "category": "special",
     "graphic": "WaterBubbles.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind5.ogg",
-      "Paralyze3.ogg"
-    ]
+    "soundEffects": ["Wind5.ogg", "Paralyze3.ogg"]
   },
   "embargo": {
     "moveId": "embargo",
@@ -2308,9 +1968,7 @@
     "category": "status",
     "graphic": "022-Darkness01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "ember": {
     "moveId": "ember",
@@ -2319,9 +1977,7 @@
     "category": "special",
     "graphic": "Flames.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Fire2"
-    ]
+    "soundEffects": ["Fire2"]
   },
   "encore": {
     "moveId": "encore",
@@ -2330,9 +1986,7 @@
     "category": "status",
     "graphic": "BABACOMETRO.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Applause"
-    ]
+    "soundEffects": ["Applause"]
   },
   "endeavor": {
     "moveId": "endeavor",
@@ -2341,9 +1995,7 @@
     "category": "physical",
     "graphic": "008-Weapon03.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "endure": {
     "moveId": "endure",
@@ -2361,9 +2013,7 @@
     "category": "special",
     "graphic": "fly copy.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Uproar.mp3"
-    ]
+    "soundEffects": ["Uproar.mp3"]
   },
   "entrainment": {
     "moveId": "entrainment",
@@ -2372,9 +2022,7 @@
     "category": "status",
     "graphic": "007-Weapon02.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint6.ogg"
-    ]
+    "soundEffects": ["Saint6.ogg"]
   },
   "eruption": {
     "moveId": "eruption",
@@ -2383,10 +2031,7 @@
     "category": "special",
     "graphic": "fire5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Fire2",
-      "Fire5"
-    ]
+    "soundEffects": ["Fire2", "Fire5"]
   },
   "esper_wing": {
     "moveId": "esper_wing",
@@ -2422,11 +2067,7 @@
     "category": "physical",
     "graphic": "Fire3.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Explosion3",
-      "Explosion7",
-      "Explosion2"
-    ]
+    "soundEffects": ["Explosion3", "Explosion7", "Explosion2"]
   },
   "extrasensory": {
     "moveId": "extrasensory",
@@ -2444,9 +2085,7 @@
     "category": "status",
     "graphic": "PRAS- Extreme Evoboost.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Extreme Evoboost.wav"
-    ]
+    "soundEffects": ["PRSFX- Extreme Evoboost.wav"]
   },
   "extreme_speed": {
     "moveId": "extreme_speed",
@@ -2455,10 +2094,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint9.ogg",
-      "Blow3.ogg"
-    ]
+    "soundEffects": ["Saint9.ogg", "Blow3.ogg"]
   },
   "facade": {
     "moveId": "facade",
@@ -2467,9 +2103,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow6.ogg"
-    ]
+    "soundEffects": ["Blow6.ogg"]
   },
   "fairy_lock": {
     "moveId": "fairy_lock",
@@ -2478,10 +2112,7 @@
     "category": "status",
     "graphic": "WaterBubbles.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sword2.ogg",
-      "Sound2.ogg"
-    ]
+    "soundEffects": ["Sword2.ogg", "Sound2.ogg"]
   },
   "fairy_wind": {
     "moveId": "fairy_wind",
@@ -2490,10 +2121,7 @@
     "category": "special",
     "graphic": "water3.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind5.ogg",
-      "Wind8.ogg"
-    ]
+    "soundEffects": ["Wind5.ogg", "Wind8.ogg"]
   },
   "fake_out": {
     "moveId": "fake_out",
@@ -2502,9 +2130,7 @@
     "category": "physical",
     "graphic": "Fakeout.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "punch5"
-    ]
+    "soundEffects": ["punch5"]
   },
   "fake_tears": {
     "moveId": "fake_tears",
@@ -2513,9 +2139,7 @@
     "category": "status",
     "graphic": "poison2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Water1"
-    ]
+    "soundEffects": ["Water1"]
   },
   "false_surrender": {
     "moveId": "false_surrender",
@@ -2533,9 +2157,7 @@
     "category": "physical",
     "graphic": "009-Weapon04.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash2.ogg"
-    ]
+    "soundEffects": ["Slash2.ogg"]
   },
   "feather_dance": {
     "moveId": "feather_dance",
@@ -2544,9 +2166,7 @@
     "category": "status",
     "graphic": "Firebird.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Darkness2.ogg"
-    ]
+    "soundEffects": ["Darkness2.ogg"]
   },
   "feint": {
     "moveId": "feint",
@@ -2555,10 +2175,7 @@
     "category": "physical",
     "graphic": "Hammer Arm.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow4.ogg",
-      "Stare.ogg"
-    ]
+    "soundEffects": ["Blow4.ogg", "Stare.ogg"]
   },
   "feint_attack": {
     "moveId": "feint_attack",
@@ -2567,11 +2184,7 @@
     "category": "physical",
     "graphic": "Aerial Ace.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Black.png",
-      "Blow3.ogg",
-      "Darkness2.ogg"
-    ]
+    "soundEffects": ["Black.png", "Blow3.ogg", "Darkness2.ogg"]
   },
   "fell_stinger": {
     "moveId": "fell_stinger",
@@ -2580,10 +2193,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Up.ogg",
-      "Water2.ogg"
-    ]
+    "soundEffects": ["Up.ogg", "Water2.ogg"]
   },
   "fickle_beam": {
     "moveId": "fickle_beam",
@@ -2601,9 +2211,7 @@
     "category": "special",
     "graphic": "fly copy.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wring Out.mp3"
-    ]
+    "soundEffects": ["Wring Out.mp3"]
   },
   "fiery_wrath": {
     "moveId": "fiery_wrath",
@@ -2630,9 +2238,7 @@
     "category": "special",
     "graphic": "finger.spoon.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "MiningCollapse.mp3"
-    ]
+    "soundEffects": ["MiningCollapse.mp3"]
   },
   "fire_blast": {
     "moveId": "fire_blast",
@@ -2641,9 +2247,7 @@
     "category": "special",
     "graphic": "fire blast.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Voltorb Flip Explosion.mp3"
-    ]
+    "soundEffects": ["Voltorb Flip Explosion.mp3"]
   },
   "fire_fang": {
     "moveId": "fire_fang",
@@ -2652,9 +2256,7 @@
     "category": "physical",
     "graphic": "element fangs.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Vice Grip.mp3"
-    ]
+    "soundEffects": ["Vice Grip.mp3"]
   },
   "fire_lash": {
     "moveId": "fire_lash",
@@ -2672,9 +2274,7 @@
     "category": "special",
     "graphic": "anim sheet.2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Mega Punch.mp3"
-    ]
+    "soundEffects": ["Mega Punch.mp3"]
   },
   "fire_punch": {
     "moveId": "fire_punch",
@@ -2683,10 +2283,7 @@
     "category": "physical",
     "graphic": "punches.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slam.mp3",
-      "Explosion.mp3"
-    ]
+    "soundEffects": ["Slam.mp3", "Explosion.mp3"]
   },
   "fire_spin": {
     "moveId": "fire_spin",
@@ -2695,9 +2292,7 @@
     "category": "special",
     "graphic": "grass2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Fire5"
-    ]
+    "soundEffects": ["Fire5"]
   },
   "first_impression": {
     "moveId": "first_impression",
@@ -2724,9 +2319,7 @@
     "category": "physical",
     "graphic": "More2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Earth4.ogg"
-    ]
+    "soundEffects": ["Earth4.ogg"]
   },
   "flail": {
     "moveId": "flail",
@@ -2735,9 +2328,7 @@
     "category": "physical",
     "graphic": "finger.spoon.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Flail.mp3"
-    ]
+    "soundEffects": ["Flail.mp3"]
   },
   "flame_burst": {
     "moveId": "flame_burst",
@@ -2746,9 +2337,7 @@
     "category": "special",
     "graphic": "Flames.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Voltorb Flip Explosion.mp3"
-    ]
+    "soundEffects": ["Voltorb Flip Explosion.mp3"]
   },
   "flame_charge": {
     "moveId": "flame_charge",
@@ -2757,9 +2346,7 @@
     "category": "physical",
     "graphic": "Flames.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Work Up.mp3"
-    ]
+    "soundEffects": ["Work Up.mp3"]
   },
   "flame_wheel": {
     "moveId": "flame_wheel",
@@ -2768,9 +2355,7 @@
     "category": "physical",
     "graphic": "punches.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Trump Card.mp3"
-    ]
+    "soundEffects": ["Trump Card.mp3"]
   },
   "flamethrower": {
     "moveId": "flamethrower",
@@ -2779,9 +2364,7 @@
     "category": "special",
     "graphic": "Flames.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Whirlwind.mp3"
-    ]
+    "soundEffects": ["Whirlwind.mp3"]
   },
   "flare_blitz": {
     "moveId": "flare_blitz",
@@ -2790,12 +2373,7 @@
     "category": "physical",
     "graphic": "Fire3.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder3.ogg",
-      "Fire1.ogg",
-      "Fire4.ogg",
-      "Fire6.ogg"
-    ]
+    "soundEffects": ["Thunder3.ogg", "Fire1.ogg", "Fire4.ogg", "Fire6.ogg"]
   },
   "flash": {
     "moveId": "flash",
@@ -2804,9 +2382,7 @@
     "category": "status",
     "graphic": "Light1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint7"
-    ]
+    "soundEffects": ["Saint7"]
   },
   "flash_cannon": {
     "moveId": "flash_cannon",
@@ -2815,9 +2391,7 @@
     "category": "special",
     "graphic": "011-Weapon06.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint7.ogg"
-    ]
+    "soundEffects": ["Saint7.ogg"]
   },
   "flatter": {
     "moveId": "flatter",
@@ -2826,9 +2400,7 @@
     "category": "status",
     "graphic": "Heal3.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Applause.ogg"
-    ]
+    "soundEffects": ["Applause.ogg"]
   },
   "fleur_cannon": {
     "moveId": "fleur_cannon",
@@ -2846,9 +2418,7 @@
     "category": "physical",
     "graphic": "BABACOMETRO.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "throw.wav"
-    ]
+    "soundEffects": ["throw.wav"]
   },
   "flip_turn": {
     "moveId": "flip_turn",
@@ -2875,9 +2445,7 @@
     "category": "status",
     "graphic": "PRAS- Floral Healing.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Floral Healing.wav"
-    ]
+    "soundEffects": ["PRSFX- Floral Healing.wav"]
   },
   "flower_shield": {
     "moveId": "flower_shield",
@@ -2904,9 +2472,7 @@
     "category": "physical",
     "graphic": "fly copy.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Take Down.mp3"
-    ]
+    "soundEffects": ["Take Down.mp3"]
   },
   "flying_press": {
     "moveId": "flying_press",
@@ -2924,10 +2490,7 @@
     "category": "special",
     "graphic": "Heal5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg",
-      "Saint7.ogg"
-    ]
+    "soundEffects": ["Twine.ogg", "Saint7.ogg"]
   },
   "focus_energy": {
     "moveId": "focus_energy",
@@ -2936,9 +2499,7 @@
     "category": "status",
     "graphic": "Fire3.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Up"
-    ]
+    "soundEffects": ["Up"]
   },
   "focus_punch": {
     "moveId": "focus_punch",
@@ -2947,9 +2508,7 @@
     "category": "physical",
     "graphic": "finger.spoon.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow5.ogg"
-    ]
+    "soundEffects": ["Blow5.ogg"]
   },
   "follow_me": {
     "moveId": "follow_me",
@@ -2958,9 +2517,7 @@
     "category": "status",
     "graphic": "finger.spoon.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Follow Me.mp3"
-    ]
+    "soundEffects": ["Follow Me.mp3"]
   },
   "force_palm": {
     "moveId": "force_palm",
@@ -2969,9 +2526,7 @@
     "category": "physical",
     "graphic": "WaterBubbles.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash1.ogg"
-    ]
+    "soundEffects": ["Slash1.ogg"]
   },
   "foresight": {
     "moveId": "foresight",
@@ -2998,9 +2553,7 @@
     "category": "physical",
     "graphic": "finger.spoon.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow5.ogg"
-    ]
+    "soundEffects": ["Blow5.ogg"]
   },
   "freeze_shock": {
     "moveId": "freeze_shock",
@@ -3009,9 +2562,7 @@
     "category": "physical",
     "graphic": "PRAS- Freeze Shock.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Freeze Shock.wav"
-    ]
+    "soundEffects": ["PRSFX- Freeze Shock.wav"]
   },
   "freeze_dry": {
     "moveId": "freeze_dry",
@@ -3020,9 +2571,7 @@
     "category": "special",
     "graphic": "PRAS- Freeze Dry.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Freeze-Dry.wav"
-    ]
+    "soundEffects": ["PRSFX- Freeze-Dry.wav"]
   },
   "freezing_glare": {
     "moveId": "freezing_glare",
@@ -3049,10 +2598,7 @@
     "category": "special",
     "graphic": "grass2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Earth4",
-      "Earth5"
-    ]
+    "soundEffects": ["Earth4", "Earth5"]
   },
   "frost_breath": {
     "moveId": "frost_breath",
@@ -3061,9 +2607,7 @@
     "category": "special",
     "graphic": "poison.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind5.ogg"
-    ]
+    "soundEffects": ["Wind5.ogg"]
   },
   "frustration": {
     "moveId": "frustration",
@@ -3072,10 +2616,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow3.ogg",
-      "Pollen.ogg"
-    ]
+    "soundEffects": ["Blow3.ogg", "Pollen.ogg"]
   },
   "fury_attack": {
     "moveId": "fury_attack",
@@ -3084,9 +2625,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "normaldamage"
-    ]
+    "soundEffects": ["normaldamage"]
   },
   "fury_cutter": {
     "moveId": "fury_cutter",
@@ -3095,9 +2634,7 @@
     "category": "physical",
     "graphic": "Sword6.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash10"
-    ]
+    "soundEffects": ["Slash10"]
   },
   "fury_swipes": {
     "moveId": "fury_swipes",
@@ -3106,9 +2643,7 @@
     "category": "physical",
     "graphic": "Scratch + Shadow Claw.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Fury Swipes.mp3"
-    ]
+    "soundEffects": ["Fury Swipes.mp3"]
   },
   "fusion_bolt": {
     "moveId": "fusion_bolt",
@@ -3117,9 +2652,7 @@
     "category": "physical",
     "graphic": "Trovao.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder9.ogg"
-    ]
+    "soundEffects": ["Thunder9.ogg"]
   },
   "fusion_flare": {
     "moveId": "fusion_flare",
@@ -3128,10 +2661,7 @@
     "category": "special",
     "graphic": "Fire3.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Explosion4.ogg",
-      "Fire3.ogg"
-    ]
+    "soundEffects": ["Explosion4.ogg", "Fire3.ogg"]
   },
   "future_sight": {
     "moveId": "future_sight",
@@ -3140,9 +2670,7 @@
     "category": "special",
     "graphic": "face and eye.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Flash2.ogg"
-    ]
+    "soundEffects": ["Flash2.ogg"]
   },
   "g_max_befuddle": {
     "moveId": "g_max_befuddle",
@@ -3448,9 +2976,7 @@
     "category": "status",
     "graphic": "fly copy.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sweet Scent.mp3"
-    ]
+    "soundEffects": ["Sweet Scent.mp3"]
   },
   "gear_grind": {
     "moveId": "gear_grind",
@@ -3486,9 +3012,7 @@
     "category": "status",
     "graphic": "PRAS- Geomancy.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Geomancy.wav"
-    ]
+    "soundEffects": ["PRSFX- Geomancy.wav"]
   },
   "giga_drain": {
     "moveId": "giga_drain",
@@ -3497,9 +3021,7 @@
     "category": "special",
     "graphic": "rockice.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Absorb2"
-    ]
+    "soundEffects": ["Absorb2"]
   },
   "giga_impact": {
     "moveId": "giga_impact",
@@ -3508,9 +3030,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder1.ogg"
-    ]
+    "soundEffects": ["Thunder1.ogg"]
   },
   "gigaton_hammer": {
     "moveId": "gigaton_hammer",
@@ -3546,9 +3066,7 @@
     "category": "special",
     "graphic": "PRAS- Glaciate.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Glaciate.wav"
-    ]
+    "soundEffects": ["PRSFX- Glaciate.wav"]
   },
   "glaive_rush": {
     "moveId": "glaive_rush",
@@ -3566,9 +3084,7 @@
     "category": "status",
     "graphic": "face and eye.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Scary Face.mp3"
-    ]
+    "soundEffects": ["Scary Face.mp3"]
   },
   "glitzy_glow": {
     "moveId": "glitzy_glow",
@@ -3586,9 +3102,7 @@
     "category": "special",
     "graphic": "Heal5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "grass_pledge": {
     "moveId": "grass_pledge",
@@ -3597,9 +3111,7 @@
     "category": "special",
     "graphic": "grass2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Pollen.ogg"
-    ]
+    "soundEffects": ["Pollen.ogg"]
   },
   "grass_whistle": {
     "moveId": "grass_whistle",
@@ -3671,9 +3183,7 @@
     "category": "status",
     "graphic": "ghost1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Fire1"
-    ]
+    "soundEffects": ["Fire1"]
   },
   "guard_split": {
     "moveId": "guard_split",
@@ -3682,9 +3192,7 @@
     "category": "status",
     "graphic": "007-Weapon02.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint8.ogg"
-    ]
+    "soundEffects": ["Saint8.ogg"]
   },
   "guard_swap": {
     "moveId": "guard_swap",
@@ -3711,9 +3219,7 @@
     "category": "physical",
     "graphic": "PRAS- Guillotine.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Guillotine.wav"
-    ]
+    "soundEffects": ["PRSFX- Guillotine.wav"]
   },
   "gunk_shot": {
     "moveId": "gunk_shot",
@@ -3722,9 +3228,7 @@
     "category": "physical",
     "graphic": "poison4.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Poison.ogg"
-    ]
+    "soundEffects": ["Poison.ogg"]
   },
   "gust": {
     "moveId": "gust",
@@ -3733,10 +3237,7 @@
     "category": "special",
     "graphic": "Gust.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "gust.mp3",
-      "hit.wav"
-    ]
+    "soundEffects": ["gust.mp3", "hit.wav"]
   },
   "gyro_ball": {
     "moveId": "gyro_ball",
@@ -3745,9 +3246,7 @@
     "category": "physical",
     "graphic": "Light1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Teleport.ogg"
-    ]
+    "soundEffects": ["Teleport.ogg"]
   },
   "hail": {
     "moveId": "hail",
@@ -3756,9 +3255,7 @@
     "category": "status",
     "graphic": "weather.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Natural Gift.mp3"
-    ]
+    "soundEffects": ["Natural Gift.mp3"]
   },
   "hammer_arm": {
     "moveId": "hammer_arm",
@@ -3767,9 +3264,7 @@
     "category": "physical",
     "graphic": "Hammer Arm.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Explosion1.ogg"
-    ]
+    "soundEffects": ["Explosion1.ogg"]
   },
   "happy_hour": {
     "moveId": "happy_hour",
@@ -3796,9 +3291,7 @@
     "category": "status",
     "graphic": "anim sheet.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Harden.mp3"
-    ]
+    "soundEffects": ["Harden.mp3"]
   },
   "haze": {
     "moveId": "haze",
@@ -3807,9 +3300,7 @@
     "category": "status",
     "graphic": "fly copy.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Darkness2.ogg"
-    ]
+    "soundEffects": ["Darkness2.ogg"]
   },
   "head_charge": {
     "moveId": "head_charge",
@@ -3818,9 +3309,7 @@
     "category": "physical",
     "graphic": "Light1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Explosion3.ogg"
-    ]
+    "soundEffects": ["Explosion3.ogg"]
   },
   "head_smash": {
     "moveId": "head_smash",
@@ -3829,10 +3318,7 @@
     "category": "physical",
     "graphic": "Earth1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Explosion7.ogg",
-      "Up.ogg"
-    ]
+    "soundEffects": ["Explosion7.ogg", "Up.ogg"]
   },
   "headbutt": {
     "moveId": "headbutt",
@@ -3841,9 +3327,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow3"
-    ]
+    "soundEffects": ["Blow3"]
   },
   "headlong_rush": {
     "moveId": "headlong_rush",
@@ -3861,10 +3345,7 @@
     "category": "status",
     "graphic": "Cups + Musical Notes.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sword1.ogg",
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Sword1.ogg", "Twine.ogg"]
   },
   "heal_block": {
     "moveId": "heal_block",
@@ -3873,9 +3354,7 @@
     "category": "status",
     "graphic": "X.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sword2.ogg"
-    ]
+    "soundEffects": ["Sword2.ogg"]
   },
   "heal_order": {
     "moveId": "heal_order",
@@ -3893,9 +3372,7 @@
     "category": "status",
     "graphic": "efftest4.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint8.ogg"
-    ]
+    "soundEffects": ["Saint8.ogg"]
   },
   "healing_wish": {
     "moveId": "healing_wish",
@@ -3904,9 +3381,7 @@
     "category": "status",
     "graphic": "007-Weapon02.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Up.ogg"
-    ]
+    "soundEffects": ["Up.ogg"]
   },
   "heart_stamp": {
     "moveId": "heart_stamp",
@@ -3915,11 +3390,7 @@
     "category": "physical",
     "graphic": "electric2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sound2.ogg",
-      "Wind1.ogg",
-      "Bow1.ogg"
-    ]
+    "soundEffects": ["Sound2.ogg", "Wind1.ogg", "Bow1.ogg"]
   },
   "heart_swap": {
     "moveId": "heart_swap",
@@ -3928,9 +3399,7 @@
     "category": "status",
     "graphic": "electric2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "heat_crash": {
     "moveId": "heat_crash",
@@ -3939,10 +3408,7 @@
     "category": "physical",
     "graphic": "015-Fire01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Fire2.ogg",
-      "Fire3.ogg"
-    ]
+    "soundEffects": ["Fire2.ogg", "Fire3.ogg"]
   },
   "heat_wave": {
     "moveId": "heat_wave",
@@ -3951,10 +3417,7 @@
     "category": "special",
     "graphic": "011-Weapon06.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Fire1",
-      "Fire2"
-    ]
+    "soundEffects": ["Fire1", "Fire2"]
   },
   "heavy_slam": {
     "moveId": "heavy_slam",
@@ -3963,10 +3426,7 @@
     "category": "physical",
     "graphic": "022-Darkness01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind1.ogg",
-      "Explosion1.ogg"
-    ]
+    "soundEffects": ["Wind1.ogg", "Explosion1.ogg"]
   },
   "helping_hand": {
     "moveId": "helping_hand",
@@ -3975,9 +3435,7 @@
     "category": "status",
     "graphic": "many.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sword1.ogg"
-    ]
+    "soundEffects": ["Sword1.ogg"]
   },
   "hex": {
     "moveId": "hex",
@@ -3986,9 +3444,7 @@
     "category": "special",
     "graphic": "009-Weapon04.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Pollen.ogg"
-    ]
+    "soundEffects": ["Pollen.ogg"]
   },
   "hidden_power": {
     "moveId": "hidden_power",
@@ -3997,9 +3453,7 @@
     "category": "special",
     "graphic": "Divine_Smash.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint7.ogg"
-    ]
+    "soundEffects": ["Saint7.ogg"]
   },
   "high_horsepower": {
     "moveId": "high_horsepower",
@@ -4008,9 +3462,7 @@
     "category": "physical",
     "graphic": "Divine_Smash.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow4.ogg"
-    ]
+    "soundEffects": ["Blow4.ogg"]
   },
   "high_jump_kick": {
     "moveId": "high_jump_kick",
@@ -4046,10 +3498,7 @@
     "category": "status",
     "graphic": "dragon claw.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sword1.ogg",
-      "Sword2.ogg"
-    ]
+    "soundEffects": ["Sword1.ogg", "Sword2.ogg"]
   },
   "horn_attack": {
     "moveId": "horn_attack",
@@ -4058,9 +3507,7 @@
     "category": "physical",
     "graphic": "Cosmo-01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "normaldamage"
-    ]
+    "soundEffects": ["normaldamage"]
   },
   "horn_drill": {
     "moveId": "horn_drill",
@@ -4069,10 +3516,7 @@
     "category": "physical",
     "graphic": "WaterBubbles.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Fire4.ogg",
-      "Slash3.ogg"
-    ]
+    "soundEffects": ["Fire4.ogg", "Slash3.ogg"]
   },
   "horn_leech": {
     "moveId": "horn_leech",
@@ -4081,9 +3525,7 @@
     "category": "physical",
     "graphic": "electric1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind5.ogg"
-    ]
+    "soundEffects": ["Wind5.ogg"]
   },
   "howl": {
     "moveId": "howl",
@@ -4110,9 +3552,7 @@
     "category": "special",
     "graphic": "WaterBubbles.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Water5.ogg"
-    ]
+    "soundEffects": ["Water5.ogg"]
   },
   "hydro_pump": {
     "moveId": "hydro_pump",
@@ -4121,9 +3561,7 @@
     "category": "special",
     "graphic": "icewater.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Water1"
-    ]
+    "soundEffects": ["Water1"]
   },
   "hydro_steam": {
     "moveId": "hydro_steam",
@@ -4150,9 +3588,7 @@
     "category": "special",
     "graphic": "Heal5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Teleport.ogg"
-    ]
+    "soundEffects": ["Teleport.ogg"]
   },
   "hyper_drill": {
     "moveId": "hyper_drill",
@@ -4170,9 +3606,7 @@
     "category": "physical",
     "graphic": "normal2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash9"
-    ]
+    "soundEffects": ["Slash9"]
   },
   "hyper_voice": {
     "moveId": "hyper_voice",
@@ -4199,9 +3633,7 @@
     "category": "special",
     "graphic": "PRAS- Hyperspace Hole.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Hyperspace Hole.wav"
-    ]
+    "soundEffects": ["PRSFX- Hyperspace Hole.wav"]
   },
   "hypnosis": {
     "moveId": "hypnosis",
@@ -4210,10 +3642,7 @@
     "category": "status",
     "graphic": "Hypnosis + Lock on.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint8.ogg",
-      "Sleep.ogg"
-    ]
+    "soundEffects": ["Saint8.ogg", "Sleep.ogg"]
   },
   "ice_ball": {
     "moveId": "ice_ball",
@@ -4222,10 +3651,7 @@
     "category": "physical",
     "graphic": "icewater.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "throw",
-      "Earth3"
-    ]
+    "soundEffects": ["throw", "Earth3"]
   },
   "ice_beam": {
     "moveId": "ice_beam",
@@ -4234,10 +3660,7 @@
     "category": "special",
     "graphic": "Ice1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Ice8.ogg",
-      "Ice2.ogg"
-    ]
+    "soundEffects": ["Ice8.ogg", "Ice2.ogg"]
   },
   "ice_burn": {
     "moveId": "ice_burn",
@@ -4246,9 +3669,7 @@
     "category": "special",
     "graphic": "PRAS- Ice Burn.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Ice Burn.wav"
-    ]
+    "soundEffects": ["PRSFX- Ice Burn.wav"]
   },
   "ice_fang": {
     "moveId": "ice_fang",
@@ -4257,9 +3678,7 @@
     "category": "physical",
     "graphic": "element fangs.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Super Fang.mp3"
-    ]
+    "soundEffects": ["Super Fang.mp3"]
   },
   "ice_hammer": {
     "moveId": "ice_hammer",
@@ -4268,9 +3687,7 @@
     "category": "physical",
     "graphic": "016-Ice01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow7.ogg"
-    ]
+    "soundEffects": ["Blow7.ogg"]
   },
   "ice_punch": {
     "moveId": "ice_punch",
@@ -4279,9 +3696,7 @@
     "category": "physical",
     "graphic": "punches.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Shell Smash.mp3"
-    ]
+    "soundEffects": ["Shell Smash.mp3"]
   },
   "ice_shard": {
     "moveId": "ice_shard",
@@ -4317,11 +3732,7 @@
     "category": "physical",
     "graphic": "rockice.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "throw",
-      "Ice2",
-      "Crash"
-    ]
+    "soundEffects": ["throw", "Ice2", "Crash"]
   },
   "icy_wind": {
     "moveId": "icy_wind",
@@ -4330,10 +3741,7 @@
     "category": "special",
     "graphic": "Ice1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "throw",
-      "Ice8"
-    ]
+    "soundEffects": ["throw", "Ice8"]
   },
   "imprison": {
     "moveId": "imprison",
@@ -4342,9 +3750,7 @@
     "category": "status",
     "graphic": "X.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sword1.ogg"
-    ]
+    "soundEffects": ["Sword1.ogg"]
   },
   "incinerate": {
     "moveId": "incinerate",
@@ -4353,10 +3759,7 @@
     "category": "special",
     "graphic": "fire5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Fire1.ogg",
-      "Explosion1.ogg"
-    ]
+    "soundEffects": ["Fire1.ogg", "Explosion1.ogg"]
   },
   "infernal_parade": {
     "moveId": "infernal_parade",
@@ -4374,9 +3777,7 @@
     "category": "special",
     "graphic": "Flames.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wring Out.mp3"
-    ]
+    "soundEffects": ["Wring Out.mp3"]
   },
   "inferno_overdrive": {
     "moveId": "inferno_overdrive",
@@ -4403,10 +3804,7 @@
     "category": "status",
     "graphic": "grass2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Pollen.ogg",
-      "Saint6.ogg"
-    ]
+    "soundEffects": ["Pollen.ogg", "Saint6.ogg"]
   },
   "instruct": {
     "moveId": "instruct",
@@ -4424,10 +3822,7 @@
     "category": "status",
     "graphic": "electric1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder4.ogg",
-      "Thunder3.ogg"
-    ]
+    "soundEffects": ["Thunder4.ogg", "Thunder3.ogg"]
   },
   "iron_defense": {
     "moveId": "iron_defense",
@@ -4445,9 +3840,7 @@
     "category": "physical",
     "graphic": "Iron Head.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Damage1.ogg"
-    ]
+    "soundEffects": ["Damage1.ogg"]
   },
   "iron_tail": {
     "moveId": "iron_tail",
@@ -4456,10 +3849,7 @@
     "category": "physical",
     "graphic": "009-Weapon04.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sword2.ogg",
-      "Sword1.ogg"
-    ]
+    "soundEffects": ["Sword2.ogg", "Sword1.ogg"]
   },
   "ivy_cudgel": {
     "moveId": "ivy_cudgel",
@@ -4504,9 +3894,7 @@
     "category": "physical",
     "graphic": "normal1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow3"
-    ]
+    "soundEffects": ["Blow3"]
   },
   "jungle_healing": {
     "moveId": "jungle_healing",
@@ -4524,10 +3912,7 @@
     "category": "physical",
     "graphic": "many.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind1",
-      "Blow3"
-    ]
+    "soundEffects": ["Wind1", "Blow3"]
   },
   "kinesis": {
     "moveId": "kinesis",
@@ -4536,9 +3921,7 @@
     "category": "status",
     "graphic": "finger.spoon.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Trump Card.mp3"
-    ]
+    "soundEffects": ["Trump Card.mp3"]
   },
   "kings_shield": {
     "moveId": "kings_shield",
@@ -4547,10 +3930,7 @@
     "category": "status",
     "graphic": "normal2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sword1.ogg",
-      "Sword2.ogg"
-    ]
+    "soundEffects": ["Sword1.ogg", "Sword2.ogg"]
   },
   "knock_off": {
     "moveId": "knock_off",
@@ -4559,10 +3939,7 @@
     "category": "physical",
     "graphic": "WaterBubbles.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow5.ogg",
-      "Water1.ogg"
-    ]
+    "soundEffects": ["Blow5.ogg", "Water1.ogg"]
   },
   "kowtow_cleave": {
     "moveId": "kowtow_cleave",
@@ -4607,9 +3984,7 @@
     "category": "physical",
     "graphic": "007-Weapon02.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow6.ogg"
-    ]
+    "soundEffects": ["Blow6.ogg"]
   },
   "last_respects": {
     "moveId": "last_respects",
@@ -4627,10 +4002,7 @@
     "category": "special",
     "graphic": "firepoison.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Fire1.ogg",
-      "Fire6.ogg"
-    ]
+    "soundEffects": ["Fire1.ogg", "Fire6.ogg"]
   },
   "leaf_blade": {
     "moveId": "leaf_blade",
@@ -4639,10 +4011,7 @@
     "category": "physical",
     "graphic": "Sword5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sword1",
-      "Slash3"
-    ]
+    "soundEffects": ["Sword1", "Slash3"]
   },
   "leaf_storm": {
     "moveId": "leaf_storm",
@@ -4651,10 +4020,7 @@
     "category": "special",
     "graphic": "More2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind8.ogg",
-      "Slash1.ogg"
-    ]
+    "soundEffects": ["Wind8.ogg", "Slash1.ogg"]
   },
   "leaf_tornado": {
     "moveId": "leaf_tornado",
@@ -4663,9 +4029,7 @@
     "category": "special",
     "graphic": "More2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind5.ogg"
-    ]
+    "soundEffects": ["Wind5.ogg"]
   },
   "leafage": {
     "moveId": "leafage",
@@ -4674,9 +4038,7 @@
     "category": "physical",
     "graphic": "grass.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind5.ogg"
-    ]
+    "soundEffects": ["Wind5.ogg"]
   },
   "leech_life": {
     "moveId": "leech_life",
@@ -4685,11 +4047,7 @@
     "category": "physical",
     "graphic": "rockice.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "throw",
-      "Twine",
-      "Bow1"
-    ]
+    "soundEffects": ["throw", "Twine", "Bow1"]
   },
   "leech_seed": {
     "moveId": "leech_seed",
@@ -4707,9 +4065,7 @@
     "category": "status",
     "graphic": "leer.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint9.ogg"
-    ]
+    "soundEffects": ["Saint9.ogg"]
   },
   "lets_snuggle_forever": {
     "moveId": "lets_snuggle_forever",
@@ -4754,9 +4110,7 @@
     "category": "status",
     "graphic": "normal2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "light_that_burns_the_sky": {
     "moveId": "light_that_burns_the_sky",
@@ -4765,9 +4119,7 @@
     "category": "special",
     "graphic": "PRAS- Light that Burns the Sky.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Light That Burns the Sky.wav"
-    ]
+    "soundEffects": ["PRSFX- Light That Burns the Sky.wav"]
   },
   "liquidation": {
     "moveId": "liquidation",
@@ -4776,11 +4128,7 @@
     "category": "physical",
     "graphic": "WaterBubbles.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Water5.ogg",
-      "Water2.ogg",
-      "Blow5.ogg"
-    ]
+    "soundEffects": ["Water5.ogg", "Water2.ogg", "Blow5.ogg"]
   },
   "lock_on": {
     "moveId": "lock_on",
@@ -4789,9 +4137,7 @@
     "category": "status",
     "graphic": "mixed.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Lock On.mp3"
-    ]
+    "soundEffects": ["Lock On.mp3"]
   },
   "lovely_kiss": {
     "moveId": "lovely_kiss",
@@ -4800,9 +4146,7 @@
     "category": "status",
     "graphic": "poi.hear.mus.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Lovely Kiss.mp3"
-    ]
+    "soundEffects": ["Lovely Kiss.mp3"]
   },
   "low_kick": {
     "moveId": "low_kick",
@@ -4811,9 +4155,7 @@
     "category": "physical",
     "graphic": "normal1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow1"
-    ]
+    "soundEffects": ["Blow1"]
   },
   "low_sweep": {
     "moveId": "low_sweep",
@@ -4822,9 +4164,7 @@
     "category": "physical",
     "graphic": "WaterBubbles.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow5.ogg"
-    ]
+    "soundEffects": ["Blow5.ogg"]
   },
   "lucky_chant": {
     "moveId": "lucky_chant",
@@ -4833,9 +4173,7 @@
     "category": "status",
     "graphic": "anim sheet.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Lucky Chant.mp3"
-    ]
+    "soundEffects": ["Lucky Chant.mp3"]
   },
   "lumina_crash": {
     "moveId": "lumina_crash",
@@ -4880,9 +4218,7 @@
     "category": "special",
     "graphic": "PRAS- Luster Purge.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Luster Purge.wav"
-    ]
+    "soundEffects": ["PRSFX- Luster Purge.wav"]
   },
   "mach_punch": {
     "moveId": "mach_punch",
@@ -4891,9 +4227,7 @@
     "category": "physical",
     "graphic": "punches.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Mega Punch.mp3"
-    ]
+    "soundEffects": ["Mega Punch.mp3"]
   },
   "magic_coat": {
     "moveId": "magic_coat",
@@ -4902,9 +4236,7 @@
     "category": "status",
     "graphic": "anim sheet.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sword2.ogg"
-    ]
+    "soundEffects": ["Sword2.ogg"]
   },
   "magic_powder": {
     "moveId": "magic_powder",
@@ -4931,10 +4263,7 @@
     "category": "special",
     "graphic": "More2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind7.ogg",
-      "Wind5.ogg"
-    ]
+    "soundEffects": ["Wind7.ogg", "Wind5.ogg"]
   },
   "magical_torque": {
     "moveId": "magical_torque",
@@ -4952,9 +4281,7 @@
     "category": "special",
     "graphic": "PRAS- Magma Storm.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Magma Storm.wav"
-    ]
+    "soundEffects": ["PRSFX- Magma Storm.wav"]
   },
   "magnet_bomb": {
     "moveId": "magnet_bomb",
@@ -4963,10 +4290,7 @@
     "category": "physical",
     "graphic": "Earth1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Earth4.ogg",
-      "Explosion1.ogg"
-    ]
+    "soundEffects": ["Earth4.ogg", "Explosion1.ogg"]
   },
   "magnet_rise": {
     "moveId": "magnet_rise",
@@ -4993,10 +4317,7 @@
     "category": "physical",
     "graphic": "Rock Tomb.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Black.png",
-      "Earth4.ogg"
-    ]
+    "soundEffects": ["Black.png", "Earth4.ogg"]
   },
   "make_it_rain": {
     "moveId": "make_it_rain",
@@ -5032,9 +4353,7 @@
     "category": "status",
     "graphic": "PRAS- Mat Block.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Mat Block.wav"
-    ]
+    "soundEffects": ["PRSFX- Mat Block.wav"]
   },
   "matcha_gotcha": {
     "moveId": "matcha_gotcha",
@@ -5223,9 +4542,7 @@
     "category": "status",
     "graphic": "estranho.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "mean_look": {
     "moveId": "mean_look",
@@ -5243,9 +4560,7 @@
     "category": "status",
     "graphic": "estranho.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "mega_drain": {
     "moveId": "mega_drain",
@@ -5254,9 +4569,7 @@
     "category": "special",
     "graphic": "rockice.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Absorb2"
-    ]
+    "soundEffects": ["Absorb2"]
   },
   "mega_kick": {
     "moveId": "mega_kick",
@@ -5265,10 +4578,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind7",
-      "Blow5"
-    ]
+    "soundEffects": ["Wind7", "Blow5"]
   },
   "mega_punch": {
     "moveId": "mega_punch",
@@ -5277,9 +4587,7 @@
     "category": "physical",
     "graphic": "punches.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Mega Punch.mp3"
-    ]
+    "soundEffects": ["Mega Punch.mp3"]
   },
   "megahorn": {
     "moveId": "megahorn",
@@ -5288,11 +4596,7 @@
     "category": "physical",
     "graphic": "poison3.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Up",
-      "throw",
-      "Slash10"
-    ]
+    "soundEffects": ["Up", "throw", "Slash10"]
   },
   "memento": {
     "moveId": "memento",
@@ -5301,9 +4605,7 @@
     "category": "status",
     "graphic": "estranho.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Stare.ogg"
-    ]
+    "soundEffects": ["Stare.ogg"]
   },
   "menacing_moonraze_maelstrom": {
     "moveId": "menacing_moonraze_maelstrom",
@@ -5321,9 +4623,7 @@
     "category": "physical",
     "graphic": "Fire3.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sand.ogg"
-    ]
+    "soundEffects": ["Sand.ogg"]
   },
   "metal_claw": {
     "moveId": "metal_claw",
@@ -5332,9 +4632,7 @@
     "category": "physical",
     "graphic": "dragon claw.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "metal.mp3"
-    ]
+    "soundEffects": ["metal.mp3"]
   },
   "metal_sound": {
     "moveId": "metal_sound",
@@ -5343,9 +4641,7 @@
     "category": "status",
     "graphic": "Firebird.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder1.ogg"
-    ]
+    "soundEffects": ["Thunder1.ogg"]
   },
   "meteor_assault": {
     "moveId": "meteor_assault",
@@ -5372,9 +4668,7 @@
     "category": "physical",
     "graphic": "punches.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "superdamage.wav"
-    ]
+    "soundEffects": ["superdamage.wav"]
   },
   "metronome": {
     "moveId": "metronome",
@@ -5383,9 +4677,7 @@
     "category": "status",
     "graphic": "finger.spoon.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Metronome.mp3"
-    ]
+    "soundEffects": ["Metronome.mp3"]
   },
   "mighty_cleave": {
     "moveId": "mighty_cleave",
@@ -5403,9 +4695,7 @@
     "category": "status",
     "graphic": "Cups + Musical Notes.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Up.ogg"
-    ]
+    "soundEffects": ["Up.ogg"]
   },
   "mimic": {
     "moveId": "mimic",
@@ -5414,9 +4704,7 @@
     "category": "status",
     "graphic": "007-Weapon02.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind1.ogg"
-    ]
+    "soundEffects": ["Wind1.ogg"]
   },
   "mind_blown": {
     "moveId": "mind_blown",
@@ -5425,9 +4713,7 @@
     "category": "special",
     "graphic": "PRAS- Mind Blown.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Mind Blown.wav"
-    ]
+    "soundEffects": ["PRSFX- Mind Blown.wav"]
   },
   "mind_reader": {
     "moveId": "mind_reader",
@@ -5436,10 +4722,7 @@
     "category": "status",
     "graphic": "animsheet.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sleep.ogg",
-      "Stare.ogg"
-    ]
+    "soundEffects": ["Sleep.ogg", "Stare.ogg"]
   },
   "minimize": {
     "moveId": "minimize",
@@ -5448,9 +4731,7 @@
     "category": "status",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "miracle_eye": {
     "moveId": "miracle_eye",
@@ -5459,10 +4740,7 @@
     "category": "status",
     "graphic": "animsheet.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind1.ogg",
-      "Stare.ogg"
-    ]
+    "soundEffects": ["Wind1.ogg", "Stare.ogg"]
   },
   "mirror_coat": {
     "moveId": "mirror_coat",
@@ -5471,9 +4749,7 @@
     "category": "special",
     "graphic": "007-Weapon02.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint8.ogg"
-    ]
+    "soundEffects": ["Saint8.ogg"]
   },
   "mirror_move": {
     "moveId": "mirror_move",
@@ -5491,10 +4767,7 @@
     "category": "special",
     "graphic": "Light1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint4.ogg",
-      "Water3.ogg"
-    ]
+    "soundEffects": ["Saint4.ogg", "Water3.ogg"]
   },
   "mist": {
     "moveId": "mist",
@@ -5503,9 +4776,7 @@
     "category": "status",
     "graphic": "fly copy.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Smokescreen.mp3"
-    ]
+    "soundEffects": ["Smokescreen.mp3"]
   },
   "mist_ball": {
     "moveId": "mist_ball",
@@ -5514,9 +4785,7 @@
     "category": "special",
     "graphic": "fly copy.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wring Out.mp3"
-    ]
+    "soundEffects": ["Wring Out.mp3"]
   },
   "misty_explosion": {
     "moveId": "misty_explosion",
@@ -5534,9 +4803,7 @@
     "category": "status",
     "graphic": "028-State01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind8.ogg"
-    ]
+    "soundEffects": ["Wind8.ogg"]
   },
   "moonblast": {
     "moveId": "moonblast",
@@ -5545,9 +4812,7 @@
     "category": "special",
     "graphic": "normal2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint4.ogg"
-    ]
+    "soundEffects": ["Saint4.ogg"]
   },
   "moongeist_beam": {
     "moveId": "moongeist_beam",
@@ -5565,9 +4830,7 @@
     "category": "status",
     "graphic": "normal2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint6"
-    ]
+    "soundEffects": ["Saint6"]
   },
   "morning_sun": {
     "moveId": "morning_sun",
@@ -5576,9 +4839,7 @@
     "category": "status",
     "graphic": "Heal3.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint7"
-    ]
+    "soundEffects": ["Saint7"]
   },
   "mortal_spin": {
     "moveId": "mortal_spin",
@@ -5605,10 +4866,7 @@
     "category": "special",
     "graphic": "Mud Sport + Mud Bomb.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Water3.ogg",
-      "Water2.ogg"
-    ]
+    "soundEffects": ["Water3.ogg", "Water2.ogg"]
   },
   "mud_shot": {
     "moveId": "mud_shot",
@@ -5617,9 +4875,7 @@
     "category": "special",
     "graphic": "Mud Sport + Mud Bomb.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Water3.ogg"
-    ]
+    "soundEffects": ["Water3.ogg"]
   },
   "mud_sport": {
     "moveId": "mud_sport",
@@ -5637,10 +4893,7 @@
     "category": "special",
     "graphic": "Mud Sport + Mud Bomb.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow5.ogg",
-      "Water5.ogg"
-    ]
+    "soundEffects": ["Blow5.ogg", "Water5.ogg"]
   },
   "muddy_water": {
     "moveId": "muddy_water",
@@ -5649,10 +4902,7 @@
     "category": "special",
     "graphic": "AAAA.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Water3.ogg",
-      "Water2.ogg"
-    ]
+    "soundEffects": ["Water3.ogg", "Water2.ogg"]
   },
   "multi_attack": {
     "moveId": "multi_attack",
@@ -5661,9 +4911,7 @@
     "category": "physical",
     "graphic": "PRAS- Multi Attack.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Multi-Attack.wav"
-    ]
+    "soundEffects": ["PRSFX- Multi-Attack.wav"]
   },
   "mystical_fire": {
     "moveId": "mystical_fire",
@@ -5672,11 +4920,7 @@
     "category": "special",
     "graphic": "firepoison.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Fire1.ogg",
-      "Fire5.ogg",
-      "Fire4.ogg"
-    ]
+    "soundEffects": ["Fire1.ogg", "Fire5.ogg", "Fire4.ogg"]
   },
   "mystical_power": {
     "moveId": "mystical_power",
@@ -5694,10 +4938,7 @@
     "category": "status",
     "graphic": "!.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Stare.ogg",
-      "Sword1.ogg"
-    ]
+    "soundEffects": ["Stare.ogg", "Sword1.ogg"]
   },
   "natural_gift": {
     "moveId": "natural_gift",
@@ -5706,9 +4947,7 @@
     "category": "physical",
     "graphic": "Heal5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind5.ogg"
-    ]
+    "soundEffects": ["Wind5.ogg"]
   },
   "nature_power": {
     "moveId": "nature_power",
@@ -5717,9 +4956,7 @@
     "category": "status",
     "graphic": "028-State01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind8.ogg"
-    ]
+    "soundEffects": ["Wind8.ogg"]
   },
   "natures_madness": {
     "moveId": "natures_madness",
@@ -5737,11 +4974,7 @@
     "category": "physical",
     "graphic": "00-TriAttack.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind1.ogg",
-      "Blow3.ogg",
-      "Slash1.ogg"
-    ]
+    "soundEffects": ["Wind1.ogg", "Blow3.ogg", "Slash1.ogg"]
   },
   "never_ending_nightmare": {
     "moveId": "never_ending_nightmare",
@@ -5750,9 +4983,7 @@
     "category": "physical",
     "graphic": "PRAS- NeverEndingNightmare.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Never-Ending Nightmare.wav"
-    ]
+    "soundEffects": ["PRSFX- Never-Ending Nightmare.wav"]
   },
   "night_daze": {
     "moveId": "night_daze",
@@ -5761,9 +4992,7 @@
     "category": "special",
     "graphic": "efftest4.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "night_shade": {
     "moveId": "night_shade",
@@ -5772,11 +5001,7 @@
     "category": "special",
     "graphic": "022-Darkness01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Black.png",
-      "Wind8.ogg",
-      "Slash3.ogg"
-    ]
+    "soundEffects": ["Black.png", "Wind8.ogg", "Slash3.ogg"]
   },
   "night_slash": {
     "moveId": "night_slash",
@@ -5785,9 +5010,7 @@
     "category": "physical",
     "graphic": "Aerial Ace.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash10.ogg"
-    ]
+    "soundEffects": ["Slash10.ogg"]
   },
   "nightmare": {
     "moveId": "nightmare",
@@ -5832,9 +5055,7 @@
     "category": "physical",
     "graphic": "electric1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder4.ogg"
-    ]
+    "soundEffects": ["Thunder4.ogg"]
   },
   "oblivion_wing": {
     "moveId": "oblivion_wing",
@@ -5861,9 +5082,7 @@
     "category": "special",
     "graphic": "PRAS- Oceanic Operetta.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Oceanic Operetta.wav"
-    ]
+    "soundEffects": ["PRSFX- Oceanic Operetta.wav"]
   },
   "octazooka": {
     "moveId": "octazooka",
@@ -5872,9 +5091,7 @@
     "category": "special",
     "graphic": "022-Darkness01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Water5.ogg"
-    ]
+    "soundEffects": ["Water5.ogg"]
   },
   "octolock": {
     "moveId": "octolock",
@@ -5892,9 +5109,7 @@
     "category": "status",
     "graphic": "PRAS- Odor Sleuth.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Odor Sleuth.wav"
-    ]
+    "soundEffects": ["PRSFX- Odor Sleuth.wav"]
   },
   "ominous_wind": {
     "moveId": "ominous_wind",
@@ -5903,9 +5118,7 @@
     "category": "special",
     "graphic": "Special5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind8.ogg"
-    ]
+    "soundEffects": ["Wind8.ogg"]
   },
   "order_up": {
     "moveId": "order_up",
@@ -5923,9 +5136,7 @@
     "category": "special",
     "graphic": "PRAS- Origin Pulse.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Origin Pulse.wav"
-    ]
+    "soundEffects": ["PRSFX- Origin Pulse.wav"]
   },
   "outrage": {
     "moveId": "outrage",
@@ -5934,10 +5145,7 @@
     "category": "physical",
     "graphic": "Fogo - 01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Explosion6",
-      "Fire2"
-    ]
+    "soundEffects": ["Explosion6", "Fire2"]
   },
   "overdrive": {
     "moveId": "overdrive",
@@ -5955,9 +5163,7 @@
     "category": "special",
     "graphic": "fire4.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Fire3"
-    ]
+    "soundEffects": ["Fire3"]
   },
   "pain_split": {
     "moveId": "pain_split",
@@ -5966,9 +5172,7 @@
     "category": "status",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow4.ogg"
-    ]
+    "soundEffects": ["Blow4.ogg"]
   },
   "parabolic_charge": {
     "moveId": "parabolic_charge",
@@ -5977,11 +5181,7 @@
     "category": "special",
     "graphic": "electric1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder4.ogg",
-      "Thunder1.ogg",
-      "Recovery.ogg"
-    ]
+    "soundEffects": ["Thunder4.ogg", "Thunder1.ogg", "Recovery.ogg"]
   },
   "parting_shot": {
     "moveId": "parting_shot",
@@ -5999,9 +5199,7 @@
     "category": "physical",
     "graphic": "008-Weapon03.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Select"
-    ]
+    "soundEffects": ["Select"]
   },
   "payback": {
     "moveId": "payback",
@@ -6010,9 +5208,7 @@
     "category": "physical",
     "graphic": "efftest4.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind5.ogg"
-    ]
+    "soundEffects": ["Wind5.ogg"]
   },
   "peck": {
     "moveId": "peck",
@@ -6021,9 +5217,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow7.ogg"
-    ]
+    "soundEffects": ["Blow7.ogg"]
   },
   "perish_song": {
     "moveId": "perish_song",
@@ -6032,9 +5226,7 @@
     "category": "status",
     "graphic": "Cups + Musical Notes.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint1.ogg"
-    ]
+    "soundEffects": ["Saint1.ogg"]
   },
   "petal_blizzard": {
     "moveId": "petal_blizzard",
@@ -6043,9 +5235,7 @@
     "category": "physical",
     "graphic": "More2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind5.ogg"
-    ]
+    "soundEffects": ["Wind5.ogg"]
   },
   "petal_dance": {
     "moveId": "petal_dance",
@@ -6054,9 +5244,7 @@
     "category": "special",
     "graphic": "Anima (1).png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint6"
-    ]
+    "soundEffects": ["Saint6"]
   },
   "phantom_force": {
     "moveId": "phantom_force",
@@ -6065,9 +5253,7 @@
     "category": "physical",
     "graphic": "efftest4.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Darkness2.ogg"
-    ]
+    "soundEffects": ["Darkness2.ogg"]
   },
   "photon_geyser": {
     "moveId": "photon_geyser",
@@ -6094,10 +5280,7 @@
     "category": "physical",
     "graphic": "poison3.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "throw",
-      "Slash10"
-    ]
+    "soundEffects": ["throw", "Slash10"]
   },
   "plasma_fists": {
     "moveId": "plasma_fists",
@@ -6115,9 +5298,7 @@
     "category": "status",
     "graphic": "electric2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "play_rough": {
     "moveId": "play_rough",
@@ -6143,9 +5324,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash3.ogg"
-    ]
+    "soundEffects": ["Slash3.ogg"]
   },
   "poison_fang": {
     "moveId": "poison_fang",
@@ -6154,9 +5333,7 @@
     "category": "physical",
     "graphic": "element fangs.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Voltorb Flip Mark.wav"
-    ]
+    "soundEffects": ["Voltorb Flip Mark.wav"]
   },
   "poison_gas": {
     "moveId": "poison_gas",
@@ -6165,9 +5342,7 @@
     "category": "status",
     "graphic": "poison.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind8"
-    ]
+    "soundEffects": ["Wind8"]
   },
   "poison_jab": {
     "moveId": "poison_jab",
@@ -6176,10 +5351,7 @@
     "category": "physical",
     "graphic": "firepoison.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Poison.ogg",
-      "Blow3.ogg"
-    ]
+    "soundEffects": ["Poison.ogg", "Blow3.ogg"]
   },
   "poison_powder": {
     "moveId": "poison_powder",
@@ -6188,9 +5360,7 @@
     "category": "status",
     "graphic": "Special5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sand"
-    ]
+    "soundEffects": ["Sand"]
   },
   "poison_sting": {
     "moveId": "poison_sting",
@@ -6199,10 +5369,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "throw",
-      "Slash10"
-    ]
+    "soundEffects": ["throw", "Slash10"]
   },
   "poison_tail": {
     "moveId": "poison_tail",
@@ -6211,10 +5378,7 @@
     "category": "physical",
     "graphic": "firepoison.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Poison",
-      "Blow3"
-    ]
+    "soundEffects": ["Poison", "Blow3"]
   },
   "pollen_puff": {
     "moveId": "pollen_puff",
@@ -6223,9 +5387,7 @@
     "category": "special",
     "graphic": "011-Weapon06.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Pollen.ogg"
-    ]
+    "soundEffects": ["Pollen.ogg"]
   },
   "poltergeist": {
     "moveId": "poltergeist",
@@ -6261,9 +5423,7 @@
     "category": "physical",
     "graphic": "many.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow1"
-    ]
+    "soundEffects": ["Blow1"]
   },
   "powder": {
     "moveId": "powder",
@@ -6272,10 +5432,7 @@
     "category": "status",
     "graphic": "firepoison.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Water3.ogg",
-      "Wind8.ogg"
-    ]
+    "soundEffects": ["Water3.ogg", "Wind8.ogg"]
   },
   "powder_snow": {
     "moveId": "powder_snow",
@@ -6284,9 +5441,7 @@
     "category": "special",
     "graphic": "icewater.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Ice8.ogg"
-    ]
+    "soundEffects": ["Ice8.ogg"]
   },
   "power_gem": {
     "moveId": "power_gem",
@@ -6295,9 +5450,7 @@
     "category": "special",
     "graphic": "Eruption.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "power_shift": {
     "moveId": "power_shift",
@@ -6315,9 +5468,7 @@
     "category": "status",
     "graphic": "Divine_Smash.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "power_swap": {
     "moveId": "power_swap",
@@ -6326,9 +5477,7 @@
     "category": "status",
     "graphic": "estranho.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind5.ogg"
-    ]
+    "soundEffects": ["Wind5.ogg"]
   },
   "power_trick": {
     "moveId": "power_trick",
@@ -6337,9 +5486,7 @@
     "category": "status",
     "graphic": "028-State01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sound2.ogg"
-    ]
+    "soundEffects": ["Sound2.ogg"]
   },
   "power_trip": {
     "moveId": "power_trip",
@@ -6357,11 +5504,7 @@
     "category": "physical",
     "graphic": "009-Weapon04.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash2.ogg",
-      "Slash3.ogg",
-      "Slash10.ogg"
-    ]
+    "soundEffects": ["Slash2.ogg", "Slash3.ogg", "Slash10.ogg"]
   },
   "power_up_punch": {
     "moveId": "power_up_punch",
@@ -6370,9 +5513,7 @@
     "category": "physical",
     "graphic": "finger.spoon.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow6.ogg"
-    ]
+    "soundEffects": ["Blow6.ogg"]
   },
   "precipice_blades": {
     "moveId": "precipice_blades",
@@ -6390,9 +5531,7 @@
     "category": "physical",
     "graphic": "PRAS- Present.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Present.wav"
-    ]
+    "soundEffects": ["PRSFX- Present.wav"]
   },
   "prismatic_laser": {
     "moveId": "prismatic_laser",
@@ -6401,9 +5540,7 @@
     "category": "special",
     "graphic": "PRAS- Prismatic Laser.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Prismatic Laser.wav"
-    ]
+    "soundEffects": ["PRSFX- Prismatic Laser.wav"]
   },
   "protect": {
     "moveId": "protect",
@@ -6412,9 +5549,7 @@
     "category": "status",
     "graphic": "anim sheet.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Flash2.ogg"
-    ]
+    "soundEffects": ["Flash2.ogg"]
   },
   "psybeam": {
     "moveId": "psybeam",
@@ -6423,9 +5558,7 @@
     "category": "special",
     "graphic": "PRAS- Psybeam.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Psybeam.wav"
-    ]
+    "soundEffects": ["PRSFX- Psybeam.wav"]
   },
   "psyblade": {
     "moveId": "psyblade",
@@ -6452,9 +5585,7 @@
     "category": "special",
     "graphic": "efftest4.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Darkness2"
-    ]
+    "soundEffects": ["Darkness2"]
   },
   "psychic_fangs": {
     "moveId": "psychic_fangs",
@@ -6481,9 +5612,7 @@
     "category": "status",
     "graphic": "efftest4.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind5.ogg"
-    ]
+    "soundEffects": ["Wind5.ogg"]
   },
   "psycho_boost": {
     "moveId": "psycho_boost",
@@ -6492,9 +5621,7 @@
     "category": "special",
     "graphic": "efftest4.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Up.ogg"
-    ]
+    "soundEffects": ["Up.ogg"]
   },
   "psycho_cut": {
     "moveId": "psycho_cut",
@@ -6503,9 +5630,7 @@
     "category": "physical",
     "graphic": "Psycho Cut.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Psycho Cut.wav"
-    ]
+    "soundEffects": ["Psycho Cut.wav"]
   },
   "psycho_shift": {
     "moveId": "psycho_shift",
@@ -6514,9 +5639,7 @@
     "category": "status",
     "graphic": "efftest4.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "psyshield_bash": {
     "moveId": "psyshield_bash",
@@ -6534,10 +5657,7 @@
     "category": "special",
     "graphic": "Aerial Ace.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow5.ogg",
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Blow5.ogg", "Twine.ogg"]
   },
   "psystrike": {
     "moveId": "psystrike",
@@ -6546,10 +5666,7 @@
     "category": "special",
     "graphic": "efftest4.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Stare.ogg",
-      "Saint3.ogg"
-    ]
+    "soundEffects": ["Stare.ogg", "Saint3.ogg"]
   },
   "psywave": {
     "moveId": "psywave",
@@ -6558,9 +5675,7 @@
     "category": "special",
     "graphic": "022-Darkness01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint4.ogg"
-    ]
+    "soundEffects": ["Saint4.ogg"]
   },
   "pulverizing_pancake": {
     "moveId": "pulverizing_pancake",
@@ -6569,9 +5684,7 @@
     "category": "physical",
     "graphic": "PRAS- Pulverizing Pancake.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Pulverizing Pancake.wav"
-    ]
+    "soundEffects": ["PRSFX- Pulverizing Pancake.wav"]
   },
   "punishment": {
     "moveId": "punishment",
@@ -6580,9 +5693,7 @@
     "category": "physical",
     "graphic": "zan03.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow4.ogg"
-    ]
+    "soundEffects": ["Blow4.ogg"]
   },
   "purify": {
     "moveId": "purify",
@@ -6618,10 +5729,7 @@
     "category": "status",
     "graphic": "WaterBubbles.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow6.ogg",
-      "Stare.ogg"
-    ]
+    "soundEffects": ["Blow6.ogg", "Stare.ogg"]
   },
   "quick_attack": {
     "moveId": "quick_attack",
@@ -6630,9 +5738,7 @@
     "category": "physical",
     "graphic": "Tackle_B.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow4.ogg"
-    ]
+    "soundEffects": ["Blow4.ogg"]
   },
   "quick_guard": {
     "moveId": "quick_guard",
@@ -6641,9 +5747,7 @@
     "category": "status",
     "graphic": "many.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint9.ogg"
-    ]
+    "soundEffects": ["Saint9.ogg"]
   },
   "quiver_dance": {
     "moveId": "quiver_dance",
@@ -6652,9 +5756,7 @@
     "category": "status",
     "graphic": "Aerial Ace.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "rage": {
     "moveId": "rage",
@@ -6663,10 +5765,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Fire1.ogg",
-      "Blow3.ogg"
-    ]
+    "soundEffects": ["Fire1.ogg", "Blow3.ogg"]
   },
   "rage_fist": {
     "moveId": "rage_fist",
@@ -6684,9 +5783,7 @@
     "category": "status",
     "graphic": "efftest4.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint1.ogg"
-    ]
+    "soundEffects": ["Saint1.ogg"]
   },
   "raging_bull": {
     "moveId": "raging_bull",
@@ -6722,9 +5819,7 @@
     "category": "physical",
     "graphic": "electric1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind8.ogg"
-    ]
+    "soundEffects": ["Wind8.ogg"]
   },
   "razor_leaf": {
     "moveId": "razor_leaf",
@@ -6733,9 +5828,7 @@
     "category": "physical",
     "graphic": "grass.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash8"
-    ]
+    "soundEffects": ["Slash8"]
   },
   "razor_shell": {
     "moveId": "razor_shell",
@@ -6744,9 +5837,7 @@
     "category": "physical",
     "graphic": "008-Weapon03.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash6.ogg"
-    ]
+    "soundEffects": ["Slash6.ogg"]
   },
   "razor_wind": {
     "moveId": "razor_wind",
@@ -6755,12 +5846,7 @@
     "category": "special",
     "graphic": "Heal5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind1.ogg",
-      "Slash2.ogg",
-      "Slash8.ogg",
-      "Slash9.ogg"
-    ]
+    "soundEffects": ["Wind1.ogg", "Slash2.ogg", "Slash8.ogg", "Slash9.ogg"]
   },
   "recover": {
     "moveId": "recover",
@@ -6769,9 +5855,7 @@
     "category": "status",
     "graphic": "anim sheet.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Recovery.ogg"
-    ]
+    "soundEffects": ["Recovery.ogg"]
   },
   "recycle": {
     "moveId": "recycle",
@@ -6780,9 +5864,7 @@
     "category": "status",
     "graphic": "fly copy.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "reflect": {
     "moveId": "reflect",
@@ -6791,9 +5873,7 @@
     "category": "status",
     "graphic": "normal2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint7"
-    ]
+    "soundEffects": ["Saint7"]
   },
   "reflect_type": {
     "moveId": "reflect_type",
@@ -6811,9 +5891,7 @@
     "category": "status",
     "graphic": "anim sheet.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Recovery.ogg"
-    ]
+    "soundEffects": ["Recovery.ogg"]
   },
   "relic_song": {
     "moveId": "relic_song",
@@ -6831,9 +5909,7 @@
     "category": "status",
     "graphic": "fly copy.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Refresh.mp3"
-    ]
+    "soundEffects": ["Refresh.mp3"]
   },
   "retaliate": {
     "moveId": "retaliate",
@@ -6842,9 +5918,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow3.ogg"
-    ]
+    "soundEffects": ["Blow3.ogg"]
   },
   "return": {
     "moveId": "return",
@@ -6853,9 +5927,7 @@
     "category": "physical",
     "graphic": "Iron Head.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "revelation_dance": {
     "moveId": "revelation_dance",
@@ -6873,9 +5945,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow4.ogg"
-    ]
+    "soundEffects": ["Blow4.ogg"]
   },
   "reversal": {
     "moveId": "reversal",
@@ -6884,10 +5954,7 @@
     "category": "physical",
     "graphic": "electric1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Fire4.ogg",
-      "Slash10.ogg"
-    ]
+    "soundEffects": ["Fire4.ogg", "Slash10.ogg"]
   },
   "revival_blessing": {
     "moveId": "revival_blessing",
@@ -6914,9 +5981,7 @@
     "category": "status",
     "graphic": "Growl.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wring Out.mp3"
-    ]
+    "soundEffects": ["Wring Out.mp3"]
   },
   "roar_of_time": {
     "moveId": "roar_of_time",
@@ -6934,10 +5999,7 @@
     "category": "physical",
     "graphic": "Earth1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind7.ogg",
-      "Explosion2.ogg"
-    ]
+    "soundEffects": ["Wind7.ogg", "Explosion2.ogg"]
   },
   "rock_climb": {
     "moveId": "rock_climb",
@@ -6946,9 +6008,7 @@
     "category": "physical",
     "graphic": "Rock Tomb.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Explosion3.ogg"
-    ]
+    "soundEffects": ["Explosion3.ogg"]
   },
   "rock_polish": {
     "moveId": "rock_polish",
@@ -6957,9 +6017,7 @@
     "category": "status",
     "graphic": "Heal5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Water5.ogg"
-    ]
+    "soundEffects": ["Water5.ogg"]
   },
   "rock_slide": {
     "moveId": "rock_slide",
@@ -6968,9 +6026,7 @@
     "category": "physical",
     "graphic": "rockice.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Earth5.ogg"
-    ]
+    "soundEffects": ["Earth5.ogg"]
   },
   "rock_smash": {
     "moveId": "rock_smash",
@@ -6979,10 +6035,7 @@
     "category": "physical",
     "graphic": "rockice.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow6",
-      "Earth1"
-    ]
+    "soundEffects": ["Blow6", "Earth1"]
   },
   "rock_throw": {
     "moveId": "rock_throw",
@@ -6991,10 +6044,7 @@
     "category": "physical",
     "graphic": "Earth1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "throw",
-      "Earth1"
-    ]
+    "soundEffects": ["throw", "Earth1"]
   },
   "rock_tomb": {
     "moveId": "rock_tomb",
@@ -7003,9 +6053,7 @@
     "category": "physical",
     "graphic": "rockice.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Earth4.ogg"
-    ]
+    "soundEffects": ["Earth4.ogg"]
   },
   "rock_wrecker": {
     "moveId": "rock_wrecker",
@@ -7032,9 +6080,7 @@
     "category": "physical",
     "graphic": "normal1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow5.ogg"
-    ]
+    "soundEffects": ["Blow5.ogg"]
   },
   "rollout": {
     "moveId": "rollout",
@@ -7043,10 +6089,7 @@
     "category": "physical",
     "graphic": "Earth1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Earth4.ogg",
-      "Explosion1.ogg"
-    ]
+    "soundEffects": ["Earth4.ogg", "Explosion1.ogg"]
   },
   "roost": {
     "moveId": "roost",
@@ -7055,9 +6098,7 @@
     "category": "status",
     "graphic": "Firebird.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "rototiller": {
     "moveId": "rototiller",
@@ -7075,10 +6116,7 @@
     "category": "special",
     "graphic": "007-Weapon02.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind7.ogg",
-      "Sound2.ogg"
-    ]
+    "soundEffects": ["Wind7.ogg", "Sound2.ogg"]
   },
   "ruination": {
     "moveId": "ruination",
@@ -7096,9 +6134,7 @@
     "category": "physical",
     "graphic": "015-Fire01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Fire6.ogg"
-    ]
+    "soundEffects": ["Fire6.ogg"]
   },
   "sacred_sword": {
     "moveId": "sacred_sword",
@@ -7107,9 +6143,7 @@
     "category": "physical",
     "graphic": "009-Weapon04.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash6.ogg"
-    ]
+    "soundEffects": ["Slash6.ogg"]
   },
   "safeguard": {
     "moveId": "safeguard",
@@ -7118,9 +6152,7 @@
     "category": "status",
     "graphic": "007-Weapon02.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint4.ogg"
-    ]
+    "soundEffects": ["Saint4.ogg"]
   },
   "salt_cure": {
     "moveId": "salt_cure",
@@ -7138,9 +6170,7 @@
     "category": "status",
     "graphic": "Sand-Attack.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sand.ogg"
-    ]
+    "soundEffects": ["Sand.ogg"]
   },
   "sand_tomb": {
     "moveId": "sand_tomb",
@@ -7149,9 +6179,7 @@
     "category": "physical",
     "graphic": "weather.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sand.ogg"
-    ]
+    "soundEffects": ["Sand.ogg"]
   },
   "sandsear_storm": {
     "moveId": "sandsear_storm",
@@ -7169,10 +6197,7 @@
     "category": "status",
     "graphic": "weather.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sand.ogg",
-      "Wind5.ogg"
-    ]
+    "soundEffects": ["Sand.ogg", "Wind5.ogg"]
   },
   "sappy_seed": {
     "moveId": "sappy_seed",
@@ -7199,10 +6224,7 @@
     "category": "special",
     "graphic": "WaterBubbles.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Fire5.ogg",
-      "Fire3.ogg"
-    ]
+    "soundEffects": ["Fire5.ogg", "Fire3.ogg"]
   },
   "scale_shot": {
     "moveId": "scale_shot",
@@ -7220,9 +6242,7 @@
     "category": "status",
     "graphic": "normal2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Stare"
-    ]
+    "soundEffects": ["Stare"]
   },
   "scorching_sands": {
     "moveId": "scorching_sands",
@@ -7240,9 +6260,7 @@
     "category": "physical",
     "graphic": "scratchbattle.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash10"
-    ]
+    "soundEffects": ["Slash10"]
   },
   "screech": {
     "moveId": "screech",
@@ -7260,9 +6278,7 @@
     "category": "special",
     "graphic": "PRAS- Searingshot.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Searing Shot.wav"
-    ]
+    "soundEffects": ["PRSFX- Searing Shot.wav"]
   },
   "searing_sunraze_smash": {
     "moveId": "searing_sunraze_smash",
@@ -7289,9 +6305,7 @@
     "category": "special",
     "graphic": "009-Weapon04.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash9.ogg"
-    ]
+    "soundEffects": ["Slash9.ogg"]
   },
   "seed_bomb": {
     "moveId": "seed_bomb",
@@ -7300,9 +6314,7 @@
     "category": "physical",
     "graphic": "anim sheet.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Explosion3.ogg"
-    ]
+    "soundEffects": ["Explosion3.ogg"]
   },
   "seed_flare": {
     "moveId": "seed_flare",
@@ -7320,9 +6332,7 @@
     "category": "physical",
     "graphic": "fly copy.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Earth5.ogg"
-    ]
+    "soundEffects": ["Earth5.ogg"]
   },
   "self_destruct": {
     "moveId": "self_destruct",
@@ -7331,24 +6341,16 @@
     "category": "physical",
     "graphic": "030-Explosion01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Explosion1",
-      "Explosion2",
-      "Explosion3",
-      "Explosion4",
-      "Explosion7"
-    ]
+    "soundEffects": ["Explosion1", "Explosion2", "Explosion3", "Explosion4", "Explosion7"]
   },
   "shadow_ball": {
     "moveId": "shadow_ball",
     "name": "Shadow Ball (Quả Cầu Bóng Tối)",
     "type": "Ghost",
     "category": "special",
-    "graphic": "009-Weapon04.png",
+    "graphic": "shadowball.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Collapse1"
-    ]
+    "soundEffects": ["Collapse1"]
   },
   "shadow_bone": {
     "moveId": "shadow_bone",
@@ -7357,9 +6359,7 @@
     "category": "physical",
     "graphic": "PRAS- Shadow Bone.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Shadow Bone.wav"
-    ]
+    "soundEffects": ["PRSFX- Shadow Bone.wav"]
   },
   "shadow_claw": {
     "moveId": "shadow_claw",
@@ -7368,10 +6368,7 @@
     "category": "physical",
     "graphic": "009-Weapon04.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash10.ogg",
-      "Darkness6.ogg"
-    ]
+    "soundEffects": ["Slash10.ogg", "Darkness6.ogg"]
   },
   "shadow_force": {
     "moveId": "shadow_force",
@@ -7389,10 +6386,7 @@
     "category": "physical",
     "graphic": "punches.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow5.ogg",
-      "Darkness2.ogg"
-    ]
+    "soundEffects": ["Blow5.ogg", "Darkness2.ogg"]
   },
   "shadow_sneak": {
     "moveId": "shadow_sneak",
@@ -7401,10 +6395,7 @@
     "category": "physical",
     "graphic": "022-Darkness01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Darkness2.ogg",
-      "Darkness6.ogg"
-    ]
+    "soundEffects": ["Darkness2.ogg", "Darkness6.ogg"]
   },
   "sharpen": {
     "moveId": "sharpen",
@@ -7413,9 +6404,7 @@
     "category": "status",
     "graphic": "anim sheet.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sword2.ogg"
-    ]
+    "soundEffects": ["Sword2.ogg"]
   },
   "shattered_psyche": {
     "moveId": "shattered_psyche",
@@ -7424,9 +6413,7 @@
     "category": "physical",
     "graphic": "PRAS- Shattered Psyche.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Shattered Psyche.wav"
-    ]
+    "soundEffects": ["PRSFX- Shattered Psyche.wav"]
   },
   "shed_tail": {
     "moveId": "shed_tail",
@@ -7444,10 +6431,7 @@
     "category": "special",
     "graphic": "016-Ice01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Ice5.ogg",
-      "Slash3.ogg"
-    ]
+    "soundEffects": ["Ice5.ogg", "Slash3.ogg"]
   },
   "shell_side_arm": {
     "moveId": "shell_side_arm",
@@ -7465,10 +6449,7 @@
     "category": "status",
     "graphic": "Earth1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sound2.ogg",
-      "Explosion1.ogg"
-    ]
+    "soundEffects": ["Sound2.ogg", "Explosion1.ogg"]
   },
   "shell_trap": {
     "moveId": "shell_trap",
@@ -7477,9 +6458,7 @@
     "category": "special",
     "graphic": "PRAS- Shell Trap.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Shell Trap.wav"
-    ]
+    "soundEffects": ["PRSFX- Shell Trap.wav"]
   },
   "shelter": {
     "moveId": "shelter",
@@ -7506,10 +6485,7 @@
     "category": "special",
     "graphic": "electric1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder4.ogg",
-      "Thunder1.ogg"
-    ]
+    "soundEffects": ["Thunder4.ogg", "Thunder1.ogg"]
   },
   "shore_up": {
     "moveId": "shore_up",
@@ -7518,9 +6494,7 @@
     "category": "status",
     "graphic": "PRAS- Shore Up.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Shore Up.wav"
-    ]
+    "soundEffects": ["PRSFX- Shore Up.wav"]
   },
   "signal_beam": {
     "moveId": "signal_beam",
@@ -7529,10 +6503,7 @@
     "category": "special",
     "graphic": "Ultra Beam.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Teleport",
-      "Twine"
-    ]
+    "soundEffects": ["Teleport", "Twine"]
   },
   "silk_trap": {
     "moveId": "silk_trap",
@@ -7550,9 +6521,7 @@
     "category": "special",
     "graphic": "Heal5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind8"
-    ]
+    "soundEffects": ["Wind8"]
   },
   "simple_beam": {
     "moveId": "simple_beam",
@@ -7561,9 +6530,7 @@
     "category": "status",
     "graphic": "007-Weapon02.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint8.ogg"
-    ]
+    "soundEffects": ["Saint8.ogg"]
   },
   "sing": {
     "moveId": "sing",
@@ -7572,9 +6539,7 @@
     "category": "status",
     "graphic": "poi.hear.mus.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sing.mp3"
-    ]
+    "soundEffects": ["Sing.mp3"]
   },
   "sinister_arrow_raid": {
     "moveId": "sinister_arrow_raid",
@@ -7583,9 +6548,7 @@
     "category": "physical",
     "graphic": "PRAS- Sinister Arrow Raid.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Sinister Arrow Raid.wav"
-    ]
+    "soundEffects": ["PRSFX- Sinister Arrow Raid.wav"]
   },
   "sizzly_slide": {
     "moveId": "sizzly_slide",
@@ -7603,9 +6566,7 @@
     "category": "status",
     "graphic": "normal2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash6"
-    ]
+    "soundEffects": ["Slash6"]
   },
   "skill_swap": {
     "moveId": "skill_swap",
@@ -7614,9 +6575,7 @@
     "category": "status",
     "graphic": "007-Weapon02.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind5.ogg"
-    ]
+    "soundEffects": ["Wind5.ogg"]
   },
   "skitter_smack": {
     "moveId": "skitter_smack",
@@ -7634,11 +6593,7 @@
     "category": "physical",
     "graphic": "007-Weapon02.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Up.ogg",
-      "Blow6.ogg",
-      "Blow7.ogg"
-    ]
+    "soundEffects": ["Up.ogg", "Blow6.ogg", "Blow7.ogg"]
   },
   "sky_attack": {
     "moveId": "sky_attack",
@@ -7647,9 +6602,7 @@
     "category": "physical",
     "graphic": "Firebird.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind5.ogg"
-    ]
+    "soundEffects": ["Wind5.ogg"]
   },
   "sky_drop": {
     "moveId": "sky_drop",
@@ -7658,11 +6611,7 @@
     "category": "physical",
     "graphic": "fly copy.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow4.ogg",
-      "Wind1.ogg",
-      "Earth1.ogg"
-    ]
+    "soundEffects": ["Blow4.ogg", "Wind1.ogg", "Earth1.ogg"]
   },
   "sky_uppercut": {
     "moveId": "sky_uppercut",
@@ -7671,10 +6620,7 @@
     "category": "physical",
     "graphic": "BABACOMETRO.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow6.ogg",
-      "Blow4.ogg"
-    ]
+    "soundEffects": ["Blow6.ogg", "Blow4.ogg"]
   },
   "slack_off": {
     "moveId": "slack_off",
@@ -7683,9 +6629,7 @@
     "category": "status",
     "graphic": "008-Weapon03.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sleep.ogg"
-    ]
+    "soundEffects": ["Sleep.ogg"]
   },
   "slam": {
     "moveId": "slam",
@@ -7694,9 +6638,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow6"
-    ]
+    "soundEffects": ["Blow6"]
   },
   "slash": {
     "moveId": "slash",
@@ -7705,9 +6647,7 @@
     "category": "physical",
     "graphic": "zan03.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash3"
-    ]
+    "soundEffects": ["Slash3"]
   },
   "sleep_powder": {
     "moveId": "sleep_powder",
@@ -7716,9 +6656,7 @@
     "category": "status",
     "graphic": "Special5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sand"
-    ]
+    "soundEffects": ["Sand"]
   },
   "sleep_talk": {
     "moveId": "sleep_talk",
@@ -7727,9 +6665,7 @@
     "category": "status",
     "graphic": "028-State01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sleep.ogg"
-    ]
+    "soundEffects": ["Sleep.ogg"]
   },
   "sludge": {
     "moveId": "sludge",
@@ -7738,10 +6674,7 @@
     "category": "special",
     "graphic": "State1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "throw",
-      "Poison"
-    ]
+    "soundEffects": ["throw", "Poison"]
   },
   "sludge_bomb": {
     "moveId": "sludge_bomb",
@@ -7750,9 +6683,7 @@
     "category": "special",
     "graphic": "poison4.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Poison"
-    ]
+    "soundEffects": ["Poison"]
   },
   "sludge_wave": {
     "moveId": "sludge_wave",
@@ -7770,10 +6701,7 @@
     "category": "physical",
     "graphic": "Rock Tomb.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Earth1.ogg",
-      "Earth4.ogg"
-    ]
+    "soundEffects": ["Earth1.ogg", "Earth4.ogg"]
   },
   "smart_strike": {
     "moveId": "smart_strike",
@@ -7800,9 +6728,7 @@
     "category": "special",
     "graphic": "poison.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind8"
-    ]
+    "soundEffects": ["Wind8"]
   },
   "smokescreen": {
     "moveId": "smokescreen",
@@ -7811,9 +6737,7 @@
     "category": "status",
     "graphic": "Anima (2).png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind8"
-    ]
+    "soundEffects": ["Wind8"]
   },
   "snap_trap": {
     "moveId": "snap_trap",
@@ -7831,9 +6755,7 @@
     "category": "special",
     "graphic": "007-Weapon02.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind5.ogg"
-    ]
+    "soundEffects": ["Wind5.ogg"]
   },
   "snatch": {
     "moveId": "snatch",
@@ -7842,10 +6764,7 @@
     "category": "status",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow3.ogg",
-      "Wind7.ogg"
-    ]
+    "soundEffects": ["Blow3.ogg", "Wind7.ogg"]
   },
   "snipe_shot": {
     "moveId": "snipe_shot",
@@ -7881,9 +6800,7 @@
     "category": "status",
     "graphic": "icewater.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Water2.ogg"
-    ]
+    "soundEffects": ["Water2.ogg"]
   },
   "soft_boiled": {
     "moveId": "soft_boiled",
@@ -7901,10 +6818,7 @@
     "category": "special",
     "graphic": "030-Explosion01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sword1.ogg",
-      "Saint8.ogg"
-    ]
+    "soundEffects": ["Sword1.ogg", "Saint8.ogg"]
   },
   "solar_blade": {
     "moveId": "solar_blade",
@@ -7913,10 +6827,7 @@
     "category": "physical",
     "graphic": "Cosmo-01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind7.ogg",
-      "Slash2.ogg"
-    ]
+    "soundEffects": ["Wind7.ogg", "Slash2.ogg"]
   },
   "sonic_boom": {
     "moveId": "sonic_boom",
@@ -7925,9 +6836,7 @@
     "category": "special",
     "graphic": "Cosmo-01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint4.ogg"
-    ]
+    "soundEffects": ["Saint4.ogg"]
   },
   "soul_stealing_7_star_strike": {
     "moveId": "soul_stealing_7_star_strike",
@@ -7945,9 +6854,7 @@
     "category": "special",
     "graphic": "PRAS- Spacial Rend.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Spacial Rend.wav"
-    ]
+    "soundEffects": ["PRSFX- Spacial Rend.wav"]
   },
   "spark": {
     "moveId": "spark",
@@ -7956,10 +6863,7 @@
     "category": "physical",
     "graphic": "electric1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder4.ogg",
-      "Thunder1.ogg"
-    ]
+    "soundEffects": ["Thunder4.ogg", "Thunder1.ogg"]
   },
   "sparkling_aria": {
     "moveId": "sparkling_aria",
@@ -7968,9 +6872,7 @@
     "category": "special",
     "graphic": "PRAS- Sparkling Aria.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Sparkling Aria.wav"
-    ]
+    "soundEffects": ["PRSFX- Sparkling Aria.wav"]
   },
   "sparkly_swirl": {
     "moveId": "sparkly_swirl",
@@ -7988,9 +6890,7 @@
     "category": "physical",
     "graphic": "PRAS- Spectral Thief.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Spectral Thief.wav"
-    ]
+    "soundEffects": ["PRSFX- Spectral Thief.wav"]
   },
   "speed_swap": {
     "moveId": "speed_swap",
@@ -8017,9 +6917,7 @@
     "category": "status",
     "graphic": "ghost2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "throw"
-    ]
+    "soundEffects": ["throw"]
   },
   "spike_cannon": {
     "moveId": "spike_cannon",
@@ -8028,9 +6926,7 @@
     "category": "physical",
     "graphic": "poison3.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash10"
-    ]
+    "soundEffects": ["Slash10"]
   },
   "spikes": {
     "moveId": "spikes",
@@ -8039,10 +6935,7 @@
     "category": "status",
     "graphic": "normal2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "throw",
-      "Sword1"
-    ]
+    "soundEffects": ["throw", "Sword1"]
   },
   "spiky_shield": {
     "moveId": "spiky_shield",
@@ -8051,10 +6944,7 @@
     "category": "status",
     "graphic": "normal2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sword2.ogg",
-      "Sword1.ogg"
-    ]
+    "soundEffects": ["Sword2.ogg", "Sword1.ogg"]
   },
   "spin_out": {
     "moveId": "spin_out",
@@ -8081,9 +6971,7 @@
     "category": "physical",
     "graphic": "PRAS- Spirit Shackle.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Spirit Shackle.wav"
-    ]
+    "soundEffects": ["PRSFX- Spirit Shackle.wav"]
   },
   "spit_up": {
     "moveId": "spit_up",
@@ -8092,9 +6980,7 @@
     "category": "special",
     "graphic": "efftest4.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Darkness2.ogg"
-    ]
+    "soundEffects": ["Darkness2.ogg"]
   },
   "spite": {
     "moveId": "spite",
@@ -8112,9 +6998,7 @@
     "category": "status",
     "graphic": "poison2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Water2"
-    ]
+    "soundEffects": ["Water2"]
   },
   "splintered_stormshards": {
     "moveId": "splintered_stormshards",
@@ -8141,9 +7025,7 @@
     "category": "status",
     "graphic": "Special5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sand"
-    ]
+    "soundEffects": ["Sand"]
   },
   "spotlight": {
     "moveId": "spotlight",
@@ -8170,9 +7052,7 @@
     "category": "status",
     "graphic": "Rock Tomb.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slam.mp3"
-    ]
+    "soundEffects": ["Slam.mp3"]
   },
   "steam_eruption": {
     "moveId": "steam_eruption",
@@ -8181,9 +7061,7 @@
     "category": "special",
     "graphic": "PRAS- Steam Eruption.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Steam Eruption.wav"
-    ]
+    "soundEffects": ["PRSFX- Steam Eruption.wav"]
   },
   "steamroller": {
     "moveId": "steamroller",
@@ -8219,9 +7097,7 @@
     "category": "physical",
     "graphic": "Heal5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind5.ogg"
-    ]
+    "soundEffects": ["Wind5.ogg"]
   },
   "sticky_web": {
     "moveId": "sticky_web",
@@ -8230,9 +7106,7 @@
     "category": "status",
     "graphic": "ghost2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind7.ogg"
-    ]
+    "soundEffects": ["Wind7.ogg"]
   },
   "stockpile": {
     "moveId": "stockpile",
@@ -8241,9 +7115,7 @@
     "category": "status",
     "graphic": "efftest4.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind5.ogg"
-    ]
+    "soundEffects": ["Wind5.ogg"]
   },
   "stoked_sparksurfer": {
     "moveId": "stoked_sparksurfer",
@@ -8261,9 +7133,7 @@
     "category": "physical",
     "graphic": "normal1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow6"
-    ]
+    "soundEffects": ["Blow6"]
   },
   "stomping_tantrum": {
     "moveId": "stomping_tantrum",
@@ -8272,9 +7142,7 @@
     "category": "physical",
     "graphic": "PRAS- Stomping Tantrum.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Stomping Tantrum.wav"
-    ]
+    "soundEffects": ["PRSFX- Stomping Tantrum.wav"]
   },
   "stone_axe": {
     "moveId": "stone_axe",
@@ -8292,9 +7160,7 @@
     "category": "physical",
     "graphic": "Rock Tomb.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Earth4.ogg"
-    ]
+    "soundEffects": ["Earth4.ogg"]
   },
   "stored_power": {
     "moveId": "stored_power",
@@ -8330,9 +7196,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow7.ogg"
-    ]
+    "soundEffects": ["Blow7.ogg"]
   },
   "strength_sap": {
     "moveId": "strength_sap",
@@ -8350,10 +7214,7 @@
     "category": "status",
     "graphic": "water3.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Battle1",
-      "throw"
-    ]
+    "soundEffects": ["Battle1", "throw"]
   },
   "struggle": {
     "moveId": "struggle",
@@ -8371,9 +7232,7 @@
     "category": "special",
     "graphic": "028-State01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder4.ogg"
-    ]
+    "soundEffects": ["Thunder4.ogg"]
   },
   "stuff_cheeks": {
     "moveId": "stuff_cheeks",
@@ -8391,9 +7250,7 @@
     "category": "status",
     "graphic": "Special5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sand"
-    ]
+    "soundEffects": ["Sand"]
   },
   "submission": {
     "moveId": "submission",
@@ -8441,9 +7298,7 @@
     "category": "physical",
     "graphic": "finger.spoon.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow5.ogg"
-    ]
+    "soundEffects": ["Blow5.ogg"]
   },
   "sunny_day": {
     "moveId": "sunny_day",
@@ -8452,9 +7307,7 @@
     "category": "status",
     "graphic": "weather.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Flash2.ogg"
-    ]
+    "soundEffects": ["Flash2.ogg"]
   },
   "sunsteel_strike": {
     "moveId": "sunsteel_strike",
@@ -8472,9 +7325,7 @@
     "category": "physical",
     "graphic": "dragon claw.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash10.ogg"
-    ]
+    "soundEffects": ["Slash10.ogg"]
   },
   "supercell_slam": {
     "moveId": "supercell_slam",
@@ -8492,10 +7343,7 @@
     "category": "physical",
     "graphic": "030-Explosion01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Fire5.ogg",
-      "Blow4.ogg"
-    ]
+    "soundEffects": ["Fire5.ogg", "Blow4.ogg"]
   },
   "supersonic": {
     "moveId": "supersonic",
@@ -8504,9 +7352,7 @@
     "category": "status",
     "graphic": "Struggle.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine"
-    ]
+    "soundEffects": ["Twine"]
   },
   "supersonic_skystrike": {
     "moveId": "supersonic_skystrike",
@@ -8524,10 +7370,7 @@
     "category": "special",
     "graphic": "SurfSpec.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Water5.ogg",
-      "Water1.ogg"
-    ]
+    "soundEffects": ["Water5.ogg", "Water1.ogg"]
   },
   "surging_strikes": {
     "moveId": "surging_strikes",
@@ -8545,9 +7388,7 @@
     "category": "status",
     "graphic": "mixed status.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Swagger.mp3"
-    ]
+    "soundEffects": ["Swagger.mp3"]
   },
   "swallow": {
     "moveId": "swallow",
@@ -8556,10 +7397,7 @@
     "category": "status",
     "graphic": "anim sheet.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Pollen.ogg",
-      "Wind7.ogg"
-    ]
+    "soundEffects": ["Pollen.ogg", "Wind7.ogg"]
   },
   "sweet_kiss": {
     "moveId": "sweet_kiss",
@@ -8568,9 +7406,7 @@
     "category": "status",
     "graphic": "electric2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint1"
-    ]
+    "soundEffects": ["Saint1"]
   },
   "sweet_scent": {
     "moveId": "sweet_scent",
@@ -8579,9 +7415,7 @@
     "category": "status",
     "graphic": "Anima (1).png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind1.ogg"
-    ]
+    "soundEffects": ["Wind1.ogg"]
   },
   "swift": {
     "moveId": "swift",
@@ -8590,9 +7424,7 @@
     "category": "special",
     "graphic": "007-Weapon02.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint3"
-    ]
+    "soundEffects": ["Saint3"]
   },
   "switcheroo": {
     "moveId": "switcheroo",
@@ -8601,9 +7433,7 @@
     "category": "status",
     "graphic": "Cups + Musical Notes.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind7.ogg"
-    ]
+    "soundEffects": ["Wind7.ogg"]
   },
   "swords_dance": {
     "moveId": "swords_dance",
@@ -8612,9 +7442,7 @@
     "category": "status",
     "graphic": "fly copy.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Swords Dance.mp3"
-    ]
+    "soundEffects": ["Swords Dance.mp3"]
   },
   "synchronoise": {
     "moveId": "synchronoise",
@@ -8623,10 +7451,7 @@
     "category": "special",
     "graphic": "023-Burst01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind5.ogg",
-      "Saint6.ogg"
-    ]
+    "soundEffects": ["Wind5.ogg", "Saint6.ogg"]
   },
   "synthesis": {
     "moveId": "synthesis",
@@ -8635,10 +7460,7 @@
     "category": "status",
     "graphic": "anim sheet.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Recovery.ogg",
-      "Pollen.ogg"
-    ]
+    "soundEffects": ["Recovery.ogg", "Pollen.ogg"]
   },
   "syrup_bomb": {
     "moveId": "syrup_bomb",
@@ -8665,9 +7487,7 @@
     "category": "physical",
     "graphic": "Tackle_B.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow1"
-    ]
+    "soundEffects": ["Blow1"]
   },
   "tail_glow": {
     "moveId": "tail_glow",
@@ -8676,9 +7496,7 @@
     "category": "status",
     "graphic": "Light1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint4"
-    ]
+    "soundEffects": ["Saint4"]
   },
   "tail_slap": {
     "moveId": "tail_slap",
@@ -8687,9 +7505,7 @@
     "category": "physical",
     "graphic": "PRAS- Tail slap.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Tail Slap.wav"
-    ]
+    "soundEffects": ["PRSFX- Tail Slap.wav"]
   },
   "tail_whip": {
     "moveId": "tail_whip",
@@ -8707,9 +7523,7 @@
     "category": "status",
     "graphic": "004-Attack02.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind8.ogg"
-    ]
+    "soundEffects": ["Wind8.ogg"]
   },
   "take_down": {
     "moveId": "take_down",
@@ -8718,9 +7532,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow4.ogg"
-    ]
+    "soundEffects": ["Blow4.ogg"]
   },
   "take_heart": {
     "moveId": "take_heart",
@@ -8747,10 +7559,7 @@
     "category": "status",
     "graphic": "Swagger.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sound2.ogg",
-      "Stare.ogg"
-    ]
+    "soundEffects": ["Sound2.ogg", "Stare.ogg"]
   },
   "tearful_look": {
     "moveId": "tearful_look",
@@ -8777,9 +7586,7 @@
     "category": "special",
     "graphic": "PRAS- Techno Blast.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Techno Blast.wav"
-    ]
+    "soundEffects": ["PRSFX- Techno Blast.wav"]
   },
   "tectonic_rage": {
     "moveId": "tectonic_rage",
@@ -8797,9 +7604,7 @@
     "category": "status",
     "graphic": "Cups + Musical Notes.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "telekinesis": {
     "moveId": "telekinesis",
@@ -8808,10 +7613,7 @@
     "category": "status",
     "graphic": "finger.spoon.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint1.ogg",
-      "Sword1.ogg"
-    ]
+    "soundEffects": ["Saint1.ogg", "Sword1.ogg"]
   },
   "teleport": {
     "moveId": "teleport",
@@ -8820,9 +7622,7 @@
     "category": "status",
     "graphic": "!.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Trump Card.mp3"
-    ]
+    "soundEffects": ["Trump Card.mp3"]
   },
   "temper_flare": {
     "moveId": "temper_flare",
@@ -8867,10 +7667,7 @@
     "category": "physical",
     "graphic": "BABACOMETRO.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow6.ogg",
-      "Darkness6.ogg"
-    ]
+    "soundEffects": ["Blow6.ogg", "Darkness6.ogg"]
   },
   "thousand_arrows": {
     "moveId": "thousand_arrows",
@@ -8897,9 +7694,7 @@
     "category": "physical",
     "graphic": "BABACOMETRO.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Explosion2.ogg"
-    ]
+    "soundEffects": ["Explosion2.ogg"]
   },
   "throat_chop": {
     "moveId": "throat_chop",
@@ -8917,9 +7712,7 @@
     "category": "special",
     "graphic": "Trovã£o.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder1"
-    ]
+    "soundEffects": ["Thunder1"]
   },
   "thunder_cage": {
     "moveId": "thunder_cage",
@@ -8937,10 +7730,7 @@
     "category": "physical",
     "graphic": "element fangs.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Super Fang.mp3",
-      "Uproar.mp3"
-    ]
+    "soundEffects": ["Super Fang.mp3", "Uproar.mp3"]
   },
   "thunder_punch": {
     "moveId": "thunder_punch",
@@ -8949,10 +7739,7 @@
     "category": "physical",
     "graphic": "punches.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Work Up.mp3",
-      "Mega Punch.mp3"
-    ]
+    "soundEffects": ["Work Up.mp3", "Mega Punch.mp3"]
   },
   "thunder_shock": {
     "moveId": "thunder_shock",
@@ -8961,9 +7748,7 @@
     "category": "special",
     "graphic": "electric1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder1"
-    ]
+    "soundEffects": ["Thunder1"]
   },
   "thunder_wave": {
     "moveId": "thunder_wave",
@@ -8972,9 +7757,7 @@
     "category": "status",
     "graphic": "T. Shock.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Paralyze1"
-    ]
+    "soundEffects": ["Paralyze1"]
   },
   "thunderbolt": {
     "moveId": "thunderbolt",
@@ -8983,9 +7766,7 @@
     "category": "special",
     "graphic": "017-Thunder01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder9"
-    ]
+    "soundEffects": ["Thunder9"]
   },
   "thunderclap": {
     "moveId": "thunderclap",
@@ -9012,9 +7793,7 @@
     "category": "status",
     "graphic": "007-Weapon02.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "tidy_up": {
     "moveId": "tidy_up",
@@ -9059,9 +7838,7 @@
     "category": "status",
     "graphic": "State1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Poison"
-    ]
+    "soundEffects": ["Poison"]
   },
   "toxic_spikes": {
     "moveId": "toxic_spikes",
@@ -9122,10 +7899,7 @@
     "category": "status",
     "graphic": "Cups + Musical Notes.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind7.ogg",
-      "Pollen.ogg"
-    ]
+    "soundEffects": ["Wind7.ogg", "Pollen.ogg"]
   },
   "trick_room": {
     "moveId": "trick_room",
@@ -9134,9 +7908,7 @@
     "category": "status",
     "graphic": "mixed status.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "MiningPing.mp3"
-    ]
+    "soundEffects": ["MiningPing.mp3"]
   },
   "trick_or_treat": {
     "moveId": "trick_or_treat",
@@ -9145,9 +7917,7 @@
     "category": "status",
     "graphic": "022-Darkness01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Darkness2.ogg"
-    ]
+    "soundEffects": ["Darkness2.ogg"]
   },
   "triple_arrows": {
     "moveId": "triple_arrows",
@@ -9183,9 +7953,7 @@
     "category": "physical",
     "graphic": "normal1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow5.ogg"
-    ]
+    "soundEffects": ["Blow5.ogg"]
   },
   "trop_kick": {
     "moveId": "trop_kick",
@@ -9194,9 +7962,7 @@
     "category": "physical",
     "graphic": "PRAS- Trop Kick.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Trop Kick.wav"
-    ]
+    "soundEffects": ["PRSFX- Trop Kick.wav"]
   },
   "trump_card": {
     "moveId": "trump_card",
@@ -9205,9 +7971,7 @@
     "category": "special",
     "graphic": "PRAS- Trump card.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Trump Card.wav"
-    ]
+    "soundEffects": ["PRSFX- Trump Card.wav"]
   },
   "twin_beam": {
     "moveId": "twin_beam",
@@ -9225,10 +7989,7 @@
     "category": "physical",
     "graphic": "poison3.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "throw",
-      "Slash10"
-    ]
+    "soundEffects": ["throw", "Slash10"]
   },
   "twinkle_tackle": {
     "moveId": "twinkle_tackle",
@@ -9237,9 +7998,7 @@
     "category": "physical",
     "graphic": "PRAS- Twinkle Tackle.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "PRSFX- Twinkle Tackle.wav"
-    ]
+    "soundEffects": ["PRSFX- Twinkle Tackle.wav"]
   },
   "twister": {
     "moveId": "twister",
@@ -9248,12 +8007,7 @@
     "category": "special",
     "graphic": "water3.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine",
-      "Water3",
-      "Water1",
-      "Water2"
-    ]
+    "soundEffects": ["Twine", "Water3", "Water1", "Water2"]
   },
   "u_turn": {
     "moveId": "u_turn",
@@ -9262,11 +8016,7 @@
     "category": "physical",
     "graphic": "efftest4.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind7.ogg",
-      "Blow6.ogg",
-      "Wind8.ogg"
-    ]
+    "soundEffects": ["Wind7.ogg", "Blow6.ogg", "Wind8.ogg"]
   },
   "upper_hand": {
     "moveId": "upper_hand",
@@ -9284,9 +8034,7 @@
     "category": "special",
     "graphic": "normal1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "v_create": {
     "moveId": "v_create",
@@ -9295,10 +8043,7 @@
     "category": "physical",
     "graphic": "Sword6.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Fire4.ogg",
-      "Fire5.ogg"
-    ]
+    "soundEffects": ["Fire4.ogg", "Fire5.ogg"]
   },
   "vacuum_wave": {
     "moveId": "vacuum_wave",
@@ -9307,10 +8052,7 @@
     "category": "special",
     "graphic": "finger.spoon.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow4.ogg",
-      "Wind5.ogg"
-    ]
+    "soundEffects": ["Blow4.ogg", "Wind5.ogg"]
   },
   "veevee_volley": {
     "moveId": "veevee_volley",
@@ -9328,9 +8070,7 @@
     "category": "status",
     "graphic": "firepoison.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Poison.ogg"
-    ]
+    "soundEffects": ["Poison.ogg"]
   },
   "venoshock": {
     "moveId": "venoshock",
@@ -9339,10 +8079,7 @@
     "category": "special",
     "graphic": "poison4.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Poison.ogg",
-      "Water5.ogg"
-    ]
+    "soundEffects": ["Poison.ogg", "Water5.ogg"]
   },
   "victory_dance": {
     "moveId": "victory_dance",
@@ -9360,9 +8097,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash1"
-    ]
+    "soundEffects": ["Slash1"]
   },
   "vise_grip": {
     "moveId": "vise_grip",
@@ -9380,9 +8115,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash3.ogg"
-    ]
+    "soundEffects": ["Slash3.ogg"]
   },
   "volt_switch": {
     "moveId": "volt_switch",
@@ -9400,10 +8133,7 @@
     "category": "physical",
     "graphic": "electric1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder4.ogg",
-      "Thunder1.ogg"
-    ]
+    "soundEffects": ["Thunder4.ogg", "Thunder1.ogg"]
   },
   "wake_up_slap": {
     "moveId": "wake_up_slap",
@@ -9412,9 +8142,7 @@
     "category": "physical",
     "graphic": "Fakeout.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow3.ogg"
-    ]
+    "soundEffects": ["Blow3.ogg"]
   },
   "water_gun": {
     "moveId": "water_gun",
@@ -9423,9 +8151,7 @@
     "category": "special",
     "graphic": "fly copy.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Yawn.mp3"
-    ]
+    "soundEffects": ["Yawn.mp3"]
   },
   "water_pledge": {
     "moveId": "water_pledge",
@@ -9452,9 +8178,7 @@
     "category": "special",
     "graphic": "electric1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Water3.ogg"
-    ]
+    "soundEffects": ["Water3.ogg"]
   },
   "water_sport": {
     "moveId": "water_sport",
@@ -9463,9 +8187,7 @@
     "category": "status",
     "graphic": "firepoison.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Water5.ogg"
-    ]
+    "soundEffects": ["Water5.ogg"]
   },
   "water_spout": {
     "moveId": "water_spout",
@@ -9474,9 +8196,7 @@
     "category": "special",
     "graphic": "water3.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Water3.ogg"
-    ]
+    "soundEffects": ["Water3.ogg"]
   },
   "waterfall": {
     "moveId": "waterfall",
@@ -9485,11 +8205,7 @@
     "category": "physical",
     "graphic": "water3.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Water3.ogg",
-      "Water1.ogg",
-      "Water2.ogg"
-    ]
+    "soundEffects": ["Water3.ogg", "Water1.ogg", "Water2.ogg"]
   },
   "wave_crash": {
     "moveId": "wave_crash",
@@ -9507,9 +8223,7 @@
     "category": "special",
     "graphic": "011-Weapon06.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind5.ogg"
-    ]
+    "soundEffects": ["Wind5.ogg"]
   },
   "whirlpool": {
     "moveId": "whirlpool",
@@ -9527,10 +8241,7 @@
     "category": "status",
     "graphic": "water3.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind8.ogg",
-      "Wind7.ogg"
-    ]
+    "soundEffects": ["Wind8.ogg", "Wind7.ogg"]
   },
   "wicked_blow": {
     "moveId": "wicked_blow",
@@ -9557,9 +8268,7 @@
     "category": "status",
     "graphic": "normal2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Stare.ogg"
-    ]
+    "soundEffects": ["Stare.ogg"]
   },
   "wild_charge": {
     "moveId": "wild_charge",
@@ -9568,10 +8277,7 @@
     "category": "physical",
     "graphic": "electric1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder3.ogg",
-      "Thunder9.ogg"
-    ]
+    "soundEffects": ["Thunder3.ogg", "Thunder9.ogg"]
   },
   "wildbolt_storm": {
     "moveId": "wildbolt_storm",
@@ -9589,9 +8295,7 @@
     "category": "status",
     "graphic": "015-Fire01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Fire2"
-    ]
+    "soundEffects": ["Fire2"]
   },
   "wing_attack": {
     "moveId": "wing_attack",
@@ -9600,10 +8304,7 @@
     "category": "physical",
     "graphic": "Wind1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind1",
-      "Wind5"
-    ]
+    "soundEffects": ["Wind1", "Wind5"]
   },
   "wish": {
     "moveId": "wish",
@@ -9612,9 +8313,7 @@
     "category": "status",
     "graphic": "007-Weapon02.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind8.ogg"
-    ]
+    "soundEffects": ["Wind8.ogg"]
   },
   "withdraw": {
     "moveId": "withdraw",
@@ -9623,10 +8322,7 @@
     "category": "status",
     "graphic": "028-State01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind1.ogg",
-      "Stare.ogg"
-    ]
+    "soundEffects": ["Wind1.ogg", "Stare.ogg"]
   },
   "wonder_room": {
     "moveId": "wonder_room",
@@ -9635,9 +8331,7 @@
     "category": "status",
     "graphic": "mixed status.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Stare.ogg"
-    ]
+    "soundEffects": ["Stare.ogg"]
   },
   "wood_hammer": {
     "moveId": "wood_hammer",
@@ -9646,9 +8340,7 @@
     "category": "physical",
     "graphic": "More2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Explosion3.ogg"
-    ]
+    "soundEffects": ["Explosion3.ogg"]
   },
   "work_up": {
     "moveId": "work_up",
@@ -9657,9 +8349,7 @@
     "category": "status",
     "graphic": "Ice1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg"
-    ]
+    "soundEffects": ["Twine.ogg"]
   },
   "worry_seed": {
     "moveId": "worry_seed",
@@ -9668,10 +8358,7 @@
     "category": "status",
     "graphic": "anim sheet.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wind7.ogg",
-      "Wind8.ogg"
-    ]
+    "soundEffects": ["Wind7.ogg", "Wind8.ogg"]
   },
   "wrap": {
     "moveId": "wrap",
@@ -9680,9 +8367,7 @@
     "category": "physical",
     "graphic": "Struggle.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash10"
-    ]
+    "soundEffects": ["Slash10"]
   },
   "wring_out": {
     "moveId": "wring_out",
@@ -9691,9 +8376,7 @@
     "category": "special",
     "graphic": "Fakeout.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Wring Out.mp3"
-    ]
+    "soundEffects": ["Wring Out.mp3"]
   },
   "x_scissor": {
     "moveId": "x_scissor",
@@ -9702,9 +8385,7 @@
     "category": "physical",
     "graphic": "X-Scizzor.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Slash.mp3"
-    ]
+    "soundEffects": ["Slash.mp3"]
   },
   "yawn": {
     "moveId": "yawn",
@@ -9713,9 +8394,7 @@
     "category": "status",
     "graphic": "Hammer Arm.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sleep.ogg"
-    ]
+    "soundEffects": ["Sleep.ogg"]
   },
   "zap_cannon": {
     "moveId": "zap_cannon",
@@ -9724,9 +8403,7 @@
     "category": "special",
     "graphic": "Thunder2.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder9"
-    ]
+    "soundEffects": ["Thunder9"]
   },
   "zen_headbutt": {
     "moveId": "zen_headbutt",
@@ -9735,10 +8412,7 @@
     "category": "physical",
     "graphic": "007-Weapon02.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Twine.ogg",
-      "Blow6.ogg"
-    ]
+    "soundEffects": ["Twine.ogg", "Blow6.ogg"]
   },
   "zing_zap": {
     "moveId": "zing_zap",
@@ -9747,9 +8421,7 @@
     "category": "physical",
     "graphic": "electric1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder3.ogg"
-    ]
+    "soundEffects": ["Thunder3.ogg"]
   },
   "zippy_zap": {
     "moveId": "zippy_zap",
@@ -9767,9 +8439,7 @@
     "category": "special",
     "graphic": "electric1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Thunder1"
-    ]
+    "soundEffects": ["Thunder1"]
   },
   "bubblebeam": {
     "moveId": "bubblebeam",
@@ -9778,10 +8448,7 @@
     "category": "special",
     "graphic": "018-Water01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Water5",
-      "Blow1"
-    ]
+    "soundEffects": ["Water5", "Blow1"]
   },
   "solarbeam": {
     "moveId": "solarbeam",
@@ -9790,10 +8457,7 @@
     "category": "special",
     "graphic": "030-Explosion01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sword1.ogg",
-      "Saint8.ogg"
-    ]
+    "soundEffects": ["Sword1.ogg", "Saint8.ogg"]
   },
   "doubleslap": {
     "moveId": "doubleslap",
@@ -9802,9 +8466,7 @@
     "category": "physical",
     "graphic": "many.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow5"
-    ]
+    "soundEffects": ["Blow5"]
   },
   "poisonpowder": {
     "moveId": "poisonpowder",
@@ -9813,9 +8475,7 @@
     "category": "status",
     "graphic": "Special5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sand"
-    ]
+    "soundEffects": ["Sand"]
   },
   "sleeppowder": {
     "moveId": "sleeppowder",
@@ -9824,9 +8484,7 @@
     "category": "status",
     "graphic": "Special5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sand"
-    ]
+    "soundEffects": ["Sand"]
   },
   "stunspore": {
     "moveId": "stunspore",
@@ -9835,9 +8493,7 @@
     "category": "status",
     "graphic": "Special5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sand"
-    ]
+    "soundEffects": ["Sand"]
   },
   "selfdestruct": {
     "moveId": "selfdestruct",
@@ -9846,13 +8502,7 @@
     "category": "physical",
     "graphic": "030-Explosion01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Explosion1",
-      "Explosion2",
-      "Explosion3",
-      "Explosion4",
-      "Explosion7"
-    ]
+    "soundEffects": ["Explosion1", "Explosion2", "Explosion3", "Explosion4", "Explosion7"]
   },
   "sonicboom": {
     "moveId": "sonicboom",
@@ -9861,9 +8511,7 @@
     "category": "special",
     "graphic": "Cosmo-01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint4.ogg"
-    ]
+    "soundEffects": ["Saint4.ogg"]
   },
   "ancientpower": {
     "moveId": "ancientpower",
@@ -9872,10 +8520,7 @@
     "category": "special",
     "graphic": "Ancient-PowerFilesheet.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Earth4.ogg",
-      "Earth5.ogg"
-    ]
+    "soundEffects": ["Earth4.ogg", "Earth5.ogg"]
   },
   "extremespeed": {
     "moveId": "extremespeed",
@@ -9884,10 +8529,7 @@
     "category": "physical",
     "graphic": "003-Attack01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Saint9.ogg",
-      "Blow3.ogg"
-    ]
+    "soundEffects": ["Saint9.ogg", "Blow3.ogg"]
   },
   "dragonbreath": {
     "moveId": "dragonbreath",
@@ -9896,9 +8538,7 @@
     "category": "special",
     "graphic": "fire5.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Fire4"
-    ]
+    "soundEffects": ["Fire4"]
   },
   "featherdance": {
     "moveId": "featherdance",
@@ -9907,9 +8547,7 @@
     "category": "status",
     "graphic": "Firebird.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Darkness2.ogg"
-    ]
+    "soundEffects": ["Darkness2.ogg"]
   },
   "grasswhistle": {
     "moveId": "grasswhistle",
@@ -9936,9 +8574,7 @@
     "category": "physical",
     "graphic": "normal1.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow3"
-    ]
+    "soundEffects": ["Blow3"]
   },
   "leechseed": {
     "moveId": "leechseed",
@@ -9956,10 +8592,7 @@
     "category": "special",
     "graphic": "Mud Sport + Mud Bomb.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow5.ogg",
-      "Water5.ogg"
-    ]
+    "soundEffects": ["Blow5.ogg", "Water5.ogg"]
   },
   "sandattack": {
     "moveId": "sandattack",
@@ -9968,9 +8601,7 @@
     "category": "status",
     "graphic": "Sand-Attack.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Sand.ogg"
-    ]
+    "soundEffects": ["Sand.ogg"]
   },
   "smellingsalts": {
     "moveId": "smellingsalts",
@@ -9997,8 +8628,6 @@
     "category": "physical",
     "graphic": "Cosmo-01.png",
     "hasGraphicFile": true,
-    "soundEffects": [
-      "Blow6.ogg"
-    ]
+    "soundEffects": ["Blow6.ogg"]
   }
 }

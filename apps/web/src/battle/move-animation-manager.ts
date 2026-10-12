@@ -117,3 +117,61 @@ export class MoveAnimationManager {
 
 /** Global singleton instance */
 export const moveAnimationManager = new MoveAnimationManager();
+
+// Register Ancient Power custom animation
+moveAnimationManager.registerOverride('ANCIENT_POWER', {
+  category: 'special',
+  attackerLunges: false,
+  defenderTakesHit: true,
+  customAnimationId: 'ANCIENT_POWER',
+});
+moveAnimationManager.registerOverride('ANCIENTPOWER', {
+  category: 'special',
+  attackerLunges: false,
+  defenderTakesHit: true,
+  customAnimationId: 'ANCIENT_POWER',
+});
+
+// Register Shadow Ball custom animation
+moveAnimationManager.registerOverride('SHADOW_BALL', {
+  category: 'special',
+  attackerLunges: false,
+  defenderTakesHit: true,
+  customAnimationId: 'SHADOW_BALL',
+});
+moveAnimationManager.registerOverride('SHADOWBALL', {
+  category: 'special',
+  attackerLunges: false,
+  defenderTakesHit: true,
+  customAnimationId: 'SHADOW_BALL',
+});
+
+// Register Flamethrower custom animation
+moveAnimationManager.registerOverride('FLAMETHROWER', {
+  category: 'special',
+  attackerLunges: false,
+  defenderTakesHit: true,
+  customAnimationId: 'FLAMETHROWER',
+});
+
+// Register Thunderbolt custom animation
+moveAnimationManager.registerOverride('THUNDERBOLT', {
+  category: 'special',
+  attackerLunges: false,
+  defenderTakesHit: true,
+  customAnimationId: 'THUNDERBOLT',
+});
+
+// Register Hydro Pump custom animation
+moveAnimationManager.registerOverride('HYDRO_PUMP', {
+  category: 'special',
+  attackerLunges: false,
+  defenderTakesHit: true,
+  customAnimationId: 'HYDRO_PUMP',
+});
+moveAnimationManager.registerOverride('HYDROPUMP', {
+  category: 'special',
+  attackerLunges: false,
+  defenderTakesHit: true,
+  customAnimationId: 'HYDRO_PUMP',
+});

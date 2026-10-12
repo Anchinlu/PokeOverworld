@@ -6438,7 +6438,9 @@ body {
 
 .pool-lv-badge.tm {
   color: #38bdf8 !important;
-  text-shadow: 0 0 6px rgba(56, 189, 248, 0.7), 1px 1px 0 #000 !important;
+  text-shadow:
+    0 0 6px rgba(56, 189, 248, 0.7),
+    1px 1px 0 #000 !important;
 }
 
 .summary-pool-card.tm-move {
@@ -6448,7 +6450,9 @@ body {
 .summary-pool-card.tm-move:hover {
   border-color: #38bdf8;
   border-left: 3px solid #38bdf8;
-  box-shadow: 0 0 8px rgba(56, 189, 248, 0.6), inset 0 0 0 1px #38bdf8;
+  box-shadow:
+    0 0 8px rgba(56, 189, 248, 0.6),
+    inset 0 0 0 1px #38bdf8;
 }
 
 .pool-tm-badge-header {
@@ -7904,7 +7908,9 @@ body {
     inset -1px -1px 0 #0369a1,
     2px 2px 0 #000,
     3px 3px 0 #075985;
-  transition: transform 0.05s ease, background-color 0.1s ease;
+  transition:
+    transform 0.05s ease,
+    background-color 0.1s ease;
   user-select: none;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
@@ -7992,7 +7998,9 @@ body {
   overflow: hidden;
   border: 4px solid #38bdf8;
   border-radius: 12px;
-  box-shadow: 0 0 50px rgba(0, 0, 0, 0.95), 0 0 35px rgba(56, 189, 248, 0.45);
+  box-shadow:
+    0 0 50px rgba(0, 0, 0, 0.95),
+    0 0 35px rgba(56, 189, 248, 0.45);
   background: #000000;
 }
 
@@ -8027,7 +8035,9 @@ body {
   background: rgba(15, 23, 42, 0.92);
   border: 3px solid #38bdf8;
   border-radius: 10px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.85), inset 0 0 14px rgba(56, 189, 248, 0.25);
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.85),
+    inset 0 0 14px rgba(56, 189, 248, 0.25);
   backdrop-filter: blur(8px);
   z-index: 10;
   display: flex;
@@ -8050,8 +8060,14 @@ body {
 }
 
 @keyframes promptBlink {
-  from { opacity: 0.3; transform: translateX(0); }
-  to { opacity: 1; transform: translateX(4px); }
+  from {
+    opacity: 0.3;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(4px);
+  }
 }
 
 .evolution-message-text {
@@ -8287,7 +8303,9 @@ body {
   padding: 8px 14px;
   cursor: pointer;
   white-space: nowrap;
-  transition: transform 0.05s ease, background-color 0.1s ease;
+  transition:
+    transform 0.05s ease,
+    background-color 0.1s ease;
   image-rendering: pixelated;
   user-select: none;
 }
@@ -8329,4 +8347,3 @@ body {
 .evolution-notify-toast:hover {
   filter: drop-shadow(0 0 14px rgba(245, 158, 11, 0.55));
 }
-

@@ -123,7 +123,7 @@ export class InventoryService {
   }
 
   /**
-   * Provides all 108 Technical Machines (TM01 - TM100) and Hidden Machines (HM01 - HM08).
+   * Provides all Technical Machines (TM001 - TM229) and Hidden Machines (HM01 - HM08).
    * Ensures every move disc exists in the player's inventory with the specified quantity (default: 1).
    */
   public addAllMachines(quantity = 1): number {

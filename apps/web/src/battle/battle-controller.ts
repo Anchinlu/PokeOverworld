@@ -4,7 +4,13 @@
  * Reads/writes BattleState, calls BattleEngine for game logic.
  */
 
-import type { BattlerPokemon, BattleMove, BattleEvent, AbilityTriggeredEvent } from './types';
+import type {
+  BattlerPokemon,
+  BattleMove,
+  BattleEvent,
+  AbilityTriggeredEvent,
+  BattlerSide,
+} from './types';
 import type { BattleState } from './battle-state';
 import { BattleEngine, STRUGGLE_MOVE, type TurnResult } from './battle-engine';
 import { getAbilityDisplay } from './rules/ability-engine';
@@ -27,6 +33,13 @@ import type { BagItemEntry } from '../ui/bag-screen';
 import { normalizeBallKey } from '../assets';
 import { moveAnimationManager } from './move-animation-manager';
 import { resolveMoveVfx, moveVfxCache, isSelfTargetMove } from './move-vfx';
+import { createCustomMoveAnimation } from './custom-animations';
+import {
+  battleAnimationPlayer,
+  getBattlerCenter,
+  DEFAULT_PLAYER_GEOMETRY,
+  DEFAULT_ENEMY_GEOMETRY,
+} from './animation';
 import { getPokeballData, getBaseCatchRate } from './pokeball-db';
 import { battleSePlayer, battleBgmPlayer } from '../audio';
 import { pokemonCatalog } from '../data';
@@ -254,21 +267,42 @@ export class BattleController {
       if (x >= 12 && x <= 202 && y >= 296 && y <= 334) {
         this.state.hoveredMoveIdx = 0;
         this.state.hoveredCancel = false;
+        this.state.hoveredTerastal = false;
       } else if (x >= 206 && x <= 396 && y >= 296 && y <= 334) {
         this.state.hoveredMoveIdx = 1;
         this.state.hoveredCancel = false;
+        this.state.hoveredTerastal = false;
       } else if (x >= 12 && x <= 202 && y >= 336 && y <= 374) {
         this.state.hoveredMoveIdx = 2;
         this.state.hoveredCancel = false;
+        this.state.hoveredTerastal = false;
       } else if (x >= 206 && x <= 396 && y >= 336 && y <= 374) {
         this.state.hoveredMoveIdx = 3;
         this.state.hoveredCancel = false;
-      } else if (x >= 398 && x <= 508 && y >= 300 && y <= 376) {
+        this.state.hoveredTerastal = false;
+      } else if (
+        this.engine.canTerastallize('player') &&
+        x >= 402 &&
+        x <= 504 &&
+        y >= 296 &&
+        y <= 332
+      ) {
+        this.state.hoveredTerastal = true;
+        this.state.hoveredCancel = false;
+        this.state.hoveredMoveIdx = -1;
+      } else if (
+        x >= 398 &&
+        x <= 508 &&
+        y >= (this.engine.canTerastallize('player') ? 336 : 300) &&
+        y <= 376
+      ) {
         this.state.hoveredCancel = true;
+        this.state.hoveredTerastal = false;
         this.state.hoveredMoveIdx = -1;
       } else {
         this.state.hoveredMoveIdx = -1;
         this.state.hoveredCancel = false;
+        this.state.hoveredTerastal = false;
       }
     }
   }
@@ -447,13 +481,23 @@ export class BattleController {
       prompt,
       item: bagEntry,
       onSelect: (selectedPk, _slotIndex, moveIndex) => {
-        const check = canUseItemOnPartyPokemon(item, selectedPk, partyService.getParty(), moveIndex);
+        const check = canUseItemOnPartyPokemon(
+          item,
+          selectedPk,
+          partyService.getParty(),
+          moveIndex
+        );
         if (!check.canUse) {
           showBerryToast(`⚠️ ${check.reason}`, '#ef4444');
           return;
         }
 
-        const result = applyItemToPartyPokemon(item, selectedPk, partyService.getParty(), moveIndex);
+        const result = applyItemToPartyPokemon(
+          item,
+          selectedPk,
+          partyService.getParty(),
+          moveIndex
+        );
         if (!result.success) {
           showBerryToast(`⚠️ ${result.message}`, '#ef4444');
           return;
@@ -502,11 +546,20 @@ export class BattleController {
       return;
     }
 
-    // Cancel button (right column: 398..508, 296..380)
-    if (x >= 398 && y >= 296 && y <= 380) {
+    // Terastal Button toggle
+    if (this.engine.canTerastallize('player') && x >= 402 && x <= 504 && y >= 296 && y <= 332) {
+      this.state.terastalRequested = !this.state.terastalRequested;
+      battleSePlayer.playSound('Audio/SE/Shiny sparkle.ogg', 0.5);
+      return;
+    }
+
+    // Cancel button
+    const cancelMinY = this.engine.canTerastallize('player') ? 336 : 296;
+    if (x >= 398 && y >= cancelMinY && y <= 380) {
       this.state.uiMode = 'command';
       this.state.hoveredMoveIdx = -1;
       this.state.hoveredCancel = false;
+      this.state.hoveredTerastal = false;
       return;
     }
 
@@ -777,25 +830,72 @@ export class BattleController {
     });
   }
 
-  /** Plays visual sprite sheet animation and handles screen shake/flash */
+  /** Plays visual move animation via timeline player (with fallback to legacy VFX) */
   private playMoveVfx(
     move: BattleMove,
     attackerSide: 'player' | 'enemy',
     onImpact: () => void,
     onComplete?: () => void
   ): void {
+    const { playerCenter, enemyCenter } = this.getAnimationBattlerCenters();
+
+    const attackerCenter = attackerSide === 'player' ? playerCenter : enemyCenter;
+    const defenderCenter = attackerSide === 'player' ? enemyCenter : playerCenter;
+
+    battleAnimationPlayer
+      .play({
+        moveId: move.id,
+        userSide: attackerSide,
+        userPos: attackerCenter,
+        targetPos: defenderCenter,
+        selfTarget: isSelfTargetMove(move),
+        moveType: move.type,
+        moveCategory: move.category,
+        onHit: onImpact,
+        onComplete,
+      })
+      .then((instance) => {
+        if (!instance) {
+          // Timeline had no animation data — fall back to legacy VFX
+          this.playLegacyMoveVfx(move, attackerSide, onImpact, onComplete);
+        }
+      })
+      .catch((err) => {
+        console.warn('[BattleController] Timeline animation error, falling back:', err);
+        this.playLegacyMoveVfx(move, attackerSide, onImpact, onComplete);
+      });
+  }
+
+  /** Legacy sprite sheet VFX and custom particle fallbacks */
+  private playLegacyMoveVfx(
+    move: BattleMove,
+    attackerSide: 'player' | 'enemy',
+    onImpact: () => void,
+    onComplete?: () => void
+  ): void {
+    const { playerCenter, enemyCenter } = this.getAnimationBattlerCenters();
+
+    const attackerCenter = attackerSide === 'player' ? playerCenter : enemyCenter;
+    const defenderCenter = attackerSide === 'player' ? enemyCenter : playerCenter;
+
+    const customAnim = createCustomMoveAnimation(move.id, {
+      attackerSide,
+      attackerCenter,
+      defenderCenter,
+      onImpact,
+      onComplete,
+    });
+    if (customAnim) {
+      this.state.startCustomMoveAnimation(customAnim);
+      return;
+    }
+
     const vfxDef = resolveMoveVfx(move);
     if (!vfxDef) {
       onImpact();
       onComplete?.();
       return;
     }
-
-    const playerCenter = { x: 130, y: 215 };
-    const enemyCenter = { x: 380, y: 115 };
-
-    const attackerCenter = attackerSide === 'player' ? playerCenter : enemyCenter;
-    const defenderCenter = attackerSide === 'player' ? enemyCenter : playerCenter;
 
     const startX = attackerCenter.x;
     let startY = attackerCenter.y;
@@ -854,8 +954,42 @@ export class BattleController {
     });
   }
 
+  /**
+   * Keeps timeline, custom, and legacy VFX aligned with the live sprite frames.
+   * The renderer owns the actual images because their frame heights vary by species.
+   */
+  private getAnimationBattlerCenters(): {
+    playerCenter: { x: number; y: number };
+    enemyCenter: { x: number; y: number };
+  } {
+    const geometry = this.renderer?.getBattlerAnimationGeometry();
+    const playerGeometry = geometry?.player ?? DEFAULT_PLAYER_GEOMETRY;
+    const enemyGeometry = geometry?.enemy ?? DEFAULT_ENEMY_GEOMETRY;
+
+    return {
+      playerCenter: getBattlerCenter(playerGeometry),
+      enemyCenter: getBattlerCenter(enemyGeometry),
+    };
+  }
+
   private handlePlayerMove(move: BattleMove): void {
     this.state.uiMode = 'message';
+
+    if (this.state.terastalRequested && this.engine.canTerastallize('player')) {
+      this.state.terastalRequested = false;
+      const teraRes = this.engine.terastallize('player');
+      if (teraRes.success) {
+        battleSePlayer.playSound('Audio/SE/Shiny sparkle.ogg', 0.6);
+        this.queueMessage(teraRes.message, 'message', () => {
+          this.executeMoveRound(move);
+        });
+        return;
+      }
+    }
+    this.executeMoveRound(move);
+  }
+
+  private executeMoveRound(move: BattleMove): void {
     const player = this.engine.playerPokemon;
     const enemy = this.engine.enemyPokemon;
 
@@ -872,6 +1006,12 @@ export class BattleController {
     if (firstSide === 'player') {
       // 1. Player attacks first
       this.executePlayerAttack(effectivePlayerMove, (firstRes) => {
+        if (firstRes.battleEnded) {
+          this.queueMessage(firstRes.message, 'message', () => {
+            this.endBattle(firstRes.battleEndReason === 'roar' ? 'fled' : 'victory');
+          });
+          return;
+        }
         if (firstRes.defenderFainted || enemy.currentHp <= 0) {
           this.handleEnemyFainted(enemy, player);
           return;
@@ -885,6 +1025,12 @@ export class BattleController {
           setTimeout(() => {
             const activePlayer = this.engine.playerPokemon;
             this.executeEnemyAttack(enemyMove, (secondRes) => {
+              if (secondRes.battleEnded) {
+                this.queueMessage(secondRes.message, 'message', () => {
+                  this.endBattle(secondRes.battleEndReason === 'roar' ? 'fled' : 'victory');
+                });
+                return;
+              }
               if (secondRes.defenderFainted || activePlayer.currentHp <= 0) {
                 this.handlePlayerFainted(activePlayer);
                 return;
@@ -894,10 +1040,29 @@ export class BattleController {
                 return;
               }
 
-              if (secondRes.mustSwitch && secondRes.switchSide === 'enemy') {
-                this.handleEnemyActionSwitch(secondRes, () => {
-                  this.resolveRoundEndEffects(activePlayer, this.engine.enemyPokemon);
-                });
+              if (secondRes.mustSwitch) {
+                if (secondRes.isForcedSwitch) {
+                  this.handleForceRandomSwitch(secondRes.switchSide ?? 'enemy', () => {
+                    this.resolveRoundEndEffects(
+                      this.engine.playerPokemon,
+                      this.engine.enemyPokemon
+                    );
+                  });
+                } else if (secondRes.switchSide === 'player') {
+                  this.handleActionSwitch(secondRes.batonPassData, () => {
+                    this.resolveRoundEndEffects(
+                      this.engine.playerPokemon,
+                      this.engine.enemyPokemon
+                    );
+                  });
+                } else {
+                  this.handleEnemyActionSwitch(secondRes, () => {
+                    this.resolveRoundEndEffects(
+                      this.engine.playerPokemon,
+                      this.engine.enemyPokemon
+                    );
+                  });
+                }
                 return;
               }
 
@@ -907,8 +1072,14 @@ export class BattleController {
           }, 400);
         };
 
-        if (firstRes.mustSwitch && firstRes.switchSide === 'player') {
-          this.handleActionSwitch(firstRes.batonPassData, proceedToEnemyAttack);
+        if (firstRes.mustSwitch) {
+          if (firstRes.isForcedSwitch) {
+            this.handleForceRandomSwitch(firstRes.switchSide ?? 'enemy', proceedToEnemyAttack);
+          } else if (firstRes.switchSide === 'player') {
+            this.handleActionSwitch(firstRes.batonPassData, proceedToEnemyAttack);
+          } else {
+            this.handleEnemyActionSwitch(firstRes, proceedToEnemyAttack);
+          }
         } else {
           proceedToEnemyAttack();
         }
@@ -916,6 +1087,12 @@ export class BattleController {
     } else {
       // 1. Enemy attacks first
       this.executeEnemyAttack(enemyMove, (firstRes) => {
+        if (firstRes.battleEnded) {
+          this.queueMessage(firstRes.message, 'message', () => {
+            this.endBattle(firstRes.battleEndReason === 'roar' ? 'fled' : 'victory');
+          });
+          return;
+        }
         if (firstRes.defenderFainted || player.currentHp <= 0) {
           this.handlePlayerFainted(player);
           return;
@@ -928,6 +1105,12 @@ export class BattleController {
         const proceedToPlayerAttack = () => {
           setTimeout(() => {
             this.executePlayerAttack(effectivePlayerMove, (secondRes) => {
+              if (secondRes.battleEnded) {
+                this.queueMessage(secondRes.message, 'message', () => {
+                  this.endBattle(secondRes.battleEndReason === 'roar' ? 'fled' : 'victory');
+                });
+                return;
+              }
               if (secondRes.defenderFainted || enemy.currentHp <= 0) {
                 this.handleEnemyFainted(enemy, player);
                 return;
@@ -937,10 +1120,29 @@ export class BattleController {
                 return;
               }
 
-              if (secondRes.mustSwitch && secondRes.switchSide === 'player') {
-                this.handleActionSwitch(secondRes.batonPassData, () => {
-                  this.resolveRoundEndEffects(this.engine.playerPokemon, enemy);
-                });
+              if (secondRes.mustSwitch) {
+                if (secondRes.isForcedSwitch) {
+                  this.handleForceRandomSwitch(secondRes.switchSide ?? 'player', () => {
+                    this.resolveRoundEndEffects(
+                      this.engine.playerPokemon,
+                      this.engine.enemyPokemon
+                    );
+                  });
+                } else if (secondRes.switchSide === 'player') {
+                  this.handleActionSwitch(secondRes.batonPassData, () => {
+                    this.resolveRoundEndEffects(
+                      this.engine.playerPokemon,
+                      this.engine.enemyPokemon
+                    );
+                  });
+                } else {
+                  this.handleEnemyActionSwitch(secondRes, () => {
+                    this.resolveRoundEndEffects(
+                      this.engine.playerPokemon,
+                      this.engine.enemyPokemon
+                    );
+                  });
+                }
                 return;
               }
 
@@ -950,12 +1152,95 @@ export class BattleController {
           }, 400);
         };
 
-        if (firstRes.mustSwitch && firstRes.switchSide === 'enemy') {
-          this.handleEnemyActionSwitch(firstRes, proceedToPlayerAttack);
+        if (firstRes.mustSwitch) {
+          if (firstRes.isForcedSwitch) {
+            this.handleForceRandomSwitch(firstRes.switchSide ?? 'player', proceedToPlayerAttack);
+          } else if (firstRes.switchSide === 'enemy') {
+            this.handleEnemyActionSwitch(firstRes, proceedToPlayerAttack);
+          } else {
+            this.handleActionSwitch(firstRes.batonPassData, proceedToPlayerAttack);
+          }
         } else {
           proceedToPlayerAttack();
         }
       });
+    }
+  }
+
+  /** Handles forced Pokémon switching triggered by Roar, Whirlwind, Dragon Tail, Circle Throw */
+  private handleForceRandomSwitch(targetSide: BattlerSide, onComplete?: () => void): void {
+    if (targetSide === 'player') {
+      const activeUid = this.engine.playerPokemon.uid;
+      const party = partyService.getParty();
+      const candidates = party.filter(
+        (p) => p.uid !== activeUid && p.currentHp > 0 && !p.isFainted
+      );
+
+      if (candidates.length === 0) {
+        this.queueMessage(
+          `${this.engine.playerPokemon.name} không còn đồng đội nào khác trong đội để đổi vào!`,
+          'message',
+          () => {
+            onComplete?.();
+          }
+        );
+        return;
+      }
+
+      // Pick random alive party member
+      const picked = candidates[Math.floor(this.engine.rng.next() * candidates.length)];
+      this.syncActiveBattlerToParty();
+      partyService.syncBattleResult(this.engine.playerPokemon, 0);
+
+      const newBattler = partyPokemonToBattler(picked);
+      const oldName = this.engine.playerPokemon.name;
+      this.state.uiMode = 'message';
+      this.state.isPlayerPokemonSentOut = false;
+      this.state.isPlayerSendingOut = false;
+
+      this.queueMessage(
+        `${oldName} bị kéo về! ${newBattler.name} bị buộc phải ra sân!`,
+        'message',
+        () => {
+          const switchRes = this.engine.switchPlayerPokemon(newBattler);
+          if (this.renderer) {
+            this.renderer.updatePlayerSprite(newBattler.backSprite);
+            this.renderer.updatePlayerBall(newBattler.pokeball ?? 'POKEBALL');
+          }
+          this.state.playerHpPct = newBattler.currentHp / newBattler.maxHp;
+          this.state.targetPlayerHpPct = this.state.playerHpPct;
+          this.state.playerHurtFlash = 0;
+          this.state.startPlayerSendOut();
+
+          this.queueMessage(`Vào trận nào! ${newBattler.name}!`, 'message', () => {
+            if (switchRes.events.length > 0) {
+              this.triggerAbilityEvents(switchRes.events);
+            }
+            if (newBattler.isFainted) {
+              this.queueMessage(`${newBattler.name} đã ngất xỉu!`, 'message', () => {
+                this.handleForceSwitch();
+              });
+              return;
+            }
+            if (switchRes.messages.length > 0) {
+              this.queueMessage(switchRes.messages.join(' '), 'message', () => {
+                onComplete?.();
+              });
+            } else {
+              onComplete?.();
+            }
+          });
+        }
+      );
+    } else {
+      // Forced switch on enemy
+      this.queueMessage(
+        `${this.engine.enemyPokemon.name} không có đồng đội nào khác để đổi vào!`,
+        'message',
+        () => {
+          onComplete?.();
+        }
+      );
     }
   }
 

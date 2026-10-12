@@ -5,7 +5,7 @@
  */
 
 import type { BattleMove, BattlerPokemon, StatStages } from './types';
-import type { BattleAssets } from './battle-assets';
+import type { BattleAssets, BattleEnvironmentElementAssets } from './battle-assets';
 import { INTRO_SHUTTER_PROGRESS, type BattleState } from './battle-state';
 import { isLoaded } from './battle-assets';
 import { BattleEngine } from './battle-engine';
@@ -13,6 +13,48 @@ import { TypeBadgeRenderer } from './type-badge-renderer';
 import { getBattleStatusIconFrame } from './battle-status-icons';
 import { TYPE_ICO_INDICES } from './type-chart';
 import { BATTLE_ASSETS } from '../assets';
+import { detectPresetFromEnvironment } from './battle-environment-presets';
+import { clampMoveVfxCenter } from './move-vfx';
+import {
+  battleAnimationPlayer,
+  DEFAULT_ENEMY_GEOMETRY,
+  DEFAULT_PLAYER_GEOMETRY,
+  type BattlerGeometry,
+} from './animation';
+
+export interface ForestScenePine {
+  x: number;
+  y: number;
+  scale: number;
+  depth: number; // 0: distant (0.55-0.70), 1: mid (0.78-0.95), 2: foreground framing (1.25-1.55)
+  swaySpeed: number;
+  swayPhase: number;
+}
+
+export interface ForestSceneRay {
+  type: 'lightC1' | 'lightC2' | 'lightC3';
+  x: number;
+  y: number;
+  scaleX: number;
+  scaleY: number;
+  baseAlpha: number;
+  pulseSpeed: number;
+  pulsePhase: number;
+}
+
+export interface ForestSceneTuft {
+  x: number;
+  y: number;
+  scale: number;
+  swaySpeed: number;
+  swayPhase: number;
+}
+
+export interface ForestSceneLayout {
+  pines: ForestScenePine[];
+  rays: ForestSceneRay[];
+  tufts: ForestSceneTuft[];
+}
 
 /** Canvas dimensions */
 export const CANVAS_W = 512;
@@ -167,6 +209,14 @@ export class BattleRenderer {
   private offscreenCanvas = document.createElement('canvas');
   private offscreenCtx = this.offscreenCanvas.getContext('2d', { willReadFrequently: true })!;
 
+  private tintedCloudCanvas: HTMLCanvasElement | null = null;
+  private tintedCloudSource: HTMLImageElement | null = null;
+
+  private forestLayout: ForestSceneLayout | null = null;
+  private tintedGrassCanvas: HTMLCanvasElement | null = null;
+  private shadowGrassCanvas: HTMLCanvasElement | null = null;
+  private tintedPineCanvas: HTMLCanvasElement | null = null;
+
   constructor(
     ctx: CanvasRenderingContext2D,
     assets: BattleAssets,
@@ -177,6 +227,12 @@ export class BattleRenderer {
     this.assets = assets;
     this.engine = engine;
     this.disableCanvasText = disableCanvasText;
+
+    const preset = detectPresetFromEnvironment(this.engine.environment);
+    if (preset.id === 'forest') {
+      const seed = (Math.floor(Math.random() * 1000000) ^ Date.now()) & 0x7fffffff;
+      this.forestLayout = this.generateForestLayout(seed);
+    }
   }
 
   /** Prepares an offscreen frame with a solid color fill (or tint overlay) without any glow */
@@ -206,6 +262,36 @@ export class BattleRenderer {
     const img = new Image();
     img.src = backSpriteUrl;
     this.assets.playerSprite = img;
+  }
+
+  /**
+   * Returns the live animation anchors used by the battler renderer.
+   *
+   * Battle sprites are horizontal strips whose frame height varies by species.
+   * The animation layer must use the same frame height and scale as the sprite
+   * renderer, otherwise effects drift vertically from the Pokémon they target.
+   */
+  public getBattlerAnimationGeometry(): { player: BattlerGeometry; enemy: BattlerGeometry } {
+    const getLiveGeometry = (
+      fallback: BattlerGeometry,
+      sprite: HTMLImageElement
+    ): BattlerGeometry => {
+      const frameHeight = sprite.naturalHeight || sprite.height;
+      if (!Number.isFinite(frameHeight) || frameHeight <= 0) {
+        return { ...fallback };
+      }
+
+      return {
+        ...fallback,
+        // drawPlayerBattler/drawEnemyBattler render each source frame at 2x.
+        spriteHeight: frameHeight * 2,
+      };
+    };
+
+    return {
+      player: getLiveGeometry(DEFAULT_PLAYER_GEOMETRY, this.assets.playerSprite),
+      enemy: getLiveGeometry(DEFAULT_ENEMY_GEOMETRY, this.assets.enemySprite),
+    };
   }
 
   public updatePlayerBall(ballType: string): void {
@@ -301,12 +387,23 @@ export class BattleRenderer {
     }
 
     this.drawBackground(ctx);
+    this.drawEnvironmentSkyAndElements(ctx, state);
     this.drawEnemyBase(ctx);
+
+    // Timeline animation cels behind battlers (priority 0 & 2)
+    battleAnimationPlayer.renderBehind(ctx, CANVAS_W, BOTTOM_PANEL_Y);
+
     this.drawEnemyBattler(ctx, state);
     this.drawPlayerBase(ctx);
     this.drawPlayerBattler(ctx, state);
+
+    // Timeline animation cels above battlers (priority 1 & 3)
+    battleAnimationPlayer.renderAbove(ctx, CANVAS_W, BOTTOM_PANEL_Y);
+
     this.drawPlayerSendOut(ctx, state);
     this.drawBallThrow(ctx, state);
+    this.drawEnvironmentOverlays(ctx, state);
+    this.drawEnvironmentAmbientParticles(ctx, state);
 
     // Shiny entrance sparkle effects (bursting stars & halo)
     if (state.enemyShinyTimer > 0) {
@@ -316,7 +413,7 @@ export class BattleRenderer {
       this.drawBattleShinySparkles(ctx, 130, 220, state.playerShinyTimer, state.playerShinyMax);
     }
 
-    // Move visual animation (VFX)
+    // Move visual animation (legacy fallback VFX)
     this.drawMoveVfx(ctx, state);
 
     // Screen flash overlay
@@ -343,6 +440,16 @@ export class BattleRenderer {
   // ---- Move Visual Animation (VFX) ----
 
   private drawMoveVfx(ctx: CanvasRenderingContext2D, state: BattleState): void {
+    // Skip ALL legacy VFX when timeline animation is playing to prevent overlap
+    if (battleAnimationPlayer.isPlaying()) {
+      return;
+    }
+
+    if (state.activeCustomMoveAnim) {
+      state.activeCustomMoveAnim.render(ctx, state);
+      return;
+    }
+
     const vfx = state.activeMoveVfx;
     if (!vfx || !isLoaded(vfx.image)) return;
 
@@ -351,8 +458,7 @@ export class BattleRenderer {
     const imgW = vfx.image.width || 960;
     const imgH = vfx.image.height || 192;
 
-    const cols =
-      vfx.columns > 0 ? vfx.columns : Math.max(1, Math.floor(imgW / cellW));
+    const cols = vfx.columns > 0 ? vfx.columns : Math.max(1, Math.floor(imgW / cellW));
     const rows = Math.max(1, Math.floor(imgH / cellH));
     const totalCells = cols * rows;
 
@@ -378,8 +484,9 @@ export class BattleRenderer {
 
     const dw = Math.round(cellW * vfx.scale);
     const dh = Math.round(cellH * vfx.scale);
-    const dx = Math.round(posX - dw / 2);
-    const dy = Math.round(posY - dh / 2);
+    const safeCenter = clampMoveVfxCenter(posX, posY, dw, dh, CANVAS_W, BOTTOM_PANEL_Y);
+    const dx = Math.round(safeCenter.x - dw / 2);
+    const dy = Math.round(safeCenter.y - dh / 2);
 
     ctx.save();
     if (vfx.blendMode && vfx.blendMode !== 'source-over') {
@@ -397,6 +504,477 @@ export class BattleRenderer {
     } else {
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, CANVAS_W, BOTTOM_PANEL_Y);
+    }
+  }
+
+  // ---- Environment Rendering (Battlebacks) ----
+
+  private getTintedCloudCanvas(cloudImg: HTMLImageElement): HTMLCanvasElement {
+    if (this.tintedCloudCanvas && this.tintedCloudSource === cloudImg) {
+      return this.tintedCloudCanvas;
+    }
+    const canvas = document.createElement('canvas');
+    canvas.width = cloudImg.naturalWidth || cloudImg.width || 384;
+    canvas.height = cloudImg.naturalHeight || cloudImg.height || 18;
+    const ctx = canvas.getContext('2d')!;
+    ctx.drawImage(cloudImg, 0, 0);
+    ctx.globalCompositeOperation = 'source-in';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.88)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    this.tintedCloudCanvas = canvas;
+    this.tintedCloudSource = cloudImg;
+    return canvas;
+  }
+
+  private drawEnvironmentSkyAndElements(ctx: CanvasRenderingContext2D, state: BattleState): void {
+    const preset = detectPresetFromEnvironment(this.engine.environment);
+    const envEl = this.assets.envElements;
+    if (!envEl) return;
+
+    // 1. Sun (Field)
+    if (preset.hasSun && envEl.sun && isLoaded(envEl.sun)) {
+      const sun = envEl.sun;
+      const cx = 413;
+      const cy = 35;
+      const coronaRadius = 36 + Math.sin(state.tick * 0.04) * 4;
+      const sunGrad = ctx.createRadialGradient(cx, cy, 10, cx, cy, coronaRadius);
+      sunGrad.addColorStop(0, 'rgba(254, 240, 138, 0.52)');
+      sunGrad.addColorStop(0.5, 'rgba(254, 215, 170, 0.22)');
+      sunGrad.addColorStop(1, 'rgba(254, 215, 170, 0)');
+
+      ctx.save();
+      ctx.fillStyle = sunGrad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, coronaRadius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.drawImage(sun, 390, 12);
+      ctx.restore();
+    }
+
+    // 2. Mountain Ridge & Mist (Mountain)
+    if (preset.hasMountainRidge && envEl.mountain && isLoaded(envEl.mountain)) {
+      const mtn = envEl.mountain;
+      const mtnH = Math.round(CANVAS_W * (mtn.naturalHeight / mtn.naturalWidth));
+      ctx.save();
+      ctx.drawImage(mtn, 0, 48, CANVAS_W, mtnH);
+      if (envEl.fog && isLoaded(envEl.fog)) {
+        const fog = envEl.fog;
+        const fogW = fog.naturalWidth || 708;
+        const fogX = ((state.tick * 0.15) % fogW) - 150;
+        ctx.globalAlpha = 0.28;
+        ctx.drawImage(fog, -fogX, 42, CANVAS_W, 80);
+      }
+      ctx.restore();
+    }
+
+    // 3. Clouds (Field, Water, Mountain)
+    if (preset.hasClouds && envEl.cloud && isLoaded(envEl.cloud)) {
+      const cloudCanvas = this.getTintedCloudCanvas(envEl.cloud);
+      const cw = cloudCanvas.width;
+      const ch = cloudCanvas.height;
+
+      ctx.save();
+      // Upper slow drift layer
+      const cx1 = ((state.tick * 0.22) % (CANVAS_W + cw * 1.2)) - cw * 1.2;
+      ctx.globalAlpha = 0.82;
+      ctx.drawImage(cloudCanvas, Math.round(cx1), 22, Math.round(cw * 1.2), Math.round(ch * 1.2));
+
+      // Lower secondary layer
+      const cx2 = ((state.tick * 0.38 + 260) % (CANVAS_W + cw)) - cw;
+      ctx.globalAlpha = 0.65;
+      ctx.drawImage(cloudCanvas, Math.round(cx2), 38, Math.round(cw * 0.95), Math.round(ch * 0.95));
+      ctx.restore();
+    }
+
+    // 4. Forest Horizon Pines, Mist & Sunbeams (Forest)
+    if (preset.hasPineTrees && envEl.treePine && isLoaded(envEl.treePine)) {
+      this.drawForestHorizonAndSky(ctx, state, envEl);
+    }
+  }
+
+  private drawEnvironmentOverlays(ctx: CanvasRenderingContext2D, state: BattleState): void {
+    const preset = detectPresetFromEnvironment(this.engine.environment);
+    const envEl = this.assets.envElements;
+    if (!envEl) return;
+
+    // 1. Forest: Foreground Framing Trees & Grass Tufts
+    if (preset.hasPineTrees) {
+      this.drawForestForegroundAndGrass(ctx, state, envEl);
+    }
+
+    // 2. Animated Water Wave Shimmer (Water)
+    if (preset.hasWaterShimmer && envEl.water0 && isLoaded(envEl.water0)) {
+      const w0 = envEl.water0;
+      const w1 = envEl.water1;
+      const waveCycle = (Math.sin(state.tick * 0.04) + 1) / 2;
+      const driftX = Math.sin(state.tick * 0.02) * 8;
+      ctx.save();
+      ctx.globalAlpha = 0.72;
+      ctx.drawImage(w0, driftX, 110, CANVAS_W, 178);
+      if (w1 && isLoaded(w1)) {
+        ctx.globalAlpha = 0.72 * waveCycle;
+        ctx.drawImage(w1, -driftX, 110, CANVAS_W, 178);
+      }
+      ctx.restore();
+    }
+
+    // 3. Ascending Bubbles (Water)
+    if (preset.hasBubbles && envEl.bubble && isLoaded(envEl.bubble)) {
+      const bubble = envEl.bubble;
+      const numBubbles = 7;
+      ctx.save();
+      for (let i = 0; i < numBubbles; i++) {
+        const seed = (i * 97 + 13) % 100;
+        const startX = 60 + (seed / 100) * (CANVAS_W - 120);
+        const cycleTicks = 220;
+        const progress = ((state.tick + i * 35) % cycleTicks) / cycleTicks;
+        const by = 275 - progress * 155;
+        const bx = startX + Math.sin(state.tick * 0.07 + i * 2) * 8;
+        const alpha =
+          progress < 0.2 ? progress / 0.2 : progress > 0.85 ? (1 - progress) / 0.15 : 0.85;
+        const scale = 0.7 + (i % 3) * 0.3;
+        const bw = Math.round(bubble.naturalWidth * scale);
+        const bh = Math.round(bubble.naturalHeight * scale);
+        ctx.globalAlpha = alpha * 0.8;
+        ctx.drawImage(bubble, Math.round(bx - bw / 2), Math.round(by - bh / 2), bw, bh);
+      }
+      ctx.restore();
+    }
+
+    // 4. Mountain Rocks (Mountain)
+    if (preset.hasMountainRidge && envEl.rocks && isLoaded(envEl.rocks)) {
+      const rocks = envEl.rocks;
+      ctx.save();
+      ctx.globalAlpha = 0.85;
+      ctx.drawImage(
+        rocks,
+        35,
+        245,
+        Math.round(rocks.naturalWidth * 1.1),
+        Math.round(rocks.naturalHeight * 1.1)
+      );
+      ctx.drawImage(
+        rocks,
+        465,
+        225,
+        Math.round(rocks.naturalWidth * 0.95),
+        Math.round(rocks.naturalHeight * 0.95)
+      );
+      ctx.restore();
+    }
+  }
+
+  private drawEnvironmentAmbientParticles(ctx: CanvasRenderingContext2D, state: BattleState): void {
+    const preset = detectPresetFromEnvironment(this.engine.environment);
+
+    if (preset.ambientParticleType === 'pollen') {
+      // Gentle floating pollen / dandelion seeds in field
+      ctx.save();
+      for (let i = 0; i < 12; i++) {
+        const speed = 0.4 + (i % 4) * 0.15;
+        const px = ((state.tick * speed + i * 47) % (CANVAS_W + 20)) - 10;
+        const py = 70 + ((i * 17) % 200) + Math.sin(state.tick * 0.04 + i) * 6;
+        const alpha = 0.35 + Math.sin(state.tick * 0.05 + i * 1.5) * 0.25;
+        ctx.fillStyle = `rgba(254, 240, 138, ${Math.max(0, alpha).toFixed(2)})`;
+        ctx.fillRect(Math.round(px), Math.round(py), 2, 2);
+      }
+      ctx.restore();
+    } else if (preset.ambientParticleType === 'spores') {
+      // Glowing forest spores / fireflies
+      ctx.save();
+      for (let i = 0; i < 10; i++) {
+        const speedY = 0.3 + (i % 3) * 0.1;
+        const py = 260 - ((state.tick * speedY + i * 31) % 180);
+        const px = 50 + ((i * 45) % (CANVAS_W - 100)) + Math.sin(state.tick * 0.03 + i) * 10;
+        const pulse = (Math.sin(state.tick * 0.06 + i * 2) + 1) / 2;
+        const alpha = 0.2 + pulse * 0.65;
+        ctx.fillStyle = `rgba(167, 243, 208, ${alpha.toFixed(2)})`;
+        ctx.shadowColor = '#34d399';
+        ctx.shadowBlur = 6;
+        ctx.beginPath();
+        ctx.arc(px, py, 1.5 + pulse, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    } else if (preset.ambientParticleType === 'bubbles') {
+      // Sparkling sunlight glints on ocean surface
+      ctx.save();
+      for (let i = 0; i < 8; i++) {
+        const sx = 40 + ((i * 61) % (CANVAS_W - 80)) + Math.sin(state.tick * 0.02 + i) * 4;
+        const sy = 125 + ((i * 23) % 140);
+        const sparkle = (Math.sin(state.tick * 0.08 + i * 3) + 1) / 2;
+        if (sparkle > 0.65) {
+          ctx.fillStyle = `rgba(255, 255, 255, ${(sparkle * 0.8).toFixed(2)})`;
+          ctx.fillRect(Math.round(sx), Math.round(sy), 2, 2);
+        }
+      }
+      ctx.restore();
+    } else if (preset.ambientParticleType === 'wind_dust') {
+      // Mountain wind streaks
+      ctx.save();
+      for (let i = 0; i < 6; i++) {
+        const streakW = 20 + (i % 3) * 15;
+        const wx = ((state.tick * 2.8 + i * 95) % (CANVAS_W + 100)) - 50;
+        const wy = 55 + ((i * 35) % 170);
+        ctx.fillStyle = 'rgba(254, 243, 199, 0.22)';
+        ctx.fillRect(Math.round(wx), Math.round(wy), streakW, 1.2);
+      }
+      ctx.restore();
+    }
+  }
+
+  // ---- Procedural Forest Environment ----
+
+  private generateForestLayout(seed: number): ForestSceneLayout {
+    let s = seed % 2147483647;
+    if (s <= 0) s += 2147483646;
+    const nextRng = () => {
+      s = (s * 16807) % 2147483647;
+      return (s - 1) / 2147483646;
+    };
+    const rngRange = (min: number, max: number) => min + nextRng() * (max - min);
+
+    const pines: ForestScenePine[] = [];
+
+    // 1. Distant Pine Layer (depth 0, rất xa): smaller scale, misty, higher up along horizon
+    const distantCount = Math.floor(rngRange(11, 14));
+    for (let i = 0; i < distantCount; i++) {
+      const x = -15 + (i / (distantCount - 1)) * 540 + rngRange(-12, 12);
+      pines.push({
+        x: Math.round(x),
+        y: Math.round(rngRange(41, 46)),
+        scale: rngRange(0.5, 0.62),
+        depth: 0,
+        swaySpeed: rngRange(0.035, 0.055),
+        swayPhase: rngRange(0, Math.PI * 2),
+      });
+    }
+
+    // 2. Mid-distant Pine Layer (depth 1, xa dọc chân trời): medium scale, staggered naturally
+    const midCount = Math.floor(rngRange(10, 12));
+    for (let i = 0; i < midCount; i++) {
+      const x = -10 + (i / (midCount - 1)) * 530 + rngRange(-15, 15);
+      pines.push({
+        x: Math.round(x),
+        y: Math.round(rngRange(48, 54)),
+        scale: rngRange(0.68, 0.8),
+        depth: 1,
+        swaySpeed: rngRange(0.045, 0.065),
+        swayPhase: rngRange(0, Math.PI * 2),
+      });
+    }
+
+    // Sort pines by depth then y so deeper background trees render first
+    pines.sort((a, b) => a.depth - b.depth || a.y - b.y);
+
+    // 4. Sunbeams (tilted shafts from top-left with randomized placement & pulsing)
+    const rayTypes: Array<'lightC1' | 'lightC2' | 'lightC3'> = ['lightC1', 'lightC2', 'lightC3'];
+    const numRays = Math.floor(rngRange(5, 7));
+    const rays: ForestSceneRay[] = [];
+    const rayXs = [30, 95, 165, 240, 315, 385, 445];
+    for (let i = 0; i < numRays; i++) {
+      const rx = rayXs[i] + rngRange(-15, 15);
+      const type = rayTypes[Math.floor(nextRng() * rayTypes.length)];
+      rays.push({
+        type,
+        x: Math.round(rx),
+        y: Math.round(rngRange(-15, 0)),
+        scaleX: rngRange(1.35, 1.55),
+        scaleY: rngRange(1.2, 1.38),
+        baseAlpha: rngRange(0.45, 0.65),
+        pulseSpeed: rngRange(0.035, 0.06),
+        pulsePhase: rngRange(0, Math.PI * 2),
+      });
+    }
+
+    // 5. Grass Tufts (STRICTLY OUTSIDE BASES)
+    const tufts: ForestSceneTuft[] = [];
+    const isOnBase = (x: number, y: number) => {
+      const dEnemy = Math.pow((x - 380) / 118, 2) + Math.pow((y - 155) / 52, 2);
+      if (dEnemy <= 1.15) return true;
+      const dPlayer = Math.pow((x - 130) / 150, 2) + Math.pow((y - 255) / 68, 2);
+      if (dPlayer <= 1.15) return true;
+      return false;
+    };
+
+    const tuftCandidates = [
+      { x: 225, y: 142, sc: 0.82 },
+      { x: 258, y: 148, sc: 0.86 },
+      { x: 285, y: 152, sc: 0.9 },
+      { x: 238, y: 175, sc: 1.05 },
+      { x: 275, y: 185, sc: 1.15 },
+      { x: 255, y: 205, sc: 1.25 },
+      { x: 455, y: 162, sc: 0.8 },
+      { x: 475, y: 185, sc: 1.05 },
+      { x: 460, y: 215, sc: 1.2 },
+      { x: 435, y: 245, sc: 1.5 },
+      { x: 465, y: 252, sc: 1.4 },
+      { x: 35, y: 215, sc: 1.15 },
+      { x: 22, y: 242, sc: 1.45 },
+      { x: 48, y: 258, sc: 1.35 },
+      { x: 175, y: 138, sc: 0.78 },
+      { x: 485, y: 148, sc: 0.76 },
+    ];
+
+    for (const cand of tuftCandidates) {
+      if (nextRng() > 0.25) {
+        const jx = Math.round(cand.x + rngRange(-8, 8));
+        const jy = Math.round(cand.y + rngRange(-5, 5));
+        if (!isOnBase(jx + 15, jy + 15)) {
+          tufts.push({
+            x: jx,
+            y: jy,
+            scale: cand.sc,
+            swaySpeed: rngRange(0.055, 0.085),
+            swayPhase: rngRange(0, Math.PI * 2),
+          });
+        }
+      }
+    }
+
+    tufts.sort((a, b) => a.y - b.y);
+
+    return { pines, rays, tufts };
+  }
+
+  private getTintedGrassCanvases(
+    grassImg: HTMLImageElement
+  ): { grass: HTMLCanvasElement; shadow: HTMLCanvasElement } | null {
+    if (typeof document === 'undefined') return null;
+    if (this.tintedGrassCanvas && this.shadowGrassCanvas) {
+      return { grass: this.tintedGrassCanvas, shadow: this.shadowGrassCanvas };
+    }
+    const gw = grassImg.naturalWidth || grassImg.width || 37;
+    const gh = grassImg.naturalHeight || grassImg.height || 38;
+
+    // Tinted grass canvas (gradient from root to tip)
+    const gCanvas = document.createElement('canvas');
+    gCanvas.width = gw;
+    gCanvas.height = gh;
+    const gctx = gCanvas.getContext('2d');
+    if (!gctx) return null;
+    gctx.drawImage(grassImg, 0, 0);
+    gctx.globalCompositeOperation = 'source-in';
+    const grad = gctx.createLinearGradient(0, gh, 0, 0);
+    grad.addColorStop(0, '#224230');
+    grad.addColorStop(0.5, '#38664a');
+    grad.addColorStop(1, '#4e8a62');
+    gctx.fillStyle = grad;
+    gctx.fillRect(0, 0, gw, gh);
+
+    // Directional shadow canvas (silhouette flipped vertically for ground projection)
+    const sCanvas = document.createElement('canvas');
+    sCanvas.width = gw;
+    sCanvas.height = gh;
+    const sctx = sCanvas.getContext('2d');
+    if (!sctx) return null;
+    sctx.save();
+    sctx.translate(0, gh);
+    sctx.scale(1, -1);
+    sctx.drawImage(grassImg, 0, 0);
+    sctx.restore();
+    sctx.globalCompositeOperation = 'source-in';
+    sctx.fillStyle = 'rgba(8, 20, 14, 0.45)';
+    sctx.fillRect(0, 0, gw, gh);
+
+    this.tintedGrassCanvas = gCanvas;
+    this.shadowGrassCanvas = sCanvas;
+    return { grass: gCanvas, shadow: sCanvas };
+  }
+
+  private getTintedPineCanvas(pineImg: HTMLImageElement): HTMLCanvasElement | null {
+    if (typeof document === 'undefined') return null;
+    if (this.tintedPineCanvas) return this.tintedPineCanvas;
+    const pw = pineImg.naturalWidth || pineImg.width || 61;
+    const ph = pineImg.naturalHeight || pineImg.height || 102;
+    const pCanvas = document.createElement('canvas');
+    pCanvas.width = pw;
+    pCanvas.height = ph;
+    const pctx = pCanvas.getContext('2d');
+    if (!pctx) return null;
+    pctx.drawImage(pineImg, 0, 0);
+    pctx.globalCompositeOperation = 'source-in';
+    pctx.fillStyle = '#12221a';
+    pctx.fillRect(0, 0, pw, ph);
+    this.tintedPineCanvas = pCanvas;
+    return pCanvas;
+  }
+
+  private drawForestHorizonAndSky(
+    ctx: CanvasRenderingContext2D,
+    state: BattleState,
+    envEl: BattleEnvironmentElementAssets
+  ): void {
+    if (!this.forestLayout || !envEl.treePine || !isLoaded(envEl.treePine)) return;
+    const pineCanvas = this.getTintedPineCanvas(envEl.treePine);
+    if (!pineCanvas) return;
+
+    // 1. Distant Pine Trees with focal depth (only in the far background along horizon, NO tree shadow)
+    for (const p of this.forestLayout.pines) {
+      const pw = Math.round(pineCanvas.width * p.scale);
+      const ph = Math.round(pineCanvas.height * p.scale);
+      const swayAngle =
+        Math.sin(state.tick * p.swaySpeed + p.swayPhase) * (p.scale > 0.7 ? 0.024 : 0.016);
+
+      ctx.save();
+      ctx.globalAlpha = p.depth === 0 ? 0.7 : 0.95;
+      ctx.translate(p.x + pw / 2, p.y + ph);
+      ctx.transform(1, 0, -swayAngle, 1, 0, 0);
+      ctx.drawImage(pineCanvas, -pw / 2, -ph, pw, ph);
+      ctx.restore();
+    }
+
+    // 2. Breathing Sunbeams (God Rays)
+    for (const r of this.forestLayout.rays) {
+      const rayImg = envEl[r.type];
+      if (!rayImg || !isLoaded(rayImg)) continue;
+
+      const pulse = (Math.sin(state.tick * r.pulseSpeed + r.pulsePhase) + 1) / 2;
+      const currentAlpha = r.baseAlpha * (0.35 + pulse * 0.85);
+
+      const rw = Math.round(rayImg.naturalWidth * r.scaleX);
+      const rh = Math.round(rayImg.naturalHeight * r.scaleY);
+
+      ctx.save();
+      ctx.globalAlpha = Math.min(1.0, currentAlpha);
+      ctx.drawImage(rayImg, r.x, r.y, rw, rh);
+      ctx.restore();
+    }
+  }
+
+  private drawForestForegroundAndGrass(
+    ctx: CanvasRenderingContext2D,
+    state: BattleState,
+    envEl: BattleEnvironmentElementAssets
+  ): void {
+    if (!this.forestLayout) return;
+
+    // Grass Tufts with Directional Cast Shadow & Wind-Bending Shear (ZERO grass on bases)
+    if (envEl.tallGrass && isLoaded(envEl.tallGrass)) {
+      const canvases = this.getTintedGrassCanvases(envEl.tallGrass);
+      if (canvases) {
+        const { grass: gCanvas, shadow: sCanvas } = canvases;
+
+        for (const t of this.forestLayout.tufts) {
+          const tw = Math.round(gCanvas.width * t.scale);
+          const th = Math.round(gCanvas.height * t.scale);
+          const swaySkew = Math.sin(state.tick * t.swaySpeed + t.swayPhase) * 0.12;
+
+          // Directional Cast Shadow (projected to bottom-right along ground matching sunlight)
+          ctx.save();
+          ctx.translate(t.x, t.y + th - 2);
+          ctx.transform(1, 0, 0.55 + swaySkew * 0.4, 0.32, 0, 0);
+          ctx.drawImage(sCanvas, 0, 0, tw, th);
+          ctx.restore();
+
+          // Standing Grass (organic wind-bending shear from roots)
+          ctx.save();
+          ctx.translate(t.x + tw / 2, t.y + th);
+          ctx.transform(1, 0, -swaySkew, 1, 0, 0);
+          ctx.drawImage(gCanvas, -tw / 2, -th, tw, th);
+          ctx.restore();
+        }
+      }
     }
   }
 
@@ -1135,6 +1713,22 @@ export class BattleRenderer {
       ctx.drawImage(this.assets.shinyIcon, 142 + lvTextW + 4, 18, 14, 14);
     }
 
+    // Tera Badge if Terastallized
+    if (enemy.isTerastallized && enemy.teraType) {
+      const lvTextW = ctx.measureText(`Lv.${enemy.level}`).width;
+      const teraOffset = enemy.isShiny && isLoaded(this.assets.shinyIcon) ? 20 : 4;
+      ctx.font = `bold 11px ${BATTLE_FONT}`;
+      this.drawTextWithOutline(
+        ctx,
+        `💎${enemy.teraType.toUpperCase()}`,
+        142 + lvTextW + teraOffset,
+        31,
+        '#38bdf8',
+        '#000000',
+        1
+      );
+    }
+
     // Type Badges (Horizontal in the black tab under HP bar, enlarged by 20%)
     const typeScale = 0.6;
     const typeIconW = 24 * typeScale;
@@ -1226,6 +1820,22 @@ export class BattleRenderer {
     if (player.isShiny && isLoaded(this.assets.shinyIcon)) {
       const lvTextW = ctx.measureText(`Lv.${player.level}`).width;
       ctx.drawImage(this.assets.shinyIcon, dx + 192 + lvTextW + 4, dy + 18, 14, 14);
+    }
+
+    // Tera Badge if Terastallized
+    if (player.isTerastallized && player.teraType) {
+      const lvTextW = ctx.measureText(`Lv.${player.level}`).width;
+      const teraOffset = player.isShiny && isLoaded(this.assets.shinyIcon) ? 20 : 4;
+      ctx.font = `bold 11px ${BATTLE_FONT}`;
+      this.drawTextWithOutline(
+        ctx,
+        `💎${player.teraType.toUpperCase()}`,
+        dx + 192 + lvTextW + teraOffset,
+        dy + 31,
+        '#38bdf8',
+        '#000000',
+        1
+      );
     }
 
     // HP Bar
@@ -1529,29 +2139,149 @@ export class BattleRenderer {
       }
     }
 
-    // Right Column: CANCEL Button from command_buttons.png (Row 9: sy=414, sh=46, sw=130)
-    const cancelX = 402;
-    const cancelY = py + 26;
-    const cancelW = 102;
-    const cancelH = 42;
+    // Right Column: CANCEL Button & TERASTAL Button
+    const canTera = this.engine.canTerastallize('player');
+    const isTerad = this.engine.playerPokemon.isTerastallized;
 
-    if (isLoaded(this.assets.commandButtons)) {
-      const cancelSx = state.hoveredCancel ? 130 : 0;
-      ctx.drawImage(
-        this.assets.commandButtons,
-        cancelSx,
-        414,
-        130,
-        46,
-        cancelX,
-        cancelY,
-        cancelW,
-        cancelH
-      );
+    if (canTera || isTerad) {
+      const teraX = 402;
+      const teraY = py + 8;
+      const teraW = 102;
+      const teraH = 36;
+
+      ctx.save();
+      if (isTerad) {
+        // Already Terastallized badge
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.roundRect(teraX, teraY, teraW, teraH, 6);
+        ctx.fill();
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.font = `bold 12px ${BATTLE_FONT}`;
+        ctx.textAlign = 'center';
+        this.drawTextWithOutline(
+          ctx,
+          `💎 TERA ${this.engine.playerPokemon.teraType?.toUpperCase()}`,
+          teraX + teraW / 2,
+          teraY + 23,
+          '#38bdf8',
+          '#000000',
+          1
+        );
+      } else {
+        // Can Terastallize button
+        const isHovered = state.hoveredTerastal;
+        const isReq = state.terastalRequested;
+        ctx.fillStyle = isReq
+          ? isHovered
+            ? '#0284c7'
+            : '#0369a1'
+          : isHovered
+            ? '#334155'
+            : '#1e293b';
+        ctx.beginPath();
+        ctx.roundRect(teraX, teraY, teraW, teraH, 6);
+        ctx.fill();
+        ctx.strokeStyle = isReq ? '#facc15' : isHovered ? '#7dd3fc' : '#38bdf8';
+        ctx.lineWidth = isReq ? 2 : 1.5;
+        ctx.stroke();
+        ctx.font = `bold 12px ${BATTLE_FONT}`;
+        ctx.textAlign = 'center';
+        const label = isReq ? '💎 TERA ON' : '💎 TERASTAL';
+        const textColor = isReq ? '#fef08a' : isHovered ? '#ffffff' : '#38bdf8';
+        this.drawTextWithOutline(
+          ctx,
+          label,
+          teraX + teraW / 2,
+          teraY + 23,
+          textColor,
+          '#000000',
+          1
+        );
+      }
+      ctx.restore();
+
+      // Cancel button below
+      const cancelX = 402;
+      const cancelY = py + 48;
+      const cancelW = 102;
+      const cancelH = 36;
+      if (isLoaded(this.assets.commandButtons)) {
+        const cancelSx = state.hoveredCancel ? 130 : 0;
+        ctx.drawImage(
+          this.assets.commandButtons,
+          cancelSx,
+          414,
+          130,
+          46,
+          cancelX,
+          cancelY,
+          cancelW,
+          cancelH
+        );
+      } else {
+        this.drawPillButton(
+          ctx,
+          cancelX,
+          cancelY,
+          cancelW,
+          cancelH,
+          '#94a3b8',
+          state.hoveredCancel
+        );
+        ctx.font = `16px ${BATTLE_FONT}`;
+        this.drawTextWithOutline(
+          ctx,
+          'CANCEL',
+          cancelX + 26,
+          cancelY + 24,
+          '#ffffff',
+          '#000000',
+          1
+        );
+      }
     } else {
-      this.drawPillButton(ctx, cancelX, cancelY, cancelW, cancelH, '#94a3b8', state.hoveredCancel);
-      ctx.font = `18px ${BATTLE_FONT}`;
-      this.drawTextWithOutline(ctx, 'CANCEL', cancelX + 26, cancelY + 26, '#ffffff', '#000000', 1);
+      const cancelX = 402;
+      const cancelY = py + 26;
+      const cancelW = 102;
+      const cancelH = 42;
+
+      if (isLoaded(this.assets.commandButtons)) {
+        const cancelSx = state.hoveredCancel ? 130 : 0;
+        ctx.drawImage(
+          this.assets.commandButtons,
+          cancelSx,
+          414,
+          130,
+          46,
+          cancelX,
+          cancelY,
+          cancelW,
+          cancelH
+        );
+      } else {
+        this.drawPillButton(
+          ctx,
+          cancelX,
+          cancelY,
+          cancelW,
+          cancelH,
+          '#94a3b8',
+          state.hoveredCancel
+        );
+        ctx.font = `18px ${BATTLE_FONT}`;
+        this.drawTextWithOutline(
+          ctx,
+          'CANCEL',
+          cancelX + 26,
+          cancelY + 26,
+          '#ffffff',
+          '#000000',
+          1
+        );
+      }
     }
   }
 
@@ -2098,9 +2828,7 @@ export class BattleRenderer {
     ctx.fillText(theme.labelVi, tx, drawY + 9);
 
     // Turn Count (Sub-header)
-    const turnsLabel = Number.isFinite(weather.turnsLeft)
-      ? `${weather.turnsLeft} LƯỢT`
-      : 'VÔ HẠN';
+    const turnsLabel = Number.isFinite(weather.turnsLeft) ? `${weather.turnsLeft} LƯỢT` : 'VÔ HẠN';
     ctx.font = `bold 12px ${BATTLE_FONT}`;
     ctx.fillStyle = '#000000';
     ctx.fillText(turnsLabel, tx + 1, drawY + 21);

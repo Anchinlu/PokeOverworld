@@ -17,7 +17,12 @@ import {
 } from '../party/pokemon-stats';
 import type { BattlerPokemon } from '../../battle/types';
 import type { ItemData } from '../../data/items-db';
-import { getItemEffectDef, STONE_EVOLUTIONS, isMoveTargetItem, isTmItem } from './item-catalog-effects';
+import {
+  getItemEffectDef,
+  STONE_EVOLUTIONS,
+  isMoveTargetItem,
+  isTmItem,
+} from './item-catalog-effects';
 export { isMoveTargetItem, isTmItem };
 import { NATURES_TABLE, type StatKey } from '@pokemon/shared-types';
 import { pokemonCatalog } from '../../data';
@@ -372,9 +377,7 @@ export function canUseItemOnPartyPokemon(
       };
     }
 
-    const alreadyTaught = pokemon.taughtTmMoves?.some(
-      (m) => m.toLowerCase() === targetMoveId
-    );
+    const alreadyTaught = pokemon.taughtTmMoves?.some((m) => m.toLowerCase() === targetMoveId);
     if (alreadyTaught) {
       return {
         canUse: false,
@@ -651,9 +654,7 @@ export function applyItemToPartyPokemon(
     const move =
       targetMoveIndex !== undefined
         ? pokemon.moves[targetMoveIndex]
-        : pokemon.moves.find(
-            (m) => ((m as { ppUpCount?: number }).ppUpCount ?? 0) < 3
-          );
+        : pokemon.moves.find((m) => ((m as { ppUpCount?: number }).ppUpCount ?? 0) < 3);
     if (move) {
       const moveExt = move as { ppUpCount?: number; baseMaxPp?: number };
       const currentCount = moveExt.ppUpCount ?? 0;

@@ -44,6 +44,8 @@ export interface PartyPokemon {
   status: StatusCondition;
   types: PokemonType[];
   ability?: string;
+  abilitySlot?: 'primary' | 'secondary' | 'hidden';
+  teraType?: PokemonType;
   gender: 'male' | 'female' | 'genderless';
   moves: BattleMove[];
   heldItem?: string | null;
@@ -73,6 +75,8 @@ export function createPartyPokemon(
     ballCaught?: string;
     heldItem?: string | null;
     ability?: string;
+    abilitySlot?: 'primary' | 'secondary' | 'hidden';
+    teraType?: PokemonType;
     rng?: RandomService;
     ivs?: Partial<PokemonStatValues> | 'perfect' | 'random';
     evs?: Partial<PokemonStatValues>;
@@ -113,6 +117,30 @@ export function createPartyPokemon(
   const growthRate = normalizeGrowthRate(data.growthRate);
   const maxExp = getExpToNextLevel(growthRate, level);
 
+  // 5. Resolve Ability & AbilitySlot
+  let abilitySlot: 'primary' | 'secondary' | 'hidden' = options?.abilitySlot ?? 'primary';
+  let chosenAbility = options?.ability;
+  if (!chosenAbility) {
+    if (data.abilities) {
+      if (options?.abilitySlot) {
+        chosenAbility = data.abilities[options.abilitySlot] ?? data.abilities.primary;
+      } else {
+        if (data.abilities.secondary && activeRng.next() < 0.5) {
+          abilitySlot = 'secondary';
+          chosenAbility = data.abilities.secondary;
+        } else {
+          abilitySlot = 'primary';
+          chosenAbility = data.abilities.primary;
+        }
+      }
+    } else {
+      chosenAbility = data.ability ?? 'none';
+    }
+  }
+
+  // 6. Resolve teraType
+  const teraType: PokemonType = options?.teraType ?? data.teraType ?? data.types[0] ?? 'Normal';
+
   return {
     uid: `pk_${Date.now()}_${activeRng.nextInt(100000, 999999).toString(36)}`,
     speciesId: data.id,
@@ -131,7 +159,9 @@ export function createPartyPokemon(
     nature,
     status: 'none',
     types: [...data.types],
-    ability: options?.ability ?? data.ability ?? 'none',
+    ability: chosenAbility,
+    abilitySlot,
+    teraType,
     gender: options?.gender ?? (activeRng.next() < 0.5 ? 'male' : 'female'),
     moves,
     heldItem: options?.heldItem ?? null,
@@ -193,15 +223,28 @@ export function recalculatePartyPokemonStats(
  * Converts a PartyPokemon into a BattlerPokemon ready for battle.
  */
 export function partyPokemonToBattler(pokemon: PartyPokemon): BattlerPokemon {
+  const speciesData = pokemonCatalog.getBySpeciesKey(pokemon.speciesKey);
+  const slot = pokemon.abilitySlot ?? 'primary';
+  const resolvedAbility =
+    pokemon.ability ??
+    (speciesData?.abilities
+      ? (speciesData.abilities[slot] ?? speciesData.abilities.primary)
+      : speciesData?.ability) ??
+    'none';
+
   return {
     uid: pokemon.uid,
     id: pokemon.speciesId,
     name: pokemon.nickname || pokemon.name,
     speciesKey: pokemon.speciesKey,
-    ability:
-      pokemon.ability ?? pokemonCatalog.getBySpeciesKey(pokemon.speciesKey)?.ability ?? 'none',
+    ability: resolvedAbility,
+    abilitySlot: slot,
     isShiny: pokemon.isShiny,
     types: [...pokemon.types],
+    teraType: pokemon.teraType ?? pokemon.types[0] ?? 'Normal',
+    originalTypes: [...pokemon.types],
+    isTerastallized: false,
+    canTerastallize: true,
     level: pokemon.level,
     currentHp: pokemon.currentHp,
     maxHp: pokemon.maxHp,

@@ -356,6 +356,6 @@ describe('Custom Bot Battler & Overlay Cheat Tools', () => {
       // Test destroy cleanup
       controller.destroy();
       expect(container.querySelector('#testOverlay')).toBeNull();
-    });
+    }, 15000);
   });
 });

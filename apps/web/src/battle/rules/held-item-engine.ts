@@ -240,9 +240,7 @@ export class HeldItemEngine {
     if (key !== 'leppa-berry' || battler.isFainted || battler.currentHp <= 0) return [];
 
     const targetMove =
-      depletedMove && depletedMove.pp <= 0
-        ? depletedMove
-        : battler.moves.find((m) => m.pp <= 0);
+      depletedMove && depletedMove.pp <= 0 ? depletedMove : battler.moves.find((m) => m.pp <= 0);
 
     if (targetMove) {
       battler.lastConsumedItem = battler.heldItem;

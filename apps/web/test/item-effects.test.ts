@@ -391,18 +391,22 @@ describe('Item Effects Engine & Inventory Deduction', () => {
     expect(pikachu.status).toBe('none');
   });
 
-  it('adds all 108 TM/HM machines into pocket 3 with addAllMachines', () => {
+  it('adds all TM/HM machines into pocket 3 with addAllMachines', () => {
     const count = inventoryService.addAllMachines(1);
-    expect(count).toBe(108);
+    expect(count).toBeGreaterThanOrEqual(108);
 
-    // Verify pocket 3 (machines) has all 108 items
+    // Verify pocket 3 (machines) has all items
     const machinePocketItems = inventoryService.getPocketItems(3);
-    expect(machinePocketItems.length).toBe(108);
+    expect(machinePocketItems.length).toBe(count);
 
-    // Verify TM24 (Thunderbolt) and HM03 (Surf) are in pocket
+    // Verify TM24 (Thunderbolt), TM001 (Take Down), and HM03 (Surf) are in pocket
     const tm24Item = machinePocketItems.find((entry) => entry.item.id.toLowerCase() === 'tm24');
     expect(tm24Item).toBeDefined();
     expect(tm24Item?.count).toBe(1);
+
+    const tm001Item = machinePocketItems.find((entry) => entry.item.id.toLowerCase() === 'tm001');
+    expect(tm001Item).toBeDefined();
+    expect(tm001Item?.count).toBe(1);
 
     const hm03Item = machinePocketItems.find((entry) => entry.item.id.toLowerCase() === 'hm03');
     expect(hm03Item).toBeDefined();
@@ -411,8 +415,28 @@ describe('Item Effects Engine & Inventory Deduction', () => {
   it('teaches move to Pokemon using TM disc and prevents re-learning if already known', () => {
     // Pikachu starting moves
     pikachu.moves = [
-      { id: 'tackle', name: 'Tackle', description: '', type: 'Normal', category: 'physical', power: 40, accuracy: 100, pp: 35, maxPp: 35 },
-      { id: 'quick_attack', name: 'Quick Attack', description: '', type: 'Normal', category: 'physical', power: 40, accuracy: 100, pp: 30, maxPp: 30 },
+      {
+        id: 'tackle',
+        name: 'Tackle',
+        description: '',
+        type: 'Normal',
+        category: 'physical',
+        power: 40,
+        accuracy: 100,
+        pp: 35,
+        maxPp: 35,
+      },
+      {
+        id: 'quick_attack',
+        name: 'Quick Attack',
+        description: '',
+        type: 'Normal',
+        category: 'physical',
+        power: 40,
+        accuracy: 100,
+        pp: 30,
+        maxPp: 30,
+      },
     ];
 
     const tm24 = findItem('tm24') as ItemData; // Thunderbolt
@@ -441,10 +465,50 @@ describe('Item Effects Engine & Inventory Deduction', () => {
 
   it('replaces 4th move when teaching TM to a Pokemon with full 4 moves', () => {
     pikachu.moves = [
-      { id: 'tackle', name: 'Tackle', description: '', type: 'Normal', category: 'physical', power: 40, accuracy: 100, pp: 35, maxPp: 35 },
-      { id: 'quick_attack', name: 'Quick Attack', description: '', type: 'Normal', category: 'physical', power: 40, accuracy: 100, pp: 30, maxPp: 30 },
-      { id: 'thunder_shock', name: 'Thunder Shock', description: '', type: 'Electric', category: 'special', power: 40, accuracy: 100, pp: 30, maxPp: 30 },
-      { id: 'growl', name: 'Growl', description: '', type: 'Normal', category: 'status', power: 0, accuracy: 100, pp: 40, maxPp: 40 },
+      {
+        id: 'tackle',
+        name: 'Tackle',
+        description: '',
+        type: 'Normal',
+        category: 'physical',
+        power: 40,
+        accuracy: 100,
+        pp: 35,
+        maxPp: 35,
+      },
+      {
+        id: 'quick_attack',
+        name: 'Quick Attack',
+        description: '',
+        type: 'Normal',
+        category: 'physical',
+        power: 40,
+        accuracy: 100,
+        pp: 30,
+        maxPp: 30,
+      },
+      {
+        id: 'thunder_shock',
+        name: 'Thunder Shock',
+        description: '',
+        type: 'Electric',
+        category: 'special',
+        power: 40,
+        accuracy: 100,
+        pp: 30,
+        maxPp: 30,
+      },
+      {
+        id: 'growl',
+        name: 'Growl',
+        description: '',
+        type: 'Normal',
+        category: 'status',
+        power: 0,
+        accuracy: 100,
+        pp: 40,
+        maxPp: 40,
+      },
     ];
 
     const tm25 = findItem('tm25') as ItemData; // Thunder
@@ -463,10 +527,50 @@ describe('Item Effects Engine & Inventory Deduction', () => {
 
   it('allows player to proactively choose which move to replace when teaching TM', () => {
     pikachu.moves = [
-      { id: 'tackle', name: 'Tackle', description: '', type: 'Normal', category: 'physical', power: 40, accuracy: 100, pp: 35, maxPp: 35 },
-      { id: 'quick_attack', name: 'Quick Attack', description: '', type: 'Normal', category: 'physical', power: 40, accuracy: 100, pp: 30, maxPp: 30 },
-      { id: 'thunder_shock', name: 'Thunder Shock', description: '', type: 'Electric', category: 'special', power: 40, accuracy: 100, pp: 30, maxPp: 30 },
-      { id: 'growl', name: 'Growl', description: '', type: 'Normal', category: 'status', power: 0, accuracy: 100, pp: 40, maxPp: 40 },
+      {
+        id: 'tackle',
+        name: 'Tackle',
+        description: '',
+        type: 'Normal',
+        category: 'physical',
+        power: 40,
+        accuracy: 100,
+        pp: 35,
+        maxPp: 35,
+      },
+      {
+        id: 'quick_attack',
+        name: 'Quick Attack',
+        description: '',
+        type: 'Normal',
+        category: 'physical',
+        power: 40,
+        accuracy: 100,
+        pp: 30,
+        maxPp: 30,
+      },
+      {
+        id: 'thunder_shock',
+        name: 'Thunder Shock',
+        description: '',
+        type: 'Electric',
+        category: 'special',
+        power: 40,
+        accuracy: 100,
+        pp: 30,
+        maxPp: 30,
+      },
+      {
+        id: 'growl',
+        name: 'Growl',
+        description: '',
+        type: 'Normal',
+        category: 'status',
+        power: 0,
+        accuracy: 100,
+        pp: 40,
+        maxPp: 40,
+      },
     ];
 
     const tm25 = findItem('tm25') as ItemData; // Thunder
@@ -491,7 +595,17 @@ describe('Item Effects Engine & Inventory Deduction', () => {
 
   it('rejects invalid targetMoveIndex outside move range when teaching TM', () => {
     pikachu.moves = [
-      { id: 'tackle', name: 'Tackle', description: '', type: 'Normal', category: 'physical', power: 40, accuracy: 100, pp: 35, maxPp: 35 },
+      {
+        id: 'tackle',
+        name: 'Tackle',
+        description: '',
+        type: 'Normal',
+        category: 'physical',
+        power: 40,
+        accuracy: 100,
+        pp: 35,
+        maxPp: 35,
+      },
     ];
     const tm24 = findItem('tm24') as ItemData; // Thunderbolt
 
@@ -697,7 +811,10 @@ describe('Item Effects Engine & Inventory Deduction', () => {
       expect(ancientPowerNames.nameEn).not.toContain('Sức Mạnh Cổ Đại');
 
       // 2. Move with DB lookup by ID
-      const dbLookup = getMoveDisplayNames({ id: 'ancientpower', name: 'Ancient Power (Sức Mạnh Cổ Đại)' });
+      const dbLookup = getMoveDisplayNames({
+        id: 'ancientpower',
+        name: 'Ancient Power (Sức Mạnh Cổ Đại)',
+      });
       expect(dbLookup.nameVi).toBe('Sức Mạnh Cổ Đại');
       expect(dbLookup.nameEn).toBe('Ancient Power');
 
@@ -708,4 +825,3 @@ describe('Item Effects Engine & Inventory Deduction', () => {
     });
   });
 });
-

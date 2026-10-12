@@ -1884,7 +1884,8 @@
       "descriptionEn": "In battles, the opponent switches. In the wild, the Pokémon runs.",
       "nameEn": "Circle Throw",
       "nameVi": "Ném Vòng Tròn",
-      "descriptionVi": "Trong trận, đối thủ bị buộc phải đổi Pokémon. Ngoài tự nhiên, Pokémon sẽ bỏ chạy."
+      "descriptionVi": "Trong trận, đối thủ bị buộc phải đổi Pokémon. Ngoài tự nhiên, Pokémon sẽ bỏ chạy.",
+      "priority": -6
     },
     "clamp": {
       "id": "clamp",
@@ -3149,7 +3150,8 @@
       "descriptionEn": "In battles, the opponent switches. In the wild, the Pokémon runs.",
       "nameEn": "Dragon Tail",
       "nameVi": "Đuôi Rồng",
-      "descriptionVi": "Trong các trận chiến, đối thủ chuyển đổi. Trong tự nhiên, Pokémon chạy."
+      "descriptionVi": "Trong các trận chiến, đối thủ chuyển đổi. Trong tự nhiên, Pokémon chạy.",
+      "priority": -6
     },
     "drain_punch": {
       "id": "drain_punch",
@@ -9162,6 +9164,11 @@
       "statChanges": [
         {
           "stat": "attack",
+          "stages": -1,
+          "target": "opponent"
+        },
+        {
+          "stat": "spAtk",
           "stages": -1,
           "target": "opponent"
         }

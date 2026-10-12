@@ -240,7 +240,34 @@ export const BATTLE_ASSETS = {
     return resolveAsset('battle_ballBurst_ring', '/Graphics/Battle animations/ballBurst_ring1.png');
   },
   getBackground: (bg: string): string => {
-    return resolveAsset(`battle_bg_${bg}`, `/Graphics/Battle/battlebg/${bg}`);
+    if (bg.startsWith('/') || bg.startsWith('http')) return bg;
+    if (bg.startsWith('Battlebacks/')) return `/Graphics/Battle/${bg}`;
+    const battlebacksList = [
+      'Field.png',
+      'Forest.png',
+      'Water.png',
+      'Mountain.png',
+      'Cave.png',
+      'CaveDark.png',
+      'City.png',
+      'Snow.png',
+      'Sky.png',
+      'Sand.png',
+      'Underwater.png',
+    ];
+    const path = battlebacksList.includes(bg)
+      ? `/Graphics/Battle/Battlebacks/battlebg/${bg}`
+      : `/Graphics/Battle/battlebg/${bg}`;
+    return resolveAsset(`battle_bg_${bg}`, path);
+  },
+  getBattlebackBg: (bg: string): string => {
+    return resolveAsset(`battle_bb_bg_${bg}`, `/Graphics/Battle/Battlebacks/battlebg/${bg}`);
+  },
+  getBattlebackBase: (base: string): string => {
+    return resolveAsset(`battle_bb_base_${base}`, `/Graphics/Battle/Battlebacks/base/${base}`);
+  },
+  getBattlebackElement: (el: string): string => {
+    return resolveAsset(`battle_bb_el_${el}`, `/Graphics/Battle/Battlebacks/elements/${el}`);
   },
   getEnemyBase: (base: string): string => {
     return resolveAsset(`battle_enemy_base_${base}`, `/Graphics/Battle/enemybase/${base}`);

@@ -16,12 +16,7 @@ import { partyService } from '../domain/party/party-service';
 import { showBerryToast } from './toast';
 
 export type EvolutionPhase =
-  | 'intro'
-  | 'glowing_ascending'
-  | 'morphing'
-  | 'burst'
-  | 'revealed'
-  | 'done';
+  'intro' | 'glowing_ascending' | 'morphing' | 'burst' | 'revealed' | 'done';
 
 interface Particle {
   x: number;
@@ -203,10 +198,17 @@ export class EvolutionScreen {
     this.animFrameId = requestAnimationFrame(loop);
   }
 
-  private playTone(freq: number, type: OscillatorType = 'sine', duration = 0.15, gainVal = 0.08): void {
+  private playTone(
+    freq: number,
+    type: OscillatorType = 'sine',
+    duration = 0.15,
+    gainVal = 0.08
+  ): void {
     try {
       if (!this.audioCtx) {
-        const AudioCtxClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+        const AudioCtxClass =
+          window.AudioContext ||
+          (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
         if (AudioCtxClass) {
           this.audioCtx = new AudioCtxClass();
         }
@@ -260,9 +262,7 @@ export class EvolutionScreen {
       const progress = Math.min(1, elapsedPhase / duration);
       // Ease in-out quad
       const eased =
-        progress < 0.5
-          ? 2 * progress * progress
-          : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+        progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
 
       this.posY = this.startY - (this.startY - this.targetY) * eased;
 
@@ -368,7 +368,9 @@ export class EvolutionScreen {
     }, 450);
 
     // Show celebratory dialogue message
-    this.setMessage(`🎉 Chúc mừng! ${evoResult.oldName} đã tiến hóa thành công thành ${evoResult.newName}!`);
+    this.setMessage(
+      `🎉 Chúc mừng! ${evoResult.oldName} đã tiến hóa thành công thành ${evoResult.newName}!`
+    );
 
     // Show the "TIẾP TỤC" button
     if (this.actionBtnEl) {
@@ -396,7 +398,14 @@ export class EvolutionScreen {
       this.drawPokemonSprite(ctx, this.preEvoImg, this.posX, this.posY, 1.0, glowFactor);
 
       // Draw glowing sphere of pure radiant light expanding over the sprite
-      this.drawRadiantLightSphere(ctx, this.posX, this.posY, 46 + progress * 24, glowFactor, timestamp);
+      this.drawRadiantLightSphere(
+        ctx,
+        this.posX,
+        this.posY,
+        46 + progress * 24,
+        glowFactor,
+        timestamp
+      );
     } else if (this.phase === 'morphing') {
       const progress = Math.min(1, elapsedPhase / 4200);
       const currentPeriod = Math.max(60, 320 - progress * 260);
@@ -410,7 +419,14 @@ export class EvolutionScreen {
       this.drawPokemonSprite(ctx, targetImg, this.posX, this.posY, pulseScale, 0.7);
 
       // Glowing sphere enclosing the morphing center
-      this.drawRadiantLightSphere(ctx, this.posX, this.posY, 68 + Math.sin(timestamp * 0.03) * 6, 1.0, timestamp);
+      this.drawRadiantLightSphere(
+        ctx,
+        this.posX,
+        this.posY,
+        68 + Math.sin(timestamp * 0.03) * 6,
+        1.0,
+        timestamp
+      );
     } else if (this.phase === 'burst') {
       // Supernova Burst expanding
       const progress = Math.min(1, elapsedPhase / 1100);
@@ -543,7 +559,7 @@ export class EvolutionScreen {
     ctx.strokeStyle = `rgba(255, 255, 255, ${0.4 * intensity})`;
     ctx.lineWidth = 2;
     for (let i = 0; i < 4; i++) {
-      const angle = (timestamp * 0.002) + (i * Math.PI) / 4;
+      const angle = timestamp * 0.002 + (i * Math.PI) / 4;
       const len = radius * 1.25;
       ctx.beginPath();
       ctx.moveTo(x - Math.cos(angle) * len, y - Math.sin(angle) * len);

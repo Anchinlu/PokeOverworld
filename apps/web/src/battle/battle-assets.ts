@@ -6,6 +6,27 @@
 import type { BattleEnvironment } from './types';
 import { BATTLE_ASSETS, MOVE_ASSETS, POKEMON_ASSETS } from '../assets';
 
+import { detectPresetFromEnvironment } from './battle-environment-presets';
+
+export interface BattleEnvironmentElementAssets {
+  sun?: HTMLImageElement;
+  cloud?: HTMLImageElement;
+  cloud2?: HTMLImageElement;
+  forestShade?: HTMLImageElement;
+  treePine?: HTMLImageElement;
+  tallGrass?: HTMLImageElement;
+  lightC1?: HTMLImageElement;
+  lightC2?: HTMLImageElement;
+  lightC3?: HTMLImageElement;
+  water0?: HTMLImageElement;
+  water1?: HTMLImageElement;
+  bubble?: HTMLImageElement;
+  mountain?: HTMLImageElement;
+  rocks?: HTMLImageElement;
+  canopyGround?: HTMLImageElement;
+  fog?: HTMLImageElement;
+}
+
 /** All preloaded images for the battle screen */
 export interface BattleAssets {
   bg: HTMLImageElement;
@@ -13,6 +34,7 @@ export interface BattleAssets {
   playerBase: HTMLImageElement;
   foregroundOverlay?: HTMLImageElement;
   overlayKey?: string;
+  envElements?: BattleEnvironmentElementAssets;
   enemySprite: HTMLImageElement;
   playerSprite: HTMLImageElement;
   databoxEnemy: HTMLImageElement;
@@ -48,6 +70,36 @@ export function createBattleAssets(
     return img;
   };
 
+  const preset = detectPresetFromEnvironment(env);
+  const envElements: BattleEnvironmentElementAssets = {};
+
+  if (preset.hasSun) {
+    envElements.sun = load(BATTLE_ASSETS.getBattlebackElement('sun.png'));
+  }
+  if (preset.hasClouds) {
+    envElements.cloud = load(BATTLE_ASSETS.getBattlebackElement('cloud1.png'));
+    envElements.cloud2 = load(BATTLE_ASSETS.getBattlebackElement('cloud2.png'));
+  }
+  if (preset.hasPineTrees) {
+    envElements.treePine = load(BATTLE_ASSETS.getBattlebackElement('treePine.png'));
+    envElements.tallGrass = load(BATTLE_ASSETS.getBattlebackElement('tallGrass.png'));
+    envElements.lightC1 = load(BATTLE_ASSETS.getBattlebackElement('lightC1.png'));
+    envElements.lightC2 = load(BATTLE_ASSETS.getBattlebackElement('lightC2.png'));
+    envElements.lightC3 = load(BATTLE_ASSETS.getBattlebackElement('lightC3.png'));
+  }
+  if (preset.hasWaterShimmer) {
+    envElements.water0 = load(BATTLE_ASSETS.getBattlebackElement('water0.png'));
+    envElements.water1 = load(BATTLE_ASSETS.getBattlebackElement('water1.png'));
+  }
+  if (preset.hasBubbles) {
+    envElements.bubble = load(BATTLE_ASSETS.getBattlebackElement('bubble.png'));
+  }
+  if (preset.hasMountainRidge) {
+    envElements.mountain = load(BATTLE_ASSETS.getBattlebackElement('mountain.png'));
+    envElements.fog = load(BATTLE_ASSETS.getBattlebackElement('fog.png'));
+    envElements.rocks = load(BATTLE_ASSETS.getBattlebackElement('rocks.png'));
+  }
+
   return {
     bg: load(BATTLE_ASSETS.getBackground(env.background)),
     enemyBase: load(BATTLE_ASSETS.getEnemyBase(env.enemyBase)),
@@ -56,6 +108,7 @@ export function createBattleAssets(
       ? load(BATTLE_ASSETS.getForegroundOverlay(env.foregroundOverlay))
       : undefined,
     overlayKey: env.foregroundOverlay,
+    envElements,
     enemySprite: load(frontSprite),
     playerSprite: load(backSprite),
     databoxEnemy: load(BATTLE_ASSETS.databoxEnemy),

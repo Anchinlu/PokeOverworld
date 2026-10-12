@@ -96,19 +96,12 @@ export class EvolutionNotificationManager {
   /**
    * Enqueues a notification to be displayed
    */
-  public enqueue(
-    pokemon: PartyPokemon,
-    evolution?: EvolutionRequirement,
-    durationMs = 7000
-  ): void {
+  public enqueue(pokemon: PartyPokemon, evolution?: EvolutionRequirement, durationMs = 7000): void {
     const evo = evolution || getAvailableEvolutions(pokemon)[0];
     if (!evo) return;
 
     // Check if already active or queued for this exact pokemon
-    if (
-      this.currentToastEl &&
-      this.currentToastEl.dataset.pokemonUid === pokemon.uid
-    ) {
+    if (this.currentToastEl && this.currentToastEl.dataset.pokemonUid === pokemon.uid) {
       return;
     }
     const alreadyQueued = this.queue.some((q) => q.pokemon.uid === pokemon.uid);
@@ -232,7 +225,10 @@ export class EvolutionNotificationManager {
     const onKeydown = (e: KeyboardEvent) => {
       if (e.key === 'r' || e.key === 'R') {
         const target = e.target as HTMLElement | null;
-        if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+        if (
+          target &&
+          (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)
+        ) {
           return;
         }
         e.preventDefault();

@@ -82,6 +82,7 @@ export interface TurnResult {
   events: BattleEvent[];
   mustSwitch?: boolean;
   switchSide?: BattlerSide;
+  isForcedSwitch?: boolean;
   batonPassData?: Partial<BattlerPokemon>;
   battleEnded?: boolean;
   battleEndReason?: 'fled' | 'roar';
@@ -129,20 +130,65 @@ export class BattleEngine {
   public message: string = '';
   public ballsCount: number = 5;
   public fleeAttempts: number = 0;
+  public isWild: boolean = true;
 
   constructor(
     playerPokemon: BattlerPokemon,
     enemyPokemon: BattlerPokemon,
     environment: BattleEnvironment,
-    public readonly rng: BattleRng = defaultBattleRng
+    public readonly rng: BattleRng = defaultBattleRng,
+    isWild: boolean = true
   ) {
     this.playerPokemon = playerPokemon;
     this.enemyPokemon = enemyPokemon;
     this.environment = environment;
-    this.message = `${enemyPokemon.name} hoang dã xuất hiện!`;
+    this.isWild = isWild;
+    this.message = isWild
+      ? `${enemyPokemon.name} hoang dã xuất hiện!`
+      : `Đối thủ cử ra ${enemyPokemon.name}!`;
 
     ensureBattlerState(this.playerPokemon);
     ensureBattlerState(this.enemyPokemon);
+  }
+
+  public playerTerastallized: boolean = false;
+  public enemyTerastallized: boolean = false;
+
+  public canTerastallize(side: BattlerSide): boolean {
+    const isPlayer = side === 'player';
+    const used = isPlayer ? this.playerTerastallized : this.enemyTerastallized;
+    if (used) return false;
+    const battler = isPlayer ? this.playerPokemon : this.enemyPokemon;
+    return Boolean(battler && battler.teraType && !battler.isTerastallized);
+  }
+
+  public terastallize(side: BattlerSide): {
+    success: boolean;
+    message: string;
+    events: BattleEvent[];
+  } {
+    if (!this.canTerastallize(side)) {
+      return { success: false, message: '', events: [] };
+    }
+    const isPlayer = side === 'player';
+    const battler = isPlayer ? this.playerPokemon : this.enemyPokemon;
+    if (!battler || !battler.teraType) {
+      return { success: false, message: '', events: [] };
+    }
+
+    if (!battler.originalTypes) {
+      battler.originalTypes = [...battler.types];
+    }
+    battler.isTerastallized = true;
+    battler.types = [battler.teraType];
+    if (isPlayer) {
+      this.playerTerastallized = true;
+    } else {
+      this.enemyTerastallized = true;
+    }
+
+    const message = `${battler.name} đã Terastallize sang hệ ${battler.teraType}!`;
+    return { success: true, message, events: [] };
   }
 
   /**
@@ -233,6 +279,7 @@ export class BattleEngine {
     this.playerPokemon.isTrapped = false;
     this.playerPokemon.trappedBy = undefined;
     this.playerPokemon.boundStatus = undefined;
+    this.playerPokemon.substituteHp = batonPassData?.substituteHp;
     if (batonPassData?.statStages) {
       this.playerPokemon.statStages = { ...batonPassData.statStages };
     }
@@ -981,14 +1028,44 @@ export class BattleEngine {
           hasAquaRing: attacker.hasAquaRing,
           isIngrained: attacker.isIngrained,
           isSeeded: attacker.isSeeded,
+          substituteHp: attacker.substituteHp,
         };
       } else if (moveId === 'teleport') {
+        if (this.isWild) {
+          statusRes.battleEnded = true;
+          statusRes.battleEndReason = 'fled';
+        } else {
+          statusRes.mustSwitch = true;
+          statusRes.switchSide = attackerSide;
+        }
+      } else if (moveId === 'parting_shot' || moveId === 'chilly_reception') {
         statusRes.mustSwitch = true;
         statusRes.switchSide = attackerSide;
+      } else if (moveId === 'shed_tail') {
+        if ((attacker.substituteHp ?? 0) > 0) {
+          statusRes.mustSwitch = true;
+          statusRes.switchSide = attackerSide;
+          statusRes.batonPassData = {
+            substituteHp: attacker.substituteHp,
+          };
+          attacker.substituteHp = 0;
+        }
       } else if (moveId === 'roar' || moveId === 'whirlwind') {
-        if (AbilityEngine.normalize(defender.ability) !== 'suctioncups' && !defender.isIngrained) {
-          statusRes.battleEnded = true;
-          statusRes.battleEndReason = 'roar';
+        const isSoundproof =
+          moveId === 'roar' && AbilityEngine.normalize(defender.ability) === 'soundproof';
+        if (
+          !isSoundproof &&
+          AbilityEngine.normalize(defender.ability) !== 'suctioncups' &&
+          !defender.isIngrained
+        ) {
+          if (this.isWild && defenderSide === 'enemy') {
+            statusRes.battleEnded = true;
+            statusRes.battleEndReason = 'roar';
+          } else {
+            statusRes.mustSwitch = true;
+            statusRes.switchSide = defenderSide;
+            statusRes.isForcedSwitch = true;
+          }
         }
       }
 
@@ -1700,6 +1777,9 @@ export class BattleEngine {
 
     let mustSwitch = false;
     let switchSide: BattlerSide | undefined;
+    let isForcedSwitch = false;
+    let battleEnded = false;
+    let battleEndReason: 'fled' | 'roar' | undefined;
 
     if (actualDamage > 0) {
       if (moveId === 'throat_chop' && !defenderFainted) {
@@ -1731,10 +1811,34 @@ export class BattleEngine {
             )
           );
         }
-      } else if ((moveId === 'u_turn' || moveId === 'volt_switch') && !attackerFainted) {
+      } else if (
+        (moveId === 'u_turn' || moveId === 'volt_switch' || moveId === 'flip_turn') &&
+        !attackerFainted
+      ) {
         mustSwitch = true;
         switchSide = attackerSide;
         secMsg += ` ${attacker.name} quay về đội sau đòn đánh!`;
+      } else if ((moveId === 'dragon_tail' || moveId === 'circle_throw') && !defenderFainted) {
+        const suctionCups = AbilityEngine.normalize(defender.ability) === 'suctioncups';
+        const hasSub = (defender.substituteHp ?? 0) > 0;
+        if (suctionCups) {
+          secMsg += ` Nhưng ${defender.name} bám chặt vào mặt đất nên không bị đẩy lùi!`;
+        } else if (defender.isIngrained) {
+          secMsg += ` Nhưng ${defender.name} đã cắm rễ vào mặt đất nên không bị đẩy lùi!`;
+        } else if (hasSub) {
+          secMsg += ` Nhưng Thế Thân của ${defender.name} đã ngăn chặn việc bị đẩy lùi!`;
+        } else {
+          if (this.isWild && defenderSide === 'enemy') {
+            battleEnded = true;
+            battleEndReason = 'roar';
+            secMsg += ` Đòn đánh đã thổi bay ${defender.name} khỏi trận đấu!`;
+          } else {
+            mustSwitch = true;
+            switchSide = defenderSide;
+            isForcedSwitch = true;
+            secMsg += ` Đòn đánh đã đẩy lùi ${defender.name} ra khỏi sân đấu!`;
+          }
+        }
       }
     }
 
@@ -1753,6 +1857,9 @@ export class BattleEngine {
       events,
       mustSwitch,
       switchSide,
+      isForcedSwitch,
+      battleEnded,
+      battleEndReason,
     };
   }
 

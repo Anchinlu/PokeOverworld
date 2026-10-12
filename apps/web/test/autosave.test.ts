@@ -237,7 +237,10 @@ describe('Autosave & Persistence System (Version 3)', () => {
       adapter.setItem('pokemon_savegame_slot_1', JSON.stringify(existingV3Data));
 
       // Obsolete legacy keys also present
-      adapter.setItem('pokemon_player_party_v1', JSON.stringify([createPartyPokemon('RATTATA', 3)]));
+      adapter.setItem(
+        'pokemon_player_party_v1',
+        JSON.stringify([createPartyPokemon('RATTATA', 3)])
+      );
       adapter.removeItem(SaveGameRepository.MIGRATION_FLAG_KEY); // flag was missing/cleared
 
       const ran = repository.migrateLegacyData('slot_1');
