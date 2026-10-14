@@ -1461,5 +1461,148 @@
     "columns": 5,
     "rows": 3,
     "maxPattern": 15
+  },
+  "PRAS-Megahorn": {
+    "assetKey": "animation.pras--megahorn",
+    "file": "PRAS- Megahorn.png",
+    "width": 960,
+    "height": 192,
+    "cellWidth": 192,
+    "cellHeight": 192,
+    "columns": 5,
+    "rows": 1,
+    "maxPattern": 5
+  },
+  "PRAS- Megahorn": {
+    "assetKey": "animation.pras--megahorn",
+    "file": "PRAS- Megahorn.png",
+    "width": 960,
+    "height": 192,
+    "cellWidth": 192,
+    "cellHeight": 192,
+    "columns": 5,
+    "rows": 1,
+    "maxPattern": 5
+  },
+  "PRAS-Megahorn-BG": {
+    "assetKey": "animation.pras--megahorn-bg",
+    "file": "PRAS- Megahorn BG.png",
+    "width": 512,
+    "height": 384,
+    "cellWidth": 512,
+    "cellHeight": 384,
+    "columns": 1,
+    "rows": 1,
+    "maxPattern": 1
+  },
+  "PRAS- Megahorn BG": {
+    "assetKey": "animation.pras--megahorn-bg",
+    "file": "PRAS- Megahorn BG.png",
+    "width": 512,
+    "height": 384,
+    "cellWidth": 512,
+    "cellHeight": 384,
+    "columns": 1,
+    "rows": 1,
+    "maxPattern": 1
+  },
+  "PRAS-Metal-Sound": {
+    "assetKey": "animation.pras--metal-sound",
+    "file": "PRAS- Metal Sound.png",
+    "width": 960,
+    "height": 384,
+    "cellWidth": 192,
+    "cellHeight": 192,
+    "columns": 5,
+    "rows": 2,
+    "maxPattern": 10
+  },
+  "PRAS- Metal Sound": {
+    "assetKey": "animation.pras--metal-sound",
+    "file": "PRAS- Metal Sound.png",
+    "width": 960,
+    "height": 384,
+    "cellWidth": 192,
+    "cellHeight": 192,
+    "columns": 5,
+    "rows": 2,
+    "maxPattern": 10
+  },
+  "PRAS-Meteor-Mash": {
+    "assetKey": "animation.pras--meteor-mash",
+    "file": "PRAS- Meteor Mash.png",
+    "width": 960,
+    "height": 384,
+    "cellWidth": 192,
+    "cellHeight": 192,
+    "columns": 5,
+    "rows": 2,
+    "maxPattern": 10
+  },
+  "PRAS- Meteor Mash": {
+    "assetKey": "animation.pras--meteor-mash",
+    "file": "PRAS- Meteor Mash.png",
+    "width": 960,
+    "height": 384,
+    "cellWidth": 192,
+    "cellHeight": 192,
+    "columns": 5,
+    "rows": 2,
+    "maxPattern": 10
+  },
+  "PRAS-Dragon-Claw": {
+    "assetKey": "animation.pras--dragon-claw",
+    "file": "PRAS- Dragon Claw.png",
+    "width": 1344,
+    "height": 192,
+    "cellWidth": 268,
+    "cellHeight": 192,
+    "columns": 5,
+    "rows": 1,
+    "maxPattern": 5
+  },
+  "PRAS- Dragon Claw": {
+    "assetKey": "animation.pras--dragon-claw",
+    "file": "PRAS- Dragon Claw.png",
+    "width": 1344,
+    "height": 192,
+    "cellWidth": 268,
+    "cellHeight": 192,
+    "columns": 5,
+    "rows": 1,
+    "maxPattern": 5
+  },
+  "PRAS-Curse": {
+    "assetKey": "animation.pras--curse",
+    "file": "PRAS- Curse.png",
+    "width": 768,
+    "height": 192,
+    "cellWidth": 153,
+    "cellHeight": 96,
+    "columns": 5,
+    "rows": 2,
+    "maxPattern": 10
+  },
+  "PRAS- Curse": {
+    "assetKey": "animation.pras--curse",
+    "file": "PRAS- Curse.png",
+    "width": 768,
+    "height": 192,
+    "cellWidth": 153,
+    "cellHeight": 96,
+    "columns": 5,
+    "rows": 2,
+    "maxPattern": 10
+  },
+  "Kick": {
+    "assetKey": "animation.kick",
+    "file": "Kick.png",
+    "width": 128,
+    "height": 64,
+    "cellWidth": 64,
+    "cellHeight": 64,
+    "columns": 2,
+    "rows": 1,
+    "maxPattern": 2
   }
 }

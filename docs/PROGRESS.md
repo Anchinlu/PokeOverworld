@@ -147,9 +147,17 @@
     4. `magnet_bomb` (6495/6189) - Bom từ tính điện trường: phóng quả bom nam châm theo đường cung parabol khóa mục tiêu và kích nổ từ trường điện từ dữ dội (`PRAS-Magnet-bomb`)
     5. `mean_look` (190/6190) - Ánh mắt ma quái khóa hồn: đôi mắt tím khổng lồ trừng trừng xuất hiện ngay trước mặt đối thủ, phát quang ma mị khóa chặt đào tẩu (`PRAS-Mean-Look`)
     6. `meditate` (6498/6191) - Thiền định nâng tầm tinh thần: cột hào quang năng lượng thanh tịnh dâng cao và các vòng hào quang halo tâm linh tỏa rộng quanh người thi triển (`PRAS-Stats`)
-    7. `mega_drain` (191/6192) - Hút cạn sinh lực đối thủ: các hạt tinh hoa lục giác xanh lục hút rút từ mục tiêu, phóng 2 dòng năng lượng bay về hội tụ hồi phục thể lực người thi triển (`PRAS-Giga-Drain`)
+    7. `mega_drain` (191/6192/192/6190) - Hút cạn sinh lực đối thủ: bầy hạt xanh ngọc lục bảo bùng nổ quanh mục tiêu, 10 luồng hạt ngọc xanh lục cuồn cuộn bay về và xoáy hấp thụ hồi phục thể lực (`PRAS-Giga-Drain` tô màu ngọc lục bảo + đồng bộ hoàn hảo cả Player lẫn OppMove 192/6190)
+  - **Triển khai toàn diện 7 chiêu thức chữ M (Đợt 2 - Hoàn tất 100%)**:
+    8. `mega_kick` (194) - Cú đá siêu trọng lượng ngàn cân: bàn chân khổng lồ giáng xéo từ trên không làm nứt toác mặt đất và bùng nổ va chạm chấn động (`Kick` + `PRAS-Strike`)
+    9. `mega_punch` (195/6193) - Cú đấm uy lực cực đại: nắm đấm quyền khí đỏ rực phóng to 260% nén áp lực không khí giáng sấm sét chấn động rung chuyển màn hình (`punches` Pattern 5, 7 + `PRAS-Strike`)
+    10. `megahorn` (193/6191) - Đại sừng húc xuyên phá: phông nền chấn động địa chấn mở màn, chiếc sừng khổng lồ phát sáng lao vun vút húc xuyên phá mục tiêu (`PRAS-Megahorn` + `PRAS-Megahorn-BG` + `PRAS-Strike`)
+    11. `memento` (6499) - Tinh linh hắc ám hiến tế: thân xác người thi triển phát sáng ma mị, phóng luồng vong linh oán hận màu tím đen bay ập sang bám riết lấy đối thủ phong tỏa chỉ số (`PRAS-Curse`)
+    12. `metal_claw` (196/6194) - Móng vuốt hợp kim sắc bén: song trảo kim loại lóe sáng chém xé đối thủ theo đường chéo xé rách không khí kèm tia lửa thép (`PRAS-Dragon-Claw` + `PRAS-Strike`)
+    13. `metal_sound` (6501) - Sóng âm kim loại chói tai: các vòng sóng âm kim loại đồng tâm lan tỏa liên hồi từ người thi triển bao trùm suy giảm chỉ số đối thủ (`PRAS-Metal-Sound`)
+    14. `meteor_mash` (197/6195) - Cú đấm sao băng vũ trụ: tinh hoa ngân hà tụ hội trên bầu trời, quả cầu sao băng vũ trụ giáng đòn sấm sét nổ tung vào mục tiêu (`PRAS-Meteor-Mash` + `PRAS-Strike`)
   - **Đồng bộ hóa hệ thống**:
-    - Nâng tổng số chiêu thức tối ưu trong [reunion-moves.json](file:///e:/Pokemon/packages/game-data/reunion-moves.json) lên **200 chiêu thức chuẩn 1:1** (`optimizedMoves`).
+    - Nâng tổng số chiêu thức tối ưu trong [reunion-moves.json](file:///e:/Pokemon/packages/game-data/reunion-moves.json) lên **207 chiêu thức chuẩn 1:1** (`optimizedMoves`).
     - Đăng ký đầy đủ các ID vào [move-animation-extensions.json](file:///e:/Pokemon/packages/game-data/move-animation-extensions.json), [manifest.json](file:///e:/Pokemon/packages/game-data/animations/manifest.json), [last-chance-animation-manifest.json](file:///e:/Pokemon/packages/game-data/last-chance-animation-manifest.json) và [animation-atlas.json](file:///e:/Pokemon/packages/game-data/animation-atlas.json).
 - **Kiểm định chất lượng**:
   - `node scripts/animation/validate-animation-atlas.mjs`: **PASS 100% (All 1237 animations and atlas assets validated with 0 errors)**.

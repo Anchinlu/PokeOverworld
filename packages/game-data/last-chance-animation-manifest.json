@@ -1583,8 +1583,8 @@
   },
   "6191": {
     "id": "6191",
-    "name": "Move:MEDITATE",
-    "graphic": "PRAS-Stats",
+    "name": "Move:MEGAHORN",
+    "graphic": "PRAS-Megahorn",
     "sourceAnimationId": 191,
     "frameCount": 12,
     "timingCount": 3
@@ -1600,7 +1600,7 @@
   "6193": {
     "id": "6193",
     "name": "Move:MEGAPUNCH",
-    "graphic": "last-chance/punches.png",
+    "graphic": "punches",
     "sourceAnimationId": 193,
     "frameCount": 10,
     "timingCount": 1
@@ -1608,7 +1608,7 @@
   "6194": {
     "id": "6194",
     "name": "Move:METALCLAW",
-    "graphic": "last-chance/dragon claw.png",
+    "graphic": "PRAS-Dragon-Claw",
     "sourceAnimationId": 194,
     "frameCount": 9,
     "timingCount": 2
@@ -1616,7 +1616,7 @@
   "6195": {
     "id": "6195",
     "name": "Move:METEORMASH",
-    "graphic": "last-chance/punches.png",
+    "graphic": "PRAS-Meteor-Mash",
     "sourceAnimationId": 195,
     "frameCount": 10,
     "timingCount": 1
@@ -4086,7 +4086,7 @@
   "6499": {
     "id": "6499",
     "name": "Move:MEMENTO",
-    "graphic": "last-chance/estranho.png",
+    "graphic": "PRAS-Curse",
     "sourceAnimationId": 499,
     "frameCount": 12,
     "timingCount": 1
@@ -4102,7 +4102,7 @@
   "6501": {
     "id": "6501",
     "name": "Move:METALSOUND",
-    "graphic": "last-chance/Firebird.png",
+    "graphic": "PRAS-Metal-Sound",
     "sourceAnimationId": 501,
     "frameCount": 10,
     "timingCount": 2
