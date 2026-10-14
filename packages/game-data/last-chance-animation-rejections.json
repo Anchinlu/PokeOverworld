@@ -1,0 +1,825 @@
+[
+  {
+    "sourceName": "Move:ABSORB",
+    "sourceId": 21,
+    "graphic": "leech-seed",
+    "reason": "pattern-out-of-range",
+    "details": [
+      {
+        "frame": 1,
+        "cel": 4,
+        "pattern": 12
+      },
+      {
+        "frame": 2,
+        "cel": 4,
+        "pattern": 12
+      },
+      {
+        "frame": 2,
+        "cel": 5,
+        "pattern": 13
+      },
+      {
+        "frame": 3,
+        "cel": 4,
+        "pattern": 12
+      },
+      {
+        "frame": 3,
+        "cel": 5,
+        "pattern": 13
+      },
+      {
+        "frame": 4,
+        "cel": 4,
+        "pattern": 12
+      },
+      {
+        "frame": 4,
+        "cel": 5,
+        "pattern": 13
+      },
+      {
+        "frame": 4,
+        "cel": 8,
+        "pattern": 12
+      },
+      {
+        "frame": 5,
+        "cel": 3,
+        "pattern": 12
+      },
+      {
+        "frame": 5,
+        "cel": 4,
+        "pattern": 13
+      },
+      {
+        "frame": 5,
+        "cel": 7,
+        "pattern": 12
+      },
+      {
+        "frame": 6,
+        "cel": 2,
+        "pattern": 13
+      },
+      {
+        "frame": 6,
+        "cel": 5,
+        "pattern": 12
+      },
+      {
+        "frame": 7,
+        "cel": 2,
+        "pattern": 13
+      },
+      {
+        "frame": 7,
+        "cel": 4,
+        "pattern": 12
+      }
+    ]
+  },
+  {
+    "sourceName": "Move:BUBBLEBEAM",
+    "sourceId": 52,
+    "graphic": "018-Water01",
+    "reason": "pattern-out-of-range",
+    "details": [
+      {
+        "frame": 11,
+        "cel": 5,
+        "pattern": 17
+      }
+    ]
+  },
+  {
+    "sourceName": "OppMove:MEGADRAIN",
+    "sourceId": 190,
+    "graphic": "leech-seed",
+    "reason": "pattern-out-of-range",
+    "details": [
+      {
+        "frame": 2,
+        "cel": 2,
+        "pattern": 12
+      },
+      {
+        "frame": 2,
+        "cel": 3,
+        "pattern": 12
+      },
+      {
+        "frame": 3,
+        "cel": 2,
+        "pattern": 12
+      },
+      {
+        "frame": 3,
+        "cel": 3,
+        "pattern": 12
+      },
+      {
+        "frame": 3,
+        "cel": 4,
+        "pattern": 12
+      },
+      {
+        "frame": 4,
+        "cel": 2,
+        "pattern": 12
+      },
+      {
+        "frame": 4,
+        "cel": 3,
+        "pattern": 12
+      },
+      {
+        "frame": 4,
+        "cel": 4,
+        "pattern": 12
+      },
+      {
+        "frame": 4,
+        "cel": 5,
+        "pattern": 12
+      },
+      {
+        "frame": 4,
+        "cel": 6,
+        "pattern": 12
+      },
+      {
+        "frame": 5,
+        "cel": 2,
+        "pattern": 12
+      },
+      {
+        "frame": 5,
+        "cel": 3,
+        "pattern": 12
+      },
+      {
+        "frame": 5,
+        "cel": 4,
+        "pattern": 12
+      },
+      {
+        "frame": 5,
+        "cel": 5,
+        "pattern": 12
+      },
+      {
+        "frame": 5,
+        "cel": 6,
+        "pattern": 12
+      },
+      {
+        "frame": 6,
+        "cel": 2,
+        "pattern": 12
+      },
+      {
+        "frame": 6,
+        "cel": 3,
+        "pattern": 12
+      },
+      {
+        "frame": 6,
+        "cel": 4,
+        "pattern": 12
+      },
+      {
+        "frame": 7,
+        "cel": 2,
+        "pattern": 12
+      },
+      {
+        "frame": 7,
+        "cel": 3,
+        "pattern": 12
+      },
+      {
+        "frame": 7,
+        "cel": 4,
+        "pattern": 12
+      },
+      {
+        "frame": 8,
+        "cel": 2,
+        "pattern": 12
+      }
+    ]
+  },
+  {
+    "sourceName": "Move:AQUAJET",
+    "sourceId": 311,
+    "graphic": "water3.png",
+    "reason": "pattern-out-of-range",
+    "details": [
+      {
+        "frame": 11,
+        "cel": 0,
+        "pattern": 25
+      },
+      {
+        "frame": 13,
+        "cel": 0,
+        "pattern": 15
+      },
+      {
+        "frame": 16,
+        "cel": 0,
+        "pattern": 15
+      },
+      {
+        "frame": 18,
+        "cel": 0,
+        "pattern": 20
+      },
+      {
+        "frame": 20,
+        "cel": 0,
+        "pattern": 20
+      },
+      {
+        "frame": 22,
+        "cel": 0,
+        "pattern": 20
+      }
+    ]
+  },
+  {
+    "sourceName": "Move:AQUAJET",
+    "sourceId": 312,
+    "graphic": "",
+    "reason": "missing-graphic",
+    "details": []
+  },
+  {
+    "sourceName": "Move:BRAVEBIRD",
+    "sourceId": 355,
+    "graphic": "Special5.png",
+    "reason": "pattern-out-of-range",
+    "details": [
+      {
+        "frame": 5,
+        "cel": 0,
+        "pattern": 50
+      },
+      {
+        "frame": 6,
+        "cel": 0,
+        "pattern": 55
+      },
+      {
+        "frame": 7,
+        "cel": 0,
+        "pattern": 50
+      },
+      {
+        "frame": 8,
+        "cel": 0,
+        "pattern": 40
+      },
+      {
+        "frame": 9,
+        "cel": 0,
+        "pattern": 45
+      },
+      {
+        "frame": 10,
+        "cel": 0,
+        "pattern": 44
+      }
+    ]
+  },
+  {
+    "sourceName": "Move:BULDOZE",
+    "sourceId": 359,
+    "graphic": "",
+    "reason": "missing-graphic",
+    "details": []
+  },
+  {
+    "sourceName": "Move:CAMOUFLAGE",
+    "sourceId": 360,
+    "graphic": "",
+    "reason": "missing-graphic",
+    "details": []
+  },
+  {
+    "sourceName": "Move:CONFUSION",
+    "sourceId": 368,
+    "graphic": "",
+    "reason": "missing-graphic",
+    "details": []
+  },
+  {
+    "sourceName": "Move:DOUBLETEAM",
+    "sourceId": 396,
+    "graphic": "",
+    "reason": "missing-graphic",
+    "details": []
+  },
+  {
+    "sourceName": "Move:DAZZLINGGLEAM",
+    "sourceId": 407,
+    "graphic": "",
+    "reason": "missing-graphic",
+    "details": []
+  },
+  {
+    "sourceName": "Move:EXTRASENSORY",
+    "sourceId": 425,
+    "graphic": "",
+    "reason": "missing-graphic",
+    "details": []
+  },
+  {
+    "sourceName": "Move:GROWTH",
+    "sourceId": 452,
+    "graphic": "",
+    "reason": "missing-graphic",
+    "details": []
+  },
+  {
+    "sourceName": "Move:HEALBLOCK",
+    "sourceId": 462,
+    "graphic": "X.png",
+    "reason": "pattern-out-of-range",
+    "details": [
+      {
+        "frame": 0,
+        "cel": 2,
+        "pattern": 0
+      },
+      {
+        "frame": 1,
+        "cel": 2,
+        "pattern": 0
+      },
+      {
+        "frame": 2,
+        "cel": 2,
+        "pattern": 0
+      },
+      {
+        "frame": 3,
+        "cel": 2,
+        "pattern": 0
+      },
+      {
+        "frame": 4,
+        "cel": 2,
+        "pattern": 0
+      },
+      {
+        "frame": 5,
+        "cel": 2,
+        "pattern": 0
+      },
+      {
+        "frame": 6,
+        "cel": 2,
+        "pattern": 0
+      },
+      {
+        "frame": 7,
+        "cel": 2,
+        "pattern": 0
+      },
+      {
+        "frame": 8,
+        "cel": 2,
+        "pattern": 0
+      }
+    ]
+  },
+  {
+    "sourceName": "Move:IMPRISON",
+    "sourceId": 480,
+    "graphic": "X.png",
+    "reason": "pattern-out-of-range",
+    "details": [
+      {
+        "frame": 0,
+        "cel": 2,
+        "pattern": 0
+      },
+      {
+        "frame": 1,
+        "cel": 2,
+        "pattern": 0
+      },
+      {
+        "frame": 2,
+        "cel": 2,
+        "pattern": 0
+      },
+      {
+        "frame": 3,
+        "cel": 2,
+        "pattern": 0
+      },
+      {
+        "frame": 4,
+        "cel": 2,
+        "pattern": 0
+      },
+      {
+        "frame": 5,
+        "cel": 2,
+        "pattern": 0
+      }
+    ]
+  },
+  {
+    "sourceName": "Move:MAGICROOM",
+    "sourceId": 493,
+    "graphic": "",
+    "reason": "missing-graphic",
+    "details": []
+  },
+  {
+    "sourceName": "Move:ODORSLEUTH",
+    "sourceId": 527,
+    "graphic": "",
+    "reason": "missing-graphic",
+    "details": []
+  },
+  {
+    "sourceName": "Move:SEISMICTOSS",
+    "sourceId": 595,
+    "graphic": "fly copy.png",
+    "reason": "pattern-out-of-range",
+    "details": [
+      {
+        "frame": 2,
+        "cel": 1,
+        "pattern": 69
+      },
+      {
+        "frame": 3,
+        "cel": 1,
+        "pattern": 64
+      },
+      {
+        "frame": 4,
+        "cel": 1,
+        "pattern": 28
+      },
+      {
+        "frame": 5,
+        "cel": 1,
+        "pattern": 53
+      },
+      {
+        "frame": 6,
+        "cel": 1,
+        "pattern": 31
+      },
+      {
+        "frame": 7,
+        "cel": 1,
+        "pattern": 59
+      },
+      {
+        "frame": 8,
+        "cel": 1,
+        "pattern": 93
+      },
+      {
+        "frame": 9,
+        "cel": 1,
+        "pattern": 79
+      },
+      {
+        "frame": 10,
+        "cel": 1,
+        "pattern": 79
+      },
+      {
+        "frame": 11,
+        "cel": 1,
+        "pattern": 79
+      },
+      {
+        "frame": 12,
+        "cel": 1,
+        "pattern": 79
+      },
+      {
+        "frame": 13,
+        "cel": 1,
+        "pattern": 79
+      },
+      {
+        "frame": 14,
+        "cel": 1,
+        "pattern": 25
+      },
+      {
+        "frame": 16,
+        "cel": 1,
+        "pattern": 54
+      },
+      {
+        "frame": 17,
+        "cel": 1,
+        "pattern": 54
+      },
+      {
+        "frame": 18,
+        "cel": 1,
+        "pattern": 54
+      },
+      {
+        "frame": 19,
+        "cel": 1,
+        "pattern": 29
+      },
+      {
+        "frame": 20,
+        "cel": 1,
+        "pattern": 29
+      },
+      {
+        "frame": 21,
+        "cel": 1,
+        "pattern": 29
+      },
+      {
+        "frame": 22,
+        "cel": 1,
+        "pattern": 29
+      },
+      {
+        "frame": 23,
+        "cel": 1,
+        "pattern": 29
+      }
+    ]
+  },
+  {
+    "sourceName": "Move:SKYDROP",
+    "sourceId": 607,
+    "graphic": "fly copy.png",
+    "reason": "pattern-out-of-range",
+    "details": [
+      {
+        "frame": 0,
+        "cel": 0,
+        "pattern": 26
+      },
+      {
+        "frame": 0,
+        "cel": 1,
+        "pattern": 64
+      },
+      {
+        "frame": 1,
+        "cel": 0,
+        "pattern": 26
+      },
+      {
+        "frame": 1,
+        "cel": 1,
+        "pattern": 64
+      },
+      {
+        "frame": 2,
+        "cel": 0,
+        "pattern": 26
+      },
+      {
+        "frame": 2,
+        "cel": 1,
+        "pattern": 64
+      },
+      {
+        "frame": 3,
+        "cel": 0,
+        "pattern": 26
+      },
+      {
+        "frame": 3,
+        "cel": 1,
+        "pattern": 64
+      },
+      {
+        "frame": 4,
+        "cel": 0,
+        "pattern": 26
+      },
+      {
+        "frame": 4,
+        "cel": 1,
+        "pattern": 64
+      },
+      {
+        "frame": 5,
+        "cel": 0,
+        "pattern": 26
+      },
+      {
+        "frame": 5,
+        "cel": 1,
+        "pattern": 64
+      },
+      {
+        "frame": 6,
+        "cel": 0,
+        "pattern": 26
+      },
+      {
+        "frame": 6,
+        "cel": 1,
+        "pattern": 64
+      },
+      {
+        "frame": 7,
+        "cel": 0,
+        "pattern": 26
+      },
+      {
+        "frame": 8,
+        "cel": 0,
+        "pattern": 26
+      },
+      {
+        "frame": 9,
+        "cel": 0,
+        "pattern": 26
+      },
+      {
+        "frame": 10,
+        "cel": 0,
+        "pattern": 26
+      },
+      {
+        "frame": 11,
+        "cel": 0,
+        "pattern": 26
+      },
+      {
+        "frame": 12,
+        "cel": 0,
+        "pattern": 26
+      },
+      {
+        "frame": 13,
+        "cel": 0,
+        "pattern": 26
+      },
+      {
+        "frame": 14,
+        "cel": 0,
+        "pattern": 26
+      }
+    ]
+  },
+  {
+    "sourceName": "Move:STONEEDGE",
+    "sourceId": 633,
+    "graphic": "Rock Tomb.png",
+    "reason": "pattern-out-of-range",
+    "details": [
+      {
+        "frame": 3,
+        "cel": 2,
+        "pattern": 8
+      },
+      {
+        "frame": 3,
+        "cel": 3,
+        "pattern": 8
+      },
+      {
+        "frame": 3,
+        "cel": 4,
+        "pattern": 8
+      },
+      {
+        "frame": 3,
+        "cel": 5,
+        "pattern": 8
+      },
+      {
+        "frame": 3,
+        "cel": 6,
+        "pattern": 8
+      },
+      {
+        "frame": 6,
+        "cel": 3,
+        "pattern": 8
+      },
+      {
+        "frame": 6,
+        "cel": 4,
+        "pattern": 8
+      },
+      {
+        "frame": 6,
+        "cel": 5,
+        "pattern": 8
+      },
+      {
+        "frame": 6,
+        "cel": 6,
+        "pattern": 8
+      },
+      {
+        "frame": 7,
+        "cel": 2,
+        "pattern": 8
+      },
+      {
+        "frame": 9,
+        "cel": 2,
+        "pattern": 8
+      }
+    ]
+  },
+  {
+    "sourceName": "Move:SUBSTITUTE",
+    "sourceId": 637,
+    "graphic": "Substitute-Back.png",
+    "reason": "pattern-out-of-range",
+    "details": [
+      {
+        "frame": 0,
+        "cel": 0,
+        "pattern": 0
+      },
+      {
+        "frame": 1,
+        "cel": 0,
+        "pattern": 0
+      },
+      {
+        "frame": 2,
+        "cel": 0,
+        "pattern": 0
+      },
+      {
+        "frame": 3,
+        "cel": 0,
+        "pattern": 0
+      },
+      {
+        "frame": 4,
+        "cel": 0,
+        "pattern": 0
+      }
+    ]
+  },
+  {
+    "sourceName": "OppMove:SUBSTITUTE",
+    "sourceId": 638,
+    "graphic": "Substitute-Front.png",
+    "reason": "pattern-out-of-range",
+    "details": [
+      {
+        "frame": 0,
+        "cel": 1,
+        "pattern": 0
+      },
+      {
+        "frame": 0,
+        "cel": 2,
+        "pattern": 0
+      },
+      {
+        "frame": 1,
+        "cel": 1,
+        "pattern": 0
+      },
+      {
+        "frame": 2,
+        "cel": 1,
+        "pattern": 0
+      },
+      {
+        "frame": 3,
+        "cel": 1,
+        "pattern": 0
+      },
+      {
+        "frame": 4,
+        "cel": 1,
+        "pattern": 0
+      }
+    ]
+  },
+  {
+    "sourceName": "Move:ROLEPLAY",
+    "sourceId": 730,
+    "graphic": "",
+    "reason": "missing-graphic",
+    "details": []
+  }
+]

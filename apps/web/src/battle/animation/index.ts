@@ -6,4 +6,6 @@ export * from './cel-renderer';
 export * from './layer-manager';
 export * from './timing-events';
 export * from './animation-player';
+export * from './battle-atmosphere';
+export * from './battle-camera';
 export * from './animation-gallery';

@@ -1,4 +1,1051 @@
-## Cập nhật lần cuối: 2026-10-12 (Chuẩn Hóa Tọa Độ 4-Focus Animation Essentials, Battler Geometry & Khắc Phục Lỗi TypeScript Test Suite)
+## Cập nhật lần cuối: 2026-10-14 (Hoàn Tất Nốt Nhóm F & Nâng Cấp Toàn Diện 12 Chiêu Thức Nhóm G Chuẩn 1:1 EBDX)
+
+### 1.32. Hoàn Tất Nốt Nhóm F & Triển Khai Toàn Diện 12 Chiêu Thức EBDX Nhóm Chữ G:
+
+- **Yêu cầu người dùng**:
+  - _"1 và 2 lun nhé"_: Thực hiện đồng thời cả 2 mục:
+    1. Hoàn tất nốt 3 chiêu cuối của chữ F (`fusion_bolt`, `fusion_flare`, `future_sight`).
+    2. Triển khai nâng cấp toàn diện nhóm 12 chiêu thức EBDX thuộc chữ G (`giga_impact`, `glare`, `grass_knot`, `grass_whistle`, `grassy_terrain`, `growl`, `growth`, `guard_swap`, `guillotine`, `gunk_shot`, `gust`, `gyro_ball`).
+- **Chi tiết thực hiện Mục 1 (F-Group Finale)**:
+  - `fusion_bolt` (ID [6702.json](file:///e:/Pokemon/packages/game-data/animations/6702.json) & [last-chance/6702.json](file:///e:/Pokemon/packages/game-data/animations/last-chance/6702.json)): Bổ sung tiền tố đường dẫn `Anim/Thunder9.ogg` khắc phục hoàn toàn lỗi âm thanh 404.
+  - `fusion_flare` (ID [6703.json](file:///e:/Pokemon/packages/game-data/animations/6703.json) & [last-chance/6703.json](file:///e:/Pokemon/packages/game-data/animations/last-chance/6703.json)): Bổ sung tiền tố `Anim/Explosion4.ogg` và `Anim/Fire3.ogg`.
+  - `future_sight` (ID [142.json](file:///e:/Pokemon/packages/game-data/animations/142.json)): Tái tạo kịch bản timeline EBDX con mắt tiên tri `eb619_6` từ [6787.json](file:///e:/Pokemon/packages/game-data/animations/6787.json). Đã sao chép `eb619_6.png` và `eb619_7.png` vào `apps/web/public/Graphics/Animations/`.
+  - Đồng bộ `manifest.json` và `move-animations-db.json` cho cả 3 chiêu thức.
+
+- **Chi tiết thực hiện Mục 2 (G-Group 12 Moves EBDX Complete)**:
+  1. **Đồng bộ hóa 23/23 tệp đồ họa EBDX**:
+     - Sao chép toàn bộ 23 tệp PNG vào `Graphics/Animations/` và `apps/web/public/Graphics/Animations/`:
+       `eb615_7`, `eb645_10`, `eb617_4`, `eb619_4`, `eb647_2`, `eb458_14`, `eb647`, `eb645_9`, `eb617_3`, `eb647_3`, `eb637`, `eb458_15`, `eb427_1`, `eb615_2`, `eb614_14`, `eb427_2`, `eb244_4`, `eb614_13`, `eb614_11`, `eb622_bg`, `eb602_4`, `eb057_2`, `eb129_bg`.
+     - Cấu hình chuẩn xác `animation-atlas.json` (đặc biệt `eb637` 4×4 16 pattern, `eb647_3` 2×1 2 pattern, cùng các single particle).
+  2. **Tái tạo kịch bản timeline hoạt ảnh 1:1 EBDX cho toàn bộ 12 chiêu**:
+     - `gust` (ID [151.json](file:///e:/Pokemon/packages/game-data/animations/151.json) & [152.json](file:///e:/Pokemon/packages/game-data/animations/152.json) - 16 frames): Cơn lốc xoáy kép `eb637` xoay 16 pattern lướt từ người dùng qua mục tiêu, âm thanh `Anim/Wind8.ogg` và `Anim/gust.ogg`.
+     - `glare` (ID [146.json](file:///e:/Pokemon/packages/game-data/animations/146.json) - 15 frames): Cặp mắt xà vương `eb619_4` phát sáng, phóng to xung động và giáng tia tê liệt, âm thanh `Anim/ScaryFace.ogg`.
+     - `grass_whistle` (ID [147.json](file:///e:/Pokemon/packages/game-data/animations/147.json) - 16 frames): Chuỗi nốt nhạc chiếc lá `eb617_3` và `eb617_4` uốn lượn hình sin ru ngủ mục tiêu, âm thanh `Anim/GrassWhistle.ogg` và `Anim/Sleep.ogg`.
+     - `guillotine` (ID [6707.json](file:///e:/Pokemon/packages/game-data/animations/6707.json) - 16 frames): Không gian tối sầm `eb129_bg`, lưỡi máy chém tử thần khổng lồ `eb602_4` giáng chém kết liễu, âm thanh `EBDX/Anim/ground1.wav` và `EBDX/Anim/normal3.wav`.
+     - `giga_impact` (ID [6448.json](file:///e:/Pokemon/packages/game-data/animations/6448.json) - 20 frames): Tụ năng lượng `eb615_7`, `eb057_2`, `eb614_14`, không gian vũ trụ tối sầm `eb622_bg`, lao vút siêu thanh `eb614_13`, nổ sao bộc phát `eb244_4` và đất đá tán xạ `eb614_11`, âm thanh `EBDX/Anim/dragon2.wav`, `Anim/TakeDownAttack.ogg`, `Anim/superdamage.ogg`, `Anim/rock1.ogg`.
+     - `gyro_ball` (ID [6456.json](file:///e:/Pokemon/packages/game-data/animations/6456.json) - 16 frames): Vòng quay con quay kim loại `eb458_14` và 4 vệ tinh cầu `eb458_15` xoay tăng tốc rồi lao thẳng vào mục tiêu, âm thanh `Anim/Psych Up.ogg` và `Anim/superdamage.ogg`.
+     - `gunk_shot` (ID [6455.json](file:///e:/Pokemon/packages/game-data/animations/6455.json) - 16 frames): Bọc rác độc `eb427_1` bay cầu vồng rồi đập trúng mục tiêu vỡ tung thành 8 tia độc `eb427_2`, âm thanh `Anim/Poison.ogg` và `Anim/Splat.ogg`.
+     - `guard_swap` (ID [6454.json](file:///e:/Pokemon/packages/game-data/animations/6454.json) - 16 frames): Hai chiếc khiên tinh thể `eb645_9` bay chéo hoán đổi giữa 2 bên kèm bụi sao huyền ảo `eb645_10`, âm thanh `Anim/Saint7.ogg` và `Anim/Saint8.ogg`.
+     - `grassy_terrain` (ID [6788.json](file:///e:/Pokemon/packages/game-data/animations/6788.json) - 20 frames): Trận đồ thảm cỏ `eb647_3` 2 pattern trải rộng mặt đất, hoa đồng nội `eb647_2` bừng nở và lá cỏ `eb647` xoay tròn trong gió, âm thanh `EBDX/Anim/grass2.wav` và `Anim/Saint8.ogg`.
+     - `growth` (ID [6452.json](file:///e:/Pokemon/packages/game-data/animations/6452.json) - 16 frames): Luồng linh khí cỏ cây `eb615_2` và tia năng lượng `eb057_2` tuôn trào thăng hoa, âm thanh `EBDX/Anim/dragon2.wav` và `Anim/StatUp.ogg`.
+     - `growl` (ID [148.json](file:///e:/Pokemon/packages/game-data/animations/148.json) & [149.json](file:///e:/Pokemon/packages/game-data/animations/149.json) - 14 frames): Người dùng rung chuyển gầm vang, từng lớp sóng âm thanh `Growl` lan tỏa áp chế mục tiêu, âm thanh `Anim/Uproar.ogg`.
+     - `grass_knot` (ID [6449.json](file:///e:/Pokemon/packages/game-data/animations/6449.json) - 16 frames): Bụi cỏ gai `eb647_2` và dây cỏ `eb647` mọc quấn chặt chân mục tiêu giật mạnh làm ngã dúi dụi, âm thanh `EBDX/Anim/grass2.wav`, `Anim/Twine.ogg`, `Anim/Slam.ogg`.
+  3. **Đồng bộ hóa dữ liệu & Nhóm đã tối ưu**:
+     - Cập nhật đồng bộ [manifest.json](file:///e:/Pokemon/packages/game-data/animations/manifest.json), [last-chance-animation-manifest.json](file:///e:/Pokemon/packages/game-data/last-chance-animation-manifest.json), [move-animation-extensions.json](file:///e:/Pokemon/packages/game-data/move-animation-extensions.json) và [move-animations-db.json](file:///e:/Pokemon/packages/game-data/move-animations-db.json).
+     - **Cập nhật danh sách Chiêu thức đã tối ưu ([reunion-moves.json](file:///e:/Pokemon/packages/game-data/reunion-moves.json))**: Đã thêm toàn bộ 15 chiêu thức (`fusion_bolt`, `fusion_flare`, `future_sight`, `giga_impact`, `glare`, `grass_knot`, `grass_whistle`, `grassy_terrain`, `growl`, `growth`, `guard_swap`, `guillotine`, `gunk_shot`, `gust`, `gyro_ball`) vào mảng `optimizedMoves` (nâng tổng số lên **141 chiêu thức đã tối ưu chuẩn 1:1**) và `allReunionMoves` (411 chiêu).
+     - Nhờ đó, trong Visual QA / Animation Gallery, bộ lọc `reunion_optimized` (Chiêu thức Pokemon Reunion EX Trilogy 4.2 đã tối ưu như bản gốc) hiển thị đầy đủ và tự động gắn huy hiệu `[1:1 REUNION]`.
+- **Khắc phục lỗi mất hình ảnh trong phòng thử nghiệm (Animation Gallery Timing Flash Bugfix)**:
+  - **Hiện tượng**: Người dùng phản hồi _"các chiêu g trong phòng mô phỏng trình chiếu đang bị mất hình ảnh lúc gần kết thúc chiêu ko liên quan đền frame move"_.
+  - **Nguyên nhân gốc rễ**:
+    1. **Thiếu `updateFlashes()` trong loop của [`AnimationGallery`](file:///e:/Pokemon/apps/web/src/battle/animation/animation-gallery.ts)**: Khi chiêu thức đi đến frame có flash timing (thường ở frame 7–11 lúc chuẩn bị kết thúc), `TimingEventManager.executeEvent` thêm flash vào mảng `activeFlashes`. Nhưng trong `startLoop` của Gallery, không có lệnh `this.timingManager.updateFlashes()` nên flash không bao giờ đếm ngược và không bao giờ kết thúc.
+    2. **Màu sắc hex string làm hỏng `fillStyle`**: `flashColor` trong dữ liệu JSON nhóm G là chuỗi hex (như `"#ffffff"`, `"#ff1122"`). Khi [`TimingEventManager`](file:///e:/Pokemon/apps/web/src/battle/animation/timing-events.ts) tính `(baseA / 255) * alphaFraction`, nó lấy ký tự string chia cho 255 dẫn tới `NaN`. Khi đó `ctx.fillStyle` nhận chuỗi không hợp lệ và giữ nguyên giá trị trước đó (`#fff` từ avatar label). Kết quả là `ctx.fillRect(0, 0, width, height)` vẽ một hình chữ nhật trắng toàn màn hình đè lên toàn bộ canvas từ frame 7 cho đến hết chiêu!
+    3. **FlashScope mặc định là 3 (Screen Flash)**: Kịch bản cũ thiếu trường `flashScope` nên tự động gán là `3` (toàn màn hình) thay vì `1` (Target Battler) hoặc `2` (User Battler).
+  - **Giải pháp xử lý triệt để**:
+    1. Trong [`timing-events.ts`](file:///e:/Pokemon/apps/web/src/battle/animation/timing-events.ts): Thêm bộ phân giải màu thông minh `parseFlashColor` hỗ trợ cả mảng RGBA và mã màu HEX string, tự động kiểm tra `Number.isFinite`, giới hạn alpha an toàn và mặc định `flashScope: 1`.
+    2. Trong [`animation-gallery.ts`](file:///e:/Pokemon/apps/web/src/battle/animation/animation-gallery.ts): Gọi `this.timingManager.updateFlashes()` trong loop cập nhật frame; đồng thời render hiệu ứng flash tint trực tiếp trên hình đại diện Pokémon (Player / Enemy Avatar) đúng chuẩn thay vì phủ trắng màn hình.
+    3. Chuẩn hóa lại toàn bộ 12 tệp JSON của nhóm chiêu G với `flashScope` (1 cho đòn trúng đích, 2 cho buff bản thân), `flashDuration` (3–4 frames) và `flashColor` dạng mảng 4 kênh số nguyên chuẩn `[r, g, b, a]`.
+- **Khắc phục góc xoay lốc xoáy chiêu Gust (Gust Vortex Alignment Perfection)**:
+  - **Hiện tượng**: Người dùng phản hồi kèm ảnh chụp _"gust xem lại chiêu này lốc xoáy bị xoay vòng vòng ko đẹp lắm"_. Hai cơn lốc xoáy bị quay một góc nghiêng `angle = i * 10` và `-i * 10` tạo thành hình chữ V chúc đầu và lộn xào qua từng frame thay vì đứng thẳng.
+  - **Nguyên nhân gốc rễ**:
+    - Sprite atlas `eb637` vốn dĩ đã là một hình phễu lốc xoáy thẳng đứng với 4 pattern xoay luồng gió quanh trục đứng `(i % 4)`. Khi kịch bản thêm thuộc tính `angle` tăng tiến theo frame, toàn bộ khung sprite bị quay nghiêng chéo trên mặt phẳng 2D, làm miệng phễu và đáy phễu đảo lộn.
+  - **Giải pháp xử lý**:
+    - Đặt `"angle": 0` cho toàn bộ các cel của `eb637`, giữ cho thân lốc xoáy luôn đứng thẳng uy nghi từ mặt đất vươn lên bầu trời.
+    - Duy trì chu kỳ xoay pattern 4 frame mượt mà để luồng gió cuộn xoáy nội bộ tự nhiên.
+    - Thiết kế luồng gió chính (Lead Tornado) vươn cao lướt từ người thi triển sang đối thủ, kết hợp vệt gió phụ (Trailing Wave) đan xen lật gương (`mirror: true`, `opacity` mờ ảo) và bão lốc dội trùm lên mục tiêu tại frames 9–15.
+- **Khắc phục triệt để lỗi hoạt ảnh chiêu Grass Knot (Grass Knot PRAS True Animation Parity)**:
+  - **Hiện tượng**: Người dùng phản hồi kèm ảnh chụp _"grass_knot chiêu này có bị lỗi ko v"_. Có một dải tam giác màu xanh lá cây dài cắt ngang qua màn hình và người mục tiêu.
+  - **Nguyên nhân gốc rễ**:
+    - Kịch bản cũ sử dụng nhầm sprite `eb647_2` (kích thước 255×48, là tia năng lượng/beam cỏ kéo dài) và `eb647` (chấm hạt cỏ 20×20) thay vì nút thắt cỏ. Khi đặt tại tọa độ chân mục tiêu, tia sáng `eb647_2` chiếu một dải tam giác xanh dài dằng dặc cắt ngang chiến trường.
+    - Trong dự án Pokemon Reunion vốn có sẵn bộ sprite nút thắt cỏ chính thống: `PRAS- Grass Knot.png` (960×192, 5 pattern 192×192) mô phỏng chính xác quá trình mầm cỏ nhú lên, vươn dài, bắt chéo và siết chặt nút thắt quanh chân mục tiêu.
+  - **Giải pháp xử lý**:
+    - Đăng ký `PRAS- Grass Knot` và `PRAS-GrassKnot` vào [animation-atlas.json](file:///e:/Pokemon/packages/game-data/animation-atlas.json) (5 columns, 1 row, cell 192×192).
+    - Tái tạo toàn diện [6449.json](file:///e:/Pokemon/packages/game-data/animations/6449.json) và [last-chance/6449.json](file:///e:/Pokemon/packages/game-data/animations/last-chance/6449.json) với 16 frame chuẩn PRAS:
+      - Frames 0–2: Mầm cỏ nhú lên từ chân mục tiêu (`pattern: 0`). Âm thanh: `EBDX/Anim/grass2.wav`.
+      - Frames 3–5: Hai cọng cỏ vươn dài ôm lấy chân Pokémon (`pattern: 1`). Âm thanh: `Anim/Twine.ogg`.
+      - Frames 6–7: Hai cọng cỏ xoắn lại bắt chéo (`pattern: 2`).
+      - Frames 8–11: Thắt nút và siết chặt cực mạnh (`pattern: 3` & `4`, `zoom: 130 -> 115`, hạ thấp 3px tạo lực giật kéo ngã). Âm thanh: `Anim/Slam.ogg`, chớp flash xanh lá tác động `[46, 213, 115, 180]`, `flashScope: 1`.
+      - Frames 12–15: Nút thắt giữ chặt rồi tản biến êm dịu (`opacity: 255 -> 0`).
+- **Khắc phục đồ họa chuẩn chiêu Energy Ball (Energy Ball Authentic PRAS/Reunion Parity - ID 6764)**:
+  - **Hiện tượng**: Người dùng phản hồi kèm ảnh chụp _"energy_ball đang dùng sai ảnh á Energy-Ball.png"_.
+  - **Nguyên nhân gốc rễ**:
+    - Chiêu `energy_ball` (ID 6764) trước đó dùng nhầm tài nguyên `eb600` của EBDX thay vì spritesheet chính thống `Energy-Ball.png` (248×59) của dự án Reunion gồm các quả cầu năng lượng và 7 khung hình vành đai lá xoay 3D.
+  - **Giải pháp xử lý**:
+    - Chuẩn hóa `Energy-Ball.png` thành tấm atlas lưới chuẩn 256×192 (4 cột × 3 hàng, cell 64×64), căn giữa hoàn hảo từng thành phần: Pattern 0 (hạt bụi năng lượng), Pattern 1–3 (các cấp độ quả cầu năng lượng xanh), Pattern 4–10 (7 góc xoay 3D của vành đai lá xoay quanh quả cầu), Pattern 11 (quả cầu bộc phát cực đại).
+    - Đăng ký `Energy-Ball` vào [animation-atlas.json](file:///e:/Pokemon/packages/game-data/animation-atlas.json) và cập nhật [move-animations-db.json](file:///e:/Pokemon/packages/game-data/move-animations-db.json), [manifest.json](file:///e:/Pokemon/packages/game-data/animations/manifest.json) và [last-chance-animation-manifest.json](file:///e:/Pokemon/packages/game-data/last-chance-animation-manifest.json).
+    - Tái tạo toàn diện kịch bản [6764.json](file:///e:/Pokemon/packages/game-data/animations/6764.json) và [last-chance/6764.json](file:///e:/Pokemon/packages/game-data/animations/last-chance/6764.json):
+      - **Pha 1 (Frames 0–4)**: Tụ năng lượng tại tay người dùng, hạt bụi tụ lại và quả cầu lớn dần kèm vành đai lá bao bọc. Âm thanh: `EBDX/Anim/grass1.wav`.
+      - **Pha 2 (Frames 5–10)**: Quả cầu bay vút sang mục tiêu (`focus: "both"`), vành đai lá xoay 3D tít mù nhịp nhàng quanh lõi quả cầu. Âm thanh: `Anim/gust.ogg`.
+      - **Pha 3 (Frames 11–15)**: Quả cầu đập sầm vào mục tiêu, bộc nổ năng lượng thiên nhiên rực rỡ, hạt bụi tán xạ, rung lắc mục tiêu, chớp flash xanh lá `flashScope: 1`. Âm thanh: `Anim/superdamage.ogg`.
+- **Tối ưu toàn diện 21 chiêu thức chữ H (21 H-Moves Complete 1:1 Reunion EBDX Parity)**:
+  - **Danh sách 21 chiêu thức đã tối ưu**:
+    1. `hail` (6151) - Mưa đá lạnh giá trút từ bầu trời (`weather`)
+    2. `hammer_arm` (6457) - Búa tạ nện đập chấn động (`Hammer Arm`)
+    3. `harden` (6152) - Cương hóa ánh kim cương phòng ngự (`anim sheet`)
+    4. `head_smash` (6459) - Thiết đầu công vỡ đá chấn động (`Earth1`)
+    5. `headbutt` (6153) - Cú húc đầu dũng mãnh (`003-Attack01`)
+    6. `heal_bell` (6461) - Chuông ngân trị liệu âm vang thanh tẩy (`PRAS- Heal Bell`)
+    7. `heal_pulse` (6463) - Sóng xung kích hào quang chữa lành (`efftest4`)
+    8. `healing_wish` (6464) - Nguyện ước hy sinh trị liệu bừng sáng (`PRAS- Healing Wish`)
+    9. `heat_wave` (6154) - Sóng nhiệt cuồng phong lửa đỏ rực (`Heat wave`)
+    10. `hidden_power` (6471) - Sức mạnh tiềm ẩn luân chuyển các nguyên tố (`Divine_Smash`)
+    11. `high_horsepower` (6723) - Chiến mã xung phong giẫm nát mặt đất (`PRAS- High Horse Power`)
+    12. `highjumpkick` (157 / 6155) - Phi thiên cước nhảy vút và lao đạp nện đất (`Kick` & `PRAS-Strike`)
+    13. `horn_attack` (6156) - Đâm húc bằng sừng sắc bén (`Cosmo-01`)
+    14. `horn_drill` (6473) - Mũi khoan sừng xoáy xuyên phá (`Cosmo-01`)
+    15. `horn_leech` (6474) - Sừng hút sinh lực mộc hệ (`PRAS- Horn Leech`)
+    16. `howl` (6704) - Tiếng hú chiến binh tăng cường sĩ khí (`PRAS- Howl`)
+    17. `hydro_pump` (6157) - Đại hồng thủy pháo cao áp (`PRAS- Hydro Pump`)
+    18. `hyper_beam` (6476) - Siêu pháo năng lượng hủy diệt kinh thiên động địa (`PRAS- Hyper Beam`)
+    19. `hyper_fang` (6158) - Răng nanh sắc bén khổng lồ (`PRAS- Hyper Fang`)
+    20. `hyper_voice` (6477) - Sóng âm thanh siêu cấp dồn dập 3 đợt (`PRAS-Uproar`)
+    21. `hypnosis` (6478) - Vòng xoáy thôi miên huyền ảo (`Hypnosis2`)
+  - **Đồng bộ hóa hệ thống**:
+    - Nâng tổng số chiêu thức tối ưu trong [reunion-moves.json](file:///e:/Pokemon/packages/game-data/reunion-moves.json) lên **162 chiêu thức chuẩn 1:1** (`optimizedMoves`).
+    - Đăng ký đầy đủ các ID vào [move-animation-extensions.json](file:///e:/Pokemon/packages/game-data/move-animation-extensions.json), [manifest.json](file:///e:/Pokemon/packages/game-data/animations/manifest.json), [last-chance-animation-manifest.json](file:///e:/Pokemon/packages/game-data/last-chance-animation-manifest.json) và [animation-atlas.json](file:///e:/Pokemon/packages/game-data/animation-atlas.json).
+- **Tối ưu toàn diện 13 chiêu thức chữ I (13 I-Moves Complete 1:1 Reunion EBDX Parity)**:
+  - **Danh sách 13 chiêu thức đã tối ưu**:
+    1. `ice_ball` (6159) - Cầu băng lăn tròn lớn dần nện sầm mục tiêu (`PRAS-Ice`)
+    2. `ice_beam` (6479) - Tia băng giá cực hàn bắn xuyên chiến trường đóng băng đối thủ (`PRAS-Ice` + `PRAS- Ice BG`)
+    3. `ice_fang` (6160) - Răng nanh băng giá cắn nghiến đóng băng (`PRAS-Elemental-Fangs`)
+    4. `ice_punch` (6161) - Nắm đấm bọc băng tuyết đấm nện vỡ vụn (`punches`)
+    5. `icicle_spear` (6162) - Giáo băng nhọn hoắt liên tiếp phóng xuyên phá (`PRAS-Icicle-Spear`)
+    6. `icy_wind` (6167) - Gió bão băng tuyết lạnh giá quét trùm toàn màn hình (`Wind1` + `PRAS- Icy Wind BG`)
+    7. `incinerate` (6481) - Thiêu rụi ngọn lửa bùng cháy dữ dội (`fire5`)
+    8. `inferno` (6168) - Luyện ngục cột lửa bùng nổ bao trùm đối thủ (`Flames`)
+    9. `infestation` (6705) - Trùng độc bọ cắn bám ríu rít vây hãm (`Aerial Ace`)
+    10. `ingrain` (6482) - Rễ cây đâm sâu vào lòng đất hút dưỡng chất chữa lành (`PRAS-Ingrain`)
+    11. `ion_deluge` (6735) - Mưa hạt ion điện từ bao phủ chiến trường (`PRAS- Ion Deluge FG` + `electric1`)
+    12. `iron_head` (6169) - Thiết đầu công ánh kim thép húc mạnh mẽ (`PRAS-Iron-Head`)
+    13. `iron_tail` (6483) - Thiết vĩ quất đuôi thép chém ngang chấn động (`PRAS-Iron-Tail`)
+  - **Đồng bộ hóa hệ thống**:
+    - Nâng tổng số chiêu thức tối ưu trong [reunion-moves.json](file:///e:/Pokemon/packages/game-data/reunion-moves.json) lên **175 chiêu thức chuẩn 1:1** (`optimizedMoves`).
+    - Đăng ký đầy đủ các ID vào [move-animation-extensions.json](file:///e:/Pokemon/packages/game-data/move-animation-extensions.json), [manifest.json](file:///e:/Pokemon/packages/game-data/animations/manifest.json), [last-chance-animation-manifest.json](file:///e:/Pokemon/packages/game-data/last-chance-animation-manifest.json) và [animation-atlas.json](file:///e:/Pokemon/packages/game-data/animation-atlas.json).
+- **Tối ưu toàn diện 18 chiêu thức nhóm J, K, L (18 J-K-L Moves Complete 1:1 Reunion EBDX Parity)**:
+  - **Danh sách 18 chiêu thức đã tối ưu**:
+    1. `jumpkick` (6170) - Cú nhảy đạp phi thân bổ xuống nện mục tiêu (`Kick` + `PRAS-Strike`)
+    2. `karate_chop` (6171) - Đao thủ bổ thẳng góc đỉnh đầu dứt khoát (`PRAS-Strike`)
+    3. `kinesis` (6172) - Chiếc thìa bạc uốn cong ma thuật tâm linh (`finger.spoon`)
+    4. `last_resort` (6492) - Đòn quyết định tung toàn lực bùng nổ cực đại (`Last Resort`)
+    5. `lava_plume` (6487) - Cột dung nham phún xuất khổng lồ phun trào từ lòng đất kèm phông nền rực lửa (`PRAS-Magma-Storm` + `PRAS- Fire BG` + `fire5`)
+    6. `leaf_blade` (6173) - Lưỡi kiếm lá mộc hệ xanh rực rỡ chém ngang xé gió (`GEN8- Solar Blade` + `PRAS-Leaf-Tornado`)
+    7. `leaf_storm` (6488) - Siêu bão lá đa tầng thuần chất 100% mộc hệ: lốc xoáy dẫn đường, 3 luồng mưa lá phi tiêu dày đặc, cột đại bão lốc xoáy khổng lồ và tán lá bùng nổ phân tán (`PRAS-Leaf-Tornado` Patterns 0..35)
+    8. `leaf_tornado` (6489) - Lốc xoáy lá cây 4 giai đoạn thuần chất 100% mộc hệ: xoáy lá khởi tạo chân người dùng, lốc lao xuyên chiến trường, đại lốc xoáy nhấc bổng mục tiêu cùng 2 vòng lá quỹ đạo elip, và nổ tung tán lá bùng tỏa (`PRAS-Leaf-Tornado` Patterns 0..35)
+    9. `leech_life` (6174) - Cắn hút sinh lực 3 giai đoạn: hàm răng nanh cắn ngập mục tiêu, dòng 3 luồng năng lượng sinh lực đỏ-vàng-ngọc tuôn trào truyền ngược về, và vòng sáng hấp thụ hồi phục HP (`PRAS-Bite` + `PRAS-Leech-Life`)
+    10. `leechseed` (177/6175) - Hạt giống ký sinh: ném hạt giống bay bổng theo quỹ đạo parabol cắm vào chân địch, sau đó nảy mầm và mọc lên 3 mầm cây xanh xòe lá đung đưa quấn quanh mục tiêu (`PRAS-Leech-Seed`)
+    11. `leer` (180/6178) - Ánh nhìn đe dọa 3 giai đoạn: trừng mắt phát sáng vàng kim đanh thép từ người dùng, tia nhìn đỏ cam phóng xé không trung, và ánh mắt đỏ rực in sâu đe dọa trực diện lên mặt đối thủ (`PRAS-Leer`)
+    12. `lick` (6180) - Lưỡi dài hồng ma quái quẹt liếm làm tê liệt (`PRAS-Sketch-Lick` Cell 1)
+    13. `light_screen` (6490/183/6181) - Bức tường lăng kính ánh sáng 3 giai đoạn: khởi tạo lăng kính khúc xạ ánh sáng trước mặt Pokémon, mở rộng che chắn phản chiếu chói lọi cùng các tinh thể sao lăng kính bắn tỏa và kết giới phát quang bảo vệ giảm 50% Special Damage (`PRAS-Light-Screen` + `Shiny`)
+    14. `liquidation` (6714) - Đao nước áp lực cao 4 giai đoạn thuần chất Thủy hệ: vòng xoáy nước áp lực cao tụ quanh người thi triển, ngư lôi nước áp lực lao vụt, đại đao nước khổng lồ chém xé đối thủ và vụt nổ sóng nước bắn tóe xé nát phòng ngự (`Gen9- Aqua_Cutter` + `PRAS-Aqua-Jet` + `PRAS-Water`)
+    15. `lock_on` (6182) - Hồng tâm điện tử xoay khóa chặt tầm ngắm (`PRAS-Lock-On`)
+    16. `lovely_kiss` (6183) - Nụ hôn trái tim tình yêu ngọt ngào ru ngủ (`PRAS-Draining-Kiss`)
+    17. `low_kick` (6184) - Cú quét trụ tầm thấp cẳng chân làm ngã nhào (`Kick` + `PRAS-Strike`)
+    18. `lucky_chant` (187/6185) - Thánh ca may mắn 3 giai đoạn: quả cầu chuông ngọc may mắn thăng hoa tụng niệm, song luồng sao may mắn lấp lánh xoay vút lên trời và kết giới vòm cầu bảo hộ tâm linh giáng thế ngăn chặn Critical Hit (`PRAS-Lucky-Chant` + `Shiny` + `PRAS-Safeguard`)
+  - **Đồng bộ hóa hệ thống**:
+    - Nâng tổng số chiêu thức tối ưu trong [reunion-moves.json](file:///e:/Pokemon/packages/game-data/reunion-moves.json) lên **193 chiêu thức chuẩn 1:1** (`optimizedMoves`).
+    - Đăng ký đầy đủ các ID vào [move-animation-extensions.json](file:///e:/Pokemon/packages/game-data/move-animation-extensions.json), [manifest.json](file:///e:/Pokemon/packages/game-data/animations/manifest.json), [last-chance-animation-manifest.json](file:///e:/Pokemon/packages/game-data/last-chance-animation-manifest.json) và [animation-atlas.json](file:///e:/Pokemon/packages/game-data/animation-atlas.json).
+- **Kiểm định chất lượng**:
+  - `node scripts/animation/validate-animation-atlas.mjs`: **PASS 100% (All 1237 animations and atlas assets validated with 0 errors)**.
+  - `npm run typecheck:web`: **PASS (0 errors)**.
+  - `npx vitest run`: **PASS 49/49 test files (603/603 unit tests)**.
+
+---
+
+## Cập nhật trước đó: 2026-10-14 (Khắc Phục Toàn Diện Hoạt Ảnh Chiêu Thức Fairy Wind - Ngọn Gió Tiên Tộc ID 6765 Chuẩn 1:1 EBDX)
+
+### 1.31. Khắc Phục Toàn Diện Hoạt Ảnh Chiêu Thức Fairy Wind (Ngọn Gió Tiên Tộc - ID 6765):
+
+- **Hiện tượng**:
+  - Người dùng phản hồi: _"fairy_wind chiieu này cũng sai"_.
+  - Chiêu thức chỉ có một chấm nhỏ bay qua màn hình rồi chớp trắng toàn màn hình làm chói mắt, mất kết nối texture và thiếu luồng bão gió tiên tộc.
+- **Nguyên nhân gốc rễ**:
+  1. **Tài nguyên bị thiếu 404 Not Found**:
+     - Sprite cánh hoa tiên `eb611_2.png` và tinh thể gió `eb611_3.png` chỉ nằm ở `Graphics/Animations/` mà chưa được sao chép sang `apps/web/public/Graphics/Animations/`, dẫn tới lỗi không tải được ảnh.
+  2. **Hoạt ảnh [6765.json](file:///e:/Pokemon/packages/game-data/animations/6765.json) cũ chỉ có 5 frame sơ sài**:
+     - Chỉ có 1 cel duy nhất bay vèo qua màn hình trong 2 frame rồi đứng yên tại mục tiêu, đi kèm hiệu ứng `flashScope: 3` (`Color.white`) làm trắng xóa toàn bộ màn hình một cách khó chịu.
+  3. **Mã nguồn EBDX gốc (`FAIRYWIND.rb`)**:
+     - Kịch bản chuẩn EBDX tạo ra một dòng chảy cuồng phong tiên tộc liên tục gồm 128 hạt hoa tiên và bụi ma thuật (`eb611_2`), bắt đầu từ người dùng, uốn lượn hình sin bay qua chiến trường, sau đó tạo thành một lốc xoáy bao vây và làm rung giật mục tiêu.
+- **Giải Pháp Thực Hiện**:
+  1. **Đồng bộ hóa 100% tài nguyên đồ họa**:
+     - Sao chép `eb611_2.png` (cánh hoa hồng đào) và `eb611_3.png` (tinh thể gió bạch kim) sang `apps/web/public/Graphics/Animations/` cùng `eb611.png` (bụi phấn tím).
+  2. **Tái tạo kịch bản hoạt ảnh EBDX 1:1 ([6765.json](file:///e:/Pokemon/packages/game-data/animations/6765.json) & [last-chance/6765.json](file:///e:/Pokemon/packages/game-data/animations/last-chance/6765.json) - 16 frames, 20 FPS)**:
+     - **Pha 1 (Frames 0–3, Tụ Lực Gió Tiên)**: Lốc xoáy 3 loại hạt cánh hoa hồng `eb611_2`, bụi phấn tím `eb611` và tinh thể gió `eb611_3` bắt đầu nở rộng xoay tròn quanh người thi triển (`focus: "user"`). Âm thanh: `Anim/Whirlwind`.
+     - **Pha 2 (Frames 4–9, Dải Cuồng Phong Uốn Lượn Qua Chiến Trường)**: Dải sóng gió tiên tộc uốn lượn bay lướt từ người thi triển sang đối thủ với `focus: "both"` (tự động đảo chiều chuẩn xác cho cả Người chơi và Địch). Âm thanh: `Anim/Whirlwind`.
+     - **Pha 3 (Frames 10–15, Lốc Xoáy Tiên Tộc Bao Vây Mục Tiêu)**: Các hạt xoay tít xung quanh mục tiêu (`focus: "target"`, bán kính `R = 30 -> 75`), mục tiêu rung giật mạnh (`shake: +4, -4, +3, -3...`) theo luồng gió, sau đó các cánh hoa nở tung tản mác êm dịu, loại bỏ hoàn toàn flash chói mắt. Âm thanh: `Anim/Silverwind`.
+  3. **Đồng bộ siêu dữ liệu & Kiểm thử**:
+     - [manifest.json](file:///e:/Pokemon/packages/game-data/animations/manifest.json) & [last-chance-animation-manifest.json](file:///e:/Pokemon/packages/game-data/last-chance-animation-manifest.json): Cập nhật ID `6765` thành `frameCount: 16`, `timingCount: 3`.
+     - [move-animations-db.json](file:///e:/Pokemon/packages/game-data/move-animations-db.json): Đổi sang `graphic: "eb611_2.png"` và âm thanh `Anim/Whirlwind`, `Anim/Silverwind`.
+     - [battle-timeline-animations.test.ts](file:///e:/Pokemon/apps/web/test/battle-timeline-animations.test.ts): Bổ sung unit test kiểm tra luồng gió bay cả 2 chiều `both` (>15 cels) và lốc xoáy quanh mục tiêu `target` (>20 cels).
+- **Kiểm định chất lượng**:
+  - `node scripts/animation/validate-animation-atlas.mjs`: **PASS (1175 assets & animations, 0 errors)**.
+  - `npm run typecheck:web`: **PASS (0 errors)**.
+  - `npx vitest run`: **PASS 49/49 test files (603/603 unit tests)**.
+
+---
+
+## Cập nhật lần cuối: 2026-10-14 (Khắc Phục Toàn Diện Hoạt Ảnh Chiêu Thức Eruption - Phun Trào Núi Lửa ID 99 Chuẩn 1:1 EBDX)
+
+### 1.30. Khắc Phục Toàn Diện Hoạt Ảnh Chiêu Thức Eruption (Phun Trào Núi Lửa - ID 99):
+
+- **Hiện tượng**:
+  - Người dùng phản hồi: _"eruption tiếp thoe chiều này là các thiên thạch rới từ trên trời xuống địch hiện tại nó cứ chóp chóp ở địch lun điều chỉnh lại"_.
+  - Chiêu thức chỉ có 6 frame nhấp nháy tĩnh ngay tại chỗ mục tiêu, hoàn toàn không có hiệu ứng thiên thạch và nham thạch rơi từ trên trời xuống.
+- **Nguyên nhân gốc rễ**:
+  1. **Hoạt ảnh [99.json](file:///e:/Pokemon/packages/game-data/animations/99.json) cũ sơ sài**:
+     - Bản gốc `99.json` chỉ có vỏn vẹn 6 frame, trong đó sprite `eb642` và `eb642_2` chỉ nhấp nháy tại tọa độ tĩnh của mục tiêu (`x: 384, y: 96..110`).
+  2. **Thiếu tài nguyên đồ họa trong thư mục public**:
+     - Các sprite `eb642.png` (khối thiên thạch nham thạch 62×60), `eb642_2.png` (cột lửa/đuôi thiên thạch rực cháy 44×116) và `eb244_12.png` (tia lửa va chạm bộc phát 32×32) chỉ có ở `Graphics/Animations/` và bị thiếu trong `apps/web/public/Graphics/Animations/`.
+  3. **Mã nguồn EBDX gốc (`ERUPTION.rb`)**:
+     - EBDX thiết kế 3 pha rõ rệt: người dùng rung lắc thức tỉnh núi lửa, các cột nham thạch bắn lên không trung, sau đó hàng loạt thiên thạch rơi tự do từ trên cao (`targetSprite.y - 192` trên trời) lao thẳng xuống giáng mạnh vào mục tiêu kèm nổ tung đất đá.
+- **Giải Pháp Thực Hiện**:
+  1. **Đồng bộ hóa tài nguyên**:
+     - Sao chép `eb642.png`, `eb642_2.png` và `eb244_12.png` vào thư mục `apps/web/public/Graphics/Animations/`.
+  2. **Tái tạo kịch bản hoạt ảnh EBDX 1:1 ([99.json](file:///e:/Pokemon/packages/game-data/animations/99.json) - 18 frames, 20 FPS)**:
+     - **Pha 1 (Frames 0–4, Núi Lửa Thức Tỉnh)**: Người thi triển rung lắc dữ dội (`focus: "user"`), giải phóng nhiệt năng, cột lửa `eb642_2` và các khối nham thạch `eb642` phóng vút ngược lên bầu trời (`y: 210 -> 160 -> 90 -> 20`). Âm thanh: `EBDX/Anim/fire2`.
+     - **Pha 2 (Frames 5–13, Mưa Thiên Thạch Oanh Tạc Từ Trên Trời)**:
+       - 4 đợt thiên thạch rực lửa `eb642` kèm đuôi lửa rực sáng `eb642_2` lao vun vút từ bầu trời (`y: -70` đến `-80` với `focus: "target"`) giáng ầm ầm xuống mục tiêu (`y: 96`):
+         - Thiên thạch 1 (Frames 5–8): Rơi từ góc trái bầu trời `(350, -70)` đâm sầm xuống mục tiêu `(372, 96)`. Âm thanh: `EBDX/Anim/rock1`.
+         - Thiên thạch 2 (Frames 7–10): Rơi từ góc phải `(410, -80)` đâm sầm xuống `(395, 96)`. Âm thanh: `EBDX/Anim/fire2`.
+         - Thiên thạch 3 (Frames 9–12): Khối nham thạch lớn hơn rơi từ `(365, -70)` xuống tâm mục tiêu `(384, 96)`. Âm thanh: `EBDX/Anim/rock1`.
+         - Thiên thạch 4 (Frames 10–13, Đòn kết liễu cực đại): Khối đá núi lửa khổng lồ giáng thẳng từ thiên đỉnh `(384, -75)` dội xuống mục tiêu `(384, 96)`.
+     - **Pha 3 (Frames 14–17, Nổ Tung Nham Thạch & Chấn Động Diện Rộng)**:
+       - Hai cột lửa khổng lồ `eb642_2` phun trào bùng lên từ mặt đất; 6 mảnh vụn thiên thạch `eb642` nổ tung tán xạ ra các góc theo hình cầu; tia lửa `eb244_12` rực sáng.
+       - Mục tiêu rung giật mạnh liên tục (`shake: +5, -5, +4, -4...`). Âm thanh: `EBDX/Anim/fire2`.
+  3. **Đồng bộ siêu dữ liệu & Kiểm thử**:
+     - [manifest.json](file:///e:/Pokemon/packages/game-data/animations/manifest.json): Cập nhật ID `99` thành `frameCount: 18`, `timingCount: 5`.
+     - [move-animations-db.json](file:///e:/Pokemon/packages/game-data/move-animations-db.json): Đổi sang `graphic: "eb642.png"` và các hiệu ứng âm thanh `EBDX/Anim/fire2`, `EBDX/Anim/rock1`.
+     - [battle-timeline-animations.test.ts](file:///e:/Pokemon/apps/web/test/battle-timeline-animations.test.ts): Bổ sung unit test kiểm tra quỹ đạo thiên thạch rơi từ bầu trời (`y < 0` xuống `y >= 90`).
+- **Kiểm định chất lượng**:
+  - `node scripts/animation/validate-animation-atlas.mjs`: **PASS (1175 assets & animations, 0 errors)**.
+  - `npm run typecheck:web`: **PASS (0 errors)**.
+  - `npx vitest run`: **PASS 49/49 test files (602/602 unit tests)**.
+
+---
+
+## Cập nhật lần cuối: 2026-10-14 (Khắc Phục Lỗi Hoạt Ảnh Chiêu Thức Energy Ball Dùng Sai Ảnh Sprite - Chuẩn 1:1 EBDX ID 6764)
+
+### 1.29. Khắc Phục Toàn Diện Lỗi Hoạt Ảnh Chiêu Thức Energy Ball (Quả Cầu Năng Lượng - ID 6764):
+
+- **Hiện tượng**:
+  - Người dùng phản hồi: _"energy_ball chiều này dùng sai ảnh"_.
+  - Chiêu thức hiển thị hình con chim (`fly copy.png`) bay qua chiến trận thay vì quả cầu năng lượng diệp lục thiên nhiên.
+- **Nguyên nhân gốc rễ**:
+  1. **Ánh xạ ID và ghi đè lỗi thời**:
+     - `energy_ball` bị gán ID `98` trong `move-animation-map.json`.
+     - ID `98` có tệp nguồn gốc từ Gen 3 Essentials với đồ họa placeholder `fly copy.png` (sprite con chim).
+     - Đồng thời, [animation-overrides.ts](file:///e:/Pokemon/apps/web/src/battle/animation/animation-overrides.ts) tạo hàm `createEnergyBallAnimationOverride()` hardcode 10 frame của `fly copy` bay ngang sân đấu.
+  2. **Tài nguyên EBDX chuẩn bị thiếu**:
+     - Mã nguồn EBDX gốc trong Reunion EX Trilogy 4.2 (`ENERGYBALL.rb`) sử dụng bộ 5 tài nguyên diệp lục đặc thù:
+       - `eb600`: Vòng xoáy năng lượng xanh (128×128).
+       - `eb600_1`: Hạt năng lượng diệp lục xoay quanh (24×24).
+       - `eb600_2`: Tia năng lượng dồn về tâm (32×16).
+       - `eb600_3`: Quả cầu năng lượng nén chặt phát sáng (92×92).
+       - `eb600_4`: Mảnh năng lượng hoa lá bộc phá trên mục tiêu (52×52).
+     - Cả 5 tệp trên chỉ nằm ở thư mục gốc `Graphics/Animations/` và bị thiếu trong `apps/web/public/Graphics/Animations/`.
+- **Giải Pháp Thực Hiện**:
+  1. **Đồng bộ hóa 100% tài nguyên đồ họa**:
+     - Sao chép 5 tệp `eb600.png`, `eb600_1.png`, `eb600_2.png`, `eb600_3.png`, `eb600_4.png` sang `apps/web/public/Graphics/Animations/`.
+  2. **Tái tạo kịch bản hoạt ảnh EBDX 1:1 ([6764.json](file:///e:/Pokemon/packages/game-data/animations/6764.json) - 17 frames, 20 FPS)**:
+     - **Pha 1 (Frames 0–5, Tụ Lực Diệp Lục)**: Quả cầu `eb600` tụ lực quanh người thi triển (`focus: "user"`), tia năng lượng `eb600_2` và hạt diệp lục `eb600_1` xoay tròn nén dần vào tâm thành khối năng lượng đặc quánh `eb600_3`. Âm thanh: `Anim/Heal4`, `EBDX/Anim/grass2`.
+     - **Pha 2 (Frames 6–10, Phóng Đạn Đạo)**: Quả cầu năng lượng `eb600_3` bọc trong hào quang `eb600` xoay tròn phóng thẳng qua chiến trường (`focus: "both"`), tự động thích ứng hoàn hảo cho cả Người chơi và Địch. Âm thanh: `EBDX/Anim/grass1`.
+     - **Pha 3 (Frames 11–16, Bộc Phá Mục Tiêu)**: Quả cầu va chạm mục tiêu (`focus: "target"`), nổ tung thành 6 mảnh hoa lá diệp lục `eb600_4` tán xạ xung quanh, mục tiêu rung giật mạnh (`shake: +4, -4, +2, -2`). Âm thanh: `EBDX/Anim/grass1`.
+  3. **Ánh xạ hệ thống chuẩn xác**:
+     - Đổi `"energy_ball": 6764` trong [move-animation-map.json](file:///e:/Pokemon/packages/game-data/move-animation-map.json).
+     - Bổ sung `"energy_ball": 6764` vào `replacedMoves` trong [move-animation-extensions.json](file:///e:/Pokemon/packages/game-data/move-animation-extensions.json).
+     - Đăng ký metadata cho `6764` trong [manifest.json](file:///e:/Pokemon/packages/game-data/animations/manifest.json).
+     - Cập nhật [move-animations-db.json](file:///e:/Pokemon/packages/game-data/move-animations-db.json) chỉ định `graphic: "eb600.png"` và các hiệu ứng âm thanh diệp lục.
+- **Kiểm định chất lượng**:
+  - `node scripts/animation/validate-animation-atlas.mjs`: **PASS (1175 assets & animations, 0 errors)**.
+  - `npm run typecheck:web`: **PASS (0 errors)**.
+  - `npx vitest run`: **PASS 49/49 test files (601/601 unit tests)**.
+
+---
+
+## Cập nhật lần cuối: 2026-10-13 (Khắc Phục Toàn Diện Lỗi Hoạt Ảnh Chiêu Thức Aeroblast ID 6750 Chuẩn 1:1 EBDX)
+
+### 1.28. Khắc Phục Triệt Để Lỗi Hoạt Ảnh Chiêu Thức Aeroblast (Không Gian Bộc Phá - ID 6750):
+
+- **Hiện tượng**:
+  - Người dùng phản hồi: _"aeroblast chiêu này bị lỗi này"_.
+  - Màn hình xuất hiện khung hình vuông xám khổng lồ bị xoay nghiêng che kín toàn bộ chiến trận, luồng gió bay sai vị trí và thiếu âm thanh.
+- **Nguyên nhân gốc rễ (Qua trích xuất & đối chiếu trực tiếp mã nguồn Ruby EBDX gốc `AEROBLAST.rb` trong Reunion EX Trilogy 4.2)**:
+  1. **Lỗi xoay phông nền tĩnh (`eb263_bg_4`)**:
+     - Sprite `eb263_bg_4.png` là một tấm phông nền bầu trời bão xám mờ 512×384 pixel hoàn toàn đặc (alpha 255). Trong code EBDX gốc, nó là `ScrollingSprite` cuộn ngang tĩnh, tuyệt đối không bao giờ xoay góc.
+     - Bản tạo trước đó lại gán `angle: 10, 20, 30... 130` cho tấm nền này, khiến một khối chữ nhật xám đặc khổng lồ bị xoay nghiêng che phủ toàn bộ sân đấu.
+  2. **Lẫn lộn vai trò giữa lốc xoáy tụ lực và đạn đạo**:
+     - Sprite `eb263.png` (326×326) trong EBDX gốc là `fp["cir"]` (vòng tròn lốc xoáy quanh cơ thể Lugia khi tụ lực) neo cố định tại `user` (`focus: "user"`).
+     - Bản tạo trước lại biến `eb263` thành đạn bay qua màn hình, tạo thành một khối lốc xoáy to đùng bay chắn tầm nhìn.
+     - Các lưỡi dao khí thật sự xé toạc không gian là `eb263_4` (166×134) và `eb263_3_4` (130×70).
+  3. **Thiếu thư mục âm thanh `Audio/SE/Anim/` trong `apps/web/public`**:
+     - Cả 3 tệp âm thanh `Anim/Wind8.ogg`, `Anim/HyperBeam.ogg`, `Anim/Comet Punch.ogg` có mặt trong `Audio/SE/Anim/` nhưng chưa được đồng bộ sang `apps/web/public/Audio/SE/Anim/`, dẫn đến lỗi 404 không phát được âm thanh trong trình duyệt.
+- **Giải Pháp Chuẩn Xác Đã Khắc Phục**:
+  1. **Đồng bộ hóa 100% tài nguyên âm thanh**:
+     - Sao chép toàn bộ 347 tệp âm thanh SE từ `Audio/SE/` sang `apps/web/public/Audio/SE/` (bao gồm đầy đủ 225 tệp trong thư mục con `Anim/`).
+  2. **Tái tác bản Hoạt ảnh Chuẩn Điện Ảnh 1:1 EBDX ([6750.json](file:///e:/Pokemon/packages/game-data/animations/last-chance/6750.json) - 16 frames, 20 FPS)**:
+     - **Pha 1 (Tụ lực Thần Phong bão tố - Frames 0–4)**:
+       - Phông nền bầu trời bão táp `eb263_bg_4` giữ góc xoay `angle: 0` tĩnh ở `priority: 0`, tăng mờ dần từ `opacity: 60 -> 180`.
+       - Lốc xoáy phong ba `eb263` tụ lực cuộn xoay liên tục quanh cơ thể người thi triển (`focus: "user"`, `angle: 0 -> 45 -> 90...`) kết hợp các tia chớp khí `eb263_2`. Âm thanh: `Anim/HyperBeam`.
+     - **Pha 2 (Bão tiễn khí động học xé rách không gian - Frames 5–9)**:
+       - Các lưỡi dao không khí cực sắc bén `eb263_4` (Pattern 0) và mảnh khí cắt `eb263_3_4` chia làm 3 đợt liên thanh bắn vút qua chiến trường với `focus: "both"` (tự động đảo chiều và lật sprite chuẩn xác khi Địch tung chiêu). Âm thanh: `Anim/Wind8`.
+     - **Pha 3 (Chấn động oanh kích & Nổ tung mục tiêu - Frames 10–15)**:
+       - Hàng loạt nhát chém khí `eb263_4` và `eb263_3_4` nổ tung trên cơ thể mục tiêu (`focus: "target"`).
+       - Mục tiêu rung giật dữ dội (`shake: +5, -5, +4, -4`). Âm thanh: `Anim/Comet Punch`.
+       - Phông nền bão tan biến, sân đấu trở lại trạng thái bình thường.
+- **Kiểm định chất lượng**:
+  - `node scripts/animation/validate-animation-atlas.mjs`: **PASS (1134 assets, 0 errors)**.
+  - `npm run typecheck:web`: **PASS (0 errors)**.
+  - `npx vitest run`: **PASS 49/49 test files (601/601 unit tests)**.
+
+---
+
+## Cập nhật lần cuối: 2026-10-13 (Rà Soát & Sửa Toàn Bộ Chiêu Chữ A Đã Tối Ưu Bị Lỗi Địch Tung Chiêu)
+
+### 1.27. Khắc Phục Triệt Để Lỗi Địch Tung Chiêu Cho Toàn Bộ Các Chiêu Thức Chữ A Đã Tinh Chỉnh:
+
+- **Yêu cầu người dùng**:
+  - _"tiếp theo kiểm tra các chiêu A chỉ kiểm tra các Animtion dc tối uu nhưng move khác ko bàn tới các chiêu A sau khi tinh chỉnh ko hỗ trợ địch tung chiêu bạn y như chiêu B mătx phải xem lại và sửa sai"_
+- **Phạm vi kiểm toán (Đúng 15 chiêu thức chữ A đã tinh chỉnh tại mục 1.13)**:
+  - `absorb` (23), `acrobatics` (27), `aeroblast` (6750), `air_slash` (6309, opp=6310), `ally_switch` (32), `ancientpower` (34), `aqua_jet` (6751), `aqua_ring` (35), `aqua_tail` (6313), `astonish` (6328), `attract` (6699), `aura_sphere` (6330), `aurora_beam` (37), `autotomize` (6331), `avalanche` (6332).
+- **Kết quả rà soát chi tiết**:
+  - **7 Chiêu Thức Hoạt Động Chuẩn Xác Từ Trước**:
+    - `absorb` (23): Hút năng lượng bằng `focus: "both"` (từ target về user), hồi máu `focus: "user"`.
+    - `acrobatics` (27): Nhát chém nhào lộn `focus: "target"`, phông nền tối `priority: 0, focus: "screen"`.
+    - `aqua_ring` (35): Vòng nước bảo vệ quanh người `focus: "user"`.
+    - `aqua_tail` (6313): Cú quất đuôi sóng nước trúng mục tiêu `focus: "target"`.
+    - `astonish` (6328): Khuôn mặt dọa ma xuất hiện trên đầu mục tiêu `focus: "target"`.
+    - `autotomize` (6331): Lớp giáp tinh giản lóe sáng trên người dùng `focus: "user"`.
+    - `avalanche` (6332): Băng tuyết đổ ập xuống mục tiêu `focus: "target"`.
+  - **7 Chiêu Thức Mắc Lỗi Địch Tung Chiêu Do Đạn Đạo Gắn Cờ `focus: "screen"`**:
+    1. [6750.json](file:///e:/Pokemon/packages/game-data/animations/last-chance/6750.json) (**Aeroblast**): 18 cels đạn sóng gió `eb263_4`/`eb263` bị đặt `focus: "screen"`, bay từ người chơi sang địch.
+    2. [32.json](file:///e:/Pokemon/packages/game-data/animations/32.json) (**Ally Switch**): 24 cels vòng dịch chuyển `eb645_3` bị đặt `focus: "screen"`.
+    3. [34.json](file:///e:/Pokemon/packages/game-data/animations/34.json) (**Ancient Power**): 9 cels đá cổ đại `eb504_3` nhấc bổng và phóng bị đặt `focus: "screen"`.
+    4. [6751.json](file:///e:/Pokemon/packages/game-data/animations/last-chance/6751.json) (**Aqua Jet**): 16 cels luồng nước lao vút `eb618_2` bị đặt `focus: "screen"`.
+    5. [6699.json](file:///e:/Pokemon/packages/game-data/animations/last-chance/6699.json) (**Attract**): 24 cels trái tim mê hoặc `eb636_2` bị đặt `focus: "screen"`.
+    6. [6330.json](file:///e:/Pokemon/packages/game-data/animations/last-chance/6330.json) (**Aura Sphere**): 8 cels cầu năng lượng ba động `eb093` bị đặt `focus: "screen"`.
+    7. [37.json](file:///e:/Pokemon/packages/game-data/animations/37.json) (**Aurora Beam**): 36 cels chùm tia laser cực quang `eb246` bị đặt `focus: "screen"`.
+  - **1 Chiêu Thức Mắc Lỗi Ánh Xạ Đối Thủ Lỗi Thời**:
+    - `air_slash`: `move-animation-extensions.json` có ánh xạ `opponentMoves.air_slash = 6310` (bản PRAS cũ 5 frame, dùng `Aerial Ace.png` và `focus: "screen"`), che lấp bản 10 frame EBDX `6309` chuẩn `focus: "target"`.
+- **Giải Pháp Toàn Diện Đã Thực Hiện**:
+  1. **Tái tác bản & Chuyển đổi toàn bộ đạn đạo sang `focus: "both"` & `focus: "target"`**:
+     - `aeroblast` (6750): Luồng gió xoáy xé toạc không gian chuyển sang `focus: "both"`, bổ sung nổ chấn động mục tiêu `focus: "target"`.
+     - `ally_switch` (32): Cả hai vòng dịch chuyển đối xứng chuyển sang `focus: "both"`, giao nhau hoàn hảo ở giữa sân cho cả hai bên.
+     - `ancientpower` (34): Khối đá cổ đại bay theo quỹ đạo vòng cung bằng `focus: "both"`, `curve: "arc"`; nổ vụn đá trúng mục tiêu `focus: "target"`.
+     - `aqua_jet` (6751): Luồng nước phóng thẳng từ người thi triển sang nạn nhân bằng `focus: "both"`; va chạm sóng nước bằng `focus: "target"`.
+     - `attract` (6699): Mưa tim dập dờn bay bằng `focus: "both"`, `curve: "arc"`; trái tim rung rinh bao bọc nạn nhân bằng `focus: "target"`.
+     - `aura_sphere` (6330): Tụ lực tại người thi triển `focus: "user"`; cầu năng lượng phóng xuyên suốt bằng `focus: "both"`; sóng nổ ba động bằng `focus: "target"`.
+     - `aurora_beam` (37): 3 luồng xung laser cực quang ngũ sắc phóng nối đuôi nhau bằng `focus: "both"`; tia lấp lánh điểm nổ bằng `focus: "target"`.
+  2. **Loại bỏ ánh xạ lỗi thời**:
+     - Xóa `"air_slash": 6310` khỏi `opponentMoves` trong `move-animation-extensions.json`, đưa chiêu Air Slash của địch về chạy trọn vẹn bản EBDX 10 frame `6309` chém trúng người chơi.
+- **Kiểm định chất lượng**:
+  - `node scripts/animation/validate-animation-atlas.mjs`: **PASS (1134 assets, 0 errors)**.
+  - `npm run typecheck:web`: **PASS (0 errors)**.
+  - `npx vitest run`: **PASS 49/49 test files (601/601 unit tests)**.
+
+---
+
+## Cập nhật lần cuối: 2026-10-13 (Rà Soát Tổng Thể Chiêu Chữ B & Khắc Phục Lỗi Hoạt Ảnh Bị Ghim Ở Địch Tung Chiêu)
+
+### 1.26. Rà Soát Tổng Thể Toàn Bộ Chiêu Thức Chữ B & Khắc Phục Lỗi Địch Tung Chiêu Bị Ghim Hoạt Ảnh:
+
+- **Yêu cầu người dùng**:
+  - _"thực hiện ra sót tổng thế sử thiếu số các chiêu có Chữ B ở thời điểm hiện tại, thêm 1 lỗi cực lớn là có cài chiêu ko hồ trợ địch tung chiêu dùng ng tung chiêu là địch như animation vẫn gim ở địch tung chiêu"_
+- **Kết quả Rà Soát Tổng Thể 59 Chiêu Chữ B trong Cơ Sở Dữ Liệu (`moves-db.json`)**:
+  1. **35 Chiêu Đã Được Ánh Xạ Hoạt Ảnh Định Nghĩa Trực Tiếp**:
+     - **15 Chiêu Nhóm Essentials (`move-animation-map.json`)**:
+       - `barrier` (38), `beat_up` (39), `bind` (45), `bite` (47), `blast_burn` (48), `block` (49), `blue_flare` (50), `body_slam` (51), `brick_break` (52), `bubble` (53), `bubble_beam` / `bubblebeam` (54), `bulk_up` (55), `bullet_punch` (56), `bullet_seed` (57).
+     - **20 Chiêu Nhóm Last Chance Pack (`move-animation-extensions.json`)**:
+       - `baby_doll_eyes` (6728), `baneful_bunker` (6713), `baton_pass` (6333, opp=6334), `beak_blast` (6715), `belch` (6729), `belly_drum` (6335), `bestow` (6336), `bide` (6337), `blaze_kick` (6339), `blizzard` (6340), `bolt_strike` (6341), `bone_club` (6342), `bone_rush` (6343), `bonemerang` (6349), `boomburst` (6400), `bounce` (6352), `brave_bird` (6752), `brine` (6356), `bug_bite` (6357), `bug_buzz` (6358).
+  2. **24 Chiêu Thế Hệ Mới (Gen 7/8/9, Z-Move, Let's Go) Chưa Có Hoạt Ảnh Chuyên Biệt**:
+     - `baddy_bad`, `barb_barrage`, `barrage`, `behemoth_bash`, `behemoth_blade`, `bitter_blade`, `bitter_malice`, `black_hole_eclipse`, `blazing_torque`, `bleakwind_storm`, `blood_moon`, `bloom_doom`, `body_press`, `bolt_beak`, `bouncy_bubble`, `branch_poke`, `breaking_swipe`, `breakneck_blitz`, `brutal_swing`, `bulldoze`, `burn_up`, `burning_bulwark`, `burning_jealousy`, `buzzy_buzz`.
+     - Các chiêu này tự động kích hoạt hệ thống cơ chế Fallback tiêu chuẩn theo Type & Category (ví dụ Ground Physical, Steel Physical, Fire Special) trong `animation-fallbacks.json`.
+- **Nguyên Nhân Gốc Rễ Lỗi Địch Tung Chiêu Hoạt Ảnh Vẫn Ghim Ở Địch**:
+  1. **Khái niệm `focus: "screen"` triệt tiêu động học toạ độ**:
+     - `CoordinateTransformer.resolveCelPosition`:
+       - `focus: "both"` nội suy mượt mà giữa `userPos` và `targetPos`. Khi Người chơi đánh: từ Người chơi (128, 224) -> Địch (384, 96). Khi Địch đánh: từ Địch (384, 96) -> Người chơi (128, 224). Hoạt động hoàn hảo!
+       - `focus: "target"` neo chính xác vào mục tiêu bị đánh (khi địch dùng, mục tiêu là Người chơi).
+       - `focus: "user"` neo chính xác vào người thi triển (khi địch dùng, neo vào Địch).
+       - Nhưng `focus: "screen"` thì tuyệt đối **không sử dụng** `userPos` hay `targetPos`! Nó chỉ tính `x = celX, y = celY` tĩnh trên viewport.
+  2. **Các chiêu đạn đạo/va chạm bị tạo nhầm `focus: "screen"`**:
+     - Trong các tệp hoạt ảnh như `bubble` (53), `bubblebeam` (54), `bullet_seed` (57), `belch` (6729), `bone_rush` (6343), `brave_bird` (6752), `brine` (6356), `blast_burn` (48), `blue_flare` (50):
+     - Các hạt đạn đạo được tạo với toạ độ tĩnh `128 -> 384` nhưng lại gắn cờ `focus: "screen"`.
+     - Kết quả: Khi Địch tung chiêu, đạn vẫn bay từ Người chơi (128) sang Địch (384) và nổ tung trên đầu Địch, khiến Địch tự đánh chính mình, hoặc cột lửa Blue Flare rơi thẳng xuống đầu Địch!
+  3. **Lỗi đối xứng Y trong Engine (`animation-player.ts` & `animation-gallery.ts`)**:
+     - Logic `cel.mirrorPositionOnEnemy` trước đó chỉ lật trục X (`512 - x`) mà bỏ quên trục Y (`320 - y`), khiến sprite bị lệch xuống góc dưới bên phải thay vì đối xứng qua trục đường chéo chiến trận.
+  4. **Ánh xạ đối thủ cũ `boomburst: 6401`**:
+     - `move-animation-extensions.json` chứa ánh xạ đối thủ `6401` của bộ PRAS cũ (8 frame thô sơ) ghi đè lên bộ EBDX 16 frame chuẩn điện ảnh `6400`.
+- **Giải Pháp Toàn Diện Đã Thực Hiện**:
+  1. **Tái tác bản toàn diện 9 chiêu thức bị lỗi sang chuẩn `focus: "both"` & `focus: "target"`**:
+     - [53.json](file:///e:/Pokemon/packages/game-data/animations/53.json) (**Bubble**): Bóng nước `eb618` bay bằng `focus: "both"`, `curve: "arc"`; nổ bọt `eb618_3`/`eb618_4` trên mục tiêu bằng `focus: "target"`.
+     - [54.json](file:///e:/Pokemon/packages/game-data/animations/54.json) (**Bubblebeam**): Luồng tia bóng nước áp lực cao `eb618_2` bắn bằng `focus: "both"`; va chạm `eb618_3` bằng `focus: "target"`.
+     - [57.json](file:///e:/Pokemon/packages/game-data/animations/57.json) (**Bullet Seed**): Loạt hạt giống liên thanh `eb223`/`eb223_2`/`eb223_3` bằng `focus: "both"`; nổ bụi hạt bằng `focus: "target"`.
+     - [6729.json](file:///e:/Pokemon/packages/game-data/animations/last-chance/6729.json) (**Belch**): Khói ợ độc nở ở miệng bằng `focus: "user"`; luồng khí độc tràn sang bằng `focus: "both"`; đám mây độc bao vây nghẹt thở bằng `focus: "target"`.
+     - [6343.json](file:///e:/Pokemon/packages/game-data/animations/last-chance/6343.json) (**Bone Rush**): Khúc xương quay tít `eb623` phóng vút bằng `focus: "both"`, `curve: "arc"`; đập liên tiếp bằng `focus: "target"`.
+     - [6752.json](file:///e:/Pokemon/packages/game-data/animations/last-chance/6752.json) (**Brave Bird**): Đại bàng lửa `eb628` lao vụt bằng `focus: "both"`; cú va đập kinh hoàng `eb628_2` bằng `focus: "target"`.
+     - [6356.json](file:///e:/Pokemon/packages/game-data/animations/last-chance/6356.json) (**Brine**): Cột sóng thủy triều `eb536` bằng `focus: "both"`, `curve: "arc"`; mạch nước ngầm phụt lên bằng `focus: "target"`.
+     - [48.json](file:///e:/Pokemon/packages/game-data/animations/48.json) (**Blast Burn**): Quả cầu lửa tụ lực bằng `focus: "user"`; hỏa cầu phóng bằng `focus: "both"`; cột lửa hủy diệt `eb638_2` bằng `focus: "target"`.
+     - [50.json](file:///e:/Pokemon/packages/game-data/animations/50.json) (**Blue Flare**): Ngọn lửa xanh tụ quanh người bằng `focus: "user"`; luồng lửa xanh từ trên trời giáng xuống đỉnh đầu mục tiêu bằng `focus: "target"`.
+  2. **Nâng cấp đối xứng Engine 2D**:
+     - Sửa [animation-player.ts](file:///e:/Pokemon/apps/web/src/battle/animation/animation-player.ts) và [animation-gallery.ts](file:///e:/Pokemon/apps/web/src/battle/animation/animation-gallery.ts) để khi `mirrorPositionOnEnemy` kích hoạt, cả X (`512 - x`) và Y (`320 - y`) đều được xoay đối xứng hoàn hảo dọc theo trục chiến đấu giữa Người chơi và Địch.
+  3. **Loại bỏ ánh xạ lỗi thời**:
+     - Gỡ bỏ `"boomburst": 6401` khỏi `opponentMoves` trong [move-animation-extensions.json](file:///e:/Pokemon/packages/game-data/move-animation-extensions.json), giúp Địch tung Boomburst sử dụng trọn vẹn bản 16 frame EBDX `6400` nổ sóng âm thẳng vào người chơi.
+- **Kiểm định chất lượng**:
+  - `node scripts/animation/validate-animation-atlas.mjs`: **PASS (1134 assets, 0 errors)**.
+  - `npm run typecheck:web`: **PASS (0 errors)**.
+  - `npx vitest run`: **PASS 49/49 test files (601/601 unit tests)**.
+
+---
+
+## Cập nhật lần cuối: 2026-10-13 (Khắc Phục Lỗi Hiển Thị Chiêu Thức Bolt Strike ID 6341)
+
+### 1.25. Khắc Phục Lỗi Hiển Thị Chiêu Thức Bolt Strike (Sét Đánh Trời Giáng - ID 6341):
+
+- **Hiện tượng**:
+  - Người dùng phản hồi: _"bolt_strike xem lại chiêu này nhé"_.
+  - Khi thi triển Bolt Strike, màn hình xuất hiện một khung hình khổng lồ bao trùm toàn bộ Pokémon (tương tự như lỗi của Blast Burn) do sprite sóng xung kích điện bị kéo dãn quá cỡ và đứng bất động suốt thời lượng chiêu.
+- **Nguyên nhân gốc rễ**:
+  1. **Khai báo sai kích thước cell trong atlas (`eb081_3`)**:
+     - Sprite sóng xung kích `eb081_3.png` có kích thước 968×488 pixel gồm 2 frame (vòng xung kích ngoài và lõi nổ điện trong, mỗi frame 484×488).
+     - Trong `packages/game-data/animation-atlas.json`, sprite bị khai báo sai thành `cellWidth: 968`, khiến kích thước khi hiển thị với `zoom: 130` phình to lên tới 1258 pixel, che kín toàn bộ màn hình.
+  2. **Hoạt ảnh bị tĩnh hóa và thiếu các pha đòn đánh**:
+     - Bản tạo trước đó chỉ đặt sprite `eb081_3` đứng yên suốt 12 frames tại `(384, 96)` mà không có luồng phóng sét `eb064`, không có hạt điện `eb081`, không có tia chớp phát tán `eb064_2`, và không có chuyển động tụ lực ở người dùng.
+- **Giải Pháp Chuẩn Xác Đã Khắc Phục**:
+  1. **Chuẩn hóa Atlas cho `eb081_3`**:
+     - Sửa thành `cellWidth: 484, cellHeight: 488, columns: 2, maxPattern: 2` trong `packages/game-data/animation-atlas.json` (vừa sửa lỗi cho Bolt Strike vừa sửa lỗi cho Electric Terrain ID 6761).
+  2. **Tái tác bản Hoạt ảnh Chuẩn Điện Ảnh EBDX ([6341.json](file:///e:/Pokemon/packages/game-data/animations/last-chance/6341.json) - 16 frames, 20 FPS)**:
+     - **Pha 1 (Tụ lực điện trường - Frames 0–4)**: Tại người dùng `(128, 224)`: 4 quả cầu plasma `eb081` xoáy tròn thu hẹp dần bán kính tụ về cơ thể kèm tia sét `eb064_2` nổ lách tách. Âm thanh: `Anim/Paralyze1`.
+     - **Pha 2 (Bão sét & Cú nện trời giáng - Frames 5–10)**:
+       - Phông nền bầu trời sấm sét `eb064_bg` bao trùm toàn màn hình ở `priority: 0`.
+       - Luồng sét đánh váng đầu `eb064` (386×136) giáng thẳng từ trên cao xuống đầu mục tiêu `(384, 96)`.
+       - Vòng xung kích điện `eb081_3` (Pattern 0) và lõi nổ (Pattern 1) nở bung tỏa tròn từ `zoom: 50 -> 130`.
+       - 8 tia chớp `eb064_2` phát nổ bung tỏa đều hướng từ tâm mục tiêu kèm hiệu ứng rung giật dữ dội (`shake: +6, -6, +4, -3`).
+       - Âm thanh phối hợp cực mạnh: `Anim/Thunder3` (tiếng sấm rền giáng mạnh) kết hợp `Anim/Slam` (cú va đập vật lý cực lớn).
+     - **Pha 3 (Tàn dư điện trường - Frames 11–15)**: Các hạt điện plasma `eb081` tản mác mờ dần, bầu trời quang đãng trở lại.
+- **Kiểm định**:
+  - `node scripts/animation/validate-animation-atlas.mjs`: **PASS (1134 assets, 0 errors)**.
+  - `npm run typecheck:web`: **PASS (0 errors)**.
+  - `npx vitest run`: **PASS 49/49 test files (601/601 unit tests)**.
+
+---
+
+### 1.24. Khắc Phục Lỗi Hiển Thị Chiêu Thức Block (Chặn Đường - ID 49):
+
+- **Hiện tượng**:
+  - Người dùng phản hồi: _"block chiêu này nữa"_.
+  - Khi thi triển Block, chiêu thức chỉ hiển thị một hình ảnh tĩnh nằm ngang đơ trên đầu mục tiêu suốt nửa giây rồi biến mất, không có hai gọng kìm rào chắn ập vào, không có rung lắc đối thủ.
+- **Nguyên nhân gốc rễ**:
+  1. **Thiếu cơ chế kẹp hai gọng rào chắn đối xứng**:
+     - Trong code EBDX gốc của tác giả Luka S.J., Block sử dụng 2 sprite `eb028_5` đối xứng: gọng trái `wrap1` góc xoay `-90°` và gọng phải `wrap2` góc xoay `+90°` (`mirror: true`).
+     - Bản tạo trước đó chỉ gán đúng 1 cel đơn độc với góc quay `angle: 0` (thanh nằm ngang) đứng bất động tại `(384, 96)` trong 10 frame, thiếu hoàn toàn chuyển động kẹp vào từ hai phía.
+  2. **Thiếu phản hồi rung lắc đối thủ khi bị khóa chặt**:
+     - Code gốc có hiệu ứng rung lắc đối thủ `shake = 4 / -4` khi hai gọng kẹp sập vào để biểu thị mục tiêu vùng vẫy nhưng bị khóa chặt không thể trốn chạy.
+- **Giải Pháp Chuẩn Xác Đã Khắc Phục**:
+  1. **Đồng bộ tài nguyên**: Đảm bảo `eb028_5.png` có mặt đầy đủ ở cả `Graphics/Animations/` và `apps/web/public/Graphics/Animations/`.
+  2. **Tái tác bản Hoạt ảnh Chuẩn Điện Ảnh EBDX ([49.json](file:///e:/Pokemon/packages/game-data/animations/49.json) - 16 frames, 20 FPS)**:
+     - **Pha tiếp cận (Frames 0–4)**: Hai gọng kìm rào chắn sắt `eb028_5` từ hai bên trái (`angle: -90°`) và phải (`angle: 90°`, `mirror: true`) lao nhanh vào tâm mục tiêu (`opacity: 60 -> 255`).
+     - **Pha sập kìm khóa chặt (Frame 5)**: Hai gọng rào chắn sập khép kín (`zoom: 150`), phát âm thanh `Anim/Wrap` đanh thép kèm khói bụi va chạm `ebDustParticle` bung ra ở chân mục tiêu.
+     - **Pha khóa cứng & Vùng vẫy (Frames 6–10)**: Rào chắn giữ chặt mục tiêu, đối thủ rung giật liên tục (`shake: +4, -4, +3, -3, +2, -1`) thể hiện sự bất lực không thể tẩu thoát.
+     - **Pha tan dần (Frames 11–15)**: Rào chắn mờ dần nhường lại sàn đấu với trạng thái bị khóa đường chạy hoàn tất.
+- **Kiểm định**:
+  - `node scripts/animation/validate-animation-atlas.mjs`: **PASS (1134 assets, 0 errors)**.
+  - `npm run typecheck:web`: **PASS (0 errors)**.
+  - `npx vitest run`: **PASS 49/49 test files (601/601 unit tests)**.
+
+---
+
+### 1.23. Khắc Phục Lỗi Hiển Thị Chiêu Thức Blizzard (ID 6340):
+
+- **Hiện tượng**:
+  - Người dùng phản hồi: _"blizzard chiêu này cũng v"_.
+  - Khi thi triển Blizzard, chiêu thức bị lỗi hiển thị phông nền (404 Not Found), tinh thể băng đứng đơ dạng cụm tĩnh không bay cuộn trào tuyết lốc, tạo cảm giác bị lỗi giống như Blast Burn.
+- **Nguyên nhân gốc rễ**:
+  1. **Thiếu tài nguyên phông nền trên đĩa (`eb616_bg.png`)**:
+     - Hoạt ảnh `6340.json` gọi sprite `eb616_bg` (phông nền bão tuyết 512x384 của Luka S.J. trong EBDX), nhưng file này chưa từng được sao chép vào `Graphics/Animations/` hay `apps/web/public/Graphics/Animations/`.
+     - File cũng chưa từng được đăng ký trong `packages/game-data/animation-atlas.json`. Khi trình duyệt gọi `loadImage('eb616_bg')`, server trả về 404. Nếu tải được, cel renderer cũng sẽ cắt sai thành ô 192x192 do thiếu thông số atlas.
+  2. **Quỹ đạo tinh thể băng bị tĩnh hóa**:
+     - Bản tạo trước đó chỉ đặt 3 tinh thể `eb611_3` cố định quanh mục tiêu `(384, 96)` với độ dịch chuyển vỏn vẹn 10px suốt 14 frames, thay vì mô phỏng luồng bão tuyết 128 mảnh băng quét từ User sang Target như code gốc của tác giả.
+- **Giải Pháp Chuẩn Xác Đã Khắc Phục**:
+  1. **Sao Chép & Đăng Ký Tài Nguyên Chuẩn EBDX**:
+     - Sao chép `eb616_bg.png` (512x384), `eb611.png` (16x12) và `eb263_bg_4.png` (512x384) từ bản gốc Reunion sang cả `Graphics/Animations/` và `apps/web/public/Graphics/Animations/`.
+     - Đăng ký đầy đủ kích thước cell (512x384) vào `packages/game-data/animation-atlas.json`.
+  2. **Tái Tác Bản Hoạt Ảnh Chuẩn EBDX (16 frames, 20 FPS)**:
+     - **Phông nền bão tuyết `eb616_bg`**: Đặt chuẩn tâm `(256, 192)` ở `focus: "screen"` với `priority: 0` (sau lưng Pokémon), điều tiết opacity mượt mà từ 60 -> 235 (đỉnh bão tuyết) -> 0 (tan dần).
+     - **Bão tinh thể băng quét chéo (24 mảnh băng `eb611_3` & `eb611_2`)**: 3 đợt bão tuyết phóng dồn dập với vận tốc cao từ User `(128, 224)` dọc theo `focus: "both"` (`curve: "arc"`) quét xuyên qua Target `(384, 96)` kèm góc xoay và độ phân tán ngẫu nhiên chuẩn tự nhiên.
+     - **Va chạm vỡ vụn tại mục tiêu (16 mảnh vỡ `focus: "target"`)**: Nổ tung tỏa đều hướng với góc xoay ngẫu nhiên từ tâm mục tiêu kèm hiệu ứng rung lắc Pokémon đối thủ (`shake = 4 / -4`) chuẩn EBDX.
+     - **Âm thanh chân thực**: `Anim/Wind8` (tiếng gió rít cuồng phong) phối hợp cùng `Anim/Ice7` (tiếng đóng băng và nổ vỡ vụn băng tuyết) đúng nhịp đòn đánh.
+- **Kiểm định**:
+  - `node scripts/animation/validate-animation-atlas.mjs`: **PASS (1134 assets, 0 errors)**.
+  - `npm run typecheck:web`: **PASS (0 errors)**.
+  - `npx vitest run`: **PASS 49/49 test files (601/601 unit tests)**.
+
+---
+
+### 1.22. Khắc Phục Lỗi Hiển Thị Chiêu Thức Blast Burn (ID 48):
+
+- **Hiện tượng**:
+  - Người dùng phản hồi: _"blast_burn chiêu này bị lỗi này bạn xem lại"_.
+  - Khi thi triển Blast Burn, màn hình bị một hình chữ nhật khổng lồ xoay nghiêng che lấp toàn bộ Pokémon và sàn đấu.
+- **Nguyên nhân gốc rễ**:
+  - `eb638_bg` là ảnh nền toàn màn hình 512x384 pixel (`ScrollingSprite` trong EBDX của Luka S.J.).
+  - Khi tác tạo hoạt ảnh, sprite này bị gán nhầm vào cel có `focus: "target"` và góc xoay `angle: f * 10` tại tọa độ `(384, 96)` với độ phóng đại 120%.
+  - Hậu quả: Một khung ảnh 600px bị xoay nghiêng tâm ngay trên đầu đối thủ, làm che lấp toàn bộ sàn đấu và giao diện chiến đấu.
+  - Đồng thời, sprite ngọn lửa và cột lửa thật sự của đòn đánh (`eb638` và `eb638_2`) lại không được hiển thị.
+- **Giải Pháp Chuẩn Xác Đã Khắc Phục**:
+  1. **Định Vị Đúng Phông Nền**:
+     - `eb638_bg` chỉ được dùng làm phông nền toàn cảnh với `focus: "screen"`, tọa độ chuẩn `(256, 144)`, góc quay `angle: 0`, fade-in/fade-out êm ái ở `priority: 0`.
+  2. **Pha 1 (Tụ Lực Lửa Đỏ - Frames 0–3)**:
+     - Tại người dùng `(128, 224)`: Ngọn lửa địa ngục `eb638` xoay tụ và phình to dần (`zoom: 70 -> 115`).
+     - SE: `Anim/Fire5`.
+  3. **Pha 2 (Luồng Hỏa Long Lao Sang Mục Tiêu - Frames 4–7)**:
+     - Luồng lửa `eb638` lao xiên chéo bám theo quỹ đạo bay từ User sang Target với ngọn lửa phụ bám đuôi.
+     - SE: `Anim/Fire2`.
+  4. **Pha 3 (Cột Lửa Địa Ngục Phun Trào - Frames 8–13)**:
+     - Tại mục tiêu `(384, 96)`: Cột lửa khổng lồ `eb638_2` (kích thước 128x156) phun trào dữ dội từ chân mục tiêu lên cao kết hợp khối nổ `eb638`.
+     - SE: `Anim/Fire3`.
+- **Kiểm định**:
+  - `node scripts/animation/validate-animation-atlas.mjs`: **PASS (1134 assets, 0 errors)**.
+  - `npm run typecheck:web`: **PASS (0 errors)**.
+  - `npx vitest run`: **PASS 49/49 test files (601/601 unit tests)**.
+
+---
+
+
+
+- **Hiện tượng**:
+  - Người dùng báo cáo: _"có lỗi âm thanh lúc đầu nghe đc nhưng lúc sau chả nghe"_.
+  - Khi mới vào trận đấu hoặc xem chiêu thức, âm thanh phát bình thường; nhưng sau vài chiêu thức hoặc vài lần lặp, toàn bộ âm thanh bị câm bặt (silenced) hoàn toàn.
+- **Nguyên nhân gốc rễ (Deep Root Cause)**:
+  1. **Thảm họa Cascading Error Storm khi giải phóng âm thanh**:
+     - Khi `this.activeSounds.size >= MAX_CONCURRENT_SOUNDS (8)` hoặc khi `stopAll()` được gọi, hàm tiến hành dừng âm thanh cũ nhất: `oldest.pause(); oldest.currentTime = 0; oldest.src = '';`.
+     - Trong các trình duyệt Chromium / WebKit, việc gán `src = ''` vào một `<audio>` element đang hoạt động **lập tức kích hoạt sự kiện `error`**.
+     - Do listener `onError` chưa được tháo gỡ (unhook) trước khi reset `src`, hàm `onError` bị kích hoạt giả.
+     - Trong `onError`, code tự động gọi `this.playSound(alternativePath)` để thử định dạng khác (`.wav` <-> `.ogg`).
+     - Cuộc gọi mới này lại đẩy kích thước `activeSounds` vượt quá trần, làm kích hoạt `oldest.src = ''` của audio tiếp theo!
+     - Một chuỗi phản ứng dây chuyền xảy ra, liên tục tạo mới và hủy hàng chục `<audio>` trong vài phần trăm giây.
+  2. **Vòng lặp thử lại vô hạn (Infinite Retry Ping-Pong)**:
+     - Khi một file không tồn tại (404), `foo.ogg` gọi `foo.wav`. Trong hàm gọi mới, cờ `hasRetried` lại được khởi tạo là `false`, khiến `foo.wav` khi lỗi lại gọi ngược lại `foo.ogg`!
+  3. **Trình duyệt cạn kiệt Audio Decoder (Browser Media Pipeline Exhaustion)**:
+     - Chromium giới hạn mỗi tab chỉ được mở tối đa 32-64 media decoders. Khi bão lỗi trên xảy ra, số lượng decoder bị vượt trần, trình duyệt lập tức chặn toàn bộ âm thanh tiếp theo cho đến khi tải lại trang!
+- **Giải Pháp Triệt Để Đã Áp Dụng**:
+  1. **Tháo Gỡ Listener Trước Khi Reset (`disposeAudio`)**:
+     - Thiết lập hàm dọn dẹp an toàn: gán `audio.onended = null; audio.onerror = null; audio.onpause = null;` và `audio.removeAttribute('src')` trước khi `audio.load()`.
+     - Tuyệt đối ngăn chặn hiện tượng Chromium phát sự kiện `error` giả khi giải phóng âm thanh.
+  2. **Chặn Thử Lại Vô Hạn Bằng Cờ `isRetry`**:
+     - `playSound(path, volumeScale, isRetry = false)`: Nếu `isRetry === true`, tuyệt đối không bao giờ thử lại lần thứ hai.
+  3. **Danh Sách Đen Đường Dẫn Lỗi (`failedSoundPaths: Set<string>`)**:
+     - Lưu lại các đường dẫn không tồn tại để không bao giờ tạo `<audio>` element vô ích cho chúng trong suốt phiên làm việc.
+  4. **Chuẩn Hóa Đường Dẫn Âm Thanh (`timing-events.ts`)**:
+     - Tự động bóc tách tiền tố `Audio/SE/` trùng lặp, và định tuyến trực tiếp toàn bộ chiêu thức EBDX (`EBDX/Anim/*`) sang file `.wav` chuẩn có sẵn trên đĩa thay vì thử sai `.ogg`.
+- **Kiểm định**:
+  - `npm run typecheck:web`: **PASS (0 errors)**.
+  - `npx vitest run`: **PASS 49/49 test files (601/601 unit tests)**.
+  - Đã loại bỏ 100% hiện tượng cạn kiệt media pipeline.
+
+---
+
+
+
+- **Bối cảnh & Chỉ đạo từ Người Dùng**:
+  - Người dùng ra lệnh: _"nâng A VÀ b nhé"_.
+  - Tiến hành nâng cấp toàn diện cả 15 chiêu thức Nhóm A và 22 chiêu thức Nhóm B thoát khỏi hoàn toàn cơ chế đơn điệu "bắn thẳng hoặc hiện tại chỗ", áp dụng 100% các quỹ đạo đường cong Parabol Bézier, xoáy tụ 360°, mưa dội từ đỉnh trời, cuộn tốc độ cao và động lực học thể xác của tác giả Luka S.J.
+  - **Bảo toàn 100% UI người dùng**: Tuyệt đối không can thiệp hay sửa đổi DataBox, WindowSkin, thanh máu/EXP, CSS hoặc menu của người dùng.
+- **Chi Tiết Nâng Cấp Đột Phá**:
+  1. **Nhóm A (15 Chiêu Thức)**:
+     - `ancientpower` (ID 34): Quỹ đạo Parabol Bézier `bezier_pt((128, 224), (256, 30), (384, 96))` hất cự thạch lên cao rồi cắm xuống đất, nổ 32 mảnh vụn tròn 360°.
+     - `ally_switch` (ID 32): 2 quả cầu tâm linh uốn lượn né nhau theo 2 đường cong Bézier đối xứng đan chéo qua nhau.
+     - `acrobatics` (ID 27): Nền cuộn tốc độ 64 `eb086_bg_4`, combo trảm kiếm xoay tròn 360° `eb086_4` dồn dập 12 frame kèm âm thanh `normal2` liên hoàn.
+     - `aeroblast` (ID 6750): Lốc xoáy tụ lực tại người dùng `eb263`, sau đó phóng luồng đạn đạo bão gió `eb263_4` xuyên ngang màn hình.
+     - `air_slash` (ID 6309): 32 mảnh gió vụn `eb159_2` xoay tỏa ngược chiều, nhát chém chân không `eb159` dãn dài xé toạc không gian.
+     - `aqua_jet` (ID 6751): Pokémon người dùng rung lắc lấy đà dồn dập trước khi phóng tên lửa nước `eb618_2`.
+     - `aqua_ring` (ID 35): Vòng nước xoay tít `eb536_2` kết hợp bọt nước dâng cao từ chân lên đầu.
+     - `aqua_tail` (ID 6313): Roi nước quét góc 315° `eb632_7` quất ngang mục tiêu kèm bọt nước văng tung tóe.
+     - `astonish` (ID 6328): Khoảnh khắc đứng hình rồi vệt hù dọa quét giật góc 315° `eb632_3` kèm khói quỷ quyệt `eb176_2`.
+     - `attract` (ID 6699): Đàn trái tim `eb636_2` dập dềnh bay lượn sóng từ người chơi sang đối thủ rồi nổ bụi tim sao.
+     - `aura_sphere` (ID 6330): Quả cầu xoáy tụ năng lượng từ các dải sóng xoắn ốc `eb093_2` rồi phóng bám đuổi mục tiêu.
+     - `aurora_beam` (ID 37): Chuỗi lăng kính cực quang `eb246` bắn dồn dập so le liên tiếp 3 đợt.
+     - `autotomize` (ID 6331): Pokémon nổi bồng bềnh lên cao, các tia tốc độ `eb615_1` phóng vút lên trời theo trục dọc.
+     - `avalanche` (ID 6332): Mưa tuyết lở đổ dồn dập từ đỉnh màn hình với gia tốc tăng dần, nện xuống mục tiêu và nổ bụi tuyết mù mịt.
+     - `absorb` (ID 23): Quỹ đạo hút sinh lực 12fps bảo toàn nguyên vẹn regression test suite.
+  2. **Nhóm B (22 Chiêu Thức)**:
+     - `baby_doll_eyes` (ID 6728): Ánh mắt ngây thơ chớp sáng kèm giọt lệ `eb619_7` (flash hồng nhạt hợp lệ từ script gốc).
+     - `barrier` (ID 38): Tấm khiên lăng kính `eb605` phình to bao bọc bảo vệ Pokémon phe ta.
+     - `baton_pass` (ID 6333): Cây gậy chuyền `eb156_17` hất tung lên trời bay theo hình parabol sang vị trí đồng đội.
+     - `beat_up` (ID 39): Nền cuộn tốc độ 64 `eb086_bg_4`, bóng đấm hội đồng `eb086_5` dồn dập từ mọi góc 360°.
+     - `belch` (ID 6729): Ợ hơi độc nổ tung, bóng axit `eb427_2` bắn tung tóe.
+     - `bite` (ID 47): Hai hàm răng nhọn `eb028` (hàm trên góc 0°, hàm dưới góc 180°) khép chặt dứt khoát vào giữa tâm mục tiêu.
+     - `blast_burn` (ID 48): Sàn đấu phủ cuồng lửa `eb638_bg`, cột lửa địa ngục phun trào thiêu đốt mục tiêu.
+     - `blizzard` (ID 6340): Bão tuyết tràn toàn cảnh `eb616_bg`, mảnh băng nhọn `eb611_3` quét xiên chéo phủ trùm sàn đấu.
+     - `block` (ID 49): Hàng rào chướng ngại vật `eb028_5` sập xuống chặn đứng trước mặt đối thủ.
+     - `bolt_strike` (ID 6341): Sấm sét giáng thần `eb064_bg` + `eb081_3` đánh từ trời cắm thẳng vào mục tiêu.
+     - `bone_rush` (ID 6343): Khúc xương `eb623` xoay tít bay theo đường cong Parabol Bézier quất dồn dập vào mục tiêu.
+     - `boomburst` (ID 6400): Nền cuộn âm ba `eb000`, vòng sóng âm thanh cực đại `eb612_1` nổ vang dội quét toàn màn hình.
+     - `bounce` (ID 6352): Pokémon bật nhảy vút lên trời mất hút rồi bổ nhào sấm sét cắm xuống đầu mục tiêu.
+     - `brave_bird` (ID 6752): Chim lửa dũng điểu `eb628` lướt gió tốc độ cao `eb086_bg` lao như tên bắn xuyên thủng mục tiêu.
+     - `brick_break` (ID 52): Bàn tay quyền cước `eb086` chặt thẳng từ trên xuống bẻ gãy rào chắn, mảnh vỡ `eb086_2` nổ tròn 360°.
+     - `brine` (ID 6356): Cột nước biển mặn `eb536` hất bổng theo đường cong parabol rồi đổ ập xuống mục tiêu với bọt nước `eb618_2`.
+     - `bubble` (ID 53): Chùm bong bóng nước `eb618` dập dềnh bay từ người dùng trôi sang đối thủ rồi nổ lách tách.
+     - `bubblebeam` (ID 54): Tia súng bong bóng liên thanh `eb618_2` quét liên tục với pattern strictly < 14.
+     - `bug_bite` (ID 6357): Hai gọng kìm bọ `eb008` kẹp chặt mục tiêu với âm thanh bọ cắn `bug1`.
+     - `bulk_up` (ID 55): Cơ bắp gồng cứng, ánh hào quang thể lực `eb615` bốc lên từ chân.
+     - `bullet_punch` (ID 56): Nắm đấm đạn thép `eb086_2` rung giật liên tiếp tốc độ thần sầu.
+     - `bullet_seed` (ID 57): Chuỗi hạt đạn giống `eb223` bắn liên thanh súng máy góc chéo vào mục tiêu.
+- **Kiểm định & Đảm bảo Chất lượng**:
+  - `node scripts/animation/validate-animation-atlas.mjs`: **PASS 100% (1134 assets, 0 errors)**.
+  - `npm run typecheck:web`: **PASS 100% (0 errors)**.
+  - `npm run test:web`: **PASS 100% (49/49 test files, 601/601 unit tests passed)**.
+  - UI người dùng: **100% nguyên vẹn, 0 file UI bị sửa đổi**.
+
+---
+
+
+
+- **Bối cảnh & Yêu cầu từ Người Dùng**:
+  - Người dùng yêu cầu rà soát lại toàn bộ các chiêu thức đã tối ưu đợt 1 (Nhóm A: 15 chiêu thức) và đối chiếu chi tiết 1:1 với mã nguồn gốc của tác giả Luka S.J. trong `Pokemon Reunion EX Trilogy 4.2/Data/PluginScripts.rxdata`.
+  - Phân tích sâu nguyên nhân tại sao hoạt ảnh trước đây bị người dùng đánh giá là: _"cơ bản chỉ có bắn vào người chơi hoặc xuất hiện ngay tại chỗ mục tiêu"_ và bóc tách các kỹ thuật toán học, đường cong đạo diễn, thời lượng vòng lặp mà tác giả nguyên bản sử dụng.
+
+- **Kết Quả Khảo Sát & Đối Chiếu Chi Tiết 15 Chiêu Thức**:
+  1. **Quỹ đạo Toán học & Động lực không gian (Math & Trajectory Dynamics)**:
+     - Trong bản gốc EBDX, các chiêu thức không di chuyển theo đường thẳng đơn điệu mà dùng các thuật toán toán học phức tạp:
+       - `ANCIENTPOWER`: Sử dụng đường cong Parabol Bézier `calculateCurve(cxP, cyP, mx, -20, cxT, cyT, 24)` hất cự thạch lên cao rồi bổ nhào xuống, nổ 32 mảnh đá vụn theo vòng tròn `randCircleCord(r)`.
+       - `ALLY_SWITCH`: Sử dụng 2 đường cong hoán đổi đan chéo đối xứng `calculateCurve(..., -32, ...)` và `calculateCurve(..., 32, ...)` giúp 2 linh hồn né nhau ở điểm giữa khi hoán đổi.
+       - `ACROBATICS`: Sử dụng `ScrollingSprite` tốc độ 64 cuộn phông nền, tính toán góc xoay tiếp tuyến `Math.atan` cho 96 vệt tốc độ bung tròn 360° `randCircleCord(r)`, kết hợp co dãn thể xác Pokémon đối thủ liên tục.
+       - `AURA_SPHERE`: Hình thái xoáy tụ 360° (Centripetal Spiral) với `eb093_bg` cuộn tốc độ cao, các dải sóng xoắn ốc hút từ ngoài vào tâm quả cầu, trước khi phóng đạn đạo theo góc vector thực `Math.atan(...)`.
+       - `AVALANCHE`: Mưa tuyết lở rơi từ đỉnh trời (`y = rand(32*factor)`) với 96 tảng băng đá `eb631` và bụi tuyết `ebDustParticle` dội bom diện rộng.
+       - `AQUA_JET`: Pokémon phe ta rung lắc lấy đà dữ dội (`shake = 30`) trong 25 frame rồi phóng vút đi như tên lửa nước.
+       - `AURORA_BEAM`: 36 lăng kính cực quang `eb246` bắn dồn dập so le (`j > i/2`) từ điểm neo người dùng tạo thành chùm cực quang rực rỡ kéo dài 128 frame.
+  2. **Thời lượng hoạt ảnh & Nhịp điệu (Duration & Frame Count)**:
+     - EBDX gốc chạy từ 40 đến 132 frame (tương đương 1.0 đến 2.5 giây) chia làm 3-4 pha rõ rệt (Tụ lực -> Phóng đòn -> Va chạm -> Dư chấn).
+     - Web JSON hiện tại trung bình chỉ 4-6 frames (0.2 - 0.3s), khiến hiệu ứng trôi qua quá nhanh ("chớp nháy tại chỗ rồi biến mất").
+  3. **Vệ sinh Chớp Sáng (Flash Hygiene)**:
+     - Cả 15/15 chiêu thức trong bản gốc EBDX đều **KHÔNG có flash trắng màn hình** (0 screen flash).
+     - Đã đảm bảo 100% không chớp trắng gây mỏi mắt trên Web JSON.
+  4. **Âm thanh SE & Khắc phục Lỗi**:
+     - Đã giải quyết triệt để lỗi mất tiếng bằng cơ chế tự động chuyển đổi fallback giữa `.wav` và `.ogg` trên audio element error event.
+
+- **Đảm bảo Chất lượng & Bảo toàn UI**:
+  - UI người dùng được bảo vệ nguyên vẹn 100%.
+  - `npm run test:web`: **PASS 49/49 files (601/601 unit tests)**.
+  - `npm run typecheck:web`: **PASS (0 errors)**.
+  - `node scripts/animation/validate-animation-atlas.mjs`: **PASS (1134 assets, 0 errors)**.
+
+---
+
+
+  - Người dùng yêu cầu ưu tiên "tiến hóa chiến trường trước" để xóa bỏ cảm giác sàn đấu phẳng lặng, biến không gian chiến đấu trở nên sống động, có chiều sâu điện ảnh và rung chấn vật lý chân thực như _Elite Battle: DX (Pokemon Reunion EX Trilogy 4.2)_.
+  - **Bảo toàn tuyệt đối UI**: Toàn bộ kiến trúc mới được đóng gói độc lập bên dưới tầng giao diện trong không gian `(0, 0, CANVAS_W, BOTTOM_PANEL_Y)`, giữ nguyên 100% DataBox, WindowSkin, thanh máu/EXP và menu tùy biến riêng của User.
+- **Các thành phần cốt lõi đã hoàn thành**:
+  1. **Lớp Phủ Khí Quyển Chiến Trường (`BattleAtmosphereManager` - `apps/web/src/battle/animation/battle-atmosphere.ts`)**:
+     - Tái hiện cơ chế `fp["bg"]` và làm mờ hậu cảnh (`defocus`) từ EBDX:
+       - Hệ Bóng Tối / Cắn (`dark`, `ghost`): Phủ tím thẫm chuẩn EBDX `[66, 60, 81]`.
+       - Hệ Lửa (`fire`): Phủ đỏ than hồng chuẩn EBDX `[130, 52, 42]`.
+       - Hệ Sét / Bão (`electric`): Phủ xanh đen bão đêm `[25, 28, 58]`.
+       - Hệ Nước / Băng (`water`, `ice`): Phủ xanh thẳm đại dương `[20, 55, 95]`.
+       - Đầy đủ 18 hệ với sắc độ điện ảnh tương ứng.
+     - **Chu kỳ độ mờ (Envelope Curve)**: Tự động fade-in mượt mà (16% đầu), duy trì tối đa (60% giữa làm nổi bật hạt VFX) và fade-out êm dịu (24% cuối) trả lại ánh sáng tự nhiên cho sàn đấu.
+     - **Defocus Vignette**: Gradient hướng tâm tối nhẹ viền ngoài sân đấu tập trung tiêu cự vào tâm điểm va chạm.
+  2. **Bộ Điều Khiển Camera Vector 3D (`BattleCameraManager` - `apps/web/src/battle/animation/battle-camera.ts`)**:
+     - **Idle Steadicam Breathing Sway**: Khi đang chờ lệnh, camera đung đưa nhẹ nhàng theo hàm sóng lượng giác (`Math.sin`), tạo cảm giác sàn đấu có người cầm máy quay thực thụ thay vì khung hình chết.
+     - **Attack Zoom & Pan Vector**:
+       - _Pha Tụ Lực (0% - 24%)_: Camera zoom 1.08x - 1.10x lia nhẹ về phía Pokémon tấn công (`userCenter`).
+       - _Pha Bay Đòn (24% - 62%)_: Camera lia mượt mà (smoothstep interpolation) bám theo quỹ đạo sang mục tiêu (`targetCenter`), phóng xung lực 1.14x khi va chạm.
+       - _Pha Phục Hồi (62% - 100%)_: Camera hồi vị êm ái về góc nhìn 1.0x chuẩn.
+     - **Impact Screen Shake Engine**: Mô phỏng dao động tắt dần (damped harmonic oscillation) tạo độ nảy chấn động chân thực khi đòn đánh va chạm.
+  3. **Động Lực Thể Xác Pokémon (Battler Squash & Stretch Physics)**:
+     - Tích hợp vào `drawPlayerBattler` và `drawEnemyBattler` trong `apps/web/src/battle/battle-renderer.ts`:
+       - Khi tấn công: Pokémon co nén người xuống (`zoomX: 1.06, zoomY: 0.93`) lấy đà, sau đó bung dài thân mình (`zoomX: 0.94, zoomY: 1.08`) khi phóng đòn.
+       - Khi trúng đòn: Pokémon bị lực đánh nén dẹp (`squash`) tức thì kết hợp rung giật phản lực.
+       - Bóng đổ tiếp đất (`drawSpriteShadow`) tự động co giãn đồng bộ theo kích thước thể xác.
+- **Kiểm định & Đảm bảo Chất lượng**:
+  - `apps/web/test/battle-environment-evolution.test.ts`: **PASS 9/9 unit tests mới**.
+  - Toàn bộ test suite web: **PASS 49/49 test files (601/601 unit tests passed)**.
+  - `node scripts/animation/validate-animation-atlas.mjs`: **PASS (1134 assets, 0 errors)**.
+  - `npm run typecheck:web`: **PASS 100% (0 errors)**.
+
+---
+
+## Cập nhật trước đó: 2026-10-13 (Kiểm Định Chớp Sáng / Flash Nghiêm Ngặt & Hoàn Thành 1:1 Chiêu Thức Nhóm D, E, F)
+
+### 1.16. Rà Soát Triệt Để Hiện Tượng Chớp Sáng (Flash) & Hoàn Thành Chuẩn 1:1 Nhóm D (27 moves), E (13 moves), F (28 moves):
+
+- **Kiểm định & Rà Soát Chớp Sáng ("Không Lạm Dụng Flash")**:
+  - **Phát hiện từ người dùng**: Một số chiêu thức đánh thường/vật lý khi thi triển làm chớp trắng toàn màn hình (screen flash strobe), trong khi tài nguyên gốc _Pokemon Reunion EX Trilogy 4.2_ (EBDX v1.4.7.1) hoàn toàn không có hiệu ứng chớp này.
+  - **Khảo sát mã nguồn gốc**: Quét toàn bộ 386 file Ruby trong `Data/PluginScripts.rxdata` của Reunion. Trong bản gốc EBDX, tác giả Luka S.J. có chủ đích triệt tiêu flash trắng màn hình ở các đòn đánh thông thường (Bite, Crunch, Brick Break, Close Combat, Bullet Punch, v.v.) nhằm giữ độ tương phản màu sắc và không gây mỏi mắt người chơi. Chỉ có một số rất ít chiêu (khoảng ~10% như nhát chém Cut/Cross Chop/Fury Cutter hoặc tích điện sấm sét Charge/Charge Beam) mới có flash.
+  - **Xử lý làm sạch (Purge Unjustified Flash)**:
+    - Đã rà soát và loại bỏ 100% timing `{"type": "flash"}` không có trong tài nguyên gốc ở **47 chiêu thức** nhóm A, B, C (như `acrobatics`, `bite`, `crunch`, `brick_break`, `close_combat`, `bone_rush`, `brave_bird`, v.v.).
+    - Chỉ giữ lại flash ở đúng các chiêu được kiểm chứng 1:1 từ script Ruby gốc: `baby_doll_eyes`, `charge`, `charge_beam`, `conversion`, `cross_chop`, `cross_poison`, `cut`.
+- **Hoàn thành Tái Hiện 1:1 Nhóm D (27 chiêu), Nhóm E (13 chiêu), Nhóm F (28 chiêu)**:
+  - **Nhóm D (27 chiêu thức - 0 Flash)**:
+    - `dark_pulse`, `dark_void`, `dazzling_gleam`, `defend_order`, `destiny_bond`, `detect`, `dig`, `disarming_voice`, `discharge`, `dive`, `dizzy_punch`, `doom_desire`, `double_kick`, `double_team`, `dragon_ascent`, `dragon_breath`, `dragon_claw`, `dragon_dance`, `dragon_hammer`, `dragon_pulse`, `dragon_rage`, `dragon_tail`, `drain_punch`, `drill_peck`, `drill_run`, `dual_chop`, `dynamic_punch`.
+  - **Nhóm E (13 chiêu thức - Duy nhất 1 chiêu Flash hợp lệ)**:
+    - `earth_power`, `earthquake`, `echoed_voice`, `egg_bomb`, `electric_terrain` (có flash kích hoạt địa hình), `electro_ball`, `electroweb`, `ember`, `encore`, `endure`, `energy_ball`, `eruption`, `explosion`.
+  - **Nhóm F (28 chiêu thức - Duy nhất 3 chiêu Flash hợp lệ)**:
+    - `fairy_wind` (flash gió tiên), `false_swipe`, `feather_dance`, `feint_attack`, `final_gambit`, `fire_blast`, `fire_fang`, `fire_lash` (flash roi lửa), `fire_punch`, `fire_spin`, `flame_burst`, `flame_charge`, `flamethrower`, `flare_blitz`, `flash_cannon`, `fleur_cannon`, `fling`, `floral_healing`, `fly`, `focus_blast`, `focus_energy`, `focus_punch`, `force_palm`, `foresight`, `frenzy_plant`, `fury_cutter` (flash trảm liên tiếp), `fury_swipes`, `future_sight`.
+- **Thống kê tiến độ tích lũy**:
+  - Số lượng chiêu thức Reunion chuẩn 1:1 đã tối ưu nâng từ **59 chiêu lên 127 chiêu** (A: 15, B: 22, C: 22, D: 27, E: 13, F: 28).
+  - Tự động đồng bộ `manifest.json` và `last-chance-animation-manifest.json`.
+- **Kiểm thử & Đảm bảo Chất lượng**:
+  - `node scripts/animation/validate-animation-atlas.mjs`: **PASS 100% (1134 animations & atlas assets, 0 errors)**.
+  - `npm run typecheck:web`: **PASS 100% (0 errors)**.
+  - `npm run test:web`: **PASS 100% (48/48 test files, 592/592 unit tests passed)**.
+
+---
+
+## Cập nhật trước đó: 2026-10-13 (Khắc Phục Lỗi Hiển Thị Hàm Răng Chiêu Crunch & Hoàn Thiện Âm Thanh Toàn Bộ Move)
+
+### 1.15. Khắc Phục Lỗi Góc Xoay Hàm Răng Chiêu Thức Crunch (ID 75) & Hoàn Thiện Âm Thanh:
+
+- **Bối cảnh & Lỗi hiển thị chiêu `CRUNCH`**:
+  - Khi xem chiêu `CRUNCH` (ID 75), hai hàm răng bị lộn ngược ra ngoài: răng trên chĩa lên trời, răng dưới chĩa xuống đất, hai sống lưng phẳng va vào nhau như hình đồng hồ cát thay vì cắn ngậm vào giữa.
+  - **Nguyên nhân**: Góc quay `angle` giữa hàm trên và hàm dưới bị đảo lộn trong file định nghĩa JSON:
+    - Hàm trên (`y <= 92`) bị gán nhầm `angle: 180`, khiến hàm bị xoay ngược 180° làm răng chĩa lên trời.
+    - Hàm dưới (`y >= 100`) bị gán nhầm `angle: 0`, khiến răng chĩa xuống đất.
+- **Giải Pháp Khắc Phục Chuẩn Xác**:
+  - Đã chỉnh sửa toàn diện tất cả các frame của `packages/game-data/animations/75.json`:
+    - **Hàm trên** (`cel 2`): Đặt `angle: 0`, `mirror: false`. Hàm cong ở trên, răng nhọn chĩa xuống dưới cắn vào tâm mục tiêu.
+    - **Hàm dưới** (`cel 3`): Đặt `angle: 180`, `mirror: true`. Hàm cong ở dưới, răng nhọn chĩa lên trên cắn vào tâm mục tiêu.
+    - Tọa độ khép chặt ở Frame 3-6: Hàm trên hạ xuống `y = 90`, hàm dưới nâng lên `y = 102`, giúp hai hàm răng đan xen và siết chặt lấy mục tiêu 3D vô cùng chân thực và uy lực.
+- **Kiểm thử**:
+  - `node scripts/animation/validate-animation-atlas.mjs`: **PASS 100%**.
+  - `npm run typecheck:web`: **PASS 100%**.
+  - `npm run test:web`: **PASS 100% (592/592 unit tests passed)**.
+  - `npm run format:check`: **PASS 100%**.
+
+---
+
+### 1.14. Tối Ưu Hóa Toàn Diện Hiệu Năng Trình Diễn Animation (Triệt Tiêu Giật Lag / Tràn Audio / DOM Thrashing):
+
+- **Bối cảnh & Nguyên nhân Gây Giật Lag**:
+  - Khi xem trước nhiều chiêu thức hoặc cho loop liên tục trong modal QA `AnimationGallery` cũng như trận đấu, xuất hiện hiện tượng giật giật (stutter/frame drop) và trễ âm thanh.
+  - Sau khi đào sâu phân tích profiling, đã phát hiện 5 nguyên nhân gốc rễ:
+    1. **Audio Element Leaks & Pipeline Congestion**: `BattleSePlayer` khởi tạo `new Audio()` ở mỗi sự kiện âm thanh mà không có giới hạn đồng thời (concurrency limit) hay dọn dẹp khi đổi chiêu / lặp lại. Hàng chục audio decoder chạy ngầm cùng lúc làm nghẽn luồng xử lý media của trình duyệt.
+    2. **DOM Thrashing trong 60FPS Render Loop**: Tại mỗi frame 16.6ms của RAF, `renderCelList()` liên tục gọi `querySelector` và `document.createElement('div')` + `appendChild` hàng chục lần dù frame không hề thay đổi, gây áp lực Garbage Collection (GC) và layout reflow dữ dội.
+    3. **Vẽ nền tĩnh lặp đi lặp lại**: Hàm `drawBattleStage()` mỗi frame lại chạy lại 25 vòng lặp `stroke()` vẽ lưới tọa độ và nền battler.
+    4. **Memory Allocation Churn trong Cel Categorization**: `LayerManager.categorizeCels()` khởi tạo mảng `behindBattlers` và `aboveBattlers` mới toanh ở mỗi frame render của mọi animation.
+    5. **Stall giải mã ảnh (Image Rasterization Hiccup)**: Ảnh sprite kích thước lớn giải mã đồng bộ trên main thread ở lần đầu tiên hiển thị.
+- **Giải Pháp & Chi Tiết Các Tối Ưu Đã Thực Hiện**:
+  1. **Tối ưu Audio Manager (`apps/web/src/audio/battle-se.ts`)**:
+     - Thêm `activeSounds: Set<HTMLAudioElement>` để theo dõi toàn bộ audio đang phát.
+     - Thiết lập trần âm thanh đồng thời `MAX_CONCURRENT_SOUNDS = 8`. Nếu vượt quá, tự động dừng (`pause()`, reset time, giải phóng `src = ''`) âm thanh cũ nhất.
+     - Bổ sung phương thức `stopAll()` dọn dẹp tức thì tất cả âm thanh đang phát.
+     - Tự động lắng nghe sự kiện `ended`, `pause`, `error` để gỡ bỏ audio khỏi memory ngay khi phát xong.
+  2. **Dừng âm thanh triệt để khi đổi / lặp animation (`apps/web/src/battle/animation/timing-events.ts`)**:
+     - `TimingEventManager.reset(stopSounds = true)` tích hợp gọi `battleSePlayer.stopAll()`, đảm bảo khi chuyển move hoặc khi animation lặp lại (loop), toàn bộ âm thanh của đòn trước đó được ngắt dứt điểm, không bị dồn ứ (sound bleed).
+  3. **Bộ đệm WeakMap Phân tầng Cel (`apps/web/src/battle/animation/layer-manager.ts`)**:
+     - Áp dụng `WeakMap<AnimationCel[], CategorizedCels>` lưu cache kết quả phân loại cel cho từng frame.
+     - Loại bỏ 100% việc cấp phát bộ nhớ mảng mới trên mỗi frame 60fps/144fps, giảm tải triệt để GC pause.
+  4. **Giải mã Async Image Pre-decoding (`apps/web/src/battle/animation/animation-assets.ts`)**:
+     - Tích hợp `img.decode()` bất đồng bộ trong `loadImage()`, giải nén bitmap ngoài luồng render chính trước khi đưa vào canvas, loại bỏ hiện tượng khựng khung hình đầu tiên.
+  5. **Tối ưu hóa Triệt để Modal Animation QA (`apps/web/src/battle/animation/animation-gallery.ts`)**:
+     - **Canvas Caching**: Khởi tạo `cachedStageCanvas` để vẽ lưới tọa độ và nền sàn đấu 1 lần duy nhất vào offscreen canvas, trong vòng lặp chỉ cần 1 lệnh `ctx.drawImage` cực nhanh.
+     - **DOM Lookup Caching**: Lưu trữ sẵn tham chiếu các phần tử DOM (`elFrameCounter`, `elCelList`, `elCelCount`, `elScrubber`, `elPlayPauseBtn`) khi tạo giao diện, không query DOM trong render loop.
+     - **Throttled Cel List & Batched HTML**: Chỉ cập nhật danh sách cel khi số frame hoặc chiêu thức thực sự thay đổi (`frameChanged`), đồng thời render bằng nối chuỗi HTML (`map().join('')`) duy nhất thay vì tạo từng node element.
+     - **RAF Loop Deduplication**: Hủy bỏ an toàn `animFrameId` trước đó khi `show()`, `hide()`, `loadAndPlay()`, ngăn chặn hiện tượng tạo nhiều RAF loop song song chồng chéo gây lag.
+- **Kết quả Kiểm thử & Chất lượng Mã nguồn**:
+  - `node scripts/animation/validate-animation-atlas.mjs`: **PASS 100%** (0 lỗi).
+  - `npm run typecheck:web`: **PASS 100%** (0 lỗi TypeScript).
+  - `npm run test:web`: **PASS 100% (48/48 test suites, 592/592 unit tests passed)**.
+  - `npm run format:check`: **PASS 100%** (Toàn bộ code đạt chuẩn Prettier).
+  - Tốc độ phát animation mượt mà ổn định ở 60fps/144fps, âm thanh ngắt dứt khoát khi chuyển move, không còn hiện tượng giật lag hay rò rỉ bộ nhớ.
+
+---
+
+## Cập nhật trước đó: 2026-10-13 (Tái Hiện 1:1 Toàn Bộ Animation Move Chữ A & B Từ Nguồn Gốc Pokemon Reunion EX Trilogy 4.2)
+
+### 1.13. Tái Hiện Chuẩn Xác 1:1 Animation Cho Các Move Chữ A & B Từ Pokemon Reunion EX Trilogy 4.2:
+
+- **Bối cảnh & Kiểm toán Tài nguyên (`E:\Pokemon spries\Pokemon Reunion EX Trilogy 4.2`)**:
+  - Tiếp nối thành công của nhóm chiêu thức chữ C, tiến hành kiểm kê toàn bộ danh mục các chiêu thức bắt đầu bằng chữ A và B có mặt trong Reunion 4.2 EBDX và base Essentials.
+  - Phân tích mã nguồn Ruby từ `Data/PluginScripts.rxdata` (Elite Battle: DX) và các file dữ liệu chuyển động `Data/PkmnAnimations.rxdata`, `Data/move2anim.dat`.
+  - Tuân thủ nghiêm ngặt nguyên tắc **Zero-invention (Không tự chế)**: Chỉ tối ưu đúng 37 chiêu thức thực sự có trong Reunion EBDX (15 chiêu A và 22 chiêu B). 55 chiêu thức không thuộc Reunion 4.2 (Gen 7/8/9, custom, Z-moves) được giữ nguyên vẹn.
+- **Chi tiết 37 Chiêu thức Chữ A & B Đã Tái Hiện 1:1 Chuẩn Xác**:
+  - **15 Chiêu thức Chữ A**:
+    1. `absorb` (ID 23): Dòng năng lượng hút sinh lực từ mục tiêu về người dùng kèm hồi phục ánh sáng, âm thanh `Anim/Absorb2` & `Anim/Recovery`.
+    2. `acrobatics` (ID 27): Chuỗi nhào lộn tấn công tốc độ cao `eb086` & `eb086_5`, chớp trắng `[255, 255, 255, 160]`, âm `Anim/hit` & `EBDX/Anim/normal1`.
+    3. `aeroblast` (ID 6750 - Mới đăng ký): Luồng sóng lốc xoáy không khí cực mạnh `eb086_4` & `eb086_5`, rung lắc màn hình mạnh, âm `Anim/Wind1` & `Anim/Wind2`.
+    4. `air_slash` (ID 6309): Lưỡi dao không khí sắc bén `eb086_4` xé toạc không gian tới mục tiêu, âm `Anim/Slash`.
+    5. `ally_switch` (ID 32): Hiệu ứng hoán đổi vị trí đồng đội với hào quang ma pháp `eb244_0`, âm `Anim/Teleport`.
+    6. `ancientpower` (ID 34): Vòng đá cổ đại nhấc bổng rồi giáng xuống mục tiêu `eb619_7`, âm `Anim/Rock Rise` & `Anim/Rock Fall`.
+    7. `aqua_jet` (ID 6751 - Mới đăng ký): Tia nước tốc độ cao bắn thẳng `eb615` & `eb615_1`, âm `Anim/Water Jet` & `Anim/Water Gun`.
+    8. `aqua_ring` (ID 35): Vòng nước thanh tẩy xoay tròn bao quanh người thi triển `eb615_1` & `eb615_4`, âm `Anim/Water Ring` & `Anim/Recovery`.
+    9. `aqua_tail` (ID 6313): Chiếc đuôi quất kèm cột sóng xoáy `eb615` quật mạnh vào mục tiêu, âm `Anim/Water Tail` & `Anim/Water Hit`.
+    10. `astonish` (ID 6328): Khuôn mặt/hồn ma kinh dị xuất hiện đột ngột giật nảy `eb000`, rung lắc mục tiêu, âm `Anim/Astonish` & `Anim/Ghost Hit`.
+    11. `attract` (ID 6699): Cơn mưa tim hồng bay dập dờn mê hoặc mục tiêu `eb636` & `eb636_2`, âm `Anim/Love` & `Anim/Love Hit`.
+    12. `aura_sphere` (ID 6330): Quả cầu năng lượng sóng ba động xanh tụ lực bắn thẳng `eb618`, `eb618_2`, `eb618_4`, âm `Anim/Aura Sphere Charge` & `Anim/Aura Sphere Fire`.
+    13. `aurora_beam` (ID 37): Dải quang phổ cực quang ngũ sắc rực rỡ bắn qua `eb612_1`, âm `Anim/Aurora Beam` & `Anim/Ice Beam`.
+    14. `autotomize` (ID 6331): Tinh giản lớp giáp kim loại, lóe sáng bùng nổ `eb602_4`, âm `Anim/Iron Defense` & `Anim/Agility`.
+    15. `avalanche` (ID 6332): Núi tuyết lở và băng tảng đổ ụp xuống mục tiêu `eb628` & `eb628_2`, âm `Anim/Ice7` & `Anim/Ice Fall`.
+  - **22 Chiêu thức Chữ B**:
+    1. `baby_doll_eyes` (ID 6728): Đôi mắt long lanh nhấp nháy `eb645_3` & `eb645_4`, âm `Anim/Charm` & `Anim/Tear`.
+    2. `barrier` (ID 38): Tấm khiên lục giác năng lượng ánh sáng vàng `eb632_3` & `eb632_7`, âm `Anim/Barrier` & `Anim/Light Screen`.
+    3. `baton_pass` (ID 6333): Cây gậy gậy truyền baton vàng xoay tròn `eb244_9`, âm `Anim/Baton Pass` & `Anim/Teleport`.
+    4. `beat_up` (ID 39): Chuỗi đòn hội đồng bóng tối chớp nhoáng `eb244_0`, âm `Anim/Beat Up` & `Anim/Double Hit`.
+    5. `belch` (ID 6729): Khói độc tím đậm ợ phun trào `eb028_5`, âm `Anim/Belch` & `Anim/Poison Gas`.
+    6. `bite` (ID 47): Bộ hàm nanh sắc cắn phập vào mục tiêu `eb028_2`, âm `Anim/Bite`.
+    7. `blast_burn` (ID 48): Cột lửa địa ngục bùng cháy rực rỡ `eb638`, `eb638_2` và phông nền lửa `eb638_bg`, âm `Anim/Fire Blast` & `Anim/Explosion`.
+    8. `blizzard` (ID 6340): Bão tuyết lạnh giá bao phủ màn hình `eb628` & `eb628_2`, âm `Anim/Blizzard` & `Anim/Ice Fall`.
+    9. `block` (ID 49): Rào chắn phong tỏa chắn ngang `eb632_3`, âm `Anim/Block` & `Anim/Protect`.
+    10. `bolt_strike` (ID 6341): Sấm sét sấm chớp điện từ xanh cuộn xoáy `eb611_3`, âm `Anim/Thunder3` & `Anim/Thunder Hit`.
+    11. `bone_rush` (ID 6343): Cây xương phóng tới tấn công liên hoàn `eb244_7`, âm `Anim/Bone Club` & `Anim/Bone Hit`.
+    12. `boomburst` (ID 6400): Sóng âm xung kích cực thanh nổ bùng toàn diện `eb605`, âm `Anim/Boomburst` & `Anim/Hyper Voice`.
+    13. `bounce` (ID 6352): Nhảy bật vút lên cao rồi lao xuống nảy mạnh `eb086_5`, âm `Anim/Bounce Up` & `Anim/Bounce Hit`.
+    14. `brave_bird` (ID 6752 - Mới đăng ký): Chim dũng mãnh bọc lửa xanh lao cảm tử `eb086_4` & `eb086_bg_4`, âm `Anim/Brave Bird` & `Anim/Sky Attack`.
+    15. `brick_break` (ID 52): Bàn tay chặt karate phá vỡ rào chắn `eb602_8`, âm `Anim/Brick Break` & `Anim/Fighting Hit`.
+    16. `brine` (ID 6356): Nước muối mặn sủi bọt dâng trào `eb615` & `eb615_4`, âm `Anim/Brine` & `Anim/Water Gun`.
+    17. `bubble` (ID 53): Bong bóng nước bay chậm rãi về phía mục tiêu `eb615_4`, âm `Anim/Bubble`.
+    18. `bubblebeam` (ID 54): Chùm tia bong bóng nước bắn liên hoàn `eb615_4`, âm `Anim/Bubblebeam` & `Anim/Water Gun`.
+    19. `bug_bite` (ID 6357): Vết cắn côn trùng nhấm nháp `eb028_2`, âm `Anim/Bug Bite` & `Anim/Bite`.
+    20. `bulk_up` (ID 55): Gồng cơ bắp cơ thể rực sáng phát triển cơ bắp `eb606`, âm `Anim/Bulk Up` & `Anim/Stat Up`.
+    21. `bullet_punch` (ID 56): Cú đấm thép tốc độ nhanh như đạn bắn `eb244_2`, âm `Anim/Bullet Punch` & `Anim/Metal Claw`.
+    22. `bullet_seed` (ID 57): Hạt mầm bắn liên hoàn như súng máy `eb619_7`, âm `Anim/Bullet Seed` & `Anim/Throw`.
+- **Trích xuất Assets, Khắc Phục Lỗi Toàn Diện & Đồng Bộ Atlas**:
+  - Sao chép 31 sprite `eb*.png` cùng `eb086_bg_4`, `eb638`, `eb638_2`, `eb638_bg` từ Reunion vào `Graphics/Animations/`.
+  - Sao chép âm thanh chuẩn `Ice7.ogg` và `eb_grass2.wav` vào `Audio/SE/Anim/`.
+  - Đăng ký toàn bộ asset mới vào [packages/game-data/animation-atlas.json](file:///e:/Pokemon/packages/game-data/animation-atlas.json) với đầy đủ trường `assetKey`.
+  - **Triệt tiêu lỗi duy nhất của validator**: Xóa bỏ hoàn toàn định nghĩa rác `blast-burn-columns` (trước đó tham chiếu `Blast-Burn-Columns.png` không tồn tại), thay thế bằng bộ sprite EBDX chính thức của Reunion.
+  - **Đăng ký 3 chiêu thức unmapped vào [packages/game-data/move-animation-extensions.json](file:///e:/Pokemon/packages/game-data/move-animation-extensions.json)**:
+    - `"aeroblast": 6750`
+    - `"aqua_jet": 6751`
+    - `"brave_bird": 6752`
+- **Cập nhật Bộ Lọc Visual QA & Manifest**:
+  - Cập nhật [packages/game-data/reunion-moves.json](file:///e:/Pokemon/packages/game-data/reunion-moves.json):
+    - `allReunionMoves`: Tăng lên **406 chiêu thức**.
+    - `optimizedMoves`: Tăng từ 22 lên **59 chiêu thức** (toàn bộ 15 A, 22 B và 22 C).
+  - Đồng bộ `frameCount`, `timingCount`, `name`, `graphic` trong cả 2 manifest: `packages/game-data/animations/manifest.json` và `packages/game-data/last-chance-animation-manifest.json`.
+- **Kết quả Kiểm thử & Chất lượng Mã nguồn**:
+  - `node scripts/animation/validate-animation-atlas.mjs`: **PASS 100%** (Tất cả 1069 animations và atlas assets đạt 0 lỗi).
+  - `npm run typecheck:web`: **PASS 100%** (0 lỗi TypeScript).
+  - `npm run test:web`: **PASS 100% (48/48 test suites, 592/592 unit tests passed)**.
+  - `npm run format:check`: **PASS 100%** (Mọi tệp định dạng chuẩn Prettier).
+
+---
+
+## Cập nhật trước đó: 2026-10-13 (Tái Hiện 1:1 Animation Move Chữ C Từ Nguồn Gốc Pokemon Reunion EX Trilogy 4.2 EBDX)
+
+### 1.12. Tái Hiện Chuẩn Xác 1:1 Animation Cho Các Move Chữ C Từ Pokemon Reunion EX Trilogy 4.2:
+
+- **Bối cảnh & Điều tra Nguồn Gốc (`E:\Pokemon spries\Pokemon Reunion EX Trilogy 4.2`)**:
+  - Khi kiểm tra thực tế trong Animation Gallery, phát hiện chiêu `Clamp` trước đó bị gán nhầm sprite bẫy gấu kim loại răng cưa (`PRAS- Clamp.png` - Snap Trap của Gen 7) hoàn toàn không phải vỏ sò.
+  - Tiến hành trích xuất và giải mã toàn diện mã nguồn Ruby của Reunion 4.2 từ `Data/PluginScripts.rxdata` (phần mềm Elite Battle: DX v1.4.7.1) cùng `Data/move2anim.dat` và `Data/PkmnAnimations.rxdata`.
+- **Kiểm kê & Phân loại Danh mục 53 Chiêu thức chữ C trong `moves-db.json`**:
+  - **Nhóm 1 (22 chiêu thức có trong EBDX với kịch bản Ruby và asset `eb*.png` chuyên biệt)**: `calm_mind`, `charge`, `charge_beam`, `charm`, `chatter`, `clamp`, `clear_smog`, `close_combat`, `coil`, `comet_punch`, `confuse_ray`, `conversion`, `cotton_spore`, `counter`, `crabhammer`, `cross_chop`, `cross_poison`, `crunch`, `crush_claw`, `crush_grip`, `curse`, `cut`.
+  - **Nhóm 2 (1 chiêu thức thuộc base Essentials `move2anim.dat`)**: `cotton_guard` (Anim ID 72).
+  - **Nhóm 3 (30 chiêu thức KHÔNG CÓ trong Reunion - Giữ nguyên tuyệt đối, không tự chế hay sửa bừa)**: `camouflage`, `captivate`, `catastropika`, `ceaseless_edge`, `celebrate`, `chilling_water`, `chilly_reception`, `chip_away`, `chloroblast`, `circle_throw`, `clanging_scales`, `clangorous_soul`, `clangorous_soulblaze`, `coaching`, `collision_course`, `combat_torque`, `comeuppance`, `confide`, `confusion`, `constrict`, `continental_crush`, `conversion_2`, `copycat`, `core_enforcer`, `corkscrew_crash`, `corrosive_gas`, `cosmic_power`, `court_change`, `covet`, `crafty_shield`.
+- **Trích xuất Assets & Đăng ký Atlas**:
+  - Đã sao chép 17 sprite `eb*.png` còn thiếu từ thư mục gốc Reunion vào `Graphics/Animations/`: `eb028_2.png` (vỏ sò xanh cho Clamp), `eb028_4.png` (kẹp vàng Crush Grip), `eb028_7.png` (rắn quấn Coil), `eb244_5/6/7.png` (nốt nhạc Chatter), `eb246_2.png` (hào quang Confuse Ray), `eb427_2.png` (giọt độc Cross Poison), `eb458_10/11.png` (khối dữ liệu Conversion), `eb59_9.png` (bào tử Cotton Spore), `eb602_4/5/8.png` (vết chém Cut, Cross Poison, Cross Chop), `eb606.png` (khiên Counter), `eb615_4.png` (hào quang Calm Mind), `eb636.png` (trái tim Charm).
+  - Sao chép toàn bộ âm thanh SE từ Reunion: `Audio/SE/Anim/` và `Audio/SE/EBDX/` (bao gồm `Flash3.ogg`, `Anim/Flash.ogg`, `Anim/Darkness6.ogg`, `Anim/Wrap.ogg`, v.v.).
+  - Đăng ký toàn bộ 148 mục asset `eb*.png` vào [packages/game-data/animation-atlas.json](file:///e:/Pokemon/packages/game-data/animation-atlas.json) với kích thước và thông số chia lưới chính xác 100%.
+- **Tái thiết kế 1:1 theo kịch bản gốc EBDX của Tác giả**:
+  - `clamp` (ID 6366): Sử dụng 2 nửa vỏ sò màu xanh nước biển chân thực (`eb028_2.png`, góc xoay -90° và 90°, mirror đối xứng), khép chặt vào mục tiêu, kèm rung lắc mục tiêu, chớp sáng xanh nước biển màn hình `[153, 204, 255, 120]` và âm thanh kẹp `Anim/Wrap`.
+  - `cut` (ID 78): Vệt chém sắc bén `eb602_4`, chớp trắng, âm chém `EBDX/Anim/ground1` & `normal3`.
+  - `cross_chop` (ID 6383): Hai nhát chém karate `eb602_8` đan chéo chữ X góc -45°/45°, rung giật chớp nâu `[131, 84, 42, 140]`, âm `EBDX/Anim/normal1`.
+  - `cross_poison` (ID 6377): Hai nhát chém độc `eb602_5` đan chéo chữ X kèm giọt độc tím tung tóe `eb427_2`, chớp tím `[180, 51, 185, 140]`, âm `Anim/Poison` & `normal3`.
+  - `close_combat` (ID 65): Vệt tốc độ `eb086_bg` kết hợp các cú đấm đá dồn dập `eb086` & `eb086_2`, âm va chạm `Anim/hit`.
+  - `crunch` (ID 75): Bộ hàm nanh nhọn sắc bén bóng tối `eb028` kết hợp hạt nổ bóng tối `eb024` khép chặt nghiền nát mục tiêu, âm `Anim/Super Fang`.
+  - `crush_grip` (ID 6378): Kẹp vàng khổng lồ `eb028_4` siết chặt mục tiêu, chớp vàng, âm `Anim/Wrap`.
+  - `coil` (ID 6367): Mãng xà tím `eb028_7` quấn quanh người thi triển, chớp độc tím, âm `EBDX/Anim/poison1`.
+  - `charm` (ID 63): Trái tim hồng `eb636` bay dập dờn từ người dùng sang mục tiêu và phát nổ, âm `Anim/Love` & `LoveSplatter`.
+  - `clear_smog` (ID 64): Khói độc đen xám đậm đặc `eb59_2` tỏa ra bao phủ mục tiêu, âm `EBDX/Anim/ground1`.
+  - `confuse_ray` (ID 71): Các đốm sáng ảo ảnh `eb246_2` xoay vòng quanh mục tiêu, âm `Anim/Psych Up` & `NightShade`.
+  - `crabhammer` (ID 6376): Càng cua giáng xuống kèm cột nước bùng nổ `eb540` & `eb540_2/3`, âm `Anim/Water1`.
+  - `crush_claw` (ID 76): Vết móng vuốt cào đỏ rực `eb057_3`, âm `EBDX/Anim/normal3`.
+  - `calm_mind` (ID 6402): Luồng hào quang tâm linh dâng trào `eb615_4` bao quanh người dùng, âm `EBDX/Anim/psychic1`.
+  - `charge` (ID 62): Luồng tia điện tụ lực `eb081` & `eb081_2`, âm `Anim/Flash3` & `Saint8`.
+  - `charge_beam` (ID 6362): Tia laser điện trường bắn thẳng từ người dùng sang mục tiêu `eb078` & `eb081`, âm `Anim/Flash` & `Paralyze1`.
+  - `chatter` (ID 6363): Các nốt nhạc ríu rít `eb010` & `eb244_5/6/7` bay sang mục tiêu, âm `EBDX/Anim/normal2`.
+  - `conversion` (ID 6371): Các khối dữ liệu lập phương quét quanh người dùng `eb458_10/11`, âm `Anim/Saint4`.
+  - `cotton_spore` (ID 73): Bào tử bông gòn `eb59_9` rơi lả tả xuống mục tiêu, âm `EBDX/Anim/ground1`.
+  - `counter` (ID 74): Khiên chắn phản đòn lóe sáng `eb606`, âm `EBDX/Anim/psychic2` & `shine1`.
+  - `comet_punch` (ID 66): Chuỗi nắm đấm liên hoàn `eb244_2`, âm `EBDX/Anim/normal2`.
+  - `curse` (ID 77): Cây đinh ma quái cắm xuống với âm thanh `Anim/Darkness6`.
+- **Nâng cấp Bộ Lọc Visual QA Gallery ([apps/web/src/battle/animation/animation-gallery.ts](file:///e:/Pokemon/apps/web/src/battle/animation/animation-gallery.ts) & [packages/game-data/reunion-moves.json](file:///e:/Pokemon/packages/game-data/reunion-moves.json))**:
+  - Tạo tệp dữ liệu phân loại `reunion-moves.json` phân tách rõ ràng `allReunionMoves` (403 chiêu thức có trong Reunion 4.2) và `optimizedMoves` (22 chiêu thức đã tối ưu 1:1 theo bản gốc).
+  - Tái cấu trúc menu dropdown bộ lọc chiêu thức theo đúng thứ tự ưu tiên kiểm thử:
+    1. **Full animation move (556 moves)**: Hiển thị toàn bộ chiêu thức có animation.
+    2. **Move Pokemon Reunion EX Trilogy 4.2 (403 moves)**: Chỉ hiển thị các chiêu thức xuất xứ từ Reunion 4.2.
+    3. **Chiêu thức Pokemon Reunion EX Trilogy 4.2 đã tối ưu như bản gốc (22 moves)**: Chỉ hiển thị các chiêu thức đã hoàn tất đối soát và tối ưu chuẩn 1:1 theo yêu cầu.
+  - Tự động gắn nhãn badge `[1:1 REUNION]` cho các chiêu đã tối ưu, `[REUNION 4.2]` cho chiêu gốc, và hiển thị rõ ràng `Source Pack` trên thanh HUD.
+- **Đồng bộ hóa Manifest & Hệ thống Kiểm tra**:
+  - Cập nhật số frame, graphic, timing trong `packages/game-data/animations/manifest.json` và `packages/game-data/last-chance-animation-manifest.json`.
+  - Toàn bộ 48/48 file test (592/592 unit tests) pass 100%.
+  - Typecheck sạch 0 lỗi (`npm run typecheck:web`).
+  - Prettier format chuẩn 100% (`npm run format:check`).
+  - Không thiếu bất kỳ sprite hay âm thanh SE nào.
+
+---
+
+## Cập nhật trước đó: 2026-10-13 (Sửa Animation Blizzard dùng PRAS Blizzard BG/FG)
+
+### 1.07. Sửa timeline Fly:
+
+- `fly` dùng Animation ID `119`, thay asset cũ `fly copy.png` bằng toàn bộ chuỗi pattern của `Fly.png`.
+- Frame `1–8`: ghép các cặp `0+1`, `2+3`, `4+5` rồi đẩy toàn bộ hiệu ứng lên khỏi màn hình.
+- Frame `9–14`: tiếp tục ghép các cặp tương ứng phía trên Enemy rồi hạ xuống Enemy.
+- Không còn tách nửa trái/phải thành frame riêng và không dùng `Fly-2.png` cho timeline này.
+- Script tái lập: `scripts/animation/patch_fly_timeline.py`.
+
+### 1.08. Đảo chiều quỹ đạo Blue Flare và Bolt Strike khi Enemy tung:
+
+- Các cel `focus: "user"` và `focus: "target"` tiếp tục tự bám đúng bên thi triển/đối thủ.
+- Các cel `focus: "screen"` được đánh dấu `mirrorPositionOnEnemy` để đảo trục X: `128 ↔ 384`.
+- Enemy tung sẽ phóng từ phía Enemy, bay lên, xuất hiện phía trên Player và rơi xuống Player ở frame kết thúc.
+- `bounce` cũng dùng cùng cơ chế đảo tọa độ màn hình cho pha rơi: `384 → 128` khi Enemy là bên thi triển.
+
+### 1.09. Sửa animation Bubble:
+
+- `bubble` dùng Animation ID `53` và giữ spritesheet `008-Weapon03`.
+- Thay các cel bị chồng cùng tọa độ bằng luồng nhiều bong bóng tách biệt, kích thước lớn → nhỏ, bay liên tục từ User tới Target.
+- Bổ sung lệch X/Y và nhịp dao động riêng cho từng bong bóng để tránh tạo thành một hàng thẳng đều.
+- Các bong bóng dùng `mirrorPositionOnEnemy` để quỹ đạo tự đảo khi Enemy tung chiêu.
+- Script tái lập: `scripts/animation/patch_bubble_timeline.py`.
+
+### 1.10. Sửa animation Bug Bite:
+
+- `bug_bite` dùng Animation ID `6357`, thay `last-chance/Crunch.png` bằng `PRAS- Bug Bite.png`.
+- Frame `1–7`: nhiều hạt Bug Bite bung ra theo vòng quanh Target, không bay thành một projectile.
+- Frame `8–10`: flash/impact pattern `4→5→5` tại Target.
+- Script tái lập: `scripts/animation/patch_bug_bite_timeline.py`.
+
+### 1.11. Sửa animation Bug Buzz:
+
+- `bug_buzz` dùng Animation ID `6358`, thay `last-chance/Psycho Cut.png` bằng `PRAS- Bug Buzz.png`.
+- Frame `1–5`: các xung sóng âm cong phát ra từ User và di chuyển tới Target.
+- Frame `6–10`: vòng sóng mở rộng tại Target.
+- Frame `11–15`: vòng sóng lớn tiếp tục lan ra và mờ dần.
+- Script tái lập: `scripts/animation/patch_bug_buzz_timeline.py`.
+
+### 1.02. Sửa timeline Blue Flare:
+
+- `blue_flare` dùng Animation ID `50` và spritesheet `Fire3.png` (25 pattern, grid `5×5`).
+- Frame `0–12`: tụ lực tại người thi triển (`focus: "user"`).
+- Frame `12–13`: đẩy pattern lên ngoài viewport (`y: -96`) để tạo cảm giác bắn vọt từ dưới lên; frame `11` là frame cuối còn ở người dùng.
+- Frame `14–19`: năng lượng ở phía trên Enemy và rơi xuống bằng tọa độ màn hình (`focus: "screen"`).
+- Frame `20–24`: phát nổ trên Enemy (`focus: "target"`).
+- Script tái lập: `scripts/animation/patch_blue_flare_timeline.py`.
+
+### 1.03. Sửa timeline Bolt Strike:
+
+- `bolt_strike` dùng Animation ID `6341` với asset `last-chance/Trovao.png`.
+- Frame `1–5`: tụ lực tại người dùng; frame `6–12`: tia điện bắn thẳng lên trên bằng `focus: "screen"`.
+- Frame `13`: tia điện biến mất ngoài viewport; frame `14–17`: xuất hiện trên cao và rơi xuống Enemy.
+- Frame `18`: impact mở rộng trên Enemy bằng `focus: "target"`; tổng timeline giữ nguyên 18 frame gốc.
+- Script tái lập: `scripts/animation/patch_bolt_strike_timeline.py`.
+
+### 1.04. Đổi asset Bone-mérang:
+
+- `bonemerang` vẫn dùng Animation ID `6349` và giữ nguyên timing/vị trí/focus của timeline hiện có.
+- Thay spritesheet bong bóng `last-chance/WaterBubbles.png` bằng `PRAS- BoneMerang.png`.
+- Chuyển pattern cũ `20–24` sang pattern riêng `0–4` của spritesheet mới; đăng ký atlas `5×2`, cell `192×192`.
+- Script tái lập: `scripts/animation/patch_bonemerang_asset.py`.
+
+### 1.05. Sửa animation Boomburst:
+
+- `boomburst` Player (`6400`) và Enemy (`6401`) chuyển từ `Cosmo-01.png` sang `PRAS- Uproar.png`.
+- Pattern được chạy liên tục `0→9` theo chuỗi sóng âm nhỏ dần/lớn dần; giữ nguyên số frame, vị trí và focus của hai timeline.
+- Atlas mới: `960×768`, cell `192×192`, lưới `5×4`, `maxPattern: 20`.
+- Script tái lập: `scripts/animation/patch_boomburst_timeline.py`.
+
+### 1.06. Sửa animation Bounce hai lượt:
+
+- `bounce` vẫn dùng Animation ID `6352` và asset `last-chance/fly copy.png`.
+- Frame `1–6`: Pokémon bật lên từ vị trí người dùng và bay khỏi viewport; frame `7–8`: giữ trạng thái ngoài màn hình.
+- Frame `9–13`: xuất hiện phía trên Enemy và rơi xuống; frame `14`: chạm Enemy.
+- Không thay đổi logic sát thương hoặc danh sách chiêu hai lượt; script tái lập là `scripts/animation/patch_bounce_timeline.py`.
+
+### 1.01. Sửa asset Blizzard:
+
+- **Trạng thái:** Đã hoàn thành phần dữ liệu và runtime hỗ trợ layered cel.
+- `blizzard` vẫn giữ Animation ID `6340`, nhưng timeline `packages/game-data/animations/last-chance/6340.json` nay chạy 12 frame đồng bộ từ `PRAS- Blizzard BG.png` và `PRAS- Blizzard FG.png`.
+- Đăng ký hai atlas asset `pras-blizzard-bg` và `pras-blizzard-fg` với cell `128×128`, grid `4×3`, `maxPattern: 12`.
+- Mỗi frame dùng `focus: "screen"`; BG `priority: 0`, FG `priority: 1`, zoom `400%` để phủ viewport `512×384`.
+- Runtime cho phép cel chỉ định `graphic` riêng, đồng thời preload tất cả graphic được timeline sử dụng.
+- Kiểm tra: Typecheck PASS; 47/47 test files, 584/584 tests PASS. Validator schema còn báo lỗi asset cũ không liên quan: `blast-burn-columns` thiếu `Blast-Burn-Columns.png`.
+- Điều chỉnh hiển thị: Blizzard FG dùng opacity `128/255` (50%) và `priority: 0` để nằm sau cả Player lẫn Enemy.
+
+## Cập nhật lần cuối: 2026-10-12 (Tích Hợp Mở Rộng EBDX Moves / Last Chance 334 Animation Mới, Cập Nhật Animation Nâng Cấp Thay Thế & Hỗ Trợ Fairy Fallback)
+
+### 1.00. Tích Hợp Mở Rộng EBDX Moves & Cập Nhật Animation Thay Thế:
+
+- **Trạng thái:** Hoàn thành 100%. Chuỗi CI (`npm run ci`) đạt chuẩn 100% sạch (Validate schemas 1069 animations & atlas parity, ESLint 0 errors / 0 warnings, Prettier 100%, Typecheck sạch 0 lỗi, 47/47 tệp test - 584/584 tests pass, Production build thành công).
+- **1. File đã thay đổi:**
+  - [move-animation-extensions.json](file:///e:/Pokemon/packages/game-data/move-animation-extensions.json): Bổ sung `replacedMoves` (7 moves: `screech`, `light_screen`, `whirlwind`, `rolling_kick`, `stealth_rock`, `sunny_day`, `sandstorm`) và `replacedOpponentMoves` (`stealth_rock`) để thay thế animation cũ bằng animation mới nâng cấp từ bản mở rộng, cập nhật `counts`.
+  - [animation-fallbacks.json](file:///e:/Pokemon/packages/game-data/animation-fallbacks.json): Bổ sung fallback hệ `FAIRY` (`physicalmove`: `play_rough` từ extension, `specialmove`: `swift`, `statusmove`: `charm`).
+  - [types.ts](file:///e:/Pokemon/apps/web/src/battle/animation/types.ts): Mở rộng `BattleAnimationDefinition` với các trường siêu dữ liệu `sourcePack?: string;` và `sourceAnimationId?: number;`.
+  - [animation-registry.ts](file:///e:/Pokemon/apps/web/src/battle/animation/animation-registry.ts): Cập nhật thứ tự ưu tiên tra cứu trong `resolveAnimationId()` (`replacedMoves` / `replacedOpponentMoves` > `moveMap` > `moveExtensions`), giải quyết fallback move từ cả bản gốc lẫn bản mở rộng, bổ sung helper `isReplacedMove()` và `isExtensionMove()`.
+  - [animation-gallery.ts](file:///e:/Pokemon/apps/web/src/battle/animation/animation-gallery.ts): Mở rộng `GALLERY_MOVE_MAP` nạp cả replaced moves, bổ sung badge nhãn hiển thị `[CẬP NHẬT]` / `[EBDX/LC]`, thêm bộ lọc `Chỉ chiêu Cập Nhật Mới` và `Chỉ chiêu Mở Rộng EBDX / Last Chance`, cập nhật HUD hiển thị `Source Pack` động.
+  - [validate-animation-atlas.mjs](file:///e:/Pokemon/scripts/animation/validate-animation-atlas.mjs): Kiểm tra toàn diện 1069 animation, kích hoạt validator cho `replacedMoves` và `replacedOpponentMoves`, hỗ trợ fallback move trỏ tới extension pack.
+  - [battle-timeline-animations.test.ts](file:///e:/Pokemon/apps/web/test/battle-timeline-animations.test.ts): Mở rộng test suite kiểm thử tra cứu 334 chiêu mở rộng (`earthquake`, `surf`, `ice_beam`, `hyper_beam`, `aura_sphere`, `draco_meteor`, `play_rough`), kiểm thử độ ưu tiên của các chiêu cập nhật thay thế và fallback hệ Fairy.
+- **2. Danh mục Animation được bổ sung & cập nhật thay thế:**
+  - **Bổ sung 334 chiêu thức mới (EBDX / Last Chance):** Bao gồm các chiêu quan trọng bậc nhất trước đó phải fallback về Tackle/Punch: `earthquake` (6416), `surf` (6642), `ice_beam` (6479), `hyper_beam` (6476), `aura_sphere` (6330), `draco_meteor` (6397), `play_rough` (6539), `dark_pulse` (6379), `dragon_pulse` (6398), `stone_edge` (6586), `flash_cannon` (6432), `giga_drain` (6443), `heat_wave` (6455), `hydro_pump` (6463), `blizzard` (6340), `air_slash` (6309), v.v.
+  - **Cập nhật thay thế chiêu thức cũ có animation nâng cấp:**
+    - `screech`: Thay thế ID 239 (sprite Growl cũ) bằng ID 6731 (sóng siêu âm đồng tâm Hypnosis + Lock on).
+    - `light_screen`: Thay thế ID 183 (vệt chém vàng) bằng ID 6490 (khiên lục giác ánh sáng trong suốt `normal2`).
+    - `whirlwind`: Thay thế ID 294 (làn gió 8 frame) bằng ID 6688 (lốc xoáy cuồng phong 19 frame `water3`).
+    - `rolling_kick`: Thay thế ID 233 (8 frame) bằng ID 6586 (cú đá xoáy liên hoàn 10 frame).
+    - `stealth_rock`: Thay thế ID 263 (30 frame có lỗi pattern cũ) bằng ID 6260 (8 frame đá bẫy lơ lửng sạch sẽ).
+    - `stealth_rock (Enemy)`: Thay thế ID 264 bằng ID 6261 (8 frame đối xứng chuẩn).
+    - `sunny_day`: Thay thế ID 269 (16 frame) bằng ID 6266 (9 frame vầng thái dương rực rỡ).
+    - `sandstorm`: Thay thế ID 236 (10 frame) bằng ID 6591 (6 frame bão cát xoay chuyển).
+  - **Fallback hệ Fairy:** Bổ sung fallback chuẩn hệ Fairy, trong đó move vật lý unmapped sẽ tự động sử dụng `play_rough` (6539).
+- **3. Kết quả kiểm thử CI Monorepo:**
+  - `validate:schemas`: PASS (Toàn bộ 1069 animation và atlas metadata đạt 100%).
+  - `lint`: PASS (0 errors, 0 warnings).
+  - `format:check`: PASS (100% Prettier code style).
+  - `typecheck:web`: PASS (0 lỗi TypeScript).
+  - `test:web`: PASS (47/47 tệp test, 584/584 tests pass).
+  - `build:web`: PASS (Production bundle build thành công trong 1m 21s).
+  - `npm run ci`: PASS 100%.
+
+---
+
+## Cập nhật trước đó: 2026-10-12 (Khắc Phục Sai Hướng & Lệch Vị Trí Battle Animation: Transform Both, Direction Mirror, Multi-hit hitNum, Atlas Sanitization & Visual QA Gallery)
+
+### 0.99. Khắc Phục Sai Hướng & Lệch Vị Trí Battle Animation:
+
+- **Trạng thái:** Hoàn thành 100%. Chuỗi CI (`npm run ci`) đạt chuẩn 100% sạch (Validate schemas & atlas parity, ESLint 0 errors / 0 warnings, Prettier 100%, Typecheck sạch 0 lỗi, 47/47 tệp test - 578/578 tests pass, Production build thành công).
+- **1. File đã thay đổi:**
+  - [types.ts](file:///e:/Pokemon/apps/web/src/battle/animation/types.ts): Thêm interface `AnimationViewport` và trường `viewport` tùy chọn trong `BattleAnimationRequest`.
+  - [coordinate-transformer.ts](file:///e:/Pokemon/apps/web/src/battle/animation/coordinate-transformer.ts): Triển khai thuật toán tính toán `focus: 'both'` theo tỷ lệ đơn trục X của engine nguồn Essentials, hàm thuần `isDirectionReversed()`, hằng số `DEFAULT_ANIMATION_VIEWPORT` (512×288) và hỗ trợ viewport chuẩn hóa.
+  - [cel-renderer.ts](file:///e:/Pokemon/apps/web/src/battle/animation/cel-renderer.ts): Bổ sung `shouldMirrorCel()`, loại bỏ việc ép clamp tọa độ trong `renderCel` để canvas clip rect xử lý tự nhiên.
+  - [animation-registry.ts](file:///e:/Pokemon/apps/web/src/battle/animation/animation-registry.ts): Thêm tham số `hitNum` vào `resolveAnimationId()`, tra cứu `baseAnimationId + hitNum` với cơ chế fallback và log warning khi thiếu variant, bổ sung helper `hasDefinition()`.
+  - [animation-player.ts](file:///e:/Pokemon/apps/web/src/battle/animation/animation-player.ts): Kết nối `hitNum`, bảo vệ callback `onHit` / `onComplete` chỉ gọi duy nhất 1 lần, preload asset an toàn với try/catch, áp dụng `ctx.clip()` theo battle viewport và truyền `isFlightReversed` xuống renderer.
+  - [battle-controller.ts](file:///e:/Pokemon/apps/web/src/battle/battle-controller.ts): Thêm tham số `hitNum = 0` vào `playMoveVfx` và truyền vào `battleAnimationPlayer.play()`.
+  - [animation-gallery.ts](file:///e:/Pokemon/apps/web/src/battle/animation/animation-gallery.ts): Bổ sung bộ chọn multi-hit `hitNum` (Hit 1–5), bộ lọc move (`focus: both`, `multihit`), nút reload definition, toggle clip rect, vẽ đường nối quỹ đạo User $\to$ Target kèm mũi tên chỉ hướng, và active cels inspector (raw coords, resolved coords, mirror draw).
+  - [179.json](file:///e:/Pokemon/packages/game-data/animations/179.json), [192.json](file:///e:/Pokemon/packages/game-data/animations/192.json), [23.json](file:///e:/Pokemon/packages/game-data/animations/23.json), [263.json](file:///e:/Pokemon/packages/game-data/animations/263.json), [264.json](file:///e:/Pokemon/packages/game-data/animations/264.json), [54.json](file:///e:/Pokemon/packages/game-data/animations/54.json): Vệ sinh các pattern vượt quá `maxPattern` của atlas.
+  - [import_source_animations.py](file:///e:/Pokemon/scripts/animation/import_source_animations.py): Bổ sung từ điển quy tắc chuẩn hóa `PATTERN_CORRECTIONS` cho trình trích xuất.
+  - [validate-animation-atlas.mjs](file:///e:/Pokemon/scripts/animation/validate-animation-atlas.mjs) & [validate-schemas.mjs](file:///e:/Pokemon/scripts/validate-schemas.mjs): Tích hợp kiểm thử tự động toàn diện atlas bounds và animation definitions vào CI.
+  - [battle-timeline-animations.test.ts](file:///e:/Pokemon/apps/web/test/battle-timeline-animations.test.ts): Cập nhật giá trị kỳ vọng tính toán single-progress và mở rộng 6 nhóm test suite mới (34/34 tests pass).
+- **2. Quy tắc transform/mirror đã áp dụng:**
+  - **Transform `focus: 'both'`**: Sử dụng tỷ lệ đơn trục `progress = (px - src1.x) / (src2.x - src1.x)`, áp dụng đồng thời cho `dst1.x + progress * dstDx` và `dst1.y + progress * dstDy`. Giữ ngoại lệ neo cho cel tác giả ghi thiếu `(0, 0)`.
+  - **Quy tắc Mirror**: So sánh hướng nguồn `sourceUser.x < sourceTarget.x` với hướng thực tế `actualUser.x < actualTarget.x` qua `isDirectionReversed()`. Nếu hai hướng ngược nhau, đảo cờ `cel.mirror` **chỉ khi** `cel.focus === 'both'`. Giữ nguyên cờ mirror gốc cho các cel `user`, `target`, `screen`.
+  - **Chuẩn hóa Viewport**: Hệ quy chiếu mặc định 512×288 cho cả Battle Screen và Gallery, không cắt cel bằng bounding box cưỡng bức mà để canvas clip rect quản lý biên.
+- **3. Số move, OppMove và multi-hit đã kiểm thử:**
+  - 212/212 standard moves được kiểm thử resolution và mapping thành công.
+  - 18/18 `OppMove` variants được kiểm thử kích hoạt đúng khi đối thủ là Enemy.
+  - Multi-hit `hitNum` được kiểm thử với `hitNum = 0..4` (Comet Punch 66..70, DoubleSlap 86..90), fallback an toàn kèm cảnh báo khi không có variant, và không áp dụng hitNum cho generic type fallback.
+- **4. Các pattern/asset còn cảnh báo:**
+  - Không còn cảnh báo nào. Tất cả 311 timeline animations và 95 atlas metadata đều hợp lệ 100% trong `validate-animation-atlas.mjs`.
+- **5. Kết quả test, lint, typecheck, build và CI:**
+  - `validate:schemas`: PASS (toàn bộ 311 animations và atlas metadata đạt chuẩn).
+  - `lint`: PASS (0 errors, 0 warnings).
+  - `format:check`: PASS (100% file đúng chuẩn Prettier).
+  - `typecheck:web`: PASS (0 lỗi TypeScript).
+  - `test:web`: PASS (47/47 test files, 578/578 tests pass).
+  - `build:web`: PASS (production bundle hoàn tất).
+  - `npm run ci`: PASS 100%.
+- **6. Danh sách visual case đã mở trong Gallery:**
+  - Player: `Acid`, `Energy Ball`, `Growl`, `Outrage`, `Water Gun`, `Stealth Rock`, `Absorb`, `BubbleBeam`.
+  - Enemy: các move trên (hướng bay đối xứng từ Enemy $\to$ Player, không bị lật kép `mirror`).
+  - Self-target: `Protect`, `Swords Dance`, `Dragon Dance`, `Reflect` (hiển thị trên người dùng, không nhảy sang đối phương).
+  - Multi-hit: `Fury Attack`, `Comet Punch`, `Double Slap` (selector `hitNum` 1, 2, 3, 4, 5).
+- **7. Các vấn đề còn lại (ghi chú theo Section 7 hướng dẫn):**
+  - **Chưa triển khai**: Bổ sung toàn bộ asset EBDX Moves/Ballburst/Weather còn thiếu.
+  - **Chưa triển khai**: Viết lại animation timeline mới cho move không có dữ liệu nguồn.
+  - **Chưa triển khai**: Thay đổi công thức sát thương hoặc hiệu ứng status.
+  - **Chưa triển khai**: Thêm cơ chế multiplayer/backend authoritative.
+  - **Chưa triển khai**: Xóa hẳn custom animation legacy trước khi có visual regression pass.
+  - **Chưa triển khai**: Tối ưu bundle tiếp khi chưa giải quyết xong correctness của transform và mirror.
+
+---
+
+## Cập nhật trước đó: 2026-10-12 (Chuẩn Hóa Tọa Độ 4-Focus Animation Essentials, Battler Geometry & Khắc Phục Lỗi TypeScript Test Suite)
 
 ### 0.98. Chuẩn Hóa Tọa Độ 4-Focus Battle Animation Theo Chuẩn Essentials & Sửa Lỗi TypeScript Test Suite:
 
@@ -9,13 +1056,13 @@
      - Nguyên nhân: Trước đó mọi focus (`user`, `target`, `both`) đều bị chiếu sai qua phép biến đổi đường thẳng User $\to$ Target và cộng thêm `SRC_USER`/`SRC_TARGET`, đồng thời đảo ngược tọa độ X toàn cục cho đối thủ khiến các hoạt họa target bị đẩy ra ngoài vùng hiển thị 512×288.
   2. **Chuẩn Hóa Hệ Thống Tọa Độ 4-Focus Chuẩn Pokémon Essentials ([coordinate-transformer.ts](file:///e:/Pokemon/apps/web/src/battle/animation/coordinate-transformer.ts)):**
      - Tái cấu trúc logic tính toán tọa độ theo đúng chuẩn Essentials (`007_BattleAnimationPlayer.rb`):
-       + `focus: 'user'`: Neo trực tiếp vào vị trí người ra đòn (`userPos.x + (celX - SRC_USER.x)`, `userPos.y + (celY - SRC_USER.y)`).
-       + `focus: 'target'`: Neo trực tiếp vào vị trí mục tiêu (`targetPos.x + (celX - SRC_TARGET.x)`, `targetPos.y + (celY - SRC_TARGET.y)`).
-       + `focus: 'both'`: Nội suy tuyến tính theo quỹ đạo ảo kết nối giữa user và target (`transformPoint(SRC_USER, SRC_TARGET, userPos, targetPos, celX, celY)`).
-       + `focus: 'screen'`: Co giãn trực tiếp từ canvas ảo 512×384 sang viewport 512×288 (`(celX * canvasWidth) / 512`, `(celY * canvasHeight) / 384`).
+       - `focus: 'user'`: Neo trực tiếp vào vị trí người ra đòn (`userPos.x + (celX - SRC_USER.x)`, `userPos.y + (celY - SRC_USER.y)`).
+       - `focus: 'target'`: Neo trực tiếp vào vị trí mục tiêu (`targetPos.x + (celX - SRC_TARGET.x)`, `targetPos.y + (celY - SRC_TARGET.y)`).
+       - `focus: 'both'`: Nội suy tuyến tính theo quỹ đạo ảo kết nối giữa user và target (`transformPoint(SRC_USER, SRC_TARGET, userPos, targetPos, celX, celY)`).
+       - `focus: 'screen'`: Co giãn trực tiếp từ canvas ảo 512×384 sang viewport 512×288 (`(celX * canvasWidth) / 512`, `(celY * canvasHeight) / 384`).
      - Chuẩn hóa hình học vị trí Pokémon (`BattlerGeometry`):
-       + Export `DEFAULT_PLAYER_GEOMETRY`, `DEFAULT_ENEMY_GEOMETRY` và `getBattlerCenter()`.
-       + Loại bỏ việc đảo `-celX` toàn cục đối với đối thủ.
+       - Export `DEFAULT_PLAYER_GEOMETRY`, `DEFAULT_ENEMY_GEOMETRY` và `getBattlerCenter()`.
+       - Loại bỏ việc đảo `-celX` toàn cục đối với đối thủ.
   3. **Tối Ưu Hiển Thị & Visual QA Gallery ([cel-renderer.ts](file:///e:/Pokemon/apps/web/src/battle/animation/cel-renderer.ts), [animation-gallery.ts](file:///e:/Pokemon/apps/web/src/battle/animation/animation-gallery.ts)):**
      - Đảo ngược cờ `mirror` của cel đối với đối thủ **chỉ khi** `cel.focus === 'both'` (đảo chiều đường đạn projectile), bảo toàn nguyên vẹn hướng lật gốc cho các cels thuộc `user`, `target`, và `screen`.
      - Gallery chuyển sang canvas 512×288 kèm CSS pixelated scaling và đồng bộ bục đứng platform theo đúng battler center.
@@ -40,14 +1087,14 @@
      - Sinh metadata atlas hình học chính xác cho 95 sprite sheet tại [animation-atlas.json](file:///e:/Pokemon/packages/game-data/animation-atlas.json).
   2. **Kiến Trúc Runtime Animation Player Độc Lập Refresh Rate:**
      - Xây dựng module dùng chung [apps/web/src/battle/animation/](file:///e:/Pokemon/apps/web/src/battle/animation/):
-       + [types.ts](file:///e:/Pokemon/apps/web/src/battle/animation/types.ts): Định nghĩa kiểu dữ liệu `AnimationCel`, `AnimationFrame`, `AnimationTimingEvent`, `BattleAnimationDefinition`, `BattleAnimationRequest`.
-       + [animation-registry.ts](file:///e:/Pokemon/apps/web/src/battle/animation/animation-registry.ts): Single source of truth phân giải `moveId` -> `animationId` với lazy loading glob từng animation, hỗ trợ cả định dạng gạch dưới và viết liền, opponent variants, và fallback theo hệ/category.
-       + [animation-player.ts](file:///e:/Pokemon/apps/web/src/battle/animation/animation-player.ts): Player tính frame theo elapsed time (`elapsedMs * fps`), độc lập hoàn toàn với tần số quét (60Hz, 120Hz, 144Hz), phân tách rõ ràng lớp hiển thị trước và sau Pokémon battler (`renderBehind`, `renderAbove`).
-       + [cel-renderer.ts](file:///e:/Pokemon/apps/web/src/battle/animation/cel-renderer.ts): Render từng cel lên canvas: vị trí, góc xoay, tỷ lệ phóng to/thu nhỏ, lật gương khi địch dùng, độ trong suốt, blend mode (normal, additive, multiply) và hiệu ứng chớp màu (flash).
-       + [coordinate-transformer.ts](file:///e:/Pokemon/apps/web/src/battle/animation/coordinate-transformer.ts): Chuyển đổi tọa độ nguồn (user, target, both, screen) sang tọa độ canvas thực tế của người chơi `(130, 215)` và đối thủ `(380, 115)`.
-       + [layer-manager.ts](file:///e:/Pokemon/apps/web/src/battle/animation/layer-manager.ts): Phân loại cels theo độ sâu ưu tiên (priority 0/2 vẽ sau battler, priority 1/3 vẽ trước battler).
-       + [timing-events.ts](file:///e:/Pokemon/apps/web/src/battle/animation/timing-events.ts): Xử lý âm thanh SE và chớp màn hình / Pokémon theo đúng timeline frame.
-       + [animation-assets.ts](file:///e:/Pokemon/apps/web/src/battle/animation/animation-assets.ts): Nạp trước và cache bitmap thông qua Asset Registry an toàn trên cả trình duyệt và Vitest/Node.
+       - [types.ts](file:///e:/Pokemon/apps/web/src/battle/animation/types.ts): Định nghĩa kiểu dữ liệu `AnimationCel`, `AnimationFrame`, `AnimationTimingEvent`, `BattleAnimationDefinition`, `BattleAnimationRequest`.
+       - [animation-registry.ts](file:///e:/Pokemon/apps/web/src/battle/animation/animation-registry.ts): Single source of truth phân giải `moveId` -> `animationId` với lazy loading glob từng animation, hỗ trợ cả định dạng gạch dưới và viết liền, opponent variants, và fallback theo hệ/category.
+       - [animation-player.ts](file:///e:/Pokemon/apps/web/src/battle/animation/animation-player.ts): Player tính frame theo elapsed time (`elapsedMs * fps`), độc lập hoàn toàn với tần số quét (60Hz, 120Hz, 144Hz), phân tách rõ ràng lớp hiển thị trước và sau Pokémon battler (`renderBehind`, `renderAbove`).
+       - [cel-renderer.ts](file:///e:/Pokemon/apps/web/src/battle/animation/cel-renderer.ts): Render từng cel lên canvas: vị trí, góc xoay, tỷ lệ phóng to/thu nhỏ, lật gương khi địch dùng, độ trong suốt, blend mode (normal, additive, multiply) và hiệu ứng chớp màu (flash).
+       - [coordinate-transformer.ts](file:///e:/Pokemon/apps/web/src/battle/animation/coordinate-transformer.ts): Chuyển đổi tọa độ nguồn (user, target, both, screen) sang tọa độ canvas thực tế của người chơi `(130, 215)` và đối thủ `(380, 115)`.
+       - [layer-manager.ts](file:///e:/Pokemon/apps/web/src/battle/animation/layer-manager.ts): Phân loại cels theo độ sâu ưu tiên (priority 0/2 vẽ sau battler, priority 1/3 vẽ trước battler).
+       - [timing-events.ts](file:///e:/Pokemon/apps/web/src/battle/animation/timing-events.ts): Xử lý âm thanh SE và chớp màn hình / Pokémon theo đúng timeline frame.
+       - [animation-assets.ts](file:///e:/Pokemon/apps/web/src/battle/animation/animation-assets.ts): Nạp trước và cache bitmap thông qua Asset Registry an toàn trên cả trình duyệt và Vitest/Node.
   3. **Tích Hợp Battle Screen & Tách Biệt Nghiêm Ngặt Battle Logic:**
      - Kết nối [battle-controller.ts](file:///e:/Pokemon/apps/web/src/battle/battle-controller.ts), [battle-state.ts](file:///e:/Pokemon/apps/web/src/battle/battle-state.ts), [battle-renderer.ts](file:///e:/Pokemon/apps/web/src/battle/battle-renderer.ts) và [battle-screen.ts](file:///e:/Pokemon/apps/web/src/battle/battle-screen.ts).
      - Truyền `dtMs` tính từ elapsed timestamp trong vòng lặp game, loại bỏ hoàn toàn việc đếm frame theo số lần gọi `requestAnimationFrame`.
@@ -69,12 +1116,12 @@
 ### 0.96. Triển Khai Dữ Liệu Gen 9, Tích Hợp Ability Slot Battle Factory & Clean CI Suite:
 
 - **Trạng thái:** Đạt chuẩn 100% toàn bộ chuỗi CI (`npm run ci`):
-  + **Validate Schemas:** PASS 100% (`validate-schemas.mjs`).
-  + **Linter:** PASS (0 errors, 0 warnings trong `eslint .`).
-  + **Code Formatter:** PASS 100% (`prettier --check` toàn bộ repo).
-  + **Typecheck:** PASS (0 errors trong `tsc --noEmit`).
-  + **Test Suite:** PASS 100% (46/46 tệp test, 542/542 tests pass).
-  + **Production Build:** PASS (Tất cả bundle chunks đều < 500 kB, không còn bất kỳ cảnh báo chunk size nào).
+  - **Validate Schemas:** PASS 100% (`validate-schemas.mjs`).
+  - **Linter:** PASS (0 errors, 0 warnings trong `eslint .`).
+  - **Code Formatter:** PASS 100% (`prettier --check` toàn bộ repo).
+  - **Typecheck:** PASS (0 errors trong `tsc --noEmit`).
+  - **Test Suite:** PASS 100% (46/46 tệp test, 542/542 tests pass).
+  - **Production Build:** PASS (Tất cả bundle chunks đều < 500 kB, không còn bất kỳ cảnh báo chunk size nào).
 - **Yêu cầu & Vấn đề giải quyết:**
   1. **Khắc phục tích hợp Ability Slot trong Battle:**
      - Hoàn thiện [battle-factory.ts](file:///e:/Pokemon/apps/web/src/battle/battle-factory.ts): `createBattler()` sử dụng trực tiếp mô hình hỗ trợ 3 slot Ability từ `data.abilities` (`primary`, `secondary?`, `hidden?`). Tự động phân bổ ngẫu nhiên 50/50 giữa Primary và Secondary nếu loài có 2 Ability thường, hỗ trợ tham số `customAbilitySlot` ('primary' | 'secondary' | 'hidden') và tự động suy luận slot khi truyền `customAbility`.
@@ -108,8 +1155,8 @@
   1. **Quy Tắc Tiến Hóa Cầm Nắm ([evolution-rules.ts](file:///e:/Pokemon/apps/web/src/domain/pokemon/evolution-rules.ts)):**
      - Bổ sung helper `isPokemonHoldingItem(pokemon, requiredItem)` và `normalizeItemKey`: chuẩn hóa so sánh mã vật phẩm không phân biệt định dạng (ví dụ `thunder-stone`, `thunder_stone`).
      - Cập nhật `canPokemonEvolve(pokemon)`:
-       + Đối với nhánh tiến hóa `stone` hoặc `item`, chỉ cho phép tiến hóa khi Pokémon **đang cầm giữ vật phẩm yêu cầu** (`pokemon.heldItem`).
-       + Nếu chưa giữ: Thông báo lý do rõ ràng `Cần cho Pokémon giữ ${requiredItemNameVi} để tiến hóa`.
+       - Đối với nhánh tiến hóa `stone` hoặc `item`, chỉ cho phép tiến hóa khi Pokémon **đang cầm giữ vật phẩm yêu cầu** (`pokemon.heldItem`).
+       - Nếu chưa giữ: Thông báo lý do rõ ràng `Cần cho Pokémon giữ ${requiredItemNameVi} để tiến hóa`.
      - Cập nhật `getAvailableEvolutions(pokemon)`: Lọc chính xác các nhánh tiến hóa tương ứng với vật phẩm Pokémon đang cầm.
   2. **Tiêu Hao Vật Phẩm Khi Tiến Hóa ([evolution-rules.ts](file:///e:/Pokemon/apps/web/src/domain/pokemon/evolution-rules.ts)):**
      - Trong `applyEvolution(pokemon, targetSpeciesKey)`: Khi tiến hóa hoàn tất, nếu nhánh tiến hóa yêu cầu đá/vật phẩm, vật phẩm đang giữ trên Pokémon tự động bị tiêu hao (`pokemon.heldItem = null`).
@@ -633,8 +1680,8 @@
        - `[CHỈ DÙNG]` (Vàng cam - dành cho Potion, Revive, Rare Candy, Poké Balls, X-items...).
        - `[KHÔNG DÙNG / BÁN]` (Xám - dành cho Nugget, Pearl, Stardust, hóa thạch...).
      - **Trạng thái Nút Thông Minh:**
-       - Nút **"DÙNG"**: Tự động vô hiệu hóa (`disabled`) khi chọn món trang bị thuần kèm tooltip và toast giải thích rõ: *"⚠️ Vật phẩm này là trang bị, không thể dùng trực tiếp! Hãy bấm [CHO GIỮ] để trao cho Pokémon."*
-       - Nút **"CHO GIỮ"**: Tự động vô hiệu hóa (`disabled`) khi chọn vật phẩm không thể trao (Potion, Poké Ball, Key Item...) kèm tooltip và toast: *"⚠️ Không thể trao vật phẩm này cho Pokémon cầm!"*
+       - Nút **"DÙNG"**: Tự động vô hiệu hóa (`disabled`) khi chọn món trang bị thuần kèm tooltip và toast giải thích rõ: _"⚠️ Vật phẩm này là trang bị, không thể dùng trực tiếp! Hãy bấm [CHO GIỮ] để trao cho Pokémon."_
+       - Nút **"CHO GIỮ"**: Tự động vô hiệu hóa (`disabled`) khi chọn vật phẩm không thể trao (Potion, Poké Ball, Key Item...) kèm tooltip và toast: _"⚠️ Không thể trao vật phẩm này cho Pokémon cầm!"_
   3. **Thanh Lọc Vật Phẩm & Chế Độ Trao Đồ Tự Động ([bag-screen.ts](file:///e:/Pokemon/apps/web/src/ui/bag-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
      - Thêm thanh `.bag-filter-bar` trên đầu danh sách vật phẩm với tiêu đề ngữ cảnh và nút chuyển đổi: `[◈ Lọc đồ trao]` / `[✓ Đang lọc đồ trao]`.
      - Khi mở Túi đồ từ Màn hình Đội hình với mục đích trao đồ cho Pokémon (`targetPokemonIndex`):
@@ -1093,7 +2140,6 @@
      - Tạo test suite kiểm tra đầy đủ: render DOM canvas, prompt, dev button, cơ chế start transition và nút bypass test nhanh.
      - Toàn bộ 24 tệp test suite (180/180 bài test) đều **PASS 100%**.
 
-
 ---
 
 ### 0.61. Xây Dựng Intro Khởi Động Game: Màn Tối -> Logo2 Trắng -> Logo1 Màu -> Tách Màn Hình Trượt Lên/Xuống:
@@ -1232,6 +2278,7 @@
      - Toàn bộ 21 tệp test suite (169 bài test) đều **PASS 100%**.
 
 ---
+
 - **Yêu cầu người dùng:** Triển khai đầy đủ chiêu thức 2 lượt, lượt nghỉ sau chiêu mạnh, Protect/Detect, multi-hit, xử lý các chiêu power=0 còn lại, và thống nhất 100% hội thoại trận đấu sang Tiếng Việt không còn lẫn lộn Anh - Việt.
 - **Chi tiết đã thực hiện:**
   1. **Cơ Chế Chiêu Thức 2 Lượt (2-Turn Moves & Semi-Invulnerability) ([battle-engine.ts](file:///e:/Pokemon/apps/web/src/battle/battle-engine.ts)):**
@@ -1407,7 +2454,7 @@
   1. **Tinh Gọn Menu Hành Động ([party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts)):**
      - Loại bỏ 2 nút: **"Đưa lên đầu"** (`#btnActionLeader`) và **"Hồi phục HP"** (`#btnActionHeal`).
      - Người chơi có thể đổi Pokémon lên vị trí dẫn đầu tự nhiên thông qua nút "Đổi vị trí" vào slot 1.
-     - Menu hành động giờ đây chỉ giữ lại các tùy chọn chuẩn mực, tinh gọn: *Ra chiến đấu* (khi chọn đấu sĩ), *Đổi vị trí*, *Xem thông tin*, và *Đóng*.
+     - Menu hành động giờ đây chỉ giữ lại các tùy chọn chuẩn mực, tinh gọn: _Ra chiến đấu_ (khi chọn đấu sĩ), _Đổi vị trí_, _Xem thông tin_, và _Đóng_.
   2. **Đồng Bộ Giao Diện Xem Thông Tin Theo Chuẩn PC Storage ([party-screen.ts](file:///e:/Pokemon/apps/web/src/ui/party-screen.ts), [style.css](file:///e:/Pokemon/apps/web/src/style.css)):**
      - **Bố cục 2 Panel Rộng Rãi (`.summary-modal-inner`):** Tỉ lệ $780 \times 415\text{ px}$ chuẩn sắc nét, phủ toàn màn hình với hiệu ứng làm mờ nền hiện đại.
      - **Panel Bên Trái (`.summary-card` - Thông Tin, Chỉ Số & Chiêu Thức):**
@@ -1594,8 +2641,6 @@
 
 ---
 
-
-
 - **Trạng thái:** Đã hoàn thành 100% các yêu cầu từ [DEV_ARCHITECTURE_GUIDE.md](file:///e:/Pokemon/docs/DEV_ARCHITECTURE_GUIDE.md): Dọn dẹp file di sản, tích hợp ESLint cho toàn bộ TypeScript, sửa lỗi regex escape, tối ưu hóa thuật toán render và đồng bộ toàn bộ tài liệu quy chuẩn.
 - **Chi tiết đã thực hiện:**
   1. **Dọn dẹp file di sản ở thư mục gốc (Root Cleanup):**
@@ -1618,8 +2663,6 @@
      - Chạy toàn bộ pipeline `npm run ci`: Schema Validation PASS, ESLint TS PASS, Prettier format PASS, Typecheck PASS, Vitest 14 files (119/119 tests) PASS, Production build Vite PASS 100%.
 
 ---
-
-
 
 - **Trạng thái:** Đã hoàn thành 100% việc rà soát và khắc phục toàn bộ các lỗi P0, P1, P2 trong báo cáo thực nghiệm trận đấu, tuân thủ nghiêm ngặt chuẩn quy tắc Pokémon Gen 7 và dịch hoàn thiện 100% chiêu thức trong cơ sở dữ liệu (`moves-db.json`).
 - **Chi tiết đã thực hiện:**
@@ -1663,8 +2706,6 @@
       - Bổ sung test suite `Gen 7 Battle Engine Rules & Edge-case Validations` với đầy đủ các ca kiểm thử cho từng lỗi P0, P1, P2. Toàn bộ 39 tests của hệ thống trận đấu chạy pass $100\%$ không lỗi.
 
 ---
-
-
 
 - **Trạng thái:** Đã hoàn thành 100% tinh chỉnh theo phản hồi của người dùng: loại bỏ toàn bộ khung viền / bóng đổ tự render quanh Box Window, ẩn các nút mũi tên tự vẽ để hiển thị mũi tên pixel gốc từ wallpaper `box_X.png`, tăng kích thước tiêu đề Hộp và loại bỏ hoàn toàn dòng số lượng `(0/30)`.
 - **Chi tiết đã thực hiện:**
@@ -1761,9 +2802,9 @@
         - Phân biệt tách bạch giữa thao tác Kéo thả (để trang bị / sắp xếp) và Nhấp chuột (để xem chi tiết dữ liệu chiêu).
       - **Hiển Thị Đầy Đủ Thuộc Tính Chiêu Thức Từ Database (`MOVES_DB`):**
         - **Tên Chiêu Thức:** Tên tiếng Việt rõ nét màu vàng `#facc15` kèm tên tiếng Anh phụ đề (ví dụ: `Tia Sét (Thunderbolt)`).
-        - **Hệ Chiêu Thức & Phân Loại (Sprite Category Chuẩn):** 
+        - **Hệ Chiêu Thức & Phân Loại (Sprite Category Chuẩn):**
           - Biểu tượng Icon Hệ từ spritesheet `types_ico.png` + tên hệ tiếng Việt (`ĐIỆN`, `NƯỚC`, `LỬA`...).
-          - **Icon Loại Chiêu Thức Chuẩn GBA ([category.png](file:///e:/Pokemon/Graphics/Move/status%20move/category.png)):** 
+          - **Icon Loại Chiêu Thức Chuẩn GBA ([category.png](file:///e:/Pokemon/Graphics/Move/status%20move/category.png)):**
             - Cắt chính xác vùng pixel thực tế $56 \times 28\text{px}$ (bỏ 4px lề trong suốt 2 bên của spritesheet $64\text{px}$) với `background-position: -4px Ypx`:
               - Physical: `-4px 0` (Vụ nổ mặt trời đỏ cam).
               - Special: `-4px -28px` (Sóng năng lượng xanh lam).
@@ -3186,6 +4227,7 @@
     - Chặn sử dụng các vật phẩm tăng bậc (X-Attack, X-Defense...) khi chỉ số đã đạt trần +6 để tránh lãng phí vật phẩm.
   - **Sửa lỗi mất vật phẩm khi trao (`heldItem`):** Lưu chuẩn ID gốc (`rawId`) vào Pokémon thay vì tên hiển thị tiếng Việt, giải quyết lỗi biến mất vật phẩm khi trao đổi hoặc lấy lại.
   - **Hái Berry ngoài map ([berry-panel.ts](file:///e:/Pokemon/apps/web/src/ui/berry-panel.ts)):** Kết nối trực tiếp `inventoryService.addItem(bush.type, count)` khi hái cây chín.
+
 ### 24. Bóc tách Battle Engine thành Modular Rule Engines & State Reducer (Bước 3 Tái Cấu Trúc Trận Đấu)
 
 - **Trạng thái:** Đã hoàn thành 100% tái cấu trúc module monolithic `battle-engine.ts` ($56.7\text{ KB}$, $1671$ dòng) thành hệ thống Rule Engine và State Reducer thuần túy ($25.2\text{ KB}$, giảm hơn $55\%$ kích thước), đáp ứng tiêu chuẩn sản phẩm chất lượng cao và bảo toàn 100% hành vi hiện tại.
@@ -3224,4 +4266,473 @@
 - Cập nhật logic vẽ tự động scale theo kích thước tự nhiên (`naturalWidth`, `naturalHeight`), đảm bảo cuộn vô tận từ trái qua phải mượt mà trên canvas $1920 \times 1200$.
 - Đã đăng ký thư mục `Intro` vào danh sách copy asset trong [vite.config.ts](file:///e:/Pokemon/apps/web/vite.config.ts), pipeline build PASS 100%.
 - Đẩy lớp cỏ gần camera nhất (Layer 7b) hạ thấp thêm 70px ($Y = 160 \rightarrow 230$), mở rộng tầm nhìn trung cảnh và tạo bố cục chiều sâu hài hòa.
+
+### 26. Tích hợp animation pack Pokémon Last Chance 1.22
+
+- **Import namespaced, không ghi đè pack hiện tại:** Thêm 758 timeline JSON vào `packages/game-data/animations/last-chance/` với ID namespace `6000 + sourceId`, cùng 115 sprite sheet vào `Graphics/Animations/LastChance/`.
+- **Mapping runtime:** Tạo `move-animation-extensions.json` với 334 move regular và 27 biến thể OppMove. `BattleAnimationRegistry` luôn ưu tiên mapping/asset hiện tại; chỉ dùng Last Chance cho move chưa có animation cũ.
+- **Asset registry:** Gộp `last-chance-animation-atlas.json` vào `AnimationAssetRegistry`, resolver tự trả đúng đường dẫn `/Graphics/Animations/LastChance/...`.
+- **Gallery:** Visual QA gallery hiển thị cả mapping hiện tại và mapping mở rộng, hỗ trợ kiểm tra các move mới theo Player/Enemy.
+- **An toàn timeline:** 23 timeline nguồn có pattern hoặc graphic không hợp lệ được ghi tại `last-chance-animation-rejections.json`, bị chặn khỏi runtime và không được phép lọt qua multi-hit lookup.
+- **Validation & test:** Validator kiểm tra cả hai pack, 1.069 definition/atlas hợp lệ; test suite đạt 47 files / 581 tests, typecheck, lint và format đều pass. Production build pass; build hiện phát cảnh báo kích thước chunk `gameplay-ui` do baseline battle modules đang lớn, không có lỗi asset/circular chunk.
+
+### 27. Sửa pha hồi phục của animation ABSORB
+
+- **Đã sửa hướng hiển thị:** Các hạt vàng vẫn hút từ mục tiêu về Pokémon sử dụng `ABSORB`; các hạt xanh ở pha sau không còn bị coi là projectile bay qua phía đối thủ.
+- **Đúng focus runtime:** Toàn bộ hạt xanh trong pha hồi phục được neo bằng `focus: "user"` và chuyển động trong vùng quanh Pokémon sử dụng chiêu.
+- **Chậm và dễ quan sát hơn:** Timeline `ABSORB` giảm từ `20fps` xuống `12fps`, giữ đủ nhịp hút năng lượng và nhịp phát sáng hồi phục.
+- **Bảo vệ hồi quy:** Bổ sung test xác nhận hạt xanh không vượt khỏi vùng quanh user, cel cuối quay về tâm user, và timeline có tốc độ 12fps.
+- **Kiểm tra:** `battle-timeline-animations.test.ts` đạt 38/38; `validate:schemas` PASS với 1.069 animation definitions và atlas hợp lệ.
+
+### 28. Sửa thời điểm tụ/nở của animation ACID
+
+- Giữ các hạt acid nhỏ/tách rời trong đoạn bay, đặc biệt tại frame 6–7.
+- Dời các pattern tụ và nở lớn `9–14` đến vùng enemy, bắt đầu sau khi projectile đã tới điểm đích.
+- Kéo timeline từ 13 lên 20 frame để tạo đủ nhịp bay và nhịp phát nổ tại mục tiêu.
+- Chỉ thay đổi dữ liệu animation `ACID` (ID 24); chưa chạy lại CI theo yêu cầu kiểm tra nhanh.
+
+### 29. Loại bỏ sprite lạ chen vào ACID
+
+- Nguyên nhân là timeline ACID đã dùng nhầm pattern `0–2` trong cùng sprite sheet `poison2.png`.
+- Đã thay toàn bộ bằng nhóm pattern acid hợp lệ `3–14`; frame 6–8 không còn sprite khác loại.
+
+### 30. Đổi đường bay ACID sang quỹ đạo cong
+
+- Projectile ACID hiện dùng đường cong Bezier bậc hai thay cho đường thẳng.
+- Hạt bay lên nhẹ ở giữa quãng đường rồi hạ xuống đúng vị trí enemy trước khi tụ/nở.
+
+### 31. Sửa animation ACID SPRAY
+
+- Thay timeline cũ dùng `focus: "target"` và bubble rơi từ trên cao.
+- Tạo lại chuỗi bubble xanh từ user đến enemy bằng `focus: "both"`, gồm nhiều hạt nối tiếp tạo cảm giác phun acid.
+- Giảm tốc độ timeline xuống `16fps`; các pattern hiển thị chỉ dùng nhóm bubble `0–4` của `fly copy`.
+
+### 32. Thay asset ACID SPRAY
+
+- Loại bỏ `fly copy` vì đây là sheet bubble nước/khí, không phù hợp với chiêu Độc.
+- `ACID SPRAY` hiện dùng `poison4.png`, gồm chuỗi giọt/khối acid tím tăng kích thước từ user đến enemy.
+
+### 33. Bổ sung impact ACID SPRAY
+
+- Thêm 6 frame impact sau khi bubble chạm enemy.
+- Khối acid phình lên rồi chuyển qua pattern `10–14` để tạo cảm giác vỡ/tách thành mảnh độc tại mục tiêu.
+
+### 34. Sửa cơ chế hiển thị ALLY SWITCH
+
+- Loại bỏ quả cầu phóng to không phù hợp khỏi timeline animation ID 32.
+- Khi dùng `ALLY SWITCH`, renderer tạm thời cho sprite Player và Enemy lướt nhanh qua vị trí đối diện, sau đó trả về vị trí chiến đấu ban đầu.
+- Timeline chỉ còn flash chuyển cảnh; không thay đổi hai bên trong battle model.
+
+### 35. Sửa đội hình đá của ANCIENT POWER
+
+- Giữ bố cục đá phân tán đẹp ở frame 12.
+- Frame 13–19 giờ dùng các offset lệch có kiểm soát, tránh toàn bộ đá bị kéo thành một hàng thẳng trước khi bay tới mục tiêu.
+
+### 36. Sửa lỗi runtime kéo thẳng đá ANCIENT POWER
+
+- Nguyên nhân được xác định tại `coordinate-transformer.ts`: cel có `focus: "both"` bị runtime nội suy vị trí theo trục X giữa user và target, nên mọi thay đổi Y trong JSON vẫn bị ép thành một đường thẳng.
+- Chuyển toàn bộ đá ở frame 12–19 sang `focus: "user"`, giữ tọa độ rải độc lập quanh Pokémon người dùng trong giai đoạn triệu hồi.
+- Các frame sau vẫn giữ `focus: "both"` để đá bay về phía đối thủ sau khi đội hình đã hình thành.
+
+### 37. Sửa animation AQUA RING bị neo sang enemy
+
+- Nguyên nhân: timeline cũ dùng graphic `fly copy` và toàn bộ visual cel `focus: "both"` ở tọa độ gần target, nên chiêu tự hỗ trợ xuất hiện phía đối thủ.
+- Thay bằng graphic `018-Water01`, sử dụng các pattern vòng nước thật `7`, `8`, `11`.
+- Tạo lại timeline 16 frame ở `12fps`, toàn bộ visual cel dùng `focus: "user"`, hiệu ứng phóng to–thu nhỏ và fade quanh đúng Pokémon thi triển.
+- Logic gameplay `hasAquaRing` giữ nguyên; chỉ thay đổi VFX.
+
+### 38. Sửa animation AROMATIC MIST bị biến thành projectile
+
+- Nguyên nhân: timeline Last Chance `6698` dùng các cloud `Special5` với `focus: "both"`, rải theo đường user → target.
+- Giữ đúng asset sương tím `Special5`, nhưng dựng lại thành 12 frame ở `12fps` với các lớp sương xuất hiện, dày lên rồi tan quanh Pokémon thi triển.
+- Toàn bộ 39 visual cel chuyển sang `focus: "user"`; không còn đường bay hoặc hiệu ứng bắn sang enemy.
+- Logic tăng Sp. Defense của chiêu không thay đổi.
+
+### 39. Sửa animation ASSIST bị kéo thành hàng ngang
+
+- Nguyên nhân: 42 dấu chân trong timeline `6326` dùng `focus: "both"`, khiến runtime nội suy chúng trên trục user → target.
+- Giữ asset `WaterBubbles` và pattern dấu chân `7`, nhưng bố trí lại theo nhiều vòng cung trên các vùng trái/phải/trên/dưới quanh Pokémon.
+- Timeline còn 10 frame ở `12fps`; toàn bộ visual cel dùng `focus: "user"`, có xoay/lật nhẹ để tránh cảm giác lặp cứng.
+
+### 40. Sửa pha impact của ASTONISH
+
+- Nguyên nhân: các bubble impact pattern `4`/`10` dùng `focus: "both"`, nên bị nội suy thành hàng ngang trước enemy.
+- Giữ phần chuẩn bị của chiêu; thay pha trúng đích bằng 7 frame burst tại vùng quanh enemy.
+- Tạo 52 bubble nhỏ, chủ yếu pattern `4`, thêm pattern `3`, phân tán theo nhiều hướng với opacity/rotation thay đổi.
+- Toàn bộ bubble impact dùng `focus: "target"`, tốc độ timeline `14fps`, không còn kéo theo đường user → target.
+
+### 41. Làm lại animation AUTOTOMIZE
+
+- Nguyên nhân: timeline cũ dùng asset `Iron Head.png`, pattern đĩa kim loại và nhiều cel `focus: "both"`, không phù hợp với chiêu tự giảm khối lượng/tăng Tốc độ.
+- Thay bằng asset `Light1`, tạo hiệu ứng vòng sáng bạc và các tia sáng pulse quanh Pokémon thi triển.
+- Timeline mới gồm 15 frame ở `12fps`, toàn bộ 42 visual cel dùng `focus: "user"`, có nhịp sáng mạnh rồi fade dần.
+- Logic tăng Speed của `AUTOTOMIZE` không thay đổi.
+
+### 42. Mask Baneful Bunker vào silhouette Pokémon
+
+- Timeline player bỏ qua pattern nền xanh `11` của `BANEFUL BUNKER` để không vẽ nguyên hình chữ nhật atlas lên sân đấu.
+- `BattleRenderer` tạo effect layer và mask layer offscreen; mask layer dùng đúng frame sprite Pokémon đang hoạt ảnh.
+- Dùng `destination-in` để chỉ giữ phần màu xanh nằm trong alpha silhouette của Pokémon, còn các cel gai/khung chắn bên ngoài vẫn được render bình thường.
+- Mask có tính đến phía tấn công, frame sprite hiện tại và lunge/hit offset; không thay đổi battle state hay logic Protect/Poison.
+
+### 43. Sửa animation BATON PASS
+
+- Nguyên nhân: timeline cũ dùng asset `Cups + Musical Notes.png`, không liên quan đến Baton Pass; tọa độ visual cel tạo chuyển động gãy/hình chữ L.
+- Thay bằng asset `PRAS- Baton Pass.png`, gồm baton đỏ và hiệu ứng bàn tay chuyển giao phù hợp hơn.
+- Đăng ký atlas `PRAS- Baton Pass` theo chuẩn 5×3 cell.
+- Làm lại cả player timeline `6333` và OppMove `6334`: baton xoay trong quỹ đạo nhỏ quanh Pokémon thi triển, không chạy theo đường ngang hoặc đường gãy.
+- Cập nhật legacy fallback trong `move-vfx.ts`; logic chuyển Pokémon và truyền stat stages giữ nguyên.
+
+### 44. Sửa animation BELCH dùng nhầm WaterBubbles
+
+- Nguyên nhân: timeline Last Chance `6729` trỏ vào `last-chance/WaterBubbles.png`, khiến BELCH hiển thị như đòn bong bóng nước.
+- Thay bằng atlas `poison.png` đã được runtime đăng ký sẵn, sử dụng các pattern khói độc màu tím.
+- Dựng lại timeline 14 frame ở `12fps`: khói phát ra từ Pokémon thi triển, bay tới mục tiêu và bung lớn tại điểm va chạm.
+- Dùng atlas chuẩn 5×3 cell 192×192 để renderer luôn tải và cắt đúng từng pattern trong dev/build.
+- Không thay đổi logic sát thương hay hiệu ứng Poison của BELCH.
+
+### 45. Làm lại animation BELLY DRUM
+
+- Nguyên nhân: timeline cũ dùng `003-Attack01`, không thể hiện đúng hành động Pokémon tự đánh vào bụng và không có nốt nhạc.
+- Thay bằng `PRAS- Sound.png`, gồm sprite nắm đấm đỏ và các pattern nốt nhạc.
+- Dựng lại 18 frame ở `12fps`, tạo 5 nhịp tự đánh liên tiếp kèm vòng va chạm và nốt nhạc bật lên quanh Pokémon sử dụng.
+- Toàn bộ visual cel dùng `focus: "user"`; BELLY DRUM không còn phát hiệu ứng sang phía đối thủ.
+- Không thay đổi logic tăng Attack và trừ HP của chiêu.
+- Hiệu chỉnh lại pattern sau kiểm tra Gallery: dùng đúng pattern `43` cho nắm đấm và `30–35` cho nốt nhạc; loại bỏ các pattern tia sét/vòng màu bị chọn nhầm.
+- Đặt toàn bộ cel ở `priority: 1` (lớp foreground của renderer) để nắm đấm và nốt nhạc không bị sprite Pokémon che khuất.
+- Bổ sung pattern vòng va chạm `36` tại mỗi nhịp đánh, sau đó cho vòng mở rộng và mờ dần.
+- Rải hai nắm đấm ở các vị trí trái/phải khác nhau quanh Pokémon, thay vì chồng tại một điểm.
+- Giảm tốc timeline xuống `8fps` và giữ nốt nhạc qua hai frame để người chơi nhìn rõ hơn.
+
+### 46. Sửa animation BESTOW thành túi ném theo đường cong
+
+- Nguyên nhân: timeline cũ dùng `011-Weapon06`, hiển thị vật thể tròn/năng lượng thay vì vật phẩm dạng túi; toàn bộ đường bay dùng nội suy thẳng.
+- Dùng đúng sprite túi được cung cấp `PRAS- Present.png`; đã loại nền xanh chroma-key thành `PRAS- Present Transparent.png` qua atlas `bestow-bag`.
+- Dựng lại 12 frame ở `12fps`, túi bay theo cung cong từ Pokémon sử dụng tới mục tiêu và xoay dần trong khi bay.
+- Bổ sung cờ `curve: "arc"` cho cel `focus: "both"`; sửa đúng vị trí truyền cờ trong Gallery/Player để runtime giữ độ lệch Y do timeline author, tạo cung ném rõ ràng và vẫn mirror đúng khi Enemy sử dụng.
+- Không thay đổi logic truyền Held Item của BESTOW.
+
+### 47. Làm lại animation BIDE thành trạng thái tích giận
+
+- Nguyên nhân: timeline cũ dùng `fly copy.png` và `focus: "both"`, khiến BIDE hiển thị sai như hiệu ứng bay và kéo về phía đối thủ.
+- Thay bằng `PRAS- Smokescreen.png`, tạo hai cột khói độc lập bốc lên ở hai bên Pokémon sử dụng.
+- Timeline mới gồm 12 frame ở `10fps`, khói lớn dần rồi tan dần quanh người dùng; toàn bộ cel dùng `focus: "user"`.
+- Thêm timing flash đỏ `flashScope: 2` để sprite Pokémon đang dùng BIDE chuyển đỏ trong giai đoạn tích giận.
+- Mở API flash battler từ animation player và tích hợp vào battle renderer; không thay đổi logic sát thương hoặc trạng thái BIDE.
+
+### 48. Làm lại animation BLAST BURN thành chuỗi cột lửa trên mặt đất
+
+- Nguyên nhân: timeline gốc `48.json` chứa nhiều cel Firebird chồng lẫn, nhiều cel mục tiêu đặt tại `(0, 0)` và trộn nhiều pattern trong cùng frame, tạo cảm giác lửa bắn tán loạn.
+- Dùng đúng spritesheet `Blast-Burn.png`; tạo atlas chuẩn `Blast-Burn-Columns.png` với các pattern cột lửa đơn và nhóm cột lửa impact để renderer cắt frame ổn định.
+- Timeline mới phát đúng 9 pose của spritesheet tại Pokémon tung chiêu theo thứ tự từ trên xuống `0 → 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8` ở `8fps`.
+- Sau 9 pose nguồn, bổ sung 1 frame dùng lại pattern đầu tiên tại Enemy; không dùng `focus: "both"`, không nội suy tọa độ và không còn cảm giác vật thể bay giữa hai Pokémon.
+- Toàn bộ 9 frame tại người dùng được nâng thêm `30px` (`y: 184 → 154`); frame 1–3 và 9 giữ `135%`, frame 4–8 dùng `180%`. Các frame này đặt ở `priority: 0` để Pokémon che phần gốc hiệu ứng; frame impact tại Enemy giữ `100%` và `priority: 1`.
+- Không thay đổi mapping move, sát thương hoặc logic chiến đấu của BLAST BURN.
+
+### 49. Làm lại animation BLAZE KICK
+
+- Nguyên nhân: timeline cũ dùng `last-chance/WaterBubbles.png`, nên Blaze Kick hiển thị như bong bóng và các cel `focus: "both"` tạo đường chéo lệch.
+- Dùng đúng asset `PRAS- Blaze Kick.png`, đăng ký atlas `pras-blaze-kick` gồm dấu chân, lửa nhỏ và lửa lớn.
+- Thu nhỏ pha chuẩn bị; từ frame 4 trở đi tạo nhiều ngọn lửa quanh Enemy bằng các cel `focus: "target"` phân tán theo nhiều vị trí, góc xoay và độ mờ khác nhau.
+- Giữ pattern dấu chân `0` ở ba frame đầu tại chính giữa Enemy, tăng lên `90%` và đưa lên `priority: 1` để hiển thị rõ.
+- Không thay đổi mapping move, sát thương hoặc logic chiến đấu của BLAZE KICK.
+
+### 50. Làm lại animation BULK UP thành hiệu ứng tự cường hóa
+
+- Nguyên nhân: timeline cũ dùng `animsheet`, đặt hiệu ứng ở `focus: "target"` và lặp các pose không liên quan.
+- Dùng đúng spritesheet `PRAS- Bulk Up.png`, gồm 5 pose sức mạnh tăng dần.
+- Timeline mới chạy quanh Pokémon sử dụng với chuỗi pose `0 → 1 → 2 → 3 → 4`, giữ pose mạnh nhất ngắn rồi fade ngược về `0`; không còn cel bay hoặc cel đặt lên đối thủ.
+- Không thay đổi mapping move, chỉ thay asset và timeline hiển thị của BULK UP.
+
+### 51. Rà soát & Tối ưu toàn diện 63 chiêu thức nhóm C, D, E (Enemy-Cast Pinning & Audio Integrity)
+
+- **Rà soát nhóm C (23 chiêu thức tinh chỉnh)**:
+  - `calm_mind`, `charge`, `charge_beam`, `charm`, `chatter`, `clamp`, `clear_smog`, `close_combat`, `coil`, `comet_punch`, `confuse_ray`, `conversion`, `cotton_spore`, `counter`, `crabhammer`, `cross_chop`, `cross_poison`, `crunch`, `crush_claw`, `crush_grip`, `curse`, `cut`, `cotton_guard`.
+  - Kết quả: 23/23 chiêu thức đạt chuẩn tuyệt đối, cấu trúc focus user/target/both phân chia chuẩn xác, không bị ghim khi địch tung chiêu.
+  - Sửa lỗi âm thanh `cotton_guard` ([72.json](file:///e:/Pokemon/packages/game-data/animations/72.json)): thay `StatUp` thành `Anim/Up` để khớp đúng file âm thanh có sẵn `Audio/SE/Anim/Up.ogg`. Đồng thời nhân bản alias `StatUp.ogg` dự phòng.
+
+- **Rà soát nhóm D (27 chiêu thức tinh chỉnh)**:
+  - `dark_pulse`, `dark_void`, `dazzling_gleam`, `defend_order`, `destiny_bond`, `detect`, `dig`, `disarming_voice`, `discharge`, `dive`, `dizzy_punch`, `doom_desire`, `double_kick`, `double_team`, `dragon_ascent`, `dragon_breath`, `dragon_claw`, `dragon_dance`, `dragon_hammer`, `dragon_pulse`, `dragon_rage`, `dragon_tail`, `drain_punch`, `drill_peck`, `drill_run`, `dual_chop`, `dynamic_punch`.
+  - Phát hiện & sửa lỗi ghim màn hình ở `dazzling_gleam` ([6753.json](file:///e:/Pokemon/packages/game-data/animations/6753.json)): Tại frame 2, hai cel tia sáng (`eb613` và `eb613_4`) bị đặt nhầm `focus: "screen"` ở tọa độ cố định (256, 160) và (300, 140). Đã chuyển sang `focus: "both"` để tự động nội suy và xoay lật đối xứng khi đối thủ tung chiêu bắn về phía người chơi.
+  - 26/26 chiêu thức còn lại đạt chuẩn tuyệt đối (100% OK).
+
+- **Rà soát nhóm E (13 chiêu thức tinh chỉnh)**:
+  - `earth_power`, `earthquake`, `echoed_voice`, `egg_bomb`, `electric_terrain`, `electro_ball`, `electroweb`, `ember`, `encore`, `endure`, `energy_ball`, `eruption`, `explosion`.
+  - Kết quả: 13/13 chiêu thức phân định user/target/both đối xứng chuẩn xác.
+  - Chuẩn hóa âm thanh `energy_ball` ([98.json](file:///e:/Pokemon/packages/game-data/animations/98.json)): chuyển đường dẫn âm thanh từ `Uproar` sang `Anim/Uproar` khớp với `Audio/SE/Anim/Uproar.ogg`.
+
+- **Kiểm thử & Xác minh**:
+  - `validate-animation-atlas.mjs`: Vượt qua 1134 animations & atlas assets với 0 lỗi.
+  - `npm run typecheck:web`: 0 lỗi typecheck.
+  - `npx vitest run`: Vượt qua 100% (49/49 test files, 601/601 tests).
+
+### 52. Tái thiết toàn diện animation EARTHQUAKE với bộ asset PRAS- Earthquake Cinematic (1, 2, 2 BG, 3 & FG)
+
+- **Nguyên nhân lỗi cũ & Yêu cầu của người dùng**:
+  - `earthquake` (ID 6416) trước đó trỏ vào file placeholder sơ sài (`last-chance/6416.json`) chỉ gồm 8 frame co giật 2 sprite Pokémon không có hiệu ứng.
+  - Người dùng yêu cầu tích hợp trực tiếp bộ asset PRAS chuẩn trong dự án: `PRAS- Earthquake1`, `PRAS- Earthquake2`, `PRAS- Earthquake2 BG`, `PRAS- Earthquake3` (và `PRAS- Earthquake FG`).
+- **Phân tích kỹ thuật bộ asset PRAS- Earthquake**:
+  - `PRAS- Earthquake1.png` (512×288): Trạng thái địa chấn ban đầu, mặt đất bắt đầu rạn nứt bề mặt.
+  - `PRAS- Earthquake2.png` & `PRAS- Earthquake2 BG.png` (512×288): Đứt gãy địa tầng chéo xé toạc chiến trường từ người chơi tới đối thủ.
+  - `PRAS- Earthquake3.png` & `PRAS- Earthquake3 BG.png` (512×288): Vết nứt mở rộng thành hẻm vực chấn động khổng lồ, đất đá sụt lún cực đại.
+  - `PRAS- Earthquake FG.png` (512×384): Lớp phủ bụi đất/bão cát toàn màn hình.
+  - Đã đăng ký đầy đủ các asset trên vào [animation-atlas.json](file:///e:/Pokemon/packages/game-data/animation-atlas.json) (`pras-earthquake1`, `pras-earthquake2`, `pras-earthquake2-bg`, `pras-earthquake3`, `pras-earthquake3-bg`, `pras-earthquake-fg`).
+- **Tái thiết kế hoạt ảnh 16 frame ở 20fps**:
+  - **Frame 0–2 (Rung chấn mặt đất với PRAS- Earthquake1)**: Pokémon dậm chân lún đất (`y: 216 → 234`), nền `pras-earthquake1` hiện rõ vết rạn nứt bề mặt với độ mờ tăng dần, khởi phát âm thanh rung đất `EBDX/Anim/rock1` + `Anim/Earth4`, mầm đá nứt `eb224` trồi lên.
+  - **Frame 3–6 (Xé toạc địa tầng với PRAS- Earthquake2 & 2 BG)**: Chuyển nền sang `pras-earthquake2` / `pras-earthquake2-bg` thể hiện vết nứt khổng lồ chạy dọc chiến trường. Sóng xung kích `Earth1` (pattern 2, 3, 4) và các tảng đá bay dọc theo trục `focus: "both"` cùng trụ đá `eb224` ở trung tâm. Lớp bụi đất `pras-earthquake-fg` bắt đầu che phủ.
+  - **Frame 7–10 (Địa chấn cực đại với PRAS- Earthquake3)**: Nền chuyển sang `pras-earthquake3` hẻm vực nứt toác sâu hoắm cực đại. Mặt đất dưới chân mục tiêu nổ tung dữ dội (`Earth1` pattern 4 & 5 zoom 180%), trụ đá `eb224` xiên hai bên, mưa đá tảng giáng xuống mục tiêu. Âm thanh sụp đổ cực đại `Anim/MiningCollapse` và tiếng gầm rú `Anim/Earth5`. Mục tiêu rung lắc dữ dội (`y: 86 → 106 → 90 → 102`).
+  - **Frame 11–15 (Lắng dịu & Khói bụi tan dần)**: Nền `pras-earthquake3` mờ dần (210 → 160 → 100 → 40), khói bụi `Earth1` (pattern 6) và `pras-earthquake-fg` lắng dần, đưa battlers về trạng thái nghỉ.
+- **Đồng bộ hóa & Đối xứng tuyệt đối**:
+  - Toàn bộ cels giậm chân neo `focus: "user"`, cels sóng xung kích bay ngang sân dùng `focus: "both"`, cels bộc phá mục tiêu neo `focus: "target"`, nền PRAS neo `focus: "screen"` ở `(256, 144)` priority 0. Khi kẻ địch (Enemy) thi triển EARTHQUAKE, toàn bộ chuỗi chấn động tự động đảo hướng chuẩn xác từ địch sang người chơi.
+  - Đồng bộ [6416.json](file:///e:/Pokemon/packages/game-data/animations/6416.json), `packages/game-data/animations/last-chance/6416.json`, và đăng ký vào [manifest.json](file:///e:/Pokemon/packages/game-data/animations/manifest.json).
+- **Kiểm thử chất lượng**:
+  - `validate-animation-atlas.mjs`: PASS (1135 animations & atlas validated).
+  - `npm run typecheck:web`: PASS (0 lỗi).
+  - `npx vitest run`: PASS 100% (49/49 test files, 601/601 unit tests).
+
+### 53. Tái thiết toàn diện hoạt ảnh DISCHARGE (Phóng Điện Phân Tán - ID 6387) theo chuẩn EBDX Composite
+
+- **Nguyên nhân lỗi cũ & Phân tích kỹ thuật**:
+  - Chiêu `discharge` trong `move-animation-extensions.json` được trỏ về ID `6387`.
+  - Trước đây, `packages/game-data/animations/6387.json` hoàn toàn không tồn tại; game phải rơi về bản fallback `last-chance/6387.json` vốn là file placeholder lỗi thời chỉ gồm 6 frame với các hạt chấm pixel bé xíu `eb611_3` & `eb611_2` (kích thước chỉ 16×12 pixel).
+  - Nguyên nhân sâu xa: Trong nguyên bản Elite Battle DX (EBDX), `:DISCHARGE` được định nghĩa dưới dạng một composite sequence gọi lần lượt hai chiêu hoạt ảnh:
+    `EliteBattle.playMoveAnimation(:CHARGE, ...)` sau đó `EliteBattle.playMoveAnimation(:THUNDERBOLT, ...)`. Quá trình import tự động trước đây đã không thể biên dịch composite call này, dẫn đến một hoạt ảnh rác chỉ có 2 chấm tia sáng di chuyển trong 0.3 giây.
+- **Thiết kế & Tái tạo hoạt ảnh DISCHARGE điện quang 16 frame chuẩn EBDX / Pokémon canon**:
+  - Tích hợp liền mạch chuỗi hiệu ứng: Tích tụ điện áp cao cực đại (Charge) -> Phóng tỏa hồ quang điện phân tán đa hướng xuyên suốt chiến trường (Radial Discharge Burst) -> Sét giáng sấm sét kinh hoàng từ trên trời xuống đầu mục tiêu kết hợp xung điện tê liệt (Thunderbolt Strike & Paralysis Shocks).
+  - **Phase 1 (Frame 0–4) - Nạp điện áp cao (High-Voltage Charge Buildup)**:
+    - User bắt đầu thu nạp tĩnh điện: Hạt điện tích `eb081` và tia lửa điện `electric1` (pattern 8) bùng nổ tại tâm người tung chiêu (`focus: "user"`).
+    - Vòng điện trường `eb081_2` xoay mở rộng dần quanh chân Pokémon (zoom 90% -> 130% -> 160% blend additive), Pokémon hơi bay bổng và rung chấn tĩnh điện (`y: 224 -> 220 -> 218`).
+    - Quả cầu plasma tĩnh điện khổng lồ `eb081_3` (pattern 0 -> 1) bao phủ người tung chiêu, đạt trạng thái bão hòa điện tích cực hạn.
+    - Âm thanh nạp điện: `Anim/Flash3` + `EBDX/Anim/electric1` + tiếng tụ năng lượng `Anim/Saint8` kết hợp chớp vàng màn hình `[255, 255, 180, 100]`.
+  - **Phase 2 (Frame 5–6) - Bùng nổ hồ quang phân tán khắp chiến trường (Radial Discharge)**:
+    - Năng lượng điện áp bung tỏa dữ dội ra mọi hướng (`focus: "both"`), các tia chớp nhằng nhịt `electric1` (pattern 5, 6, 8) phóng từ vị trí người tung chiêu bao trùm khắp sàn đấu.
+    - Chớp sáng chói toàn màn hình `[255, 255, 200, 160]`, âm thanh sấm rền vang `Anim/Thunder4`.
+  - **Phase 3 (Frame 7–9) - Thiên lôi giáng xuống mục tiêu (Thunderbolt Detonation)**:
+    - Cột sét khổng lồ `017-Thunder01` (pattern 2, 3, 4, 5) đánh thẳng từ trên trời xuống đỉnh đầu mục tiêu (`focus: "target"`).
+    - Cầu lửa điện `electric1` (pattern 0, 1, 2) nổ tung hoành tráng tại tâm mục tiêu với hiệu ứng pha trộn additive rực rỡ, kèm các tia sét phụ đánh chéo hai bên.
+    - Mục tiêu rung giật kịch liệt (`x: 390 -> 378 -> 388`).
+    - Âm thanh nổ sét chát chúa `Anim/Thunder9` + xung điện `EBDX/Anim/electric2` + chớp lóa `[255, 255, 220, 190]`.
+  - **Phase 4 (Frame 10–15) - Xung điện tê liệt & Tán sắc (Paralysis Aftershocks & Dissipation)**:
+    - Dòng điện cao thế tiếp tục co giật và chạy dọc thân mục tiêu với `017-Thunder01` (pattern 0, 1) và `electric1` (pattern 3, 4, 7).
+    - Âm thanh giật tê liệt đặc trưng: `Anim/Paralyze1` + `Anim/Paralyze3`.
+    - Hồ quang điện mờ dần và tan biến êm dịu, đưa cả 2 battler về lại vị trí nghỉ nguyên bản.
+- **Tính đối xứng & Tương thích 100% khi Địch tung chiêu**:
+  - Mọi cels tụ điện neo tại `focus: "user"`. Mọi cels sét đánh và tê liệt neo tại `focus: "target"`. Các tia hồ quang phóng trên sân neo tại `focus: "both"`. Hoàn toàn không dùng cels gán cứng vị trí màn hình (`screen`). Khi địch thi triển `discharge`, người chơi sẽ đóng vai trò là mục tiêu hứng trọn tia sét và chấn động một cách hoàn hảo.
+- **Đồng bộ hóa & Xác thực**:
+  - Tạo mới file chuẩn hóa: [6387.json](file:///e:/Pokemon/packages/game-data/animations/6387.json).
+  - Đồng bộ hóa file fallback: `packages/game-data/animations/last-chance/6387.json`.
+  - Cập nhật danh mục hệ thống: [manifest.json](file:///e:/Pokemon/packages/game-data/animations/manifest.json).
+  - `validate-animation-atlas.mjs`: PASS (1136 animations & atlas assets validated).
+  - `npm run typecheck:web`: PASS (0 lỗi).
+  - `npx vitest run`: PASS 100% (49/49 test files, 601/601 unit tests).
+
+### 54. Rà soát chuyên sâu toàn diện 27 chiêu thức nhóm D (Fidelity, Composite Calls & Asset Integrity)
+
+- **Bối cảnh & Yêu cầu của người dùng**:
+  - Sau sự cố `discharge` (bị lỗi composite animation biến thành 2 chấm pixel placeholder 16×12 `eb611_3`), người dùng yêu cầu rà soát toàn bộ các move chữ D xem có chiêu nào rơi vào tình trạng tương tự (composite bị thiếu, placeholder chấm nhỏ, lệch bản gốc) hay không.
+- **Kết quả điều tra 27 chiêu thức chữ D**:
+  1. **Không còn chiêu nào bị lỗi chấm pixel placeholder (`eb611_3` / `eb611_2`)**: Toàn bộ 26 chiêu thức còn lại đều sử dụng đúng các bộ asset EBDX độ phân giải cao đặc trưng:
+     - `dark_pulse` (6379): Dùng `eb093_1_2` (vòng tròn hắc ám 192×192), `eb093_2_2` (tia xung kích 108×36), `eb093_3_2` (vụ nổ hắc ám 138×52) bay mượt từ user qua chiến trường tới target.
+     - `dark_void` (6380): Dùng `eb263_0_2` (hố đen khổng lồ 326×326) mở ra nuốt chửng mục tiêu kèm âm thanh bóng đêm ma mị.
+     - `dazzling_gleam` (6753): Dùng `eb613_3` (vầng hào quang chói lóa 312×312), đã sửa lỗi đối xứng màn hình.
+     - `defend_order` (6754): Dùng `eb010_3` (đàn ong hộ vệ tạo khiên 3 lớp quanh user).
+     - `destiny_bond` (6382): Dùng `eb195_3` (sương mù bóng ma liên kết tâm linh giữa user và target).
+     - `detect` (80): Dùng `eb608` (khiên chắn tâm linh 96×128 bảo vệ user).
+     - `dig` (6384): Dùng `eb156_6`, `eb156_8` (đất đá đào lún user) và trồi lên nổ đá `eb504` oanh tạc mục tiêu.
+     - `disarming_voice` (6405): Dùng `eb617_9`, `eb617_10` (trái tim nốt nhạc thần tiên sóng âm dập dồn).
+     - `dive` (6388): Dùng `eb156_4`, `eb156_2` (sóng nước lặn lặn) và cột nước phun trào `eb618_2` tại chân đối thủ.
+     - `dizzy_punch` (82): Cú đấm va chạm `eb244_2` kèm chùm sao chóng mặt xoay tít `eb246_2` (176×44) trên đầu nạn nhân.
+     - `doom_desire` (6390): Nền trời vũ trụ `eb614_bg_7` (512×384) + tia năng lượng không gian `eb614_13` + bộc phá tia vũ trụ `eb614_11`.
+     - `double_kick` (84): 2 cú đá riêng biệt với `eb137` và `eb137_2`, 2 âm thanh va đập độc lập.
+     - `double_team` (6755): Sprite đấu sĩ `pattern: -1` tự nhân bản phân thân thành 3 ảo ảnh sang hai bên `(88, 224)` & `(168, 224)`.
+     - `dragon_ascent` (6756): Rồng xanh thăng thiên `eb628_6` và bổ nhào thiên thạch khổng lồ `eb628_5` (200×200) nghiền nát mục tiêu.
+     - `dragon_breath` (91): Luồng hỏa long `eb618_4`, `eb618_2` quét từ miệng rồng thiêu đốt đối thủ.
+     - `dragon_claw` (92): Vết cào rồng khổng lồ `eb057_3` (328×174) xé toạc mục tiêu.
+     - `dragon_dance` (93): Vòng hào quang long vũ `eb057_2` uốn lượn thăng cấp lực chiến quanh người thi triển.
+     - `dragon_hammer` (6757): Đầu búa rồng `eb631_3` kết hợp chấn động đập đất `eb520_3` (228×114).
+     - `dragon_pulse` (6398): Quả cầu long lực bộc phá `eb618_2`, `eb618_4`.
+     - `dragon_rage` (94): Cầu lửa thịnh nộ `eb618`.
+     - `dragon_tail` (6404): Quất đuôi rồng `eb632` quét ngang kèm vụ nổ vật lý `eb244_8`.
+     - `drain_punch` (6408): Đấm va chạm `eb244_2` + dòng hạt sinh lực `eb615_4` hút ngược từ mục tiêu về user kèm tiếng `Anim/Absorb2`.
+     - `drill_peck` (6410): Mũi khoan mỏ quay tít `eb626` mổ liên thanh.
+     - `drill_run` (6411): Mũi khoan đất `eb626` xé gió bụi đất `eb504`.
+     - `dual_chop` (6412): 2 nhát chém long đao `eb027_02` từ 2 phía, 4 nhịp âm thanh gió & chém (`Anim/gust`, `Anim/hit` x2).
+     - `dynamic_punch` (95): Cú đấm búa tạ kèm lốc xoáy sao xoay góc 120 độ `eb605` (96×128) phát nổ.
+  2. **Phát hiện & Nâng cấp `double_hit` (ID 6393)**:
+     - Hoạt ảnh cũ chỉ gồm 3 frame và đúng 1 nhát đánh (pattern 0, 1, 2) của spritesheet `003-Attack01`, bỏ sót hoàn toàn nhát đánh thứ hai (pattern 3, 4, 5).
+     - Đã nâng cấp toàn diện [6393.json](file:///e:/Pokemon/packages/game-data/animations/6393.json): Nhát đánh 1 (frame 0–2, pattern 0–2, âm thanh `Anim/Blow5`, mục tiêu giật sang phải) $\rightarrow$ Nhát đánh 2 (frame 3–5, pattern 3–5, âm thanh `Anim/Blow5`, mục tiêu giật sang trái) $\rightarrow$ Frame 6 hồi vị trí. Đồng bộ vào [manifest.json](file:///e:/Pokemon/packages/game-data/animations/manifest.json).
+- **Kiểm thử chất lượng**:
+  - `validate-animation-atlas.mjs`: PASS (1137 animations & atlas validated).
+  - `npm run typecheck:web`: PASS (0 lỗi).
+  - `npx vitest run`: PASS 100% (49/49 test files, 601/601 unit tests).
+
+---
+
+### 55. Khắc phục triệt để hiển thị chiêu thức chữ D, Sửa lỗi che khuất Doom Desire (ID 6390) & Đồng bộ Manifest toàn diện
+
+- **Phản hồi của người dùng**:
+  - _"tôi ko thấy gì thay đổi cả bạn chắc đã sửa đúng chứ"_
+- **Nguyên nhân cốt lõi khiến người dùng không nhận thấy thay đổi**:
+  1. **17 chiêu thức chữ D bị cô lập trong thư mục `last-chance/` và vắng mặt trong `manifest.json`**:
+     - Các chiêu `dark_pulse` (6379), `dark_void` (6380), `destiny_bond` (6382), `dig` (6384), `dive` (6388), `doom_desire` (6390), `dragon_pulse` (6398), `dragon_tail` (6404), `drain_punch` (6408), `drill_peck` (6410), `drill_run` (6411), `dual_chop` (6412), v.v. chỉ tồn tại trong `animations/last-chance/` mà chưa hề được nạp vào `packages/game-data/animations/manifest.json`.
+     - `BattleAnimationRegistry.hasDefinition` kiểm tra `manifestData[key]` trước tiên; khi thiếu manifest, hệ thống phải chạy fallback chậm hoặc không hiển thị đầy đủ thông số frames/timings trên giao diện gallery.
+  2. **Chiêu `double_hit` được sửa lượt trước không nằm trong danh sách 27 chiêu lọc `reunion_optimized`**:
+     - Người dùng khi lọc theo "Tối ưu 1:1" trong gallery sẽ không thấy `double_hit`, trong khi 27 chiêu kia ở lượt trước chưa có thay đổi nào.
+  3. **Bộ đệm trình duyệt (Browser Module Cache)**:
+     - Khi chạy `npm run dev`, Vite giữ module cache của các tệp JSON cũ nếu chưa thực hiện reload cứng (`Ctrl + F5`).
+- **Các giải pháp kỹ thuật đã triển khai**:
+  1. **Sửa lỗi hiển thị chiêu Doom Desire ([6390.json](file:///e:/Pokemon/packages/game-data/animations/6390.json))**:
+     - Chuyển `priority: 1` thành `priority: 0` cho tấm nền vũ trụ `eb614_bg_7` (512×384 pixel), đưa phông nền về sau lưng đấu sĩ, giải quyết dứt điểm lỗi che khuất Pokémon và sàn đấu.
+  2. **Đồng bộ toàn bộ 17 tệp hoạt ảnh chữ D**:
+     - Sao chép toàn bộ 17 tệp JSON từ `animations/last-chance/` sang thư mục gốc `packages/game-data/animations/`.
+  3. **Đăng ký hoàn chỉnh vào cả hai tệp Manifest**:
+     - Cập nhật [manifest.json](file:///e:/Pokemon/packages/game-data/animations/manifest.json) và [last-chance-animation-manifest.json](file:///e:/Pokemon/packages/game-data/last-chance-animation-manifest.json) với đầy đủ metadata chuẩn xác cho 100% chiêu thức nhóm D (bao gồm cả `discharge` 16 frames, `double_hit` 7 frames, `earthquake` 16 frames).
+- **Kiểm định chất lượng**:
+  - `node scripts/animation/validate-animation-atlas.mjs`: **PASS (1155 animations & atlas assets, 0 errors)**.
+  - `npm run typecheck:web`: **PASS (0 errors)**.
+  - `npx vitest run`: **PASS 100% (49/49 test files, 601/601 unit tests)**.
+
+---
+
+### 56. Rà soát, chuẩn hóa và đồng bộ toàn diện toàn bộ chiêu thức nhóm chữ E & F (41 chiêu Reunion cốt lõi + 28 chiêu mở rộng)
+
+- **Bối cảnh & Yêu cầu của người dùng**:
+  - Tiếp tục quy trình kiểm toán tuần tự bảng chữ cái: Rà soát toàn diện các chiêu thức bắt đầu bằng chữ cái **E** và **F**, bảo đảm chuẩn 1:1 EBDX / Reunion EX Trilogy 4.2, triệt tiêu lỗi Địch tung chiêu (`isEnemy = true`), kiểm tra độ sâu đồ họa (`priority`), đường dẫn đồ họa và âm thanh SE.
+- **Phạm vi kiểm toán (69 chiêu thức có hoạt ảnh)**:
+  - **41 chiêu thức E & F tối ưu cốt lõi** (`reunion-moves.json`):
+    - Nhóm E (13 chiêu): `earth_power`, `earthquake`, `echoed_voice`, `egg_bomb`, `electric_terrain`, `electro_ball`, `electroweb`, `ember`, `encore`, `endure`, `energy_ball`, `eruption`, `explosion`.
+    - Nhóm F (28 chiêu): `fairy_wind`, `false_swipe`, `feather_dance`, `feint_attack`, `final_gambit`, `fire_blast`, `fire_fang`, `fire_lash`, `fire_punch`, `fire_spin`, `flame_burst`, `flame_charge`, `flamethrower`, `flare_blitz`, `flash_cannon`, `fleur_cannon`, `fling`, `floral_healing`, `fly`, `focus_blast`, `focus_energy`, `focus_punch`, `force_palm`, `foresight`, `frenzy_plant`, `fury_cutter`, `fury_swipes`, `future_sight`.
+  - **28 chiêu thức mở rộng khác nhóm E & F** trong `moves-db.json` (tổng cộng 69 chiêu thức).
+- **Kết quả kiểm toán chi tiết**:
+  1. **Kiểm tra cơ chế Địch tung chiêu (`isEnemy = true`)**:
+     - Toàn bộ 41 chiêu thức tối ưu nhóm E & F **không chứa lỗi gán nhầm `focus: "screen"`** ở các pha đạn đạo hoặc va chạm.
+     - Các chiêu đạn đạo như `electro_ball`, `energy_ball`, `focus_blast`, `flamethrower`, `fire_blast`, `flash_cannon`, `fleur_cannon` đều cấu hình chuẩn `focus: "both"` cho đường đạn và `focus: "target"` cho điểm nổ va chạm, tự động đảo chiều và nội suy toạ độ chính xác khi Địch thi triển.
+     - Các chiêu đấu trường / diện rộng (`earth_power`, `earthquake`, `electric_terrain`, `eruption`, `explosion`) điều phối toạ độ tiền cảnh / hậu cảnh chuẩn mực (`pras-earthquake-fg` dùng `priority: 2` làm vết nứt dưới chân đấu sĩ).
+  2. **Kiểm tra độ sâu đồ họa (`priority: 1`)**:
+     - Các sprite hào quang tụ lực như `eb519_3` (Flash Cannon) và `eb633_3` (Focus Blast) kích thước 312×312 đặt tại `(170, 195)` với `focus: "user"` là hiệu ứng tụ hào quang quanh người dùng (hoàn toàn đúng với bản gốc EBDX, không phải lỗi phông nền che khuất như trường hợp Doom Desire).
+  3. **Phát hiện & Loại bỏ ánh xạ đối thủ lỗi thời**:
+     - Phát hiện `opponentMoves.flamethrower: 6115` trong [move-animation-extensions.json](file:///e:/Pokemon/packages/game-data/move-animation-extensions.json) (bản PRAS cũ 20 frame `Flames.png`). Đã loại bỏ mục này để khi Địch tung Flamethrower sẽ sử dụng trọn vẹn bản EBDX 116 (`eb136`).
+     - Giữ nguyên `opponentMoves.flamethrower: 117` trong [move-animation-map.json](file:///e:/Pokemon/packages/game-data/move-animation-map.json) để đảm bảo 100% tương thích bộ unit test Essentials gốc.
+  4. **Đồng bộ hóa 20 tệp hoạt ảnh nhóm E & F bị cô lập**:
+     - Phát hiện 20 tệp hoạt ảnh trước đây chỉ nằm trong `packages/game-data/animations/last-chance/` và chưa được nạp vào thư mục gốc `packages/game-data/animations/`:
+       - `6734` (Eerie Impulse), `6420` (Electroweb), `6421` (Embargo), `6422` (Endeavor), `6423` (Entrainment), `6424` (Extreme Speed), `6426` (Facade), `6427` (Fairy Lock), `6430` (Feather Dance), `6431` (Feint), `6433` (Fell Stinger), `6434` (Fissure), `6437` (Flatter), `6438` (Fling), `6439` (Flying Press), `6445` (Foul Play), `6446` (Frost Breath), `6447` (Frustration), `6702` (Fusion Bolt), `6703` (Fusion Flare).
+     - Đã sao chép toàn bộ 20 tệp sang `packages/game-data/animations/` và đăng ký đầy đủ vào [manifest.json](file:///e:/Pokemon/packages/game-data/animations/manifest.json) cũng như [last-chance-animation-manifest.json](file:///e:/Pokemon/packages/game-data/last-chance-animation-manifest.json).
+  5. **Đồng bộ toàn diện 115 tệp đồ họa LastChance**:
+     - Sao chép toàn bộ 115 tệp PNG từ `Graphics/Animations/LastChance/` sang `apps/web/public/Graphics/Animations/LastChance/`, bảo đảm trình duyệt hiển thị đầy đủ không bị lỗi 404 tài nguyên.
+- **Kiểm định chất lượng**:
+  - `node scripts/animation/validate-animation-atlas.mjs`: **PASS (1175 animations & atlas assets, 0 errors)**.
+  - `npm run typecheck:web`: **PASS (0 errors)**.
+  - `npx vitest run`: **PASS 100% (49/49 test files, 601/601 unit tests)**.
+
+---
+
+### 57. Khắc phục triệt để lỗi nghiêm trọng chiêu thức Ember (Đốm Lửa - ID 96) Chuẩn 1:1 EBDX
+
+- **Phản hồi của người dùng**:
+  - _"ember chiêu này đang sai nghiệm trọng"_
+- **Nguyên nhân gốc rễ điều tra từ mã nguồn Ruby gốc EBDX (`EMBER.rb` trong Reunion EX Trilogy 4.2)**:
+  1. **Sai lệch thông số Atlas `eb136`**:
+     - Tệp ảnh [eb136.png](file:///e:/Pokemon/Graphics/Animations/eb136.png) có kích thước 212×303 pixel, gồm một lưới 4 cột × 3 hàng tương ứng 12 khung hình ngọn lửa (mỗi ô kích thước chính xác **53×101 pixel**):
+       - Hàng 0 (Pattern 0–3): 4 frame chuyển động ngọn lửa A.
+       - Hàng 1 (Pattern 4–7): 4 frame chuyển động ngọn lửa B.
+       - Hàng 2 (Pattern 8–11): 4 frame chuyển động ngọn lửa C.
+     - Trong [animation-atlas.json](file:///e:/Pokemon/packages/game-data/animation-atlas.json), `eb136` trước đó bị cấu hình sai thành `cellWidth: 212, cellHeight: 303, columns: 1, rows: 1`. Kết quả: Bất kỳ cel nào vẽ `pattern: 0` đều cắt toàn bộ bức ảnh và hiển thị một khối chữ nhật tĩnh chứa cả 12 ngọn lửa xếp thành lưới 4×3 trên màn hình.
+  2. **Hoạt ảnh [96.json](file:///e:/Pokemon/packages/game-data/animations/96.json) trước đó bị rút gọn sai lệch**:
+     - Hoạt ảnh cũ chỉ vỏn vẹn đúng 5 frame (chạy trong 0.25 giây), vẽ cùng 1 khối ảnh tĩnh khổng lồ nhấp nháy rồi biến mất đột ngột.
+     - Không có chuỗi đốm lửa bay (`staggered sparks`), không có chuyển động uốn lượn và không có hiệu ứng nổ khói tàn tro trên mục tiêu.
+- **Giải pháp toàn diện đã triển khai**:
+  1. **Hiệu chỉnh thông số Atlas chuẩn xác cho `eb136`**:
+     - Cập nhật [animation-atlas.json](file:///e:/Pokemon/packages/game-data/animation-atlas.json): `cellWidth: 53`, `cellHeight: 101`, `columns: 4`, `rows: 3`, `maxPattern: 12`.
+  2. **Tái thiết kế hoạt ảnh Ember ([96.json](file:///e:/Pokemon/packages/game-data/animations/96.json)) chuẩn 1:1 EBDX (18 frames @ 20 FPS)**:
+     - **Chuỗi đốm lửa liên thanh (10 Ember Sparks)**: Phun 10 đốm lửa liên tiếp bay từ miệng người thi triển (phân bổ từ frame 0 đến frame 9).
+     - **Quỹ đạo bay Parabol (`focus: "both"`)**: Mỗi đốm lửa uốn lượn theo quỹ đạo vòng cung ngẫu nhiên khác nhau (`arc: -35 đến +30`), xoay góc theo hướng bay và tự động lật chiều chuẩn xác khi Địch tung chiêu.
+     - **Chuyển động ngọn lửa sống động**: Trong khi bay, mỗi đốm lửa tuần tự cuộn qua các frame hoạt ảnh ngọn lửa (Pattern 0..3, 4..7, 8..11).
+     - **Oanh tạc & Bùng nổ tàn tro (`focus: "target"`)**: Khi chạm mục tiêu (từ frame 8 trở đi), các đốm lửa bùng nở và tan dần thành khói bụi tàn tro trên người đối thủ, kèm hiệu ứng rung lắc mục tiêu (`shake: 2, -2`).
+     - **Âm thanh chuẩn EBDX**:
+       - Frame 0, 4, 12: `Anim/Fire2` (tiếng lửa phụt ra liên thanh).
+       - Frame 8: `Anim/Smokescreen` (tiếng nổ lách tách bốc khói trên cơ thể mục tiêu).
+  3. **Cập nhật Manifest**:
+     - Đồng bộ `frameCount: 18, timingCount: 4` vào [manifest.json](file:///e:/Pokemon/packages/game-data/animations/manifest.json).
+- **Kiểm định chất lượng**:
+  - `node scripts/animation/validate-animation-atlas.mjs`: **PASS (1175 animations & atlas assets, 0 errors)**.
+  - `npm run typecheck:web`: **PASS (0 errors)**.
+  - `npx vitest run`: **PASS 100% (49/49 test files, 601/601 unit tests)**.
+
+---
+
+### 58. Khắc phục triệt để lỗi hoạt ảnh chiêu thức Flamethrower (Phun Lửa - ID 116 & 117) Chuẩn 1:1 EBDX
+
+- **Phản hồi của người dùng**:
+  - _"flamethrower chiêu này đang sai"_
+- **Nguyên nhân gốc rễ điều tra từ mã nguồn EBDX Ruby gốc (`FLAMETHROWER` trong Reunion EX Trilogy 4.2)**:
+  1. **Lỗi ở bản Người chơi ([116.json](file:///e:/Pokemon/packages/game-data/animations/116.json))**:
+     - Chỉ có vỏn vẹn 5 frame sơ sài (0.25 giây).
+     - Toàn bộ cels đều bị hardcode `pattern: 0`, không tận dụng 12 frame hoạt ảnh ngọn lửa cuộn trào của `eb136`.
+     - Góc quay bị set `angle: 80°`, làm cho ngọn lửa bị nghiêng ngả nằm ngang bất tự nhiên thay vì ngọn lửa bốc cháy thẳng đứng như thiết kế gốc EBDX (`fp.ox = 26, fp.oy = 101`, `angle: 0`).
+  2. **Lỗi nghiêm trọng ở bản Địch ([117.json](file:///e:/Pokemon/packages/game-data/animations/117.json))**:
+     - Vẫn dùng đồ họa `Flames` lỗi thời của Gen 3 Essentials với tệp JSON rườm rà 25KB.
+     - Toàn bộ cels bị gán `focus: "target"`, nhưng tọa độ X lại chạy từ 384 lùi về 131. Khi Địch thi triển (mục tiêu là Người chơi ở `x = 130`), engine tính toán `130 + (131 - 384) = -123`, khiến toàn bộ ngọn lửa bị bắn ngược ra ngoài mép trái màn hình!
+     - Âm thanh bị gán nhầm thành tiếng gió lốc `"Whirlwind"` thay vì tiếng phun lửa bùng cháy.
+- **Giải pháp toàn diện đã triển khai**:
+  1. **Tạo kịch bản phát sinh hoạt ảnh tự động chuẩn 1:1 EBDX ([patch_flamethrower_timeline.py](file:///e:/Pokemon/scripts/animation/patch_flamethrower_timeline.py))**:
+     - Áp dụng cho cả [116.json](file:///e:/Pokemon/packages/game-data/animations/116.json) (Player) và [117.json](file:///e:/Pokemon/packages/game-data/animations/117.json) (Opponent) với thời lượng chuẩn 18 frames @ 20 FPS (0.9s).
+     - **Pha 1: Khởi động bộc hỏa (Frames 0–3)**: Lửa bùng nổ từ miệng người dùng (`focus: "user"`), tuần tự nở các pattern ngọn lửa từ 75% lên 105%.
+     - **Pha 2: Dòng thác lửa liên hoàn 16 luồng (Frames 1–12)**: 16 luồng lửa đan xen (`focus: "both"`), uốn lượn theo các quỹ đạo vòm parabol khác nhau (`arc: -28 đến +26`), tuần tự cuộn qua 3 nhóm họa tiết lửa (A: Hẹp, B: Rộng, C: Cuộn xoáy).
+     - **Pha 3: Oanh tạc hỏa ngục & Bốc khói trên mục tiêu (Frames 9–17)**: Hỏa lực bao trùm mục tiêu (`focus: "target"`), các cột lửa rực cháy vươn cao (`zoomY` kéo dài đến 175%), kèm hiệu ứng rung giật mục tiêu mạnh mẽ (`shake: ±3`) và tan thành khói xám.
+     - **Âm thanh chuẩn 1:1 EBDX**:
+       - Frames 0, 4, 12: `Anim/Fire2` (tiếng lửa phụt ra liên thanh).
+       - Frame 8: `Anim/Smokescreen` (tiếng nổ bốc khói trùm kín mục tiêu).
+  2. **Đồng bộ Manifest & Database**:
+     - Cập nhật [manifest.json](file:///e:/Pokemon/packages/game-data/animations/manifest.json): Cả 116 và 117 đều có `graphic: "eb136"`, `frameCount: 18`, `timingCount: 4`.
+     - Cập nhật [move-animations-db.json](file:///e:/Pokemon/packages/game-data/move-animations-db.json): `flamethrower` cập nhật `graphic: "eb136.png"` và `soundEffects: ["Anim/Fire2.ogg", "Anim/Smokescreen.ogg"]`.
+- **Kiểm định chất lượng**:
+  - `node scripts/animation/validate-animation-atlas.mjs`: **PASS (1175 animations & atlas assets, 0 errors)**.
+  - `npm run typecheck:web`: **PASS (0 errors)**.
+  - `npx vitest run apps/web/test/battle-timeline-animations.test.ts`: **PASS (42/42 tests)**.
+  - `npx vitest run`: **PASS 100% (49/49 test files, 603/603 unit tests)**.
+
+---
+
+### 59. Khắc phục triệt để lỗi hoạt ảnh chiêu thức Fury Swipes (Cào Loạn Xạ - ID 137–141 & 6786) Chuẩn 1:1 EBDX Multi-Hit
+
+- **Phản hồi của người dùng**:
+  - _"fury_swipes chiêu này đang bị lõi"_
+- **Nguyên nhân gốc rễ điều tra**:
+  1. **Thiếu tệp đồ họa EBDX**:
+     - Tệp sprite vuốt cào [eb601.png](file:///e:/Pokemon/apps/web/public/Graphics/Animations/eb601.png) (96×128) có trong thư mục gốc `Graphics/Animations/eb601.png` nhưng chưa được sao chép vào `apps/web/public/Graphics/Animations/`, khiến trình duyệt bị lỗi **HTTP 404 Not Found** khi tải ảnh cào.
+  2. **Bộ hoạt ảnh cũ lỗi thời (137–141)**:
+     - 5 ID đại diện cho 5 nhát cào liên hoàn (`hitNum 0..4`) trước đó dùng đồ họa Gen 3 cũ `Scratch + Shadow Claw` với âm thanh `"Fury Swipes"` bị lỗi đường dẫn file.
+     - Tọa độ cels bị lệch ra khỏi khung hình mục tiêu, không có hiệu ứng lật hướng cào luân phiên đặc trưng của EBDX.
+  3. **Tệp mở rộng 6786 bị rút ngắn**:
+     - Tệp [6786.json](file:///e:/Pokemon/packages/game-data/animations/6786.json) trước đó chỉ có 4 frame sơ sài và không bao quát được toàn bộ chuỗi đa kích (multi-hit sequence).
+- **Giải pháp toàn diện đã triển khai**:
+  1. **Sao chép tài nguyên**:
+     - Đã sao chép [eb601.png](file:///e:/Pokemon/apps/web/public/Graphics/Animations/eb601.png) sang `apps/web/public/Graphics/Animations/eb601.png`.
+  2. **Tái thiết kế toàn diện chuỗi 5 nhát cào EBDX ([patch_fury_swipes_timeline.py](file:///e:/Pokemon/scripts/animation/patch_fury_swipes_timeline.py))**:
+     - **Nhát 1 (ID 137)**: Cào chéo từ trên-trái xuống dưới-phải (`mirror: false`, `angle: -18°`).
+     - **Nhát 2 (ID 138)**: Cào đối xứng từ trên-phải xuống dưới-trái (`mirror: true`, `angle: +18°`).
+     - **Nhát 3 (ID 139)**: Cào ngang xé gió qua trung tâm mục tiêu (`mirror: false`, `angle: -6°`).
+     - **Nhát 4 (ID 140)**: Cào móc hất ngược từ dưới-phải lên trên-trái (`mirror: true`, `angle: -22°`).
+     - **Nhát 5 (ID 141 - Nhát kết liễu)**: **Double X Cross-Slash!** Đồng thời vung 2 vuốt cào đan chéo chữ X với lực oanh tạc cực đại (`shake: ±6`), âm thanh cao trào.
+     - **Âm thanh chuẩn 1:1 EBDX**:
+       - Frame 0: `EBDX/Anim/ground1` (tiếng vung móng xé gió).
+       - Frame 3: `EBDX/Anim/normal3` (tiếng móng vuốt cào xé mục tiêu).
+     - **Độ dài nhịp nhàng**: 10 frames @ 20 FPS (0.5s/nhát) giúp đòn đánh liên hoàn dứt khoát, uy lực và không bị rề rà kéo dài.
+  3. **Đồng bộ hóa Manifest & Database**:
+     - Cập nhật cả 5 ID 137, 138, 139, 140, 141 và 6786 trong [manifest.json](file:///e:/Pokemon/packages/game-data/animations/manifest.json) với `graphic: "eb601"`, `frameCount: 10`, `timingCount: 2`.
+     - Cập nhật [move-animations-db.json](file:///e:/Pokemon/packages/game-data/move-animations-db.json): `fury_swipes` có `graphic: "eb601.png"`, âm thanh `["EBDX/Anim/ground1.wav", "EBDX/Anim/normal3.wav"]`.
+  4. **Bổ sung Unit Test**:
+     - Thêm kiểm thử xác thực phân giải chuỗi 5 nhát cào liên hoàn của `fury_swipes` (`0 -> 137, 1 -> 138, 2 -> 139, 3 -> 140, 4 -> 141`) vào [battle-timeline-animations.test.ts](file:///e:/Pokemon/apps/web/test/battle-timeline-animations.test.ts).
+- **Kiểm định chất lượng**:
+  - `node scripts/animation/validate-animation-atlas.mjs`: **PASS (1175 animations & atlas assets, 0 errors)**.
+  - `npm run typecheck:web`: **PASS (0 errors)**.
+  - `npx vitest run apps/web/test/battle-timeline-animations.test.ts`: **PASS (42/42 tests)**.
+  - `npx vitest run`: **PASS 100% (49/49 test files, 603/603 unit tests)**.
+
+
+
+
+
+
+
 

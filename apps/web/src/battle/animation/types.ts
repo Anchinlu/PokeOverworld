@@ -7,6 +7,12 @@ export type AnimationFocus = 'user' | 'target' | 'both' | 'screen';
 export type AnimationBlendMode = 'normal' | 'additive' | 'multiply';
 
 export interface AnimationCel {
+  /** Optional per-cel spritesheet override for layered effects. */
+  graphic?: string;
+  /** Flip this cel only when the Enemy is the attacker. */
+  mirrorOnEnemy?: boolean;
+  /** Mirror authored screen-space X coordinates when the Enemy attacks. */
+  mirrorPositionOnEnemy?: boolean;
   pattern: number;
   x: number;
   y: number;
@@ -19,6 +25,8 @@ export interface AnimationCel {
   visible: boolean;
   priority: number;
   focus: AnimationFocus;
+  /** Preserve the authored Y offset for a curved user-to-target trajectory. */
+  curve?: 'arc';
   color?: [number, number, number, number];
   flash?: [number, number, number, number];
 }
@@ -44,6 +52,8 @@ export interface BattleAnimationDefinition {
   fps: number;
   frames: AnimationFrame[];
   timings: AnimationTimingEvent[];
+  sourcePack?: string;
+  sourceAnimationId?: number;
 }
 
 export interface AnimationAtlasEntry {
@@ -57,6 +67,13 @@ export interface AnimationAtlasEntry {
   rows: number;
   maxPattern: number;
   missingOnDisk?: boolean;
+}
+
+export interface AnimationViewport {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
 }
 
 export interface BattleAnimationRequest {
@@ -74,6 +91,7 @@ export interface BattleAnimationRequest {
   moveType?: string;
   moveCategory?: 'physical' | 'special' | 'status';
   hitNum?: number;
+  viewport?: AnimationViewport;
   onHit?: () => void;
   onComplete?: () => void;
 }

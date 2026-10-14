@@ -466,7 +466,27 @@ def main():
 
         normalize_both_focus_coordinates(frames)
 
-        raw_timings = attrs.get('@timing', [])
+        # Sanitize known out-of-range pattern authoring errors in Essentials source data:
+        # Absorb (23): leech-seed particle patterns 12, 13 -> 10, 11
+        # Bubblebeam (54): 018-Water01 pattern 17 -> 13
+        # Common:LeechSeed (179): leech-seed pattern 12 -> 11
+        # OppMove:MEGADRAIN (192): leech-seed pattern 12 -> 11
+        # Stealth Rock (263, 264): Rock Tomb pattern 8 -> 7
+        PATTERN_CORRECTIONS = {
+            23: {12: 10, 13: 11},
+            54: {17: 13},
+            179: {12: 11},
+            192: {12: 11},
+            263: {8: 7},
+            264: {8: 7},
+        }
+        if idx in PATTERN_CORRECTIONS:
+            corr = PATTERN_CORRECTIONS[idx]
+            for fr in frames:
+                for cel in fr.get('cels', []):
+                    if cel.get('pattern') in corr:
+                        cel['pattern'] = corr[cel['pattern']]
+        raw_timings = attrs.get('@timing', []) or []
         timings = []
         for t in raw_timings:
             t_obj = parse_timing(t)

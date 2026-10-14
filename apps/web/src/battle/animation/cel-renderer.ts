@@ -1,4 +1,4 @@
-import type { AnimationCel } from './types';
+import type { AnimationCel, AnimationViewport } from './types';
 import { ANIMATION_ASSETS } from './animation-assets';
 
 export interface CelRenderPosition {
@@ -6,7 +6,29 @@ export interface CelRenderPosition {
   y: number;
 }
 
+/**
+ * Determines whether a cel should have its horizontal mirror flipped.
+ *
+ * Rules:
+ * 1. For focus='both' (trajectory along user→target line), mirror is inverted
+ *    only if flight direction is reversed (e.g. enemy attacking player).
+ * 2. For focus='user', 'target', and 'screen', the authored cel.mirror is preserved as-is.
+ */
+export function shouldMirrorCel(
+  cel: AnimationCel,
+  isFlightReversed: boolean,
+  isEnemy = false
+): boolean {
+  const authoredMirror = cel.mirror || (isEnemy && cel.mirrorOnEnemy === true);
+  if (cel.focus === 'both') {
+    return isFlightReversed ? !authoredMirror : authoredMirror;
+  }
+  return authoredMirror;
+}
+
 export class CelRenderer {
+  public static shouldMirrorCel = shouldMirrorCel;
+
   /**
    * Renders an individual AnimationCel to the canvas context.
    */
@@ -16,9 +38,10 @@ export class CelRenderer {
     canvasX: number,
     canvasY: number,
     graphicName: string,
-    isEnemy = false,
-    canvasWidth = 512,
-    canvasHeight = 288
+    isFlightReversedOrEnemy = false,
+    _viewportOrWidth: AnimationViewport | number = 512,
+    _canvasHeight?: number,
+    isEnemy = false
   ): void {
     if (!cel.visible || cel.opacity <= 0 || cel.pattern < 0) {
       return;
@@ -40,24 +63,15 @@ export class CelRenderer {
     const srcX = col * cellWidth;
     const srcY = row * cellHeight;
 
-    // Check bounds
+    // Check pattern bounds against atlas texture
     if (srcX + cellWidth > img.naturalWidth || srcY + cellHeight > img.naturalHeight) {
       return;
     }
 
     ctx.save();
 
-    // 1. Position
-    const safePosition = this.clampPositionToCanvas(
-      cel,
-      canvasX,
-      canvasY,
-      cellWidth,
-      cellHeight,
-      canvasWidth,
-      canvasHeight
-    );
-    ctx.translate(safePosition.x, safePosition.y);
+    // 1. Position — Render directly at resolved canvas coordinates (clipping is handled at canvas level)
+    ctx.translate(canvasX, canvasY);
 
     // 2. Rotation (cel angle is in degrees)
     if (cel.angle !== 0) {
@@ -68,7 +82,7 @@ export class CelRenderer {
     // 3. Mirror & Scale
     let scaleX = cel.zoomX / 100;
     const scaleY = cel.zoomY / 100;
-    const shouldMirror = cel.focus === 'both' && isEnemy ? !cel.mirror : cel.mirror;
+    const shouldMirror = shouldMirrorCel(cel, isFlightReversedOrEnemy, isEnemy);
     if (shouldMirror) {
       scaleX = -scaleX;
     }

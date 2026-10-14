@@ -79,6 +79,15 @@ export class BattleState {
   enemyLungeY = 0;
   private onEnemyAttackHit?: () => void;
 
+  // Ally Switch cinematic: both battlers cross sides briefly, then return to
+  // their normal battle positions. The battle model itself is unchanged.
+  allySwitchTick = 0;
+  allySwitchMaxTicks = 24;
+  allySwitchPlayerOffsetX = 0;
+  allySwitchPlayerOffsetY = 0;
+  allySwitchEnemyOffsetX = 0;
+  allySwitchEnemyOffsetY = 0;
+
   // Wild Pokémon Faint (Red tint -> pure white -> top-to-bottom dust dissolve)
   enemyFaintPhase: 'none' | 'red_flash' | 'white_flash' | 'dissolving' | 'dead' = 'none';
   enemyFaintTick = 0;
@@ -333,6 +342,15 @@ export class BattleState {
     this.enemyLungeY = 0;
   }
 
+  /** Animate Ally Switch as a fast visual crossing without changing battle sides. */
+  startAllySwitch(): void {
+    this.allySwitchTick = 1;
+    this.allySwitchPlayerOffsetX = 0;
+    this.allySwitchPlayerOffsetY = 0;
+    this.allySwitchEnemyOffsetX = 0;
+    this.allySwitchEnemyOffsetY = 0;
+  }
+
   /** Trigger hit reaction on player */
   startPlayerHit(): void {
     this.playerHurtFlash = 16;
@@ -464,6 +482,27 @@ export class BattleState {
       this.activeCustomMoveAnim.update(this);
       if (this.activeCustomMoveAnim.isComplete) {
         this.activeCustomMoveAnim = null;
+      }
+    }
+
+    // Ally Switch cinematic: cross the two battler anchors at high speed,
+    // then restore them so this single-battle model keeps its normal sides.
+    if (this.allySwitchTick > 0) {
+      const progress = Math.min(1, this.allySwitchTick / this.allySwitchMaxTicks);
+      const crossing = progress <= 0.5 ? progress * 2 : (1 - progress) * 2;
+      const eased = crossing * crossing * (3 - 2 * crossing);
+      this.allySwitchPlayerOffsetX = 250 * eased;
+      this.allySwitchPlayerOffsetY = -10 * Math.sin(eased * Math.PI);
+      this.allySwitchEnemyOffsetX = -250 * eased;
+      this.allySwitchEnemyOffsetY = 10 * Math.sin(eased * Math.PI);
+      this.allySwitchTick++;
+
+      if (this.allySwitchTick > this.allySwitchMaxTicks) {
+        this.allySwitchTick = 0;
+        this.allySwitchPlayerOffsetX = 0;
+        this.allySwitchPlayerOffsetY = 0;
+        this.allySwitchEnemyOffsetX = 0;
+        this.allySwitchEnemyOffsetY = 0;
       }
     }
 

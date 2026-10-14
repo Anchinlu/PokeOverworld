@@ -2,7 +2,14 @@ import type { AnimationCel } from './types';
 
 export type CelRenderLayer = 'background' | 'behind_focus' | 'front';
 
+export interface CategorizedCels {
+  behindBattlers: AnimationCel[];
+  aboveBattlers: AnimationCel[];
+}
+
 export class LayerManager {
+  private static readonly cache = new WeakMap<AnimationCel[], CategorizedCels>();
+
   /**
    * Sorts cels in an AnimationFrame into background, middle, and foreground layers.
    * Essentials priority codes:
@@ -11,10 +18,10 @@ export class LayerManager {
    * 2 = behind focus
    * 3 = before focus / front
    */
-  public static categorizeCels(cels: AnimationCel[]): {
-    behindBattlers: AnimationCel[];
-    aboveBattlers: AnimationCel[];
-  } {
+  public static categorizeCels(cels: AnimationCel[]): CategorizedCels {
+    const cached = LayerManager.cache.get(cels);
+    if (cached) return cached;
+
     const behindBattlers: AnimationCel[] = [];
     const aboveBattlers: AnimationCel[] = [];
 
@@ -28,6 +35,8 @@ export class LayerManager {
       }
     }
 
-    return { behindBattlers, aboveBattlers };
+    const result = { behindBattlers, aboveBattlers };
+    LayerManager.cache.set(cels, result);
+    return result;
   }
 }

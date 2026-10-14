@@ -1,0 +1,325 @@
+{
+  "id": "6339",
+  "name": "Move:BLAZEKICK",
+  "graphic": "pras-blaze-kick",
+  "hue": 0,
+  "position": 3,
+  "fps": 12,
+  "frames": [
+    {
+      "cels": [
+        {
+          "pattern": 0,
+          "x": 384,
+          "y": 96,
+          "zoomX": 90,
+          "zoomY": 90,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 0,
+          "x": 384,
+          "y": 96,
+          "zoomX": 90,
+          "zoomY": 90,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 0,
+          "x": 384,
+          "y": 96,
+          "zoomX": 90,
+          "zoomY": 90,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 2,
+          "x": 350,
+          "y": 78,
+          "zoomX": 62,
+          "zoomY": 62,
+          "angle": -18,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 2,
+          "x": 418,
+          "y": 82,
+          "zoomX": 62,
+          "zoomY": 62,
+          "angle": 18,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 2,
+          "x": 384,
+          "y": 48,
+          "zoomX": 58,
+          "zoomY": 58,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 2,
+          "x": 330,
+          "y": 108,
+          "zoomX": 58,
+          "zoomY": 58,
+          "angle": -28,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 2,
+          "x": 356,
+          "y": 58,
+          "zoomX": 55,
+          "zoomY": 55,
+          "angle": -12,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 2,
+          "x": 384,
+          "y": 40,
+          "zoomX": 60,
+          "zoomY": 60,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 2,
+          "x": 412,
+          "y": 60,
+          "zoomX": 55,
+          "zoomY": 55,
+          "angle": 12,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 2,
+          "x": 438,
+          "y": 108,
+          "zoomX": 58,
+          "zoomY": 58,
+          "angle": 28,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 2,
+          "x": 340,
+          "y": 78,
+          "zoomX": 54,
+          "zoomY": 54,
+          "angle": -24,
+          "mirror": false,
+          "opacity": 235,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 2,
+          "x": 370,
+          "y": 112,
+          "zoomX": 52,
+          "zoomY": 52,
+          "angle": -8,
+          "mirror": false,
+          "opacity": 230,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 2,
+          "x": 400,
+          "y": 48,
+          "zoomX": 56,
+          "zoomY": 56,
+          "angle": 10,
+          "mirror": false,
+          "opacity": 235,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 2,
+          "x": 430,
+          "y": 90,
+          "zoomX": 54,
+          "zoomY": 54,
+          "angle": 26,
+          "mirror": false,
+          "opacity": 225,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 2,
+          "x": 354,
+          "y": 92,
+          "zoomX": 48,
+          "zoomY": 48,
+          "angle": -20,
+          "mirror": false,
+          "opacity": 180,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 2,
+          "x": 384,
+          "y": 54,
+          "zoomX": 50,
+          "zoomY": 50,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 190,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 2,
+          "x": 418,
+          "y": 94,
+          "zoomX": 48,
+          "zoomY": 48,
+          "angle": 20,
+          "mirror": false,
+          "opacity": 175,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 2,
+          "x": 370,
+          "y": 78,
+          "zoomX": 42,
+          "zoomY": 42,
+          "angle": -12,
+          "mirror": false,
+          "opacity": 120,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 2,
+          "x": 402,
+          "y": 82,
+          "zoomX": 42,
+          "zoomY": 42,
+          "angle": 12,
+          "mirror": false,
+          "opacity": 115,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        }
+      ]
+    }
+  ],
+  "timings": [],
+  "sourcePack": "Pokémon Last Chance 1.22",
+  "sourceAnimationId": 6339
+}

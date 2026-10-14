@@ -33,7 +33,27 @@ function serveGraphicsPlugin(): Plugin {
         // Serve Audio files
         if (rawUrl && rawUrl.startsWith('/Audio/')) {
           const decoded = decodeURIComponent(rawUrl.slice(1));
-          const filePath = path.resolve(__dirname, '../../', decoded);
+          let filePath = path.resolve(__dirname, '../../', decoded);
+          if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
+            const currentExt = path.extname(filePath);
+            const baseFilename = path.basename(filePath, currentExt);
+            const parentDir = path.dirname(filePath);
+            const candidateDirs = [
+              parentDir,
+              path.resolve(parentDir, 'Anim'),
+              path.resolve(parentDir, 'EBDX/Anim'),
+              path.resolve(parentDir, 'EBDX'),
+            ];
+            searchLoop: for (const dir of candidateDirs) {
+              for (const candidateExt of ['.ogg', '.wav', '.mp3']) {
+                const testPath = path.resolve(dir, baseFilename + candidateExt);
+                if (fs.existsSync(testPath) && fs.statSync(testPath).isFile()) {
+                  filePath = testPath;
+                  break searchLoop;
+                }
+              }
+            }
+          }
           if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
             const stat = fs.statSync(filePath);
             const ext = path.extname(filePath).toLowerCase();

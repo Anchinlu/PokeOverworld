@@ -1,0 +1,934 @@
+{
+  "id": "6167",
+  "name": "Move:ICYWIND",
+  "graphic": "Wind1",
+  "hue": 0,
+  "position": 2,
+  "fps": 20,
+  "frames": [
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 0,
+          "graphic": "Wind1",
+          "x": 128,
+          "y": 209,
+          "zoomX": 110,
+          "zoomY": 110,
+          "angle": -25,
+          "mirror": false,
+          "opacity": 250,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "both"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 1,
+          "graphic": "Wind1",
+          "x": 156,
+          "y": 194,
+          "zoomX": 114,
+          "zoomY": 114,
+          "angle": -25,
+          "mirror": false,
+          "opacity": 250,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "both"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 2,
+          "graphic": "Wind1",
+          "x": 184,
+          "y": 180,
+          "zoomX": 118,
+          "zoomY": 118,
+          "angle": -25,
+          "mirror": false,
+          "opacity": 250,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "both"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 3,
+          "graphic": "Wind1",
+          "x": 213,
+          "y": 166,
+          "zoomX": 123,
+          "zoomY": 123,
+          "angle": -25,
+          "mirror": false,
+          "opacity": 250,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "both"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 0,
+          "graphic": "PRAS- Icy Wind BG",
+          "x": 256,
+          "y": 192,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 210,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 0,
+          "focus": "screen"
+        },
+        {
+          "pattern": 4,
+          "graphic": "Wind1",
+          "x": 241,
+          "y": 152,
+          "zoomX": 127,
+          "zoomY": 127,
+          "angle": -25,
+          "mirror": false,
+          "opacity": 250,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "both"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 0,
+          "graphic": "PRAS- Icy Wind BG",
+          "x": 256,
+          "y": 192,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 210,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 0,
+          "focus": "screen"
+        },
+        {
+          "pattern": 5,
+          "graphic": "Wind1",
+          "x": 270,
+          "y": 137,
+          "zoomX": 132,
+          "zoomY": 132,
+          "angle": -25,
+          "mirror": false,
+          "opacity": 250,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "both"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 0,
+          "graphic": "PRAS- Icy Wind BG",
+          "x": 256,
+          "y": 192,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 210,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 0,
+          "focus": "screen"
+        },
+        {
+          "pattern": 6,
+          "graphic": "Wind1",
+          "x": 298,
+          "y": 123,
+          "zoomX": 136,
+          "zoomY": 136,
+          "angle": -25,
+          "mirror": false,
+          "opacity": 250,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "both"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 0,
+          "graphic": "PRAS- Icy Wind BG",
+          "x": 256,
+          "y": 192,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 210,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 0,
+          "focus": "screen"
+        },
+        {
+          "pattern": 7,
+          "graphic": "Wind1",
+          "x": 327,
+          "y": 109,
+          "zoomX": 141,
+          "zoomY": 141,
+          "angle": -25,
+          "mirror": false,
+          "opacity": 250,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "both"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 0,
+          "graphic": "PRAS- Icy Wind BG",
+          "x": 256,
+          "y": 192,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 210,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 0,
+          "focus": "screen"
+        },
+        {
+          "pattern": 8,
+          "graphic": "Wind1",
+          "x": 355,
+          "y": 95,
+          "zoomX": 145,
+          "zoomY": 145,
+          "angle": -25,
+          "mirror": false,
+          "opacity": 250,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "both"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 0,
+          "graphic": "PRAS- Icy Wind BG",
+          "x": 256,
+          "y": 192,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 210,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 0,
+          "focus": "screen"
+        },
+        {
+          "pattern": 9,
+          "graphic": "Wind1",
+          "x": 384,
+          "y": 81,
+          "zoomX": 150,
+          "zoomY": 150,
+          "angle": -25,
+          "mirror": false,
+          "opacity": 250,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "both"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 0,
+          "graphic": "PRAS- Icy Wind BG",
+          "x": 256,
+          "y": 192,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 210,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 0,
+          "focus": "screen"
+        },
+        {
+          "pattern": 10,
+          "graphic": "Wind1",
+          "x": 384,
+          "y": 81,
+          "zoomX": 150,
+          "zoomY": 150,
+          "angle": -25,
+          "mirror": false,
+          "opacity": 250,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "both"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 0,
+          "graphic": "PRAS- Icy Wind BG",
+          "x": 256,
+          "y": 192,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 130,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 0,
+          "focus": "screen"
+        },
+        {
+          "pattern": 11,
+          "graphic": "Wind1",
+          "x": 384,
+          "y": 81,
+          "zoomX": 150,
+          "zoomY": 150,
+          "angle": -25,
+          "mirror": false,
+          "opacity": 250,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "both"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 0,
+          "graphic": "PRAS- Icy Wind BG",
+          "x": 256,
+          "y": 192,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 130,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 0,
+          "focus": "screen"
+        },
+        {
+          "pattern": 12,
+          "graphic": "Wind1",
+          "x": 384,
+          "y": 81,
+          "zoomX": 150,
+          "zoomY": 150,
+          "angle": -25,
+          "mirror": false,
+          "opacity": 250,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "both"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 13,
+          "graphic": "Wind1",
+          "x": 384,
+          "y": 81,
+          "zoomX": 150,
+          "zoomY": 150,
+          "angle": -25,
+          "mirror": false,
+          "opacity": 190,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "both"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 14,
+          "graphic": "Wind1",
+          "x": 384,
+          "y": 81,
+          "zoomX": 150,
+          "zoomY": 150,
+          "angle": -25,
+          "mirror": false,
+          "opacity": 130,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "both"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 14,
+          "graphic": "Wind1",
+          "x": 384,
+          "y": 81,
+          "zoomX": 150,
+          "zoomY": 150,
+          "angle": -25,
+          "mirror": false,
+          "opacity": 70,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "both"
+        }
+      ]
+    }
+  ],
+  "timings": [
+    {
+      "frame": 0,
+      "type": "sound",
+      "payload": {
+        "sound": "Anim/Wind8.ogg",
+        "volume": 85,
+        "pitch": 95
+      }
+    },
+    {
+      "frame": 6,
+      "type": "sound",
+      "payload": {
+        "sound": "Anim/Ice2.ogg",
+        "volume": 85,
+        "pitch": 100
+      }
+    },
+    {
+      "frame": 6,
+      "type": "flash",
+      "payload": {
+        "flashDuration": 4,
+        "flashScope": 1,
+        "flashColor": [
+          200,
+          235,
+          255,
+          180
+        ],
+        "screenShake": true
+      }
+    }
+  ],
+  "sourcePack": "Pokemon Reunion 1:1 Parity",
+  "sourceAnimationId": 6167
+}

@@ -675,11 +675,14 @@ export function calculateDamage(
     );
 
     // Multi-hit moves
-    const isMultiHit2to5 = MULTI_HIT_2_TO_5_MOVE_IDS.has(moveId);
-    const isMultiHit2 = MULTI_HIT_2_MOVE_IDS.has(moveId);
-    const isMultiHit3 = MULTI_HIT_3_MOVE_IDS.has(moveId);
+    const mh = effectiveMove.multiHit;
+    const isMultiHit2to5 =
+      MULTI_HIT_2_TO_5_MOVE_IDS.has(moveId) || (Array.isArray(mh) && mh[0] === 2 && mh[1] === 5);
+    const isMultiHit2 = MULTI_HIT_2_MOVE_IDS.has(moveId) || mh === 2;
+    const isMultiHit3 = MULTI_HIT_3_MOVE_IDS.has(moveId) || mh === 3;
+    const isMultiHit10 = moveId === 'population_bomb' || mh === 10;
 
-    if (isMultiHit2to5 || isMultiHit2 || isMultiHit3) {
+    if (isMultiHit2to5 || isMultiHit2 || isMultiHit3 || isMultiHit10) {
       let maxHits = 2;
       if (isMultiHit2to5) {
         const hasSkillLink = AbilityEngine.normalize(attacker.ability) === 'skilllink';
@@ -694,6 +697,17 @@ export function calculateDamage(
         }
       } else if (isMultiHit3) {
         maxHits = 3;
+      } else if (isMultiHit10) {
+        const hasSkillLink = AbilityEngine.normalize(attacker.ability) === 'skilllink';
+        if (hasSkillLink) {
+          maxHits = 10;
+        } else {
+          maxHits = 1;
+          for (let h = 2; h <= 10; h++) {
+            if (rng.next() < 0.9) maxHits++;
+            else break;
+          }
+        }
       }
 
       let totalDmg = damage;

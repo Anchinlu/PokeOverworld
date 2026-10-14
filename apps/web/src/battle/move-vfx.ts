@@ -674,13 +674,14 @@ export const MOVE_VFX_REGISTRY: Record<string, MoveVfxDef> = {
     scale: 1.0,
   },
   baton_pass: {
-    spriteUrl: 'Graphics/Animations/Cups + Musical Notes.png',
+    spriteUrl: 'Graphics/Animations/PRAS- Baton Pass.png',
     cellWidth: 192,
     cellHeight: 192,
-    columns: 4,
-    totalFrames: 6,
-    ticksPerFrame: 5,
+    columns: 5,
+    totalFrames: 12,
+    ticksPerFrame: 4,
     target: 'attacker',
+    blendMode: 'lighter',
     scale: 1.0,
   },
   teleport: {

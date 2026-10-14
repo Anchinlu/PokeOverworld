@@ -8,6 +8,8 @@
 export class BattleSePlayer {
   private static instance: BattleSePlayer;
   private volume = 0.7;
+  private activeSounds: Set<HTMLAudioElement> = new Set();
+  private static readonly MAX_CONCURRENT_SOUNDS = 8;
 
   private constructor() {}
 
@@ -26,26 +28,120 @@ export class BattleSePlayer {
     return this.volume;
   }
 
+  private failedSoundPaths: Set<string> = new Set();
+
+  /**
+   * Safely disposes an Audio element, removing all listeners BEFORE resetting src
+   * to strictly prevent Chrome from emitting synthetic error events or decoder leaks.
+   */
+  private disposeAudio(audio: HTMLAudioElement): void {
+    audio.onended = null;
+    audio.onerror = null;
+    audio.onpause = null;
+    try {
+      audio.pause();
+      audio.currentTime = 0;
+      audio.removeAttribute('src');
+      audio.load();
+    } catch {
+      // ignore
+    }
+    this.activeSounds.delete(audio);
+  }
+
+  /**
+   * Immediately stops and disposes all currently playing sound effects.
+   * Useful when switching animations, looping, or resetting battle state.
+   */
+  public stopAll(): void {
+    const audios = Array.from(this.activeSounds);
+    for (const audio of audios) {
+      this.disposeAudio(audio);
+    }
+    this.activeSounds.clear();
+  }
+
+  /**
+   * Retries an alternative audio format (ogg <-> wav <-> mp3) at most once.
+   */
+  private retryAlternativeFormat(cleanPath: string, volumeScale: number): void {
+    let altPath: string | null = null;
+    if (cleanPath.endsWith('.ogg')) {
+      altPath = cleanPath.slice(0, -4) + '.wav';
+    } else if (cleanPath.endsWith('.wav')) {
+      altPath = cleanPath.slice(0, -4) + '.ogg';
+    } else if (cleanPath.endsWith('.mp3')) {
+      altPath = cleanPath.slice(0, -4) + '.ogg';
+    }
+
+    if (altPath && !this.failedSoundPaths.has(altPath)) {
+      this.playSound(altPath, volumeScale, true);
+    }
+  }
+
   /**
    * Play any sound effect file safely with relative URL resolution.
-   * Handles browser autoplay policies and audio errors gracefully.
+   * Handles browser autoplay policies and audio errors gracefully without decoder starvation.
    */
-  public playSound(path: string, volumeScale = 1.0): HTMLAudioElement | null {
+  public playSound(path: string, volumeScale = 1.0, isRetry = false): HTMLAudioElement | null {
     try {
       if (typeof window === 'undefined' || typeof Audio === 'undefined') return null;
 
       const cleanPath = path.replace(/\\/g, '/').replace(/^\/+/, '');
+      if (this.failedSoundPaths.has(cleanPath)) {
+        return null;
+      }
+
       const parts = cleanPath.split('/');
       const filename = parts.pop() || '';
-      const encodedRelativePath = [...parts, encodeURIComponent(filename)].join('/');
-      const resolvedUrl = new URL(encodedRelativePath, window.location.href).href;
+      const encodedPath = '/' + [...parts, encodeURIComponent(filename)].join('/');
+      const resolvedUrl = new URL(encodedPath, window.location.origin || window.location.href).href;
+
+      // Limit concurrent sound effects cleanly by disarming before discarding
+      while (this.activeSounds.size >= BattleSePlayer.MAX_CONCURRENT_SOUNDS) {
+        const oldest = this.activeSounds.values().next().value;
+        if (oldest) {
+          this.disposeAudio(oldest);
+        } else {
+          break;
+        }
+      }
 
       const audio = new Audio(resolvedUrl);
       audio.volume = Math.max(0, Math.min(1, this.volume * volumeScale));
+      this.activeSounds.add(audio);
+
+      let isCleanedUp = false;
+      const cleanup = () => {
+        if (isCleanedUp) return;
+        isCleanedUp = true;
+        audio.removeEventListener('ended', onEnded);
+        audio.removeEventListener('error', onError);
+        this.activeSounds.delete(audio);
+      };
+
+      const onEnded = () => {
+        cleanup();
+      };
+
+      const onError = () => {
+        cleanup();
+        this.failedSoundPaths.add(cleanPath);
+        if (!isRetry) {
+          this.retryAlternativeFormat(cleanPath, volumeScale);
+        }
+      };
+
+      audio.addEventListener('ended', onEnded);
+      audio.addEventListener('error', onError);
 
       audio.play().catch((err: unknown) => {
+        cleanup();
         if (err instanceof DOMException && err.name === 'AbortError') return;
-        console.warn('[BattleSE] Auto-play blocked or failed to play SE:', path, err);
+        this.failedSoundPaths.add(cleanPath);
+        if (!isRetry) {
+          this.retryAlternativeFormat(cleanPath, volumeScale);
+        }
       });
 
       return audio;

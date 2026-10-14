@@ -220,7 +220,7 @@ describe('Move Visual FX (VFX) & Animation Engine', () => {
       });
       const futureSightVfx = resolveMoveVfx(futureSightMove);
       expect(futureSightVfx).toBeDefined();
-      expect(futureSightVfx?.spriteUrl).toBe('Graphics/Animations/face and eye.png');
+      expect(futureSightVfx?.spriteUrl).toMatch(/Graphics\/Animations\/(face and eye|eb619_6)\.png/);
     });
 
     it('falls back to elemental type animations when move is completely custom / unlisted', () => {

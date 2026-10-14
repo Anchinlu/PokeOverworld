@@ -1,4 +1,5 @@
 import atlasData from '../../../../../packages/game-data/animation-atlas.json';
+import lastChanceAtlasData from '../../../../../packages/game-data/last-chance-animation-atlas.json';
 import type { AnimationAtlasEntry } from './types';
 
 export class AnimationAssetRegistry {
@@ -8,8 +9,10 @@ export class AnimationAssetRegistry {
   private loadPromises: Map<string, Promise<HTMLImageElement>> = new Map();
 
   private constructor() {
-    for (const [key, entry] of Object.entries(atlasData)) {
-      this.atlasMap.set(key.toLowerCase(), entry as AnimationAtlasEntry);
+    for (const atlas of [atlasData, lastChanceAtlasData]) {
+      for (const [key, entry] of Object.entries(atlas)) {
+        this.atlasMap.set(key.toLowerCase(), entry as AnimationAtlasEntry);
+      }
     }
   }
 
@@ -60,10 +63,17 @@ export class AnimationAssetRegistry {
 
     const promise = new Promise<HTMLImageElement>((resolve) => {
       const img = new Image();
-      img.onload = () => {
+      const onReady = () => {
         this.imageCache.set(key, img);
         this.loadPromises.delete(key);
         resolve(img);
+      };
+      img.onload = () => {
+        if (typeof img.decode === 'function') {
+          img.decode().then(onReady).catch(onReady);
+        } else {
+          onReady();
+        }
       };
       img.onerror = () => {
         this.loadPromises.delete(key);

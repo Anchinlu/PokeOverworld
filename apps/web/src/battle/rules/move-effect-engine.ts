@@ -107,6 +107,9 @@ export const TWO_TURN_MOVE_IDS = new Set([
   'meteor_beam',
   'electro_shot',
   'electroshot',
+  'beak_blast',
+  'focus_punch',
+  'bide',
 ]);
 
 /** Move IDs that can cause target to flinch, with base chances */
@@ -255,7 +258,7 @@ export function handleTwoTurnMoveCharge(
   environment?: BattleEnvironment
 ): { isCharging: boolean; chargeMessage?: string } {
   const moveId = move.id.toLowerCase();
-  if (!TWO_TURN_MOVE_IDS.has(moveId)) {
+  if (!TWO_TURN_MOVE_IDS.has(moveId) && !move.twoTurn) {
     return { isCharging: false };
   }
 
@@ -361,6 +364,40 @@ export function handleTwoTurnMoveCharge(
     } else if (moveId === 'geomancy') {
       attacker.chargingMove = { move, turn: 1 };
       chargeMsg = `${attacker.name} hấp thụ năng lượng trời đất!`;
+    } else if (moveId === 'beak_blast') {
+      attacker.chargingMove = { move, turn: 1 };
+      attacker.isBeakBlastCharging = true;
+      chargeMsg = `${attacker.name} bắt đầu nung nóng chiếc mỏ rực lửa!`;
+    } else if (moveId === 'focus_punch') {
+      attacker.chargingMove = { move, turn: 1 };
+      attacker.isFocusPunchCharging = true;
+      chargeMsg = `${attacker.name} tập trung cao độ chuẩn bị tung cú đấm ngàn cân!`;
+    } else if (moveId === 'bide') {
+      attacker.chargingMove = { move, turn: 1 };
+      chargeMsg = `${attacker.name} đang gồng mình tích trữ năng lượng!`;
+    } else if (move.twoTurn === 'fly') {
+      stance = 'flying';
+      attacker.chargingMove = { move, turn: 1, semiInvulnerable: 'flying' };
+      attacker.semiInvulnerable = 'flying';
+      chargeMsg = `${attacker.name} bay vút lên không trung!`;
+    } else if (move.twoTurn === 'dig') {
+      stance = 'underground';
+      attacker.chargingMove = { move, turn: 1, semiInvulnerable: 'underground' };
+      attacker.semiInvulnerable = 'underground';
+      chargeMsg = `${attacker.name} đào sâu vào lòng đất!`;
+    } else if (move.twoTurn === 'dive') {
+      stance = 'underwater';
+      attacker.chargingMove = { move, turn: 1, semiInvulnerable: 'underwater' };
+      attacker.semiInvulnerable = 'underwater';
+      chargeMsg = `${attacker.name} lặn sâu vào lòng nước!`;
+    } else if (move.twoTurn === 'bounce') {
+      stance = 'high';
+      attacker.chargingMove = { move, turn: 1, semiInvulnerable: 'high' };
+      attacker.semiInvulnerable = 'high';
+      chargeMsg = `${attacker.name} bật nhảy lên rất cao!`;
+    } else if (move.twoTurn) {
+      attacker.chargingMove = { move, turn: 1 };
+      chargeMsg = `${attacker.name} đang nạp năng lượng cho ${moveDisplayName}!`;
     }
 
     events.push(
@@ -384,6 +421,8 @@ export function handleTwoTurnMoveCharge(
     // Turn 2: Release
     attacker.chargingMove = undefined;
     attacker.semiInvulnerable = undefined;
+    attacker.isBeakBlastCharging = false;
+    attacker.isFocusPunchCharging = false;
     return { isCharging: false };
   }
 }

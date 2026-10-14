@@ -232,8 +232,21 @@ try {
   } else {
     logPass(`pokemon-db.json validated successfully (all 151 Gen 1 Pokemons present)`);
   }
+
+  // 6. Verify Battle Animation Timelines & Atlas Integrity
+  const { validateAnimationAtlas } = await import('./animation/validate-animation-atlas.mjs');
+  const animResult = validateAnimationAtlas();
+  if (animResult.errors > 0) {
+    for (const issue of animResult.issues) {
+      logFail(`Animation issue: ${issue}`);
+    }
+  } else {
+    logPass(
+      `All ${animResult.totalAnimations} battle animation definitions and atlas assets validated successfully`
+    );
+  }
 } catch (err) {
-  logFail(`JSON data files validation error: ${err.message}`);
+  logFail(`Validation error: ${err.message}`);
 }
 
 console.log('---------------------------------------------------------');

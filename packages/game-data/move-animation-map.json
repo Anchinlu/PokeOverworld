@@ -55,7 +55,7 @@
     "dynamic_punch": 95,
     "ember": 96,
     "encore": 97,
-    "energy_ball": 98,
+    "energy_ball": 6764,
     "eruption": 99,
     "explosion": 100,
     "fake_out": 101,
@@ -216,7 +216,6 @@
   "opponentMoves": {
     "aerial_ace": 30,
     "flame_wheel": 115,
-    "flamethrower": 117,
     "follow_me": 123,
     "fury_attack": 131,
     "growl": 149,
@@ -231,6 +230,7 @@
     "sandattack": 235,
     "sing": 245,
     "stealth_rock": 264,
-    "water_gun": 292
+    "water_gun": 292,
+    "flamethrower": 117
   }
 }

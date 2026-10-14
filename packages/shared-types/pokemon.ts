@@ -343,7 +343,12 @@ export interface MoveData {
   statChanges?: MoveStatChange[];
   statusEffect?: MoveStatusEffect;
   healPercent?: number;
+  drainPercent?: number;
+  recoilPercent?: number;
   highCrit?: boolean;
+  multiHit?: [number, number] | number;
+  twoTurn?: boolean | 'charge' | 'fly' | 'dig' | 'dive' | 'bounce';
+  flinchChance?: number;
 }
 
 export interface MovesDatabase {

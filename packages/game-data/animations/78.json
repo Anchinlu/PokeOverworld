@@ -1,1 +1,328 @@
-{"id": "78", "name": "Move:CUT", "graphic": "004-Attack02", "hue": 0, "position": 1, "fps": 20, "frames": [{"cels": [{"pattern": -1, "x": 128, "y": 224, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "user"}, {"pattern": -2, "x": 384, "y": 96, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "target"}, {"pattern": 0, "x": 384, "y": 94, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "target"}]}, {"cels": [{"pattern": -1, "x": 128, "y": 224, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "user"}, {"pattern": -2, "x": 384, "y": 96, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "target"}, {"pattern": 1, "x": 384, "y": 94, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "target"}]}, {"cels": [{"pattern": -1, "x": 128, "y": 224, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "user"}, {"pattern": -2, "x": 384, "y": 96, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "target"}, {"pattern": 2, "x": 384, "y": 94, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "target"}]}, {"cels": [{"pattern": -1, "x": 128, "y": 224, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "user"}, {"pattern": -2, "x": 384, "y": 96, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "target"}, {"pattern": 3, "x": 384, "y": 94, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "target"}]}, {"cels": [{"pattern": -1, "x": 128, "y": 224, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "user"}, {"pattern": -2, "x": 384, "y": 96, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "target"}, {"pattern": 4, "x": 384, "y": 94, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "target"}]}, {"cels": [{"pattern": -1, "x": 128, "y": 224, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "user"}, {"pattern": -2, "x": 384, "y": 96, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "target"}, {"pattern": 5, "x": 384, "y": 94, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "target"}]}, {"cels": [{"pattern": -1, "x": 128, "y": 224, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "user"}, {"pattern": -2, "x": 384, "y": 96, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "target"}, {"pattern": 6, "x": 384, "y": 94, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "target"}]}, {"cels": [{"pattern": -1, "x": 128, "y": 224, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "user"}, {"pattern": -2, "x": 384, "y": 96, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "target"}, {"pattern": 7, "x": 384, "y": 94, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "target"}]}, {"cels": [{"pattern": -1, "x": 128, "y": 224, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "user"}, {"pattern": -2, "x": 384, "y": 96, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "target"}, {"pattern": 8, "x": 384, "y": 94, "zoomX": 100, "zoomY": 100, "angle": 0, "mirror": false, "opacity": 255, "blendMode": "normal", "visible": true, "priority": 1, "focus": "target"}]}], "timings": [{"frame": 0, "type": "sound", "payload": {"sound": "Slash10", "volume": 80, "pitch": 100}}, {"frame": 3, "type": "sound", "payload": {"sound": "Slash2", "volume": 80, "pitch": 100}}, {"frame": 6, "type": "sound", "payload": {"sound": "Slash11", "volume": 80, "pitch": 100}}]}
+{
+  "id": "78",
+  "name": "Move:CUT",
+  "graphic": "eb602_4",
+  "hue": 0,
+  "position": 1,
+  "fps": 20,
+  "frames": [
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 0,
+          "graphic": "eb602_4",
+          "x": 384,
+          "y": 96,
+          "zoomX": 60,
+          "zoomY": 60,
+          "angle": -35,
+          "mirror": false,
+          "opacity": 160,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 0,
+          "graphic": "eb602_4",
+          "x": 384,
+          "y": 96,
+          "zoomX": 120,
+          "zoomY": 120,
+          "angle": -35,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        },
+        {
+          "pattern": -2,
+          "x": 388,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 0,
+          "graphic": "eb602_4",
+          "x": 384,
+          "y": 96,
+          "zoomX": 140,
+          "zoomY": 140,
+          "angle": -35,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        },
+        {
+          "pattern": -2,
+          "x": 380,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 0,
+          "graphic": "eb602_4",
+          "x": 384,
+          "y": 96,
+          "zoomX": 150,
+          "zoomY": 150,
+          "angle": -35,
+          "mirror": false,
+          "opacity": 220,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 0,
+          "graphic": "eb602_4",
+          "x": 384,
+          "y": 96,
+          "zoomX": 150,
+          "zoomY": 150,
+          "angle": -35,
+          "mirror": false,
+          "opacity": 140,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        },
+        {
+          "pattern": 0,
+          "graphic": "eb602_4",
+          "x": 384,
+          "y": 96,
+          "zoomX": 150,
+          "zoomY": 150,
+          "angle": -35,
+          "mirror": false,
+          "opacity": 50,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target"
+        }
+      ]
+    }
+  ],
+  "timings": [
+    {
+      "frame": 1,
+      "type": "flash",
+      "payload": {
+        "flashColor": [
+          255,
+          255,
+          255,
+          180
+        ],
+        "flashDuration": 4,
+        "flashScope": 3
+      }
+    },
+    {
+      "frame": 1,
+      "type": "sound",
+      "payload": {
+        "sound": "EBDX/Anim/ground1",
+        "volume": 80,
+        "pitch": 100
+      }
+    },
+    {
+      "frame": 2,
+      "type": "sound",
+      "payload": {
+        "sound": "EBDX/Anim/normal3",
+        "volume": 90,
+        "pitch": 100
+      }
+    }
+  ],
+  "sourcePack": "Reunion EBDX 1:1 Parity",
+  "sourceAnimationId": 78
+}

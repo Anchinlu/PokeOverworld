@@ -1753,6 +1753,35 @@ export class BattleEngine {
       attacker.mustRecharge = true;
     }
 
+    // Beak Blast charging contact check
+    if (
+      actualDamage > 0 &&
+      defender.isBeakBlastCharging &&
+      move.category === 'physical' &&
+      !hitSubstitute &&
+      !attackerFainted
+    ) {
+      if (attacker.status === 'none' && !attacker.types.includes('Fire')) {
+        setStatusCondition(attacker, 'burn');
+        secMsg += ` ${attacker.name} chạm vào chiếc mỏ rực lửa của ${defender.name} và bị bỏng!`;
+        events.push(
+          BattleEventFactory.statusInflicted(
+            attackerSide,
+            attacker.name,
+            'burn',
+            `${attacker.name} bị bỏng do chạm vào chiếc mỏ rực lửa của ${defender.name}!`
+          )
+        );
+      }
+    }
+
+    // Focus Punch interruption check
+    if (actualDamage > 0 && defender.isFocusPunchCharging) {
+      defender.isFocusPunchCharging = false;
+      defender.chargingMove = undefined;
+      secMsg += ` Đòn tấn công khiến ${defender.name} mất tập trung và hủy bỏ tụ đòn!`;
+    }
+
     // Post-attack held item effects (Life Orb recoil, Rocky Helmet counter, Defender Pinch Berries)
     if (actualDamage > 0) {
       const heldEffects = HeldItemEngine.checkPostAttackEffects(

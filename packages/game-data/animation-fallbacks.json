@@ -83,5 +83,10 @@
     "physicalmove": "bite",
     "specialmove": "crunch",
     "statusmove": "fake_tears"
+  },
+  "FAIRY": {
+    "physicalmove": "play_rough",
+    "specialmove": "swift",
+    "statusmove": "charm"
   }
 }

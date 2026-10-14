@@ -62,7 +62,15 @@
       "descriptionEn": "May lower opponent's Special Defense.",
       "nameEn": "Acid",
       "nameVi": "Axit Ăn Mòn",
-      "descriptionVi": "Có cơ hội làm giảm Phòng thủ Đặc biệt của đối phương (-1 bậc)."
+      "descriptionVi": "Có cơ hội làm giảm Phòng thủ Đặc biệt của đối phương (-1 bậc).",
+      "statChanges": [
+        {
+          "stat": "spDef",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 0.1
+        }
+      ]
     },
     "acid_armor": {
       "id": "acid_armor",
@@ -355,7 +363,15 @@
       "descriptionEn": "Lowers target's Special Defense.",
       "nameEn": "Apple Acid",
       "nameVi": "Apple Axit",
-      "descriptionVi": "Hạ Phòng thủ đặc biệt của mục tiêu."
+      "descriptionVi": "Hạ Phòng thủ đặc biệt của mục tiêu.",
+      "statChanges": [
+        {
+          "stat": "spDef",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 1.0
+        }
+      ]
     },
     "aqua_cutter": {
       "id": "aqua_cutter",
@@ -454,7 +470,8 @@
       "descriptionEn": "Hits 2-5 times in one turn.",
       "nameEn": "Arm Thrust",
       "nameVi": "Đẩy Tay",
-      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt."
+      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt.",
+      "multiHit": [2, 5]
     },
     "armor_cannon": {
       "id": "armor_cannon",
@@ -469,7 +486,19 @@
       "descriptionEn": "Lowers user's Defense and Special Defense.",
       "nameEn": "Armor Cannon",
       "nameVi": "Đại Bác Bộ Giáp",
-      "descriptionVi": "Làm giảm Phòng thủ và Phòng đặc biệt của người dùng."
+      "descriptionVi": "Làm giảm Phòng thủ và Phòng đặc biệt của người dùng.",
+      "statChanges": [
+        {
+          "stat": "defense",
+          "stages": -1,
+          "target": "self"
+        },
+        {
+          "stat": "spDef",
+          "stages": -1,
+          "target": "self"
+        }
+      ]
     },
     "aromatherapy": {
       "id": "aromatherapy",
@@ -635,7 +664,15 @@
       "descriptionEn": "May lower opponent's Attack.",
       "nameEn": "Aurora Beam",
       "nameVi": "Tia Cực Quang",
-      "descriptionVi": "Có cơ hội làm giảm Tấn công của đối phương (-1 bậc)."
+      "descriptionVi": "Có cơ hội làm giảm Tấn công của đối phương (-1 bậc).",
+      "statChanges": [
+        {
+          "stat": "attack",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 0.1
+        }
+      ]
     },
     "aurora_veil": {
       "id": "aurora_veil",
@@ -665,7 +702,14 @@
       "descriptionEn": "Reduces weight and sharply raises Speed.",
       "nameEn": "Autotomize",
       "nameVi": "Tự Cắt Rời Thân",
-      "descriptionVi": "Giảm trọng lượng và tăng mạnh Tốc độ."
+      "descriptionVi": "Giảm trọng lượng và tăng mạnh Tốc độ.",
+      "statChanges": [
+        {
+          "stat": "speed",
+          "stages": 2,
+          "target": "self"
+        }
+      ]
     },
     "avalanche": {
       "id": "avalanche",
@@ -717,7 +761,8 @@
       ],
       "nameEn": "Baby-Doll Eyes",
       "nameVi": "Đôi Mắt Trẻ Thơ",
-      "descriptionVi": "Luôn đi trước. Hạ chỉ số Tấn công của mục tiêu."
+      "descriptionVi": "Luôn đi trước. Hạ chỉ số Tấn công của mục tiêu.",
+      "priority": 1
     },
     "baddy_bad": {
       "id": "baddy_bad",
@@ -747,7 +792,8 @@
       "descriptionEn": "Protects the user and poisons opponent on contact.",
       "nameEn": "Baneful Bunker",
       "nameVi": "Hầm Trú Gai Độc",
-      "descriptionVi": "Bảo vệ người dùng và đầu độc đối thủ khi đối thủ tiếp xúc."
+      "descriptionVi": "Bảo vệ người dùng và đầu độc đối thủ khi đối thủ tiếp xúc.",
+      "priority": 4
     },
     "barb_barrage": {
       "id": "barb_barrage",
@@ -782,7 +828,8 @@
       "descriptionEn": "Hits 2-5 times in one turn.",
       "nameEn": "Barrage",
       "nameVi": "Bắn Dồn Dập",
-      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt."
+      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt.",
+      "multiHit": [2, 5]
     },
     "barrier": {
       "id": "barrier",
@@ -834,7 +881,8 @@
       "descriptionEn": "The user first heats up its beak, and then it attacks the target. Making direct contact with the Pokémon while it's heating up its beak results in a burn.",
       "nameEn": "Beak Blast",
       "nameVi": "Bộc Phá Mỏ",
-      "descriptionVi": "Người dùng làm nóng mỏ trước rồi tấn công mục tiêu. Pokémon tiếp xúc trực tiếp khi mỏ đang nóng sẽ bị bỏng."
+      "descriptionVi": "Người dùng làm nóng mỏ trước rồi tấn công mục tiêu. Pokémon tiếp xúc trực tiếp khi mỏ đang nóng sẽ bị bỏng.",
+      "twoTurn": "charge"
     },
     "beat_up": {
       "id": "beat_up",
@@ -939,7 +987,8 @@
       "descriptionEn": "User takes damage for two turns then strikes back double.",
       "nameEn": "Bide",
       "nameVi": "Nhẫn Nhịn",
-      "descriptionVi": "Chịu sát thương trong hai lượt rồi phản công với sát thương gấp đôi."
+      "descriptionVi": "Chịu sát thương trong hai lượt rồi phản công với sát thương gấp đôi.",
+      "twoTurn": "charge"
     },
     "bind": {
       "id": "bind",
@@ -1278,7 +1327,8 @@
       "descriptionEn": "Hits 2-5 times in one turn.",
       "nameEn": "Bone Rush",
       "nameVi": "Càn Quét Xương",
-      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt."
+      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt.",
+      "multiHit": [2, 5]
     },
     "bonemerang": {
       "id": "bonemerang",
@@ -1293,7 +1343,8 @@
       "descriptionEn": "Hits twice in one turn.",
       "nameEn": "Bonemerang",
       "nameVi": "Boomerang Xương",
-      "descriptionVi": "Tấn công liên tiếp 2 lần trong cùng một lượt."
+      "descriptionVi": "Tấn công liên tiếp 2 lần trong cùng một lượt.",
+      "multiHit": 2
     },
     "boomburst": {
       "id": "boomburst",
@@ -1328,7 +1379,8 @@
       },
       "nameEn": "Bounce",
       "nameVi": "Nhảy Bật",
-      "descriptionVi": "Bật lò xo ở lượt đầu tiên, tấn công ở lượt thứ hai. Có cơ hội làm đối phương bị tê liệt."
+      "descriptionVi": "Bật lò xo ở lượt đầu tiên, tấn công ở lượt thứ hai. Có cơ hội làm đối phương bị tê liệt.",
+      "twoTurn": "bounce"
     },
     "bouncy_bubble": {
       "id": "bouncy_bubble",
@@ -1480,7 +1532,15 @@
       "descriptionEn": "May lower opponent's Speed.",
       "nameEn": "Bubble Beam",
       "nameVi": "Tia Bong Bóng",
-      "descriptionVi": "Có cơ hội làm giảm Tốc độ của đối phương (-1 bậc)."
+      "descriptionVi": "Có cơ hội làm giảm Tốc độ của đối phương (-1 bậc).",
+      "statChanges": [
+        {
+          "stat": "speed",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 0.1
+        }
+      ]
     },
     "bug_bite": {
       "id": "bug_bite",
@@ -1510,7 +1570,15 @@
       "descriptionEn": "May lower opponent's Special Defense.",
       "nameEn": "Bug Buzz",
       "nameVi": "Rung Động Sóng Âm",
-      "descriptionVi": "Có cơ hội làm giảm Phòng thủ Đặc biệt của đối phương (-1 bậc)."
+      "descriptionVi": "Có cơ hội làm giảm Phòng thủ Đặc biệt của đối phương (-1 bậc).",
+      "statChanges": [
+        {
+          "stat": "spDef",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 0.1
+        }
+      ]
     },
     "bulk_up": {
       "id": "bulk_up",
@@ -1526,6 +1594,11 @@
       "statChanges": [
         {
           "stat": "attack",
+          "stages": 1,
+          "target": "self"
+        },
+        {
+          "stat": "defense",
           "stages": 1,
           "target": "self"
         }
@@ -1585,7 +1658,8 @@
       "descriptionEn": "Hits 2-5 times in one turn.",
       "nameEn": "Bullet Seed",
       "nameVi": "Đạn Hạt Giống",
-      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt."
+      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt.",
+      "multiHit": [2, 5]
     },
     "burn_up": {
       "id": "burn_up",
@@ -1660,7 +1734,19 @@
       "descriptionEn": "Raises user's Special Attack and Special Defense.",
       "nameEn": "Calm Mind",
       "nameVi": "Tịnh Tâm",
-      "descriptionVi": "Tịnh tâm tập trung, tăng cả Tấn công Đặc biệt và Phòng thủ Đặc biệt (+1 bậc)."
+      "descriptionVi": "Tịnh tâm tập trung, tăng cả Tấn công Đặc biệt và Phòng thủ Đặc biệt (+1 bậc).",
+      "statChanges": [
+        {
+          "stat": "spAtk",
+          "stages": 1,
+          "target": "self"
+        },
+        {
+          "stat": "spDef",
+          "stages": 1,
+          "target": "self"
+        }
+      ]
     },
     "camouflage": {
       "id": "camouflage",
@@ -1690,7 +1776,14 @@
       "descriptionEn": "Sharply lowers opponent's Special Attack if opposite gender.",
       "nameEn": "Captivate",
       "nameVi": "Quyến Rũ",
-      "descriptionVi": "Sharply Làm giảm chỉ số Tấn công đặc biệt nếu khác giới của đối phương."
+      "descriptionVi": "Sharply Làm giảm chỉ số Tấn công đặc biệt nếu khác giới của đối phương.",
+      "statChanges": [
+        {
+          "stat": "spAtk",
+          "stages": -2,
+          "target": "opponent"
+        }
+      ]
     },
     "catastropika": {
       "id": "catastropika",
@@ -1750,7 +1843,14 @@
       "descriptionEn": "Raises user's Special Defense and next Electric move's power increases.",
       "nameEn": "Charge",
       "nameVi": "Nạp Điện",
-      "descriptionVi": "Tăng phòng thủ đặc biệt của người dùng và sức mạnh của động thái điện tiếp theo tăng lên."
+      "descriptionVi": "Tăng phòng thủ đặc biệt của người dùng và sức mạnh của động thái điện tiếp theo tăng lên.",
+      "statChanges": [
+        {
+          "stat": "spDef",
+          "stages": 1,
+          "target": "self"
+        }
+      ]
     },
     "charge_beam": {
       "id": "charge_beam",
@@ -1781,7 +1881,7 @@
       "statChanges": [
         {
           "stat": "attack",
-          "stages": -1,
+          "stages": -2,
           "target": "opponent"
         }
       ],
@@ -1930,7 +2030,34 @@
       "descriptionEn": "Raises all user's stats but loses HP.",
       "nameEn": "Clangorous Soul",
       "nameVi": "Linh Hồn Vang Rền",
-      "descriptionVi": "Tăng tất cả chỉ số của người dùng nhưng làm mất HP."
+      "descriptionVi": "Tăng tất cả chỉ số của người dùng nhưng làm mất HP.",
+      "statChanges": [
+        {
+          "stat": "attack",
+          "stages": 1,
+          "target": "self"
+        },
+        {
+          "stat": "defense",
+          "stages": 1,
+          "target": "self"
+        },
+        {
+          "stat": "spAtk",
+          "stages": 1,
+          "target": "self"
+        },
+        {
+          "stat": "spDef",
+          "stages": 1,
+          "target": "self"
+        },
+        {
+          "stat": "speed",
+          "stages": 1,
+          "target": "self"
+        }
+      ]
     },
     "clangorous_soulblaze": {
       "id": "clangorous_soulblaze",
@@ -1975,7 +2102,19 @@
       "descriptionEn": "Lowers user's Defense and Special Defense.",
       "nameEn": "Close Combat",
       "nameVi": "Giáp Lá Cà",
-      "descriptionVi": "Làm giảm Phòng thủ và Phòng đặc biệt của người dùng."
+      "descriptionVi": "Làm giảm Phòng thủ và Phòng đặc biệt của người dùng.",
+      "statChanges": [
+        {
+          "stat": "defense",
+          "stages": -1,
+          "target": "self"
+        },
+        {
+          "stat": "spDef",
+          "stages": -1,
+          "target": "self"
+        }
+      ]
     },
     "coaching": {
       "id": "coaching",
@@ -2006,6 +2145,16 @@
       "statChanges": [
         {
           "stat": "attack",
+          "stages": 1,
+          "target": "self"
+        },
+        {
+          "stat": "defense",
+          "stages": 1,
+          "target": "self"
+        },
+        {
+          "stat": "accuracy",
           "stages": 1,
           "target": "self"
         }
@@ -2062,7 +2211,8 @@
       "descriptionEn": "Hits 2-5 times in one turn.",
       "nameEn": "Comet Punch",
       "nameVi": "Đấm Sao Băng",
-      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt."
+      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt.",
+      "multiHit": [2, 5]
     },
     "comeuppance": {
       "id": "comeuppance",
@@ -2092,7 +2242,14 @@
       "descriptionEn": "Lowers opponent's Special Attack.",
       "nameEn": "Confide",
       "nameVi": "Bộc Bạch",
-      "descriptionVi": "Làm giảm Tấn công Đặc biệt của đối phương (-1 bậc)."
+      "descriptionVi": "Làm giảm Tấn công Đặc biệt của đối phương (-1 bậc).",
+      "statChanges": [
+        {
+          "stat": "spAtk",
+          "stages": -1,
+          "target": "opponent"
+        }
+      ]
     },
     "confuse_ray": {
       "id": "confuse_ray",
@@ -2260,6 +2417,11 @@
           "stat": "defense",
           "stages": 1,
           "target": "self"
+        },
+        {
+          "stat": "spDef",
+          "stages": 1,
+          "target": "self"
         }
       ],
       "nameEn": "Cosmic Power",
@@ -2280,7 +2442,7 @@
       "statChanges": [
         {
           "stat": "defense",
-          "stages": 1,
+          "stages": 3,
           "target": "self"
         }
       ],
@@ -2437,7 +2599,15 @@
       "descriptionEn": "May lower opponent's Defense.",
       "nameEn": "Crunch",
       "nameVi": "Cắn Nghiền",
-      "descriptionVi": "Có cơ hội làm giảm Phòng thủ của đối phương (-1 bậc)."
+      "descriptionVi": "Có cơ hội làm giảm Phòng thủ của đối phương (-1 bậc).",
+      "statChanges": [
+        {
+          "stat": "defense",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 0.2
+        }
+      ]
     },
     "crush_claw": {
       "id": "crush_claw",
@@ -2452,7 +2622,15 @@
       "descriptionEn": "May lower opponent's Defense.",
       "nameEn": "Crush Claw",
       "nameVi": "Vuốt Nghiền Nát",
-      "descriptionVi": "Có cơ hội làm giảm Phòng thủ của đối phương (-1 bậc)."
+      "descriptionVi": "Có cơ hội làm giảm Phòng thủ của đối phương (-1 bậc).",
+      "statChanges": [
+        {
+          "stat": "defense",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 0.5
+        }
+      ]
     },
     "crush_grip": {
       "id": "crush_grip",
@@ -2590,6 +2768,11 @@
           "stat": "defense",
           "stages": 1,
           "target": "self"
+        },
+        {
+          "stat": "spDef",
+          "stages": 1,
+          "target": "self"
         }
       ],
       "nameEn": "Defend Order",
@@ -2707,7 +2890,8 @@
       "descriptionEn": "Digs underground on first turn, attacks on second. Can also escape from caves.",
       "nameEn": "Dig",
       "nameVi": "Đào Đất",
-      "descriptionVi": "Đào dưới lòng đất ở lượt đầu tiên, tấn công ở lượt thứ hai. Cũng có thể thoát khỏi hang động."
+      "descriptionVi": "Đào dưới lòng đất ở lượt đầu tiên, tấn công ở lượt thứ hai. Cũng có thể thoát khỏi hang động.",
+      "twoTurn": "dig"
     },
     "dire_claw": {
       "id": "dire_claw",
@@ -2792,7 +2976,8 @@
       "descriptionEn": "Dives underwater on first turn, attacks on second turn.",
       "nameEn": "Dive",
       "nameVi": "Lặn Sâu",
-      "descriptionVi": "Lặn dưới nước ở lượt đầu tiên, tấn công ở lượt thứ hai."
+      "descriptionVi": "Lặn dưới nước ở lượt đầu tiên, tấn công ở lượt thứ hai.",
+      "twoTurn": "dive"
     },
     "dizzy_punch": {
       "id": "dizzy_punch",
@@ -2852,7 +3037,8 @@
       "descriptionEn": "Hits twice in one turn.",
       "nameEn": "Double Hit",
       "nameVi": "Đòn Đánh Kép",
-      "descriptionVi": "Tấn công liên tiếp 2 lần trong cùng một lượt."
+      "descriptionVi": "Tấn công liên tiếp 2 lần trong cùng một lượt.",
+      "multiHit": 2
     },
     "double_iron_bash": {
       "id": "double_iron_bash",
@@ -2867,7 +3053,8 @@
       "descriptionEn": "Hits twice in one turn; may cause flinching.",
       "nameEn": "Double Iron Bash",
       "nameVi": "Double Sắt Bash",
-      "descriptionVi": "Đánh hai lần trong một lượt; Có cơ hội khiến đối phương nao núng."
+      "descriptionVi": "Đánh hai lần trong một lượt; Có cơ hội khiến đối phương nao núng.",
+      "multiHit": 2
     },
     "double_kick": {
       "id": "double_kick",
@@ -2882,7 +3069,8 @@
       "descriptionEn": "Hits twice in one turn.",
       "nameEn": "Double Kick",
       "nameVi": "Song Cước",
-      "descriptionVi": "Tấn công liên tiếp 2 lần trong cùng một lượt."
+      "descriptionVi": "Tấn công liên tiếp 2 lần trong cùng một lượt.",
+      "multiHit": 2
     },
     "double_shock": {
       "id": "double_shock",
@@ -2912,7 +3100,8 @@
       "descriptionEn": "Hits 2-5 times in one turn.",
       "nameEn": "Double Slap",
       "nameVi": "Song Tát",
-      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt."
+      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt.",
+      "multiHit": [2, 5]
     },
     "double_team": {
       "id": "double_team",
@@ -2958,7 +3147,14 @@
       "descriptionEn": "Sharply lowers user's Special Attack.",
       "nameEn": "Draco Meteor",
       "nameVi": "Draco Sao Băng",
-      "descriptionVi": "Sharply hạ thấp Special Tấn công của người dùng."
+      "descriptionVi": "Sharply hạ thấp Special Tấn công của người dùng.",
+      "statChanges": [
+        {
+          "stat": "spAtk",
+          "stages": -2,
+          "target": "self"
+        }
+      ]
     },
     "dragon_ascent": {
       "id": "dragon_ascent",
@@ -3041,6 +3237,11 @@
           "stat": "attack",
           "stages": 1,
           "target": "self"
+        },
+        {
+          "stat": "speed",
+          "stages": 1,
+          "target": "self"
         }
       ],
       "nameEn": "Dragon Dance",
@@ -3060,7 +3261,8 @@
       "descriptionEn": "User attacks twice.",
       "nameEn": "Dragon Darts",
       "nameVi": "Phi Tiêu Rồng",
-      "descriptionVi": "Người dùng tấn công hai lần."
+      "descriptionVi": "Người dùng tấn công hai lần.",
+      "multiHit": 2
     },
     "dragon_energy": {
       "id": "dragon_energy",
@@ -3266,7 +3468,8 @@
       "descriptionEn": "Hits twice in one turn.",
       "nameEn": "Dual Chop",
       "nameVi": "Dual Chặt",
-      "descriptionVi": "Tấn công liên tiếp 2 lần trong cùng một lượt."
+      "descriptionVi": "Tấn công liên tiếp 2 lần trong cùng một lượt.",
+      "multiHit": 2
     },
     "dual_wingbeat": {
       "id": "dual_wingbeat",
@@ -3281,7 +3484,8 @@
       "descriptionEn": "The user slams the target with its wings. The target is hit twice in a row.",
       "nameEn": "Dual Wingbeat",
       "nameVi": "Đập Cánh Đôi",
-      "descriptionVi": "Người dùng dùng dùng cánh đập mạnh vào mục tiêu. Mục tiêu bị bắn trúng hai lần liên tiếp."
+      "descriptionVi": "Người dùng dùng dùng cánh đập mạnh vào mục tiêu. Mục tiêu bị bắn trúng hai lần liên tiếp.",
+      "multiHit": 2
     },
     "dynamax_cannon": {
       "id": "dynamax_cannon",
@@ -3326,7 +3530,15 @@
       "descriptionEn": "May lower opponent's Special Defense.",
       "nameEn": "Earth Power",
       "nameVi": "Sức Mạnh Đất Mẹ",
-      "descriptionVi": "Có cơ hội làm giảm Phòng thủ Đặc biệt của đối phương (-1 bậc)."
+      "descriptionVi": "Có cơ hội làm giảm Phòng thủ Đặc biệt của đối phương (-1 bậc).",
+      "statChanges": [
+        {
+          "stat": "spDef",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 0.1
+        }
+      ]
     },
     "earthquake": {
       "id": "earthquake",
@@ -3371,7 +3583,14 @@
       "descriptionEn": "Sharply lowers opponent's Special Attack.",
       "nameEn": "Eerie Impulse",
       "nameVi": "Xung Điện Kỳ Quái",
-      "descriptionVi": "Làm giảm mạnh Tấn công Đặc biệt của đối phương (-2 bậc)."
+      "descriptionVi": "Làm giảm mạnh Tấn công Đặc biệt của đối phương (-2 bậc).",
+      "statChanges": [
+        {
+          "stat": "spAtk",
+          "stages": -2,
+          "target": "opponent"
+        }
+      ]
     },
     "eerie_spell": {
       "id": "eerie_spell",
@@ -3476,7 +3695,8 @@
       "descriptionEn": "Charges on first turn, attacks on second.",
       "nameEn": "Electro Shot",
       "nameVi": "Bắn Điện",
-      "descriptionVi": "Tụ năng lượng ở lượt đầu tiên và tấn công dũng mãnh ở lượt thứ hai."
+      "descriptionVi": "Tụ năng lượng ở lượt đầu tiên và tấn công dũng mãnh ở lượt thứ hai.",
+      "twoTurn": "charge"
     },
     "electroweb": {
       "id": "electroweb",
@@ -3578,7 +3798,8 @@
       "descriptionEn": "Always left with at least 1 HP, but may fail if used consecutively.",
       "nameEn": "Endure",
       "nameVi": "Kiên Cường",
-      "descriptionVi": "Luôn để lại ít nhất 1 HP, nhưng có thể không thành công nếu sử dụng liên tiếp."
+      "descriptionVi": "Luôn để lại ít nhất 1 HP, nhưng có thể không thành công nếu sử dụng liên tiếp.",
+      "priority": 4
     },
     "energy_ball": {
       "id": "energy_ball",
@@ -3593,7 +3814,15 @@
       "descriptionEn": "May lower opponent's Special Defense.",
       "nameEn": "Energy Ball",
       "nameVi": "Quả Cầu Năng Lượng",
-      "descriptionVi": "Có cơ hội làm giảm Phòng thủ Đặc biệt của đối phương (-1 bậc)."
+      "descriptionVi": "Có cơ hội làm giảm Phòng thủ Đặc biệt của đối phương (-1 bậc).",
+      "statChanges": [
+        {
+          "stat": "spDef",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 0.1
+        }
+      ]
     },
     "entrainment": {
       "id": "entrainment",
@@ -3813,7 +4042,14 @@
       "descriptionEn": "Sharply lowers opponent's Special Defense.",
       "nameEn": "Fake Tears",
       "nameVi": "Giả Tạo Nước Mắt",
-      "descriptionVi": "Làm giảm mạnh Phòng thủ Đặc biệt của đối phương (-2 bậc)."
+      "descriptionVi": "Làm giảm mạnh Phòng thủ Đặc biệt của đối phương (-2 bậc).",
+      "statChanges": [
+        {
+          "stat": "spDef",
+          "stages": -2,
+          "target": "opponent"
+        }
+      ]
     },
     "false_surrender": {
       "id": "false_surrender",
@@ -3859,7 +4095,7 @@
       "statChanges": [
         {
           "stat": "attack",
-          "stages": -1,
+          "stages": -2,
           "target": "opponent"
         }
       ],
@@ -3880,7 +4116,8 @@
       "descriptionEn": "Only hits if opponent uses Protect or Detect in the same turn.",
       "nameEn": "Feint",
       "nameVi": "Đòn Đánh Đánh Lừa",
-      "descriptionVi": "Chỉ đánh trúng nếu đối thủ dùng Protect hoặc Detect trong cùng lượt."
+      "descriptionVi": "Chỉ đánh trúng nếu đối thủ dùng Protect hoặc Detect trong cùng lượt.",
+      "priority": 2
     },
     "feint_attack": {
       "id": "feint_attack",
@@ -4042,7 +4279,15 @@
       "descriptionEn": "The user strikes the target with a burning lash. This also lowers the target's Defense stat.",
       "nameEn": "Fire Lash",
       "nameVi": "Roi Lửa",
-      "descriptionVi": "Đánh mục tiêu bằng một roi lửa, đồng thời hạ chỉ số Phòng thủ của mục tiêu."
+      "descriptionVi": "Đánh mục tiêu bằng một roi lửa, đồng thời hạ chỉ số Phòng thủ của mục tiêu.",
+      "statChanges": [
+        {
+          "stat": "defense",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 1.0
+        }
+      ]
     },
     "fire_pledge": {
       "id": "fire_pledge",
@@ -4107,7 +4352,8 @@
       "descriptionEn": "Although this move has great power, it only works the first turn the user is in battle.",
       "nameEn": "First Impression",
       "nameVi": "Ấn Tượng Ban Đầu",
-      "descriptionVi": "Dù có uy lực lớn, chiêu này chỉ hoạt động trong lượt đầu tiên người dùng vào trận."
+      "descriptionVi": "Dù có uy lực lớn, chiêu này chỉ hoạt động trong lượt đầu tiên người dùng vào trận.",
+      "priority": 2
     },
     "fishious_rend": {
       "id": "fishious_rend",
@@ -4265,7 +4511,14 @@
       "descriptionEn": "Lowers opponent's Accuracy.",
       "nameEn": "Flash",
       "nameVi": "Tia Chớp Sáng",
-      "descriptionVi": "Hạ chỉ số Độ chính xác của đối thủ."
+      "descriptionVi": "Hạ chỉ số Độ chính xác của đối thủ.",
+      "statChanges": [
+        {
+          "stat": "accuracy",
+          "stages": -1,
+          "target": "opponent"
+        }
+      ]
     },
     "flash_cannon": {
       "id": "flash_cannon",
@@ -4280,7 +4533,15 @@
       "descriptionEn": "May lower opponent's Special Defense.",
       "nameEn": "Flash Cannon",
       "nameVi": "Đại Bác Quang Học",
-      "descriptionVi": "Có cơ hội làm giảm Phòng thủ Đặc biệt của đối phương (-1 bậc)."
+      "descriptionVi": "Có cơ hội làm giảm Phòng thủ Đặc biệt của đối phương (-1 bậc).",
+      "statChanges": [
+        {
+          "stat": "spDef",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 0.1
+        }
+      ]
     },
     "flatter": {
       "id": "flatter",
@@ -4310,7 +4571,14 @@
       "descriptionEn": "Sharply lowers user's Special Attack.",
       "nameEn": "Fleur Cannon",
       "nameVi": "Đại Bác Hoa",
-      "descriptionVi": "Hạ mạnh Công đặc biệt của người dùng."
+      "descriptionVi": "Hạ mạnh Công đặc biệt của người dùng.",
+      "statChanges": [
+        {
+          "stat": "spAtk",
+          "stages": -2,
+          "target": "self"
+        }
+      ]
     },
     "fling": {
       "id": "fling",
@@ -4415,7 +4683,8 @@
       "descriptionEn": "Flies up on first turn, attacks on second turn.",
       "nameEn": "Fly",
       "nameVi": "Bay Lên",
-      "descriptionVi": "Bay lên ở lượt đầu và tấn công ở lượt thứ hai."
+      "descriptionVi": "Bay lên ở lượt đầu và tấn công ở lượt thứ hai.",
+      "twoTurn": "fly"
     },
     "flying_press": {
       "id": "flying_press",
@@ -4445,7 +4714,15 @@
       "descriptionEn": "May lower opponent's Special Defense.",
       "nameEn": "Focus Blast",
       "nameVi": "Khí Công Pháo",
-      "descriptionVi": "Có cơ hội làm giảm Phòng thủ Đặc biệt của đối phương (-1 bậc)."
+      "descriptionVi": "Có cơ hội làm giảm Phòng thủ Đặc biệt của đối phương (-1 bậc).",
+      "statChanges": [
+        {
+          "stat": "spDef",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 0.1
+        }
+      ]
     },
     "focus_energy": {
       "id": "focus_energy",
@@ -4475,7 +4752,8 @@
       "descriptionEn": "If the user is hit before attacking, it flinches instead.",
       "nameEn": "Focus Punch",
       "nameVi": "Cú Đấm Tập Trung",
-      "descriptionVi": "Nếu bị đánh trúng trước khi tấn công, người dùng sẽ nao núng thay vì ra đòn."
+      "descriptionVi": "Nếu bị đánh trúng trước khi tấn công, người dùng sẽ nao núng thay vì ra đòn.",
+      "twoTurn": "charge"
     },
     "follow_me": {
       "id": "follow_me",
@@ -4575,7 +4853,8 @@
       },
       "nameEn": "Freeze Shock",
       "nameVi": "Sốc Hàn Băng",
-      "descriptionVi": "Tụ lực lượt 1, tấn công mạnh ở lượt 2. Có cơ hội làm đối phương bị tê liệt."
+      "descriptionVi": "Tụ lực lượt 1, tấn công mạnh ở lượt 2. Có cơ hội làm đối phương bị tê liệt.",
+      "twoTurn": "charge"
     },
     "freeze_dry": {
       "id": "freeze_dry",
@@ -4690,7 +4969,8 @@
       "descriptionEn": "Hits 2-5 times in one turn.",
       "nameEn": "Fury Attack",
       "nameVi": "Tấn Công Điên Cuồng",
-      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt."
+      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt.",
+      "multiHit": [2, 5]
     },
     "fury_cutter": {
       "id": "fury_cutter",
@@ -4720,7 +5000,8 @@
       "descriptionEn": "Hits 2-5 times in one turn.",
       "nameEn": "Fury Swipes",
       "nameVi": "Cào Loạn Xạ",
-      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt."
+      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt.",
+      "multiHit": [2, 5]
     },
     "fusion_bolt": {
       "id": "fusion_bolt",
@@ -5290,7 +5571,8 @@
       "descriptionEn": "Hits twice in one turn.",
       "nameEn": "Gear Grind",
       "nameVi": "Bánh Răng Nghiền Nát",
-      "descriptionVi": "Tấn công liên tiếp 2 lần trong cùng một lượt."
+      "descriptionVi": "Tấn công liên tiếp 2 lần trong cùng một lượt.",
+      "multiHit": 2
     },
     "gear_up": {
       "id": "gear_up",
@@ -5335,7 +5617,25 @@
       "descriptionEn": "Charges on first turn, sharply raises user's Sp. Attack, Sp. Defense and Speed on the second.",
       "nameEn": "Geomancy",
       "nameVi": "Hấp Thu Địa Khí",
-      "descriptionVi": "Tập trung năng lượng ở lượt đầu, rồi tăng mạnh Tấn công, Công đặc biệt, Phòng thủ đặc biệt và Tốc độ ở lượt thứ hai."
+      "descriptionVi": "Tập trung năng lượng ở lượt đầu, rồi tăng mạnh Tấn công, Công đặc biệt, Phòng thủ đặc biệt và Tốc độ ở lượt thứ hai.",
+      "statChanges": [
+        {
+          "stat": "spAtk",
+          "stages": 2,
+          "target": "self"
+        },
+        {
+          "stat": "spDef",
+          "stages": 2,
+          "target": "self"
+        },
+        {
+          "stat": "speed",
+          "stages": 2,
+          "target": "self"
+        }
+      ],
+      "twoTurn": "charge"
     },
     "giga_drain": {
       "id": "giga_drain",
@@ -5573,7 +5873,15 @@
       "descriptionEn": "Lowers the opponent's Defense stat.",
       "nameEn": "Grav Apple",
       "nameVi": "Quả Táo Trọng Lực",
-      "descriptionVi": "Hạ chỉ số Phòng thủ của đối thủ."
+      "descriptionVi": "Hạ chỉ số Phòng thủ của đối thủ.",
+      "statChanges": [
+        {
+          "stat": "defense",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 1.0
+        }
+      ]
     },
     "gravity": {
       "id": "gravity",
@@ -5626,6 +5934,11 @@
       "statChanges": [
         {
           "stat": "attack",
+          "stages": 1,
+          "target": "self"
+        },
+        {
+          "stat": "spAtk",
           "stages": 1,
           "target": "self"
         }
@@ -5787,7 +6100,14 @@
       "descriptionEn": "Lowers user's Speed.",
       "nameEn": "Hammer Arm",
       "nameVi": "Cánh Tay Búa",
-      "descriptionVi": "Hạ Tốc độ của người dùng."
+      "descriptionVi": "Hạ Tốc độ của người dùng.",
+      "statChanges": [
+        {
+          "stat": "speed",
+          "stages": -1,
+          "target": "self"
+        }
+      ]
     },
     "happy_hour": {
       "id": "happy_hour",
@@ -5869,7 +6189,8 @@
       "descriptionEn": "User receives recoil damage.",
       "nameEn": "Head Charge",
       "nameVi": "Húc Đầu Bộc Phá",
-      "descriptionVi": "Người dùng chịu sát thương phản lực."
+      "descriptionVi": "Người dùng chịu sát thương phản lực.",
+      "recoilPercent": 0.25
     },
     "head_smash": {
       "id": "head_smash",
@@ -5915,7 +6236,19 @@
       "descriptionEn": "Lowers user's Defense.",
       "nameEn": "Headlong Rush",
       "nameVi": "Càn Quét Headlong",
-      "descriptionVi": "Hạ Phòng thủ của người dùng."
+      "descriptionVi": "Hạ Phòng thủ của người dùng.",
+      "statChanges": [
+        {
+          "stat": "defense",
+          "stages": -1,
+          "target": "self"
+        },
+        {
+          "stat": "spDef",
+          "stages": -1,
+          "target": "self"
+        }
+      ]
     },
     "heal_bell": {
       "id": "heal_bell",
@@ -6086,7 +6419,8 @@
       "descriptionEn": "In Double Battles, boosts the power of the partner's move.",
       "nameEn": "Helping Hand",
       "nameVi": "Giúp Đỡ Đồng Đội",
-      "descriptionVi": "Trong Double Battle, tăng uy lực chiêu thức của đồng đội."
+      "descriptionVi": "Trong Double Battle, tăng uy lực chiêu thức của đồng đội.",
+      "priority": 5
     },
     "hex": {
       "id": "hex",
@@ -6192,6 +6526,11 @@
       "statChanges": [
         {
           "stat": "attack",
+          "stages": 1,
+          "target": "self"
+        },
+        {
+          "stat": "accuracy",
           "stages": 1,
           "target": "self"
         }
@@ -6506,7 +6845,8 @@
       },
       "nameEn": "Ice Burn",
       "nameVi": "Băng Burn",
-      "descriptionVi": "Tụ lực lượt 1, tấn công mạnh ở lượt 2. Có cơ hội làm đối phương bị bỏng."
+      "descriptionVi": "Tụ lực lượt 1, tấn công mạnh ở lượt 2. Có cơ hội làm đối phương bị bỏng.",
+      "twoTurn": "charge"
     },
     "ice_fang": {
       "id": "ice_fang",
@@ -6536,7 +6876,14 @@
       "descriptionEn": "The user swings and hits with its strong, heavy fist. It lowers the user's Speed, however.",
       "nameEn": "Ice Hammer",
       "nameVi": "Búa Băng",
-      "descriptionVi": "Vung nắm đấm nặng để đánh mục tiêu, nhưng hạ Tốc độ của người dùng."
+      "descriptionVi": "Vung nắm đấm nặng để đánh mục tiêu, nhưng hạ Tốc độ của người dùng.",
+      "statChanges": [
+        {
+          "stat": "speed",
+          "stages": -1,
+          "target": "self"
+        }
+      ]
     },
     "ice_punch": {
       "id": "ice_punch",
@@ -6617,7 +6964,8 @@
       "descriptionEn": "Hits 2-5 times in one turn.",
       "nameEn": "Icicle Spear",
       "nameVi": "Giáo Băng",
-      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt."
+      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt.",
+      "multiHit": [2, 5]
     },
     "icy_wind": {
       "id": "icy_wind",
@@ -6699,7 +7047,12 @@
       "descriptionEn": "Burns opponent.",
       "nameEn": "Inferno",
       "nameVi": "Hỏa Ngục",
-      "descriptionVi": "Khiến đối thủ bị bỏng (giảm 50% Tấn công và mất máu mỗi lượt)."
+      "descriptionVi": "Khiến đối thủ bị bỏng (giảm 50% Tấn công và mất máu mỗi lượt).",
+      "statusEffect": {
+        "condition": "burn",
+        "target": "opponent",
+        "chance": 1.0
+      }
     },
     "inferno_overdrive": {
       "id": "inferno_overdrive",
@@ -6826,7 +7179,15 @@
       "descriptionEn": "May lower opponent's Defense.",
       "nameEn": "Iron Tail",
       "nameVi": "Đuôi Thép",
-      "descriptionVi": "Có cơ hội làm giảm Phòng thủ của đối phương (-1 bậc)."
+      "descriptionVi": "Có cơ hội làm giảm Phòng thủ của đối phương (-1 bậc).",
+      "statChanges": [
+        {
+          "stat": "defense",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 0.3
+        }
+      ]
     },
     "ivy_cudgel": {
       "id": "ivy_cudgel",
@@ -6948,7 +7309,14 @@
       "descriptionEn": "Lowers opponent's Accuracy.",
       "nameEn": "Kinesis",
       "nameVi": "Bẻ Cong Thìa",
-      "descriptionVi": "Hạ Độ chính xác của đối thủ."
+      "descriptionVi": "Hạ Độ chính xác của đối thủ.",
+      "statChanges": [
+        {
+          "stat": "accuracy",
+          "stages": -1,
+          "target": "opponent"
+        }
+      ]
     },
     "kings_shield": {
       "id": "kings_shield",
@@ -6970,7 +7338,8 @@
       ],
       "nameEn": "King's Shield",
       "nameVi": "Khiên Của Vua",
-      "descriptionVi": "Bảo vệ người dùng và hạ Tấn công của đối thủ khi đối thủ tiếp xúc."
+      "descriptionVi": "Bảo vệ người dùng và hạ Tấn công của đối thủ khi đối thủ tiếp xúc.",
+      "priority": 4
     },
     "knock_off": {
       "id": "knock_off",
@@ -7126,7 +7495,14 @@
       "descriptionEn": "Sharply lowers user's Special Attack.",
       "nameEn": "Leaf Storm",
       "nameVi": "Bão Lá Cây",
-      "descriptionVi": "Hạ mạnh Công đặc biệt của người dùng."
+      "descriptionVi": "Hạ mạnh Công đặc biệt của người dùng.",
+      "statChanges": [
+        {
+          "stat": "spAtk",
+          "stages": -2,
+          "target": "self"
+        }
+      ]
     },
     "leaf_tornado": {
       "id": "leaf_tornado",
@@ -7141,7 +7517,15 @@
       "descriptionEn": "May lower opponent's Accuracy.",
       "nameEn": "Leaf Tornado",
       "nameVi": "Lá Cây Tornado",
-      "descriptionVi": "Có thể hạ Độ chính xác của đối thủ."
+      "descriptionVi": "Có thể hạ Độ chính xác của đối thủ.",
+      "statChanges": [
+        {
+          "stat": "accuracy",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 0.5
+        }
+      ]
     },
     "leafage": {
       "id": "leafage",
@@ -7320,7 +7704,15 @@
       "descriptionEn": "May lower opponent's Defense.",
       "nameEn": "Liquidation",
       "nameVi": "Đao Nước Xẻ Đôi",
-      "descriptionVi": "Có cơ hội làm giảm Phòng thủ của đối phương (-1 bậc)."
+      "descriptionVi": "Có cơ hội làm giảm Phòng thủ của đối phương (-1 bậc).",
+      "statChanges": [
+        {
+          "stat": "defense",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 0.2
+        }
+      ]
     },
     "lock_on": {
       "id": "lock_on",
@@ -7462,7 +7854,15 @@
       "descriptionEn": "The user makes a lunge at the target, attacking with full force. This also lowers the target's Attack stat.",
       "nameEn": "Lunge",
       "nameVi": "Đâm Tới",
-      "descriptionVi": "Lao mạnh vào mục tiêu và đồng thời hạ chỉ số Tấn công của mục tiêu."
+      "descriptionVi": "Lao mạnh vào mục tiêu và đồng thời hạ chỉ số Tấn công của mục tiêu.",
+      "statChanges": [
+        {
+          "stat": "attack",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 1.0
+        }
+      ]
     },
     "luster_purge": {
       "id": "luster_purge",
@@ -7508,7 +7908,8 @@
       "descriptionEn": "Reflects moves that cause status conditions back to the attacker.",
       "nameEn": "Magic Coat",
       "nameVi": "Áo Choàng Phép Thuật",
-      "descriptionVi": "Phản lại các chiêu gây trạng thái bất lợi về phía người tấn công."
+      "descriptionVi": "Phản lại các chiêu gây trạng thái bất lợi về phía người tấn công.",
+      "priority": 4
     },
     "magic_powder": {
       "id": "magic_powder",
@@ -7658,7 +8059,14 @@
       "descriptionEn": "Lowers user's Special Attack. Money is earned after the battle.",
       "nameEn": "Make It Rain",
       "nameVi": "Rải Tiền Vàng",
-      "descriptionVi": "Hạ Công đặc biệt của người dùng. Nhận thêm tiền sau trận đấu."
+      "descriptionVi": "Hạ Công đặc biệt của người dùng. Nhận thêm tiền sau trận đấu.",
+      "statChanges": [
+        {
+          "stat": "spAtk",
+          "stages": -1,
+          "target": "self"
+        }
+      ]
     },
     "malicious_moonsault": {
       "id": "malicious_moonsault",
@@ -8208,7 +8616,14 @@
       "descriptionEn": "Sharply lowers opponent's Special Defense.",
       "nameEn": "Metal Sound",
       "nameVi": "Âm Thanh Kim Loại",
-      "descriptionVi": "Làm giảm mạnh Phòng thủ Đặc biệt của đối phương (-2 bậc)."
+      "descriptionVi": "Làm giảm mạnh Phòng thủ Đặc biệt của đối phương (-2 bậc).",
+      "statChanges": [
+        {
+          "stat": "spDef",
+          "stages": -2,
+          "target": "opponent"
+        }
+      ]
     },
     "meteor_assault": {
       "id": "meteor_assault",
@@ -8238,7 +8653,8 @@
       "descriptionEn": "User gathers space power and boosts its Sp. Atk stat, then attacks the target on the next turn.",
       "nameEn": "Meteor Beam",
       "nameVi": "Tia Sao Băng",
-      "descriptionVi": "Tập trung năng lượng vũ trụ để tăng Công đặc biệt, rồi tấn công ở lượt tiếp theo."
+      "descriptionVi": "Tập trung năng lượng vũ trụ để tăng Công đặc biệt, rồi tấn công ở lượt tiếp theo.",
+      "twoTurn": "charge"
     },
     "meteor_mash": {
       "id": "meteor_mash",
@@ -8420,7 +8836,15 @@
       "descriptionEn": "May lower opponent's Accuracy.",
       "nameEn": "Mirror Shot",
       "nameVi": "Tia Phản Chiếu",
-      "descriptionVi": "Có thể hạ Độ chính xác của đối thủ."
+      "descriptionVi": "Có thể hạ Độ chính xác của đối thủ.",
+      "statChanges": [
+        {
+          "stat": "accuracy",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 0.3
+        }
+      ]
     },
     "mist": {
       "id": "mist",
@@ -8495,7 +8919,15 @@
       "descriptionEn": "May lower opponent's Special Attack.",
       "nameEn": "Moonblast",
       "nameVi": "Vụ Nổ Mặt Trăng",
-      "descriptionVi": "Có cơ hội làm giảm Tấn công Đặc biệt của đối phương (-1 bậc)."
+      "descriptionVi": "Có cơ hội làm giảm Tấn công Đặc biệt của đối phương (-1 bậc).",
+      "statChanges": [
+        {
+          "stat": "spAtk",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 0.3
+        }
+      ]
     },
     "moongeist_beam": {
       "id": "moongeist_beam",
@@ -8587,7 +9019,15 @@
       "descriptionEn": "May lower opponent's Accuracy.",
       "nameEn": "Mud Bomb",
       "nameVi": "Bom Bùn",
-      "descriptionVi": "Có thể hạ Độ chính xác của đối thủ."
+      "descriptionVi": "Có thể hạ Độ chính xác của đối thủ.",
+      "statChanges": [
+        {
+          "stat": "accuracy",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 0.3
+        }
+      ]
     },
     "mud_shot": {
       "id": "mud_shot",
@@ -8654,7 +9094,15 @@
       "descriptionEn": "May lower opponent's Accuracy.",
       "nameEn": "Muddy Water",
       "nameVi": "Nước Bùn Đục",
-      "descriptionVi": "Có thể hạ Độ chính xác của đối thủ."
+      "descriptionVi": "Có thể hạ Độ chính xác của đối thủ.",
+      "statChanges": [
+        {
+          "stat": "accuracy",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 0.3
+        }
+      ]
     },
     "multi_attack": {
       "id": "multi_attack",
@@ -8684,7 +9132,15 @@
       "descriptionEn": "Lowers opponent's Special Attack.",
       "nameEn": "Mystical Fire",
       "nameVi": "Ngọn Lửa Thần Bí",
-      "descriptionVi": "Làm giảm Tấn công Đặc biệt của đối phương (-1 bậc)."
+      "descriptionVi": "Làm giảm Tấn công Đặc biệt của đối phương (-1 bậc).",
+      "statChanges": [
+        {
+          "stat": "spAtk",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 1.0
+        }
+      ]
     },
     "mystical_power": {
       "id": "mystical_power",
@@ -8811,7 +9267,15 @@
       "descriptionEn": "May lower opponent's Accuracy.",
       "nameEn": "Night Daze",
       "nameVi": "Màn Đêm Choáng Váng",
-      "descriptionVi": "Có thể hạ Độ chính xác của đối thủ."
+      "descriptionVi": "Có thể hạ Độ chính xác của đối thủ.",
+      "statChanges": [
+        {
+          "stat": "accuracy",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 0.4
+        }
+      ]
     },
     "night_shade": {
       "id": "night_shade",
@@ -8872,7 +9336,34 @@
       "descriptionEn": "Raises all stats but user cannot switch out.",
       "nameEn": "No Retreat",
       "nameVi": "Không Rút Lui",
-      "descriptionVi": "Tăng tất cả chỉ số nhưng người dùng không thể đổi Pokémon."
+      "descriptionVi": "Tăng tất cả chỉ số nhưng người dùng không thể đổi Pokémon.",
+      "statChanges": [
+        {
+          "stat": "attack",
+          "stages": 1,
+          "target": "self"
+        },
+        {
+          "stat": "defense",
+          "stages": 1,
+          "target": "self"
+        },
+        {
+          "stat": "spAtk",
+          "stages": 1,
+          "target": "self"
+        },
+        {
+          "stat": "spDef",
+          "stages": 1,
+          "target": "self"
+        },
+        {
+          "stat": "speed",
+          "stages": 1,
+          "target": "self"
+        }
+      ]
     },
     "noble_roar": {
       "id": "noble_roar",
@@ -8888,6 +9379,11 @@
       "statChanges": [
         {
           "stat": "attack",
+          "stages": -1,
+          "target": "opponent"
+        },
+        {
+          "stat": "spAtk",
           "stages": -1,
           "target": "opponent"
         }
@@ -8929,7 +9425,12 @@
       "descriptionEn": "Paralyzes opponent.",
       "nameEn": "Nuzzle",
       "nameVi": "Dụi Má Tê Liệt",
-      "descriptionVi": "Khiến đối thủ bị tê liệt ngay lập tức."
+      "descriptionVi": "Khiến đối thủ bị tê liệt ngay lập tức.",
+      "statusEffect": {
+        "condition": "paralysis",
+        "target": "opponent",
+        "chance": 1.0
+      }
     },
     "oblivion_wing": {
       "id": "oblivion_wing",
@@ -8990,7 +9491,15 @@
       "descriptionEn": "May lower opponent's Accuracy.",
       "nameEn": "Octazooka",
       "nameVi": "Đại Bác Bạch Tuộc",
-      "descriptionVi": "Có thể hạ Độ chính xác của đối thủ."
+      "descriptionVi": "Có thể hạ Độ chính xác của đối thủ.",
+      "statChanges": [
+        {
+          "stat": "accuracy",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 0.5
+        }
+      ]
     },
     "octolock": {
       "id": "octolock",
@@ -9117,7 +9626,14 @@
       "descriptionEn": "Sharply lowers user's Special Attack.",
       "nameEn": "Overheat",
       "nameVi": "Quá Nhiệt Bộc Phá",
-      "descriptionVi": "Hạ mạnh Công đặc biệt của người dùng."
+      "descriptionVi": "Hạ mạnh Công đặc biệt của người dùng.",
+      "statChanges": [
+        {
+          "stat": "spAtk",
+          "stages": -2,
+          "target": "self"
+        }
+      ]
     },
     "pain_split": {
       "id": "pain_split",
@@ -9280,7 +9796,8 @@
       "descriptionEn": "Disappears on first turn, attacks on second. Can strike through Protect/Detect.",
       "nameEn": "Phantom Force",
       "nameVi": "Lực Lượng Ma Quái",
-      "descriptionVi": "Biến mất ở lượt đầu và tấn công ở lượt thứ hai. Có thể đánh xuyên Protect và Detect."
+      "descriptionVi": "Biến mất ở lượt đầu và tấn công ở lượt thứ hai. Có thể đánh xuyên Protect và Detect.",
+      "twoTurn": "fly"
     },
     "photon_geyser": {
       "id": "photon_geyser",
@@ -9325,7 +9842,8 @@
       "descriptionEn": "Hits 2-5 times in one turn.",
       "nameEn": "Pin Missile",
       "nameVi": "Tên Bắn Kim",
-      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt."
+      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt.",
+      "multiHit": [2, 5]
     },
     "plasma_fists": {
       "id": "plasma_fists",
@@ -9377,7 +9895,15 @@
       "descriptionEn": "May lower opponent's Attack.",
       "nameEn": "Play Rough",
       "nameVi": "Đùa Giỡn Thô Bạo",
-      "descriptionVi": "Có cơ hội làm giảm Tấn công của đối phương (-1 bậc)."
+      "descriptionVi": "Có cơ hội làm giảm Tấn công của đối phương (-1 bậc).",
+      "statChanges": [
+        {
+          "stat": "attack",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 0.1
+        }
+      ]
     },
     "pluck": {
       "id": "pluck",
@@ -9553,7 +10079,8 @@
       "descriptionEn": "Hits 1-10 times in a row.",
       "nameEn": "Population Bomb",
       "nameVi": "Bom Chuột Bầy Đàn",
-      "descriptionVi": "Đánh liên tiếp từ 1 đến 10 lần."
+      "descriptionVi": "Đánh liên tiếp từ 1 đến 10 lần.",
+      "multiHit": 10
     },
     "pounce": {
       "id": "pounce",
@@ -9866,7 +10393,15 @@
       "descriptionEn": "May lower opponent's Special Defense.",
       "nameEn": "Psychic",
       "nameVi": "Tâm Linh",
-      "descriptionVi": "Có cơ hội làm giảm Phòng thủ Đặc biệt của đối phương (-1 bậc)."
+      "descriptionVi": "Có cơ hội làm giảm Phòng thủ Đặc biệt của đối phương (-1 bậc).",
+      "statChanges": [
+        {
+          "stat": "spDef",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 0.1
+        }
+      ]
     },
     "psychic_fangs": {
       "id": "psychic_fangs",
@@ -10150,7 +10685,8 @@
       "descriptionEn": "Protects the user's team from high-priority moves.",
       "nameEn": "Quick Guard",
       "nameVi": "Bảo Vệ Đòn Nhanh",
-      "descriptionVi": "Bảo vệ cả đội của người dùng khỏi các chiêu có độ ưu tiên cao."
+      "descriptionVi": "Bảo vệ cả đội của người dùng khỏi các chiêu có độ ưu tiên cao.",
+      "priority": 3
     },
     "quiver_dance": {
       "id": "quiver_dance",
@@ -10165,7 +10701,24 @@
       "descriptionEn": "Raises user's Special Attack, Special Defense and Speed.",
       "nameEn": "Quiver Dance",
       "nameVi": "Vũ Điệu Bướm Lung Linh",
-      "descriptionVi": "Vũ điệu bướm lung linh, tăng Tấn công Đặc biệt, Phòng thủ Đặc biệt và Tốc độ (+1 bậc)."
+      "descriptionVi": "Vũ điệu bướm lung linh, tăng Tấn công Đặc biệt, Phòng thủ Đặc biệt và Tốc độ (+1 bậc).",
+      "statChanges": [
+        {
+          "stat": "spAtk",
+          "stages": 1,
+          "target": "self"
+        },
+        {
+          "stat": "spDef",
+          "stages": 1,
+          "target": "self"
+        },
+        {
+          "stat": "speed",
+          "stages": 1,
+          "target": "self"
+        }
+      ]
     },
     "rage": {
       "id": "rage",
@@ -10315,7 +10868,15 @@
       "descriptionEn": "May lower opponent's Defense.",
       "nameEn": "Razor Shell",
       "nameVi": "Vỏ Dao Cạo",
-      "descriptionVi": "Có cơ hội làm giảm Phòng thủ của đối phương (-1 bậc)."
+      "descriptionVi": "Có cơ hội làm giảm Phòng thủ của đối phương (-1 bậc).",
+      "statChanges": [
+        {
+          "stat": "defense",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 0.5
+        }
+      ]
     },
     "razor_wind": {
       "id": "razor_wind",
@@ -10331,7 +10892,8 @@
       "highCrit": true,
       "nameEn": "Razor Wind",
       "nameVi": "Gió Dao Cạo",
-      "descriptionVi": "Tụ lực lượt 1, tấn công mạnh ở lượt 2. Tỉ lệ tung đòn chí mạng rất cao."
+      "descriptionVi": "Tụ lực lượt 1, tấn công mạnh ở lượt 2. Tỉ lệ tung đòn chí mạng rất cao.",
+      "twoTurn": "charge"
     },
     "recover": {
       "id": "recover",
@@ -10422,7 +10984,12 @@
       "descriptionEn": "May put the target to sleep.",
       "nameEn": "Relic Song",
       "nameVi": "Khúc Ca Cổ Xưa",
-      "descriptionVi": "Có thể khiến mục tiêu ngủ."
+      "descriptionVi": "Có thể khiến mục tiêu ngủ.",
+      "statusEffect": {
+        "condition": "sleep",
+        "target": "opponent",
+        "chance": 0.1
+      }
     },
     "rest": {
       "id": "rest",
@@ -10594,7 +11161,8 @@
       "descriptionEn": "Hits 2-5 times in one turn.",
       "nameEn": "Rock Blast",
       "nameVi": "Đạn Đá",
-      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt."
+      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt.",
+      "multiHit": [2, 5]
     },
     "rock_climb": {
       "id": "rock_climb",
@@ -10661,7 +11229,15 @@
       "descriptionEn": "May lower opponent's Defense.",
       "nameEn": "Rock Smash",
       "nameVi": "Đập Đá",
-      "descriptionVi": "Có cơ hội làm giảm Phòng thủ của đối phương (-1 bậc)."
+      "descriptionVi": "Có cơ hội làm giảm Phòng thủ của đối phương (-1 bậc).",
+      "statChanges": [
+        {
+          "stat": "defense",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 0.5
+        }
+      ]
     },
     "rock_throw": {
       "id": "rock_throw",
@@ -10899,7 +11475,14 @@
       "descriptionEn": "Lowers opponent's Accuracy.",
       "nameEn": "Sand Attack",
       "nameVi": "Tạt Cát",
-      "descriptionVi": "Hạ Độ chính xác của đối thủ."
+      "descriptionVi": "Hạ Độ chính xác của đối thủ.",
+      "statChanges": [
+        {
+          "stat": "accuracy",
+          "stages": -1,
+          "target": "opponent"
+        }
+      ]
     },
     "sand_tomb": {
       "id": "sand_tomb",
@@ -11014,7 +11597,8 @@
       "descriptionEn": "Hits 2-5 times in one turn. Boosts user's Speed but lowers its Defense.",
       "nameEn": "Scale Shot",
       "nameVi": "Bắn Scale",
-      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong một lượt. Tăng Tốc độ nhưng hạ Phòng thủ của người dùng."
+      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong một lượt. Tăng Tốc độ nhưng hạ Phòng thủ của người dùng.",
+      "multiHit": [2, 5]
     },
     "scary_face": {
       "id": "scary_face",
@@ -11087,7 +11671,7 @@
       "statChanges": [
         {
           "stat": "defense",
-          "stages": -1,
+          "stages": -2,
           "target": "opponent"
         }
       ],
@@ -11233,7 +11817,15 @@
       "descriptionEn": "May lower opponent's Special Defense.",
       "nameEn": "Shadow Ball",
       "nameVi": "Quả Cầu Bóng Tối",
-      "descriptionVi": "Có cơ hội làm giảm Phòng thủ Đặc biệt của đối phương (-1 bậc)."
+      "descriptionVi": "Có cơ hội làm giảm Phòng thủ Đặc biệt của đối phương (-1 bậc).",
+      "statChanges": [
+        {
+          "stat": "spDef",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 0.2
+        }
+      ]
     },
     "shadow_bone": {
       "id": "shadow_bone",
@@ -11279,7 +11871,8 @@
       "descriptionEn": "Disappears on first turn, attacks on second. Can strike through Protect/Detect.",
       "nameEn": "Shadow Force",
       "nameVi": "Ám Ảnh Vô Hình",
-      "descriptionVi": "Biến mất ở lượt đầu và tấn công ở lượt thứ hai. Có thể đánh xuyên Protect và Detect."
+      "descriptionVi": "Biến mất ở lượt đầu và tấn công ở lượt thứ hai. Có thể đánh xuyên Protect và Detect.",
+      "twoTurn": "fly"
     },
     "shadow_punch": {
       "id": "shadow_punch",
@@ -11415,6 +12008,26 @@
           "stat": "attack",
           "stages": 2,
           "target": "self"
+        },
+        {
+          "stat": "spAtk",
+          "stages": 2,
+          "target": "self"
+        },
+        {
+          "stat": "speed",
+          "stages": 2,
+          "target": "self"
+        },
+        {
+          "stat": "defense",
+          "stages": -1,
+          "target": "self"
+        },
+        {
+          "stat": "spDef",
+          "stages": -1,
+          "target": "self"
         }
       ],
       "nameEn": "Shell Smash",
@@ -11470,6 +12083,11 @@
       "description": "Tăng chỉ số Tấn công and sharply raises Tốc độ của bản thân.",
       "descriptionEn": "Raises user's Attack and sharply raises Speed.",
       "statChanges": [
+        {
+          "stat": "speed",
+          "stages": 2,
+          "target": "self"
+        },
         {
           "stat": "attack",
           "stages": 1,
@@ -11671,7 +12289,15 @@
       "descriptionEn": "Lowers opponent's Sp. Attack.",
       "nameEn": "Skitter Smack",
       "nameVi": "Skitter Tát Mạnh",
-      "descriptionVi": "Làm giảm chỉ số Sp của đối phương. Tấn công."
+      "descriptionVi": "Làm giảm chỉ số Sp của đối phương. Tấn công.",
+      "statChanges": [
+        {
+          "stat": "spAtk",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 1.0
+        }
+      ]
     },
     "skull_bash": {
       "id": "skull_bash",
@@ -11686,7 +12312,8 @@
       "descriptionEn": "Raises Defense on first turn, attacks on second.",
       "nameEn": "Skull Bash",
       "nameVi": "Húc Đầu Thiết Giáp",
-      "descriptionVi": "Tăng Phòng thủ ở lượt đầu và tấn công ở lượt thứ hai."
+      "descriptionVi": "Tăng Phòng thủ ở lượt đầu và tấn công ở lượt thứ hai.",
+      "twoTurn": "charge"
     },
     "sky_attack": {
       "id": "sky_attack",
@@ -11702,7 +12329,8 @@
       "highCrit": true,
       "nameEn": "Sky Attack",
       "nameVi": "Không Kích",
-      "descriptionVi": "Tụ lực lượt 1, tấn công mạnh ở lượt 2. Có cơ hội khiến đối phương nao núng. Tỉ lệ tung đòn chí mạng rất cao."
+      "descriptionVi": "Tụ lực lượt 1, tấn công mạnh ở lượt 2. Có cơ hội khiến đối phương nao núng. Tỉ lệ tung đòn chí mạng rất cao.",
+      "twoTurn": "charge"
     },
     "sky_drop": {
       "id": "sky_drop",
@@ -11954,7 +12582,14 @@
       "descriptionEn": "Lowers opponent's Accuracy.",
       "nameEn": "Smokescreen",
       "nameVi": "Màn Khói",
-      "descriptionVi": "Hạ Độ chính xác của đối thủ."
+      "descriptionVi": "Hạ Độ chính xác của đối thủ.",
+      "statChanges": [
+        {
+          "stat": "accuracy",
+          "stages": -1,
+          "target": "opponent"
+        }
+      ]
     },
     "snap_trap": {
       "id": "snap_trap",
@@ -11984,7 +12619,15 @@
       "descriptionEn": "Lowers opponent's Special Attack.",
       "nameEn": "Snarl",
       "nameVi": "Tiếng Gầm Gừ Gắt Gỏng",
-      "descriptionVi": "Làm giảm Tấn công Đặc biệt của đối phương (-1 bậc)."
+      "descriptionVi": "Làm giảm Tấn công Đặc biệt của đối phương (-1 bậc).",
+      "statChanges": [
+        {
+          "stat": "spAtk",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 1.0
+        }
+      ]
     },
     "snatch": {
       "id": "snatch",
@@ -11999,7 +12642,8 @@
       "descriptionEn": "Steals the effects of the opponent's next move.",
       "nameEn": "Snatch",
       "nameVi": "Cướp Đoạt",
-      "descriptionVi": "Đánh cắp hiệu ứng của chiêu tiếp theo mà đối thủ sử dụng."
+      "descriptionVi": "Đánh cắp hiệu ứng của chiêu tiếp theo mà đối thủ sử dụng.",
+      "priority": 4
     },
     "snipe_shot": {
       "id": "snipe_shot",
@@ -12091,7 +12735,8 @@
       "descriptionEn": "Charges on first turn, attacks on second.",
       "nameEn": "Solar Beam",
       "nameVi": "Tia Sáng Mặt Trời",
-      "descriptionVi": "Tụ năng lượng ở lượt đầu tiên và tấn công dũng mãnh ở lượt thứ hai."
+      "descriptionVi": "Tụ năng lượng ở lượt đầu tiên và tấn công dũng mãnh ở lượt thứ hai.",
+      "twoTurn": "charge"
     },
     "solar_blade": {
       "id": "solar_blade",
@@ -12106,7 +12751,8 @@
       "descriptionEn": "Charges on first turn, attacks on second.",
       "nameEn": "Solar Blade",
       "nameVi": "Lưỡi Đao Mặt Trời",
-      "descriptionVi": "Tụ năng lượng ở lượt đầu tiên và tấn công dũng mãnh ở lượt thứ hai."
+      "descriptionVi": "Tụ năng lượng ở lượt đầu tiên và tấn công dũng mãnh ở lượt thứ hai.",
+      "twoTurn": "charge"
     },
     "sonic_boom": {
       "id": "sonic_boom",
@@ -12277,7 +12923,8 @@
       "descriptionEn": "Hits 2-5 times in one turn.",
       "nameEn": "Spike Cannon",
       "nameVi": "Đại Bác Gai Nhọn",
-      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt."
+      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt.",
+      "multiHit": [2, 5]
     },
     "spikes": {
       "id": "spikes",
@@ -12307,7 +12954,8 @@
       "descriptionEn": "Protects the user and inflicts damage on contact.",
       "nameEn": "Spiky Shield",
       "nameVi": "Khiên Gai Bảo Vệ",
-      "descriptionVi": "Bảo vệ người dùng và gây sát thương khi đối thủ tiếp xúc."
+      "descriptionVi": "Bảo vệ người dùng và gây sát thương khi đối thủ tiếp xúc.",
+      "priority": 4
     },
     "spin_out": {
       "id": "spin_out",
@@ -12322,7 +12970,14 @@
       "descriptionEn": "Harshly lowers user’s Speed.",
       "nameEn": "Spin Out",
       "nameVi": "Xoay Trượt Vòng",
-      "descriptionVi": "Hạ mạnh Tốc độ của người dùng."
+      "descriptionVi": "Hạ mạnh Tốc độ của người dùng.",
+      "statChanges": [
+        {
+          "stat": "speed",
+          "stages": -2,
+          "target": "self"
+        }
+      ]
     },
     "spirit_break": {
       "id": "spirit_break",
@@ -12337,7 +12992,15 @@
       "descriptionEn": "Lowers opponent's Special Attack.",
       "nameEn": "Spirit Break",
       "nameVi": "Tinh Thần Phá Vỡ",
-      "descriptionVi": "Làm giảm Tấn công Đặc biệt của đối phương (-1 bậc)."
+      "descriptionVi": "Làm giảm Tấn công Đặc biệt của đối phương (-1 bậc).",
+      "statChanges": [
+        {
+          "stat": "spAtk",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 1.0
+        }
+      ]
     },
     "spirit_shackle": {
       "id": "spirit_shackle",
@@ -12817,7 +13480,15 @@
       "descriptionEn": "Lowers opponent's Special Attack.",
       "nameEn": "Struggle Bug",
       "nameVi": "Struggle Bọ",
-      "descriptionVi": "Làm giảm Tấn công Đặc biệt của đối phương (-1 bậc)."
+      "descriptionVi": "Làm giảm Tấn công Đặc biệt của đối phương (-1 bậc).",
+      "statChanges": [
+        {
+          "stat": "spAtk",
+          "stages": -1,
+          "target": "opponent",
+          "chance": 1.0
+        }
+      ]
     },
     "stuff_cheeks": {
       "id": "stuff_cheeks",
@@ -12913,7 +13584,8 @@
       "descriptionEn": "User attacks first, but only works if opponent is readying an attack.",
       "nameEn": "Sucker Punch",
       "nameVi": "Đòn Đánh Bất Ngờ",
-      "descriptionVi": "Tấn công trước nhưng chỉ hiệu quả nếu đối thủ đang chuẩn bị tấn công."
+      "descriptionVi": "Tấn công trước nhưng chỉ hiệu quả nếu đối thủ đang chuẩn bị tấn công.",
+      "priority": 1
     },
     "sunny_day": {
       "id": "sunny_day",
@@ -12988,7 +13660,19 @@
       "descriptionEn": "Lowers user's Attack and Defense.",
       "nameEn": "Superpower",
       "nameVi": "Siêu Sức Mạnh",
-      "descriptionVi": "Hạ Tấn công và Phòng thủ của người dùng."
+      "descriptionVi": "Hạ Tấn công và Phòng thủ của người dùng.",
+      "statChanges": [
+        {
+          "stat": "attack",
+          "stages": -1,
+          "target": "self"
+        },
+        {
+          "stat": "defense",
+          "stages": -1,
+          "target": "self"
+        }
+      ]
     },
     "supersonic": {
       "id": "supersonic",
@@ -13048,7 +13732,8 @@
       "descriptionEn": "Always results in a critical hit and ignores stat changes.",
       "nameEn": "Surging Strikes",
       "nameVi": "Đòn Đánh Dồn Dập",
-      "descriptionVi": "Luôn là đòn chí mạng và bỏ qua thay đổi chỉ số."
+      "descriptionVi": "Luôn là đòn chí mạng và bỏ qua thay đổi chỉ số.",
+      "multiHit": 3
     },
     "swagger": {
       "id": "swagger",
@@ -13108,7 +13793,14 @@
       "descriptionEn": "Lowers opponent's Evasiveness.",
       "nameEn": "Sweet Scent",
       "nameVi": "Hương Thơm Ngọt Ngào",
-      "descriptionVi": "Làm giảm chỉ số Evasiveness của đối phương."
+      "descriptionVi": "Làm giảm chỉ số Evasiveness của đối phương.",
+      "statChanges": [
+        {
+          "stat": "evasion",
+          "stages": -2,
+          "target": "opponent"
+        }
+      ]
     },
     "swift": {
       "id": "swift",
@@ -13228,7 +13920,8 @@
       "descriptionEn": "Guaranteed to hit twice in a row.",
       "nameEn": "Tachyon Cutter",
       "nameVi": "Nhát Cắt Siêu Quang",
-      "descriptionVi": "Chắc chắn đánh trúng hai lần liên tiếp."
+      "descriptionVi": "Chắc chắn đánh trúng hai lần liên tiếp.",
+      "multiHit": 2
     },
     "tackle": {
       "id": "tackle",
@@ -13258,7 +13951,14 @@
       "descriptionEn": "Drastically raises user's Special Attack.",
       "nameEn": "Tail Glow",
       "nameVi": "Đuôi Phát Sáng Tụ Lực",
-      "descriptionVi": "Tăng mạnh Công đặc biệt của người dùng."
+      "descriptionVi": "Tăng mạnh Công đặc biệt của người dùng.",
+      "statChanges": [
+        {
+          "stat": "spAtk",
+          "stages": 3,
+          "target": "self"
+        }
+      ]
     },
     "tail_slap": {
       "id": "tail_slap",
@@ -13273,7 +13973,8 @@
       "descriptionEn": "Hits 2-5 times in one turn.",
       "nameEn": "Tail Slap",
       "nameVi": "Quật Đuôi",
-      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt."
+      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt.",
+      "multiHit": [2, 5]
     },
     "tail_whip": {
       "id": "tail_whip",
@@ -13341,7 +14042,19 @@
       "descriptionEn": "Heals user's status conditions and raises its stats.",
       "nameEn": "Take Heart",
       "nameVi": "Lấy Lại Can Đảm",
-      "descriptionVi": "Chữa trạng thái bất lợi và tăng các chỉ số của người dùng."
+      "descriptionVi": "Chữa trạng thái bất lợi và tăng các chỉ số của người dùng.",
+      "statChanges": [
+        {
+          "stat": "spAtk",
+          "stages": 1,
+          "target": "self"
+        },
+        {
+          "stat": "spDef",
+          "stages": 1,
+          "target": "self"
+        }
+      ]
     },
     "tar_shot": {
       "id": "tar_shot",
@@ -13386,7 +14099,19 @@
       "descriptionEn": "The user gets teary eyed to make the target lose its combative spirit. This lowers the target's Attack and Sp. Atk stats.",
       "nameEn": "Tearful Look",
       "nameVi": "Ánh Mắt Ngấn Lệ",
-      "descriptionVi": "Làm mục tiêu mất ý chí chiến đấu, hạ Tấn công và Công đặc biệt của mục tiêu."
+      "descriptionVi": "Làm mục tiêu mất ý chí chiến đấu, hạ Tấn công và Công đặc biệt của mục tiêu.",
+      "statChanges": [
+        {
+          "stat": "attack",
+          "stages": -1,
+          "target": "opponent"
+        },
+        {
+          "stat": "spAtk",
+          "stages": -1,
+          "target": "opponent"
+        }
+      ]
     },
     "teatime": {
       "id": "teatime",
@@ -13796,6 +14521,11 @@
           "stat": "attack",
           "stages": -1,
           "target": "opponent"
+        },
+        {
+          "stat": "defense",
+          "stages": -1,
+          "target": "opponent"
         }
       ],
       "nameEn": "Tickle",
@@ -13815,7 +14545,19 @@
       "descriptionEn": "Removes the effects of entry hazards and Substitute, and boosts user’s Attack and Speed.",
       "nameEn": "Tidy Up",
       "nameVi": "Dọn Dẹp Sạch Sẽ",
-      "descriptionVi": "Loại bỏ bẫy sân và Substitute, đồng thời tăng Tấn công và Tốc độ của người dùng."
+      "descriptionVi": "Loại bỏ bẫy sân và Substitute, đồng thời tăng Tấn công và Tốc độ của người dùng.",
+      "statChanges": [
+        {
+          "stat": "attack",
+          "stages": 1,
+          "target": "self"
+        },
+        {
+          "stat": "speed",
+          "stages": 1,
+          "target": "self"
+        }
+      ]
     },
     "topsy_turvy": {
       "id": "topsy_turvy",
@@ -13997,7 +14739,8 @@
       "descriptionEn": "Slower Pokémon move first in the turn for 5 turns.",
       "nameEn": "Trick Room",
       "nameVi": "Không Gian Kì Lạ",
-      "descriptionVi": "Pokémon chậm hơn sẽ đi trước trong 5 lượt."
+      "descriptionVi": "Pokémon chậm hơn sẽ đi trước trong 5 lượt.",
+      "priority": -7
     },
     "trick_or_treat": {
       "id": "trick_or_treat",
@@ -14043,7 +14786,8 @@
       "descriptionEn": "Attacks thrice with more power each time.",
       "nameEn": "Triple Axel",
       "nameVi": "Xoay Ba Vòng Băng",
-      "descriptionVi": "Đánh ba lần, mỗi lần sau mạnh hơn."
+      "descriptionVi": "Đánh ba lần, mỗi lần sau mạnh hơn.",
+      "multiHit": 3
     },
     "triple_dive": {
       "id": "triple_dive",
@@ -14058,7 +14802,8 @@
       "descriptionEn": "Hits 3 times in a row.",
       "nameEn": "Triple Dive",
       "nameVi": "Ba Cú Lặn",
-      "descriptionVi": "Đánh liên tiếp 3 lần."
+      "descriptionVi": "Đánh liên tiếp 3 lần.",
+      "multiHit": 3
     },
     "triple_kick": {
       "id": "triple_kick",
@@ -14073,7 +14818,8 @@
       "descriptionEn": "Hits thrice in one turn at increasing power.",
       "nameEn": "Triple Kick",
       "nameVi": "Đá Ba Phát",
-      "descriptionVi": "Đá ba lần trong một lượt với uy lực tăng dần."
+      "descriptionVi": "Đá ba lần trong một lượt với uy lực tăng dần.",
+      "multiHit": 3
     },
     "trop_kick": {
       "id": "trop_kick",
@@ -14125,7 +14871,8 @@
       "descriptionEn": "Hits twice in one turn.",
       "nameEn": "Twin Beam",
       "nameVi": "Song Tia Sáng",
-      "descriptionVi": "Tấn công liên tiếp 2 lần trong cùng một lượt."
+      "descriptionVi": "Tấn công liên tiếp 2 lần trong cùng một lượt.",
+      "multiHit": 2
     },
     "twineedle": {
       "id": "twineedle",
@@ -14145,7 +14892,8 @@
       },
       "nameEn": "Twineedle",
       "nameVi": "Song Kim",
-      "descriptionVi": "Tấn công liên tiếp 2 lần trong cùng một lượt. Có cơ hội làm đối phương bị nhiễm độc."
+      "descriptionVi": "Tấn công liên tiếp 2 lần trong cùng một lượt. Có cơ hội làm đối phương bị nhiễm độc.",
+      "multiHit": 2
     },
     "twinkle_tackle": {
       "id": "twinkle_tackle",
@@ -14235,7 +14983,24 @@
       "descriptionEn": "Lowers user's Defense, Special Defense and Speed.",
       "nameEn": "V-create",
       "nameVi": "Chữ V Chiến Thắng",
-      "descriptionVi": "Hạ Phòng thủ, Phòng thủ đặc biệt và Tốc độ của người dùng."
+      "descriptionVi": "Hạ Phòng thủ, Phòng thủ đặc biệt và Tốc độ của người dùng.",
+      "statChanges": [
+        {
+          "stat": "defense",
+          "stages": -1,
+          "target": "self"
+        },
+        {
+          "stat": "spDef",
+          "stages": -1,
+          "target": "self"
+        },
+        {
+          "stat": "speed",
+          "stages": -1,
+          "target": "self"
+        }
+      ]
     },
     "vacuum_wave": {
       "id": "vacuum_wave",
@@ -14281,7 +15046,24 @@
       "descriptionEn": "Lowers poisoned opponent's Special Attack and Speed.",
       "nameEn": "Venom Drench",
       "nameVi": "Tưới Nước Độc",
-      "descriptionVi": "Hạ Công đặc biệt và Tốc độ của đối thủ đang bị độc."
+      "descriptionVi": "Hạ Công đặc biệt và Tốc độ của đối thủ đang bị độc.",
+      "statChanges": [
+        {
+          "stat": "attack",
+          "stages": -1,
+          "target": "opponent"
+        },
+        {
+          "stat": "spAtk",
+          "stages": -1,
+          "target": "opponent"
+        },
+        {
+          "stat": "speed",
+          "stages": -1,
+          "target": "opponent"
+        }
+      ]
     },
     "venoshock": {
       "id": "venoshock",
@@ -14311,7 +15093,24 @@
       "descriptionEn": "Raises Attack and Defense.",
       "nameEn": "Victory Dance",
       "nameVi": "Vũ Điệu Victory",
-      "descriptionVi": "Tăng Tấn công và Phòng thủ của người dùng."
+      "descriptionVi": "Tăng Tấn công và Phòng thủ của người dùng.",
+      "statChanges": [
+        {
+          "stat": "attack",
+          "stages": 1,
+          "target": "self"
+        },
+        {
+          "stat": "defense",
+          "stages": 1,
+          "target": "self"
+        },
+        {
+          "stat": "speed",
+          "stages": 1,
+          "target": "self"
+        }
+      ]
     },
     "vine_whip": {
       "id": "vine_whip",
@@ -14467,7 +15266,9 @@
       "descriptionEn": "Hits 2-5 times in one turn.",
       "nameEn": "Water Shuriken",
       "nameVi": "Phi Tiêu Nước",
-      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt."
+      "descriptionVi": "Tấn công liên tiếp từ 2 đến 5 lần trong cùng một lượt.",
+      "multiHit": [2, 5],
+      "priority": 1
     },
     "water_sport": {
       "id": "water_sport",
@@ -14527,7 +15328,8 @@
       "descriptionEn": "User receives recoil damage.",
       "nameEn": "Wave Crash",
       "nameVi": "Cú Va Chạm Sóng",
-      "descriptionVi": "Người dùng chịu sát thương phản lực."
+      "descriptionVi": "Người dùng chịu sát thương phản lực.",
+      "recoilPercent": 0.33
     },
     "weather_ball": {
       "id": "weather_ball",
@@ -14618,7 +15420,8 @@
       "descriptionEn": "Protects the user's team from multi-target attacks.",
       "nameEn": "Wide Guard",
       "nameVi": "Khiên Bảo Vệ Diện Rộng",
-      "descriptionVi": "Bảo vệ đội của người dùng khỏi các đòn đánh nhiều mục tiêu."
+      "descriptionVi": "Bảo vệ đội của người dùng khỏi các đòn đánh nhiều mục tiêu.",
+      "priority": 3
     },
     "wild_charge": {
       "id": "wild_charge",
@@ -14633,7 +15436,8 @@
       "descriptionEn": "User receives recoil damage.",
       "nameEn": "Wild Charge",
       "nameVi": "Xung Kích Hoang Dã",
-      "descriptionVi": "Người dùng chịu sát thương phản lực."
+      "descriptionVi": "Người dùng chịu sát thương phản lực.",
+      "recoilPercent": 0.25
     },
     "wildbolt_storm": {
       "id": "wildbolt_storm",
@@ -14774,6 +15578,11 @@
           "stat": "attack",
           "stages": 1,
           "target": "self"
+        },
+        {
+          "stat": "spAtk",
+          "stages": 1,
+          "target": "self"
         }
       ],
       "nameEn": "Work Up",
@@ -14873,7 +15682,12 @@
       "descriptionEn": "Paralyzes opponent.",
       "nameEn": "Zap Cannon",
       "nameVi": "Đại Bác Sấm Sét",
-      "descriptionVi": "Khiến đối thủ bị tê liệt ngay lập tức."
+      "descriptionVi": "Khiến đối thủ bị tê liệt ngay lập tức.",
+      "statusEffect": {
+        "condition": "paralysis",
+        "target": "opponent",
+        "chance": 1.0
+      }
     },
     "zen_headbutt": {
       "id": "zen_headbutt",

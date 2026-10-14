@@ -4,7 +4,7 @@ import rawMovesData from '@pokemon/game-data/moves-db.json';
 import rawPokemonData from '@pokemon/game-data/pokemon-db.json';
 
 export const MOVES_DB: Record<string, BattleMove> = (
-  rawMovesData as { moves: Record<string, BattleMove> }
+  rawMovesData as unknown as { moves: Record<string, BattleMove> }
 ).moves;
 
 const speciesMovesMap = new Map<string, PokemonLearnMove[]>();

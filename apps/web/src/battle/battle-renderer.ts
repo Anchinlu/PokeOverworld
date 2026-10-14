@@ -16,7 +16,11 @@ import { BATTLE_ASSETS } from '../assets';
 import { detectPresetFromEnvironment } from './battle-environment-presets';
 import { clampMoveVfxCenter } from './move-vfx';
 import {
+  ANIMATION_ASSETS,
   battleAnimationPlayer,
+  battleAtmosphereManager,
+  battleCameraManager,
+  CoordinateTransformer,
   DEFAULT_ENEMY_GEOMETRY,
   DEFAULT_PLAYER_GEOMETRY,
   type BattlerGeometry,
@@ -209,6 +213,12 @@ export class BattleRenderer {
   private offscreenCanvas = document.createElement('canvas');
   private offscreenCtx = this.offscreenCanvas.getContext('2d', { willReadFrequently: true })!;
 
+  /** Offscreen layers used to clip Baneful Bunker to the active Pokémon sprite. */
+  private bunkerEffectCanvas = document.createElement('canvas');
+  private bunkerEffectCtx = this.bunkerEffectCanvas.getContext('2d')!;
+  private bunkerMaskCanvas = document.createElement('canvas');
+  private bunkerMaskCtx = this.bunkerMaskCanvas.getContext('2d')!;
+
   private tintedCloudCanvas: HTMLCanvasElement | null = null;
   private tintedCloudSource: HTMLImageElement | null = null;
 
@@ -334,61 +344,57 @@ export class BattleRenderer {
     const ctx = this.ctx;
     ctx.imageSmoothingEnabled = false;
 
-    // Dynamic Cinematic Camera: Zoom in close on wild Pokémon initially, then smoothly pull back to standard 1.0x view
-    let camScale = 1.0;
-    let camPanX = 0;
-    let camPanY = 0;
+    // Dynamic Cinematic Camera Vector (EBDX Camera System)
+    const isAnimPlaying = battleAnimationPlayer.isPlaying();
+    const animProgress = battleAnimationPlayer.getProgress();
+    const activeMoveType = battleAnimationPlayer.getActiveMoveType();
+    const userPos = battleAnimationPlayer.getActiveUserPos();
+    const targetPos = battleAnimationPlayer.getActiveTargetPos();
 
-    if (state.isIntro) {
-      const zoomStartP = 0.5; // starts zoom-out around the time Pokémon flashes radiant colors
-      const zoomEndP = 0.92; // completes zoom-out right before intro finishes
-      if (state.introProgress < zoomStartP) {
-        camScale = 1.35;
-        camPanX = -45;
-        camPanY = 15;
-      } else if (state.introProgress < zoomEndP) {
-        const t = (state.introProgress - zoomStartP) / (zoomEndP - zoomStartP);
-        const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-        camScale = 1.35 - eased * 0.35;
-        camPanX = -45 * (1 - eased);
-        camPanY = 15 * (1 - eased);
-      } else {
-        camScale = 1.0;
-        camPanX = 0;
-        camPanY = 0;
-      }
-    }
-
-    // Capture zoom: smoothly zoom in when ball hits Pokemon and zoom out if capture fails
-    if (state.captureZoomProgress > 0) {
-      const t = state.captureZoomProgress;
-      const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-      camScale = 1.0 + eased * 0.4; // Zoom from 1.0x to 1.4x
-      camPanX = -45 * eased;
-      camPanY = 15 * eased;
-    }
+    const cam = battleCameraManager.getTransform(
+      state.tick,
+      state.isIntro,
+      state.introProgress,
+      state.captureZoomProgress,
+      isAnimPlaying,
+      animProgress,
+      userPos,
+      targetPos
+    );
 
     ctx.save();
     ctx.beginPath();
     ctx.rect(0, 0, CANVAS_W, BOTTOM_PANEL_Y);
     ctx.clip();
 
-    // Subtle screen shake on Pokémon landing
-    if (state.screenShakeX !== 0 || state.screenShakeY !== 0) {
-      ctx.translate(state.screenShakeX, state.screenShakeY);
+    // Screen shake: Combine Pokémon landing shake + dynamic impact screen shake
+    const totalShakeX = (state.screenShakeX || 0) + cam.shakeX;
+    const totalShakeY = (state.screenShakeY || 0) + cam.shakeY;
+    if (totalShakeX !== 0 || totalShakeY !== 0) {
+      ctx.translate(totalShakeX, totalShakeY);
     }
 
-    if (camScale !== 1.0 || camPanX !== 0 || camPanY !== 0) {
+    if (cam.scale !== 1.0 || cam.panX !== 0 || cam.panY !== 0) {
       const centerX = CANVAS_W / 2;
       const centerY = BOTTOM_PANEL_Y / 2;
-      ctx.translate(centerX + camPanX, centerY + camPanY);
-      ctx.scale(camScale, camScale);
+      ctx.translate(centerX + cam.panX, centerY + cam.panY);
+      ctx.scale(cam.scale, cam.scale);
       ctx.translate(-centerX, -centerY);
     }
 
     this.drawBackground(ctx);
     this.drawEnvironmentSkyAndElements(ctx, state);
     this.drawEnemyBase(ctx);
+
+    // EBDX Atmospheric Dimming (fp["bg"]) & Defocus Vignette behind battlers
+    battleAtmosphereManager.renderBehind(
+      ctx,
+      CANVAS_W,
+      BOTTOM_PANEL_Y,
+      isAnimPlaying,
+      activeMoveType,
+      animProgress
+    );
 
     // Timeline animation cels behind battlers (priority 0 & 2)
     battleAnimationPlayer.renderBehind(ctx, CANVAS_W, BOTTOM_PANEL_Y);
@@ -399,6 +405,7 @@ export class BattleRenderer {
 
     // Timeline animation cels above battlers (priority 1 & 3)
     battleAnimationPlayer.renderAbove(ctx, CANVAS_W, BOTTOM_PANEL_Y);
+    this.drawBanefulBunkerMaskedOverlay(ctx, state);
 
     this.drawPlayerSendOut(ctx, state);
     this.drawBallThrow(ctx, state);
@@ -494,6 +501,147 @@ export class BattleRenderer {
     }
     ctx.drawImage(vfx.image, sx, sy, cellW, cellH, dx, dy, dw, dh);
     ctx.restore();
+  }
+
+  /**
+   * Clips Baneful Bunker's green texture to the active battler silhouette.
+   * The source cel is a full opaque atlas cell, so drawing it directly would
+   * expose its rectangular background over the entire battle field.
+   */
+  private drawBanefulBunkerMaskedOverlay(ctx: CanvasRenderingContext2D, state: BattleState): void {
+    const instance = battleAnimationPlayer.getCurrentInstance();
+    if (!instance || !instance.isPlaying) return;
+
+    const moveId = instance.request.moveId.toLowerCase().replace(/[\s-]+/g, '_');
+    if (moveId !== 'baneful_bunker') return;
+
+    const frame = instance.definition.frames[instance.currentFrame];
+    const cel = frame?.cels.find((candidate) => candidate.pattern === 11 && candidate.visible);
+    if (!cel || cel.opacity <= 0) return;
+
+    const effectImage = ANIMATION_ASSETS.getImage(instance.definition.graphic);
+    const atlas = ANIMATION_ASSETS.getAtlas(instance.definition.graphic);
+    if (!effectImage || !isLoaded(effectImage) || !atlas) return;
+
+    const attackerSide = instance.request.userSide;
+    const sprite = attackerSide === 'player' ? this.assets.playerSprite : this.assets.enemySprite;
+    if (!sprite || !isLoaded(sprite)) return;
+
+    const viewport = { x: 0, y: 0, width: CANVAS_W, height: BOTTOM_PANEL_Y };
+    const effectPosition = CoordinateTransformer.resolveCelPosition(
+      cel.x,
+      cel.y,
+      cel.focus,
+      instance.request.userPos,
+      instance.request.targetPos,
+      viewport,
+      attackerSide === 'enemy',
+      instance.request.selfTarget
+    );
+
+    const cellWidth = atlas.cellWidth;
+    const cellHeight = atlas.cellHeight;
+    const srcX = (cel.pattern % atlas.columns) * cellWidth;
+    const srcY = Math.floor(cel.pattern / atlas.columns) * cellHeight;
+    if (
+      srcX + cellWidth > effectImage.naturalWidth ||
+      srcY + cellHeight > effectImage.naturalHeight
+    ) {
+      return;
+    }
+
+    if (
+      this.bunkerEffectCanvas.width !== CANVAS_W ||
+      this.bunkerEffectCanvas.height !== BOTTOM_PANEL_Y
+    ) {
+      this.bunkerEffectCanvas.width = CANVAS_W;
+      this.bunkerEffectCanvas.height = BOTTOM_PANEL_Y;
+      this.bunkerMaskCanvas.width = CANVAS_W;
+      this.bunkerMaskCanvas.height = BOTTOM_PANEL_Y;
+    }
+
+    const effectCtx = this.bunkerEffectCtx;
+    const maskCtx = this.bunkerMaskCtx;
+    effectCtx.clearRect(0, 0, CANVAS_W, BOTTOM_PANEL_Y);
+    maskCtx.clearRect(0, 0, CANVAS_W, BOTTOM_PANEL_Y);
+
+    // Draw the selected Baneful Bunker atlas cell onto the effect layer.
+    effectCtx.save();
+    effectCtx.translate(effectPosition.x, effectPosition.y);
+    if (cel.angle !== 0) effectCtx.rotate((cel.angle * Math.PI) / 180);
+    effectCtx.scale(cel.zoomX / 100, cel.zoomY / 100);
+    effectCtx.globalAlpha = Math.max(0, Math.min(1, cel.opacity / 255));
+    effectCtx.globalCompositeOperation = cel.blendMode === 'additive' ? 'lighter' : 'source-over';
+    effectCtx.drawImage(
+      effectImage,
+      srcX,
+      srcY,
+      cellWidth,
+      cellHeight,
+      -cellWidth / 2,
+      -cellHeight / 2,
+      cellWidth,
+      cellHeight
+    );
+    effectCtx.restore();
+
+    // Recreate the exact active battler frame as the alpha mask.
+    const frameHeight = sprite.naturalHeight || sprite.height;
+    const frameWidth = frameHeight;
+    if (frameWidth <= 0 || frameHeight <= 0) return;
+
+    const pokemon =
+      attackerSide === 'player' ? this.engine.playerPokemon : this.engine.enemyPokemon;
+    const isShiny = pokemon.isShiny;
+    const divisor = isShiny ? 8 : 4;
+    const totalFrames = Math.max(1, Math.floor((sprite.naturalWidth || sprite.width) / frameWidth));
+    const frameIndex = Math.floor(state.tick / divisor) % totalFrames;
+
+    const isFainting =
+      attackerSide === 'player'
+        ? !state.isPlayerSendingOut &&
+          (state.playerFaintPhase !== 'none' || this.engine.playerPokemon.currentHp <= 0)
+        : state.enemyFaintPhase !== 'none' || this.engine.enemyPokemon.currentHp <= 0;
+    const offsetX =
+      attackerSide === 'player'
+        ? isFainting
+          ? 0
+          : state.playerLungeX + state.playerHitOffsetX + state.allySwitchPlayerOffsetX
+        : isFainting
+          ? 0
+          : state.enemyLungeX + state.enemyHitOffsetX + state.allySwitchEnemyOffsetX;
+    const offsetY =
+      attackerSide === 'player'
+        ? isFainting
+          ? 0
+          : state.playerLungeY + state.playerHitOffsetY + state.allySwitchPlayerOffsetY
+        : isFainting
+          ? 0
+          : state.enemyLungeY + state.enemyHitOffsetY + state.allySwitchEnemyOffsetY;
+    const spriteCenterX = instance.request.userPos.x + offsetX;
+    const spriteCenterY = instance.request.userPos.y + offsetY;
+    const drawWidth = frameWidth * 2;
+    const drawHeight = frameHeight * 2;
+    const drawX = Math.round(spriteCenterX - drawWidth / 2);
+    const drawY = Math.round(spriteCenterY - drawHeight / 2);
+
+    maskCtx.drawImage(
+      sprite,
+      frameIndex * frameWidth,
+      0,
+      frameWidth,
+      frameHeight,
+      drawX,
+      drawY,
+      drawWidth,
+      drawHeight
+    );
+
+    // Keep only the effect pixels whose location overlaps opaque sprite pixels.
+    effectCtx.globalCompositeOperation = 'destination-in';
+    effectCtx.drawImage(this.bunkerMaskCanvas, 0, 0);
+    effectCtx.globalCompositeOperation = 'source-over';
+    ctx.drawImage(this.bunkerEffectCanvas, 0, 0);
   }
 
   // ---- Background ----
@@ -1013,8 +1161,16 @@ export class BattleRenderer {
     // Dynamic sprite anchor (with attack lunge and hit knockback; frozen when fainting)
     const isEnemyFainting =
       state.enemyFaintPhase !== 'none' || this.engine.enemyPokemon.currentHp <= 0;
-    const anchorX = baseAnchorX + (isEnemyFainting ? 0 : state.enemyLungeX + state.enemyHitOffsetX);
-    const anchorY = baseAnchorY + (isEnemyFainting ? 0 : state.enemyLungeY + state.enemyHitOffsetY);
+    const anchorX =
+      baseAnchorX +
+      (isEnemyFainting
+        ? 0
+        : state.enemyLungeX + state.enemyHitOffsetX + state.allySwitchEnemyOffsetX);
+    const anchorY =
+      baseAnchorY +
+      (isEnemyFainting
+        ? 0
+        : state.enemyLungeY + state.enemyHitOffsetY + state.allySwitchEnemyOffsetY);
 
     // Animated sprite (EBS horizontal strip)
     const img = this.assets.enemySprite;
@@ -1033,14 +1189,41 @@ export class BattleRenderer {
       const sx = frameIdx * frameW;
 
       // Apply capture shrink scale
+      // Apply capture shrink scale and EBDX battler dynamics (squash & stretch)
       const captureScale =
         state.isThrowingBall && state.ballThrowPhase === 'capturing'
           ? state.captureShrinkScale
           : 1.0;
-      const scale = 2.0 * captureScale;
 
-      const dw = Math.round(frameW * scale);
-      const dh = Math.round(frameH * scale);
+      let enemyScaleMultiplierX = captureScale;
+      let enemyScaleMultiplierY = captureScale;
+
+      const isAnimPlaying = battleAnimationPlayer.isPlaying();
+      const animProgress = battleAnimationPlayer.getProgress();
+      const userSide = battleAnimationPlayer.getActiveUserSide();
+
+      if (!isEnemyFainting && (!state.isThrowingBall || state.ballThrowPhase !== 'capturing')) {
+        if (isAnimPlaying && userSide === 'enemy') {
+          // Enemy attacking: windup squash -> strike stretch
+          if (animProgress < 0.24) {
+            const t = animProgress / 0.24;
+            enemyScaleMultiplierX *= 1.0 + 0.06 * Math.sin(t * Math.PI);
+            enemyScaleMultiplierY *= 1.0 - 0.07 * Math.sin(t * Math.PI);
+          } else if (animProgress < 0.58) {
+            const t = (animProgress - 0.24) / 0.34;
+            enemyScaleMultiplierX *= 1.0 - 0.05 * Math.sin(t * Math.PI);
+            enemyScaleMultiplierY *= 1.0 + 0.08 * Math.sin(t * Math.PI);
+          }
+        } else if (state.enemyHitTimer > 0) {
+          // Enemy taking damage: impact compression squash
+          const hitP = state.enemyHitTimer / 16;
+          enemyScaleMultiplierX *= 1.0 + 0.07 * hitP;
+          enemyScaleMultiplierY *= 1.0 - 0.08 * hitP;
+        }
+      }
+
+      const dw = Math.round(frameW * 2.0 * enemyScaleMultiplierX);
+      const dh = Math.round(frameH * 2.0 * enemyScaleMultiplierY);
       const dx = Math.round(anchorX - dw / 2);
       const dy = Math.round(anchorY - dh);
 
@@ -1142,7 +1325,19 @@ export class BattleRenderer {
         ctx.restore();
       } else {
         // Normal rendering & hit flash
-        if (state.enemyHurtFlash > 0) {
+        const animationFlash = battleAnimationPlayer.getBattlerFlashColor(true);
+        if (animationFlash) {
+          const [r, g, b, a] = animationFlash;
+          const can = this.prepareSilhouetteCanvas(
+            img,
+            sx,
+            frameW,
+            frameH,
+            `rgba(${r}, ${g}, ${b}, ${(a / 255).toFixed(2)})`,
+            'source-atop'
+          );
+          ctx.drawImage(can, 0, 0, frameW, frameH, dx, dy, dw, dh);
+        } else if (state.enemyHurtFlash > 0) {
           if (state.enemyHurtFlash % 4 < 2) {
             ctx.filter = 'drop-shadow(0 0 10px rgba(239, 68, 68, 0.9)) saturate(3)';
           } else {
@@ -1170,7 +1365,9 @@ export class BattleRenderer {
           ctx.filter = 'none';
         }
 
-        ctx.drawImage(img, sx, 0, frameW, frameH, dx, dy, dw, dh);
+        if (!animationFlash) {
+          ctx.drawImage(img, sx, 0, frameW, frameH, dx, dy, dw, dh);
+        }
       }
 
       ctx.restore();
@@ -1216,13 +1413,43 @@ export class BattleRenderer {
     const baseAnchorX = 130;
     const baseAnchorY = isVisibleInSendOut ? state.pokemonDropY : 280;
     const anchorX =
-      baseAnchorX + (isPlayerFainting ? 0 : state.playerLungeX + state.playerHitOffsetX);
+      baseAnchorX +
+      (isPlayerFainting
+        ? 0
+        : state.playerLungeX + state.playerHitOffsetX + state.allySwitchPlayerOffsetX);
     const currentY =
-      baseAnchorY + (isPlayerFainting ? 0 : state.playerLungeY + state.playerHitOffsetY);
+      baseAnchorY +
+      (isPlayerFainting
+        ? 0
+        : state.playerLungeY + state.playerHitOffsetY + state.allySwitchPlayerOffsetY);
 
-    // Base scale modified by send-out physics and faint shrinking
+    // Base scale modified by send-out physics, faint shrinking, and EBDX battler dynamics (squash & stretch)
     let scaleMultiplierX = isVisibleInSendOut ? state.pokemonScaleX : 1.0;
     let scaleMultiplierY = isVisibleInSendOut ? state.pokemonScaleY : 1.0;
+
+    const isAnimPlaying = battleAnimationPlayer.isPlaying();
+    const animProgress = battleAnimationPlayer.getProgress();
+    const userSide = battleAnimationPlayer.getActiveUserSide();
+
+    if (!isPlayerFainting && !isVisibleInSendOut) {
+      if (isAnimPlaying && userSide === 'player') {
+        // Player attacking: windup squash -> strike stretch
+        if (animProgress < 0.24) {
+          const t = animProgress / 0.24;
+          scaleMultiplierX *= 1.0 + 0.06 * Math.sin(t * Math.PI);
+          scaleMultiplierY *= 1.0 - 0.07 * Math.sin(t * Math.PI);
+        } else if (animProgress < 0.58) {
+          const t = (animProgress - 0.24) / 0.34;
+          scaleMultiplierX *= 1.0 - 0.05 * Math.sin(t * Math.PI);
+          scaleMultiplierY *= 1.0 + 0.08 * Math.sin(t * Math.PI);
+        }
+      } else if (state.playerHitTimer > 0) {
+        // Player taking damage: impact compression squash
+        const hitP = state.playerHitTimer / 16;
+        scaleMultiplierX *= 1.0 + 0.07 * hitP;
+        scaleMultiplierY *= 1.0 - 0.08 * hitP;
+      }
+    }
 
     if (isPlayerFainting && state.playerFaintPhase === 'shrinking') {
       scaleMultiplierX *= state.playerFaintScale;
@@ -1309,7 +1536,19 @@ export class BattleRenderer {
         ctx.drawImage(can, 0, 0, frameW, frameH, dx, dy, dw, dh);
       } else {
         // Normal rendering / send-out flash / hit flash
-        if (state.playerHurtFlash > 0) {
+        const animationFlash = battleAnimationPlayer.getBattlerFlashColor(false);
+        if (animationFlash) {
+          const [r, g, b, a] = animationFlash;
+          const can = this.prepareSilhouetteCanvas(
+            img,
+            sx,
+            frameW,
+            frameH,
+            `rgba(${r}, ${g}, ${b}, ${(a / 255).toFixed(2)})`,
+            'source-atop'
+          );
+          ctx.drawImage(can, 0, 0, frameW, frameH, dx, dy, dw, dh);
+        } else if (state.playerHurtFlash > 0) {
           if (state.playerHurtFlash % 4 < 2) {
             ctx.filter = 'drop-shadow(0 0 10px rgba(239, 68, 68, 0.9)) saturate(3)';
           } else {
@@ -1327,7 +1566,9 @@ export class BattleRenderer {
           ctx.filter = 'none';
         }
 
-        ctx.drawImage(img, sx, 0, frameW, frameH, dx, dy, dw, dh);
+        if (!animationFlash) {
+          ctx.drawImage(img, sx, 0, frameW, frameH, dx, dy, dw, dh);
+        }
       }
 
       ctx.restore();

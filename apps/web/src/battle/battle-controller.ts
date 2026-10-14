@@ -835,12 +835,17 @@ export class BattleController {
     move: BattleMove,
     attackerSide: 'player' | 'enemy',
     onImpact: () => void,
-    onComplete?: () => void
+    onComplete?: () => void,
+    hitNum = 0
   ): void {
     const { playerCenter, enemyCenter } = this.getAnimationBattlerCenters();
 
     const attackerCenter = attackerSide === 'player' ? playerCenter : enemyCenter;
     const defenderCenter = attackerSide === 'player' ? enemyCenter : playerCenter;
+
+    if (move.id.toLowerCase().replace(/[- ]/g, '_') === 'ally_switch') {
+      this.state.startAllySwitch();
+    }
 
     battleAnimationPlayer
       .play({
@@ -851,6 +856,7 @@ export class BattleController {
         selfTarget: isSelfTargetMove(move),
         moveType: move.type,
         moveCategory: move.category,
+        hitNum,
         onHit: onImpact,
         onComplete,
       })

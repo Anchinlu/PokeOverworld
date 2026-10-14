@@ -1,15 +1,52 @@
-import type { BattleAnimationRequest, BattleAnimationInstance } from './types';
+import type { BattleAnimationRequest, BattleAnimationInstance, AnimationViewport } from './types';
 import { ANIMATION_REGISTRY } from './animation-registry';
 import { ANIMATION_ASSETS } from './animation-assets';
 import { CoordinateTransformer } from './coordinate-transformer';
 import { CelRenderer } from './cel-renderer';
 import { LayerManager } from './layer-manager';
 import { TimingEventManager } from './timing-events';
+import { battleCameraManager } from './battle-camera';
 
 export class BattleAnimationPlayer {
   private currentInstance: BattleAnimationInstance | null = null;
   private timingManager: TimingEventManager = new TimingEventManager();
   private hitTriggered = false;
+  private completeTriggered = false;
+
+  /**
+   * Baneful Bunker pattern 11 is a full-cell green texture. BattleRenderer
+   * renders it through the Pokémon alpha mask so the rectangle cannot leak
+   * outside the battler silhouette.
+   */
+  private isBattlerMaskedCel(instance: BattleAnimationInstance, pattern: number): boolean {
+    const moveId = instance.request.moveId.toLowerCase().replace(/[\s-]+/g, '_');
+    return moveId === 'baneful_bunker' && pattern === 11;
+  }
+
+  private triggerHit(request: BattleAnimationRequest): void {
+    if (!this.hitTriggered) {
+      this.hitTriggered = true;
+      try {
+        const isPhysical = request.moveCategory === 'physical';
+        battleCameraManager.triggerImpactShake(isPhysical ? 6 : 4);
+        request.onHit?.();
+      } catch (err) {
+        console.error('[BattleAnimationPlayer] Error in onHit callback:', err);
+      }
+    }
+  }
+
+  private triggerComplete(request: BattleAnimationRequest): void {
+    if (!this.completeTriggered) {
+      this.completeTriggered = true;
+      this.triggerHit(request);
+      try {
+        request.onComplete?.();
+      } catch (err) {
+        console.error('[BattleAnimationPlayer] Error in onComplete callback:', err);
+      }
+    }
+  }
 
   /**
    * Starts playing an animation request asynchronously.
@@ -21,7 +58,8 @@ export class BattleAnimationPlayer {
       request.moveId,
       isEnemy,
       request.moveType,
-      request.moveCategory
+      request.moveCategory,
+      request.hitNum ?? 0
     );
 
     const definition = await ANIMATION_REGISTRY.getDefinition(animId);
@@ -29,14 +67,25 @@ export class BattleAnimationPlayer {
       console.warn(
         `[BattleAnimationPlayer] No frames found for animation ID: ${animId} (${request.moveId})`
       );
-      request.onHit?.();
-      request.onComplete?.();
+      this.hitTriggered = false;
+      this.completeTriggered = false;
+      this.triggerComplete(request);
       return null;
     }
 
-    // Preload spritesheet if defined
-    if (definition.graphic) {
-      await ANIMATION_ASSETS.loadImage(definition.graphic);
+    // Preload spritesheet safely if defined (continue gracefully if asset is missing)
+    const graphics = new Set<string>([
+      definition.graphic,
+      ...definition.frames.flatMap((frame) =>
+        frame.cels.flatMap((cel) => (cel.graphic ? [cel.graphic] : []))
+      ),
+    ]);
+    for (const graphic of graphics) {
+      try {
+        await ANIMATION_ASSETS.loadImage(graphic);
+      } catch (err) {
+        console.warn(`[BattleAnimationPlayer] Could not preload asset '${graphic}':`, err);
+      }
     }
 
     const fps = definition.fps || 20;
@@ -44,6 +93,7 @@ export class BattleAnimationPlayer {
 
     this.timingManager.reset();
     this.hitTriggered = false;
+    this.completeTriggered = false;
 
     const instance: BattleAnimationInstance = {
       id: `anim_${animId}_${Date.now()}`,
@@ -79,27 +129,24 @@ export class BattleAnimationPlayer {
 
     // Mid-animation hit trigger (~40% duration if not already triggered)
     if (!this.hitTriggered && inst.elapsedMs >= inst.totalDurationMs * 0.4) {
-      this.hitTriggered = true;
-      inst.request.onHit?.();
+      this.triggerHit(inst.request);
     }
 
     if (frameIndex >= inst.definition.frames.length) {
       // Completed animation
       inst.currentFrame = inst.definition.frames.length - 1;
       inst.isPlaying = false;
-      if (!this.hitTriggered) {
-        this.hitTriggered = true;
-        inst.request.onHit?.();
-      }
-      inst.request.onComplete?.();
+      this.triggerComplete(inst.request);
       this.currentInstance = null;
       return;
     }
 
-    if (frameIndex !== inst.currentFrame) {
+    if (frameIndex > inst.currentFrame) {
+      for (let f = inst.currentFrame + 1; f <= frameIndex; f++) {
+        this.timingManager.triggerFrameTimings(f, inst.definition.timings);
+      }
       inst.currentFrame = frameIndex;
       this.timingManager.updateFlashes();
-      this.timingManager.triggerFrameTimings(frameIndex, inst.definition.timings);
     }
   }
 
@@ -107,17 +154,64 @@ export class BattleAnimationPlayer {
     return this.currentInstance !== null && this.currentInstance.isPlaying;
   }
 
+  /** Returns the active animation tint for the requested battler, if any. */
+  public getBattlerFlashColor(isTarget: boolean): [number, number, number, number] | null {
+    return this.timingManager.getActiveBattlerFlashes(isTarget);
+  }
+
   public getCurrentInstance(): BattleAnimationInstance | null {
     return this.currentInstance;
+  }
+
+  public getProgress(): number {
+    if (!this.currentInstance || !this.currentInstance.isPlaying || this.currentInstance.totalDurationMs <= 0) {
+      return 0;
+    }
+    return Math.min(1, Math.max(0, this.currentInstance.elapsedMs / this.currentInstance.totalDurationMs));
+  }
+
+  public getActiveMoveType(): string | undefined {
+    return this.currentInstance?.request.moveType;
+  }
+
+  public getActiveUserSide(): 'player' | 'enemy' | undefined {
+    return this.currentInstance?.request.userSide;
+  }
+
+  public getActiveUserPos(): { x: number; y: number } | undefined {
+    return this.currentInstance?.request.userPos;
+  }
+
+  public getActiveTargetPos(): { x: number; y: number } | undefined {
+    return this.currentInstance?.request.targetPos;
   }
 
   public stop(): void {
     if (this.currentInstance) {
       this.currentInstance.isPlaying = false;
-      this.currentInstance.request.onComplete?.();
+      this.triggerComplete(this.currentInstance.request);
       this.currentInstance = null;
     }
     this.timingManager.reset();
+  }
+
+  private resolveViewport(
+    viewportOrWidth?: AnimationViewport | number,
+    canvasHeight?: number
+  ): AnimationViewport {
+    if (typeof viewportOrWidth === 'object' && viewportOrWidth !== null) {
+      return viewportOrWidth;
+    }
+    if (this.currentInstance?.request.viewport) {
+      return this.currentInstance.request.viewport;
+    }
+    const width =
+      typeof viewportOrWidth === 'number'
+        ? viewportOrWidth
+        : CoordinateTransformer.DEFAULT_CANVAS_WIDTH;
+    const height =
+      typeof canvasHeight === 'number' ? canvasHeight : CoordinateTransformer.DEFAULT_CANVAS_HEIGHT;
+    return { x: 0, y: 0, width, height };
   }
 
   /**
@@ -125,7 +219,7 @@ export class BattleAnimationPlayer {
    */
   public renderBehind(
     ctx: CanvasRenderingContext2D,
-    canvasWidth = CoordinateTransformer.DEFAULT_CANVAS_WIDTH,
+    viewportOrWidth: AnimationViewport | number = CoordinateTransformer.DEFAULT_CANVAS_WIDTH,
     canvasHeight = CoordinateTransformer.DEFAULT_CANVAS_HEIGHT
   ): void {
     if (!this.currentInstance || !this.currentInstance.isPlaying) {
@@ -136,24 +230,52 @@ export class BattleAnimationPlayer {
     const frame = inst.definition.frames[inst.currentFrame];
     if (!frame) return;
 
+    const viewport = this.resolveViewport(viewportOrWidth, canvasHeight);
     const isEnemy = inst.request.userSide === 'enemy';
-    const graphic = inst.definition.graphic;
     const { behindBattlers } = LayerManager.categorizeCels(frame.cels);
 
+    const isFlightReversed = CoordinateTransformer.isDirectionReversed(
+      CoordinateTransformer.SRC_USER,
+      CoordinateTransformer.SRC_TARGET,
+      inst.request.userPos,
+      inst.request.targetPos
+    );
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(viewport.x, viewport.y, viewport.width, viewport.height);
+    ctx.clip();
+
     for (const cel of behindBattlers) {
+      if (this.isBattlerMaskedCel(inst, cel.pattern)) continue;
       const pos = CoordinateTransformer.resolveCelPosition(
-        cel.x,
-        cel.y,
+        cel.mirrorPositionOnEnemy && isEnemy ? CoordinateTransformer.SRC_WIDTH - cel.x : cel.x,
+        cel.mirrorPositionOnEnemy && isEnemy
+          ? CoordinateTransformer.SRC_USER.y + CoordinateTransformer.SRC_TARGET.y - cel.y
+          : cel.y,
         cel.focus,
         inst.request.userPos,
         inst.request.targetPos,
-        canvasWidth,
-        canvasHeight,
+        viewport,
         isEnemy,
-        inst.request.selfTarget
+        inst.request.selfTarget,
+        false,
+        cel.curve === 'arc'
       );
-      CelRenderer.renderCel(ctx, cel, pos.x, pos.y, graphic, isEnemy, canvasWidth, canvasHeight);
+      CelRenderer.renderCel(
+        ctx,
+        cel,
+        pos.x,
+        pos.y,
+        cel.graphic ?? inst.definition.graphic,
+        isFlightReversed,
+        viewport,
+        undefined,
+        isEnemy
+      );
     }
+
+    ctx.restore();
   }
 
   /**
@@ -161,7 +283,7 @@ export class BattleAnimationPlayer {
    */
   public renderAbove(
     ctx: CanvasRenderingContext2D,
-    canvasWidth = CoordinateTransformer.DEFAULT_CANVAS_WIDTH,
+    viewportOrWidth: AnimationViewport | number = CoordinateTransformer.DEFAULT_CANVAS_WIDTH,
     canvasHeight = CoordinateTransformer.DEFAULT_CANVAS_HEIGHT
   ): void {
     if (!this.currentInstance || !this.currentInstance.isPlaying) {
@@ -172,27 +294,55 @@ export class BattleAnimationPlayer {
     const frame = inst.definition.frames[inst.currentFrame];
     if (!frame) return;
 
+    const viewport = this.resolveViewport(viewportOrWidth, canvasHeight);
     const isEnemy = inst.request.userSide === 'enemy';
-    const graphic = inst.definition.graphic;
     const { aboveBattlers } = LayerManager.categorizeCels(frame.cels);
 
+    const isFlightReversed = CoordinateTransformer.isDirectionReversed(
+      CoordinateTransformer.SRC_USER,
+      CoordinateTransformer.SRC_TARGET,
+      inst.request.userPos,
+      inst.request.targetPos
+    );
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(viewport.x, viewport.y, viewport.width, viewport.height);
+    ctx.clip();
+
     for (const cel of aboveBattlers) {
+      if (this.isBattlerMaskedCel(inst, cel.pattern)) continue;
       const pos = CoordinateTransformer.resolveCelPosition(
-        cel.x,
-        cel.y,
+        cel.mirrorPositionOnEnemy && isEnemy ? CoordinateTransformer.SRC_WIDTH - cel.x : cel.x,
+        cel.mirrorPositionOnEnemy && isEnemy
+          ? CoordinateTransformer.SRC_USER.y + CoordinateTransformer.SRC_TARGET.y - cel.y
+          : cel.y,
         cel.focus,
         inst.request.userPos,
         inst.request.targetPos,
-        canvasWidth,
-        canvasHeight,
+        viewport,
         isEnemy,
-        inst.request.selfTarget
+        inst.request.selfTarget,
+        false,
+        cel.curve === 'arc'
       );
-      CelRenderer.renderCel(ctx, cel, pos.x, pos.y, graphic, isEnemy, canvasWidth, canvasHeight);
+      CelRenderer.renderCel(
+        ctx,
+        cel,
+        pos.x,
+        pos.y,
+        cel.graphic ?? inst.definition.graphic,
+        isFlightReversed,
+        viewport,
+        undefined,
+        isEnemy
+      );
     }
 
     // Render screen flashes
-    this.timingManager.renderScreenFlash(ctx, canvasWidth, canvasHeight);
+    this.timingManager.renderScreenFlash(ctx, viewport.width, viewport.height);
+
+    ctx.restore();
   }
 
   /**
@@ -200,11 +350,12 @@ export class BattleAnimationPlayer {
    */
   public render(
     ctx: CanvasRenderingContext2D,
-    canvasWidth = CoordinateTransformer.DEFAULT_CANVAS_WIDTH,
+    viewportOrWidth: AnimationViewport | number = CoordinateTransformer.DEFAULT_CANVAS_WIDTH,
     canvasHeight = CoordinateTransformer.DEFAULT_CANVAS_HEIGHT
   ): void {
-    this.renderBehind(ctx, canvasWidth, canvasHeight);
-    this.renderAbove(ctx, canvasWidth, canvasHeight);
+    const viewport = this.resolveViewport(viewportOrWidth, canvasHeight);
+    this.renderBehind(ctx, viewport);
+    this.renderAbove(ctx, viewport);
   }
 
   public dispose(): void {
