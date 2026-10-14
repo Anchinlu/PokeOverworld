@@ -1544,7 +1544,7 @@
   "6186": {
     "id": "6186",
     "name": "Move:MACHPUNCH",
-    "graphic": "last-chance/punches.png",
+    "graphic": "punches",
     "sourceAnimationId": 186,
     "frameCount": 14,
     "timingCount": 1
@@ -1552,47 +1552,47 @@
   "6187": {
     "id": "6187",
     "name": "Move:MAGICCOAT",
-    "graphic": "last-chance/anim sheet.png",
+    "graphic": "PRAS-Magic-Coat",
     "sourceAnimationId": 187,
     "frameCount": 11,
     "timingCount": 3
   },
   "6188": {
     "id": "6188",
-    "name": "Move:MEANLOOK",
-    "graphic": "last-chance/face and eye.png",
+    "name": "Move:MAGICALLEAF",
+    "graphic": "PRAS-Magical-Leaf",
     "sourceAnimationId": 188,
     "frameCount": 6,
     "timingCount": 0
   },
   "6189": {
     "id": "6189",
-    "name": "Move:MEGADRAIN",
-    "graphic": "last-chance/rockice.png",
+    "name": "Move:MAGNETBOMB",
+    "graphic": "PRAS-Magnet-bomb",
     "sourceAnimationId": 189,
     "frameCount": 10,
     "timingCount": 4
   },
   "6190": {
     "id": "6190",
-    "name": "OppMove:MEGADRAIN",
-    "graphic": "last-chance/leech-seed.png",
+    "name": "Move:MEANLOOK",
+    "graphic": "PRAS-Mean-Look",
     "sourceAnimationId": 190,
     "frameCount": 20,
     "timingCount": 1
   },
   "6191": {
     "id": "6191",
-    "name": "Move:MEGAHORN",
-    "graphic": "last-chance/poison3.png",
+    "name": "Move:MEDITATE",
+    "graphic": "PRAS-Stats",
     "sourceAnimationId": 191,
     "frameCount": 12,
     "timingCount": 3
   },
   "6192": {
     "id": "6192",
-    "name": "Move:MEGAKICK",
-    "graphic": "last-chance/003-Attack01.png",
+    "name": "Move:MEGADRAIN",
+    "graphic": "PRAS-Giga-Drain",
     "sourceAnimationId": 192,
     "frameCount": 10,
     "timingCount": 2
@@ -4046,7 +4046,7 @@
   "6494": {
     "id": "6494",
     "name": "Move:MAGICALLEAF",
-    "graphic": "last-chance/More2.png",
+    "graphic": "PRAS-Magical-Leaf",
     "sourceAnimationId": 494,
     "frameCount": 10,
     "timingCount": 5
@@ -4054,7 +4054,7 @@
   "6495": {
     "id": "6495",
     "name": "Move:MAGNETBOMB",
-    "graphic": "last-chance/Earth1.png",
+    "graphic": "PRAS-Magnet-bomb",
     "sourceAnimationId": 495,
     "frameCount": 14,
     "timingCount": 2
@@ -4078,7 +4078,7 @@
   "6498": {
     "id": "6498",
     "name": "Move:MEDITATE",
-    "graphic": "last-chance/estranho.png",
+    "graphic": "PRAS-Stats",
     "sourceAnimationId": 498,
     "frameCount": 14,
     "timingCount": 1

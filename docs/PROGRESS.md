@@ -140,8 +140,16 @@
     16. `lovely_kiss` (6183) - Nụ hôn trái tim tình yêu ngọt ngào ru ngủ (`PRAS-Draining-Kiss`)
     17. `low_kick` (6184) - Cú quét trụ tầm thấp cẳng chân làm ngã nhào (`Kick` + `PRAS-Strike`)
     18. `lucky_chant` (187/6185) - Thánh ca may mắn 3 giai đoạn: quả cầu chuông ngọc may mắn thăng hoa tụng niệm, song luồng sao may mắn lấp lánh xoay vút lên trời và kết giới vòm cầu bảo hộ tâm linh giáng thế ngăn chặn Critical Hit (`PRAS-Lucky-Chant` + `Shiny` + `PRAS-Safeguard`)
+  - **Triển khai toàn diện 7 chiêu thức chữ M (Batch 1 - Hoàn tất 100%)**:
+    1. `mach_punch` (188/6186) - Cú đấm siêu thanh chuẩn 1:1 Reunion: nắm đấm Mach đỏ rực xuất hiện thần tốc ngay trước mặt mục tiêu, phóng to cực nhanh mô phỏng cú đấm tốc độ âm thanh điểm xuyết vết nứt chấn động và sóng xung kích bùng nổ rung màn hình (`punches` Pattern 5, 7 + `PRAS-Strike`)
+    2. `magic_coat` (189/6187) - Áo choàng ma thuật lấp lánh phản hồi toàn diện: kết giới lăng kính đa sắc bao phủ quanh người thi triển và các tia sáng khúc xạ bắn tỏa phản hồi trạng thái (`PRAS-Magic-Coat` + `Shiny`)
+    3. `magical_leaf` (6494/6188) - Lá ma thuật ngũ sắc không bao giờ trượt: tụ quả cầu lá ma thuật, phóng 2 luồng lá ngũ sắc xoay lượn quỹ đạo kép và bùng nở hoa lá ma thuật tại mục tiêu (`PRAS-Magical-Leaf`)
+    4. `magnet_bomb` (6495/6189) - Bom từ tính điện trường: phóng quả bom nam châm theo đường cung parabol khóa mục tiêu và kích nổ từ trường điện từ dữ dội (`PRAS-Magnet-bomb`)
+    5. `mean_look` (190/6190) - Ánh mắt ma quái khóa hồn: đôi mắt tím khổng lồ trừng trừng xuất hiện ngay trước mặt đối thủ, phát quang ma mị khóa chặt đào tẩu (`PRAS-Mean-Look`)
+    6. `meditate` (6498/6191) - Thiền định nâng tầm tinh thần: cột hào quang năng lượng thanh tịnh dâng cao và các vòng hào quang halo tâm linh tỏa rộng quanh người thi triển (`PRAS-Stats`)
+    7. `mega_drain` (191/6192) - Hút cạn sinh lực đối thủ: các hạt tinh hoa lục giác xanh lục hút rút từ mục tiêu, phóng 2 dòng năng lượng bay về hội tụ hồi phục thể lực người thi triển (`PRAS-Giga-Drain`)
   - **Đồng bộ hóa hệ thống**:
-    - Nâng tổng số chiêu thức tối ưu trong [reunion-moves.json](file:///e:/Pokemon/packages/game-data/reunion-moves.json) lên **193 chiêu thức chuẩn 1:1** (`optimizedMoves`).
+    - Nâng tổng số chiêu thức tối ưu trong [reunion-moves.json](file:///e:/Pokemon/packages/game-data/reunion-moves.json) lên **200 chiêu thức chuẩn 1:1** (`optimizedMoves`).
     - Đăng ký đầy đủ các ID vào [move-animation-extensions.json](file:///e:/Pokemon/packages/game-data/move-animation-extensions.json), [manifest.json](file:///e:/Pokemon/packages/game-data/animations/manifest.json), [last-chance-animation-manifest.json](file:///e:/Pokemon/packages/game-data/last-chance-animation-manifest.json) và [animation-atlas.json](file:///e:/Pokemon/packages/game-data/animation-atlas.json).
 - **Kiểm định chất lượng**:
   - `node scripts/animation/validate-animation-atlas.mjs`: **PASS 100% (All 1237 animations and atlas assets validated with 0 errors)**.
