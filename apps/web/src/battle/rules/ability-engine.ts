@@ -1429,5 +1429,11 @@ export class AbilityEngine {
     if (key === 'naturalcure' && pokemon.status && pokemon.status !== 'none') {
       clearStatusCondition(pokemon);
     }
+    if (pokemon.abilitySuppressed) {
+      pokemon.ability = pokemon.suppressedAbility ?? pokemon.ability;
+      pokemon.suppressedAbility = undefined;
+      pokemon.abilitySuppressed = false;
+    }
+    pokemon.glaiveRushTurns = 0;
   }
 }

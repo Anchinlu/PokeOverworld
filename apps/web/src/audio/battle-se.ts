@@ -62,20 +62,39 @@ export class BattleSePlayer {
   }
 
   /**
-   * Retries an alternative audio format (ogg <-> wav <-> mp3) at most once.
+   * Retries an alternative audio format (ogg <-> wav <-> mp3) or alternative subfolder (Audio/SE <-> Audio/SE/Anim) at most once.
    */
   private retryAlternativeFormat(cleanPath: string, volumeScale: number): void {
-    let altPath: string | null = null;
+    const candidates: string[] = [];
+
+    // 1. Format swaps
     if (cleanPath.endsWith('.ogg')) {
-      altPath = cleanPath.slice(0, -4) + '.wav';
+      candidates.push(cleanPath.slice(0, -4) + '.wav');
     } else if (cleanPath.endsWith('.wav')) {
-      altPath = cleanPath.slice(0, -4) + '.ogg';
+      candidates.push(cleanPath.slice(0, -4) + '.ogg');
     } else if (cleanPath.endsWith('.mp3')) {
-      altPath = cleanPath.slice(0, -4) + '.ogg';
+      candidates.push(cleanPath.slice(0, -4) + '.ogg');
+      candidates.push(cleanPath.slice(0, -4) + '.wav');
     }
 
-    if (altPath && !this.failedSoundPaths.has(altPath)) {
-      this.playSound(altPath, volumeScale, true);
+    // 2. Folder swaps (Audio/SE <-> Audio/SE/Anim)
+    if (cleanPath.toLowerCase().startsWith('audio/se/anim/')) {
+      const stripped = 'Audio/SE/' + cleanPath.slice(14);
+      candidates.push(stripped);
+      if (stripped.endsWith('.wav')) candidates.push(stripped.slice(0, -4) + '.ogg');
+      if (stripped.endsWith('.ogg')) candidates.push(stripped.slice(0, -4) + '.wav');
+    } else if (cleanPath.toLowerCase().startsWith('audio/se/')) {
+      const withAnim = 'Audio/SE/Anim/' + cleanPath.slice(9);
+      candidates.push(withAnim);
+      if (withAnim.endsWith('.wav')) candidates.push(withAnim.slice(0, -4) + '.ogg');
+      if (withAnim.endsWith('.ogg')) candidates.push(withAnim.slice(0, -4) + '.wav');
+    }
+
+    for (const altPath of candidates) {
+      if (!this.failedSoundPaths.has(altPath)) {
+        this.playSound(altPath, volumeScale, true);
+        break;
+      }
     }
   }
 

@@ -1,0 +1,1939 @@
+{
+  "id": 7235,
+  "name": "OppMove:SWAGGER",
+  "graphic": "PRAS- Swagger.png",
+  "frames": [
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 102,
+          "zoomY": 102,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 104,
+          "zoomY": 104,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 106,
+          "zoomY": 106,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 109,
+          "zoomY": 109,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 111,
+          "zoomY": 111,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 113,
+          "zoomY": 113,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 115,
+          "zoomY": 115,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 118,
+          "zoomY": 118,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 116,
+          "zoomY": 116,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 114,
+          "zoomY": 114,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 112,
+          "zoomY": 112,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 110,
+          "zoomY": 110,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 108,
+          "zoomY": 108,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 106,
+          "zoomY": 106,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 104,
+          "zoomY": 104,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 102,
+          "zoomY": 102,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 1,
+          "x": 320,
+          "y": 65,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": true,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "both",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 1,
+          "x": 312,
+          "y": 65,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": true,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 2,
+          "x": 304,
+          "y": 65,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": true,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "both",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 0,
+          "x": 96,
+          "y": 164,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 0,
+          "x": 96,
+          "y": 164,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 2,
+          "x": 296,
+          "y": 65,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": true,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 0,
+          "x": 96,
+          "y": 164,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 3,
+          "x": 288,
+          "y": 65,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": true,
+          "opacity": 201,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "both",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 0,
+          "x": 96,
+          "y": 164,
+          "zoomX": 111,
+          "zoomY": 111,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 3,
+          "x": 288,
+          "y": 65,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": true,
+          "opacity": 154,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "both",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 0,
+          "x": 96,
+          "y": 164,
+          "zoomX": 111,
+          "zoomY": 111,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 4,
+          "x": 280,
+          "y": 65,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": true,
+          "opacity": 98,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "both",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 0,
+          "x": 96,
+          "y": 164,
+          "zoomX": 122,
+          "zoomY": 122,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 4,
+          "x": 280,
+          "y": 65,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": true,
+          "opacity": 58,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "both",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 0,
+          "x": 96,
+          "y": 164,
+          "zoomX": 111,
+          "zoomY": 111,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 0,
+          "x": 96,
+          "y": 164,
+          "zoomX": 111,
+          "zoomY": 111,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 0,
+          "x": 96,
+          "y": 164,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 0,
+          "x": 96,
+          "y": 164,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 0,
+          "x": 96,
+          "y": 164,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 0,
+          "x": 96,
+          "y": 164,
+          "zoomX": 111,
+          "zoomY": 111,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 0,
+          "x": 96,
+          "y": 164,
+          "zoomX": 111,
+          "zoomY": 111,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 0,
+          "x": 96,
+          "y": 164,
+          "zoomX": 122,
+          "zoomY": 122,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 0,
+          "x": 96,
+          "y": 164,
+          "zoomX": 122,
+          "zoomY": 122,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 0,
+          "x": 96,
+          "y": 164,
+          "zoomX": 111,
+          "zoomY": 111,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 0,
+          "x": 96,
+          "y": 165,
+          "zoomX": 111,
+          "zoomY": 111,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 0,
+          "x": 96,
+          "y": 165,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 180,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 0,
+          "x": 96,
+          "y": 165,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 120,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": 0,
+          "x": 96,
+          "y": 165,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 60,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": -1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "user",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        },
+        {
+          "pattern": -2,
+          "x": 384,
+          "y": 96,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 255,
+          "blendMode": "normal",
+          "visible": true,
+          "priority": 1,
+          "focus": "target",
+          "_sourceXMissing": false,
+          "_sourceYMissing": false
+        }
+      ]
+    }
+  ],
+  "timings": [
+    {
+      "frame": 36,
+      "type": "sound",
+      "payload": {
+        "sound": "Anim/PRSFX- Swagger1.wav",
+        "volume": 80,
+        "pitch": 100
+      },
+      "sound": {
+        "file": "PRSFX- Swagger1.wav",
+        "volume": 80,
+        "pitch": 100
+      }
+    },
+    {
+      "frame": 30,
+      "type": "sound",
+      "payload": {
+        "sound": "Anim/PRSFX- Swagger1.wav",
+        "volume": 80,
+        "pitch": 100
+      },
+      "sound": {
+        "file": "PRSFX- Swagger1.wav",
+        "volume": 80,
+        "pitch": 100
+      }
+    },
+    {
+      "frame": 4,
+      "type": "sound",
+      "payload": {
+        "sound": "Anim/PRSFX- Swagger2.wav",
+        "volume": 80,
+        "pitch": 100
+      },
+      "sound": {
+        "file": "PRSFX- Swagger2.wav",
+        "volume": 80,
+        "pitch": 100
+      }
+    }
+  ]
+}

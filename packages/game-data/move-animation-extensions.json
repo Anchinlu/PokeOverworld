@@ -14,111 +14,111 @@
     "autotomize": 6331,
     "avalanche": 6332,
     "baton_pass": 6333,
-    "belly_drum": 6335,
-    "bestow": 6336,
-    "bide": 6337,
-    "blaze_kick": 6339,
+    "belly_drum": 761,
+    "bestow": 773,
+    "bide": 720,
+    "blaze_kick": 423,
     "blizzard": 6340,
     "bolt_strike": 6341,
-    "bone_club": 6342,
+    "bone_club": 992,
     "bone_rush": 6343,
-    "bonemerang": 6349,
+    "bonemerang": 881,
     "bounce": 6352,
     "brave_bird": 6752,
     "brine": 6356,
     "bug_bite": 6357,
-    "bug_buzz": 6358,
-    "captivate": 6361,
-    "charge_beam": 6362,
-    "chatter": 6363,
-    "chip_away": 6364,
-    "circle_throw": 6365,
-    "clamp": 6366,
-    "coil": 6367,
-    "constrict": 6369,
-    "conversion": 6371,
-    "conversion_2": 6372,
-    "copycat": 6373,
-    "cosmic_power": 6374,
-    "covet": 6375,
-    "crabhammer": 6376,
-    "cross_poison": 6377,
-    "crush_grip": 6378,
-    "dark_pulse": 6379,
-    "dark_void": 6380,
-    "defog": 6381,
-    "destiny_bond": 6382,
-    "cross_chop": 6383,
-    "dig": 6384,
-    "discharge": 6387,
-    "dive": 6388,
-    "doom_desire": 6390,
-    "double_hit": 6393,
+    "bug_buzz": 638,
+    "captivate": 919,
+    "charge_beam": 595,
+    "chatter": 889,
+    "chip_away": 645,
+    "circle_throw": 646,
+    "clamp": 1054,
+    "coil": 918,
+    "constrict": 618,
+    "conversion": 789,
+    "conversion_2": 790,
+    "copycat": 1355,
+    "cosmic_power": 475,
+    "covet": 524,
+    "crabhammer": 1030,
+    "cross_poison": 759,
+    "crush_grip": 999,
+    "dark_pulse": 665,
+    "dark_void": 821,
+    "defog": 912,
+    "destiny_bond": 515,
+    "cross_chop": 499,
+    "dig": 563,
+    "discharge": 710,
+    "dive": 654,
+    "doom_desire": 1358,
+    "double_hit": 799,
     "draco_meteor": 6397,
-    "dragon_pulse": 6398,
+    "dragon_pulse": 565,
     "air_cutter": 6399,
     "boomburst": 6400,
-    "calm_mind": 6402,
-    "confide": 6403,
-    "dragon_tail": 6404,
-    "disarming_voice": 6405,
-    "dragon_rush": 6406,
-    "drain_punch": 6408,
-    "draining_kiss": 6409,
-    "drill_peck": 6410,
-    "drill_run": 6411,
-    "dual_chop": 6412,
-    "earth_power": 6758,
-    "earthquake": 6416,
-    "echoed_voice": 6759,
-    "egg_bomb": 6760,
-    "electro_ball": 6762,
-    "electroweb": 6420,
-    "embargo": 6421,
-    "endeavor": 6422,
-    "entrainment": 6423,
-    "extremespeed": 6424,
-    "facade": 6426,
-    "fairy_lock": 6427,
+    "calm_mind": 424,
+    "confide": 834,
+    "dragon_tail": 937,
+    "disarming_voice": 685,
+    "dragon_rush": 510,
+    "drain_punch": 573,
+    "draining_kiss": 633,
+    "drill_peck": 656,
+    "drill_run": 950,
+    "dual_chop": 895,
+    "earth_power": 518,
+    "earthquake": 662,
+    "echoed_voice": 1001,
+    "egg_bomb": 803,
+    "electro_ball": 647,
+    "electroweb": 866,
+    "embargo": 777,
+    "endeavor": 683,
+    "entrainment": 835,
+    "extremespeed": 463,
+    "facade": 722,
+    "fairy_lock": 844,
     "fairy_wind": 6765,
-    "false_swipe": 6766,
-    "featherdance": 6430,
-    "feint": 6431,
-    "feint_attack": 6767,
-    "fell_stinger": 6433,
-    "fissure": 6434,
-    "flare_blitz": 6776,
-    "flash_cannon": 6777,
-    "flatter": 6437,
-    "fling": 6438,
-    "flying_press": 6439,
-    "focus_blast": 6780,
-    "focus_punch": 6782,
-    "force_palm": 6783,
-    "foul_play": 6445,
-    "frost_breath": 6446,
-    "frustration": 6447,
-    "giga_impact": 6448,
-    "grass_knot": 6449,
-    "grass_pledge": 6450,
-    "guard_split": 6453,
-    "guard_swap": 6454,
-    "gunk_shot": 6455,
-    "gyro_ball": 6456,
-    "hammer_arm": 6457,
-    "haze": 6458,
-    "head_smash": 6459,
-    "head_charge": 6460,
-    "heal_bell": 6461,
-    "heal_pulse": 6463,
-    "healing_wish": 6464,
-    "heart_stamp": 6465,
-    "heart_swap": 6466,
-    "heat_crash": 6467,
-    "heavy_slam": 6468,
-    "helping_hand": 6469,
-    "hex": 6470,
-    "hidden_power": 6471,
+    "false_swipe": 867,
+    "featherdance": 958,
+    "feint": 859,
+    "feint_attack": 668,
+    "fell_stinger": 1024,
+    "fissure": 1072,
+    "flare_blitz": 1056,
+    "flash_cannon": 420,
+    "flatter": 734,
+    "fling": 740,
+    "flying_press": 742,
+    "focus_blast": 517,
+    "focus_punch": 589,
+    "force_palm": 537,
+    "foul_play": 873,
+    "frost_breath": 567,
+    "frustration": 875,
+    "giga_impact": 1048,
+    "grass_knot": 519,
+    "grass_pledge": 476,
+    "guard_split": 1060,
+    "guard_swap": 822,
+    "gunk_shot": 669,
+    "gyro_ball": 634,
+    "hammer_arm": 488,
+    "haze": 529,
+    "head_smash": 792,
+    "head_charge": 805,
+    "heal_bell": 434,
+    "heal_pulse": 963,
+    "healing_wish": 868,
+    "heart_stamp": 465,
+    "heart_swap": 824,
+    "heat_crash": 778,
+    "heavy_slam": 584,
+    "helping_hand": 643,
+    "hex": 500,
+    "hidden_power": 688,
     "hone_claws": 6472,
     "horn_drill": 6473,
     "horn_leech": 6474,
@@ -127,17 +127,17 @@
     "hyper_voice": 6477,
     "hypnosis": 6478,
     "ice_beam": 6479,
-    "incinerate": 6481,
-    "ingrain": 6482,
-    "iron_tail": 6483,
-    "iron_defense": 6484,
-    "kings_shield": 6485,
-    "knock_off": 6486,
-    "lava_plume": 6487,
-    "leaf_storm": 6488,
-    "leaf_tornado": 6489,
-    "low_sweep": 6491,
-    "last_resort": 6492,
+    "incinerate": 458,
+    "ingrain": 436,
+    "iron_tail": 588,
+    "iron_defense": 484,
+    "kings_shield": 467,
+    "knock_off": 501,
+    "lava_plume": 489,
+    "leaf_storm": 728,
+    "leaf_tornado": 1065,
+    "low_sweep": 583,
+    "last_resort": 1050,
     "magical_leaf": 6494,
     "magnet_bomb": 6495,
     "magnitude": 6496,
@@ -160,7 +160,6 @@
     "mud_sport": 6514,
     "mudslap": 6515,
     "muddy_water": 6516,
-    "tri_attack": 6518,
     "mystical_fire": 6519,
     "nasty_plot": 6520,
     "natural_gift": 6521,
@@ -170,60 +169,59 @@
     "night_slash": 6525,
     "nuzzle": 6526,
     "ominous_wind": 6528,
-    "pain_split": 6529,
-    "parabolic_charge": 6530,
-    "payback": 6531,
-    "peck": 6532,
-    "perish_song": 6533,
-    "petal_blizzard": 6534,
-    "phantom_force": 6535,
-    "play_nice": 6538,
-    "play_rough": 6539,
-    "pluck": 6540,
-    "poison_jab": 6541,
-    "powder": 6542,
-    "powder_snow": 6543,
-    "power_gem": 6544,
-    "power_split": 6545,
-    "power_swap": 6546,
-    "power_trick": 6547,
-    "power_whip": 6548,
-    "power_up_punch": 6549,
-    "psybeam": 6550,
-    "psych_up": 6551,
-    "psychic_terrain": 6552,
-    "psycho_boost": 6553,
-    "psycho_shift": 6554,
-    "psyshock": 6555,
-    "psywave": 6556,
-    "punishment": 6557,
-    "quash": 6559,
-    "quick_guard": 6560,
-    "quiver_dance": 6561,
-    "rage": 6562,
-    "rage_powder": 6563,
-    "rapid_spin": 6564,
-    "razor_shell": 6565,
-    "razor_wind": 6566,
-    "recover": 6567,
-    "recycle": 6568,
-    "refresh": 6569,
-    "retaliate": 6570,
-    "return": 6571,
-    "revenge": 6572,
-    "reversal": 6573,
-    "rock_blast": 6574,
-    "rock_climb": 6579,
-    "rock_polish": 6580,
-    "rock_slide": 6581,
-    "rock_tomb": 6582,
-    "rollout": 6583,
-    "roost": 6584,
-    "round": 6585,
+    "pain_split": 6936,
+    "parabolic_charge": 6937,
+    "payback": 6942,
+    "peck": 6943,
+    "perish_song": 6944,
+    "petal_blizzard": 6945,
+    "phantom_force": 6949,
+    "play_nice": 6955,
+    "play_rough": 6956,
+    "pluck": 6957,
+    "poison_jab": 6961,
+    "powder": 6972,
+    "powder_snow": 6973,
+    "power_gem": 6974,
+    "power_split": 6975,
+    "power_swap": 6976,
+    "power_trick": 6978,
+    "power_whip": 6981,
+    "power_up_punch": 6980,
+    "psybeam": 6988,
+    "psych_up": 6990,
+    "psychic_terrain": 6993,
+    "psycho_boost": 6994,
+    "psycho_shift": 6998,
+    "psyshock": 6999,
+    "psywave": 7001,
+    "punishment": 7004,
+    "quash": 7017,
+    "quick_guard": 7014,
+    "quiver_dance": 7016,
+    "rage": 7018,
+    "rage_powder": 7019,
+    "rapid_spin": 7021,
+    "razor_shell": 7024,
+    "razor_wind": 7025,
+    "recover": 7026,
+    "recycle": 7027,
+    "refresh": 7032,
+    "retaliate": 7035,
+    "return": 7037,
+    "revenge": 7039,
+    "reversal": 7041,
+    "rock_blast": 7047,
+    "rock_climb": 7049,
+    "rock_polish": 7051,
+    "rock_slide": 7052,
+    "rock_tomb": 7057,
+    "rollout": 7064,
+    "roost": 7066,
+    "round": 7068,
     "sacred_fire": 6587,
     "sacred_sword": 6588,
     "safeguard": 6589,
-    "sand_tomb": 6590,
     "scald": 6592,
     "secret_sword": 6593,
     "seed_bomb": 6594,
@@ -270,28 +268,14 @@
     "switcheroo": 6646,
     "synchronoise": 6647,
     "synthesis": 6648,
-    "tailwind": 6649,
-    "take_down": 6650,
-    "taunt": 6652,
-    "tearful_look": 6653,
-    "teeter_dance": 6654,
-    "telekinesis": 6655,
-    "thief": 6656,
-    "thrash": 6657,
-    "tickle": 6658,
-    "torment": 6659,
-    "toxic_spikes": 6660,
-    "trick": 6662,
-    "trick_or_treat": 6663,
-    "triple_kick": 6664,
-    "u_turn": 6668,
-    "uproar": 6669,
-    "vacuum_wave": 6670,
-    "venom_drench": 6671,
-    "venoshock": 6672,
-    "vicegrip": 6673,
-    "vital_throw": 6674,
-    "volt_tackle": 6675,
+    "u_turn": 7339,
+    "uproar": 7341,
+    "vacuum_wave": 7345,
+    "venom_drench": 7347,
+    "venoshock": 7349,
+    "vicegrip": 7351,
+    "vital_throw": 7355,
+    "volt_tackle": 7359,
     "wake_up_slap": 6676,
     "water_shuriken": 6677,
     "water_sport": 6683,
@@ -308,25 +292,25 @@
     "worry_seed": 6695,
     "zen_headbutt": 6696,
     "aromatic_mist": 6698,
-    "crafty_shield": 6700,
-    "dream_eater": 6701,
-    "fusion_bolt": 6702,
-    "fusion_flare": 6703,
+    "crafty_shield": 943,
+    "dream_eater": 891,
+    "fusion_bolt": 1367,
+    "fusion_flare": 1046,
     "howl": 6704,
-    "infestation": 6705,
+    "infestation": 726,
     "nature_power": 6706,
-    "guillotine": 6707,
+    "guillotine": 952,
     "octazooka": 6708,
-    "v_create": 6709,
-    "psystrike": 6710,
+    "v_create": 7343,
+    "psystrike": 7000,
     "accelerock": 6711,
-    "baneful_bunker": 6713,
-    "liquidation": 6714,
-    "beak_blast": 6715,
-    "clanging_scales": 6717,
-    "ice_hammer": 6718,
-    "leafage": 6719,
-    "pollen_puff": 6720,
+    "baneful_bunker": 1095,
+    "liquidation": 1109,
+    "beak_blast": 1097,
+    "clanging_scales": 1354,
+    "ice_hammer": 1086,
+    "leafage": 1082,
+    "pollen_puff": 6968,
     "solar_blade": 6721,
     "high_horsepower": 6723,
     "zing_zap": 6724,
@@ -334,86 +318,501 @@
     "belch": 6729,
     "sharpen": 6732,
     "wonder_room": 6733,
-    "eerie_impulse": 6734,
-    "ion_deluge": 6735,
+    "eerie_impulse": 1363,
+    "ion_deluge": 953,
     "noble_roar": 6736,
-    "protect": 6740,
-    "confusion": 6740,
+    "protect": 6986,
+    "confusion": 528,
     "chilly_reception": 6741,
     "chloroblast": 6742,
     "collision_course": 6743,
-    "core_enforcer": 6744,
+    "core_enforcer": 1356,
     "corkscrew_crash": 6745,
-    "corrosive_gas": 6746,
-    "court_change": 6747,
+    "corrosive_gas": 1302,
+    "court_change": 1256,
     "chilling_water": 6748,
-    "catastropika": 6749,
-    "dazzling_gleam": 6753,
-    "defend_order": 6754,
-    "double_team": 6755,
-    "dragon_ascent": 6756,
-    "dragon_hammer": 6757,
-    "electric_terrain": 6761,
-    "endure": 6763,
-    "energy_ball": 6764,
-    "final_gambit": 6768,
-    "fire_blast": 6769,
-    "fire_fang": 6770,
-    "fire_lash": 6771,
-    "fire_punch": 6772,
-    "fire_spin": 6773,
-    "flame_burst": 6774,
-    "flame_charge": 6775,
-    "fleur_cannon": 6778,
-    "floral_healing": 6779,
-    "focus_energy": 6781,
-    "frenzy_plant": 6784,
-    "fury_cutter": 6785,
-    "fury_swipes": 6786,
-    "future_sight": 6787,
-    "growth": 6452,
-    "grassy_terrain": 6788,
-    "grass_whistle": 6145
+    "catastropika": 1206,
+    "dazzling_gleam": 594,
+    "defend_order": 758,
+    "double_team": 6813,
+    "dragon_ascent": 902,
+    "dragon_hammer": 1362,
+    "electric_terrain": 441,
+    "endure": 817,
+    "energy_ball": 6823,
+    "final_gambit": 328,
+    "fire_blast": 6832,
+    "fire_fang": 6834,
+    "fire_lash": 1084,
+    "fire_punch": 6837,
+    "fire_spin": 321,
+    "flame_burst": 386,
+    "flame_charge": 6839,
+    "fleur_cannon": 1366,
+    "floral_healing": 1093,
+    "focus_energy": 6843,
+    "frenzy_plant": 6846,
+    "fury_cutter": 299,
+    "fury_swipes": 137,
+    "future_sight": 142,
+    "growth": 428,
+    "grassy_terrain": 443,
+    "grass_whistle": 6852,
+    "barrage": 763,
+    "behemoth_bash": 1245,
+    "behemoth_blade": 1246,
+    "bind": 45,
+    "blue_flare": 50,
+    "body_press": 1248,
+    "body_slam": 51,
+    "bolt_beak": 1250,
+    "branch_poke": 1252,
+    "breaking_swipe": 1253,
+    "brutal_swing": 1142,
+    "bubble_beam": 6758,
+    "bulldoze": 712,
+    "burn_up": 1110,
+    "burning_jealousy": 1300,
+    "bubblebeam": 6758,
+    "breakneck_blitz": 1172,
+    "bloom_doom": 1192,
+    "black_hole_eclipse": 1202,
+    "barrier": 55,
+    "beat_up": 57,
+    "bite": 65,
+    "blast_burn": 66,
+    "block": 68,
+    "brick_break": 72,
+    "bubble": 73,
+    "bulk_up": 77,
+    "bullet_punch": 79,
+    "bullet_seed": 80,
+    "after_you": 6469,
+    "all_out_pummeling": 1174,
+    "ally_switch": 48,
+    "anchor_shot": 1122,
+    "apple_acid": 1241,
+    "aqua_ring": 52,
+    "astral_barrage": 1343,
+    "attack_order": 815,
+    "aura_wheel": 1243,
+    "aurora_beam": 37,
+    "aurora_veil": 1107,
+    "camouflage": 925,
+    "celebrate": 1240,
+    "clangorous_soul": 1255,
+    "coaching": 1301,
+    "close_combat": 6790,
+    "charge": 6792,
+    "charm": 6793,
+    "clear_smog": 6794,
+    "comet_punch": 6795,
+    "confuse_ray": 6800,
+    "cotton_guard": 6801,
+    "cotton_spore": 6802,
+    "counter": 6803,
+    "crunch": 6804,
+    "crush_claw": 6805,
+    "curse": 6807,
+    "cut": 6809,
+    "darkest_lariat": 1070,
+    "decorate": 1257,
+    "defense_curl": 6810,
+    "detect": 407,
+    "devastating_drake": 1200,
+    "diamond_storm": 1357,
+    "disable": 373,
+    "dizzy_punch": 6811,
+    "double_edge": 6812,
+    "double_iron_bash": 1360,
+    "double_kick": 335,
+    "double_slap": 356,
+    "doubleslap": 356,
+    "dragon_breath": 6814,
+    "dragonbreath": 6814,
+    "dragon_claw": 6816,
+    "dragon_dance": 330,
+    "dragon_darts": 1258,
+    "dragon_energy": 1344,
+    "dragon_rage": 6818,
+    "drum_beating": 1266,
+    "dual_wingbeat": 1303,
+    "dynamax_cannon": 1268,
+    "dynamic_punch": 6819,
+    "eerie_spell": 1345,
+    "electrify": 775,
+    "ember": 6820,
+    "encore": 6821,
+    "eruption": 6825,
+    "eternabeam": 1269,
+    "expanding_force": 1307,
+    "explosion": 6827,
+    "extrasensory": 651,
+    "extreme_evoboost": 1210,
+    "extreme_speed": 463,
+    "fake_out": 6828,
+    "fake_tears": 6829,
+    "false_surrender": 1270,
+    "feather_dance": 958,
+    "fiery_dance": 6830,
+    "fiery_wrath": 1346,
+    "fire_pledge": 6835,
+    "first_impression": 1365,
+    "fishious_rend": 1272,
+    "flail": 6838,
+    "flame_wheel": 6841,
+    "flamethrower": 116,
+    "flash": 118,
+    "flip_turn": 1308,
+    "flower_shield": 781,
+    "fly": 309,
+    "follow_me": 6844,
+    "foresight": 124,
+    "forests_curse": 816,
+    "freeze_dry": 1032,
+    "freeze_shock": 852,
+    "freezing_glare": 1347,
+    "fury_attack": 375,
+    "gastro_acid": 388,
+    "gear_grind": 1033,
+    "gear_up": 1103,
+    "geomancy": 1124,
+    "giga_drain": 6848,
+    "gigavolt_havoc": 1194,
+    "glacial_lance": 1348,
+    "glaciate": 1064,
+    "glare": 6850,
+    "grasswhistle": 6852,
+    "grav_apple": 6856,
+    "gravity": 946,
+    "grudge": 6854,
+    "hail": 6858,
+    "harden": 6859,
+    "headbutt": 395,
+    "heal_block": 744,
+    "heal_order": 757,
+    "heat_wave": 6860,
+    "ice_ball": 6864,
+    "ice_burn": 1128,
+    "ice_fang": 6865,
+    "ice_punch": 6866,
+    "ice_shard": 609,
+    "icicle_crash": 876,
+    "icicle_spear": 346,
+    "icy_wind": 6867,
+    "imprison": 836,
+    "inferno": 6868,
+    "instruct": 1137,
+    "iron_head": 6869,
+    "jaw_lock": 1275,
+    "jet_punch": 6751,
+    "judgment": 870,
+    "jump_kick": 6871,
+    "jumpkick": 6871,
+    "jungle_healing": 1311,
+    "karate_chop": 6873,
+    "kinesis": 6874,
+    "lands_wrath": 1376,
+    "laser_focus": 1081,
+    "lash_out": 1312,
+    "leaf_blade": 393,
+    "leech_life": 6876,
+    "leech_seed": 6877,
+    "leechseed": 6877,
+    "leer": 344,
+    "lick": 6879,
+    "life_dew": 1276,
+    "light_of_ruin": 1377,
+    "light_screen": 6881,
+    "lock_on": 6883,
+    "low_kick": 6885,
+    "lucky_chant": 6887,
+    "lunar_blessing": 1276,
+    "lunar_dance": 755,
+    "lunge": 1378,
+    "luster_purge": 1066,
+    "natures_madness": 6909,
+    "never_ending_nightmare": 6910,
+    "nightmare": 204,
+    "no_retreat": 6913,
+    "noxious_torque": 6916,
+    "parting_shot": 6938,
+    "pay_day": 6940,
+    "petal_dance": 6947,
+    "photon_geyser": 6950,
+    "pin_missile": 6952,
+    "plasma_fists": 6954,
+    "poison_fang": 6959,
+    "poison_gas": 6960,
+    "poison_powder": 6963,
+    "poisonpowder": 6963,
+    "poison_sting": 6964,
+    "poison_tail": 6966,
+    "poltergeist": 6970,
+    "pound": 6971,
+    "power_trip": 6979,
+    "precipice_blades": 6982,
+    "present": 6983,
+    "prismatic_laser": 6985,
+    "psyblade": 6996,
+    "psychic": 6991,
+    "psychic_fangs": 6992,
+    "psychic_noise": 7001,
+    "psycho_cut": 6996,
+    "psyshield_bash": 6999,
+    "pulverizing_pancake": 7003,
+    "purify": 7005,
+    "pursuit": 7007,
+    "pyro_ball": 7009,
+    "shattered_psyche": 7011,
+    "quick_attack": 7012,
+    "rain_dance": 7020,
+    "razor_leaf": 7022,
+    "reflect": 7028,
+    "reflect_type": 7030,
+    "rage_fist": 7018,
+    "raging_bull": 6651,
+    "raging_fury": 6838,
+    "relic_song": 7033,
+    "rest": 7034,
+    "revelation_dance": 7038,
+    "rising_voltage": 7043,
+    "roar": 7044,
+    "roar_of_time": 7046,
+    "revival_blessing": 7026,
+    "rock_smash": 7053,
+    "rock_throw": 7055,
+    "rock_wrecker": 7058,
+    "role_play": 7060,
+    "rolling_kick": 7062,
+    "rototiller": 7067,
+    "ruination": 6642,
+    "vise_grip": 7351,
+    "vine_whip": 7353,
+    "volt_switch": 7357,
+    "upper_hand": 537,
+    "veevee_volley": 7247,
+    "victory_dance": 424
   },
   "opponentMoves": {
     "aerial_ace": 6028,
-    "flame_wheel": 6113,
-    "follow_me": 6121,
-    "fury_attack": 6129,
-    "growl": 6147,
-    "gust": 6150,
-    "leechseed": 6176,
-    "leer": 6179,
+    "flame_wheel": 6842,
+    "follow_me": 6845,
+    "fury_attack": 380,
+    "leechseed": 6878,
+    "leer": 345,
     "metronome": 6197,
-    "poison_sting": 6216,
-    "psycho_cut": 6221,
-    "roar": 6228,
+    "poison_sting": 6965,
+    "psycho_cut": 6997,
+    "roar": 7045,
     "sandattack": 6233,
     "sing": 6242,
-    "stealth_rock": 6261,
     "water_gun": 6289,
     "arm_thrust": 6320,
     "baton_pass": 6334,
     "mud_bomb": 6512,
     "muddy_water": 6517,
     "surf": 6643,
-    "take_down": 6651,
-    "toxic_spikes": 6661,
-    "tackle": 6726
+    "megahorn": 6789,
+    "barrage": 768,
+    "beak_blast": 1099,
+    "behemoth_blade": 1247,
+    "belly_drum": 762,
+    "bestow": 774,
+    "blue_flare": 6756,
+    "body_press": 1249,
+    "bolt_beak": 1251,
+    "bonemerang": 883,
+    "breaking_swipe": 1254,
+    "brutal_swing": 1143,
+    "bulldoze": 713,
+    "boomburst": 6401,
+    "bounce": 6353,
+    "bloom_doom": 1193,
+    "black_hole_eclipse": 1203,
+    "barrier": 56,
+    "blast_burn": 67,
+    "bulk_up": 78,
+    "bullet_seed": 85,
+    "aeroblast": 6750,
+    "after_you": 6469,
+    "all_out_pummeling": 1175,
+    "apple_acid": 1241,
+    "aqua_jet": 6751,
+    "attract": 512,
+    "aura_sphere": 536,
+    "aura_wheel": 1244,
+    "aurora_veil": 1108,
+    "charge_beam": 596,
+    "chatter": 890,
+    "crabhammer": 1031,
+    "cross_poison": 760,
+    "crush_grip": 1000,
+    "conversion_2": 791,
+    "crafty_shield": 944,
+    "close_combat": 6791,
+    "crush_claw": 6806,
+    "dark_pulse": 666,
+    "destiny_bond": 516,
+    "detect": 408,
+    "devastating_drake": 1201,
+    "disable": 374,
+    "disarming_voice": 686,
+    "double_hit": 801,
+    "dragon_breath": 6815,
+    "dragonbreath": 6815,
+    "dragon_claw": 6817,
+    "dragon_darts": 1260,
+    "dragon_pulse": 566,
+    "dragon_tail": 938,
+    "drain_punch": 574,
+    "dream_eater": 892,
+    "drill_run": 951,
+    "drum_beating": 1267,
+    "dual_chop": 897,
+    "dual_wingbeat": 1305,
+    "eerie_impulse": 1364,
+    "egg_bomb": 804,
+    "electrify": 776,
+    "electro_ball": 648,
+    "encore": 6822,
+    "energy_ball": 6824,
+    "eruption": 6826,
+    "extreme_speed": 464,
+    "extremespeed": 464,
+    "false_surrender": 1271,
+    "feint": 860,
+    "fell_stinger": 1025,
+    "fiery_dance": 6831,
+    "fire_blast": 6833,
+    "fire_pledge": 6836,
+    "flame_burst": 387,
+    "flame_charge": 6840,
+    "flamethrower": 117,
+    "fling": 741,
+    "flip_turn": 1309,
+    "fly": 311,
+    "flying_press": 743,
+    "focus_punch": 590,
+    "force_palm": 538,
+    "frenzy_plant": 6847,
+    "frost_breath": 568,
+    "fusion_bolt": 1368,
+    "fusion_flare": 1047,
+    "gear_grind": 1035,
+    "gear_up": 1104,
+    "giga_drain": 6849,
+    "giga_impact": 1049,
+    "gigavolt_havoc": 1195,
+    "glacial_lance": 1349,
+    "glare": 6851,
+    "grass_whistle": 6853,
+    "grasswhistle": 6853,
+    "grav_apple": 6857,
+    "guard_split": 1061,
+    "guard_swap": 823,
+    "gunk_shot": 670,
+    "headbutt": 396,
+    "heal_bell": 435,
+    "heart_stamp": 466,
+    "heat_wave": 6861,
+    "high_horsepower": 1127,
+    "high_jump_kick": 1372,
+    "highjumpkick": 1372,
+    "hold_back": 1374,
+    "horn_attack": 316,
+    "horn_drill": 1003,
+    "horn_leech": 927,
+    "hurricane": 1005,
+    "hydro_cannon": 1063,
+    "hydro_vortex": 1191,
+    "hyper_fang": 6863,
+    "hyper_voice": 679,
+    "hypnosis": 576,
+    "ice_shard": 610,
+    "icicle_spear": 351,
+    "iron_head": 6870,
+    "jump_kick": 6872,
+    "jumpkick": 6872,
+    "kinesis": 6875,
+    "kings_shield": 468,
+    "lash_out": 1313,
+    "last_resort": 1051,
+    "leaf_blade": 394,
+    "leaf_storm": 729,
+    "leafage": 1083,
+    "leech_seed": 6878,
+    "lick": 6880,
+    "light_screen": 6882,
+    "lock_on": 6884,
+    "low_kick": 6886,
+    "lunge": 1379,
+    "night_daze": 6911,
+    "noble_roar": 6914,
+    "nuzzle": 6915,
+    "noxious_torque": 6917,
+    "parting_shot": 6939,
+    "pay_day": 6941,
+    "petal_blizzard": 6946,
+    "petal_dance": 6948,
+    "photon_geyser": 6951,
+    "pin_missile": 6953,
+    "pluck": 6958,
+    "poison_jab": 6962,
+    "poison_tail": 6967,
+    "pollen_puff": 6969,
+    "power_swap": 6977,
+    "present": 6984,
+    "protect": 6987,
+    "psybeam": 6989,
+    "psyblade": 6997,
+    "psychic_noise": 7002,
+    "psycho_boost": 6995,
+    "psywave": 7002,
+    "purify": 7006,
+    "pursuit": 7008,
+    "pyro_ball": 7010,
+    "quick_attack": 7013,
+    "quick_guard": 7015,
+    "razor_leaf": 7023,
+    "reflect": 7029,
+    "reflect_type": 7031,
+    "retaliate": 7036,
+    "revenge": 7040,
+    "reversal": 7042,
+    "rock_blast": 7048,
+    "rock_climb": 7050,
+    "rock_smash": 7054,
+    "rock_throw": 7056,
+    "rock_wrecker": 7059,
+    "role_play": 7061,
+    "rolling_kick": 7063,
+    "rollout": 7065,
+    "round": 7069,
+    "u_turn": 7340,
+    "uproar": 7342,
+    "v_create": 7344,
+    "vacuum_wave": 7346,
+    "venom_drench": 7348,
+    "venoshock": 7350,
+    "vise_grip": 7352,
+    "vicegrip": 7352,
+    "vine_whip": 7354,
+    "vital_throw": 7356,
+    "volt_switch": 7358,
+    "volt_tackle": 7360,
+    "upper_hand": 538,
+    "veevee_volley": 7248,
+    "victory_dance": 424
   },
   "replacedMoves": {
     "screech": 6731,
     "light_screen": 6490,
     "whirlwind": 6688,
     "rolling_kick": 6586,
-    "stealth_rock": 6260,
-    "sunny_day": 6266,
-    "sandstorm": 6591,
-    "energy_ball": 6764
+    "sunny_day": 6266
   },
-  "replacedOpponentMoves": {
-    "stealth_rock": 6261
-  },
+  "replacedOpponentMoves": {},
   "counts": {
     "newMoves": 344,
     "opponentMoves": 27,
@@ -435,79 +834,788 @@
   "heal-pulse": 6463,
   "healing_wish": 6464,
   "healing-wish": 6464,
-  "heat_wave": 6154,
-  "heat-wave": 6154,
+  "heat_wave": 6860,
+  "heat-wave": 6860,
   "hidden_power": 6471,
   "hidden-power": 6471,
-  "high_horsepower": 6723,
-  "high-horsepower": 6723,
-  "highjumpkick": 157,
-  "horn_attack": 6156,
-  "horn-attack": 6156,
-  "horn_drill": 6473,
-  "horn-drill": 6473,
-  "horn_leech": 6474,
-  "horn-leech": 6474,
-  "howl": 6704,
-  "hydro_pump": 6157,
-  "hydro-pump": 6157,
+  "high_horsepower": 1126,
+  "high-horsepower": 1126,
+  "highjumpkick": 1371,
+  "horn_attack": 315,
+  "horn-attack": 315,
+  "horn_drill": 1002,
+  "horn-drill": 1002,
+  "horn_leech": 926,
+  "horn-leech": 926,
+  "howl": 585,
+  "hydro_pump": 159,
+  "hydro-pump": 159,
   "hyper_beam": 6476,
   "hyper-beam": 6476,
-  "hyper_fang": 6158,
-  "hyper-fang": 6158,
-  "hyper_voice": 6477,
-  "hyper-voice": 6477,
-  "hypnosis": 6478,
-  "ice_ball": 6159,
-  "ice-ball": 6159,
+  "hyper_fang": 6862,
+  "hyper-fang": 6862,
+  "hyper_voice": 678,
+  "hyper-voice": 678,
+  "hypnosis": 575,
+  "ice-ball": 6864,
   "ice_beam": 6479,
   "ice-beam": 6479,
-  "ice_fang": 6160,
-  "ice-fang": 6160,
-  "ice_punch": 6161,
-  "ice-punch": 6161,
-  "icicle_spear": 6162,
-  "icicle-spear": 6162,
-  "icy_wind": 6167,
-  "icy-wind": 6167,
-  "incinerate": 6481,
-  "inferno": 6168,
-  "infestation": 6705,
-  "ingrain": 6482,
-  "ion_deluge": 6735,
-  "ion-deluge": 6735,
-  "iron_head": 6169,
-  "iron-head": 6169,
-  "iron_tail": 6483,
-  "iron-tail": 6483,
-  "jumpkick": 6170,
-  "karate_chop": 6171,
-  "karate-chop": 6171,
-  "kinesis": 6172,
-  "last_resort": 6492,
-  "last-resort": 6492,
-  "lava_plume": 6487,
-  "lava-plume": 6487,
-  "leaf_blade": 6173,
-  "leaf-blade": 6173,
-  "leaf_storm": 6488,
-  "leaf-storm": 6488,
-  "leaf_tornado": 6489,
-  "leaf-tornado": 6489,
-  "leech_life": 6174,
-  "leech-life": 6174,
-  "leechseed": 6175,
-  "leer": 6178,
-  "lick": 6180,
-  "light_screen": 6181,
-  "light-screen": 6181,
-  "liquidation": 6714,
-  "lock_on": 6182,
-  "lock-on": 6182,
-  "lovely_kiss": 6183,
-  "lovely-kiss": 6183,
-  "low_kick": 6184,
-  "low-kick": 6184,
-  "lucky_chant": 6185,
-  "lucky-chant": 6185
+  "ice-fang": 6865,
+  "ice-punch": 6866,
+  "icicle-spear": 346,
+  "icy-wind": 6867,
+  "incinerate": 458,
+  "inferno": 6868,
+  "infestation": 726,
+  "ingrain": 436,
+  "ion_deluge": 953,
+  "ion-deluge": 953,
+  "iron_head": 6869,
+  "iron-head": 6869,
+  "iron_tail": 588,
+  "iron-tail": 588,
+  "jumpkick": 6871,
+  "karate_chop": 6873,
+  "karate-chop": 6873,
+  "kinesis": 6874,
+  "last_resort": 1050,
+  "last-resort": 1050,
+  "lava_plume": 489,
+  "lava-plume": 489,
+  "leaf_blade": 393,
+  "leaf-blade": 393,
+  "leaf_storm": 728,
+  "leaf-storm": 728,
+  "leaf_tornado": 1065,
+  "leaf-tornado": 1065,
+  "leech_life": 6876,
+  "leech-life": 6876,
+  "leechseed": 6877,
+  "leer": 344,
+  "lick": 6879,
+  "light_screen": 6881,
+  "light-screen": 6881,
+  "liquidation": 1109,
+  "lock_on": 6883,
+  "lock-on": 6883,
+  "low_kick": 6885,
+  "low-kick": 6885,
+  "lucky_chant": 6887,
+  "lucky-chant": 6887,
+  "high_jump_kick": 1371,
+  "high-jump-kick": 1371,
+  "hold_back": 1373,
+  "hold-back": 1373,
+  "hold_hands": 1375,
+  "hold-hands": 1375,
+  "hone_claws": 494,
+  "hone-claws": 494,
+  "hurricane": 1004,
+  "hydro_cannon": 1062,
+  "hydro-cannon": 1062,
+  "hydro_vortex": 1190,
+  "hydro-vortex": 1190,
+  "hyperspace_fury": 1131,
+  "hyperspace-fury": 1131,
+  "hyperspace_hole": 920,
+  "hyperspace-hole": 920,
+  "ice_ball": 6864,
+  "ice_burn": 1128,
+  "ice-burn": 1128,
+  "ice_fang": 6865,
+  "ice_hammer": 1086,
+  "ice-hammer": 1086,
+  "ice_punch": 6866,
+  "ice_shard": 609,
+  "ice-shard": 609,
+  "icicle_crash": 876,
+  "icicle-crash": 876,
+  "icicle_spear": 346,
+  "icy_wind": 6867,
+  "imprison": 836,
+  "instruct": 1137,
+  "iron_defense": 484,
+  "iron-defense": 484,
+  "jaw_lock": 1275,
+  "jaw-lock": 1275,
+  "jet_punch": 6751,
+  "jet-punch": 6751,
+  "judgment": 870,
+  "jump_kick": 6871,
+  "jump-kick": 6871,
+  "jungle_healing": 1311,
+  "jungle-healing": 1311,
+  "kings_shield": 467,
+  "kings-shield": 467,
+  "knock_off": 501,
+  "knock-off": 501,
+  "lands_wrath": 1376,
+  "lands-wrath": 1376,
+  "laser_focus": 1081,
+  "laser-focus": 1081,
+  "lash_out": 1312,
+  "lash-out": 1312,
+  "leafage": 1082,
+  "leech_seed": 6877,
+  "leech-seed": 6877,
+  "life_dew": 1276,
+  "life-dew": 1276,
+  "light_of_ruin": 1377,
+  "light-of-ruin": 1377,
+  "low_sweep": 583,
+  "low-sweep": 583,
+  "lunar_blessing": 1276,
+  "lunar-blessing": 1276,
+  "lunar_dance": 755,
+  "lunar-dance": 755,
+  "lunge": 1378,
+  "luster_purge": 1066,
+  "luster-purge": 1066,
+  "poison_fang": {
+    "animationId": 6959,
+    "hasOpponentVersion": false,
+    "opponentAnimationId": null
+  },
+  "poison_gas": {
+    "animationId": 6960,
+    "hasOpponentVersion": false,
+    "opponentAnimationId": null
+  },
+  "poison_jab": {
+    "animationId": 6961,
+    "hasOpponentVersion": true,
+    "opponentAnimationId": 6962
+  },
+  "poison_powder": {
+    "animationId": 6963,
+    "hasOpponentVersion": false,
+    "opponentAnimationId": null
+  },
+  "poisonpowder": {
+    "animationId": 6963,
+    "hasOpponentVersion": false,
+    "opponentAnimationId": null
+  },
+  "poison_sting": {
+    "animationId": 6964,
+    "hasOpponentVersion": true,
+    "opponentAnimationId": 6965
+  },
+  "poison_tail": {
+    "animationId": 6966,
+    "hasOpponentVersion": true,
+    "opponentAnimationId": 6967
+  },
+  "pollen_puff": {
+    "animationId": 6968,
+    "hasOpponentVersion": true,
+    "opponentAnimationId": 6969
+  },
+  "poltergeist": {
+    "animationId": 6970,
+    "hasOpponentVersion": false,
+    "opponentAnimationId": null
+  },
+  "pound": {
+    "animationId": 6971,
+    "hasOpponentVersion": false,
+    "opponentAnimationId": null
+  },
+  "powder": {
+    "animationId": 6972,
+    "hasOpponentVersion": false,
+    "opponentAnimationId": null
+  },
+  "powder_snow": {
+    "animationId": 6973,
+    "hasOpponentVersion": false,
+    "opponentAnimationId": null
+  },
+  "power_gem": {
+    "animationId": 6974,
+    "hasOpponentVersion": false,
+    "opponentAnimationId": null
+  },
+  "power_split": {
+    "animationId": 6975,
+    "hasOpponentVersion": false,
+    "opponentAnimationId": null
+  },
+  "power_swap": {
+    "animationId": 6976,
+    "hasOpponentVersion": true,
+    "opponentAnimationId": 6977
+  },
+  "power_trick": {
+    "animationId": 6978,
+    "hasOpponentVersion": false,
+    "opponentAnimationId": null
+  },
+  "power_trip": {
+    "animationId": 6979,
+    "hasOpponentVersion": false,
+    "opponentAnimationId": null
+  },
+  "power_up_punch": {
+    "animationId": 6980,
+    "hasOpponentVersion": false,
+    "opponentAnimationId": null
+  },
+  "power_whip": {
+    "animationId": 6981,
+    "hasOpponentVersion": false,
+    "opponentAnimationId": null
+  },
+  "precipice_blades": {
+    "animationId": 6982,
+    "hasOpponentVersion": false,
+    "opponentAnimationId": null
+  },
+  "present": {
+    "animationId": 6983,
+    "hasOpponentVersion": true,
+    "opponentAnimationId": 6984
+  },
+  "prismatic_laser": {
+    "animationId": 6985,
+    "hasOpponentVersion": false,
+    "opponentAnimationId": null
+  },
+  "protect": {
+    "animationId": 6986,
+    "hasOpponentVersion": true,
+    "opponentAnimationId": 6987
+  },
+  "sacred_fire": {
+    "animationId": 7070,
+    "enemyAnimationId": 7071
+  },
+  "sacred_sword": {
+    "animationId": 7072,
+    "enemyAnimationId": 7073
+  },
+  "safeguard": {
+    "animationId": 7074
+  },
+  "sand_attack": {
+    "animationId": 7075,
+    "enemyAnimationId": 7076
+  },
+  "sandattack": {
+    "animationId": 7075,
+    "enemyAnimationId": 7076
+  },
+  "sand_tomb": {
+    "animationId": 7077
+  },
+  "sandstorm": {
+    "animationId": 7078
+  },
+  "scald": {
+    "animationId": 7079,
+    "enemyAnimationId": 7080
+  },
+  "scale_shot": {
+    "animationId": 7081
+  },
+  "scary_face": {
+    "animationId": 7082,
+    "enemyAnimationId": 7083
+  },
+  "scorching_sands": {
+    "animationId": 7084
+  },
+  "scratch": {
+    "animationId": 7085
+  },
+  "screech": {
+    "animationId": 7086,
+    "enemyAnimationId": 7087
+  },
+  "searing_shot": {
+    "animationId": 7088
+  },
+  "secret_power": {
+    "animationId": 7089
+  },
+  "secret_sword": {
+    "animationId": 7090,
+    "enemyAnimationId": 7091
+  },
+  "seed_bomb": {
+    "animationId": 7092,
+    "enemyAnimationId": 7093
+  },
+  "seed_flare": {
+    "animationId": 7094
+  },
+  "seismic_toss": {
+    "animationId": 7095,
+    "enemyAnimationId": 7096
+  },
+  "self_destruct": {
+    "animationId": 7097
+  },
+  "selfdestruct": {
+    "animationId": 7097
+  },
+  "shadow_ball": {
+    "animationId": 7098,
+    "enemyAnimationId": 7099
+  },
+  "shadow_bone": {
+    "animationId": 7100,
+    "enemyAnimationId": 7101
+  },
+  "shadow_claw": {
+    "animationId": 7102
+  },
+  "shadow_force": {
+    "animationId": 7103
+  },
+  "shadow_punch": {
+    "animationId": 7104
+  },
+  "shadow_sneak": {
+    "animationId": 7105,
+    "enemyAnimationId": 7106
+  },
+  "salt_cure": {
+    "animationId": 7077
+  },
+  "sandsear_storm": {
+    "animationId": 7084
+  },
+  "sappy_seed": {
+    "animationId": 7092,
+    "enemyAnimationId": 7093
+  },
+  "savage_spin_out": {
+    "animationId": 6737
+  },
+  "searing_sunraze_smash": {
+    "animationId": 1397
+  },
+  "sharpen": {
+    "animationId": 7107
+  },
+  "shattered_psyche": {
+    "animationId": 7011
+  },
+  "sheer_cold": {
+    "animationId": 7108
+  },
+  "shell_side_arm": {
+    "animationId": 7109
+  },
+  "shell_smash": {
+    "animationId": 7110
+  },
+  "shell_trap": {
+    "animationId": 7111,
+    "enemyAnimationId": 7112
+  },
+  "shift_gear": {
+    "animationId": 7113
+  },
+  "shock_wave": {
+    "animationId": 7114,
+    "enemyAnimationId": 7115
+  },
+  "shore_up": {
+    "animationId": 7116
+  },
+  "signal_beam": {
+    "animationId": 7117,
+    "enemyAnimationId": 7118
+  },
+  "silver_wind": {
+    "animationId": 7119
+  },
+  "simple_beam": {
+    "animationId": 7120,
+    "enemyAnimationId": 7121
+  },
+  "sing": {
+    "animationId": 7122,
+    "enemyAnimationId": 7123
+  },
+  "sinister_arrow_raid": {
+    "animationId": 7124,
+    "enemyAnimationId": 7125
+  },
+  "sketch": {
+    "animationId": 7126,
+    "enemyAnimationId": 7127
+  },
+  "skill_swap": {
+    "animationId": 7128
+  },
+  "skitter_smack": {
+    "animationId": 7129,
+    "enemyAnimationId": 7130
+  },
+  "skull_bash": {
+    "animationId": 7131
+  },
+  "sky_attack": {
+    "animationId": 7132,
+    "enemyAnimationId": 7133
+  },
+  "sky_drop": {
+    "animationId": 7134
+  },
+  "sky_uppercut": {
+    "animationId": 7135
+  },
+  "slack_off": {
+    "animationId": 7136,
+    "enemyAnimationId": 7137
+  },
+  "slam": {
+    "animationId": 7138,
+    "enemyAnimationId": 7139
+  },
+  "slash": {
+    "animationId": 7140
+  },
+  "sleep_powder": {
+    "animationId": 7141
+  },
+  "sleeppowder": {
+    "animationId": 7141
+  },
+  "sleep_talk": {
+    "animationId": 7142
+  },
+  "sludge": {
+    "animationId": 7143,
+    "enemyAnimationId": 7144
+  },
+  "sludge_bomb": {
+    "animationId": 7145,
+    "enemyAnimationId": 7146
+  },
+  "sludge_wave": {
+    "animationId": 7147,
+    "enemyAnimationId": 7148
+  },
+  "smack_down": {
+    "animationId": 7149,
+    "enemyAnimationId": 7150
+  },
+  "smart_strike": {
+    "animationId": 7151,
+    "enemyAnimationId": 7152
+  },
+  "smelling_salts": {
+    "animationId": 7153
+  },
+  "smellingsalts": {
+    "animationId": 7153
+  },
+  "shed_tail": {
+    "animationId": 497,
+    "enemyAnimationId": 498
+  },
+  "shelter": {
+    "animationId": 6868
+  },
+  "silk_trap": {
+    "animationId": 906
+  },
+  "sizzly_slide": {
+    "animationId": 6840
+  },
+  "smog": {
+    "animationId": 7154
+  },
+  "smokescreen": {
+    "animationId": 7155
+  },
+  "snap_trap": {
+    "animationId": 7156
+  },
+  "snarl": {
+    "animationId": 7157,
+    "enemyAnimationId": 7158
+  },
+  "snatch": {
+    "animationId": 7159
+  },
+  "snipe_shot": {
+    "animationId": 7160
+  },
+  "snore": {
+    "animationId": 7161
+  },
+  "soak": {
+    "animationId": 7162
+  },
+  "soft_boiled": {
+    "animationId": 7163
+  },
+  "softboiled": {
+    "animationId": 7163
+  },
+  "solar_beam": {
+    "animationId": 7164
+  },
+  "solarbeam": {
+    "animationId": 7164
+  },
+  "solar_blade": {
+    "animationId": 7165,
+    "enemyAnimationId": 7166
+  },
+  "sonic_boom": {
+    "animationId": 7167,
+    "enemyAnimationId": 7168
+  },
+  "sonicboom": {
+    "animationId": 7167,
+    "enemyAnimationId": 7168
+  },
+  "spacial_rend": {
+    "animationId": 7169,
+    "enemyAnimationId": 7170
+  },
+  "spark": {
+    "animationId": 7171
+  },
+  "sparkling_aria": {
+    "animationId": 7172
+  },
+  "spectral_thief": {
+    "animationId": 7173,
+    "enemyAnimationId": 7174
+  },
+  "speed_swap": {
+    "animationId": 7175
+  },
+  "spider_web": {
+    "animationId": 7176
+  },
+  "spike_cannon": {
+    "animationId": 7177,
+    "enemyAnimationId": 7178
+  },
+  "spikes": {
+    "animationId": 7179,
+    "enemyAnimationId": 7180
+  },
+  "spiky_shield": {
+    "animationId": 7181
+  },
+  "spirit_break": {
+    "animationId": 7182
+  },
+  "spirit_shackle": {
+    "animationId": 7183,
+    "enemyAnimationId": 7184
+  },
+  "spit_up": {
+    "animationId": 7185,
+    "enemyAnimationId": 7186
+  },
+  "spite": {
+    "animationId": 7187
+  },
+  "splash": {
+    "animationId": 7188
+  },
+  "spore": {
+    "animationId": 7189
+  },
+  "spotlight": {
+    "animationId": 7190,
+    "enemyAnimationId": 7191
+  },
+  "stealth_rock": {
+    "animationId": 7192,
+    "enemyAnimationId": 7193
+  },
+  "steam_eruption": {
+    "animationId": 7194,
+    "enemyAnimationId": 7195
+  },
+  "steamroller": {
+    "animationId": 7196
+  },
+  "steel_beam": {
+    "animationId": 7197
+  },
+  "steel_roller": {
+    "animationId": 7198
+  },
+  "steel_wing": {
+    "animationId": 7199,
+    "enemyAnimationId": 7200
+  },
+  "snowscape": {
+    "animationId": 6861
+  },
+  "soul_stealing_7_star_strike": {
+    "animationId": 7173,
+    "enemyAnimationId": 7174
+  },
+  "sparkly_swirl": {
+    "animationId": 6775
+  },
+  "spicy_extract": {
+    "animationId": 6858
+  },
+  "spin_out": {
+    "animationId": 7198
+  },
+  "splintered_stormshards": {
+    "animationId": 718
+  },
+  "splishy_splash": {
+    "animationId": 473,
+    "enemyAnimationId": 474
+  },
+  "springtide_storm": {
+    "animationId": 6829
+  },
+  "sticky_web": {
+    "animationId": 7201,
+    "enemyAnimationId": 7202
+  },
+  "stockpile": {
+    "animationId": 7203
+  },
+  "stomp": {
+    "animationId": 7204
+  },
+  "stomping_tantrum": {
+    "animationId": 7205
+  },
+  "stone_edge": {
+    "animationId": 7206
+  },
+  "stored_power": {
+    "animationId": 7207
+  },
+  "storm_throw": {
+    "animationId": 7208
+  },
+  "strange_steam": {
+    "animationId": 7209
+  },
+  "strength": {
+    "animationId": 7210
+  },
+  "strength_sap": {
+    "animationId": 7211,
+    "enemyAnimationId": 7212
+  },
+  "string_shot": {
+    "animationId": 7213
+  },
+  "struggle": {
+    "animationId": 7214
+  },
+  "struggle_bug": {
+    "animationId": 7215
+  },
+  "stuff_cheeks": {
+    "animationId": 7216,
+    "enemyAnimationId": 7217
+  },
+  "stun_spore": {
+    "animationId": 7218
+  },
+  "stunspore": {
+    "animationId": 7218
+  },
+  "submission": {
+    "animationId": 7219
+  },
+  "substitute": {
+    "animationId": 7220,
+    "enemyAnimationId": 7221
+  },
+  "subzero_slammer": {
+    "animationId": 7222
+  },
+  "sucker_punch": {
+    "animationId": 7223
+  },
+  "sunny_day": {
+    "animationId": 7224
+  },
+  "sunsteel_strike": {
+    "animationId": 7225
+  },
+  "super_fang": {
+    "animationId": 7226
+  },
+  "superpower": {
+    "animationId": 7227
+  },
+  "supersonic": {
+    "animationId": 7228,
+    "enemyAnimationId": 7229
+  },
+  "supersonic_skystrike": {
+    "animationId": 7230
+  },
+  "surf": {
+    "animationId": 7231,
+    "enemyAnimationId": 7232
+  },
+  "surging_strikes": {
+    "animationId": 7233
+  },
+  "swagger": {
+    "animationId": 7234,
+    "enemyAnimationId": 7235
+  },
+  "swallow": {
+    "animationId": 7236,
+    "enemyAnimationId": 7237
+  },
+  "sweet_kiss": {
+    "animationId": 7238
+  },
+  "sweet_scent": {
+    "animationId": 7239
+  },
+  "swift": {
+    "animationId": 7240,
+    "enemyAnimationId": 7241
+  },
+  "switcheroo": {
+    "animationId": 7242,
+    "enemyAnimationId": 7243
+  },
+  "swords_dance": {
+    "animationId": 7244
+  },
+  "synchronoise": {
+    "animationId": 7245
+  },
+  "synthesis": {
+    "animationId": 7246
+  },
+  "stoked_sparksurfer": {
+    "animationId": 100
+  },
+  "stone_axe": {
+    "animationId": 7206
+  },
+  "supercell_slam": {
+    "animationId": 7043
+  },
+  "syrup_bomb": {
+    "animationId": 1241,
+    "enemyAnimationId": 1242
+  },
+  "ruination": {
+    "animationId": 7226
+  },
+  "raging_bull": {
+    "animationId": 396
+  }
 }

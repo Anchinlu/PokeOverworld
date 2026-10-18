@@ -61,7 +61,7 @@
   },
   "ROCK": {
     "physicalmove": "rock_throw",
-    "specialmove": "ancientpower",
+    "specialmove": "ancient_power",
     "statusmove": "stealth_rock"
   },
   "GHOST": {

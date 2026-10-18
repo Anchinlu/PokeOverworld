@@ -17,6 +17,11 @@ import moveExtensionData from '../../../../../packages/game-data/move-animation-
 import reunionMovesData from '../../../../../packages/game-data/reunion-moves.json';
 import { MOVES_DB } from '../moves-db';
 import { isSelfTargetMove } from '../move-vfx';
+import {
+  isKnownDuplicateAnimationCel,
+  shouldPreserveAnimationCurve,
+  deduplicateAnimationCels,
+} from './animation-overrides';
 
 const GALLERY_MOVE_MAP: Record<string, number> = {
   ...moveMapData.moves,
@@ -826,6 +831,9 @@ export class AnimationGallery {
 
     const move = MOVES_DB[this.currentMove] ?? MOVES_DB[this.currentMove.replace(/-/g, '_')];
     const selfTarget = move ? isSelfTargetMove(move) : false;
+    const isOppMove =
+      isEnemy &&
+      ANIMATION_REGISTRY.isOpponentAnimation(def.id, def.name);
     const isFlightReversed = isDirectionReversed(
       CoordinateTransformer.SRC_USER,
       CoordinateTransformer.SRC_TARGET,
@@ -834,7 +842,9 @@ export class AnimationGallery {
     );
 
     // Categorize layers
-    const { behindBattlers, aboveBattlers } = LayerManager.categorizeCels(frame.cels);
+    const { behindBattlers, aboveBattlers } = LayerManager.categorizeCels(
+      deduplicateAnimationCels(def.id, frame.cels)
+    );
 
     // Viewport clip wrapper
     if (this.clipViewport) {
@@ -846,6 +856,7 @@ export class AnimationGallery {
 
     // Render behind cels
     for (const cel of behindBattlers) {
+      if (isKnownDuplicateAnimationCel(def.id, cel)) continue;
       const pos = CoordinateTransformer.resolveCelPosition(
         cel.mirrorPositionOnEnemy && isEnemy ? CoordinateTransformer.SRC_WIDTH - cel.x : cel.x,
         cel.mirrorPositionOnEnemy && isEnemy
@@ -858,7 +869,10 @@ export class AnimationGallery {
         isEnemy,
         selfTarget,
         false,
-        cel.curve === 'arc'
+        shouldPreserveAnimationCurve(def.id, cel),
+        isOppMove,
+        def.id,
+        cel.pattern
       );
       CelRenderer.renderCel(
         ctx,
@@ -866,7 +880,7 @@ export class AnimationGallery {
         pos.x,
         pos.y,
         cel.graphic ?? def.graphic,
-        isFlightReversed,
+        isFlightReversed && String(def.id) !== '351',
         this.viewport,
         undefined,
         isEnemy
@@ -878,6 +892,7 @@ export class AnimationGallery {
 
     // Render above cels
     for (const cel of aboveBattlers) {
+      if (isKnownDuplicateAnimationCel(def.id, cel)) continue;
       const pos = CoordinateTransformer.resolveCelPosition(
         cel.mirrorPositionOnEnemy && isEnemy ? CoordinateTransformer.SRC_WIDTH - cel.x : cel.x,
         cel.mirrorPositionOnEnemy && isEnemy
@@ -890,7 +905,10 @@ export class AnimationGallery {
         isEnemy,
         selfTarget,
         false,
-        cel.curve === 'arc'
+        shouldPreserveAnimationCurve(def.id, cel),
+        isOppMove,
+        def.id,
+        cel.pattern
       );
       CelRenderer.renderCel(
         ctx,
@@ -898,7 +916,7 @@ export class AnimationGallery {
         pos.x,
         pos.y,
         cel.graphic ?? def.graphic,
-        isFlightReversed,
+        isFlightReversed && String(def.id) !== '351',
         this.viewport,
         undefined,
         isEnemy
@@ -1045,6 +1063,9 @@ export class AnimationGallery {
 
     const itemsHtml = cels
       .map((cel, idx) => {
+        const isOppMove =
+          this.currentSide === 'enemy' &&
+          Boolean(this.currentDef && ANIMATION_REGISTRY.isOpponentAnimation(this.currentDef.id, this.currentDef.name));
         const pos = CoordinateTransformer.resolveCelPosition(
           cel.x,
           cel.y,
@@ -1055,7 +1076,10 @@ export class AnimationGallery {
           this.currentSide === 'enemy',
           selfTarget,
           false,
-          cel.curve === 'arc'
+          cel.curve === 'arc',
+          isOppMove,
+          this.currentDef?.id,
+          cel.pattern
         );
         const shouldMirror = shouldMirrorCel(cel, isFlightReversed);
 

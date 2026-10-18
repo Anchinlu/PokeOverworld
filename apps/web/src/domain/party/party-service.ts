@@ -122,6 +122,30 @@ export class PartyService {
     return this.state.pokemon.every((p) => p.currentHp <= 0 || p.isFainted);
   }
 
+  public healParty(cureStatus: boolean): number {
+    let changed = 0;
+    for (const pokemon of this.state.pokemon) {
+      const wasChanged = pokemon.currentHp < pokemon.maxHp || (cureStatus && pokemon.status !== 'none');
+      if (!wasChanged) continue;
+      pokemon.currentHp = pokemon.maxHp;
+      pokemon.isFainted = false;
+      if (cureStatus) pokemon.status = 'none';
+      changed++;
+    }
+    if (changed > 0) this.notify();
+    return changed;
+  }
+
+  public reviveOne(hpRatio: number): boolean {
+    const pokemon = this.state.pokemon.find((candidate) => candidate.isFainted || candidate.currentHp <= 0);
+    if (!pokemon) return false;
+    pokemon.currentHp = Math.max(1, Math.floor(pokemon.maxHp * hpRatio));
+    pokemon.isFainted = false;
+    pokemon.status = 'none';
+    this.notify();
+    return true;
+  }
+
   public subscribe(callback: (state: PartyState) => void): () => void {
     this.listeners.add(callback);
     return () => this.listeners.delete(callback);

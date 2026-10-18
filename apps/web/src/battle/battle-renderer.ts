@@ -536,7 +536,11 @@ export class BattleRenderer {
       instance.request.targetPos,
       viewport,
       attackerSide === 'enemy',
-      instance.request.selfTarget
+      instance.request.selfTarget,
+      false,
+      false,
+      false,
+      instance.definition.id
     );
 
     const cellWidth = atlas.cellWidth;
@@ -1325,7 +1329,7 @@ export class BattleRenderer {
         ctx.restore();
       } else {
         // Normal rendering & hit flash
-        const animationFlash = battleAnimationPlayer.getBattlerFlashColor(true);
+        const animationFlash = battleAnimationPlayer.getBattlerFlashColorForSide('enemy');
         if (animationFlash) {
           const [r, g, b, a] = animationFlash;
           const can = this.prepareSilhouetteCanvas(
@@ -1348,6 +1352,22 @@ export class BattleRenderer {
             ctx.filter = 'drop-shadow(0 0 12px rgba(74, 222, 128, 0.95)) saturate(2.5)';
           } else {
             ctx.filter = 'brightness(1.8) drop-shadow(0 0 6px rgba(134, 239, 172, 0.8))';
+          }
+        } else if (state.enemyStatusInflictFlash > 0) {
+          const t = state.enemyStatusInflictFlash;
+          if (t > 44) {
+            // Phase 1 (frames 52→44): bright white burst
+            ctx.filter = 'brightness(5.0)';
+          } else {
+            // Phase 2 (frames 44→0): status-colored glow pulsing every 6 frames
+            const alpha = Math.min(1.0, t / 12);
+            const pulsePhase = Math.floor(t / 6) % 2;
+            const col = state.enemyStatusInflictColor.replace(/[\.\d]+\)$/, `${(alpha * 0.95).toFixed(2)})`);
+            if (pulsePhase === 0) {
+              ctx.filter = `drop-shadow(0 0 16px ${col}) saturate(2.2) brightness(1.6)`;
+            } else {
+              ctx.filter = `brightness(2.8)`;
+            }
           }
         } else if (state.isIntro) {
           const flashStart = 0.55;
@@ -1536,7 +1556,7 @@ export class BattleRenderer {
         ctx.drawImage(can, 0, 0, frameW, frameH, dx, dy, dw, dh);
       } else {
         // Normal rendering / send-out flash / hit flash
-        const animationFlash = battleAnimationPlayer.getBattlerFlashColor(false);
+        const animationFlash = battleAnimationPlayer.getBattlerFlashColorForSide('player');
         if (animationFlash) {
           const [r, g, b, a] = animationFlash;
           const can = this.prepareSilhouetteCanvas(
@@ -1559,6 +1579,22 @@ export class BattleRenderer {
             ctx.filter = 'drop-shadow(0 0 12px rgba(74, 222, 128, 0.95)) saturate(2.5)';
           } else {
             ctx.filter = 'brightness(1.8) drop-shadow(0 0 6px rgba(134, 239, 172, 0.8))';
+          }
+        } else if (state.playerStatusInflictFlash > 0) {
+          const t = state.playerStatusInflictFlash;
+          if (t > 44) {
+            // Phase 1 (frames 52→44): bright white burst
+            ctx.filter = 'brightness(5.0)';
+          } else {
+            // Phase 2 (frames 44→0): status-colored glow pulsing every 6 frames
+            const alpha = Math.min(1.0, t / 12);
+            const pulsePhase = Math.floor(t / 6) % 2;
+            const col = state.playerStatusInflictColor.replace(/[\.\d]+\)$/, `${(alpha * 0.95).toFixed(2)})`);
+            if (pulsePhase === 0) {
+              ctx.filter = `drop-shadow(0 0 16px ${col}) saturate(2.2) brightness(1.6)`;
+            } else {
+              ctx.filter = `brightness(2.8)`;
+            }
           }
         } else if (isVisibleInSendOut && state.pokemonEnergyFlash > 0.05) {
           ctx.filter = `brightness(${(1.0 + state.pokemonEnergyFlash * 4.5).toFixed(2)})`;

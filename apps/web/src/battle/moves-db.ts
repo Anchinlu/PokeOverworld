@@ -7,6 +7,27 @@ export const MOVES_DB: Record<string, BattleMove> = (
   rawMovesData as unknown as { moves: Record<string, BattleMove> }
 ).moves;
 
+/** Legacy learnset spellings kept for compatibility with imported data. */
+export const MOVE_ID_ALIASES: Readonly<Record<string, string>> = {
+  leechseed: 'leech_seed', sandattack: 'sand_attack', doubleslap: 'double_slap',
+  featherdance: 'feather_dance', selfdestruct: 'self_destruct', highjumpkick: 'high_jump_kick',
+  jumpkick: 'jump_kick', dragonbreath: 'dragon_breath', poisonpowder: 'poison_powder',
+  sleeppowder: 'sleep_powder', thundershock: 'thunder_shock', extremespeed: 'extreme_speed',
+  solarbeam: 'solar_beam', softboiled: 'soft_boiled', smellingsalts: 'smelling_salts',
+  grasswhistle: 'grass_whistle',
+};
+
+export function normalizeMoveId(id: string): string {
+  const normalized = id.toLowerCase().replace(/-/g, '_');
+  return MOVE_ID_ALIASES[normalized] ?? normalized;
+}
+
+function resolveMove(id: string): BattleMove | undefined {
+  const canonicalId = normalizeMoveId(id);
+  const move = MOVES_DB[canonicalId] ?? MOVES_DB[id];
+  return move ? { ...move, id: canonicalId } : undefined;
+}
+
 const speciesMovesMap = new Map<string, PokemonLearnMove[]>();
 for (const p of Object.values(rawPokemonData.pokemon as Record<string, PokemonSpeciesData>)) {
   if (p.speciesKey && p.moves) {
@@ -42,7 +63,7 @@ export function getMovesForSpecies(
     const chosen = pool.slice(-4);
 
     const resolved = chosen
-      .map((entry) => MOVES_DB[entry.moveId])
+      .map((entry) => resolveMove(entry.moveId))
       .filter((m): m is BattleMove => Boolean(m))
       .map((m) => ({ ...m }));
 
@@ -54,7 +75,7 @@ export function getMovesForSpecies(
   const moveIds = SPECIES_MOVESETS[normKey];
   if (moveIds && moveIds.length > 0) {
     return moveIds
-      .map((id) => MOVES_DB[id])
+      .map((id) => resolveMove(id))
       .filter((m): m is BattleMove => Boolean(m))
       .map((m) => ({ ...m }));
   }
@@ -95,9 +116,10 @@ export function getAvailableLevelUpMoves(
   if (learnset && learnset.length > 0) {
     const eligible = learnset.filter((m) => m.level <= level);
     for (const entry of eligible) {
-      if (!seen.has(entry.moveId)) {
-        seen.add(entry.moveId);
-        const moveData = MOVES_DB[entry.moveId];
+      const canonicalId = normalizeMoveId(entry.moveId);
+      if (!seen.has(canonicalId)) {
+        seen.add(canonicalId);
+        const moveData = resolveMove(entry.moveId);
         if (moveData) {
           result.push({
             move: { ...moveData },
@@ -113,10 +135,12 @@ export function getAvailableLevelUpMoves(
   if (result.length === 0) {
     const fallbackIds = SPECIES_MOVESETS[normKey] || ['tackle'];
     for (const id of fallbackIds) {
-      if (!seen.has(id) && MOVES_DB[id]) {
-        seen.add(id);
+      const canonicalId = normalizeMoveId(id);
+      const moveData = resolveMove(id);
+      if (!seen.has(canonicalId) && moveData) {
+        seen.add(canonicalId);
         result.push({
-          move: { ...MOVES_DB[id] },
+          move: { ...moveData },
           level: 1,
           source: 'level',
         });
@@ -148,13 +172,13 @@ export function getAvailableMovesForPokemon(pokemon: {
     source: 'level' as const,
   }));
 
-  const seen = new Set<string>(pool.map((p) => p.move.id.toLowerCase()));
+  const seen = new Set<string>(pool.map((p) => normalizeMoveId(p.move.id)));
 
   // 1. Taught TM moves
   if (Array.isArray(pokemon.taughtTmMoves)) {
     for (const moveId of pokemon.taughtTmMoves) {
-      const norm = moveId.toLowerCase();
-      const moveData = MOVES_DB[norm] || getMoveById(moveId);
+      const norm = normalizeMoveId(moveId);
+      const moveData = resolveMove(moveId);
       if (moveData) {
         const existing = pool.find((p) => p.move.id.toLowerCase() === norm);
         if (existing) {
@@ -175,7 +199,7 @@ export function getAvailableMovesForPokemon(pokemon: {
   if (Array.isArray(pokemon.moves)) {
     for (const m of pokemon.moves) {
       if (m && m.id) {
-        const norm = m.id.toLowerCase();
+        const norm = normalizeMoveId(m.id);
         if (!seen.has(norm)) {
           seen.add(norm);
           pool.push({
@@ -217,8 +241,7 @@ export function getAllMoves(): BattleMove[] {
 }
 
 export function getMoveById(id: string): BattleMove | undefined {
-  const norm = id.toLowerCase().replace(/-/g, '_');
-  return MOVES_DB[norm] || MOVES_DB[id];
+  return resolveMove(id);
 }
 
 export function getMoveDisplayNames(move: {
@@ -227,8 +250,7 @@ export function getMoveDisplayNames(move: {
   nameVi?: string;
   nameEn?: string;
 }): { nameVi: string; nameEn: string } {
-  const normId = move.id ? move.id.toLowerCase().replace(/-/g, '_') : '';
-  const db = (normId && MOVES_DB[normId]) || (move.id && MOVES_DB[move.id]) || move;
+  const db = (move.id && resolveMove(move.id)) || move;
 
   let vi = db.nameVi || move.nameVi || '';
   let en = db.nameEn || move.nameEn || '';

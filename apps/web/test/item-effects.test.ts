@@ -800,7 +800,7 @@ describe('Item Effects Engine & Inventory Deduction', () => {
     it('correctly formats move display names without duplicating Vietnamese or English text', () => {
       // 1. Move like Ancient Power which has "Ancient Power (Sức Mạnh Cổ Đại)" in DB
       const ancientPowerNames = getMoveDisplayNames({
-        id: 'ancientpower',
+        id: 'ancient_power',
         name: 'Ancient Power (Sức Mạnh Cổ Đại)',
         nameVi: 'Sức Mạnh Cổ Đại',
         nameEn: 'Ancient Power',
@@ -812,7 +812,7 @@ describe('Item Effects Engine & Inventory Deduction', () => {
 
       // 2. Move with DB lookup by ID
       const dbLookup = getMoveDisplayNames({
-        id: 'ancientpower',
+        id: 'ancient_power',
         name: 'Ancient Power (Sức Mạnh Cổ Đại)',
       });
       expect(dbLookup.nameVi).toBe('Sức Mạnh Cổ Đại');

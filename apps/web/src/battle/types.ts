@@ -111,6 +111,8 @@ export interface BattlerPokemon {
   name: string;
   speciesKey: string;
   ability?: string;
+  abilitySuppressed?: boolean;
+  suppressedAbility?: string;
   abilitySlot?: 'primary' | 'secondary' | 'hidden';
   isShiny?: boolean;
   types: PokemonType[];
@@ -157,6 +159,7 @@ export interface BattlerPokemon {
   isProtected?: boolean;
   protectSuccessiveUses?: number;
   isSeeded?: boolean;
+  bideDamageTaken?: number;
   destinyBond?: boolean;
   // Volatile statuses & round flags
   isFlinched?: boolean;
@@ -165,6 +168,9 @@ export interface BattlerPokemon {
   firstTurnInBattle?: boolean;
   hasAquaRing?: boolean;
   isIngrained?: boolean;
+  wishTurns?: number;
+  wishHealAmount?: number;
+  healingWishPending?: boolean;
   safeguardTurns?: number;
   // Trapping & Binding
   isTrapped?: boolean;
@@ -194,6 +200,7 @@ export interface BattlerPokemon {
   damagedThisRound?: boolean;
   isBeakBlastCharging?: boolean;
   isFocusPunchCharging?: boolean;
+  glaiveRushTurns?: number;
 }
 
 export interface BoundStatus {
@@ -255,4 +262,14 @@ export interface BattleEnvironment {
   trickRoomTurns?: number;
   pledgeCombo?: boolean;
   lastPledgeMove?: string;
+  playerWish?: BattleWishState;
+  enemyWish?: BattleWishState;
+  playerHealingWishPending?: boolean;
+  enemyHealingWishPending?: boolean;
+}
+
+export interface BattleWishState {
+  turnsLeft: number;
+  healAmount: number;
+  cureStatus: boolean;
 }

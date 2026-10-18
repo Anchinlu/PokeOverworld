@@ -78,6 +78,7 @@ export interface AnimationViewport {
 
 export interface BattleAnimationRequest {
   moveId: string;
+  animId?: number;
   userSide: 'player' | 'enemy';
   userPos: { x: number; y: number };
   targetPos: { x: number; y: number };
@@ -104,4 +105,5 @@ export interface BattleAnimationInstance {
   currentFrame: number;
   elapsedMs: number;
   totalDurationMs: number;
+  isOppMove?: boolean;
 }

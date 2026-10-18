@@ -55,11 +55,13 @@ export class BattleAnimationRegistry {
    * Normalizes move ID to standard key format (lowercase, underscores).
    */
   public normalizeMoveId(moveId: string): string {
-    return moveId
+    const norm = moveId
       .trim()
       .toLowerCase()
       .replace(/[\s-]+/g, '_')
       .replace(/[^a-z0-9_]/g, '');
+    if (norm === 'ancientpower') return 'ancient_power';
+    return norm;
   }
 
   /**
@@ -86,6 +88,68 @@ export class BattleAnimationRegistry {
   }
 
   /**
+   * Resolves Common/Status animation IDs (Essentials standard):
+   * 0: HealthUp, 1: HealthDown, 2: StatUp, 3: StatDown,
+   * 4: Sleep, 5: Poison, 6: Toxic, 7: Burn, 8: Paralysis,
+   * 9: Frozen, 10: Confusion, 11: Attract, 179: LeechSeed
+   */
+  public resolveStatusAnimationId(condition: string): number | null {
+    const norm = condition
+      .toLowerCase()
+      .trim()
+      .replace(/^(common|status)[:_]/, '')
+      .replace(/[\s-]+/g, '_');
+
+    switch (norm) {
+      case 'sleep':
+      case 'asleep':
+        return 4;
+      case 'poison':
+      case 'psn':
+        return 5;
+      case 'toxic':
+      case 'tox':
+        return 6;
+      case 'burn':
+      case 'brn':
+        return 7;
+      case 'paralysis':
+      case 'paralyze':
+      case 'paralyzed':
+      case 'par':
+        return 8;
+      case 'freeze':
+      case 'frozen':
+      case 'frz':
+        return 9;
+      case 'confusion':
+      case 'confused':
+        return 10;
+      case 'attract':
+      case 'infatuation':
+        return 11;
+      case 'leech_seed':
+      case 'leechseed':
+      case 'seed':
+        return 179;
+      case 'stat_up':
+      case 'statup':
+        return 2;
+      case 'stat_down':
+      case 'statdown':
+        return 3;
+      case 'health_up':
+      case 'healthup':
+        return 0;
+      case 'health_down':
+      case 'healthdown':
+        return 1;
+      default:
+        return null;
+    }
+  }
+
+  /**
    * Resolves the animation ID for a given move request, handling:
    * 1. Opponent variants for enemy battlers.
    * 2. Direct regular move mappings.
@@ -100,6 +164,20 @@ export class BattleAnimationRegistry {
     moveCategory: 'physical' | 'special' | 'status' = 'physical',
     hitNum = 0
   ): number {
+    // Direct numeric ID (e.g. "8", "4", "7")
+    const numId = Number(moveId);
+    if (!isNaN(numId) && numId >= 0 && this.hasDefinition(numId)) {
+      return numId;
+    }
+
+    // Common / Status condition lookup (e.g. "Common:Sleep", "Common:Paralysis", "status:burn")
+    if (moveId.toLowerCase().startsWith('common:') || moveId.toLowerCase().startsWith('status:')) {
+      const statusId = this.resolveStatusAnimationId(moveId);
+      if (statusId !== null && this.hasDefinition(statusId)) {
+        return statusId;
+      }
+    }
+
     const norm = this.normalizeMoveId(moveId);
     const noUnderscore = norm.replace(/_/g, '');
 
@@ -155,16 +233,51 @@ export class BattleAnimationRegistry {
         if (fallbackMove) {
           const fallbackNorm = this.normalizeMoveId(fallbackMove);
           const fallbackNoUnderscore = fallbackNorm.replace(/_/g, '');
-          const fallbackAnimId =
-            (this.moveExtensions.replacedMoves
-              ? this.lookupMove(
-                  this.moveExtensions.replacedMoves,
-                  fallbackNorm,
-                  fallbackNoUnderscore
-                )
-              : undefined) ??
-            this.lookupMove(this.moveMap.moves, fallbackNorm, fallbackNoUnderscore) ??
-            this.lookupMove(this.moveExtensions.moves, fallbackNorm, fallbackNoUnderscore);
+          let fallbackAnimId: number | undefined;
+
+          if (isEnemy) {
+            if (this.moveExtensions.replacedOpponentMoves) {
+              fallbackAnimId = this.lookupMove(
+                this.moveExtensions.replacedOpponentMoves,
+                fallbackNorm,
+                fallbackNoUnderscore
+              );
+            }
+            if (fallbackAnimId === undefined) {
+              fallbackAnimId = this.lookupMove(
+                this.moveMap.opponentMoves,
+                fallbackNorm,
+                fallbackNoUnderscore
+              );
+            }
+            if (fallbackAnimId === undefined && this.moveExtensions.opponentMoves) {
+              fallbackAnimId = this.lookupMove(
+                this.moveExtensions.opponentMoves,
+                fallbackNorm,
+                fallbackNoUnderscore
+              );
+            }
+          }
+
+          if (fallbackAnimId === undefined) {
+            fallbackAnimId =
+              (this.moveExtensions.replacedMoves
+                ? this.lookupMove(
+                    this.moveExtensions.replacedMoves,
+                    fallbackNorm,
+                    fallbackNoUnderscore
+                  )
+                : undefined) ??
+              this.lookupMove(this.moveMap.moves, fallbackNorm, fallbackNoUnderscore) ??
+              (this.moveExtensions.moves
+                ? this.lookupMove(
+                    this.moveExtensions.moves,
+                    fallbackNorm,
+                    fallbackNoUnderscore
+                  )
+                : undefined);
+          }
+
           if (fallbackAnimId !== undefined) {
             return fallbackAnimId;
           }
@@ -271,6 +384,29 @@ export class BattleAnimationRegistry {
     return Boolean(
       this.moveExtensions.moves?.[norm] || this.moveExtensions.moves?.[norm.replace(/_/g, '')]
     );
+  }
+
+  /**
+   * Checks whether an animation was authored specifically as an opponent (enemy) variant.
+   */
+  public isOpponentAnimation(animId: number | string, definitionName?: string): boolean {
+    if (definitionName && definitionName.toLowerCase().startsWith('oppmove:')) {
+      return true;
+    }
+    const numId = Number(animId);
+    if (isNaN(numId)) return false;
+    for (const map of [
+      this.moveExtensions.replacedOpponentMoves,
+      this.moveMap.opponentMoves,
+      this.moveExtensions.opponentMoves,
+    ]) {
+      if (map) {
+        for (const val of Object.values(map)) {
+          if (Number(val) === numId) return true;
+        }
+      }
+    }
+    return false;
   }
 
   private lookupMove(

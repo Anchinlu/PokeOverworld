@@ -5,6 +5,11 @@ import { CoordinateTransformer } from './coordinate-transformer';
 import { CelRenderer } from './cel-renderer';
 import { LayerManager } from './layer-manager';
 import { TimingEventManager } from './timing-events';
+import {
+  isKnownDuplicateAnimationCel,
+  shouldPreserveAnimationCurve,
+  deduplicateAnimationCels,
+} from './animation-overrides';
 import { battleCameraManager } from './battle-camera';
 
 export class BattleAnimationPlayer {
@@ -54,13 +59,15 @@ export class BattleAnimationPlayer {
    */
   public async play(request: BattleAnimationRequest): Promise<BattleAnimationInstance | null> {
     const isEnemy = request.userSide === 'enemy';
-    const animId = ANIMATION_REGISTRY.resolveAnimationId(
-      request.moveId,
-      isEnemy,
-      request.moveType,
-      request.moveCategory,
-      request.hitNum ?? 0
-    );
+    const animId =
+      request.animId ??
+      ANIMATION_REGISTRY.resolveAnimationId(
+        request.moveId,
+        isEnemy,
+        request.moveType,
+        request.moveCategory,
+        request.hitNum ?? 0
+      );
 
     const definition = await ANIMATION_REGISTRY.getDefinition(animId);
     if (!definition || !definition.frames || definition.frames.length === 0) {
@@ -95,6 +102,10 @@ export class BattleAnimationPlayer {
     this.hitTriggered = false;
     this.completeTriggered = false;
 
+    const isOppMove =
+      isEnemy &&
+      ANIMATION_REGISTRY.isOpponentAnimation(animId, definition.name);
+
     const instance: BattleAnimationInstance = {
       id: `anim_${animId}_${Date.now()}`,
       definition,
@@ -103,6 +114,7 @@ export class BattleAnimationPlayer {
       currentFrame: 0,
       elapsedMs: 0,
       totalDurationMs,
+      isOppMove,
     };
 
     this.currentInstance = instance;
@@ -157,6 +169,41 @@ export class BattleAnimationPlayer {
   /** Returns the active animation tint for the requested battler, if any. */
   public getBattlerFlashColor(isTarget: boolean): [number, number, number, number] | null {
     return this.timingManager.getActiveBattlerFlashes(isTarget);
+  }
+
+  /**
+   * Returns the active animation tint for the specified side ('player' | 'enemy').
+   * Dynamically resolves whether the side is the target or the user based on
+   * instance.request.userSide and instance.request.selfTarget.
+   */
+  public getBattlerFlashColorForSide(side: 'player' | 'enemy'): [number, number, number, number] | null {
+    if (!this.currentInstance || !this.currentInstance.isPlaying) {
+      return null;
+    }
+    const req = this.currentInstance.request;
+    const attackerSide = req.userSide ?? 'player';
+    const isAttacker = side === attackerSide;
+    const isDefender = !isAttacker;
+    const isSelfTarget = Boolean(req.selfTarget);
+
+    // If self-targeted move (e.g. Dragon Dance, Recover, Swords Dance):
+    // Only the attacker receives the flashes (both scope 2 user flashes and scope 1 target flashes).
+    if (isSelfTarget) {
+      if (!isAttacker) return null;
+      return (
+        this.timingManager.getActiveBattlerFlashes(false) ??
+        this.timingManager.getActiveBattlerFlashes(true)
+      );
+    }
+
+    // Normal offensive / targeted move:
+    // Defender receives scope 1 (target hit flashes)
+    // Attacker receives scope 2 (user charge flashes)
+    if (isDefender) {
+      return this.timingManager.getActiveBattlerFlashes(true);
+    } else {
+      return this.timingManager.getActiveBattlerFlashes(false);
+    }
   }
 
   public getCurrentInstance(): BattleAnimationInstance | null {
@@ -232,7 +279,9 @@ export class BattleAnimationPlayer {
 
     const viewport = this.resolveViewport(viewportOrWidth, canvasHeight);
     const isEnemy = inst.request.userSide === 'enemy';
-    const { behindBattlers } = LayerManager.categorizeCels(frame.cels);
+    const { behindBattlers } = LayerManager.categorizeCels(
+      deduplicateAnimationCels(inst.definition.id, frame.cels)
+    );
 
     const isFlightReversed = CoordinateTransformer.isDirectionReversed(
       CoordinateTransformer.SRC_USER,
@@ -248,6 +297,7 @@ export class BattleAnimationPlayer {
 
     for (const cel of behindBattlers) {
       if (this.isBattlerMaskedCel(inst, cel.pattern)) continue;
+      if (isKnownDuplicateAnimationCel(inst.definition.id, cel)) continue;
       const pos = CoordinateTransformer.resolveCelPosition(
         cel.mirrorPositionOnEnemy && isEnemy ? CoordinateTransformer.SRC_WIDTH - cel.x : cel.x,
         cel.mirrorPositionOnEnemy && isEnemy
@@ -260,7 +310,10 @@ export class BattleAnimationPlayer {
         isEnemy,
         inst.request.selfTarget,
         false,
-        cel.curve === 'arc'
+        shouldPreserveAnimationCurve(inst.definition.id, cel),
+        inst.isOppMove,
+        inst.definition.id,
+        cel.pattern
       );
       CelRenderer.renderCel(
         ctx,
@@ -268,7 +321,7 @@ export class BattleAnimationPlayer {
         pos.x,
         pos.y,
         cel.graphic ?? inst.definition.graphic,
-        isFlightReversed,
+        isFlightReversed && String(inst.definition.id) !== '351',
         viewport,
         undefined,
         isEnemy
@@ -296,7 +349,9 @@ export class BattleAnimationPlayer {
 
     const viewport = this.resolveViewport(viewportOrWidth, canvasHeight);
     const isEnemy = inst.request.userSide === 'enemy';
-    const { aboveBattlers } = LayerManager.categorizeCels(frame.cels);
+    const { aboveBattlers } = LayerManager.categorizeCels(
+      deduplicateAnimationCels(inst.definition.id, frame.cels)
+    );
 
     const isFlightReversed = CoordinateTransformer.isDirectionReversed(
       CoordinateTransformer.SRC_USER,
@@ -312,6 +367,7 @@ export class BattleAnimationPlayer {
 
     for (const cel of aboveBattlers) {
       if (this.isBattlerMaskedCel(inst, cel.pattern)) continue;
+      if (isKnownDuplicateAnimationCel(inst.definition.id, cel)) continue;
       const pos = CoordinateTransformer.resolveCelPosition(
         cel.mirrorPositionOnEnemy && isEnemy ? CoordinateTransformer.SRC_WIDTH - cel.x : cel.x,
         cel.mirrorPositionOnEnemy && isEnemy
@@ -324,7 +380,10 @@ export class BattleAnimationPlayer {
         isEnemy,
         inst.request.selfTarget,
         false,
-        cel.curve === 'arc'
+        shouldPreserveAnimationCurve(inst.definition.id, cel),
+        inst.isOppMove,
+        inst.definition.id,
+        cel.pattern
       );
       CelRenderer.renderCel(
         ctx,
@@ -332,7 +391,7 @@ export class BattleAnimationPlayer {
         pos.x,
         pos.y,
         cel.graphic ?? inst.definition.graphic,
-        isFlightReversed,
+        isFlightReversed && String(inst.definition.id) !== '351',
         viewport,
         undefined,
         isEnemy

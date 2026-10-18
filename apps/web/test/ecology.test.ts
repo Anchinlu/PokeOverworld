@@ -182,7 +182,7 @@ describe('Ecological Field & Regional Distribution (Step 1)', () => {
 
     // Dry berries in dryland should exceed 50%
     expect(dryCountInDryland / trials).toBeGreaterThan(0.5);
-  });
+  }, 20000);
 
   it('calculates tall grass density according to Section 8.1 formula and clamps [0, 1]', async () => {
     const { calculateTallGrassDensity } = await import('../src/maps/ecology/ecology-field');

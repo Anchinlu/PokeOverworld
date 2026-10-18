@@ -247,7 +247,7 @@
       "frame": 0,
       "type": "sound",
       "payload": {
-        "sound": "Anim/Psych Up",
+        "sound": "Anim/Psych Up.ogg",
         "volume": 85,
         "pitch": 100
       }
@@ -256,7 +256,7 @@
       "frame": 2,
       "type": "sound",
       "payload": {
-        "sound": "Anim/Saint8",
+        "sound": "Anim/Saint8.ogg",
         "volume": 90,
         "pitch": 90
       }

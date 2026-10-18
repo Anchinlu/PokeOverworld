@@ -6,6 +6,23 @@ import { PROTECT_MOVE_IDS } from './move-effect-engine';
 
 import { HeldItemEngine } from './held-item-engine';
 import { getEnvironmentSpeedMultiplier } from './environment';
+import { isGrounded } from './environment';
+
+export function getEffectiveMovePriority(
+  move: BattleMove,
+  attacker: BattlerPokemon,
+  environment?: BattleEnvironment
+): number {
+  const basePriority = move.priority ?? 0;
+  if (
+    move.id.toLowerCase() === 'grassy_glide' &&
+    environment?.terrain?.type === 'grassy' &&
+    isGrounded(attacker)
+  ) {
+    return basePriority + 1;
+  }
+  return basePriority;
+}
 
 /**
  * Calculates effective combat speed of a battler, taking into account stat stages, paralysis, held items, Tailwind, and environment abilities.
@@ -47,7 +64,6 @@ export const PHAZING_NEGATIVE_PRIORITY_MOVE_IDS = new Set([
   'whirlwind',
   'dragon_tail',
   'circle_throw',
-  'teleport',
 ]);
 
 export function determineTurnOrder(
@@ -58,8 +74,8 @@ export function determineTurnOrder(
   rng: BattleRng,
   environment?: BattleEnvironment
 ): 'player' | 'enemy' {
-  let pPri = playerMove.priority ?? 0;
-  let ePri = enemyMove.priority ?? 0;
+  let pPri = getEffectiveMovePriority(playerMove, playerPokemon, environment);
+  let ePri = getEffectiveMovePriority(enemyMove, enemyPokemon, environment);
 
   if (PROTECT_MOVE_IDS.has(playerMove.id.toLowerCase())) pPri = 4;
   if (PROTECT_MOVE_IDS.has(enemyMove.id.toLowerCase())) ePri = 4;

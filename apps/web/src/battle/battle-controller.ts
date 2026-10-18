@@ -33,9 +33,11 @@ import type { BagItemEntry } from '../ui/bag-screen';
 import { normalizeBallKey } from '../assets';
 import { moveAnimationManager } from './move-animation-manager';
 import { resolveMoveVfx, moveVfxCache, isSelfTargetMove } from './move-vfx';
+import { MOVES_DB, normalizeMoveId } from './moves-db';
 import { createCustomMoveAnimation } from './custom-animations';
 import {
   battleAnimationPlayer,
+  ANIMATION_REGISTRY,
   getBattlerCenter,
   DEFAULT_PLAYER_GEOMETRY,
   DEFAULT_ENEMY_GEOMETRY,
@@ -590,7 +592,10 @@ export class BattleController {
     onSurvive: () => void,
     onFaint: () => void
   ): void {
-    const effect = this.engine.applyEndTurnEffects(target);
+    const opponent = target === this.engine.playerPokemon
+      ? this.engine.enemyPokemon
+      : this.engine.playerPokemon;
+    const effect = this.engine.applyEndTurnEffects(target, opponent);
     if (!effect) {
       onSurvive();
       return;
@@ -613,6 +618,14 @@ export class BattleController {
             this.state.startEnemyHeal();
           }
           battleSePlayer.playSound('Audio/SE/Shiny sparkle.ogg', 0.4);
+        } else if (ev.type === 'end_turn_damage') {
+          // Play status effect animation (burn, poison, toxic, leech_seed) on the suffering battler
+          this.playStatusVfx(ev.source, ev.targetSide as 'player' | 'enemy');
+          if (ev.targetSide === 'player') {
+            this.state.startPlayerHit();
+          } else {
+            this.state.startEnemyHit();
+          }
         }
       }
     }
@@ -688,6 +701,11 @@ export class BattleController {
     if (isActionHindered) {
       // Pokémon is incapacitated (sleep, freeze, full paralysis, flinch, confusion, recharge, etc.):
       // Do not lunge forward, do not trigger move VFX.
+      const statusHinderedEv = result.events.find((ev) => ev.type === 'status_hindered');
+      if (statusHinderedEv && statusHinderedEv.type === 'status_hindered') {
+        this.playStatusVfx(statusHinderedEv.status, 'player');
+      }
+
       const selfDmgEvent = result.events.find(
         (ev) => ev.type === 'damage_dealt' && ev.targetSide === 'player'
       );
@@ -708,9 +726,14 @@ export class BattleController {
       // Do NOT lunge forward, do NOT trigger attack VFX or defender hit reactions.
       if (result.events && result.events.length > 0) {
         this.triggerAbilityEvents(result.events);
-        const hasStatRise = result.events.some((ev) => ev.type === 'stat_stage_changed');
-        if (hasStatRise) {
-          battleSePlayer.playSound('Audio/SE/Stat rise.ogg', 0.45);
+        for (const ev of result.events) {
+          if (ev.type === 'stat_stage_changed') {
+            if (ev.change > 0) {
+              battleSePlayer.playSound('Audio/SE/Anim/PRSFX- Stat Up.wav', 0.5);
+            } else if (ev.change < 0) {
+              battleSePlayer.playSound('Audio/SE/Anim/PRSFX- Stat Down.wav', 0.5);
+            }
+          }
         }
       }
       this.queueMessage(result.message, 'message', () => {
@@ -719,12 +742,13 @@ export class BattleController {
       return;
     }
 
-    const animPlan = moveAnimationManager.resolveAnimationPlan(move, result.damage > 0);
+    const visualMove = this.resolveCopiedMoveAnimation(move, enemy.lastUsedMoveId);
+    const animPlan = moveAnimationManager.resolveAnimationPlan(visualMove, result.damage > 0);
 
     this.state.startPlayerAttack({
       lunge: animPlan.attackerLunges,
       onHit: () => {
-        this.playMoveVfx(move, 'player', () => {
+        this.playMoveVfx(visualMove, 'player', () => {
           if (animPlan.defenderTakesHit) {
             this.state.startEnemyHit();
           }
@@ -744,6 +768,17 @@ export class BattleController {
             this.state.startEnemyHeal();
           }
           battleSePlayer.playSound('Audio/SE/Shiny sparkle.ogg', 0.45);
+        } else if (ev.type === 'stat_stage_changed') {
+          if (ev.change > 0) {
+            battleSePlayer.playSound('Audio/SE/Anim/PRSFX- Stat Up.wav', 0.5);
+          } else if (ev.change < 0) {
+            battleSePlayer.playSound('Audio/SE/Anim/PRSFX- Stat Down.wav', 0.5);
+          }
+        } else if (ev.type === 'status_inflicted') {
+          // Play status condition animation on the target battler
+          this.playStatusVfx(ev.condition, ev.targetSide as 'player' | 'enemy');
+        } else if (ev.type === 'status_cured') {
+          battleSePlayer.playSound('Audio/SE/Shiny sparkle.ogg', 0.5);
         }
       }
     }
@@ -766,6 +801,11 @@ export class BattleController {
 
     if (isActionHindered) {
       // Enemy is incapacitated: Do not lunge, do not trigger move VFX.
+      const statusHinderedEv = result.events.find((ev) => ev.type === 'status_hindered');
+      if (statusHinderedEv && statusHinderedEv.type === 'status_hindered') {
+        this.playStatusVfx(statusHinderedEv.status, 'enemy');
+      }
+
       const selfDmgEvent = result.events.find(
         (ev) => ev.type === 'damage_dealt' && ev.targetSide === 'enemy'
       );
@@ -785,9 +825,14 @@ export class BattleController {
       // Turn 1 charging phase: Do NOT lunge forward, do NOT trigger attack VFX or defender hit reactions.
       if (result.events && result.events.length > 0) {
         this.triggerAbilityEvents(result.events);
-        const hasStatRise = result.events.some((ev) => ev.type === 'stat_stage_changed');
-        if (hasStatRise) {
-          battleSePlayer.playSound('Audio/SE/Stat rise.ogg', 0.45);
+        for (const ev of result.events) {
+          if (ev.type === 'stat_stage_changed') {
+            if (ev.change > 0) {
+              battleSePlayer.playSound('Audio/SE/Anim/PRSFX- Stat Up.wav', 0.5);
+            } else if (ev.change < 0) {
+              battleSePlayer.playSound('Audio/SE/Anim/PRSFX- Stat Down.wav', 0.5);
+            }
+          }
         }
       }
       this.queueMessage(result.message, 'message', () => {
@@ -796,12 +841,13 @@ export class BattleController {
       return;
     }
 
-    const animPlan = moveAnimationManager.resolveAnimationPlan(move, result.damage > 0);
+    const visualMove = this.resolveCopiedMoveAnimation(move, player.lastUsedMoveId);
+    const animPlan = moveAnimationManager.resolveAnimationPlan(visualMove, result.damage > 0);
 
     this.state.startEnemyAttack({
       lunge: animPlan.attackerLunges,
       onHit: () => {
-        this.playMoveVfx(move, 'enemy', () => {
+        this.playMoveVfx(visualMove, 'enemy', () => {
           if (animPlan.defenderTakesHit) {
             this.state.startPlayerHit();
           }
@@ -821,6 +867,17 @@ export class BattleController {
             this.state.startPlayerHeal();
           }
           battleSePlayer.playSound('Audio/SE/Shiny sparkle.ogg', 0.45);
+        } else if (ev.type === 'stat_stage_changed') {
+          if (ev.change > 0) {
+            battleSePlayer.playSound('Audio/SE/Anim/PRSFX- Stat Up.wav', 0.5);
+          } else if (ev.change < 0) {
+            battleSePlayer.playSound('Audio/SE/Anim/PRSFX- Stat Down.wav', 0.5);
+          }
+        } else if (ev.type === 'status_inflicted') {
+          // Play status condition animation on the target battler
+          this.playStatusVfx(ev.condition, ev.targetSide as 'player' | 'enemy');
+        } else if (ev.type === 'status_cured') {
+          battleSePlayer.playSound('Audio/SE/Shiny sparkle.ogg', 0.5);
         }
       }
     }
@@ -828,6 +885,92 @@ export class BattleController {
     this.queueMessage(result.message, 'message', () => {
       onDone(result);
     });
+  }
+
+  /**
+   * Plays the visual timeline animation for a status condition or persistent effect
+   * (Burn, Poison, Toxic, Paralysis, Sleep, Freeze, Confusion, Leech Seed)
+   * directly on the target battler, alongside sound effects and hit/glow reactions.
+   */
+  public playStatusVfx(
+    condition: string,
+    targetSide: 'player' | 'enemy',
+    onComplete?: () => void
+  ): void {
+    const norm = condition.toLowerCase().trim().replace(/[\s-]+/g, '_');
+    const animId = ANIMATION_REGISTRY.resolveStatusAnimationId(norm);
+
+    const { playerCenter, enemyCenter } = this.getAnimationBattlerCenters();
+    const targetPos = targetSide === 'player' ? playerCenter : enemyCenter;
+
+    // Trigger visual color glow overlay on the battler sprite
+    this.state.startStatusInflictFlash(targetSide, norm);
+
+    if (animId !== null && ANIMATION_REGISTRY.hasDefinition(animId)) {
+      battleAnimationPlayer
+        .play({
+          moveId: String(animId),
+          animId,
+          userSide: targetSide,
+          userPos: targetPos,
+          targetPos: targetPos,
+          selfTarget: true,
+          moveCategory: 'status',
+          onComplete,
+        })
+        .catch((err) => {
+          console.warn('[BattleController] Status animation error:', err);
+          this.playStatusInflictSe(norm);
+          onComplete?.();
+        });
+    } else {
+      // Fallback: sound effect only
+      this.playStatusInflictSe(norm);
+      onComplete?.();
+    }
+  }
+
+  /**
+   * Plays the appropriate status-condition sound effect when a status is inflicted.
+   * Each condition has a distinct audio cue to reinforce the visual feedback.
+   */
+  private playStatusInflictSe(condition: string): void {
+    switch (condition) {
+      case 'paralysis':
+        battleSePlayer.playSound('Audio/SE/Paralyze1.ogg', 0.7);
+        break;
+      case 'burn':
+        battleSePlayer.playSound('Audio/SE/Fire1.ogg', 0.55);
+        break;
+      case 'poison':
+      case 'toxic':
+        battleSePlayer.playSound('Audio/SE/Poison.ogg', 0.65);
+        break;
+      case 'sleep':
+        battleSePlayer.playSound('Audio/SE/Sleep.ogg', 0.65);
+        break;
+      case 'freeze':
+        battleSePlayer.playSound('Audio/SE/Ice1.ogg', 0.6);
+        break;
+      case 'confusion':
+        battleSePlayer.playSound('Audio/SE/Confuse.ogg', 0.6);
+        break;
+      default:
+        battleSePlayer.playSound('Audio/SE/Flash.ogg', 0.4);
+        break;
+    }
+  }
+
+  /**
+   * Copycat has an intentionally empty source timeline. For visual playback,
+   * reuse the opponent's most recently used move animation instead of showing
+   * an invisible placeholder animation.
+   */
+  private resolveCopiedMoveAnimation(move: BattleMove, copiedMoveId?: string): BattleMove {
+    if (normalizeMoveId(move.id) !== 'copycat') return move;
+
+    const copiedMove = copiedMoveId ? MOVES_DB[normalizeMoveId(copiedMoveId)] : undefined;
+    return copiedMove ?? MOVES_DB.tackle ?? move;
   }
 
   /** Plays visual move animation via timeline player (with fallback to legacy VFX) */
@@ -845,6 +988,12 @@ export class BattleController {
 
     if (move.id.toLowerCase().replace(/[- ]/g, '_') === 'ally_switch') {
       this.state.startAllySwitch();
+      // Ally Switch is rendered by the battler-crossing cinematic in BattleState.
+      // The imported timeline (48) contains only placeholder cels and no visible
+      // graphic, so do not start a second empty/misaligned animation here.
+      onImpact();
+      onComplete?.();
+      return;
     }
 
     battleAnimationPlayer
@@ -1022,7 +1171,7 @@ export class BattleController {
           this.handleEnemyFainted(enemy, player);
           return;
         }
-        if (firstRes.attackerFainted || player.currentHp <= 0) {
+        if (!firstRes.mustSwitch && (firstRes.attackerFainted || player.currentHp <= 0)) {
           this.handlePlayerFainted(player);
           return;
         }
@@ -1041,7 +1190,7 @@ export class BattleController {
                 this.handlePlayerFainted(activePlayer);
                 return;
               }
-              if (secondRes.attackerFainted || enemy.currentHp <= 0) {
+              if (!secondRes.mustSwitch && (secondRes.attackerFainted || enemy.currentHp <= 0)) {
                 this.handleEnemyFainted(enemy, activePlayer);
                 return;
               }
@@ -1103,7 +1252,7 @@ export class BattleController {
           this.handlePlayerFainted(player);
           return;
         }
-        if (firstRes.attackerFainted || enemy.currentHp <= 0) {
+        if (!firstRes.mustSwitch && (firstRes.attackerFainted || enemy.currentHp <= 0)) {
           this.handleEnemyFainted(enemy, player);
           return;
         }
@@ -1121,7 +1270,7 @@ export class BattleController {
                 this.handleEnemyFainted(enemy, player);
                 return;
               }
-              if (secondRes.attackerFainted || player.currentHp <= 0) {
+              if (!secondRes.mustSwitch && (secondRes.attackerFainted || player.currentHp <= 0)) {
                 this.handlePlayerFainted(player);
                 return;
               }

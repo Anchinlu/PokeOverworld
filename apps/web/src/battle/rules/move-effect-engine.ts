@@ -6,6 +6,7 @@ import type {
   BattleEnvironment,
 } from '../types';
 import type { BattleRng } from '../battle-rng';
+import type { BattlePartyEffects } from '../party-effects';
 import { BattleEventFactory } from '../state/battle-event-factory';
 import {
   applyStatStageChange,
@@ -27,6 +28,8 @@ import {
   getHeldItemDisplayName,
   HeldItemEngine,
 } from './held-item-engine';
+import { getWeatherRecoveryMultiplier } from './environment/weather-rules';
+import { getStatMultiplier } from '../state/battle-state-reducer';
 
 export const SOUND_BASED_MOVE_IDS = new Set([
   'growl',
@@ -85,6 +88,10 @@ export const PROTECT_MOVE_IDS = new Set([
   'spiky_shield',
   'baneful_bunker',
   'kings_shield',
+  'obstruct',
+  'silk_trap',
+  'burning_bulwark',
+  'max_guard',
 ]);
 
 export const TWO_TURN_MOVE_IDS = new Set([
@@ -199,6 +206,10 @@ export function checkMoveAccuracy(
   rng: BattleRng,
   environment?: BattleEnvironment
 ): boolean {
+  if ((defender.glaiveRushTurns ?? 0) > 0) {
+    return true;
+  }
+
   const isSelfTargetMove =
     move.category === 'status' &&
     (move.id === 'rest' ||
@@ -374,6 +385,7 @@ export function handleTwoTurnMoveCharge(
       chargeMsg = `${attacker.name} tập trung cao độ chuẩn bị tung cú đấm ngàn cân!`;
     } else if (moveId === 'bide') {
       attacker.chargingMove = { move, turn: 1 };
+      attacker.bideDamageTaken = 0;
       chargeMsg = `${attacker.name} đang gồng mình tích trữ năng lượng!`;
     } else if (move.twoTurn === 'fly') {
       stance = 'flying';
@@ -475,7 +487,8 @@ export function applyStatusCategoryMove(
   move: BattleMove,
   rng: BattleRng,
   events: BattleEvent[],
-  environment?: BattleEnvironment
+  environment?: BattleEnvironment,
+  partyEffects?: BattlePartyEffects
 ): { extraMsg: string; failed?: boolean } {
   const moveId = move.id.toLowerCase();
   let extraMsg = '';
@@ -500,6 +513,8 @@ export function applyStatusCategoryMove(
       extraMsg += ` Nhưng chiêu thức thất bại! HP không đủ!`;
     }
   } else if (moveId === 'pain_split') {
+    const attackerHpBefore = attacker.currentHp;
+    const defenderHpBefore = defender.currentHp;
     const avg = Math.max(1, Math.floor((attacker.currentHp + defender.currentHp) / 2));
     attacker.currentHp = Math.min(attacker.maxHp, avg);
     defender.currentHp = Math.min(defender.maxHp, avg);
@@ -515,6 +530,116 @@ export function applyStatusCategoryMove(
         `${attacker.name} chia sẻ sinh lực với ${defender.name}!`
       )
     );
+    if (defender.currentHp < defenderHpBefore) {
+      events.push(
+        BattleEventFactory.damageDealt(
+          defenderSide, defender.name, defenderHpBefore - defender.currentHp,
+          defender.currentHp, defender.maxHp, 1, false, 1, '',
+        )
+      );
+    }
+    if (attacker.currentHp < attackerHpBefore) {
+      events.push(
+        BattleEventFactory.damageDealt(
+          attackerSide, attacker.name, attackerHpBefore - attacker.currentHp,
+          attacker.currentHp, attacker.maxHp, 1, false, 1, '',
+        )
+      );
+    }
+  } else if (moveId === 'heal_pulse' || moveId === 'floral_healing') {
+    const ratio =
+      moveId === 'floral_healing' && environment?.terrain?.type === 'grassy' ? 2 / 3 : 1 / 2;
+    const healAmount = Math.max(1, Math.floor(defender.maxHp * ratio));
+    const actualHealed = restoreHp(defender, healAmount);
+    if (actualHealed <= 0) {
+      extraMsg += ` Nhưng HP của ${defender.name} đã đầy!`;
+    } else {
+      extraMsg += ` ${defender.name} đã hồi phục HP!`;
+      events.push(
+        BattleEventFactory.hpRestored(
+          defenderSide,
+          defender.name,
+          actualHealed,
+          defender.currentHp,
+          defender.maxHp,
+          'move',
+          `${defender.name} hồi phục ${actualHealed} HP!`
+        )
+      );
+    }
+  } else if (moveId === 'life_dew' || moveId === 'jungle_healing') {
+    const healAmount = Math.max(1, Math.floor(attacker.maxHp * (moveId === 'life_dew' ? 0.25 : 0.25)));
+    const actualHealed = restoreHp(attacker, healAmount);
+    const partyChanged = partyEffects?.healParty(attackerSide, moveId === 'jungle_healing') ?? 0;
+    if (moveId === 'jungle_healing' && attacker.status !== 'none') {
+      clearStatusCondition(attacker);
+      extraMsg += ` ${attacker.name} được chữa khỏi trạng thái bất lợi!`;
+    }
+    extraMsg += ` ${attacker.name} hồi phục HP cho bản thân và ${partyChanged} Pokémon trong đội!`;
+    if (actualHealed > 0) {
+      events.push(
+        BattleEventFactory.hpRestored(
+          attackerSide,
+          attacker.name,
+          actualHealed,
+          attacker.currentHp,
+          attacker.maxHp,
+          'move',
+          `${attacker.name} hồi phục ${actualHealed} HP!`
+        )
+      );
+    }
+  } else if (moveId === 'strength_sap') {
+    const targetAttackStage = defender.statStages?.attack ?? 0;
+    const targetAttack = Math.max(
+      1,
+      Math.floor(defender.stats.attack * getStatMultiplier(targetAttackStage))
+    );
+    const actualHealed = restoreHp(attacker, targetAttack);
+    const attackDrop = applyStatStageChange(defender, 'attack', -1);
+    extraMsg += ` ${attacker.name} hút sức mạnh và hồi ${actualHealed} HP; Tấn công của ${defender.name} giảm!`;
+    events.push(
+      BattleEventFactory.hpRestored(
+        attackerSide,
+        attacker.name,
+        actualHealed,
+        attacker.currentHp,
+        attacker.maxHp,
+        'move',
+        `${attacker.name} hồi phục nhờ Hút Cạn Sức Mạnh!`
+      ),
+      BattleEventFactory.statStageChanged(
+        defenderSide,
+        defender.name,
+        'attack',
+        attackDrop,
+        defender.statStages?.attack ?? 0,
+        `Tấn công của ${defender.name} giảm!`
+      )
+    );
+  } else if (moveId === 'wish') {
+    const wish = { turnsLeft: 2, healAmount: Math.max(1, Math.floor(attacker.maxHp / 2)), cureStatus: false };
+    if (environment) {
+      if (attackerSide === 'player') environment.playerWish = wish;
+      else environment.enemyWish = wish;
+    } else {
+      attacker.wishTurns = wish.turnsLeft;
+      attacker.wishHealAmount = wish.healAmount;
+    }
+    extraMsg += ` ${attacker.name} gửi một điều ước sẽ hồi phục vào lượt kế tiếp!`;
+  } else if (moveId === 'healing_wish') {
+    attacker.healingWishPending = true;
+    if (environment) {
+      if (attackerSide === 'player') environment.playerHealingWishPending = true;
+      else environment.enemyHealingWishPending = true;
+    }
+    attacker.currentHp = 0;
+    attacker.isFainted = true;
+    extraMsg += ` ${attacker.name} hy sinh để Pokémon tiếp theo được hồi phục hoàn toàn!`;
+  } else if (moveId === 'revival_blessing') {
+    const revived = partyEffects?.reviveOne(attackerSide, 0.5) ?? false;
+    if (!revived) return { extraMsg: ' Nhưng không có Pokémon nào đã ngất để hồi sinh!', failed: true };
+    extraMsg += ` Một Pokémon trong đội của ${attacker.name} đã được hồi sinh với 50% HP!`;
   } else if (moveId === 'destiny_bond') {
     attacker.destinyBond = true;
     extraMsg += ` ${attacker.name} chuẩn bị đưa đối thủ đi cùng nếu ngất xỉu!`;
@@ -710,7 +835,8 @@ export function applyStatusCategoryMove(
         )
       );
     }
-    extraMsg += ` ${soundMsg} đã lan tỏa, chữa lành trạng thái bất lợi cho toàn đội!`;
+    const changed = partyEffects?.healParty(attackerSide, true) ?? 0;
+    extraMsg += ` ${soundMsg} đã lan tỏa, chữa lành trạng thái bất lợi cho ${changed || 1} Pokémon trong đội!`;
   } else if (moveId === 'refresh') {
     if (
       attacker.status === 'paralysis' ||
@@ -732,6 +858,31 @@ export function applyStatusCategoryMove(
     } else {
       extraMsg += ` Nhưng chiêu thức thất bại!`;
     }
+  } else if (moveId === 'gastro_acid') {
+    if (!defender.ability || defender.abilitySuppressed) {
+      extraMsg += ` Nhưng Gastro Acid không có tác dụng lên ${defender.name}!`;
+    } else {
+      defender.suppressedAbility = defender.ability;
+      defender.ability = undefined;
+      defender.abilitySuppressed = true;
+      extraMsg += ` Đặc tính của ${defender.name} đã bị vô hiệu hóa!`;
+    }
+  } else if (moveId === 'guard_split') {
+    const defense = Math.floor((attacker.stats.defense + defender.stats.defense) / 2);
+    const spDef = Math.floor((attacker.stats.spDef + defender.stats.spDef) / 2);
+    attacker.stats.defense = defense;
+    defender.stats.defense = defense;
+    attacker.stats.spDef = spDef;
+    defender.stats.spDef = spDef;
+    extraMsg += ` ${attacker.name} và ${defender.name} chia sẻ chỉ số Phòng thủ và Thủ ĐB!`;
+  } else if (moveId === 'guard_swap') {
+    const attackerDefense = attacker.statStages!.defense;
+    const attackerSpDef = attacker.statStages!.spDef;
+    attacker.statStages!.defense = defender.statStages!.defense;
+    attacker.statStages!.spDef = defender.statStages!.spDef;
+    defender.statStages!.defense = attackerDefense;
+    defender.statStages!.spDef = attackerSpDef;
+    extraMsg += ` ${attacker.name} và ${defender.name} đã hoán đổi các bậc Phòng thủ và Thủ ĐB!`;
   } else if (moveId === 'taunt') {
     if ((defender.tauntTurns ?? 0) > 0) {
       extraMsg += ` Nhưng ${defender.name} đã bị khiêu khích rồi!`;
@@ -1064,7 +1215,8 @@ export function applyStatusCategoryMove(
     if (attacker.currentHp >= attacker.maxHp) {
       extraMsg += ` Nhưng thất bại! HP của ${attacker.name} đã đầy!`;
     } else {
-      const heal = Math.max(1, Math.floor(attacker.maxHp * move.healPercent));
+      const recoveryMultiplier = getWeatherRecoveryMultiplier(environment?.weather?.type, moveId);
+      const heal = Math.max(1, Math.floor(attacker.maxHp * move.healPercent * recoveryMultiplier));
       const actualHealed = restoreHp(attacker, heal);
       extraMsg += ` ${attacker.name} đã hồi phục HP!`;
       events.push(
@@ -1174,7 +1326,7 @@ export function applyStatusCategoryMove(
     const tSide: BattlerSide = target === attacker ? attackerSide : defenderSide;
     const oppSide: BattlerSide = tSide === 'player' ? 'enemy' : 'player';
     const chance = Math.max(0, Math.min(1, move.statusEffect.chance));
-    const immunityMessage = getStatusImmunity(target, move.statusEffect.condition);
+    const immunityMessage = getStatusImmunity(target, move.statusEffect.condition, environment);
     const conditionVi = STATUS_NAME_VI[move.statusEffect.condition] ?? move.statusEffect.condition;
 
     // Overcoat blocks powder and spore moves

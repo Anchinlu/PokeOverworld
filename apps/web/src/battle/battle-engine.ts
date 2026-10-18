@@ -7,7 +7,8 @@ import type {
   BattlerSide,
   BattleSideScreens,
 } from './types';
-import { MOVES_DB } from './moves-db';
+import { MOVES_DB, normalizeMoveId } from './moves-db';
+import type { BattlePartyEffects } from './party-effects';
 import { defaultBattleRng, type BattleRng } from './battle-rng';
 import { isTypeImmune } from './rules/type-effectiveness';
 import { calculateDamage } from './rules/damage-calculator';
@@ -16,7 +17,7 @@ import {
   processEndTurnEffects,
   getStatusImmunity,
 } from './rules/status-engine';
-import { determineTurnOrder } from './rules/turn-order';
+import { determineTurnOrder, getEffectiveMovePriority } from './rules/turn-order';
 import {
   checkMoveAccuracy,
   handleTwoTurnMoveCharge,
@@ -103,6 +104,27 @@ export interface EndTurnResult {
   events: BattleEvent[];
 }
 
+const NON_TARGETING_STATUS_MOVES = new Set([
+  'calm_mind', 'focus_energy', 'haze', 'healing_wish', 'lunar_dance', 'mist',
+  'rain_dance', 'sandstorm', 'safeguard', 'spikes', 'stealth_rock', 'sticky_web',
+  'sunny_day', 'tailwind', 'toxic_spikes', 'trick_room', 'wish', 'recover', 'roost',
+  'rest', 'slack_off', 'milk_drink', 'soft_boiled', 'synthesis', 'morning_sun',
+  'moonlight', 'shore_up', 'substitute', 'protect', 'detect', 'endure', 'reflect',
+  'light_screen', 'aqua_ring', 'ingrain', 'belly_drum', 'stockpile', 'swallow',
+  'spit_up', 'metronome', 'teleport', 'aromatherapy', 'heal_bell', 'jungle_healing',
+  'life_dew', 'revival_blessing', 'splash', 'destiny_bond',
+]);
+
+function moveTargetsDefender(move: BattleMove, moveId: string): boolean {
+  if (move.category !== 'status') return true;
+  if (NON_TARGETING_STATUS_MOVES.has(moveId)) return false;
+  if (move.healPercent !== undefined && move.healPercent > 0) return false;
+  if (move.statChanges?.length && move.statChanges.every((change) => change.target === 'self')) {
+    return false;
+  }
+  return true;
+}
+
 // Re-export constants & helpers for external modules & backward compatibility
 export {
   NEVER_MISS_MOVE_IDS,
@@ -137,7 +159,8 @@ export class BattleEngine {
     enemyPokemon: BattlerPokemon,
     environment: BattleEnvironment,
     public readonly rng: BattleRng = defaultBattleRng,
-    isWild: boolean = true
+    isWild: boolean = true,
+    private readonly partyEffects?: BattlePartyEffects
   ) {
     this.playerPokemon = playerPokemon;
     this.enemyPokemon = enemyPokemon;
@@ -266,6 +289,12 @@ export class BattleEngine {
     const oldSafeguard = this.playerPokemon.safeguardTurns ?? 0;
     this.playerPokemon = newPokemon;
     ensureBattlerState(this.playerPokemon);
+    if (this.environment.playerHealingWishPending) {
+      this.playerPokemon.currentHp = this.playerPokemon.maxHp;
+      this.playerPokemon.isFainted = false;
+      clearStatusCondition(this.playerPokemon);
+      this.environment.playerHealingWishPending = false;
+    }
     this.playerPokemon.isFlinched = false;
     this.playerPokemon.confusionTurns = batonPassData?.confusionTurns ?? 0;
     this.playerPokemon.hasActedThisRound = false;
@@ -322,6 +351,12 @@ export class BattleEngine {
     const oldSafeguard = this.enemyPokemon.safeguardTurns ?? 0;
     this.enemyPokemon = newPokemon;
     ensureBattlerState(this.enemyPokemon);
+    if (this.environment.enemyHealingWishPending) {
+      this.enemyPokemon.currentHp = this.enemyPokemon.maxHp;
+      this.enemyPokemon.isFainted = false;
+      clearStatusCondition(this.enemyPokemon);
+      this.environment.enemyHealingWishPending = false;
+    }
     this.enemyPokemon.isFlinched = false;
     this.enemyPokemon.confusionTurns = batonPassData?.confusionTurns ?? 0;
     this.enemyPokemon.hasActedThisRound = false;
@@ -411,7 +446,8 @@ export class BattleEngine {
     const defenderSide: BattlerSide = defender === this.playerPokemon ? 'player' : 'enemy';
     const events: BattleEvent[] = [];
 
-    const moveId = move.id.toLowerCase();
+    const moveId = normalizeMoveId(move.id);
+    const effectiveMove = move.id === moveId ? move : { ...move, id: moveId };
     const moveDisplayName = getMoveDisplayName(move);
 
     // 0. Round protection reset at the beginning of action
@@ -522,6 +558,21 @@ export class BattleEngine {
       };
     }
 
+    if (moveId === 'gigaton_hammer' && attacker.lastUsedMoveId === moveId) {
+      const gigatonMsg = `${attacker.name} không thể sử dụng Gigaton Hammer liên tiếp! Phải dùng một chiêu khác ở lượt kế tiếp.`;
+      return {
+        attackerName: attacker.name,
+        moveName: moveDisplayName,
+        damage: 0,
+        typeEffectiveness: 1.0,
+        isCritical: false,
+        defenderFainted: false,
+        message: gigatonMsg,
+        events,
+        actionPrevented: true,
+      };
+    }
+
     if (attacker.encore && attacker.encore.turnsLeft > 0 && attacker.encore.moveId !== moveId) {
       const encoreBlockedMsg = `${attacker.name} phải tiếp tục lặp lại chiêu thức [${attacker.encore.moveId}] theo lời tán dương!`;
       return {
@@ -576,6 +627,13 @@ export class BattleEngine {
       const statusResult = checkPreTurnStatus(attacker, attackerSide, this.rng);
       events.push(...statusResult.events);
       if (!statusResult.canAct) {
+        if (attacker.chargingMove) {
+          attacker.chargingMove = undefined;
+          attacker.semiInvulnerable = undefined;
+          attacker.isBeakBlastCharging = false;
+          attacker.isFocusPunchCharging = false;
+          attacker.bideDamageTaken = 0;
+        }
         return {
           attackerName: attacker.name,
           moveName: moveDisplayName,
@@ -685,7 +743,7 @@ export class BattleEngine {
     const chargeResult = handleTwoTurnMoveCharge(
       attacker,
       attackerSide,
-      move,
+      effectiveMove,
       moveDisplayName,
       events,
       this.environment
@@ -705,8 +763,12 @@ export class BattleEngine {
     }
 
     // 5. Defender Protect check
-    if (defender.isProtected) {
-      if (['feint', 'shadow_force', 'phantom_force', 'hyperspace_hole'].includes(moveId)) {
+    if (defender.isProtected && moveTargetsDefender(effectiveMove, moveId)) {
+      if (
+        ['feint', 'shadow_force', 'phantom_force', 'hyperspace_hole', 'hyperspace_fury'].includes(
+          moveId
+        )
+      ) {
         defender.isProtected = false;
       } else {
         const blockedMsg = `${statusPrefix}${attacker.name} sử dụng ${moveDisplayName}! Nhưng ${defender.name} đã được bảo vệ hoàn toàn!`;
@@ -866,7 +928,11 @@ export class BattleEngine {
     // Psychic Terrain priority move block on grounded targets
     if (
       !isSelfTarget &&
-      !canUsePriorityMoveInTerrain(this.environment.terrain?.type, move.priority, defender)
+      !canUsePriorityMoveInTerrain(
+        this.environment.terrain?.type,
+        getEffectiveMovePriority(move, attacker, this.environment),
+        defender
+      )
     ) {
       const terrainBlockedMsg = `${statusPrefix}${attacker.name} sử dụng ${moveDisplayName}! Nhưng Trường Tâm Linh bảo vệ ${defender.name} khỏi đòn ưu tiên!`;
       return {
@@ -961,6 +1027,20 @@ export class BattleEngine {
           move.statChanges.every((sc) => sc.target === 'self')) ||
         (move.statusEffect !== undefined && move.statusEffect.target === 'self');
 
+      if (!isSelfTargetMove && defender.substituteHp && defender.substituteHp > 0) {
+        const blockedMsg = `${statusPrefix}${attacker.name} sử dụng ${moveDisplayName}! Nhưng Hình Nhân Thế Thân của ${defender.name} đã chặn chiêu thức!`;
+        return {
+          attackerName: attacker.name,
+          moveName: moveDisplayName,
+          damage: 0,
+          typeEffectiveness: 1.0,
+          isCritical: false,
+          defenderFainted: false,
+          message: blockedMsg,
+          events,
+        };
+      }
+
       if (!isSelfTargetMove && isTypeImmune(move.type, defender.types)) {
         const immuneMsg = `${statusPrefix}${attacker.name} sử dụng ${moveDisplayName}! Không có tác dụng lên ${defender.name}!`;
         events.push(
@@ -992,7 +1072,8 @@ export class BattleEngine {
         move,
         this.rng,
         events,
-        this.environment
+        this.environment,
+        this.partyEffects
       );
 
       attacker.lastUsedMoveId = moveId;
@@ -1009,7 +1090,10 @@ export class BattleEngine {
         events,
       };
 
-      if (moveId === 'baton_pass') {
+      if (moveId === 'healing_wish') {
+        statusRes.mustSwitch = true;
+        statusRes.switchSide = attackerSide;
+      } else if (moveId === 'baton_pass') {
         statusRes.mustSwitch = true;
         statusRes.switchSide = attackerSide;
         statusRes.batonPassData = {
@@ -1027,7 +1111,6 @@ export class BattleEngine {
           confusionTurns: attacker.confusionTurns,
           hasAquaRing: attacker.hasAquaRing,
           isIngrained: attacker.isIngrained,
-          isSeeded: attacker.isSeeded,
           substituteHp: attacker.substituteHp,
         };
       } else if (moveId === 'teleport') {
@@ -1082,14 +1165,16 @@ export class BattleEngine {
     }
 
     // 9. Damaging attack handling
+    const isBideRelease = moveId === 'bide' && !attacker.chargingMove;
     const dmgCalc = calculateDamage(
       attacker,
       defender,
-      move,
+      effectiveMove,
       this.rng,
       this.environment,
       defenderSide
     );
+    if (isBideRelease) attacker.bideDamageTaken = 0;
 
     if (dmgCalc.typeEffectiveness === 0) {
       const immuneMsg = `${statusPrefix}${attacker.name} sử dụng ${moveDisplayName}! Không có tác dụng lên ${defender.name}!`;
@@ -1188,17 +1273,43 @@ export class BattleEngine {
     let actualDamage: number;
 
     if ((defender.substituteHp ?? 0) > 0) {
-      hitSubstitute = true;
-      const prevSubHp = defender.substituteHp!;
-      defender.substituteHp = Math.max(0, defender.substituteHp! - damage);
-      damageDealtToSub = prevSubHp - defender.substituteHp;
-      if (defender.substituteHp <= 0) {
-        defender.substituteHp = 0;
-        secMsg += ` Hình nhân thế thân của ${defender.name} đã bị phá hủy!`;
-      } else {
+      const hitDamages = dmgCalc.hitDamages ?? [damage];
+      let bodyDamage = 0;
+      for (const hitDamage of hitDamages) {
+        if ((defender.substituteHp ?? 0) > 0) {
+          hitSubstitute = true;
+          const prevSubHp = defender.substituteHp!;
+          defender.substituteHp = Math.max(0, defender.substituteHp! - hitDamage);
+          damageDealtToSub += prevSubHp - defender.substituteHp;
+          if (defender.substituteHp <= 0) {
+            defender.substituteHp = 0;
+            secMsg += ` Hình nhân thế thân của ${defender.name} đã bị phá hủy!`;
+          }
+        } else {
+          bodyDamage += hitDamage;
+        }
+      }
+      if (defender.substituteHp && defender.substituteHp > 0) {
         secMsg += ` Hình nhân thế thân nhận sát thương thay cho ${defender.name}!`;
       }
-      actualDamage = 0;
+      if (bodyDamage > 0) {
+        const prevDefenderHp = defender.currentHp;
+        let targetHp = defender.currentHp - bodyDamage;
+        if (defender.isEndured && targetHp <= 0 && prevDefenderHp > 0) {
+          targetHp = 1;
+          secMsg += ` ${defender.name} kiên cường chịu đựng đòn đánh với 1 HP!`;
+        }
+        defender.currentHp = Math.max(0, targetHp);
+        actualDamage = prevDefenderHp - defender.currentHp;
+        if (actualDamage > 0) {
+          defender.damagedThisRound = true;
+          if (normalizeMoveId(defender.chargingMove?.move.id ?? '') === 'bide') {
+            defender.bideDamageTaken = (defender.bideDamageTaken ?? 0) + actualDamage;
+          }
+        }
+      } else {
+        actualDamage = 0;
+      }
     } else {
       const prevDefenderHp = defender.currentHp;
       let targetHp = defender.currentHp - damage;
@@ -1210,6 +1321,9 @@ export class BattleEngine {
       actualDamage = prevDefenderHp - defender.currentHp;
       if (actualDamage > 0) {
         defender.damagedThisRound = true;
+        if (normalizeMoveId(defender.chargingMove?.move.id ?? '') === 'bide') {
+          defender.bideDamageTaken = (defender.bideDamageTaken ?? 0) + actualDamage;
+        }
       }
     }
     let defenderFainted = defender.currentHp <= 0;
@@ -1429,7 +1543,11 @@ export class BattleEngine {
         const target = move.statusEffect.target === 'self' ? attacker : defender;
         const tSide: BattlerSide = target === attacker ? attackerSide : defenderSide;
         const chance = Math.max(0, Math.min(1, move.statusEffect.chance));
-        const immunityMessage = getStatusImmunity(target, move.statusEffect.condition);
+        const immunityMessage = getStatusImmunity(
+          target,
+          move.statusEffect.condition,
+          this.environment
+        );
         const conditionVi =
           STATUS_NAME_VI[move.statusEffect.condition] ?? move.statusEffect.condition;
         if (target.status === 'none' && !immunityMessage && this.rng.next() < chance) {
@@ -1577,7 +1695,7 @@ export class BattleEngine {
         attacker.isSeeded = false;
         secMsg += ` ${attacker.name} đã thổi bay toàn bộ bẫy và trói buộc trên sân!`;
         if (moveId === 'mortal_spin' && !defenderFainted && !hitSubstitute) {
-          const immunity = getStatusImmunity(defender, 'poison');
+          const immunity = getStatusImmunity(defender, 'poison', this.environment);
           if (defender.status === 'none' && !immunity) {
             setStatusCondition(defender, 'poison', 0);
             secMsg += ` ${defender.name} đã bị trúng độc!`;
@@ -1869,6 +1987,14 @@ export class BattleEngine {
           }
         }
       }
+    }
+
+    if (moveId === 'glaive_rush' && !attackerFainted) {
+      // Two end-of-round ticks represent the remainder of this round and the
+      // next one: resetRound() reduces it to 1, so the next turn receives the
+      // double-damage and never-miss penalty before the flag expires.
+      attacker.glaiveRushTurns = 2;
+      secMsg += ` ${attacker.name} sơ hở trong lượt kế tiếp, mọi đòn đánh vào nó sẽ gây gấp đôi sát thương!`;
     }
 
     attacker.lastUsedMoveId = moveId;

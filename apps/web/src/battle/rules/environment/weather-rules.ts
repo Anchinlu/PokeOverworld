@@ -132,3 +132,28 @@ export function getWeatherMovePowerMultiplier(weatherType?: string, moveId?: str
 
   return 1.0;
 }
+
+/**
+ * Returns the Gen 7 recovery multiplier for weather-dependent recovery moves.
+ * The move database already stores the neutral 1/2 recovery amount, so this
+ * function returns a multiplier relative to that base amount. Favorable
+ * weather changes 1/2 to 2/3 (4/3x), while harsh weather changes it to 1/4
+ * (1/2x).
+ */
+export function getWeatherRecoveryMultiplier(weatherType?: string, moveId?: string): number {
+  const id = moveId?.toLowerCase();
+  if (!id) return 1.0;
+
+  if (id === 'shore_up') {
+    return weatherType === 'sandstorm' ? 4 / 3 : 1;
+  }
+
+  if (id === 'synthesis' || id === 'moonlight' || id === 'morning_sun') {
+    if (weatherType === 'sun') return 4 / 3;
+    if (weatherType === 'rain' || weatherType === 'sandstorm' || weatherType === 'hail') {
+      return 1 / 2;
+    }
+  }
+
+  return 1;
+}

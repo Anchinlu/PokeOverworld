@@ -378,11 +378,13 @@ export function processEndTurnEffects(
   }
 
   // Leech Seed tick
-  if (target.isSeeded) {
+  if (target.isSeeded && !isMagicGuard) {
     const seedDmg = Math.max(1, Math.floor(target.maxHp / 8));
+    const hpBeforeSeed = Math.max(0, target.currentHp - totalDamage);
+    const actualSeedDamage = Math.min(seedDmg, hpBeforeSeed);
     totalDamage += seedDmg;
-    if (opponent && opponent.currentHp > 0 && !opponent.isFainted && opponentSide) {
-      const healed = restoreHp(opponent, seedDmg);
+    if (opponent && actualSeedDamage > 0 && opponent.currentHp > 0 && !opponent.isFainted && opponentSide) {
+      const healed = restoreHp(opponent, actualSeedDamage);
       events.push(
         BattleEventFactory.hpRestored(
           opponentSide,
@@ -401,7 +403,7 @@ export function processEndTurnEffects(
       BattleEventFactory.endTurnDamage(
         targetSide,
         target.name,
-        seedDmg,
+        actualSeedDamage,
         Math.max(0, target.currentHp - totalDamage),
         'leech_seed',
         seedMsg
@@ -464,6 +466,50 @@ export function processEndTurnEffects(
       events.push(
         BattleEventFactory.fainted(targetSide, target.name, `${target.name} đã ngất xỉu!`)
       );
+    }
+  }
+
+  // Wish resolves after the damage portion of the end-of-turn sequence.
+  const sideWish = environment
+    ? targetSide === 'player'
+      ? environment.playerWish
+      : environment.enemyWish
+    : undefined;
+  if (sideWish && sideWish.turnsLeft > 0) {
+    sideWish.turnsLeft--;
+    if (sideWish.turnsLeft === 0 && target.currentHp > 0) {
+      const wishAmount = sideWish.healAmount;
+      const healed = restoreHp(target, wishAmount);
+      if (healed > 0) {
+        const wishMsg = `${target.name} được điều ước hồi phục ${healed} HP!`;
+        messageText = messageText ? `${messageText} ${wishMsg}` : wishMsg;
+        events.push(
+          BattleEventFactory.hpRestored(
+            targetSide,
+            target.name,
+            healed,
+            target.currentHp,
+            target.maxHp,
+            'move',
+            wishMsg
+          )
+        );
+      }
+    }
+    if (sideWish.turnsLeft === 0 && environment) {
+      if (targetSide === 'player') environment.playerWish = undefined;
+      else environment.enemyWish = undefined;
+    }
+  } else if ((target.wishTurns ?? 0) > 0) {
+    target.wishTurns = (target.wishTurns ?? 0) - 1;
+    if (target.wishTurns === 0 && target.currentHp > 0) {
+      const healed = restoreHp(target, target.wishHealAmount ?? Math.floor(target.maxHp / 2));
+      target.wishHealAmount = 0;
+      if (healed > 0) {
+        const wishMsg = `${target.name} được điều ước hồi phục ${healed} HP!`;
+        messageText = messageText ? `${messageText} ${wishMsg}` : wishMsg;
+        events.push(BattleEventFactory.hpRestored(targetSide, target.name, healed, target.currentHp, target.maxHp, 'move', wishMsg));
+      }
     }
   }
 

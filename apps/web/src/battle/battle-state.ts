@@ -59,6 +59,12 @@ export class BattleState {
   playerHurtFlash = 0;
   enemyHealFlash = 0;
   playerHealFlash = 0;
+
+  // Status condition infliction overlay flash (colored glow when status is applied)
+  enemyStatusInflictFlash = 0;
+  playerStatusInflictFlash = 0;
+  enemyStatusInflictColor = 'rgba(255, 215, 0, 0.9)';
+  playerStatusInflictColor = 'rgba(255, 215, 0, 0.9)';
   playerHitTimer = 0;
   playerHitOffsetX = 0;
   playerHitOffsetY = 0;
@@ -366,6 +372,31 @@ export class BattleState {
   /** Trigger healing visual flash on player */
   startPlayerHeal(): void {
     this.playerHealFlash = 24;
+  }
+
+  /**
+   * Trigger status-infliction glow flash on a battler's sprite.
+   * The glow color is chosen based on the condition (paralysis=yellow,
+   * burn=orange, poison/toxic=purple, sleep=blue, freeze=cyan, confusion=pink).
+   */
+  startStatusInflictFlash(side: 'player' | 'enemy', condition: string): void {
+    const colorMap: Record<string, string> = {
+      paralysis: 'rgba(255, 215, 0, 0.95)',
+      burn: 'rgba(255, 90, 20, 0.95)',
+      poison: 'rgba(168, 50, 220, 0.95)',
+      toxic: 'rgba(100, 0, 190, 0.95)',
+      sleep: 'rgba(90, 130, 220, 0.95)',
+      freeze: 'rgba(70, 210, 255, 0.95)',
+      confusion: 'rgba(255, 70, 185, 0.95)',
+    };
+    const color = colorMap[condition] ?? 'rgba(200, 200, 255, 0.9)';
+    if (side === 'player') {
+      this.playerStatusInflictFlash = 52;
+      this.playerStatusInflictColor = color;
+    } else {
+      this.enemyStatusInflictFlash = 52;
+      this.enemyStatusInflictColor = color;
+    }
   }
 
   /** Trigger healing visual flash on enemy */
@@ -780,6 +811,8 @@ export class BattleState {
     if (this.playerHurtFlash > 0) this.playerHurtFlash--;
     if (this.enemyHealFlash > 0) this.enemyHealFlash--;
     if (this.playerHealFlash > 0) this.playerHealFlash--;
+    if (this.enemyStatusInflictFlash > 0) this.enemyStatusInflictFlash--;
+    if (this.playerStatusInflictFlash > 0) this.playerStatusInflictFlash--;
     if (this.ballShakeTimer > 0) this.ballShakeTimer--;
     if (this.enemyShinyTimer > 0) this.enemyShinyTimer--;
     if (this.playerShinyTimer > 0) this.playerShinyTimer--;

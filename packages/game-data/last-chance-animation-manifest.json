@@ -1,4 +1,838 @@
 {
+  "38": {
+    "id": "38",
+    "name": "Move:BARRIER",
+    "graphic": "PRAS- Barrier.png",
+    "position": 2,
+    "frameCount": 21,
+    "timingCount": 1
+  },
+  "39": {
+    "id": "39",
+    "name": "Move:BEATUP",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 5,
+    "timingCount": 2
+  },
+  "45": {
+    "id": "45",
+    "name": "Move:BIND",
+    "graphic": "block.png",
+    "position": 1,
+    "frameCount": 17,
+    "timingCount": 2
+  },
+  "47": {
+    "id": "47",
+    "name": "Move:BITE",
+    "graphic": "PRAS- Bite.png",
+    "position": 1,
+    "frameCount": 14,
+    "timingCount": 1
+  },
+  "48": {
+    "id": "48",
+    "name": "Move:ALLYSWITCH",
+    "graphic": "Ancient-PowerFilesheet.png",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "49": {
+    "id": "49",
+    "name": "Move:BLOCK",
+    "graphic": "PRAS- Recovery.png",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "50": {
+    "id": "50",
+    "name": "Move:BLUEFLARE",
+    "graphic": "PRAS- Fire.png",
+    "position": 3,
+    "frameCount": 60,
+    "timingCount": 5
+  },
+  "51": {
+    "id": "51",
+    "name": "Move:BODYSLAM",
+    "graphic": "PRAS- Strike.png",
+    "position": 2,
+    "frameCount": 15,
+    "timingCount": 2
+  },
+  "52": {
+    "id": "52",
+    "name": "Move:AQUARING",
+    "graphic": "PRAS- Water.png",
+    "position": 1,
+    "frameCount": 40,
+    "timingCount": 4
+  },
+  "53": {
+    "id": "53",
+    "name": "Move:BUBBLE",
+    "graphic": "PRAS- Water.png",
+    "position": 2,
+    "frameCount": 30,
+    "timingCount": 1
+  },
+  "55": {
+    "id": "55",
+    "name": "Move:BULKUP",
+    "graphic": "PRAS- Bulk Up.png",
+    "position": 1,
+    "frameCount": 28,
+    "timingCount": 3
+  },
+  "56": {
+    "id": "56",
+    "name": "Move:BULLETPUNCH",
+    "graphic": "PRAS- Strike.png",
+    "position": 2,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "57": {
+    "id": "57",
+    "name": "Move:BULLETSEED",
+    "graphic": "PRAS- Grass.png",
+    "position": 3,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "58": {
+    "id": "58",
+    "name": "Beat Up hit 2",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 5,
+    "timingCount": 2
+  },
+  "59": {
+    "id": "59",
+    "name": "Beat Up hit 3",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 5,
+    "timingCount": 2
+  },
+  "60": {
+    "id": "60",
+    "name": "Beat Up hit 4",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 5,
+    "timingCount": 2
+  },
+  "61": {
+    "id": "61",
+    "name": "Beat Up hit 5",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 5,
+    "timingCount": 2
+  },
+  "62": {
+    "id": "62",
+    "name": "Beat Up hit 6",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 5,
+    "timingCount": 2
+  },
+  "65": {
+    "id": "65",
+    "name": "Move:BITE",
+    "graphic": "PRAS- Bite.png",
+    "position": 1,
+    "frameCount": 14,
+    "timingCount": 1
+  },
+  "66": {
+    "id": "66",
+    "name": "Move:BLASTBURN",
+    "graphic": "PRAS- Fire.png",
+    "position": 3,
+    "frameCount": 80,
+    "timingCount": 14
+  },
+  "67": {
+    "id": "67",
+    "name": "OppMove:BLASTBURN",
+    "graphic": "PRAS- Fire.png",
+    "position": 3,
+    "frameCount": 80,
+    "timingCount": 14
+  },
+  "68": {
+    "id": "68",
+    "name": "Move:BLOCK",
+    "graphic": "PRAS- Recovery.png",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "72": {
+    "id": "72",
+    "name": "Move:BRICKBREAK",
+    "graphic": "PRAS- Strike.png",
+    "position": 3,
+    "frameCount": 35,
+    "timingCount": 3
+  },
+  "73": {
+    "id": "73",
+    "name": "Move:BUBBLE",
+    "graphic": "PRAS- Water.png",
+    "position": 2,
+    "frameCount": 30,
+    "timingCount": 1
+  },
+  "77": {
+    "id": "77",
+    "name": "Move:BULKUP",
+    "graphic": "PRAS- Bulk Up.png",
+    "position": 1,
+    "frameCount": 28,
+    "timingCount": 3
+  },
+  "78": {
+    "id": "78",
+    "name": "OppMove:BULKUP",
+    "graphic": "PRAS- Bulk Up.png",
+    "position": 1,
+    "frameCount": 28,
+    "timingCount": 3
+  },
+  "79": {
+    "id": "79",
+    "name": "Move:BULLETPUNCH",
+    "graphic": "PRAS- Strike.png",
+    "position": 2,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "80": {
+    "id": "80",
+    "name": "Move:BULLETSEED",
+    "graphic": "PRAS- Grass.png",
+    "position": 3,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "81": {
+    "id": "81",
+    "name": "Bullet Seed hit 2",
+    "graphic": "PRAS- Grass.png",
+    "position": 3,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "82": {
+    "id": "82",
+    "name": "Bullet Seed hit 3",
+    "graphic": "PRAS- Grass.png",
+    "position": 3,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "83": {
+    "id": "83",
+    "name": "Bullet Seed hit 4",
+    "graphic": "PRAS- Grass.png",
+    "position": 3,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "84": {
+    "id": "84",
+    "name": "Bullet Seed hit 5",
+    "graphic": "PRAS- Grass.png",
+    "position": 3,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "85": {
+    "id": "85",
+    "name": "OppMove:BULLETSEED",
+    "graphic": "PRAS- Grass.png",
+    "position": 3,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "86": {
+    "id": "86",
+    "name": "Bullet Seed hit 2",
+    "graphic": "PRAS- Grass.png",
+    "position": 3,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "87": {
+    "id": "87",
+    "name": "Bullet Seed hit 3",
+    "graphic": "PRAS- Grass.png",
+    "position": 3,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "88": {
+    "id": "88",
+    "name": "Bullet Seed hit 4",
+    "graphic": "PRAS- Grass.png",
+    "position": 3,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "89": {
+    "id": "89",
+    "name": "Bullet Seed hit 5",
+    "graphic": "PRAS- Grass.png",
+    "position": 3,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "157": {
+    "id": "157",
+    "name": "Move:HIGHJUMPKICK",
+    "graphic": "PRAS-Strike",
+    "frames": 16,
+    "frameCount": 16,
+    "position": 2,
+    "timings": 3,
+    "timingCount": 3
+  },
+  "423": {
+    "id": "423",
+    "name": "Move:BLAZEKICK",
+    "graphic": "PRAS- Blaze Kick.png",
+    "position": 1,
+    "frameCount": 13,
+    "timingCount": 2
+  },
+  "461": {
+    "id": "461",
+    "name": "Move:BOOMBURST",
+    "graphic": "PRAS- Sound.png",
+    "position": 4,
+    "frameCount": 20,
+    "timingCount": 2
+  },
+  "462": {
+    "id": "462",
+    "name": "OppMove:BOOMBURST",
+    "graphic": "PRAS- Sound.png",
+    "position": 4,
+    "frameCount": 20,
+    "timingCount": 2
+  },
+  "546": {
+    "id": "546",
+    "name": "Move:BUGBITE",
+    "graphic": "PRAS- Bug Bite.png",
+    "position": 4,
+    "frameCount": 21,
+    "timingCount": 2
+  },
+  "559": {
+    "id": "559",
+    "name": "Move:BOUNCE",
+    "graphic": "",
+    "position": 3,
+    "frameCount": 14,
+    "timingCount": 2
+  },
+  "560": {
+    "id": "560",
+    "name": "Bounce charging",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 16,
+    "timingCount": 2
+  },
+  "561": {
+    "id": "561",
+    "name": "OppMove:BOUNCE",
+    "graphic": "",
+    "position": 3,
+    "frameCount": 14,
+    "timingCount": 2
+  },
+  "629": {
+    "id": "629",
+    "name": "Move:BLIZZARD",
+    "graphic": "PRAS- Ice.png",
+    "position": 3,
+    "frameCount": 31,
+    "timingCount": 8
+  },
+  "632": {
+    "id": "632",
+    "name": "Move:BRAVEBIRD",
+    "graphic": "PRAS- Brave Bird.png",
+    "position": 3,
+    "frameCount": 60,
+    "timingCount": 2
+  },
+  "637": {
+    "id": "637",
+    "name": "Move:BRINE",
+    "graphic": "PRAS- Brine.png",
+    "position": 1,
+    "frameCount": 29,
+    "timingCount": 2
+  },
+  "638": {
+    "id": "638",
+    "name": "Move:BUGBUZZ",
+    "graphic": "PRAS- Bug Buzz.png",
+    "position": 4,
+    "frameCount": 34,
+    "timingCount": 3
+  },
+  "712": {
+    "id": "712",
+    "name": "Move:BULLDOZE",
+    "graphic": "PRAS- Rock.png",
+    "position": 3,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "713": {
+    "id": "713",
+    "name": "OppMove:BULLDOZE",
+    "graphic": "PRAS- Rock.png",
+    "position": 3,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "720": {
+    "id": "720",
+    "name": "Move:BIDE",
+    "graphic": "PRAS- Bide.png",
+    "position": 4,
+    "frameCount": 17,
+    "timingCount": 1
+  },
+  "761": {
+    "id": "761",
+    "name": "Move:BELLYDRUM",
+    "graphic": "PRAS- Strike.png",
+    "position": 2,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "762": {
+    "id": "762",
+    "name": "OppMove:BELLYDRUM",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "763": {
+    "id": "763",
+    "name": "Move:BARRAGE",
+    "graphic": "PRAS- Orbs.png",
+    "position": 3,
+    "frameCount": 8,
+    "timingCount": 2
+  },
+  "764": {
+    "id": "764",
+    "name": "Barrage hit 2",
+    "graphic": "PRAS- Orbs.png",
+    "position": 3,
+    "frameCount": 8,
+    "timingCount": 2
+  },
+  "765": {
+    "id": "765",
+    "name": "Barrage hit 3",
+    "graphic": "PRAS- Orbs.png",
+    "position": 3,
+    "frameCount": 8,
+    "timingCount": 2
+  },
+  "766": {
+    "id": "766",
+    "name": "Barrage hit 4",
+    "graphic": "PRAS- Orbs.png",
+    "position": 3,
+    "frameCount": 8,
+    "timingCount": 2
+  },
+  "767": {
+    "id": "767",
+    "name": "Barrage hit 5",
+    "graphic": "PRAS- Orbs.png",
+    "position": 3,
+    "frameCount": 8,
+    "timingCount": 2
+  },
+  "768": {
+    "id": "768",
+    "name": "OppMove:BARRAGE",
+    "graphic": "PRAS- Orbs.png",
+    "position": 3,
+    "frameCount": 8,
+    "timingCount": 2
+  },
+  "769": {
+    "id": "769",
+    "name": "Barrage hit 2",
+    "graphic": "PRAS- Orbs.png",
+    "position": 3,
+    "frameCount": 8,
+    "timingCount": 2
+  },
+  "770": {
+    "id": "770",
+    "name": "Barrage hit 3",
+    "graphic": "PRAS- Orbs.png",
+    "position": 3,
+    "frameCount": 8,
+    "timingCount": 2
+  },
+  "771": {
+    "id": "771",
+    "name": "Barrage hit 4",
+    "graphic": "PRAS- Orbs.png",
+    "position": 3,
+    "frameCount": 8,
+    "timingCount": 2
+  },
+  "772": {
+    "id": "772",
+    "name": "Barrage hit 5",
+    "graphic": "PRAS- Orbs.png",
+    "position": 3,
+    "frameCount": 8,
+    "timingCount": 2
+  },
+  "773": {
+    "id": "773",
+    "name": "Move:BESTOW",
+    "graphic": "PRAS- Trick.png",
+    "position": 3,
+    "frameCount": 15,
+    "timingCount": 2
+  },
+  "774": {
+    "id": "774",
+    "name": "OppMove:BESTOW",
+    "graphic": "PRAS- Trick.png",
+    "position": 3,
+    "frameCount": 15,
+    "timingCount": 2
+  },
+  "845": {
+    "id": "845",
+    "name": "Move:BATONPASS",
+    "graphic": "PRAS- Baton Pass.png",
+    "position": 4,
+    "frameCount": 31,
+    "timingCount": 2
+  },
+  "846": {
+    "id": "846",
+    "name": "OppMove:BATONPASS",
+    "graphic": "PRAS- Baton Pass.png",
+    "position": 4,
+    "frameCount": 35,
+    "timingCount": 2
+  },
+  "856": {
+    "id": "856",
+    "name": "Move:BOLTSTRIKE",
+    "graphic": "PRAS- Electric.png",
+    "position": 3,
+    "frameCount": 38,
+    "timingCount": 2
+  },
+  "881": {
+    "id": "881",
+    "name": "Move:BONEMERANG",
+    "graphic": "PRAS- BoneMerang.png",
+    "position": 4,
+    "frameCount": 16,
+    "timingCount": 2
+  },
+  "882": {
+    "id": "882",
+    "name": "Bonemerang hit 2",
+    "graphic": "PRAS- BoneMerang.png",
+    "position": 4,
+    "frameCount": 16,
+    "timingCount": 2
+  },
+  "883": {
+    "id": "883",
+    "name": "OppMove:BONEMERANG",
+    "graphic": "PRAS- BoneMerang.png",
+    "position": 4,
+    "frameCount": 14,
+    "timingCount": 2
+  },
+  "884": {
+    "id": "884",
+    "name": "Bonemerang hit 2",
+    "graphic": "PRAS- BoneMerang.png",
+    "position": 4,
+    "frameCount": 14,
+    "timingCount": 2
+  },
+  "971": {
+    "id": "971",
+    "name": "Move:BABYDOLLEYES",
+    "graphic": "PRAS- Baby Doll Eyes.png",
+    "position": 4,
+    "frameCount": 25,
+    "timingCount": 4
+  },
+  "992": {
+    "id": "992",
+    "name": "Move:BONECLUB",
+    "graphic": "PRAS- BoneMerang.png",
+    "position": 4,
+    "frameCount": 21,
+    "timingCount": 2
+  },
+  "993": {
+    "id": "993",
+    "name": "Move:BONERUSH",
+    "graphic": "PRAS- BoneMerang.png",
+    "position": 3,
+    "frameCount": 19,
+    "timingCount": 2
+  },
+  "994": {
+    "id": "994",
+    "name": "Bone Rush hit 2",
+    "graphic": "PRAS- BoneMerang.png",
+    "position": 3,
+    "frameCount": 19,
+    "timingCount": 2
+  },
+  "995": {
+    "id": "995",
+    "name": "Bone Rush hit 3",
+    "graphic": "PRAS- BoneMerang.png",
+    "position": 3,
+    "frameCount": 19,
+    "timingCount": 2
+  },
+  "996": {
+    "id": "996",
+    "name": "Bone Rush hit 4",
+    "graphic": "PRAS- BoneMerang.png",
+    "position": 3,
+    "frameCount": 19,
+    "timingCount": 2
+  },
+  "997": {
+    "id": "997",
+    "name": "Bone Rush hit 5",
+    "graphic": "PRAS- BoneMerang.png",
+    "position": 3,
+    "frameCount": 19,
+    "timingCount": 2
+  },
+  "1029": {
+    "id": "1029",
+    "name": "Move:BELCH",
+    "graphic": "PRAS- Gastro Acid.png",
+    "position": 3,
+    "frameCount": 32,
+    "timingCount": 3
+  },
+  "1095": {
+    "id": "1095",
+    "name": "Move:BANEFULBUNKER",
+    "graphic": "PRAS- Gyro Ball.png",
+    "position": 2,
+    "frameCount": 32,
+    "timingCount": 4
+  },
+  "1097": {
+    "id": "1097",
+    "name": "Move:BEAKBLAST",
+    "graphic": "PRAS- Fire.png",
+    "position": 1,
+    "frameCount": 38,
+    "timingCount": 18
+  },
+  "1098": {
+    "id": "1098",
+    "name": "Beak Blast charging",
+    "graphic": "PRAS- Fire.png",
+    "position": 4,
+    "frameCount": 40,
+    "timingCount": 12
+  },
+  "1099": {
+    "id": "1099",
+    "name": "OppMove:BEAKBLAST",
+    "graphic": "PRAS- Fire.png",
+    "position": 1,
+    "frameCount": 38,
+    "timingCount": 18
+  },
+  "1110": {
+    "id": "1110",
+    "name": "Move:BURNUP",
+    "graphic": "PRAS- Fire.png",
+    "position": 2,
+    "frameCount": 80,
+    "timingCount": 8
+  },
+  "1142": {
+    "id": "1142",
+    "name": "Move:BRUTALSWING",
+    "graphic": "PRAS- Brutal Swing.png",
+    "position": 4,
+    "frameCount": 56,
+    "timingCount": 12
+  },
+  "1143": {
+    "id": "1143",
+    "name": "OppMove:BRUTALSWING",
+    "graphic": "PRAS- Brutal Swing.png",
+    "position": 4,
+    "frameCount": 56,
+    "timingCount": 12
+  },
+  "1172": {
+    "id": "1172",
+    "name": "Move:BREAKNECKBLITZ",
+    "graphic": "PRAS- Breakneck Blitz.png",
+    "position": 3,
+    "frameCount": 42,
+    "timingCount": 13
+  },
+  "1192": {
+    "id": "1192",
+    "name": "Move:BLOOMDOOM",
+    "graphic": "PRAS- Bloom Doom.png",
+    "position": 2,
+    "frameCount": 46,
+    "timingCount": 11
+  },
+  "1193": {
+    "id": "1193",
+    "name": "OppMove:BLOOMDOOM",
+    "graphic": "PRAS- Bloom Doom.png",
+    "position": 2,
+    "frameCount": 46,
+    "timingCount": 11
+  },
+  "1202": {
+    "id": "1202",
+    "name": "Move:BLACKHOLEECLIPSE",
+    "graphic": "PRAS- Black Hole Eclipse.png",
+    "position": 3,
+    "frameCount": 85,
+    "timingCount": 15
+  },
+  "1203": {
+    "id": "1203",
+    "name": "OppMove:BLACKHOLEECLIPSE",
+    "graphic": "PRAS- Black Hole Eclipse.png",
+    "position": 3,
+    "frameCount": 85,
+    "timingCount": 16
+  },
+  "1245": {
+    "id": "1245",
+    "name": "Move:BEHEMOTHBASH",
+    "graphic": "GEN8- Behemoth Bash Sword.png",
+    "position": 3,
+    "frameCount": 51,
+    "timingCount": 2
+  },
+  "1246": {
+    "id": "1246",
+    "name": "Move:BEHEMOTHBLADE",
+    "graphic": "GEN8- Behemoth Bash Sword.png",
+    "position": 3,
+    "frameCount": 50,
+    "timingCount": 4
+  },
+  "1247": {
+    "id": "1247",
+    "name": "OppMove:BEHEMOTHBLADE",
+    "graphic": "GEN8- Behemoth Bash Sword.png",
+    "position": 3,
+    "frameCount": 50,
+    "timingCount": 4
+  },
+  "1248": {
+    "id": "1248",
+    "name": "Move:BODYPRESS",
+    "graphic": "",
+    "position": 3,
+    "frameCount": 17,
+    "timingCount": 1
+  },
+  "1249": {
+    "id": "1249",
+    "name": "OppMove:BODYPRESS",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 17,
+    "timingCount": 1
+  },
+  "1250": {
+    "id": "1250",
+    "name": "Move:BOLTBEAK",
+    "graphic": "GEN8- Elemental Punch.png",
+    "position": 1,
+    "frameCount": 25,
+    "timingCount": 6
+  },
+  "1251": {
+    "id": "1251",
+    "name": "OppMove:BOLTBEAK",
+    "graphic": "GEN8- Elemental Punch.png",
+    "position": 1,
+    "frameCount": 25,
+    "timingCount": 6
+  },
+  "1252": {
+    "id": "1252",
+    "name": "Move:BRANCHPOKE",
+    "graphic": "PRAS- Wood Hammer.png",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 1
+  },
+  "1253": {
+    "id": "1253",
+    "name": "Move:BREAKINGSWIPE",
+    "graphic": "PRAS- Dragon Tail.png",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "1254": {
+    "id": "1254",
+    "name": "OppMove:BREAKINGSWIPE",
+    "graphic": "PRAS- Dragon Tail.png",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "1300": {
+    "id": "1300",
+    "name": "Move:BURNINGJEALOUSY",
+    "graphic": "PRAS- Fire.png",
+    "position": 3,
+    "frameCount": 32,
+    "timingCount": 3
+  },
   "6000": {
     "id": "6000",
     "name": "Common:HealthUp",
@@ -2136,17 +2970,17 @@
   "6260": {
     "id": "6260",
     "name": "Move:STEALTHROCK",
-    "graphic": "last-chance/Rock Tomb.png",
+    "graphic": "PRAS- Stealth Rock.png",
     "sourceAnimationId": 260,
-    "frameCount": 8,
+    "frameCount": 35,
     "timingCount": 1
   },
   "6261": {
     "id": "6261",
     "name": "OppMove:STEALTHROCK",
-    "graphic": "last-chance/Rock Tomb.png",
+    "graphic": "PRAS- Stealth Rock.png",
     "sourceAnimationId": 261,
-    "frameCount": 8,
+    "frameCount": 35,
     "timingCount": 1
   },
   "6262": {
@@ -2528,10 +3362,10 @@
   "6309": {
     "id": "6309",
     "name": "Move:AIRSLASH",
-    "graphic": "eb159",
-    "sourceAnimationId": 309,
-    "frameCount": 4,
-    "timingCount": 2
+    "graphic": "PRAS- Air Slash.png",
+    "position": 1,
+    "frameCount": 25,
+    "timingCount": 3
   },
   "6310": {
     "id": "6310",
@@ -2560,18 +3394,18 @@
   "6313": {
     "id": "6313",
     "name": "Move:AQUATAIL",
-    "graphic": "eb632_7",
-    "sourceAnimationId": 313,
-    "frameCount": 4,
-    "timingCount": 3
+    "graphic": "PRAS- Water.png",
+    "position": 1,
+    "frameCount": 17,
+    "timingCount": 1
   },
   "6314": {
     "id": "6314",
     "name": "Move:ARMTHRUST",
-    "graphic": "last-chance/WaterBubbles.png",
-    "sourceAnimationId": 314,
-    "frameCount": 4,
-    "timingCount": 1
+    "graphic": "PRAS- Strike",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 0
   },
   "6315": {
     "id": "6315",
@@ -2616,10 +3450,10 @@
   "6320": {
     "id": "6320",
     "name": "OppMove:ARMTHRUST",
-    "graphic": "last-chance/WaterBubbles.png",
-    "sourceAnimationId": 320,
-    "frameCount": 5,
-    "timingCount": 1
+    "graphic": "PRAS- Strike",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 0
   },
   "6321": {
     "id": "6321",
@@ -2680,9 +3514,9 @@
   "6328": {
     "id": "6328",
     "name": "Move:ASTONISH",
-    "graphic": "eb632_3",
-    "sourceAnimationId": 328,
-    "frameCount": 4,
+    "graphic": "PRAS- Shadow Sneak.png",
+    "position": 1,
+    "frameCount": 12,
     "timingCount": 2
   },
   "6329": {
@@ -2696,65 +3530,65 @@
   "6330": {
     "id": "6330",
     "name": "Move:AURASPHERE",
-    "graphic": "eb093",
-    "sourceAnimationId": 330,
-    "frameCount": 7,
+    "graphic": "PRAS- Aura Sphere.png",
+    "position": 3,
+    "frameCount": 42,
     "timingCount": 2
   },
   "6331": {
     "id": "6331",
     "name": "Move:AUTOTOMIZE",
-    "graphic": "eb615_1",
-    "sourceAnimationId": 331,
-    "frameCount": 4,
-    "timingCount": 1
+    "graphic": "PRAS- Autotomize.png",
+    "position": 2,
+    "frameCount": 29,
+    "timingCount": 2
   },
   "6332": {
     "id": "6332",
     "name": "Move:AVALANCHE",
-    "graphic": "eb631",
-    "sourceAnimationId": 332,
-    "frameCount": 5,
-    "timingCount": 2
+    "graphic": "PRAS- Ice.png",
+    "position": 1,
+    "frameCount": 35,
+    "timingCount": 4
   },
   "6333": {
     "id": "6333",
     "name": "Move:BATONPASS",
-    "graphic": "eb156_17",
-    "sourceAnimationId": 333,
-    "frameCount": 5,
-    "timingCount": 1
+    "graphic": "PRAS- Baton Pass.png",
+    "position": 4,
+    "frameCount": 31,
+    "timingCount": 2
   },
   "6334": {
     "id": "6334",
     "name": "OppMove:BATONPASS",
-    "graphic": "PRAS- Baton Pass",
-    "sourceAnimationId": 334,
-    "frameCount": 12,
-    "timingCount": 1
+    "graphic": "PRAS- Baton Pass.png",
+    "position": 4,
+    "frameCount": 35,
+    "timingCount": 2
   },
   "6335": {
     "id": "6335",
     "name": "Move:BELLYDRUM",
-    "graphic": "pras-sound",
-    "sourceAnimationId": 335,
-    "frameCount": 18,
-    "timingCount": 5
+    "graphic": "PRAS- Strike.png",
+    "position": 2,
+    "frameCount": 10,
+    "timingCount": 1
   },
   "6336": {
     "id": "6336",
     "name": "Move:BESTOW",
-    "graphic": "bestow-bag",
-    "sourceAnimationId": 336,
-    "frameCount": 12,
-    "timingCount": 1
+    "graphic": "PRAS- Trick.png",
+    "position": 3,
+    "frameCount": 15,
+    "timingCount": 2
   },
   "6337": {
     "id": "6337",
     "name": "Move:BIDE",
-    "graphic": "bide-smoke",
-    "sourceAnimationId": 337,
-    "frameCount": 12,
+    "graphic": "PRAS- Bide.png",
+    "position": 4,
+    "frameCount": 17,
     "timingCount": 1
   },
   "6338": {
@@ -2768,41 +3602,41 @@
   "6339": {
     "id": "6339",
     "name": "Move:BLAZEKICK",
-    "graphic": "pras-blaze-kick",
-    "sourceAnimationId": 339,
-    "frameCount": 8,
-    "timingCount": 0
+    "graphic": "PRAS- Blaze Kick.png",
+    "position": 1,
+    "frameCount": 13,
+    "timingCount": 2
   },
   "6340": {
     "id": "6340",
     "name": "Move:BLIZZARD",
-    "graphic": "eb611_3",
-    "sourceAnimationId": 340,
-    "frameCount": 5,
-    "timingCount": 2
+    "graphic": "PRAS- Ice.png",
+    "position": 3,
+    "frameCount": 31,
+    "timingCount": 8
   },
   "6341": {
     "id": "6341",
     "name": "Move:BOLTSTRIKE",
-    "graphic": "eb064",
-    "sourceAnimationId": 341,
-    "frameCount": 6,
-    "timingCount": 3
+    "graphic": "PRAS- Electric.png",
+    "position": 3,
+    "frameCount": 38,
+    "timingCount": 2
   },
   "6342": {
     "id": "6342",
     "name": "Move:BONECLUB",
-    "graphic": "last-chance/WaterBubbles.png",
-    "sourceAnimationId": 342,
-    "frameCount": 9,
-    "timingCount": 1
+    "graphic": "PRAS- BoneMerang.png",
+    "position": 4,
+    "frameCount": 21,
+    "timingCount": 2
   },
   "6343": {
     "id": "6343",
     "name": "Move:BONERUSH",
-    "graphic": "eb623",
-    "sourceAnimationId": 343,
-    "frameCount": 5,
+    "graphic": "PRAS- BoneMerang.png",
+    "position": 3,
+    "frameCount": 19,
     "timingCount": 2
   },
   "6344": {
@@ -2848,10 +3682,10 @@
   "6349": {
     "id": "6349",
     "name": "Move:BONEMERANG",
-    "graphic": "pras-bonemerang",
-    "sourceAnimationId": 349,
-    "frameCount": 14,
-    "timingCount": 1
+    "graphic": "PRAS- BoneMerang.png",
+    "position": 4,
+    "frameCount": 16,
+    "timingCount": 2
   },
   "6350": {
     "id": "6350",
@@ -2872,18 +3706,18 @@
   "6352": {
     "id": "6352",
     "name": "Move:BOUNCE",
-    "graphic": "eb156",
-    "sourceAnimationId": 352,
-    "frameCount": 6,
-    "timingCount": 3
+    "graphic": "",
+    "position": 3,
+    "frameCount": 14,
+    "timingCount": 2
   },
   "6353": {
     "id": "6353",
-    "name": "BounceCharge",
-    "graphic": "last-chance/fly copy.png",
-    "sourceAnimationId": 353,
-    "frameCount": 16,
-    "timingCount": 1
+    "name": "OppMove:BOUNCE",
+    "graphic": "",
+    "position": 3,
+    "frameCount": 14,
+    "timingCount": 2
   },
   "6354": {
     "id": "6354",
@@ -2904,26 +3738,26 @@
   "6356": {
     "id": "6356",
     "name": "Move:BRINE",
-    "graphic": "eb536",
-    "sourceAnimationId": 356,
-    "frameCount": 5,
+    "graphic": "PRAS- Brine.png",
+    "position": 1,
+    "frameCount": 29,
     "timingCount": 2
   },
   "6357": {
     "id": "6357",
     "name": "Move:BUGBITE",
-    "graphic": "eb008",
-    "sourceAnimationId": 357,
-    "frameCount": 4,
-    "timingCount": 1
+    "graphic": "PRAS- Bug Bite.png",
+    "position": 4,
+    "frameCount": 21,
+    "timingCount": 2
   },
   "6358": {
     "id": "6358",
     "name": "Move:BUGBUZZ",
-    "graphic": "pras-bug-buzz",
-    "sourceAnimationId": 358,
-    "frameCount": 15,
-    "timingCount": 2
+    "graphic": "PRAS- Bug Buzz.png",
+    "position": 4,
+    "frameCount": 34,
+    "timingCount": 3
   },
   "6359": {
     "id": "6359",
@@ -2944,9 +3778,9 @@
   "6361": {
     "id": "6361",
     "name": "Move:CAPTIVATE",
-    "graphic": "pras-love",
-    "sourceAnimationId": 361,
-    "frameCount": 15,
+    "graphic": "PRAS- Love.png",
+    "position": 2,
+    "frameCount": 25,
     "timingCount": 2
   },
   "6362": {
@@ -2968,18 +3802,18 @@
   "6364": {
     "id": "6364",
     "name": "Move:CHIPAWAY",
-    "graphic": "last-chance/003-Attack01.png",
-    "sourceAnimationId": 364,
-    "frameCount": 13,
-    "timingCount": 1
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 3
   },
   "6365": {
     "id": "6365",
     "name": "Move:CIRCLETHROW",
-    "graphic": "last-chance/electric1.png",
-    "sourceAnimationId": 365,
-    "frameCount": 16,
-    "timingCount": 1
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 19,
+    "timingCount": 2
   },
   "6366": {
     "id": "6366",
@@ -3008,10 +3842,10 @@
   "6369": {
     "id": "6369",
     "name": "Move:CONSTRICT",
-    "graphic": "last-chance/Cosmo-01.png",
-    "sourceAnimationId": 369,
-    "frameCount": 10,
-    "timingCount": 1
+    "graphic": "PRAS- Constrict.png",
+    "position": 4,
+    "frameCount": 22,
+    "timingCount": 2
   },
   "6370": {
     "id": "6370",
@@ -3032,33 +3866,33 @@
   "6372": {
     "id": "6372",
     "name": "Move:CONVERSION2",
-    "graphic": "last-chance/023-Burst01.png",
-    "sourceAnimationId": 372,
-    "frameCount": 16,
+    "graphic": "PRAS- Conversion.png",
+    "position": 3,
+    "frameCount": 20,
     "timingCount": 1
   },
   "6373": {
     "id": "6373",
     "name": "Move:COPYCAT",
-    "graphic": "last-chance/007-Weapon02.png",
-    "sourceAnimationId": 373,
-    "frameCount": 12,
-    "timingCount": 1
+    "graphic": "!.png",
+    "position": 4,
+    "frameCount": 30,
+    "timingCount": 0
   },
   "6374": {
     "id": "6374",
     "name": "Move:COSMICPOWER",
-    "graphic": "last-chance/Cosmo-01.png",
-    "sourceAnimationId": 374,
-    "frameCount": 25,
-    "timingCount": 2
+    "graphic": "PRAS- Stats.png",
+    "position": 2,
+    "frameCount": 35,
+    "timingCount": 4
   },
   "6375": {
     "id": "6375",
     "name": "Move:COVET",
-    "graphic": "last-chance/electric2.png",
-    "sourceAnimationId": 375,
-    "frameCount": 10,
+    "graphic": "PRAS- Covet.png",
+    "position": 4,
+    "frameCount": 27,
     "timingCount": 1
   },
   "6376": {
@@ -3256,18 +4090,18 @@
   "6400": {
     "id": "6400",
     "name": "Move:BOOMBURST",
-    "graphic": "eb612_1",
-    "sourceAnimationId": 400,
-    "frameCount": 6,
-    "timingCount": 3
+    "graphic": "PRAS- Sound.png",
+    "position": 4,
+    "frameCount": 20,
+    "timingCount": 2
   },
   "6401": {
     "id": "6401",
     "name": "OppMove:BOOMBURST",
-    "graphic": "pras-uproar",
-    "sourceAnimationId": 401,
-    "frameCount": 8,
-    "timingCount": 1
+    "graphic": "PRAS- Sound.png",
+    "position": 4,
+    "frameCount": 20,
+    "timingCount": 2
   },
   "6402": {
     "id": "6402",
@@ -3280,10 +4114,10 @@
   "6403": {
     "id": "6403",
     "name": "Move:CONFIDE",
-    "graphic": "last-chance/WaterBubbles.png",
-    "sourceAnimationId": 403,
-    "frameCount": 20,
-    "timingCount": 5
+    "graphic": "",
+    "position": 4,
+    "frameCount": 22,
+    "timingCount": 1
   },
   "6404": {
     "id": "6404",
@@ -4252,60 +5086,67 @@
     "timingCount": 10
   },
   "6520": {
-    "id": "6520",
     "name": "Move:NASTYPLOT",
-    "graphic": "last-chance/!.png",
-    "sourceAnimationId": 520,
-    "frameCount": 13,
-    "timingCount": 4
+    "graphic": "PRAS- Nasty Plot.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 30,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
   },
   "6521": {
-    "id": "6521",
     "name": "Move:NATURALGIFT",
-    "graphic": "last-chance/Heal5.png",
-    "sourceAnimationId": 521,
-    "frameCount": 17,
-    "timingCount": 1
+    "graphic": "PRAS- Strike.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 34,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
   },
   "6522": {
-    "id": "6522",
     "name": "Move:NEEDLEARM",
-    "graphic": "last-chance/00-TriAttack.png",
-    "sourceAnimationId": 522,
-    "frameCount": 11,
-    "timingCount": 3
+    "graphic": "PRAS- Needle Arm.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 16,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
   },
   "6523": {
-    "id": "6523",
     "name": "Move:NIGHTDAZE",
-    "graphic": "last-chance/efftest4.png",
-    "sourceAnimationId": 523,
-    "frameCount": 14,
-    "timingCount": 1
+    "graphic": "PRAS- Night Daze.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 42,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
   },
   "6524": {
-    "id": "6524",
     "name": "Move:NIGHTSHADE",
-    "graphic": "last-chance/022-Darkness01.png",
-    "sourceAnimationId": 524,
-    "frameCount": 12,
-    "timingCount": 3
+    "graphic": "PRAS- Psychic BG.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 24,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
   },
   "6525": {
-    "id": "6525",
     "name": "Move:NIGHTSLASH",
-    "graphic": "last-chance/Aerial Ace.png",
-    "sourceAnimationId": 525,
-    "frameCount": 14,
-    "timingCount": 5
+    "graphic": "PRAS- Slash.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 20,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
   },
   "6526": {
-    "id": "6526",
     "name": "Move:NUZZLE",
-    "graphic": "last-chance/electric1.png",
-    "sourceAnimationId": 526,
-    "frameCount": 16,
-    "timingCount": 2
+    "graphic": "PRAS- Electric.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 18,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
   },
   "6527": {
     "id": "6527",
@@ -4814,17 +5655,17 @@
   "6590": {
     "id": "6590",
     "name": "Move:SANDTOMB",
-    "graphic": "last-chance/weather.png",
+    "graphic": "PRAS- Sand Particles.png",
     "sourceAnimationId": 590,
-    "frameCount": 8,
-    "timingCount": 1
+    "frameCount": 30,
+    "timingCount": 2
   },
   "6591": {
     "id": "6591",
     "name": "Move:SANDSTORM",
-    "graphic": "last-chance/weather.png",
+    "graphic": "PRAS- Sand Particles.png",
     "sourceAnimationId": 591,
-    "frameCount": 6,
+    "frameCount": 32,
     "timingCount": 2
   },
   "6592": {
@@ -5686,18 +6527,18 @@
   "6699": {
     "id": "6699",
     "name": "Move:ATTRACT",
-    "graphic": "eb636_2",
-    "sourceAnimationId": 699,
-    "frameCount": 6,
-    "timingCount": 2
+    "graphic": "PRAS- Love.png",
+    "position": 4,
+    "frameCount": 37,
+    "timingCount": 5
   },
   "6700": {
     "id": "6700",
     "name": "Move:CRAFTYSHIELD",
-    "graphic": "last-chance/normal2.png",
-    "sourceAnimationId": 700,
-    "frameCount": 7,
-    "timingCount": 4
+    "graphic": "PRAS- Crafty Shield.png",
+    "position": 4,
+    "frameCount": 39,
+    "timingCount": 2
   },
   "6701": {
     "id": "6701",
@@ -5744,12 +6585,13 @@
     "timingCount": 3
   },
   "6706": {
-    "id": "6706",
     "name": "Move:NATUREPOWER",
-    "graphic": "last-chance/028-State01.png",
-    "sourceAnimationId": 706,
-    "frameCount": 10,
-    "timingCount": 1
+    "graphic": "PRAS- Absorption.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 15,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
   },
   "6707": {
     "id": "6707",
@@ -5786,10 +6628,10 @@
   "6711": {
     "id": "6711",
     "name": "Move:ACCELEROCK",
-    "graphic": "last-chance/003-Attack01.png",
-    "sourceAnimationId": 711,
-    "frameCount": 15,
-    "timingCount": 2
+    "graphic": "PRAS- Rock Smash",
+    "position": 4,
+    "frameCount": 24,
+    "timingCount": 0
   },
   "6712": {
     "id": "6712",
@@ -5802,9 +6644,9 @@
   "6713": {
     "id": "6713",
     "name": "Move:BANEFULBUNKER",
-    "graphic": "last-chance/normal2.png",
-    "sourceAnimationId": 713,
-    "frameCount": 11,
+    "graphic": "PRAS- Gyro Ball.png",
+    "position": 2,
+    "frameCount": 32,
     "timingCount": 4
   },
   "6714": {
@@ -5820,10 +6662,10 @@
   "6715": {
     "id": "6715",
     "name": "Move:BEAKBLAST",
-    "graphic": "last-chance/Fogo - 01.png",
-    "sourceAnimationId": 715,
-    "frameCount": 7,
-    "timingCount": 1
+    "graphic": "PRAS- Fire.png",
+    "position": 1,
+    "frameCount": 38,
+    "timingCount": 18
   },
   "6716": {
     "id": "6716",
@@ -5836,9 +6678,9 @@
   "6717": {
     "id": "6717",
     "name": "Move:CLANGINGSCALES",
-    "graphic": "last-chance/Hypnosis + Lock on.png",
-    "sourceAnimationId": 717,
-    "frameCount": 14,
+    "graphic": "PRAS- Uproar.png",
+    "position": 2,
+    "frameCount": 27,
     "timingCount": 2
   },
   "6718": {
@@ -5926,18 +6768,18 @@
   "6728": {
     "id": "6728",
     "name": "Move:BABYDOLLEYES",
-    "graphic": "eb619_7",
-    "sourceAnimationId": 728,
-    "frameCount": 4,
-    "timingCount": 2
+    "graphic": "PRAS- Baby Doll Eyes.png",
+    "position": 4,
+    "frameCount": 25,
+    "timingCount": 4
   },
   "6729": {
     "id": "6729",
     "name": "Move:BELCH",
-    "graphic": "eb59_2",
-    "sourceAnimationId": 729,
-    "frameCount": 5,
-    "timingCount": 2
+    "graphic": "PRAS- Gastro Acid.png",
+    "position": 3,
+    "frameCount": 32,
+    "timingCount": 3
   },
   "6730": {
     "id": "6730",
@@ -5990,12 +6832,13 @@
     "timingCount": 3
   },
   "6736": {
-    "id": "6736",
     "name": "Move:NOBLEROAR",
-    "graphic": "last-chance/anim sheet.png",
-    "sourceAnimationId": 736,
-    "frameCount": 16,
-    "timingCount": 1
+    "graphic": "PRAS- Sound.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 24,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
   },
   "6737": {
     "id": "6737",
@@ -6023,11 +6866,11 @@
   },
   "6740": {
     "id": "6740",
-    "name": "Move:PROTECT",
-    "graphic": "confusion",
-    "sourceAnimationId": 740,
-    "frameCount": 15,
-    "timingCount": 2
+    "name": "Move:CONFUSION",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 29,
+    "timingCount": 6
   },
   "6741": {
     "id": "6741",
@@ -6055,11 +6898,11 @@
   },
   "6744": {
     "id": "6744",
-    "name": "",
-    "graphic": "gen8-core-enforcer",
-    "sourceAnimationId": 744,
-    "frameCount": 12,
-    "timingCount": 1
+    "name": "Move:COREENFORCER",
+    "graphic": "GEN8- Core Enforcer.png",
+    "position": 3,
+    "frameCount": 60,
+    "timingCount": 5
   },
   "6745": {
     "id": "6745",
@@ -6071,19 +6914,19 @@
   },
   "6746": {
     "id": "6746",
-    "name": "",
-    "graphic": "pras-corrosive-bg",
-    "sourceAnimationId": 746,
-    "frameCount": 14,
-    "timingCount": 1
+    "name": "Move:CORROSIVEGAS",
+    "graphic": "PRAS- Poison.png",
+    "position": 1,
+    "frameCount": 36,
+    "timingCount": 4
   },
   "6747": {
     "id": "6747",
-    "name": "",
-    "graphic": "pras-swap",
-    "sourceAnimationId": 747,
-    "frameCount": 16,
-    "timingCount": 1
+    "name": "Move:COURTCHANGE",
+    "graphic": "",
+    "position": 3,
+    "frameCount": 22,
+    "timingCount": 0
   },
   "6748": {
     "id": "6748",
@@ -6095,34 +6938,34 @@
   },
   "6749": {
     "id": "6749",
-    "name": "",
-    "graphic": "pras-catastropika",
-    "sourceAnimationId": 749,
-    "frameCount": 20,
-    "timingCount": 2
+    "name": "Move:CATASTROPIKA",
+    "graphic": "PRAS- Catastropika.png",
+    "position": 1,
+    "frameCount": 50,
+    "timingCount": 15
   },
   "6750": {
     "id": "6750",
     "name": "Move:AEROBLAST",
-    "graphic": "eb263_4",
-    "sourceAnimationId": 750,
-    "frameCount": 6,
-    "timingCount": 3
+    "graphic": "PRAS- Aeroblast.png",
+    "position": 3,
+    "frameCount": 85,
+    "timingCount": 10
   },
   "6751": {
     "id": "6751",
     "name": "Move:AQUAJET",
-    "graphic": "eb618_2",
-    "sourceAnimationId": 751,
-    "frameCount": 6,
-    "timingCount": 2
+    "graphic": "PRAS- Aqua Jet.png",
+    "position": 3,
+    "frameCount": 18,
+    "timingCount": 1
   },
   "6752": {
     "id": "6752",
     "name": "Move:BRAVEBIRD",
-    "graphic": "eb628",
-    "sourceAnimationId": 752,
-    "frameCount": 6,
+    "graphic": "PRAS- Brave Bird.png",
+    "position": 3,
+    "frameCount": 60,
     "timingCount": 2
   },
   "6753": {
@@ -6143,34 +6986,35 @@
   },
   "6755": {
     "id": "6755",
-    "name": "Move:DOUBLETEAM",
-    "graphic": "eb086",
-    "sourceAnimationId": 755,
-    "frameCount": 4,
-    "timingCount": 1
+    "name": "Move:BIND",
+    "graphic": "block.png",
+    "position": 1,
+    "frameCount": 17,
+    "timingCount": 2
   },
   "6756": {
     "id": "6756",
-    "name": "Move:DRAGONASCENT",
-    "graphic": "eb628_5",
-    "sourceAnimationId": 756,
-    "frameCount": 5,
-    "timingCount": 2
+    "name": "OppMove:BLUEFLARE",
+    "graphic": "PRAS- Fire.png",
+    "position": 3,
+    "frameCount": 60,
+    "timingCount": 5
   },
   "6757": {
     "id": "6757",
-    "name": "Move:DRAGONHAMMER",
-    "graphic": "eb631_3",
-    "sourceAnimationId": 757,
-    "frameCount": 4,
+    "name": "Move:BODYSLAM",
+    "graphic": "PRAS- Strike.png",
+    "position": 2,
+    "frameCount": 15,
     "timingCount": 2
   },
   "6758": {
     "id": "6758",
-    "name": "Move:EARTHPOWER",
-    "graphic": "eb224",
-    "frameCount": 6,
-    "timingCount": 2
+    "name": "Move:BUBBLEBEAM",
+    "graphic": "PRAS- Water.png",
+    "position": 3,
+    "frameCount": 31,
+    "timingCount": 1
   },
   "6759": {
     "id": "6759",
@@ -6383,14 +7227,6723 @@
     "frameCount": 20,
     "timingCount": 4
   },
-  "157": {
-    "id": "157",
-    "name": "Move:HIGHJUMPKICK",
-    "graphic": "PRAS-Strike",
-    "frames": 16,
-    "frameCount": 16,
-    "position": 2,
-    "timings": 3,
+  "6789": {
+    "id": "6789",
+    "name": "OppMove:MEGAHORN",
+    "graphic": "poison3",
+    "position": 3,
+    "frameCount": 12,
+    "timingCount": 0
+  },
+  "1027": {
+    "id": "1027",
+    "name": "Move:AEROBLAST",
+    "graphic": "PRAS- Aeroblast.png",
+    "position": 3,
+    "frameCount": 85,
+    "timingCount": 10
+  },
+  "1028": {
+    "id": "1028",
+    "name": "OppMove:AEROBLAST",
+    "graphic": "PRAS- Aeroblast.png",
+    "position": 3,
+    "frameCount": 85,
+    "timingCount": 7
+  },
+  "935": {
+    "id": "935",
+    "name": "Move:AFTERYOU",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 25,
+    "timingCount": 2
+  },
+  "936": {
+    "id": "936",
+    "name": "OppMove:AFTERYOU",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 25,
+    "timingCount": 2
+  },
+  "487": {
+    "id": "487",
+    "name": "Move:AIRSLASH",
+    "graphic": "PRAS- Air Slash.png",
+    "position": 1,
+    "frameCount": 25,
     "timingCount": 3
+  },
+  "1174": {
+    "id": "1174",
+    "name": "Move:ALLOUTPUMMELING",
+    "graphic": "PRAS- All Out Pummeling.png",
+    "position": 4,
+    "frameCount": 43,
+    "timingCount": 16
+  },
+  "1175": {
+    "id": "1175",
+    "name": "OppMove:ALLOUTPUMMELING",
+    "graphic": "PRAS- All Out Pummeling.png",
+    "position": 4,
+    "frameCount": 43,
+    "timingCount": 16
+  },
+  "32": {
+    "id": "32",
+    "name": "Move:ALLYSWITCH",
+    "graphic": "Ancient-PowerFilesheet.png",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "1122": {
+    "id": "1122",
+    "name": "Move:ANCHORSHOT",
+    "graphic": "PRAS- Anchor Shot.png",
+    "position": 4,
+    "frameCount": 41,
+    "timingCount": 2
+  },
+  "1241": {
+    "id": "1241",
+    "name": "Move:APPLEACID",
+    "graphic": "GEN8- Apple Acid.png",
+    "position": 3,
+    "frameCount": 26,
+    "timingCount": 1
+  },
+  "1242": {
+    "id": "1242",
+    "name": "OppMove:APPLEACID",
+    "graphic": "GEN8- Apple Acid.png",
+    "position": 3,
+    "frameCount": 26,
+    "timingCount": 1
+  },
+  "621": {
+    "id": "621",
+    "name": "Move:AQUAJET",
+    "graphic": "PRAS- Aqua Jet.png",
+    "position": 3,
+    "frameCount": 18,
+    "timingCount": 1
+  },
+  "622": {
+    "id": "622",
+    "name": "OppMove:AQUAJET",
+    "graphic": "PRAS- Aqua Jet.png",
+    "position": 3,
+    "frameCount": 18,
+    "timingCount": 1
+  },
+  "35": {
+    "id": "35",
+    "name": "Move:AQUARING",
+    "graphic": "PRAS- Water.png",
+    "position": 1,
+    "frameCount": 40,
+    "timingCount": 4
+  },
+  "481": {
+    "id": "481",
+    "name": "Move:AQUATAIL",
+    "graphic": "PRAS- Water.png",
+    "position": 1,
+    "frameCount": 17,
+    "timingCount": 1
+  },
+  "664": {
+    "id": "664",
+    "name": "Move:ASTONISH",
+    "graphic": "PRAS- Shadow Sneak.png",
+    "position": 1,
+    "frameCount": 12,
+    "timingCount": 2
+  },
+  "1343": {
+    "id": "1343",
+    "name": "Move:ASTRALBARRAGE",
+    "graphic": "GEN8- AstralBarrage.png",
+    "position": 1,
+    "frameCount": 35,
+    "timingCount": 5
+  },
+  "815": {
+    "id": "815",
+    "name": "Move:ATTACKORDER",
+    "graphic": "PRAS- Struggle Bug.png",
+    "position": 1,
+    "frameCount": 28,
+    "timingCount": 2
+  },
+  "511": {
+    "id": "511",
+    "name": "Move:ATTRACT",
+    "graphic": "PRAS- Love.png",
+    "position": 4,
+    "frameCount": 37,
+    "timingCount": 5
+  },
+  "512": {
+    "id": "512",
+    "name": "OppMove:ATTRACT",
+    "graphic": "PRAS- Love.png",
+    "position": 4,
+    "frameCount": 37,
+    "timingCount": 5
+  },
+  "535": {
+    "id": "535",
+    "name": "Move:AURASPHERE",
+    "graphic": "PRAS- Aura Sphere.png",
+    "position": 3,
+    "frameCount": 42,
+    "timingCount": 2
+  },
+  "536": {
+    "id": "536",
+    "name": "OppMove:AURASPHERE",
+    "graphic": "PRAS- Aura Sphere.png",
+    "position": 3,
+    "frameCount": 42,
+    "timingCount": 2
+  },
+  "1243": {
+    "id": "1243",
+    "name": "Move:AURAWHEEL",
+    "graphic": "GEN8- Aura Wheel Ally.png",
+    "position": 3,
+    "frameCount": 59,
+    "timingCount": 3
+  },
+  "1244": {
+    "id": "1244",
+    "name": "OppMove:AURAWHEEL",
+    "graphic": "GEN8- Aura Wheel Opp.png",
+    "position": 3,
+    "frameCount": 59,
+    "timingCount": 3
+  },
+  "37": {
+    "id": "37",
+    "name": "Move:AURORABEAM",
+    "graphic": "PRAS- Ice.png",
+    "position": 1,
+    "frameCount": 30,
+    "timingCount": 4
+  },
+  "1107": {
+    "id": "1107",
+    "name": "Move:AURORAVEIL",
+    "graphic": "PRAS- Weather.png",
+    "position": 4,
+    "frameCount": 50,
+    "timingCount": 19
+  },
+  "1108": {
+    "id": "1108",
+    "name": "OppMove:AURORAVEIL",
+    "graphic": "PRAS- Weather.png",
+    "position": 4,
+    "frameCount": 50,
+    "timingCount": 19
+  },
+  "901": {
+    "id": "901",
+    "name": "Move:AUTOTOMIZE",
+    "graphic": "PRAS- Autotomize.png",
+    "position": 2,
+    "frameCount": 29,
+    "timingCount": 2
+  },
+  "459": {
+    "id": "459",
+    "name": "Move:AVALANCHE",
+    "graphic": "PRAS- Ice.png",
+    "position": 1,
+    "frameCount": 35,
+    "timingCount": 4
+  },
+  "424": {
+    "id": "424",
+    "name": "Move:CALMMIND",
+    "graphic": "PRAS- Screech.png",
+    "position": 4,
+    "frameCount": 25,
+    "timingCount": 1
+  },
+  "595": {
+    "id": "595",
+    "name": "Move:CHARGEBEAM",
+    "graphic": "PRAS- Charge Beam.png",
+    "position": 3,
+    "frameCount": 40,
+    "timingCount": 1
+  },
+  "596": {
+    "id": "596",
+    "name": "OppMove:CHARGEBEAM",
+    "graphic": "PRAS- Charge Beam.png",
+    "position": 3,
+    "frameCount": 40,
+    "timingCount": 1
+  },
+  "889": {
+    "id": "889",
+    "name": "Move:CHATTER",
+    "graphic": "PRAS- Chatter.png",
+    "position": 2,
+    "frameCount": 31,
+    "timingCount": 8
+  },
+  "890": {
+    "id": "890",
+    "name": "OppMove:CHATTER",
+    "graphic": "PRAS- Chatter.png",
+    "position": 2,
+    "frameCount": 31,
+    "timingCount": 8
+  },
+  "1054": {
+    "id": "1054",
+    "name": "Move:CLAMP",
+    "graphic": "PRAS- Shell Smash.png",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 3
+  },
+  "1055": {
+    "id": "1055",
+    "name": "Common:Clamp",
+    "graphic": "PRAS- Shell Smash.png",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 3
+  },
+  "918": {
+    "id": "918",
+    "name": "Move:COIL",
+    "graphic": "PRAS- Coil.png",
+    "position": 4,
+    "frameCount": 42,
+    "timingCount": 2
+  },
+  "789": {
+    "id": "789",
+    "name": "Move:CONVERSION",
+    "graphic": "PRAS- Conversion.png",
+    "position": 2,
+    "frameCount": 17,
+    "timingCount": 1
+  },
+  "1030": {
+    "id": "1030",
+    "name": "Move:CRABHAMMER",
+    "graphic": "PRAS- Crabhammer.png",
+    "position": 1,
+    "frameCount": 12,
+    "timingCount": 1
+  },
+  "1031": {
+    "id": "1031",
+    "name": "OppMove:CRABHAMMER",
+    "graphic": "PRAS- Crabhammer.png",
+    "position": 1,
+    "frameCount": 12,
+    "timingCount": 1
+  },
+  "499": {
+    "id": "499",
+    "name": "Move:CROSSCHOP",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 20,
+    "timingCount": 3
+  },
+  "759": {
+    "id": "759",
+    "name": "Move:CROSSPOISON",
+    "graphic": "PRAS- Cross Poison.png",
+    "position": 1,
+    "frameCount": 40,
+    "timingCount": 6
+  },
+  "760": {
+    "id": "760",
+    "name": "OppMove:CROSSPOISON",
+    "graphic": "PRAS- Cross Poison.png",
+    "position": 1,
+    "frameCount": 40,
+    "timingCount": 6
+  },
+  "999": {
+    "id": "999",
+    "name": "Move:CRUSHGRIP",
+    "graphic": "PRAS- Crush Grip.png",
+    "position": 1,
+    "frameCount": 24,
+    "timingCount": 2
+  },
+  "1000": {
+    "id": "1000",
+    "name": "OppMove:CRUSHGRIP",
+    "graphic": "PRAS- Crush Grip.png",
+    "position": 1,
+    "frameCount": 24,
+    "timingCount": 2
+  },
+  "925": {
+    "id": "925",
+    "name": "Move:CAMOUFLAGE",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 21,
+    "timingCount": 1
+  },
+  "919": {
+    "id": "919",
+    "name": "Move:CAPTIVATE",
+    "graphic": "PRAS- Love.png",
+    "position": 2,
+    "frameCount": 25,
+    "timingCount": 2
+  },
+  "1206": {
+    "id": "1206",
+    "name": "Move:CATASTROPIKA",
+    "graphic": "PRAS- Catastropika.png",
+    "position": 1,
+    "frameCount": 50,
+    "timingCount": 15
+  },
+  "1240": {
+    "id": "1240",
+    "name": "Move:CELEBRATE",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 1,
+    "timingCount": 0
+  },
+  "645": {
+    "id": "645",
+    "name": "Move:CHIPAWAY",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 3
+  },
+  "646": {
+    "id": "646",
+    "name": "Move:CIRCLETHROW",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 19,
+    "timingCount": 2
+  },
+  "1354": {
+    "id": "1354",
+    "name": "Move:CLANGINGSCALES",
+    "graphic": "PRAS- Uproar.png",
+    "position": 2,
+    "frameCount": 27,
+    "timingCount": 2
+  },
+  "1255": {
+    "id": "1255",
+    "name": "Move:CLANGOROUSSOUL",
+    "graphic": "PRAS- Uproar.png",
+    "position": 2,
+    "frameCount": 27,
+    "timingCount": 2
+  },
+  "1301": {
+    "id": "1301",
+    "name": "Move:COACHING",
+    "graphic": "PRAS- Strike.png",
+    "position": 2,
+    "frameCount": 30,
+    "timingCount": 6
+  },
+  "834": {
+    "id": "834",
+    "name": "Move:CONFIDE",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 22,
+    "timingCount": 1
+  },
+  "528": {
+    "id": "528",
+    "name": "Move:CONFUSION",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 29,
+    "timingCount": 6
+  },
+  "10": {
+    "id": "10",
+    "name": "Common:Confusion",
+    "graphic": "PRAS- Status.png",
+    "position": 2,
+    "frameCount": 17,
+    "timingCount": 1
+  },
+  "618": {
+    "id": "618",
+    "name": "Move:CONSTRICT",
+    "graphic": "PRAS- Constrict.png",
+    "position": 4,
+    "frameCount": 22,
+    "timingCount": 2
+  },
+  "790": {
+    "id": "790",
+    "name": "Move:CONVERSION2",
+    "graphic": "PRAS- Conversion.png",
+    "position": 3,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "791": {
+    "id": "791",
+    "name": "OppMove:CONVERSION2",
+    "graphic": "PRAS- Conversion.png",
+    "position": 3,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "1355": {
+    "id": "1355",
+    "name": "Move:COPYCAT",
+    "graphic": "!.png",
+    "position": 4,
+    "frameCount": 30,
+    "timingCount": 0
+  },
+  "1356": {
+    "id": "1356",
+    "name": "Move:COREENFORCER",
+    "graphic": "GEN8- Core Enforcer.png",
+    "position": 3,
+    "frameCount": 60,
+    "timingCount": 5
+  },
+  "1302": {
+    "id": "1302",
+    "name": "Move:CORROSIVEGAS",
+    "graphic": "PRAS- Poison.png",
+    "position": 1,
+    "frameCount": 36,
+    "timingCount": 4
+  },
+  "475": {
+    "id": "475",
+    "name": "Move:COSMICPOWER",
+    "graphic": "PRAS- Stats.png",
+    "position": 2,
+    "frameCount": 35,
+    "timingCount": 4
+  },
+  "1256": {
+    "id": "1256",
+    "name": "Move:COURTCHANGE",
+    "graphic": "",
+    "position": 3,
+    "frameCount": 22,
+    "timingCount": 0
+  },
+  "524": {
+    "id": "524",
+    "name": "Move:COVET",
+    "graphic": "PRAS- Covet.png",
+    "position": 4,
+    "frameCount": 27,
+    "timingCount": 1
+  },
+  "525": {
+    "id": "525",
+    "name": "Common:Covet",
+    "graphic": "PRAS- Covet.png",
+    "position": 4,
+    "frameCount": 19,
+    "timingCount": 1
+  },
+  "943": {
+    "id": "943",
+    "name": "Move:CRAFTYSHIELD",
+    "graphic": "PRAS- Crafty Shield.png",
+    "position": 4,
+    "frameCount": 39,
+    "timingCount": 2
+  },
+  "944": {
+    "id": "944",
+    "name": "OppMove:CRAFTYSHIELD",
+    "graphic": "PRAS- Crafty Shield.png",
+    "position": 4,
+    "frameCount": 39,
+    "timingCount": 2
+  },
+  "945": {
+    "id": "945",
+    "name": "Common:CraftyShield",
+    "graphic": "PRAS- Crafty Shield.png",
+    "position": 4,
+    "frameCount": 22,
+    "timingCount": 1
+  },
+  "6790": {
+    "id": "6790",
+    "name": "Move:CLOSECOMBAT",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 37,
+    "timingCount": 8
+  },
+  "6791": {
+    "id": "6791",
+    "name": "OppMove:CLOSECOMBAT",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 37,
+    "timingCount": 8
+  },
+  "6792": {
+    "id": "6792",
+    "name": "Move:CHARGE",
+    "graphic": "PRAS- Electric.png",
+    "position": 2,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "6793": {
+    "id": "6793",
+    "name": "Move:CHARM",
+    "graphic": "PRAS- Love.png",
+    "position": 1,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "6794": {
+    "id": "6794",
+    "name": "Move:CLEARSMOG",
+    "graphic": "PRAS- Clear Smog.png",
+    "position": 1,
+    "frameCount": 30,
+    "timingCount": 1
+  },
+  "6795": {
+    "id": "6795",
+    "name": "Move:COMETPUNCH",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "6796": {
+    "id": "6796",
+    "name": "Comet Punch hit 2",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "6797": {
+    "id": "6797",
+    "name": "Comet Punch hit 3",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "6798": {
+    "id": "6798",
+    "name": "Comet Punch hit 4",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "6799": {
+    "id": "6799",
+    "name": "Comet Punch hit 5",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "6800": {
+    "id": "6800",
+    "name": "Move:CONFUSERAY",
+    "graphic": "PRAS- Confuse Ray.png",
+    "position": 3,
+    "frameCount": 30,
+    "timingCount": 4
+  },
+  "6801": {
+    "id": "6801",
+    "name": "Move:COTTONGUARD",
+    "graphic": "PRAS- Cotton Guard.png",
+    "position": 2,
+    "frameCount": 20,
+    "timingCount": 2
+  },
+  "6802": {
+    "id": "6802",
+    "name": "Move:COTTONSPORE",
+    "graphic": "PRAS- Cotton Spore.png",
+    "position": 1,
+    "frameCount": 47,
+    "timingCount": 5
+  },
+  "6803": {
+    "id": "6803",
+    "name": "Move:COUNTER",
+    "graphic": "PRAS- Strike.png",
+    "position": 3,
+    "frameCount": 15,
+    "timingCount": 2
+  },
+  "6804": {
+    "id": "6804",
+    "name": "Move:CRUNCH",
+    "graphic": "PRAS- Bite.png",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 2
+  },
+  "6805": {
+    "id": "6805",
+    "name": "Move:CRUSHCLAW",
+    "graphic": "PRAS- Slash.png",
+    "position": 1,
+    "frameCount": 30,
+    "timingCount": 3
+  },
+  "6806": {
+    "id": "6806",
+    "name": "OppMove:CRUSHCLAW",
+    "graphic": "PRAS- Slash.png",
+    "position": 2,
+    "frameCount": 30,
+    "timingCount": 3
+  },
+  "6807": {
+    "id": "6807",
+    "name": "Move:CURSE",
+    "graphic": "PRAS- Curse.png",
+    "position": 2,
+    "frameCount": 30,
+    "timingCount": 6
+  },
+  "6808": {
+    "id": "6808",
+    "name": "Common:CurseNoGhost",
+    "graphic": "PRAS- CURSE2.png",
+    "position": 2,
+    "frameCount": 31,
+    "timingCount": 1
+  },
+  "6809": {
+    "id": "6809",
+    "name": "Move:CUT",
+    "graphic": "PRAS- Slash.png",
+    "position": 3,
+    "frameCount": 8,
+    "timingCount": 1
+  },
+  "6811": {
+    "id": "6811",
+    "name": "Move:DIZZYPUNCH",
+    "graphic": "PRAS- Elemental Punch.png",
+    "position": 1,
+    "frameCount": 20,
+    "timingCount": 2
+  },
+  "6812": {
+    "id": "6812",
+    "name": "Move:DOUBLEEDGE",
+    "graphic": "PRAS- Strike.png",
+    "position": 3,
+    "frameCount": 30,
+    "timingCount": 2
+  },
+  "6810": {
+    "id": "6810",
+    "name": "Move:DEFENSECURL",
+    "graphic": "PRAS- Gyro Ball.png",
+    "position": 3,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "6813": {
+    "id": "6813",
+    "name": "Move:DOUBLETEAM",
+    "graphic": "PRAS- Stats.png",
+    "position": 1,
+    "frameCount": 24,
+    "timingCount": 1
+  },
+  "335": {
+    "id": "335",
+    "name": "Move:DOUBLEKICK",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 6,
+    "timingCount": 1
+  },
+  "356": {
+    "id": "356",
+    "name": "Move:DOUBLESLAP",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 7,
+    "timingCount": 1
+  },
+  "373": {
+    "id": "373",
+    "name": "Move:DISABLE",
+    "graphic": "PRAS- Disable.png",
+    "position": 4,
+    "frameCount": 30,
+    "timingCount": 3
+  },
+  "374": {
+    "id": "374",
+    "name": "OppMove:DISABLE",
+    "graphic": "PRAS- Disable.png",
+    "position": 4,
+    "frameCount": 30,
+    "timingCount": 3
+  },
+  "407": {
+    "id": "407",
+    "name": "Move:DETECT",
+    "graphic": "PRAS- Detect.png",
+    "position": 3,
+    "frameCount": 23,
+    "timingCount": 3
+  },
+  "408": {
+    "id": "408",
+    "name": "OppMove:DETECT",
+    "graphic": "PRAS- Detect.png",
+    "position": 3,
+    "frameCount": 23,
+    "timingCount": 3
+  },
+  "515": {
+    "id": "515",
+    "name": "Move:DESTINYBOND",
+    "graphic": "PRAS- Shadow Sneak.png",
+    "position": 4,
+    "frameCount": 37,
+    "timingCount": 5
+  },
+  "516": {
+    "id": "516",
+    "name": "OppMove:DESTINYBOND",
+    "graphic": "PRAS- Shadow Sneak.png",
+    "position": 4,
+    "frameCount": 37,
+    "timingCount": 5
+  },
+  "563": {
+    "id": "563",
+    "name": "Move:DIG",
+    "graphic": "PRAS- Dig.png",
+    "position": 1,
+    "frameCount": 24,
+    "timingCount": 2
+  },
+  "594": {
+    "id": "594",
+    "name": "Move:DAZZLINGGLEAM",
+    "graphic": "PRAS- Recovery.png",
+    "position": 3,
+    "frameCount": 40,
+    "timingCount": 6
+  },
+  "654": {
+    "id": "654",
+    "name": "Move:DIVE",
+    "graphic": "PRAS- Dive.png",
+    "position": 1,
+    "frameCount": 24,
+    "timingCount": 2
+  },
+  "665": {
+    "id": "665",
+    "name": "Move:DARKPULSE",
+    "graphic": "PRAS- Dark Pulse.png",
+    "position": 3,
+    "frameCount": 45,
+    "timingCount": 2
+  },
+  "666": {
+    "id": "666",
+    "name": "OppMove:DARKPULSE",
+    "graphic": "PRAS- Dark Pulse.png",
+    "position": 3,
+    "frameCount": 45,
+    "timingCount": 2
+  },
+  "685": {
+    "id": "685",
+    "name": "Move:DISARMINGVOICE",
+    "graphic": "PRAS- Sound.png",
+    "position": 3,
+    "frameCount": 18,
+    "timingCount": 3
+  },
+  "686": {
+    "id": "686",
+    "name": "OppMove:DISARMINGVOICE",
+    "graphic": "PRAS- Sound.png",
+    "position": 3,
+    "frameCount": 18,
+    "timingCount": 3
+  },
+  "710": {
+    "id": "710",
+    "name": "Move:DISCHARGE",
+    "graphic": "PRAS- Discharge.png",
+    "position": 4,
+    "frameCount": 36,
+    "timingCount": 1
+  },
+  "758": {
+    "id": "758",
+    "name": "Move:DEFENDORDER",
+    "graphic": "PRAS- Struggle Bug.png",
+    "position": 2,
+    "frameCount": 15,
+    "timingCount": 2
+  },
+  "799": {
+    "id": "799",
+    "name": "Move:DOUBLEHIT",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "801": {
+    "id": "801",
+    "name": "OppMove:DOUBLEHIT",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "821": {
+    "id": "821",
+    "name": "Move:DARKVOID",
+    "graphic": "PRAS- Dark void.png",
+    "position": 4,
+    "frameCount": 33,
+    "timingCount": 5
+  },
+  "912": {
+    "id": "912",
+    "name": "Move:DEFOG",
+    "graphic": "PRAS- Defog.png",
+    "position": 4,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "1070": {
+    "id": "1070",
+    "name": "Move:DARKESTLARIAT",
+    "graphic": "PRAS- Coil.png",
+    "position": 2,
+    "frameCount": 49,
+    "timingCount": 5
+  },
+  "1200": {
+    "id": "1200",
+    "name": "Move:DEVASTATINGDRAKE",
+    "graphic": "PRAS- Devastating Drake.png",
+    "position": 3,
+    "frameCount": 62,
+    "timingCount": 14
+  },
+  "1201": {
+    "id": "1201",
+    "name": "OppMove:DEVASTATINGDRAKE",
+    "graphic": "PRAS- Devastating Drake.png",
+    "position": 3,
+    "frameCount": 62,
+    "timingCount": 14
+  },
+  "1257": {
+    "id": "1257",
+    "name": "Move:DECORATE",
+    "graphic": "GEN8- Decorate.png",
+    "position": 1,
+    "frameCount": 30,
+    "timingCount": 3
+  },
+  "1357": {
+    "id": "1357",
+    "name": "Move:DIAMONDSTORM",
+    "graphic": "PRAS- Ice.png",
+    "position": 3,
+    "frameCount": 47,
+    "timingCount": 6
+  },
+  "1358": {
+    "id": "1358",
+    "name": "Move:DOOMDESIRE",
+    "graphic": "GEN8- Doom Desire.png",
+    "position": 1,
+    "frameCount": 42,
+    "timingCount": 7
+  },
+  "1360": {
+    "id": "1360",
+    "name": "Move:DOUBLEIRONBASH",
+    "graphic": "GEN8- Double Iron Bash.png",
+    "position": 3,
+    "frameCount": 20,
+    "timingCount": 4
+  },
+  "6818": {
+    "id": "6818",
+    "name": "Move:DRAGONRAGE",
+    "graphic": "PRAS- Fire.png",
+    "position": 3,
+    "frameCount": 23,
+    "timingCount": 3
+  },
+  "6816": {
+    "id": "6816",
+    "name": "Move:DRAGONCLAW",
+    "graphic": "PRAS- Dragon Claw.png",
+    "position": 1,
+    "frameCount": 18,
+    "timingCount": 1
+  },
+  "6817": {
+    "id": "6817",
+    "name": "OppMove:DRAGONCLAW",
+    "graphic": "PRAS- Dragon Claw.png",
+    "position": 1,
+    "frameCount": 18,
+    "timingCount": 1
+  },
+  "6819": {
+    "id": "6819",
+    "name": "Move:DYNAMICPUNCH",
+    "graphic": "PRAS- Explosions.png",
+    "position": 1,
+    "frameCount": 17,
+    "timingCount": 2
+  },
+  "6814": {
+    "id": "6814",
+    "name": "Move:DRAGONBREATH",
+    "graphic": "PRAS- Dragonbreath.png",
+    "position": 3,
+    "frameCount": 15,
+    "timingCount": 2
+  },
+  "6815": {
+    "id": "6815",
+    "name": "OppMove:DRAGONBREATH",
+    "graphic": "PRAS- Dragonbreath.png",
+    "position": 3,
+    "frameCount": 15,
+    "timingCount": 2
+  },
+  "330": {
+    "id": "330",
+    "name": "Move:DRAGONDANCE",
+    "graphic": "PRAS- Dragon Dance.png",
+    "position": 4,
+    "frameCount": 38,
+    "timingCount": 2
+  },
+  "510": {
+    "id": "510",
+    "name": "Move:DRAGONRUSH",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 16,
+    "timingCount": 2
+  },
+  "565": {
+    "id": "565",
+    "name": "Move:DRAGONPULSE",
+    "graphic": "PRAS- Dragon Pulse.png",
+    "position": 3,
+    "frameCount": 55,
+    "timingCount": 1
+  },
+  "566": {
+    "id": "566",
+    "name": "OppMove:DRAGONPULSE",
+    "graphic": "PRAS- Dragon Pulse.png",
+    "position": 3,
+    "frameCount": 55,
+    "timingCount": 1
+  },
+  "572": {
+    "id": "572",
+    "name": "Move:DRACOMETEOR",
+    "graphic": "PRAS- Rock.png",
+    "position": 1,
+    "frameCount": 60,
+    "timingCount": 7
+  },
+  "573": {
+    "id": "573",
+    "name": "Move:DRAINPUNCH",
+    "graphic": "PRAS- Drain Punch.png",
+    "position": 3,
+    "frameCount": 18,
+    "timingCount": 3
+  },
+  "574": {
+    "id": "574",
+    "name": "OppMove:DRAINPUNCH",
+    "graphic": "PRAS- Drain Punch.png",
+    "position": 3,
+    "frameCount": 18,
+    "timingCount": 3
+  },
+  "633": {
+    "id": "633",
+    "name": "Move:DRAININGKISS",
+    "graphic": "PRAS- Draining Kiss.png",
+    "position": 3,
+    "frameCount": 18,
+    "timingCount": 2
+  },
+  "656": {
+    "id": "656",
+    "name": "Move:DRILLPECK",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 23,
+    "timingCount": 1
+  },
+  "891": {
+    "id": "891",
+    "name": "Move:DREAMEATER",
+    "graphic": "PRAS- Dream Eater.png",
+    "position": 4,
+    "frameCount": 38,
+    "timingCount": 6
+  },
+  "892": {
+    "id": "892",
+    "name": "OppMove:DREAMEATER",
+    "graphic": "PRAS- Dream Eater.png",
+    "position": 4,
+    "frameCount": 38,
+    "timingCount": 6
+  },
+  "895": {
+    "id": "895",
+    "name": "Move:DUALCHOP",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "897": {
+    "id": "897",
+    "name": "OppMove:DUALCHOP",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "902": {
+    "id": "902",
+    "name": "Move:DRAGONASCENT",
+    "graphic": "PRAS- Dragon Ascent.png",
+    "position": 1,
+    "frameCount": 50,
+    "timingCount": 11
+  },
+  "937": {
+    "id": "937",
+    "name": "Move:DRAGONTAIL",
+    "graphic": "PRAS- Dragon Tail.png",
+    "position": 1,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "938": {
+    "id": "938",
+    "name": "OppMove:DRAGONTAIL",
+    "graphic": "PRAS- Dragon Tail.png",
+    "position": 1,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "950": {
+    "id": "950",
+    "name": "Move:DRILLRUN",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 36,
+    "timingCount": 1
+  },
+  "951": {
+    "id": "951",
+    "name": "OppMove:DRILLRUN",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 36,
+    "timingCount": 1
+  },
+  "1258": {
+    "id": "1258",
+    "name": "Move:DRAGONDARTS",
+    "graphic": "GEN8- Dragon Darts.png",
+    "position": 4,
+    "frameCount": 18,
+    "timingCount": 1
+  },
+  "1260": {
+    "id": "1260",
+    "name": "OppMove:DRAGONDARTS",
+    "graphic": "GEN8- Dragon Darts.png",
+    "position": 3,
+    "frameCount": 18,
+    "timingCount": 1
+  },
+  "1266": {
+    "id": "1266",
+    "name": "Move:DRUMBEATING",
+    "graphic": "GEN8- Drum beating.png",
+    "position": 2,
+    "frameCount": 34,
+    "timingCount": 6
+  },
+  "1267": {
+    "id": "1267",
+    "name": "OppMove:DRUMBEATING",
+    "graphic": "GEN8- Drum beating.png",
+    "position": 1,
+    "frameCount": 34,
+    "timingCount": 6
+  },
+  "1268": {
+    "id": "1268",
+    "name": "Move:DYNAMAXCANNON",
+    "graphic": "PRAS- Hyper Beam.png",
+    "position": 3,
+    "frameCount": 55,
+    "timingCount": 3
+  },
+  "1303": {
+    "id": "1303",
+    "name": "Move:DUALWINGBEAT",
+    "graphic": "PRAS- Slash.png",
+    "position": 1,
+    "frameCount": 14,
+    "timingCount": 2
+  },
+  "1305": {
+    "id": "1305",
+    "name": "OppMove:DUALWINGBEAT",
+    "graphic": "PRAS- Slash.png",
+    "position": 1,
+    "frameCount": 14,
+    "timingCount": 2
+  },
+  "1344": {
+    "id": "1344",
+    "name": "Move:DRAGONENERGY",
+    "graphic": "GEN8- DragonEnergy.png",
+    "position": 1,
+    "frameCount": 36,
+    "timingCount": 3
+  },
+  "1362": {
+    "id": "1362",
+    "name": "Move:DRAGONHAMMER",
+    "graphic": "PRAS- Dragon Tail.png",
+    "position": 4,
+    "frameCount": 21,
+    "timingCount": 2
+  },
+  "6820": {
+    "id": "6820",
+    "name": "Move:EMBER",
+    "graphic": "PRAS- Fire.png",
+    "position": 3,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "441": {
+    "id": "441",
+    "name": "Move:ELECTRICTERRAIN",
+    "graphic": "PRAS- Electric.png",
+    "position": 4,
+    "frameCount": 25,
+    "timingCount": 5
+  },
+  "518": {
+    "id": "518",
+    "name": "Move:EARTHPOWER",
+    "graphic": "PRAS- Earth Power.png",
+    "position": 1,
+    "frameCount": 50,
+    "timingCount": 1
+  },
+  "647": {
+    "id": "647",
+    "name": "Move:ELECTROBALL",
+    "graphic": "PRAS- Electro Ball.png",
+    "position": 3,
+    "frameCount": 40,
+    "timingCount": 1
+  },
+  "648": {
+    "id": "648",
+    "name": "OppMove:ELECTROBALL",
+    "graphic": "PRAS- Electro Ball.png",
+    "position": 3,
+    "frameCount": 40,
+    "timingCount": 1
+  },
+  "662": {
+    "id": "662",
+    "name": "Move:EARTHQUAKE",
+    "graphic": "PRAS- Rock.png",
+    "position": 4,
+    "frameCount": 55,
+    "timingCount": 4
+  },
+  "775": {
+    "id": "775",
+    "name": "Move:ELECTRIFY",
+    "graphic": "PRAS- Electric.png",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "776": {
+    "id": "776",
+    "name": "OppMove:ELECTRIFY",
+    "graphic": "PRAS- Electric.png",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "777": {
+    "id": "777",
+    "name": "Move:EMBARGO",
+    "graphic": "PRAS- Trick.png",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "803": {
+    "id": "803",
+    "name": "Move:EGGBOMB",
+    "graphic": "PRAS- Egg Bomb.png",
+    "position": 3,
+    "frameCount": 18,
+    "timingCount": 2
+  },
+  "804": {
+    "id": "804",
+    "name": "OppMove:EGGBOMB",
+    "graphic": "PRAS- Egg Bomb.png",
+    "position": 3,
+    "frameCount": 18,
+    "timingCount": 2
+  },
+  "866": {
+    "id": "866",
+    "name": "Move:ELECTROWEB",
+    "graphic": "PRAS- Electroweb.png",
+    "position": 3,
+    "frameCount": 45,
+    "timingCount": 3
+  },
+  "1001": {
+    "id": "1001",
+    "name": "Move:ECHOEDVOICE",
+    "graphic": "PRAS- Sound.png",
+    "position": 2,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "1345": {
+    "id": "1345",
+    "name": "Move:EERIESPELL",
+    "graphic": "GEN8- EerieSpell.png",
+    "position": 4,
+    "frameCount": 44,
+    "timingCount": 3
+  },
+  "1363": {
+    "id": "1363",
+    "name": "Move:EERIEIMPULSE",
+    "graphic": "PRAS- Sound.png",
+    "position": 3,
+    "frameCount": 21,
+    "timingCount": 2
+  },
+  "1364": {
+    "id": "1364",
+    "name": "OppMove:EERIEIMPULSE",
+    "graphic": "PRAS- Sound.png",
+    "position": 3,
+    "frameCount": 21,
+    "timingCount": 2
+  },
+  "6827": {
+    "id": "6827",
+    "name": "Move:EXPLOSION",
+    "graphic": "PRAS- Explosions.png",
+    "position": 2,
+    "frameCount": 65,
+    "timingCount": 2
+  },
+  "6821": {
+    "id": "6821",
+    "name": "Move:ENCORE",
+    "graphic": "PRAS- Encore.png",
+    "position": 3,
+    "frameCount": 25,
+    "timingCount": 1
+  },
+  "6822": {
+    "id": "6822",
+    "name": "OppMove:ENCORE",
+    "graphic": "PRAS- Encore.png",
+    "position": 3,
+    "frameCount": 25,
+    "timingCount": 1
+  },
+  "6823": {
+    "id": "6823",
+    "name": "Move:ENERGYBALL",
+    "graphic": "PRAS- Energy Ball.png",
+    "position": 4,
+    "frameCount": 45,
+    "timingCount": 2
+  },
+  "6824": {
+    "id": "6824",
+    "name": "OppMove:ENERGYBALL",
+    "graphic": "PRAS- Energy Ball.png",
+    "position": 4,
+    "frameCount": 45,
+    "timingCount": 2
+  },
+  "6825": {
+    "id": "6825",
+    "name": "Move:ERUPTION",
+    "graphic": "PRAS- Eruption.png",
+    "position": 3,
+    "frameCount": 52,
+    "timingCount": 4
+  },
+  "6826": {
+    "id": "6826",
+    "name": "OppMove:ERUPTION",
+    "graphic": "PRAS- Eruption.png",
+    "position": 3,
+    "frameCount": 52,
+    "timingCount": 4
+  },
+  "463": {
+    "id": "463",
+    "name": "Move:EXTREMESPEED",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 35,
+    "timingCount": 3
+  },
+  "464": {
+    "id": "464",
+    "name": "OppMove:EXTREMESPEED",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 35,
+    "timingCount": 3
+  },
+  "651": {
+    "id": "651",
+    "name": "Move:EXTRASENSORY",
+    "graphic": "PRAS- Uproar.png",
+    "position": 4,
+    "frameCount": 40,
+    "timingCount": 1
+  },
+  "683": {
+    "id": "683",
+    "name": "Move:ENDEAVOR",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 18,
+    "timingCount": 3
+  },
+  "817": {
+    "id": "817",
+    "name": "Move:ENDURE",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 12,
+    "timingCount": 1
+  },
+  "835": {
+    "id": "835",
+    "name": "Move:ENTRAINMENT",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 36,
+    "timingCount": 1
+  },
+  "1210": {
+    "id": "1210",
+    "name": "Move:EXTREMEEVOBOOST",
+    "graphic": "PRAS- Extreme Evoboost.png",
+    "position": 3,
+    "frameCount": 85,
+    "timingCount": 3
+  },
+  "1269": {
+    "id": "1269",
+    "name": "Move:ETERNABEAM",
+    "graphic": "PRAS- Hyper Beam.png",
+    "position": 3,
+    "frameCount": 55,
+    "timingCount": 2
+  },
+  "1307": {
+    "id": "1307",
+    "name": "Move:EXPANDINGFORCE",
+    "graphic": "GEN8- EerieSpell.png",
+    "position": 1,
+    "frameCount": 41,
+    "timingCount": 3
+  },
+  "6837": {
+    "id": "6837",
+    "name": "Move:FIREPUNCH",
+    "graphic": "PRAS- Elemental Punch.png",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 3
+  },
+  "6835": {
+    "id": "6835",
+    "name": "Move:FIREPLEDGE",
+    "graphic": "PRAS- Fire.png",
+    "position": 4,
+    "frameCount": 20,
+    "timingCount": 3
+  },
+  "6836": {
+    "id": "6836",
+    "name": "OppMove:FIREPLEDGE",
+    "graphic": "PRAS- Fire.png",
+    "position": 4,
+    "frameCount": 20,
+    "timingCount": 3
+  },
+  "6839": {
+    "id": "6839",
+    "name": "Move:FLAMECHARGE",
+    "graphic": "PRAS- Fire.png",
+    "position": 1,
+    "frameCount": 34,
+    "timingCount": 3
+  },
+  "6840": {
+    "id": "6840",
+    "name": "OppMove:FLAMECHARGE",
+    "graphic": "PRAS- Fire.png",
+    "position": 1,
+    "frameCount": 34,
+    "timingCount": 3
+  },
+  "6841": {
+    "id": "6841",
+    "name": "Move:FLAMEWHEEL",
+    "graphic": "PRAS- Fire.png",
+    "position": 1,
+    "frameCount": 25,
+    "timingCount": 2
+  },
+  "6842": {
+    "id": "6842",
+    "name": "OppMove:FLAMEWHEEL",
+    "graphic": "PRAS- Fire.png",
+    "position": 1,
+    "frameCount": 25,
+    "timingCount": 2
+  },
+  "6830": {
+    "id": "6830",
+    "name": "Move:FIERYDANCE",
+    "graphic": "PRAS- Fire.png",
+    "position": 3,
+    "frameCount": 30,
+    "timingCount": 3
+  },
+  "6831": {
+    "id": "6831",
+    "name": "OppMove:FIERYDANCE",
+    "graphic": "PRAS- Fire.png",
+    "position": 1,
+    "frameCount": 30,
+    "timingCount": 3
+  },
+  "6828": {
+    "id": "6828",
+    "name": "Move:FAKEOUT",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 16,
+    "timingCount": 2
+  },
+  "6834": {
+    "id": "6834",
+    "name": "Move:FIREFANG",
+    "graphic": "PRAS- Elemental Fangs.png",
+    "position": 1,
+    "frameCount": 17,
+    "timingCount": 2
+  },
+  "6829": {
+    "id": "6829",
+    "name": "Move:FAKETEARS",
+    "graphic": "PRAS- FAKE TEARS.png",
+    "position": 4,
+    "frameCount": 45,
+    "timingCount": 2
+  },
+  "6832": {
+    "id": "6832",
+    "name": "Move:FIREBLAST",
+    "graphic": "PRAS- Fire.png",
+    "position": 3,
+    "frameCount": 60,
+    "timingCount": 2
+  },
+  "6833": {
+    "id": "6833",
+    "name": "OppMove:FIREBLAST",
+    "graphic": "PRAS- Fire.png",
+    "position": 3,
+    "frameCount": 60,
+    "timingCount": 2
+  },
+  "6838": {
+    "id": "6838",
+    "name": "Move:FLAIL",
+    "graphic": "PRAS- Slash.png",
+    "position": 1,
+    "frameCount": 36,
+    "timingCount": 3
+  },
+  "321": {
+    "id": "321",
+    "name": "Move:FIRESPIN",
+    "graphic": "PRAS- Fire Spin.png",
+    "position": 1,
+    "frameCount": 40,
+    "timingCount": 3
+  },
+  "328": {
+    "id": "328",
+    "name": "Move:FINALGAMBIT",
+    "graphic": "PRAS- Slash.png",
+    "position": 1,
+    "frameCount": 55,
+    "timingCount": 2
+  },
+  "386": {
+    "id": "386",
+    "name": "Move:FLAMEBURST",
+    "graphic": "PRAS- Fire.png",
+    "position": 3,
+    "frameCount": 29,
+    "timingCount": 1
+  },
+  "387": {
+    "id": "387",
+    "name": "OppMove:FLAMEBURST",
+    "graphic": "PRAS- Fire.png",
+    "position": 3,
+    "frameCount": 29,
+    "timingCount": 1
+  },
+  "667": {
+    "id": "667",
+    "name": "Move:FAIRYWIND",
+    "graphic": "PRAS- Fairy Wind.png",
+    "position": 1,
+    "frameCount": 35,
+    "timingCount": 1
+  },
+  "668": {
+    "id": "668",
+    "name": "Move:FEINTATTACK",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 30,
+    "timingCount": 2
+  },
+  "722": {
+    "id": "722",
+    "name": "Move:FACADE",
+    "graphic": "PRAS- FAKE TEARS.png",
+    "position": 4,
+    "frameCount": 30,
+    "timingCount": 3
+  },
+  "844": {
+    "id": "844",
+    "name": "Move:FAIRYLOCK",
+    "graphic": "PRAS- Fairy Lock.png",
+    "position": 4,
+    "frameCount": 43,
+    "timingCount": 1
+  },
+  "859": {
+    "id": "859",
+    "name": "Move:FEINT",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 18,
+    "timingCount": 2
+  },
+  "860": {
+    "id": "860",
+    "name": "OppMove:FEINT",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 18,
+    "timingCount": 2
+  },
+  "867": {
+    "id": "867",
+    "name": "Move:FALSESWIPE",
+    "graphic": "PRAS- False Swipe.png",
+    "position": 4,
+    "frameCount": 17,
+    "timingCount": 1
+  },
+  "958": {
+    "id": "958",
+    "name": "Move:FEATHERDANCE",
+    "graphic": "PRAS- Roost.png",
+    "position": 4,
+    "frameCount": 45,
+    "timingCount": 2
+  },
+  "1024": {
+    "id": "1024",
+    "name": "Move:FELLSTINGER",
+    "graphic": "PRAS- Fell Stinger.png",
+    "position": 2,
+    "frameCount": 32,
+    "timingCount": 3
+  },
+  "1025": {
+    "id": "1025",
+    "name": "OppMove:FELLSTINGER",
+    "graphic": "PRAS- Fell Stinger.png",
+    "position": 2,
+    "frameCount": 32,
+    "timingCount": 3
+  },
+  "1056": {
+    "id": "1056",
+    "name": "Move:FLAREBLITZ",
+    "graphic": "PRAS- Fire.png",
+    "position": 3,
+    "frameCount": 28,
+    "timingCount": 5
+  },
+  "1072": {
+    "id": "1072",
+    "name": "Move:FISSURE",
+    "graphic": "PRAS- Fissure.png",
+    "position": 4,
+    "frameCount": 53,
+    "timingCount": 1
+  },
+  "1084": {
+    "id": "1084",
+    "name": "Move:FIRELASH",
+    "graphic": "PRAS- Fire.png",
+    "position": 1,
+    "frameCount": 20,
+    "timingCount": 4
+  },
+  "1270": {
+    "id": "1270",
+    "name": "Move:FALSESURRENDER",
+    "graphic": "GEN8- False Surrender.png",
+    "position": 1,
+    "frameCount": 9,
+    "timingCount": 1
+  },
+  "1271": {
+    "id": "1271",
+    "name": "OppMove:FALSESURRENDER",
+    "graphic": "GEN8- False Surrender.png",
+    "position": 1,
+    "frameCount": 9,
+    "timingCount": 1
+  },
+  "1272": {
+    "id": "1272",
+    "name": "Move:FISHIOUSREND",
+    "graphic": "PRAS- Elemental Fangs.png",
+    "position": 1,
+    "frameCount": 26,
+    "timingCount": 2
+  },
+  "1346": {
+    "id": "1346",
+    "name": "Move:FIERYWRATH",
+    "graphic": "GEN8- Fiery.png",
+    "position": 1,
+    "frameCount": 50,
+    "timingCount": 3
+  },
+  "1365": {
+    "id": "1365",
+    "name": "Move:FIRSTIMPRESSION",
+    "graphic": "GEN8- First Impression.png",
+    "position": 2,
+    "frameCount": 15,
+    "timingCount": 2
+  },
+  "116": {
+    "id": "116",
+    "name": "Move:FLAMETHROWER",
+    "graphic": "eb136",
+    "position": 2,
+    "frameCount": 18,
+    "timingCount": 4
+  },
+  "117": {
+    "id": "117",
+    "name": "OppMove:FLAMETHROWER",
+    "graphic": "eb136",
+    "position": 2,
+    "frameCount": 18,
+    "timingCount": 4
+  },
+  "6846": {
+    "id": "6846",
+    "name": "Move:FRENZYPLANT",
+    "graphic": "PRAS- Frenzy Plant.png",
+    "position": 3,
+    "frameCount": 50,
+    "timingCount": 6
+  },
+  "6847": {
+    "id": "6847",
+    "name": "OppMove:FRENZYPLANT",
+    "graphic": "PRAS- Frenzy Plant.png",
+    "position": 3,
+    "frameCount": 50,
+    "timingCount": 6
+  },
+  "6843": {
+    "id": "6843",
+    "name": "Move:FOCUSENERGY",
+    "graphic": "PRAS- Focus Energy.png",
+    "position": 2,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "118": {
+    "id": "118",
+    "name": "Move:FLASH",
+    "graphic": "PRAS- Recovery.png",
+    "position": 2,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "6844": {
+    "id": "6844",
+    "name": "Move:FOLLOWME",
+    "graphic": "PRAS- Follow Me.png",
+    "position": 2,
+    "frameCount": 32,
+    "timingCount": 1
+  },
+  "6845": {
+    "id": "6845",
+    "name": "OppMove:FOLLOWME",
+    "graphic": "PRAS- Follow Me.png",
+    "position": 1,
+    "frameCount": 32,
+    "timingCount": 1
+  },
+  "124": {
+    "id": "124",
+    "name": "Move:FORESIGHT",
+    "graphic": "PRAS- Foresight.png",
+    "position": 1,
+    "frameCount": 40,
+    "timingCount": 4
+  },
+  "299": {
+    "id": "299",
+    "name": "Move:FURYCUTTER",
+    "graphic": "PRAS- Slash.png",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 1
+  },
+  "309": {
+    "id": "309",
+    "name": "Move:FLY",
+    "graphic": "PRAS- Fly.png",
+    "position": 1,
+    "frameCount": 25,
+    "timingCount": 1
+  },
+  "311": {
+    "id": "311",
+    "name": "OppMove:FLY",
+    "graphic": "PRAS- Fly.png",
+    "position": 1,
+    "frameCount": 25,
+    "timingCount": 1
+  },
+  "361": {
+    "id": "361",
+    "name": "Move:FURYSWIPES",
+    "graphic": "PRAS- Slash.png",
+    "position": 1,
+    "frameCount": 14,
+    "timingCount": 2
+  },
+  "375": {
+    "id": "375",
+    "name": "Move:FURYATTACK",
+    "graphic": "PRAS- Slash.png",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 1
+  },
+  "380": {
+    "id": "380",
+    "name": "OppMove:FURYATTACK",
+    "graphic": "PRAS- Slash.png",
+    "position": 1,
+    "frameCount": 8,
+    "timingCount": 1
+  },
+  "420": {
+    "id": "420",
+    "name": "Move:FLASHCANNON",
+    "graphic": "PRAS- Flash Cannon.png",
+    "position": 3,
+    "frameCount": 48,
+    "timingCount": 1
+  },
+  "517": {
+    "id": "517",
+    "name": "Move:FOCUSBLAST",
+    "graphic": "PRAS- Tri Attack.png",
+    "position": 3,
+    "frameCount": 23,
+    "timingCount": 1
+  },
+  "537": {
+    "id": "537",
+    "name": "Move:FORCEPALM",
+    "graphic": "PRAS- Force Palm.png",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 2
+  },
+  "538": {
+    "id": "538",
+    "name": "OppMove:FORCEPALM",
+    "graphic": "PRAS- Force Palm.png",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 2
+  },
+  "567": {
+    "id": "567",
+    "name": "Move:FROSTBREATH",
+    "graphic": "PRAS- Frost Breath.png",
+    "position": 3,
+    "frameCount": 25,
+    "timingCount": 2
+  },
+  "568": {
+    "id": "568",
+    "name": "OppMove:FROSTBREATH",
+    "graphic": "PRAS- Frost Breath.png",
+    "position": 3,
+    "frameCount": 25,
+    "timingCount": 2
+  },
+  "589": {
+    "id": "589",
+    "name": "Move:FOCUSPUNCH",
+    "graphic": "PRAS- Strike.png",
+    "position": 4,
+    "frameCount": 29,
+    "timingCount": 7
+  },
+  "590": {
+    "id": "590",
+    "name": "OppMove:FOCUSPUNCH",
+    "graphic": "PRAS- Strike.png",
+    "position": 4,
+    "frameCount": 29,
+    "timingCount": 7
+  },
+  "734": {
+    "id": "734",
+    "name": "Move:FLATTER",
+    "graphic": "PRAS- Flatter.png",
+    "position": 4,
+    "frameCount": 24,
+    "timingCount": 1
+  },
+  "740": {
+    "id": "740",
+    "name": "Move:FLING",
+    "graphic": "PRAS- Strike.png",
+    "position": 3,
+    "frameCount": 10,
+    "timingCount": 2
+  },
+  "741": {
+    "id": "741",
+    "name": "OppMove:FLING",
+    "graphic": "PRAS- Strike.png",
+    "position": 3,
+    "frameCount": 10,
+    "timingCount": 2
+  },
+  "742": {
+    "id": "742",
+    "name": "Move:FLYINGPRESS",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 28,
+    "timingCount": 3
+  },
+  "743": {
+    "id": "743",
+    "name": "OppMove:FLYINGPRESS",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 28,
+    "timingCount": 3
+  },
+  "781": {
+    "id": "781",
+    "name": "Move:FLOWERSHIELD",
+    "graphic": "PRAS- Grass.png",
+    "position": 2,
+    "frameCount": 28,
+    "timingCount": 1
+  },
+  "816": {
+    "id": "816",
+    "name": "Move:FORESTSCURSE",
+    "graphic": "PRAS- Frenzy Plant.png",
+    "position": 1,
+    "frameCount": 50,
+    "timingCount": 1
+  },
+  "852": {
+    "id": "852",
+    "name": "Move:FREEZESHOCK",
+    "graphic": "PRAS- Freeze Shock.png",
+    "position": 1,
+    "frameCount": 40,
+    "timingCount": 3
+  },
+  "873": {
+    "id": "873",
+    "name": "Move:FOULPLAY",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 2
+  },
+  "875": {
+    "id": "875",
+    "name": "Move:FRUSTRATION",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 25,
+    "timingCount": 4
+  },
+  "1032": {
+    "id": "1032",
+    "name": "Move:FREEZEDRY",
+    "graphic": "PRAS- Freeze Dry.png",
+    "position": 1,
+    "frameCount": 56,
+    "timingCount": 3
+  },
+  "1046": {
+    "id": "1046",
+    "name": "Move:FUSIONFLARE",
+    "graphic": "PRAS- Fusion Flare.png",
+    "position": 4,
+    "frameCount": 51,
+    "timingCount": 4
+  },
+  "1047": {
+    "id": "1047",
+    "name": "OppMove:FUSIONFLARE",
+    "graphic": "PRAS- Fusion Flare.png",
+    "position": 4,
+    "frameCount": 51,
+    "timingCount": 3
+  },
+  "1093": {
+    "id": "1093",
+    "name": "Move:FLORALHEALING",
+    "graphic": "PRAS- Floral Healing.png",
+    "position": 1,
+    "frameCount": 41,
+    "timingCount": 9
+  },
+  "1308": {
+    "id": "1308",
+    "name": "Move:FLIPTURN",
+    "graphic": "PRAS- Water.png",
+    "position": 3,
+    "frameCount": 30,
+    "timingCount": 3
+  },
+  "1309": {
+    "id": "1309",
+    "name": "OppMove:FLIPTURN",
+    "graphic": "PRAS- Water.png",
+    "position": 3,
+    "frameCount": 30,
+    "timingCount": 3
+  },
+  "1347": {
+    "id": "1347",
+    "name": "Move:FREEZINGGLARE",
+    "graphic": "GEN8- FreezingGlare.png",
+    "position": 1,
+    "frameCount": 55,
+    "timingCount": 3
+  },
+  "1366": {
+    "id": "1366",
+    "name": "Move:FLEURCANNON",
+    "graphic": "GEN8- Fleur Cannon.png",
+    "position": 3,
+    "frameCount": 35,
+    "timingCount": 3
+  },
+  "1367": {
+    "id": "1367",
+    "name": "Move:FUSIONBOLT",
+    "graphic": "GEN8- Fusion Bolt.png",
+    "position": 1,
+    "frameCount": 30,
+    "timingCount": 2
+  },
+  "1368": {
+    "id": "1368",
+    "name": "OppMove:FUSIONBOLT",
+    "graphic": "GEN8- Fusion Bolt.png",
+    "position": 1,
+    "frameCount": 30,
+    "timingCount": 2
+  },
+  "142": {
+    "id": "142",
+    "name": "Move:FUTURESIGHT",
+    "graphic": "eb619_6",
+    "position": 2,
+    "frameCount": 5,
+    "timingCount": 2
+  },
+  "137": {
+    "id": "137",
+    "name": "Move:FURYSWIPES",
+    "graphic": "eb601",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 2
+  },
+  "138": {
+    "id": "138",
+    "name": "Fury Swipes hit 2",
+    "graphic": "eb601",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 2
+  },
+  "139": {
+    "id": "139",
+    "name": "Fury Swipes hit 3",
+    "graphic": "eb601",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 2
+  },
+  "140": {
+    "id": "140",
+    "name": "Fury Swipes hit 4",
+    "graphic": "eb601",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 2
+  },
+  "141": {
+    "id": "141",
+    "name": "Fury Swipes hit 5",
+    "graphic": "eb601",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 2
+  },
+  "6848": {
+    "id": "6848",
+    "name": "Move:GIGADRAIN",
+    "graphic": "PRAS- Giga Drain.png",
+    "position": 2,
+    "frameCount": 50,
+    "timingCount": 6
+  },
+  "6849": {
+    "id": "6849",
+    "name": "OppMove:GIGADRAIN",
+    "graphic": "PRAS- Giga Drain.png",
+    "position": 1,
+    "frameCount": 50,
+    "timingCount": 6
+  },
+  "6850": {
+    "id": "6850",
+    "name": "Move:GLARE",
+    "graphic": "PRAS- Glare.png",
+    "position": 2,
+    "frameCount": 32,
+    "timingCount": 1
+  },
+  "6851": {
+    "id": "6851",
+    "name": "OppMove:GLARE",
+    "graphic": "PRAS- Glare.png",
+    "position": 1,
+    "frameCount": 32,
+    "timingCount": 1
+  },
+  "388": {
+    "id": "388",
+    "name": "Move:GASTROACID",
+    "graphic": "PRAS- Gastro Acid.png",
+    "position": 1,
+    "frameCount": 45,
+    "timingCount": 1
+  },
+  "476": {
+    "id": "476",
+    "name": "Move:GRASSPLEDGE",
+    "graphic": "PRAS- Grass.png",
+    "position": 1,
+    "frameCount": 30,
+    "timingCount": 2
+  },
+  "519": {
+    "id": "519",
+    "name": "Move:GRASSKNOT",
+    "graphic": "PRAS- Grass Knot.png",
+    "position": 1,
+    "frameCount": 22,
+    "timingCount": 2
+  },
+  "1033": {
+    "id": "1033",
+    "name": "Move:GEARGRIND",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 22,
+    "timingCount": 1
+  },
+  "1035": {
+    "id": "1035",
+    "name": "OppMove:GEARGRIND",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 22,
+    "timingCount": 1
+  },
+  "1048": {
+    "id": "1048",
+    "name": "Move:GIGAIMPACT",
+    "graphic": "PRAS- Me First.png",
+    "position": 4,
+    "frameCount": 30,
+    "timingCount": 2
+  },
+  "1049": {
+    "id": "1049",
+    "name": "OppMove:GIGAIMPACT",
+    "graphic": "PRAS- Me First.png",
+    "position": 4,
+    "frameCount": 30,
+    "timingCount": 2
+  },
+  "1064": {
+    "id": "1064",
+    "name": "Move:GLACIATE",
+    "graphic": "PRAS- Glaciate.png",
+    "position": 1,
+    "frameCount": 65,
+    "timingCount": 11
+  },
+  "1103": {
+    "id": "1103",
+    "name": "Move:GEARUP",
+    "graphic": "PRAS- Electric.png",
+    "position": 2,
+    "frameCount": 61,
+    "timingCount": 6
+  },
+  "1104": {
+    "id": "1104",
+    "name": "OppMove:GEARUP",
+    "graphic": "PRAS- Electric.png",
+    "position": 2,
+    "frameCount": 61,
+    "timingCount": 6
+  },
+  "1124": {
+    "id": "1124",
+    "name": "Move:GEOMANCY",
+    "graphic": "PRAS- Geomancy.png",
+    "position": 2,
+    "frameCount": 52,
+    "timingCount": 1
+  },
+  "1194": {
+    "id": "1194",
+    "name": "Move:GIGAVOLTHAVOC",
+    "graphic": "PRAS- Electric.png",
+    "position": 1,
+    "frameCount": 50,
+    "timingCount": 9
+  },
+  "1195": {
+    "id": "1195",
+    "name": "OppMove:GIGAVOLTHAVOC",
+    "graphic": "PRAS- Electric.png",
+    "position": 1,
+    "frameCount": 50,
+    "timingCount": 9
+  },
+  "1348": {
+    "id": "1348",
+    "name": "Move:GLACIALLANCE",
+    "graphic": "GEN8- Glacial Lance.png",
+    "position": 4,
+    "frameCount": 22,
+    "timingCount": 2
+  },
+  "1349": {
+    "id": "1349",
+    "name": "OppMove:GLACIALLANCE",
+    "graphic": "GEN8- Glacial Lance.png",
+    "position": 1,
+    "frameCount": 22,
+    "timingCount": 2
+  },
+  "6854": {
+    "id": "6854",
+    "name": "Move:GRUDGE",
+    "graphic": "PRAS- Grudge.png",
+    "position": 1,
+    "frameCount": 24,
+    "timingCount": 1
+  },
+  "6852": {
+    "id": "6852",
+    "name": "Move:GRASSWHISTLE",
+    "graphic": "PRAS- Sound.png",
+    "position": 3,
+    "frameCount": 55,
+    "timingCount": 1
+  },
+  "6853": {
+    "id": "6853",
+    "name": "OppMove:GRASSWHISTLE",
+    "graphic": "PRAS- Sound.png",
+    "position": 3,
+    "frameCount": 55,
+    "timingCount": 1
+  },
+  "428": {
+    "id": "428",
+    "name": "Move:GROWTH",
+    "graphic": "PRAS- Grass.png",
+    "position": 2,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "443": {
+    "id": "443",
+    "name": "Move:GRASSYTERRAIN",
+    "graphic": "PRAS- Grass.png",
+    "position": 4,
+    "frameCount": 43,
+    "timingCount": 1
+  },
+  "634": {
+    "id": "634",
+    "name": "Move:GYROBALL",
+    "graphic": "PRAS- Gyro Ball.png",
+    "position": 3,
+    "frameCount": 29,
+    "timingCount": 2
+  },
+  "669": {
+    "id": "669",
+    "name": "Move:GUNKSHOT",
+    "graphic": "PRAS- Gunk Shot.png",
+    "position": 3,
+    "frameCount": 60,
+    "timingCount": 1
+  },
+  "670": {
+    "id": "670",
+    "name": "OppMove:GUNKSHOT",
+    "graphic": "PRAS- Gunk Shot.png",
+    "position": 3,
+    "frameCount": 60,
+    "timingCount": 1
+  },
+  "822": {
+    "id": "822",
+    "name": "Move:GUARDSWAP",
+    "graphic": "PRAS- Swap.png",
+    "position": 4,
+    "frameCount": 38,
+    "timingCount": 2
+  },
+  "823": {
+    "id": "823",
+    "name": "MoveOpp:GUARDSWAP",
+    "graphic": "PRAS- Swap.png",
+    "position": 4,
+    "frameCount": 38,
+    "timingCount": 2
+  },
+  "946": {
+    "id": "946",
+    "name": "Move:GRAVITY",
+    "graphic": "PRAS- Swap.png",
+    "position": 4,
+    "frameCount": 53,
+    "timingCount": 1
+  },
+  "952": {
+    "id": "952",
+    "name": "Move:GUILLOTINE",
+    "graphic": "PRAS- Guillotine.png",
+    "position": 1,
+    "frameCount": 43,
+    "timingCount": 3
+  },
+  "1060": {
+    "id": "1060",
+    "name": "Move:GUARDSPLIT",
+    "graphic": "PRAS- Protect.png",
+    "position": 4,
+    "frameCount": 29,
+    "timingCount": 2
+  },
+  "1061": {
+    "id": "1061",
+    "name": "OppMove:GUARDSPLIT",
+    "graphic": "PRAS- Protect.png",
+    "position": 4,
+    "frameCount": 29,
+    "timingCount": 2
+  },
+  "6856": {
+    "id": "6856",
+    "name": "Move:GRAVAPPLE",
+    "graphic": "GEN8- Grav Apple.png",
+    "position": 3,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "6857": {
+    "id": "6857",
+    "name": "OppMove:GRAVAPPLE",
+    "graphic": "GEN8- Grav Apple.png",
+    "position": 3,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "6859": {
+    "id": "6859",
+    "name": "Move:HARDEN",
+    "graphic": "PRAS- Clear Smog.png",
+    "position": 2,
+    "frameCount": 11,
+    "timingCount": 3
+  },
+  "6858": {
+    "id": "6858",
+    "name": "Move:HAIL",
+    "graphic": "PRAS- Ice.png",
+    "position": 4,
+    "frameCount": 13,
+    "timingCount": 1
+  },
+  "395": {
+    "id": "395",
+    "name": "Move:HEADBUTT",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 16,
+    "timingCount": 1
+  },
+  "396": {
+    "id": "396",
+    "name": "OppMove:HEADBUTT",
+    "graphic": "PRAS- Strike.png",
+    "position": 3,
+    "frameCount": 16,
+    "timingCount": 1
+  },
+  "434": {
+    "id": "434",
+    "name": "Move:HEALBELL",
+    "graphic": "PRAS- Heal Bell.png",
+    "position": 1,
+    "frameCount": 32,
+    "timingCount": 1
+  },
+  "435": {
+    "id": "435",
+    "name": "OppMove:HEALBELL",
+    "graphic": "PRAS- Heal Bell.png",
+    "position": 1,
+    "frameCount": 32,
+    "timingCount": 1
+  },
+  "465": {
+    "id": "465",
+    "name": "Move:HEARTSTAMP",
+    "graphic": "PRAS- Love.png",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 2
+  },
+  "466": {
+    "id": "466",
+    "name": "OppMove:HEARTSTAMP",
+    "graphic": "PRAS- Love.png",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 2
+  },
+  "488": {
+    "id": "488",
+    "name": "Move:HAMMERARM",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 12,
+    "timingCount": 2
+  },
+  "500": {
+    "id": "500",
+    "name": "Move:HEX",
+    "graphic": "PRAS- Grudge.png",
+    "position": 1,
+    "frameCount": 28,
+    "timingCount": 1
+  },
+  "529": {
+    "id": "529",
+    "name": "Move:HAZE",
+    "graphic": "PRAS- Smokescreen.png",
+    "position": 2,
+    "frameCount": 35,
+    "timingCount": 1
+  },
+  "584": {
+    "id": "584",
+    "name": "Move:HEAVYSLAM",
+    "graphic": "PRAS- Iron Head.png",
+    "position": 1,
+    "frameCount": 27,
+    "timingCount": 2
+  },
+  "643": {
+    "id": "643",
+    "name": "Move:HELPINGHAND",
+    "graphic": "PRAS- Strike.png",
+    "position": 2,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "688": {
+    "id": "688",
+    "name": "Move:HIDDENPOWER",
+    "graphic": "PRAS- Hidden Power.png",
+    "position": 3,
+    "frameCount": 17,
+    "timingCount": 2
+  },
+  "744": {
+    "id": "744",
+    "name": "Move:HEALBLOCK",
+    "graphic": "PRAS- Recovery.png",
+    "position": 1,
+    "frameCount": 36,
+    "timingCount": 1
+  },
+  "757": {
+    "id": "757",
+    "name": "Move:HEALORDER",
+    "graphic": "PRAS- Struggle Bug.png",
+    "position": 2,
+    "frameCount": 32,
+    "timingCount": 2
+  },
+  "778": {
+    "id": "778",
+    "name": "Move:HEATCRASH",
+    "graphic": "PRAS- Fire.png",
+    "position": 1,
+    "frameCount": 27,
+    "timingCount": 1
+  },
+  "792": {
+    "id": "792",
+    "name": "Move:HEADSMASH",
+    "graphic": "PRAS- Rock.png",
+    "position": 1,
+    "frameCount": 14,
+    "timingCount": 1
+  },
+  "805": {
+    "id": "805",
+    "name": "Move:HEADCHARGE",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 22,
+    "timingCount": 1
+  },
+  "824": {
+    "id": "824",
+    "name": "Move:HEARTSWAP",
+    "graphic": "PRAS- Swap.png",
+    "position": 4,
+    "frameCount": 38,
+    "timingCount": 2
+  },
+  "868": {
+    "id": "868",
+    "name": "Move:HEALINGWISH",
+    "graphic": "PRAS- Healing Wish.png",
+    "position": 4,
+    "frameCount": 23,
+    "timingCount": 1
+  },
+  "963": {
+    "id": "963",
+    "name": "Move:HEALPULSE",
+    "graphic": "PRAS- Healing Wish.png",
+    "position": 2,
+    "frameCount": 50,
+    "timingCount": 1
+  },
+  "6860": {
+    "id": "6860",
+    "name": "Move:HEATWAVE",
+    "graphic": "PRAS- Heat Wave BG.png",
+    "position": 2,
+    "frameCount": 28,
+    "timingCount": 2
+  },
+  "6861": {
+    "id": "6861",
+    "name": "OppMove:HEATWAVE",
+    "graphic": "PRAS- Heat Wave BG.png",
+    "position": 2,
+    "frameCount": 28,
+    "timingCount": 2
+  },
+  "1126": {
+    "id": "1126",
+    "name": "Move:HIGHHORSEPOWER",
+    "graphic": "PRAS- High Horse Power.png",
+    "position": 4,
+    "frameCount": 31,
+    "timingCount": 2
+  },
+  "1127": {
+    "id": "1127",
+    "name": "OppMove:HIGHHORSEPOWER",
+    "graphic": "PRAS- High Horse Power.png",
+    "position": 4,
+    "frameCount": 31,
+    "timingCount": 2
+  },
+  "6862": {
+    "id": "6862",
+    "name": "Move:HYPERFANG",
+    "graphic": "PRAS- Hyper Fang.png",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "6863": {
+    "id": "6863",
+    "name": "OppMove:HYPERFANG",
+    "graphic": "PRAS- Hyper Fang.png",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "315": {
+    "id": "315",
+    "name": "Move:HORNATTACK",
+    "graphic": "PRAS- Megahorn.png",
+    "position": 3,
+    "frameCount": 18,
+    "timingCount": 1
+  },
+  "316": {
+    "id": "316",
+    "name": "OppMove:HORNATTACK",
+    "graphic": "PRAS- Megahorn.png",
+    "position": 2,
+    "frameCount": 18,
+    "timingCount": 1
+  },
+  "494": {
+    "id": "494",
+    "name": "Move:HONECLAWS",
+    "graphic": "PRAS- Hone Claws.png",
+    "position": 2,
+    "frameCount": 17,
+    "timingCount": 2
+  },
+  "575": {
+    "id": "575",
+    "name": "Move:HYPNOSIS",
+    "graphic": "PRAS- Confuse Ray.png",
+    "position": 3,
+    "frameCount": 45,
+    "timingCount": 4
+  },
+  "576": {
+    "id": "576",
+    "name": "OppMove:HYPNOSIS",
+    "graphic": "PRAS- Confuse Ray.png",
+    "position": 3,
+    "frameCount": 45,
+    "timingCount": 4
+  },
+  "585": {
+    "id": "585",
+    "name": "Move:HOWL",
+    "graphic": "PRAS- Howl.png",
+    "position": 2,
+    "frameCount": 10,
+    "timingCount": 0
+  },
+  "678": {
+    "id": "678",
+    "name": "Move:HYPERVOICE",
+    "graphic": "PRAS- Uproar.png",
+    "position": 4,
+    "frameCount": 43,
+    "timingCount": 0
+  },
+  "679": {
+    "id": "679",
+    "name": "OppMove:HYPERVOICE",
+    "graphic": "PRAS- Uproar.png",
+    "position": 4,
+    "frameCount": 43,
+    "timingCount": 0
+  },
+  "920": {
+    "id": "920",
+    "name": "Move:HYPERSPACEHOLE",
+    "graphic": "PRAS- Hyperspace Hole.png",
+    "position": 1,
+    "frameCount": 77,
+    "timingCount": 2
+  },
+  "926": {
+    "id": "926",
+    "name": "Move:HORNLEECH",
+    "graphic": "PRAS- Horn Leech.png",
+    "position": 4,
+    "frameCount": 34,
+    "timingCount": 2
+  },
+  "927": {
+    "id": "927",
+    "name": "OppMove:HORNLEECH",
+    "graphic": "PRAS- Horn Leech.png",
+    "position": 4,
+    "frameCount": 34,
+    "timingCount": 2
+  },
+  "1002": {
+    "id": "1002",
+    "name": "Move:HORNDRILL",
+    "graphic": "PRAS- Slash.png",
+    "position": 1,
+    "frameCount": 60,
+    "timingCount": 3
+  },
+  "1003": {
+    "id": "1003",
+    "name": "OppMove:HORNDRILL",
+    "graphic": "PRAS- Slash.png",
+    "position": 1,
+    "frameCount": 60,
+    "timingCount": 3
+  },
+  "1004": {
+    "id": "1004",
+    "name": "Move:HURRICANE",
+    "graphic": "PRAS- Gust.png",
+    "position": 3,
+    "frameCount": 70,
+    "timingCount": 1
+  },
+  "1005": {
+    "id": "1005",
+    "name": "OppMove:HURRICANE",
+    "graphic": "PRAS- Gust.png",
+    "position": 3,
+    "frameCount": 70,
+    "timingCount": 1
+  },
+  "1062": {
+    "id": "1062",
+    "name": "Move:HYDROCANNON",
+    "graphic": "PRAS- Hydro cannon.png",
+    "position": 4,
+    "frameCount": 46,
+    "timingCount": 2
+  },
+  "1063": {
+    "id": "1063",
+    "name": "OppMove:HYDROCANNON",
+    "graphic": "PRAS- Hydro cannon.png",
+    "position": 4,
+    "frameCount": 46,
+    "timingCount": 2
+  },
+  "1131": {
+    "id": "1131",
+    "name": "Move:HYPERSPACEFURY",
+    "graphic": "PRAS- Hyper Space Fury.png",
+    "position": 1,
+    "frameCount": 80,
+    "timingCount": 11
+  },
+  "1190": {
+    "id": "1190",
+    "name": "Move:HYDROVORTEX",
+    "graphic": "PRAS- Water.png",
+    "position": 1,
+    "frameCount": 51,
+    "timingCount": 7
+  },
+  "1191": {
+    "id": "1191",
+    "name": "OppMove:HYDROVORTEX",
+    "graphic": "PRAS- Water.png",
+    "position": 1,
+    "frameCount": 51,
+    "timingCount": 7
+  },
+  "1371": {
+    "id": "1371",
+    "name": "Move:HIGHJUMPKICK",
+    "graphic": "PRAS- Blaze Kick.png",
+    "position": 4,
+    "frameCount": 17,
+    "timingCount": 2
+  },
+  "1372": {
+    "id": "1372",
+    "name": "OppMove:HIGHJUMPKICK",
+    "graphic": "PRAS- Blaze Kick.png",
+    "position": 4,
+    "frameCount": 17,
+    "timingCount": 2
+  },
+  "1373": {
+    "id": "1373",
+    "name": "Move:HOLDBACK",
+    "graphic": "PRAS- Strike.png",
+    "position": 4,
+    "frameCount": 24,
+    "timingCount": 1
+  },
+  "1374": {
+    "id": "1374",
+    "name": "OppMove:HOLDBACK",
+    "graphic": "PRAS- Strike.png",
+    "position": 4,
+    "frameCount": 24,
+    "timingCount": 1
+  },
+  "1375": {
+    "id": "1375",
+    "name": "Move:HOLDHANDS",
+    "graphic": "GEN8- Hold Hands.png",
+    "position": 3,
+    "frameCount": 38,
+    "timingCount": 2
+  },
+  "6864": {
+    "id": "6864",
+    "name": "Move:ICEBALL",
+    "graphic": "PRAS- Ice.png",
+    "position": 4,
+    "frameCount": 28,
+    "timingCount": 2
+  },
+  "1128": {
+    "id": "1128",
+    "name": "Move:ICEBURN",
+    "graphic": "PRAS- Ice Burn.png",
+    "position": 4,
+    "frameCount": 65,
+    "timingCount": 11
+  },
+  "6865": {
+    "id": "6865",
+    "name": "Move:ICEFANG",
+    "graphic": "PRAS- Elemental Fangs.png",
+    "position": 1,
+    "frameCount": 13,
+    "timingCount": 2
+  },
+  "1086": {
+    "id": "1086",
+    "name": "Move:ICEHAMMER",
+    "graphic": "PRAS- Ice Hammer.png",
+    "position": 1,
+    "frameCount": 24,
+    "timingCount": 2
+  },
+  "6866": {
+    "id": "6866",
+    "name": "Move:ICEPUNCH",
+    "graphic": "PRAS- Elemental Punch.png",
+    "position": 1,
+    "frameCount": 18,
+    "timingCount": 4
+  },
+  "609": {
+    "id": "609",
+    "name": "Move:ICESHARD",
+    "graphic": "PRAS- Ice.png",
+    "position": 3,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "610": {
+    "id": "610",
+    "name": "OppMove:ICESHARD",
+    "graphic": "PRAS- Ice.png",
+    "position": 3,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "876": {
+    "id": "876",
+    "name": "Move:ICICLECRASH",
+    "graphic": "PRAS- Ice.png",
+    "position": 1,
+    "frameCount": 16,
+    "timingCount": 2
+  },
+  "346": {
+    "id": "346",
+    "name": "Move:ICICLESPEAR",
+    "graphic": "PRAS- Icicle Spear.png",
+    "position": 3,
+    "frameCount": 18,
+    "timingCount": 1
+  },
+  "351": {
+    "id": "351",
+    "name": "OppMove:ICICLESPEAR",
+    "graphic": "PRAS- Icicle Spear.png",
+    "position": 3,
+    "frameCount": 18,
+    "timingCount": 1
+  },
+  "6867": {
+    "id": "6867",
+    "name": "Move:ICYWIND",
+    "graphic": "PRAS- Ice.png",
+    "position": 3,
+    "frameCount": 18,
+    "timingCount": 2
+  },
+  "836": {
+    "id": "836",
+    "name": "Move:IMPRISON",
+    "graphic": "PRAS- Recovery.png",
+    "position": 2,
+    "frameCount": 23,
+    "timingCount": 2
+  },
+  "458": {
+    "id": "458",
+    "name": "Move:INCINERATE",
+    "graphic": "PRAS- Fire.png",
+    "position": 3,
+    "frameCount": 22,
+    "timingCount": 2
+  },
+  "6868": {
+    "id": "6868",
+    "name": "Move:INFERNO",
+    "graphic": "PRAS- Fire.png",
+    "position": 4,
+    "frameCount": 60,
+    "timingCount": 1
+  },
+  "726": {
+    "id": "726",
+    "name": "Move:INFESTATION",
+    "graphic": "PRAS- Struggle Bug.png",
+    "position": 1,
+    "frameCount": 17,
+    "timingCount": 1
+  },
+  "436": {
+    "id": "436",
+    "name": "Move:INGRAIN",
+    "graphic": "PRAS- Ingrain.png",
+    "position": 1,
+    "frameCount": 27,
+    "timingCount": 1
+  },
+  "1137": {
+    "id": "1137",
+    "name": "Move:INSTRUCT",
+    "graphic": "PRAS- Follow Me.png",
+    "position": 2,
+    "frameCount": 60,
+    "timingCount": 9
+  },
+  "953": {
+    "id": "953",
+    "name": "Move:IONDELUGE",
+    "graphic": "PRAS- Electric.png",
+    "position": 3,
+    "frameCount": 70,
+    "timingCount": 1
+  },
+  "484": {
+    "id": "484",
+    "name": "Move:IRONDEFENSE",
+    "graphic": "PRAS- Ice.png",
+    "position": 4,
+    "frameCount": 30,
+    "timingCount": 1
+  },
+  "6869": {
+    "id": "6869",
+    "name": "Move:IRONHEAD",
+    "graphic": "PRAS- Iron Head.png",
+    "position": 3,
+    "frameCount": 16,
+    "timingCount": 1
+  },
+  "6870": {
+    "id": "6870",
+    "name": "OppMove:IRONHEAD",
+    "graphic": "PRAS- Iron Head.png",
+    "position": 3,
+    "frameCount": 16,
+    "timingCount": 1
+  },
+  "588": {
+    "id": "588",
+    "name": "Move:IRONTAIL",
+    "graphic": "PRAS- Iron Tail.png",
+    "position": 1,
+    "frameCount": 21,
+    "timingCount": 2
+  },
+  "1275": {
+    "id": "1275",
+    "name": "Move:JAWLOCK",
+    "graphic": "PRAS- Elemental Fangs.png",
+    "position": 1,
+    "frameCount": 21,
+    "timingCount": 1
+  },
+  "870": {
+    "id": "870",
+    "name": "Move:JUDGMENT",
+    "graphic": "PRAS- Judgement.png",
+    "position": 4,
+    "frameCount": 44,
+    "timingCount": 1
+  },
+  "6871": {
+    "id": "6871",
+    "name": "Move:JUMPKICK",
+    "graphic": "PRAS- Strike.png",
+    "position": 3,
+    "frameCount": 21,
+    "timingCount": 2
+  },
+  "6872": {
+    "id": "6872",
+    "name": "OppMove:JUMPKICK",
+    "graphic": "PRAS- Strike.png",
+    "position": 2,
+    "frameCount": 24,
+    "timingCount": 2
+  },
+  "1311": {
+    "id": "1311",
+    "name": "Move:JUNGLEHEALING",
+    "graphic": "PRAS- Healing Wish.png",
+    "position": 2,
+    "frameCount": 57,
+    "timingCount": 2
+  },
+  "6873": {
+    "id": "6873",
+    "name": "Move:KARATECHOP",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 2
+  },
+  "6874": {
+    "id": "6874",
+    "name": "Move:KINESIS",
+    "graphic": "PRAS- Kenesis.png",
+    "position": 3,
+    "frameCount": 31,
+    "timingCount": 1
+  },
+  "6875": {
+    "id": "6875",
+    "name": "OppMove:KINESIS",
+    "graphic": "PRAS- Kenesis.png",
+    "position": 3,
+    "frameCount": 31,
+    "timingCount": 1
+  },
+  "467": {
+    "id": "467",
+    "name": "Move:KINGSSHIELD",
+    "graphic": "PRAS- King's Shield.png",
+    "position": 2,
+    "frameCount": 21,
+    "timingCount": 2
+  },
+  "468": {
+    "id": "468",
+    "name": "OppMove:KINGSSHIELD",
+    "graphic": "PRAS- King's Shield.png",
+    "position": 1,
+    "frameCount": 21,
+    "timingCount": 2
+  },
+  "501": {
+    "id": "501",
+    "name": "Move:KNOCKOFF",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "1376": {
+    "id": "1376",
+    "name": "Move:LANDSWRATH",
+    "graphic": "GEN8- Land's Wrath.png",
+    "position": 1,
+    "frameCount": 51,
+    "timingCount": 5
+  },
+  "1081": {
+    "id": "1081",
+    "name": "Move:LASERFOCUS",
+    "graphic": "PRAS- Leer.png",
+    "position": 2,
+    "frameCount": 44,
+    "timingCount": 2
+  },
+  "1312": {
+    "id": "1312",
+    "name": "Move:LASHOUT",
+    "graphic": "PRAS- Fire.png",
+    "position": 3,
+    "frameCount": 32,
+    "timingCount": 3
+  },
+  "1313": {
+    "id": "1313",
+    "name": "OppMove:LASHOUT",
+    "graphic": "PRAS- Fire.png",
+    "position": 3,
+    "frameCount": 32,
+    "timingCount": 3
+  },
+  "1050": {
+    "id": "1050",
+    "name": "Move:LASTRESORT",
+    "graphic": "PRAS- Last Resort.png",
+    "position": 1,
+    "frameCount": 43,
+    "timingCount": 2
+  },
+  "1051": {
+    "id": "1051",
+    "name": "OppMove:LASTRESORT",
+    "graphic": "PRAS- Last Resort.png",
+    "position": 1,
+    "frameCount": 45,
+    "timingCount": 2
+  },
+  "489": {
+    "id": "489",
+    "name": "Move:LAVAPLUME",
+    "graphic": "PRAS- Fire.png",
+    "position": 1,
+    "frameCount": 25,
+    "timingCount": 1
+  },
+  "393": {
+    "id": "393",
+    "name": "Move:LEAFBLADE",
+    "graphic": "PRAS- Grass.png",
+    "position": 1,
+    "frameCount": 25,
+    "timingCount": 1
+  },
+  "394": {
+    "id": "394",
+    "name": "OppMove:LEAFBLADE",
+    "graphic": "PRAS- Grass.png",
+    "position": 1,
+    "frameCount": 27,
+    "timingCount": 1
+  },
+  "728": {
+    "id": "728",
+    "name": "Move:LEAFSTORM",
+    "graphic": "PRAS- Grass.png",
+    "position": 3,
+    "frameCount": 35,
+    "timingCount": 2
+  },
+  "729": {
+    "id": "729",
+    "name": "OppMove:LEAFSTORM",
+    "graphic": "PRAS- Grass.png",
+    "position": 3,
+    "frameCount": 35,
+    "timingCount": 2
+  },
+  "1065": {
+    "id": "1065",
+    "name": "Move:LEAFTORNADO",
+    "graphic": "PRAS- Leaf Tornado.png",
+    "position": 1,
+    "frameCount": 55,
+    "timingCount": 2
+  },
+  "1082": {
+    "id": "1082",
+    "name": "Move:LEAFAGE",
+    "graphic": "PRAS- Grass.png",
+    "position": 4,
+    "frameCount": 30,
+    "timingCount": 2
+  },
+  "1083": {
+    "id": "1083",
+    "name": "OppMove:LEAFAGE",
+    "graphic": "PRAS- Grass.png",
+    "position": 4,
+    "frameCount": 30,
+    "timingCount": 2
+  },
+  "6876": {
+    "id": "6876",
+    "name": "Move:LEECHLIFE",
+    "graphic": "PRAS- Leech Life.png",
+    "position": 3,
+    "frameCount": 22,
+    "timingCount": 2
+  },
+  "6877": {
+    "id": "6877",
+    "name": "Move:LEECHSEED",
+    "graphic": "PRAS- Leech Seed.png",
+    "position": 3,
+    "frameCount": 40,
+    "timingCount": 1
+  },
+  "6878": {
+    "id": "6878",
+    "name": "OppMove:LEECHSEED",
+    "graphic": "PRAS- Leech Seed.png",
+    "position": 3,
+    "frameCount": 40,
+    "timingCount": 1
+  },
+  "344": {
+    "id": "344",
+    "name": "Move:LEER",
+    "graphic": "PRAS- Leer.png",
+    "position": 3,
+    "frameCount": 7,
+    "timingCount": 1
+  },
+  "345": {
+    "id": "345",
+    "name": "OppMove:LEER",
+    "graphic": "PRAS- Leer.png",
+    "position": 3,
+    "frameCount": 7,
+    "timingCount": 1
+  },
+  "6879": {
+    "id": "6879",
+    "name": "Move:LICK",
+    "graphic": "PRAS- Sketch + Lick.png",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "6880": {
+    "id": "6880",
+    "name": "OppMove:LICK",
+    "graphic": "PRAS- Sketch + Lick.png",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "1276": {
+    "id": "1276",
+    "name": "Move:LIFEDEW",
+    "graphic": "PRAS- Recovery.png",
+    "position": 2,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "1377": {
+    "id": "1377",
+    "name": "Move:LIGHTOFRUIN",
+    "graphic": "PRAS- Strike.png",
+    "position": 4,
+    "frameCount": 50,
+    "timingCount": 19
+  },
+  "6881": {
+    "id": "6881",
+    "name": "Move:LIGHTSCREEN",
+    "graphic": "PRAS- Light Screen.png",
+    "position": 2,
+    "frameCount": 21,
+    "timingCount": 1
+  },
+  "6882": {
+    "id": "6882",
+    "name": "OppMove:LIGHTSCREEN",
+    "graphic": "PRAS- Light Screen.png",
+    "position": 1,
+    "frameCount": 21,
+    "timingCount": 1
+  },
+  "1109": {
+    "id": "1109",
+    "name": "Move:LIQUIDATION",
+    "graphic": "PRAS- Water.png",
+    "position": 1,
+    "frameCount": 55,
+    "timingCount": 9
+  },
+  "6883": {
+    "id": "6883",
+    "name": "Move:LOCKON",
+    "graphic": "PRAS- Lock On.png",
+    "position": 1,
+    "frameCount": 40,
+    "timingCount": 2
+  },
+  "6884": {
+    "id": "6884",
+    "name": "OppMove:LOCKON",
+    "graphic": "PRAS- Lock On.png",
+    "position": 2,
+    "frameCount": 40,
+    "timingCount": 2
+  },
+  "6885": {
+    "id": "6885",
+    "name": "Move:LOWKICK",
+    "graphic": "PRAS- Strike.png",
+    "position": 3,
+    "frameCount": 14,
+    "timingCount": 1
+  },
+  "6886": {
+    "id": "6886",
+    "name": "OppMove:LOWKICK",
+    "graphic": "PRAS- Strike.png",
+    "position": 3,
+    "frameCount": 14,
+    "timingCount": 1
+  },
+  "583": {
+    "id": "583",
+    "name": "Move:LOWSWEEP",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 10,
+    "timingCount": 1
+  },
+  "6887": {
+    "id": "6887",
+    "name": "Move:LUCKYCHANT",
+    "graphic": "PRAS- Lucky Chant.png",
+    "position": 1,
+    "frameCount": 34,
+    "timingCount": 1
+  },
+  "755": {
+    "id": "755",
+    "name": "Move:LUNARDANCE",
+    "graphic": "PRAS- Recovery.png",
+    "position": 2,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "1378": {
+    "id": "1378",
+    "name": "Move:LUNGE",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 18,
+    "timingCount": 1
+  },
+  "1379": {
+    "id": "1379",
+    "name": "OppMove:LUNGE",
+    "graphic": "PRAS- Strike.png",
+    "position": 4,
+    "frameCount": 18,
+    "timingCount": 1
+  },
+  "1066": {
+    "id": "1066",
+    "name": "Move:LUSTERPURGE",
+    "graphic": "PRAS- Luster Purge.png",
+    "position": 1,
+    "frameCount": 48,
+    "timingCount": 3
+  },
+  "6888": {
+    "id": "6888",
+    "name": "Move:MACHPUNCH",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 11,
+    "timingCount": 2
+  },
+  "6889": {
+    "id": "6889",
+    "name": "Move:MAGICCOAT",
+    "graphic": "PRAS- Magic Coat.png",
+    "position": 2,
+    "frameCount": 21,
+    "timingCount": 1
+  },
+  "6890": {
+    "id": "6890",
+    "name": "OppMove:MAGICCOAT",
+    "graphic": "PRAS- Magic Coat.png",
+    "position": 1,
+    "frameCount": 21,
+    "timingCount": 1
+  },
+  "1277": {
+    "id": "1277",
+    "name": "Move:MAGICPOWDER",
+    "graphic": "PRAS- Powder Snow.png",
+    "position": 3,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "129": {
+    "id": "129",
+    "name": "Move:MAGICROOM",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 40,
+    "timingCount": 1
+  },
+  "437": {
+    "id": "437",
+    "name": "Move:MAGICALLEAF",
+    "graphic": "PRAS- Magical Leaf.png",
+    "position": 3,
+    "frameCount": 29,
+    "timingCount": 4
+  },
+  "438": {
+    "id": "438",
+    "name": "OppMove:MAGICALLEAF",
+    "graphic": "PRAS- Magical Leaf.png",
+    "position": 3,
+    "frameCount": 29,
+    "timingCount": 4
+  },
+  "1006": {
+    "id": "1006",
+    "name": "Move:MAGMASTORM",
+    "graphic": "PRAS- Magma Storm.png",
+    "position": 1,
+    "frameCount": 24,
+    "timingCount": 2
+  },
+  "611": {
+    "id": "611",
+    "name": "Move:MAGNETBOMB",
+    "graphic": "PRAS- Magnet bomb.png",
+    "position": 1,
+    "frameCount": 22,
+    "timingCount": 2
+  },
+  "779": {
+    "id": "779",
+    "name": "Move:MAGNETRISE",
+    "graphic": "PRAS- Electric.png",
+    "position": 2,
+    "frameCount": 18,
+    "timingCount": 1
+  },
+  "954": {
+    "id": "954",
+    "name": "Move:MAGNETICFLUX",
+    "graphic": "PRAS- Electric.png",
+    "position": 3,
+    "frameCount": 65,
+    "timingCount": 1
+  },
+  "955": {
+    "id": "955",
+    "name": "OppMove:MAGNETICFLUX",
+    "graphic": "PRAS- Electric.png",
+    "position": 1,
+    "frameCount": 65,
+    "timingCount": 1
+  },
+  "671": {
+    "id": "671",
+    "name": "Move:MAGNITUDE",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 64,
+    "timingCount": 1
+  },
+  "854": {
+    "id": "854",
+    "name": "Move:MATBLOCK",
+    "graphic": "PRAS- Mat Block.png",
+    "position": 2,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "855": {
+    "id": "855",
+    "name": "OppMove:MATBLOCK",
+    "graphic": "PRAS- Mat Block.png",
+    "position": 2,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "425": {
+    "id": "425",
+    "name": "Move:MOONBLAST",
+    "graphic": "PRAS- Moonblast.png",
+    "position": 3,
+    "frameCount": 60,
+    "timingCount": 2
+  },
+  "426": {
+    "id": "426",
+    "name": "OppMove:MOONBLAST",
+    "graphic": "PRAS- Moonblast.png",
+    "position": 3,
+    "frameCount": 60,
+    "timingCount": 2
+  },
+  "991": {
+    "name": "Move:MEFIRST",
+    "graphic": "PRAS- Me First.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 42,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "6891": {
+    "name": "Move:MEANLOOK",
+    "graphic": "PRAS- Mean Look.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 24,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "635": {
+    "name": "Move:MEDITATE",
+    "graphic": "",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 22,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "6892": {
+    "name": "Move:MEGADRAIN",
+    "graphic": "PRAS- Absorption.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 34,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "6893": {
+    "name": "OppMove:MEGADRAIN",
+    "graphic": "PRAS- Absorption.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 33,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "6894": {
+    "name": "Move:MEGAKICK",
+    "graphic": "PRAS- Strike.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 10,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "6895": {
+    "name": "OppMove:MEGAKICK",
+    "graphic": "PRAS- Strike.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 10,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "6896": {
+    "name": "Move:MEGAPUNCH",
+    "graphic": "PRAS- Strike.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 15,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "338": {
+    "name": "Move:MEGAHORN",
+    "graphic": "PRAS- Megahorn.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 19,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "339": {
+    "name": "OppMove:MEGAHORN",
+    "graphic": "PRAS- Megahorn.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 19,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "921": {
+    "name": "Move:MEMENTO",
+    "graphic": "",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 25,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "959": {
+    "name": "Move:METALBURST",
+    "graphic": "PRAS- Metal Burst.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 46,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "960": {
+    "name": "OppMove:METALBURST",
+    "graphic": "PRAS- Metal Burst.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 46,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "6897": {
+    "name": "Move:METALCLAW",
+    "graphic": "PRAS- Slash.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 15,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "649": {
+    "name": "Move:METALSOUND",
+    "graphic": "PRAS- Metal Sound.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 26,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "650": {
+    "name": "OppMove:METALSOUND",
+    "graphic": "PRAS- Metal Sound.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 28,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "1278": {
+    "name": "Move:METEORASSAULT",
+    "graphic": "PRAS- Me First.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 35,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "1279": {
+    "name": "OppMove:METEORASSAULT",
+    "graphic": "PRAS- Me First.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 35,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "1314": {
+    "name": "Move:METEORBEAM",
+    "graphic": "GEN8- Meteor Beam.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 60,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "6898": {
+    "name": "Move:METEORMASH",
+    "graphic": "PRAS- Meteor Mash.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 45,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "6899": {
+    "name": "Move:METRONOME",
+    "graphic": "PRAS- Hands.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 17,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "6900": {
+    "name": "OppMove:METRONOME",
+    "graphic": "PRAS- Hands.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 17,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "847": {
+    "name": "Move:MILKDRINK",
+    "graphic": "PRAS- Milk Drink.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 36,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "806": {
+    "name": "Move:MIMIC",
+    "graphic": "",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 20,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "1114": {
+    "name": "Move:MINDBLOWN",
+    "graphic": "PRAS- Mind Blown.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 58,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "1115": {
+    "name": "OppMove:MINDBLOWN",
+    "graphic": "PRAS- Mind Blown.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 58,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "1037": {
+    "name": "Move:MINDREADER",
+    "graphic": "PRAS- Miracle Eye.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 23,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "485": {
+    "name": "Move:MINIMIZE",
+    "graphic": "",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 33,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "502": {
+    "name": "Move:MIRACLEEYE",
+    "graphic": "PRAS- Miracle Eye.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 30,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "930": {
+    "name": "Move:MIRRORCOAT",
+    "graphic": "PRAS- Mirror Coat.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 24,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "931": {
+    "name": "OppMove:MIRRORCOAT",
+    "graphic": "PRAS- Mirror Coat.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 24,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "1380": {
+    "name": "Move:MIRRORMOVE",
+    "graphic": "PRAS- Mirror Shot.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 17,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "1381": {
+    "name": "OppMove:MIRRORMOVE",
+    "graphic": "PRAS- Mirror Shot.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 17,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "597": {
+    "name": "Move:MIRRORSHOT",
+    "graphic": "PRAS- Mirror Shot.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 20,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "598": {
+    "name": "OppMove:MIRRORSHOT",
+    "graphic": "PRAS- Mirror Shot.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 20,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "6901": {
+    "name": "Move:MIST",
+    "graphic": "PRAS- Mist.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 35,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "6902": {
+    "name": "Move:MISTBALL",
+    "graphic": "PRAS- Water.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 30,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "1315": {
+    "name": "Move:MISTYEXPLOSION",
+    "graphic": "GEN8- Misty Explosion.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 65,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "439": {
+    "name": "Move:MISTYTERRAIN",
+    "graphic": "PRAS- Orbs.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 30,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "1382": {
+    "name": "Move:MOONGEISTBEAM",
+    "graphic": "GEN8- Moongeist Beam.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 35,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "1383": {
+    "name": "OppMove:MOONGEISTBEAM",
+    "graphic": "GEN8- Moongeist Beam.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 35,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "6903": {
+    "name": "Move:MOONLIGHT",
+    "graphic": "PRAS- Moonlight.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 25,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "6904": {
+    "name": "Move:MORNINGSUN",
+    "graphic": "PRAS- Recovery.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 20,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "672": {
+    "name": "Move:MUDBOMB",
+    "graphic": "PRAS- Mud Bomb.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 21,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "673": {
+    "name": "OppMove:MUDBOMB",
+    "graphic": "PRAS- Mud Bomb.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 21,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "714": {
+    "name": "Move:MUDSHOT",
+    "graphic": "PRAS- Mud Shot.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 30,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "715": {
+    "name": "OppMove:MUDSHOT",
+    "graphic": "PRAS- Mud Shot.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 30,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "682": {
+    "name": "Move:MUDSPORT",
+    "graphic": "PRAS- Mud Sport.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 25,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "735": {
+    "name": "Move:MUDSLAP",
+    "graphic": "PRAS- Mud Slap.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 18,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "793": {
+    "name": "Move:MUDDYWATER",
+    "graphic": "",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 50,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "794": {
+    "name": "OppMove:MUDDYWATER",
+    "graphic": "",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 50,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "1133": {
+    "name": "Move:MULTIATTACK",
+    "graphic": "PRAS- Multi Attack.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 65,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "1134": {
+    "name": "OppMove:MULTIATTACK",
+    "graphic": "PRAS- Multi Attack.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 65,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "478": {
+    "name": "Move:MYSTICALFIRE",
+    "graphic": "PRAS- Mystical Fire.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 32,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "479": {
+    "name": "OppMove:MYSTICALFIRE",
+    "graphic": "PRAS- Mystical Fire.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 32,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "6909": {
+    "name": "Move:NATURESMADNESS",
+    "graphic": "PRAS- Natures Madness BG.png",
+    "frameWidth": 512,
+    "frameHeight": 288,
+    "fps": 20,
+    "frames": 65,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "6910": {
+    "name": "Move:NEVERENDINGNIGHTMARE",
+    "graphic": "PRAS- NeverEndingNightmare.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 95,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "6911": {
+    "name": "OppMove:NIGHTDAZE",
+    "graphic": "PRAS- Night Daze.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 42,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "6912": {
+    "name": "Move:NIGHTMARE",
+    "graphic": "PRAS- Love.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 45,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "6913": {
+    "name": "Move:NORETREAT",
+    "graphic": "GEN8- No Retreat.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 20,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "6914": {
+    "name": "OppMove:NOBLEROAR",
+    "graphic": "PRAS- Sound.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 24,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "6915": {
+    "name": "OppMove:NUZZLE",
+    "graphic": "PRAS- Electric.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 18,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "6916": {
+    "name": "Move:CROSSPOISON",
+    "graphic": "PRAS- Cross Poison.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 40,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "6917": {
+    "name": "OppMove:CROSSPOISON",
+    "graphic": "PRAS- Cross Poison.png",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 40,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "204": {
+    "name": "Move:NIGHTMARE",
+    "graphic": "022-Darkness01",
+    "frameWidth": 192,
+    "frameHeight": 192,
+    "fps": 20,
+    "frames": 12,
+    "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+  },
+  "6918": {
+    "id": "6918",
+    "name": "Move:OBLIVIONWING",
+    "frames": 35,
+    "graphic": "GEN8- Moongeist Beam.png"
+  },
+  "6919": {
+    "id": "6919",
+    "name": "OppMove:OBLIVIONWING",
+    "frames": 35,
+    "graphic": "GEN8- Moongeist Beam.png"
+  },
+  "6920": {
+    "id": "6920",
+    "name": "Move:OBSTRUCT",
+    "frames": 22,
+    "graphic": "GEN8- Obstruct.png"
+  },
+  "6921": {
+    "id": "6921",
+    "name": "OppMove:OBSTRUCT",
+    "frames": 22,
+    "graphic": "GEN8- Obstruct.png"
+  },
+  "6922": {
+    "id": "6922",
+    "name": "ZMove:OCEANICOPERETTA",
+    "frames": 65,
+    "graphic": "PRAS- Oceanic Operetta.png"
+  },
+  "6923": {
+    "id": "6923",
+    "name": "OppZMove:OCEANICOPERETTA",
+    "frames": 65,
+    "graphic": "PRAS- Oceanic Operetta.png"
+  },
+  "6924": {
+    "id": "6924",
+    "name": "Move:OCTAZOOKA",
+    "frames": 23,
+    "graphic": "PRAS- Octozooka.png"
+  },
+  "6925": {
+    "id": "6925",
+    "name": "OppMove:OCTAZOOKA",
+    "frames": 23,
+    "graphic": "PRAS- Octozooka.png"
+  },
+  "6926": {
+    "id": "6926",
+    "name": "Move:OCTOLOCK",
+    "frames": 22,
+    "graphic": "PRAS- Constrict.png"
+  },
+  "6927": {
+    "id": "6927",
+    "name": "Move:ODORSLEUTH",
+    "frames": 20,
+    "graphic": "PRAS- Odor Sleuth.png"
+  },
+  "6928": {
+    "id": "6928",
+    "name": "Move:OMINOUSWIND",
+    "frames": 35,
+    "graphic": "PRAS- Ominous Wind BG.png"
+  },
+  "6929": {
+    "id": "6929",
+    "name": "Move:ORIGINPULSE",
+    "frames": 64,
+    "graphic": "PRAS- Origin Pulse.png"
+  },
+  "6930": {
+    "id": "6930",
+    "name": "OppMove:ORIGINPULSE",
+    "frames": 64,
+    "graphic": "PRAS- Origin Pulse.png"
+  },
+  "6931": {
+    "id": "6931",
+    "name": "Move:OUTRAGE",
+    "frames": 28,
+    "graphic": "PRAS- Fire.png"
+  },
+  "6932": {
+    "id": "6932",
+    "name": "OppMove:OUTRAGE",
+    "frames": 28,
+    "graphic": "PRAS- Fire.png"
+  },
+  "6933": {
+    "id": "6933",
+    "name": "Move:OVERDRIVE",
+    "frames": 20,
+    "graphic": "PRAS- Sound.png"
+  },
+  "6934": {
+    "id": "6934",
+    "name": "Move:OVERHEAT",
+    "frames": 30,
+    "graphic": "PRAS- Fire.png"
+  },
+  "6935": {
+    "id": "6935",
+    "name": "OppMove:OVERHEAT",
+    "frames": 30,
+    "graphic": "PRAS- Fire.png"
+  },
+  "6936": {
+    "id": "6936",
+    "name": "Move:PAINSPLIT",
+    "frameCount": 19,
+    "timingCount": 3,
+    "graphic": "PRAS- Bide.png",
+    "position": 4,
+    "fps": 20
+  },
+  "6937": {
+    "id": "6937",
+    "name": "Move:PARABOLICCHARGE",
+    "frameCount": 21,
+    "timingCount": 1,
+    "graphic": "PRAS- Electric.png",
+    "position": 3,
+    "fps": 20
+  },
+  "6938": {
+    "id": "6938",
+    "name": "Move:PARTINGSHOT",
+    "frameCount": 26,
+    "timingCount": 1,
+    "graphic": "PRAS- Sound.png",
+    "position": 2,
+    "fps": 20
+  },
+  "6939": {
+    "id": "6939",
+    "name": "OppMove:PARTINGSHOT",
+    "frameCount": 26,
+    "timingCount": 1,
+    "graphic": "PRAS- Sound.png",
+    "position": 2,
+    "fps": 20
+  },
+  "6940": {
+    "id": "6940",
+    "name": "Move:PAYDAY",
+    "frameCount": 35,
+    "timingCount": 2,
+    "graphic": "PRAS- Pay Day.png",
+    "position": 3,
+    "fps": 20
+  },
+  "6941": {
+    "id": "6941",
+    "name": "OppMove:PAYDAY",
+    "frameCount": 35,
+    "timingCount": 2,
+    "graphic": "PRAS- Pay Day.png",
+    "position": 3,
+    "fps": 20
+  },
+  "6942": {
+    "id": "6942",
+    "name": "Move:PAYBACK",
+    "frameCount": 24,
+    "timingCount": 2,
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "fps": 20
+  },
+  "6943": {
+    "id": "6943",
+    "name": "Move:PECK",
+    "frameCount": 10,
+    "timingCount": 3,
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "fps": 20
+  },
+  "6944": {
+    "id": "6944",
+    "name": "Move:PERISHSONG",
+    "frameCount": 45,
+    "timingCount": 1,
+    "graphic": "PRAS- Sound.png",
+    "position": 4,
+    "fps": 20
+  },
+  "6945": {
+    "id": "6945",
+    "name": "Move:PETALBLIZZARD",
+    "frameCount": 63,
+    "timingCount": 2,
+    "graphic": "PRAS- Petal Blizzard.png",
+    "position": 4,
+    "fps": 20
+  },
+  "6946": {
+    "id": "6946",
+    "name": "OppMove:PETALBLIZZARD",
+    "frameCount": 63,
+    "timingCount": 2,
+    "graphic": "PRAS- Petal Blizzard.png",
+    "position": 4,
+    "fps": 20
+  },
+  "6947": {
+    "id": "6947",
+    "name": "Move:PETALDANCE",
+    "frameCount": 40,
+    "timingCount": 2,
+    "graphic": "PRAS- Petal Dance.png",
+    "position": 1,
+    "fps": 20
+  },
+  "6948": {
+    "id": "6948",
+    "name": "OppMove:PETALDANCE",
+    "frameCount": 40,
+    "timingCount": 2,
+    "graphic": "PRAS- Petal Dance.png",
+    "position": 3,
+    "fps": 20
+  },
+  "6949": {
+    "id": "6949",
+    "name": "Move:PHANTOMFORCE",
+    "frameCount": 22,
+    "timingCount": 1,
+    "graphic": "PRAS- Shadow Sneak.png",
+    "position": 1,
+    "fps": 20
+  },
+  "6950": {
+    "id": "6950",
+    "name": "Move:PHOTONGEYSER",
+    "frameCount": 57,
+    "timingCount": 3,
+    "graphic": "PRAS- Photon Guyser.png",
+    "position": 4,
+    "fps": 20
+  },
+  "6951": {
+    "id": "6951",
+    "name": "OppMove:PHOTONGEYSER",
+    "frameCount": 57,
+    "timingCount": 3,
+    "graphic": "PRAS- Photon Guyser.png",
+    "position": 4,
+    "fps": 20
+  },
+  "6952": {
+    "id": "6952",
+    "name": "Move:PINMISSILE",
+    "frameCount": 16,
+    "timingCount": 1,
+    "graphic": "PRAS- Leech Life.png",
+    "position": 3,
+    "fps": 20
+  },
+  "6953": {
+    "id": "6953",
+    "name": "OppMove:PINMISSILE",
+    "frameCount": 16,
+    "timingCount": 1,
+    "graphic": "PRAS- Leech Life.png",
+    "position": 3,
+    "fps": 20
+  },
+  "6954": {
+    "id": "6954",
+    "name": "Move:PLASMAFISTS",
+    "frameCount": 51,
+    "timingCount": 4,
+    "graphic": "PRAS- Plasma Fist.png",
+    "position": 4,
+    "fps": 20
+  },
+  "6955": {
+    "id": "6955",
+    "name": "Move:PLAYNICE",
+    "frameCount": 21,
+    "timingCount": 2,
+    "graphic": "PRAS- Love.png",
+    "position": 2,
+    "fps": 20
+  },
+  "6956": {
+    "id": "6956",
+    "name": "Move:PLAYROUGH",
+    "frameCount": 65,
+    "timingCount": 12,
+    "graphic": "PRAS- Love.png",
+    "position": 1,
+    "fps": 20
+  },
+  "6957": {
+    "id": "6957",
+    "name": "Move:PLUCK",
+    "frameCount": 15,
+    "timingCount": 2,
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "fps": 20
+  },
+  "6958": {
+    "id": "6958",
+    "name": "OppMove:PLUCK",
+    "frameCount": 15,
+    "timingCount": 2,
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "fps": 20
+  },
+  "6959": {
+    "id": "6959",
+    "name": "Move:POISONFANG",
+    "file": "6959.json"
+  },
+  "6960": {
+    "id": "6960",
+    "name": "Move:POISONGAS",
+    "file": "6960.json"
+  },
+  "6961": {
+    "id": "6961",
+    "name": "Move:POISONJAB",
+    "file": "6961.json"
+  },
+  "6962": {
+    "id": "6962",
+    "name": "OppMove:POISONJAB",
+    "file": "6962.json"
+  },
+  "6963": {
+    "id": "6963",
+    "name": "Move:POISONPOWDER",
+    "file": "6963.json"
+  },
+  "6964": {
+    "id": "6964",
+    "name": "Move:POISONSTING",
+    "file": "6964.json"
+  },
+  "6965": {
+    "id": "6965",
+    "name": "OppMove:POISONSTING",
+    "file": "6965.json"
+  },
+  "6966": {
+    "id": "6966",
+    "name": "Move:POISONTAIL",
+    "file": "6966.json"
+  },
+  "6967": {
+    "id": "6967",
+    "name": "OppMove:POISONTAIL",
+    "file": "6967.json"
+  },
+  "6968": {
+    "id": "6968",
+    "name": "Move:POLLENPUFF",
+    "file": "6968.json"
+  },
+  "6969": {
+    "id": "6969",
+    "name": "OppMove:POLLENPUFF",
+    "file": "6969.json"
+  },
+  "6970": {
+    "id": "6970",
+    "name": "Move:POLTERGEIST",
+    "file": "6970.json"
+  },
+  "6971": {
+    "id": "6971",
+    "name": "Move:POUND",
+    "file": "6971.json"
+  },
+  "6972": {
+    "id": "6972",
+    "name": "Move:POWDER",
+    "file": "6972.json"
+  },
+  "6973": {
+    "id": "6973",
+    "name": "Move:POWDERSNOW",
+    "file": "6973.json"
+  },
+  "6974": {
+    "id": "6974",
+    "name": "Move:POWERGEM",
+    "file": "6974.json"
+  },
+  "6975": {
+    "id": "6975",
+    "name": "Move:POWERSPLIT",
+    "file": "6975.json"
+  },
+  "6976": {
+    "id": "6976",
+    "name": "Move:POWERSWAP",
+    "file": "6976.json"
+  },
+  "6977": {
+    "id": "6977",
+    "name": "MoveOpp:POWERSWAP",
+    "file": "6977.json"
+  },
+  "6978": {
+    "id": "6978",
+    "name": "Move:POWERTRICK",
+    "file": "6978.json"
+  },
+  "6979": {
+    "id": "6979",
+    "name": "Move:POWERTRIP",
+    "file": "6979.json"
+  },
+  "6980": {
+    "id": "6980",
+    "name": "Move:POWERUPPUNCH",
+    "file": "6980.json"
+  },
+  "6981": {
+    "id": "6981",
+    "name": "Move:POWERWHIP",
+    "file": "6981.json"
+  },
+  "6982": {
+    "id": "6982",
+    "name": "Move:PRECIPICEBLADES",
+    "file": "6982.json"
+  },
+  "6983": {
+    "id": "6983",
+    "name": "Move:PRESENT",
+    "file": "6983.json"
+  },
+  "6984": {
+    "id": "6984",
+    "name": "OppMove:PRESENT",
+    "file": "6984.json"
+  },
+  "6985": {
+    "id": "6985",
+    "name": "Move:PRISMATICLASER",
+    "file": "6985.json"
+  },
+  "6986": {
+    "id": "6986",
+    "name": "Move:PROTECT",
+    "file": "6986.json"
+  },
+  "6987": {
+    "id": "6987",
+    "name": "OppMove:PROTECT",
+    "file": "6987.json"
+  },
+  "6988": {
+    "id": "6988",
+    "name": "Move:PSYBEAM",
+    "file": "6988.json"
+  },
+  "6989": {
+    "id": "6989",
+    "name": "OppMove:PSYBEAM",
+    "file": "6989.json"
+  },
+  "6990": {
+    "id": "6990",
+    "name": "Move:PSYCHUP",
+    "file": "6990.json"
+  },
+  "6991": {
+    "id": "6991",
+    "name": "Move:PSYCHIC",
+    "file": "6991.json"
+  },
+  "6992": {
+    "id": "6992",
+    "name": "Move:PSYCHICFANGS",
+    "file": "6992.json"
+  },
+  "6993": {
+    "id": "6993",
+    "name": "Move:PSYCHICTERRAIN",
+    "file": "6993.json"
+  },
+  "6994": {
+    "id": "6994",
+    "name": "Move:PSYCHOBOOST",
+    "file": "6994.json"
+  },
+  "6995": {
+    "id": "6995",
+    "name": "OppMove:PSYCHOBOOST",
+    "file": "6995.json"
+  },
+  "6996": {
+    "id": "6996",
+    "name": "Move:PSYCHOCUT",
+    "file": "6996.json"
+  },
+  "6997": {
+    "id": "6997",
+    "name": "OppMove:PSYCHOCUT",
+    "file": "6997.json"
+  },
+  "6998": {
+    "id": "6998",
+    "name": "Move:PSYCHOSHIFT",
+    "file": "6998.json"
+  },
+  "6999": {
+    "id": "6999",
+    "name": "Move:PSYSHOCK",
+    "file": "6999.json"
+  },
+  "7000": {
+    "id": "7000",
+    "name": "Move:PSYSTRIKE",
+    "file": "7000.json"
+  },
+  "7001": {
+    "id": "7001",
+    "name": "Move:PSYWAVE",
+    "file": "7001.json"
+  },
+  "7002": {
+    "id": "7002",
+    "name": "OppMove:PSYWAVE",
+    "file": "7002.json"
+  },
+  "7003": {
+    "id": "7003",
+    "name": "Move:PULVERIZINGPANCAKE",
+    "file": "7003.json"
+  },
+  "7004": {
+    "id": "7004",
+    "name": "Move:PUNISHMENT",
+    "file": "7004.json"
+  },
+  "7005": {
+    "id": "7005",
+    "name": "Move:PURIFY",
+    "file": "7005.json"
+  },
+  "7006": {
+    "id": "7006",
+    "name": "OppMove:PURIFY",
+    "file": "7006.json"
+  },
+  "7007": {
+    "id": "7007",
+    "name": "Move:PURSUIT",
+    "file": "7007.json"
+  },
+  "7008": {
+    "id": "7008",
+    "name": "OppMove:PURSUIT",
+    "file": "7008.json"
+  },
+  "7009": {
+    "id": "7009",
+    "name": "Move:PYROBALL",
+    "file": "7009.json"
+  },
+  "7010": {
+    "id": "7010",
+    "name": "OppMove:PYROBALL",
+    "file": "7010.json"
+  },
+  "7011": {
+    "id": "7011",
+    "name": "Move:SHATTEREDPSYCHE",
+    "file": "7011.json"
+  },
+  "7017": {
+    "id": "7017",
+    "name": "Move:QUASH",
+    "frames": 18,
+    "hasSound": true
+  },
+  "7012": {
+    "id": "7012",
+    "name": "Move:QUICKATTACK",
+    "frames": 14,
+    "hasSound": true
+  },
+  "7013": {
+    "id": "7013",
+    "name": "OppMove:QUICKATTACK",
+    "frames": 14,
+    "hasSound": true
+  },
+  "7014": {
+    "id": "7014",
+    "name": "Move:QUICKGUARD",
+    "frames": 23,
+    "hasSound": true
+  },
+  "7015": {
+    "id": "7015",
+    "name": "OppMove:QUICKGUARD",
+    "frames": 23,
+    "hasSound": true
+  },
+  "7016": {
+    "id": "7016",
+    "name": "Move:QUIVERDANCE",
+    "frames": 21,
+    "hasSound": true
+  },
+  "7018": {
+    "id": "7018",
+    "name": "Move:RAGE",
+    "frames": 14,
+    "hasSound": true
+  },
+  "7019": {
+    "id": "7019",
+    "name": "Move:RAGEPOWDER",
+    "frames": 30,
+    "hasSound": true
+  },
+  "7020": {
+    "id": "7020",
+    "name": "Move:RAINDANCE",
+    "frames": 26,
+    "hasSound": true
+  },
+  "7021": {
+    "id": "7021",
+    "name": "Move:RAPIDSPIN",
+    "frames": 22,
+    "hasSound": true
+  },
+  "7022": {
+    "id": "7022",
+    "name": "Move:RAZORLEAF",
+    "frames": 30,
+    "hasSound": true
+  },
+  "7023": {
+    "id": "7023",
+    "name": "OppMove:RAZORLEAF",
+    "frames": 30,
+    "hasSound": true
+  },
+  "7024": {
+    "id": "7024",
+    "name": "Move:RAZORSHELL",
+    "frames": 21,
+    "hasSound": true
+  },
+  "7025": {
+    "id": "7025",
+    "name": "Move:RAZORWIND",
+    "frames": 34,
+    "hasSound": true
+  },
+  "7026": {
+    "id": "7026",
+    "name": "Move:RECOVER",
+    "frames": 20,
+    "hasSound": true
+  },
+  "7027": {
+    "id": "7027",
+    "name": "Move:RECYCLE",
+    "frames": 20,
+    "hasSound": true
+  },
+  "7028": {
+    "id": "7028",
+    "name": "Move:REFLECT",
+    "frames": 21,
+    "hasSound": true
+  },
+  "7029": {
+    "id": "7029",
+    "name": "OppMove:REFLECT",
+    "frames": 21,
+    "hasSound": true
+  },
+  "7030": {
+    "id": "7030",
+    "name": "Move:REFLECTTYPE",
+    "frames": 35,
+    "hasSound": true
+  },
+  "7031": {
+    "id": "7031",
+    "name": "OppMove:REFLECTTYPE",
+    "frames": 35,
+    "hasSound": true
+  },
+  "7032": {
+    "id": "7032",
+    "name": "Move:REFRESH",
+    "frames": 15,
+    "hasSound": true
+  },
+  "7033": {
+    "id": "7033",
+    "name": "Move:RELICSONG",
+    "frames": 38,
+    "hasSound": true
+  },
+  "7034": {
+    "id": "7034",
+    "name": "Move:REST",
+    "frames": 1,
+    "hasSound": true
+  },
+  "7035": {
+    "id": "7035",
+    "name": "Move:RETALIATE",
+    "frames": 26,
+    "hasSound": true
+  },
+  "7036": {
+    "id": "7036",
+    "name": "OppMove:RETALIATE",
+    "frames": 26,
+    "hasSound": true
+  },
+  "7037": {
+    "id": "7037",
+    "name": "Move:RETURN",
+    "frames": 16,
+    "hasSound": true
+  },
+  "7038": {
+    "id": "7038",
+    "name": "Move:REVELATIONDANCE",
+    "frames": 38,
+    "hasSound": true
+  },
+  "7039": {
+    "id": "7039",
+    "name": "Move:REVENGE",
+    "frames": 60,
+    "hasSound": true
+  },
+  "7040": {
+    "id": "7040",
+    "name": "OppMove:REVENGE",
+    "frames": 60,
+    "hasSound": true
+  },
+  "7041": {
+    "id": "7041",
+    "name": "Move:REVERSAL",
+    "frames": 22,
+    "hasSound": true
+  },
+  "7042": {
+    "id": "7042",
+    "name": "OppMove:REVERSAL",
+    "frames": 22,
+    "hasSound": true
+  },
+  "7043": {
+    "id": "7043",
+    "name": "Move:RISINGVOLTAGE",
+    "frames": 20,
+    "hasSound": true
+  },
+  "7044": {
+    "id": "7044",
+    "name": "Move:ROAR",
+    "frames": 21,
+    "hasSound": true
+  },
+  "7045": {
+    "id": "7045",
+    "name": "OppMove:ROAR",
+    "frames": 21,
+    "hasSound": true
+  },
+  "7046": {
+    "id": "7046",
+    "name": "Move:ROAROFTIME",
+    "frames": 60,
+    "hasSound": true
+  },
+  "7047": {
+    "id": "7047",
+    "name": "Move:ROCKBLAST",
+    "frames": 10,
+    "hasSound": true
+  },
+  "7048": {
+    "id": "7048",
+    "name": "OppMove:ROCKBLAST",
+    "frames": 10,
+    "hasSound": true
+  },
+  "7049": {
+    "id": "7049",
+    "name": "Move:ROCKCLIMB",
+    "frames": 34,
+    "hasSound": true
+  },
+  "7050": {
+    "id": "7050",
+    "name": "OppMove:ROCKCLIMB",
+    "frames": 34,
+    "hasSound": true
+  },
+  "7051": {
+    "id": "7051",
+    "name": "Move:ROCKPOLISH",
+    "frames": 22,
+    "hasSound": true
+  },
+  "7052": {
+    "id": "7052",
+    "name": "Move:ROCKSLIDE",
+    "frames": 33,
+    "hasSound": true
+  },
+  "7053": {
+    "id": "7053",
+    "name": "Move:ROCKSMASH",
+    "frames": 18,
+    "hasSound": true
+  },
+  "7054": {
+    "id": "7054",
+    "name": "OppMove:ROCKSMASH",
+    "frames": 18,
+    "hasSound": true
+  },
+  "7055": {
+    "id": "7055",
+    "name": "Move:ROCKTHROW",
+    "frames": 25,
+    "hasSound": true
+  },
+  "7056": {
+    "id": "7056",
+    "name": "OppMove:ROCKTHROW",
+    "frames": 25,
+    "hasSound": true
+  },
+  "7057": {
+    "id": "7057",
+    "name": "Move:ROCKTOMB",
+    "frames": 41,
+    "hasSound": true
+  },
+  "7058": {
+    "id": "7058",
+    "name": "Move:ROCKWRECKER",
+    "frames": 24,
+    "hasSound": true
+  },
+  "7059": {
+    "id": "7059",
+    "name": "OppMove:ROCKWRECKER",
+    "frames": 24,
+    "hasSound": true
+  },
+  "7060": {
+    "id": "7060",
+    "name": "Move:ROLEPLAY",
+    "frames": 36,
+    "hasSound": true
+  },
+  "7061": {
+    "id": "7061",
+    "name": "OppMove:ROLEPLAY",
+    "frames": 36,
+    "hasSound": true
+  },
+  "7062": {
+    "id": "7062",
+    "name": "Move:ROLLINGKICK",
+    "frames": 12,
+    "hasSound": true
+  },
+  "7063": {
+    "id": "7063",
+    "name": "OppMove:ROLLINGKICK",
+    "frames": 12,
+    "hasSound": true
+  },
+  "7064": {
+    "id": "7064",
+    "name": "Move:ROLLOUT",
+    "frames": 44,
+    "hasSound": true
+  },
+  "7065": {
+    "id": "7065",
+    "name": "OppMove:ROLLOUT",
+    "frames": 44,
+    "hasSound": true
+  },
+  "7066": {
+    "id": "7066",
+    "name": "Move:ROOST",
+    "frames": 25,
+    "hasSound": true
+  },
+  "7067": {
+    "id": "7067",
+    "name": "Move:ROTOTILLER",
+    "frames": 30,
+    "hasSound": true
+  },
+  "7068": {
+    "id": "7068",
+    "name": "Move:ROUND",
+    "frames": 30,
+    "hasSound": true
+  },
+  "7069": {
+    "id": "7069",
+    "name": "OppMove:ROUND",
+    "frames": 30,
+    "hasSound": true
+  },
+  "animations": {
+    "7070": {
+      "name": "Move:SACREDFIRE",
+      "file": "7070.json"
+    },
+    "7071": {
+      "name": "OppMove:SACREDFIRE",
+      "file": "7071.json"
+    },
+    "7072": {
+      "name": "Move:SACREDSWORD",
+      "file": "7072.json"
+    },
+    "7073": {
+      "name": "OppMove:SACREDSWORD",
+      "file": "7073.json"
+    },
+    "7074": {
+      "name": "Move:SAFEGUARD",
+      "file": "7074.json"
+    },
+    "7075": {
+      "name": "Move:SANDATTACK",
+      "file": "7075.json"
+    },
+    "7076": {
+      "name": "OppMove:SANDATTACK",
+      "file": "7076.json"
+    },
+    "7077": {
+      "name": "Move:SANDTOMB",
+      "file": "7077.json"
+    },
+    "7078": {
+      "name": "Move:SANDSTORM",
+      "file": "7078.json"
+    },
+    "7079": {
+      "name": "Move:SCALD",
+      "file": "7079.json"
+    },
+    "7080": {
+      "name": "OppMove:SCALD",
+      "file": "7080.json"
+    },
+    "7081": {
+      "name": "Move:SCALESHOT",
+      "file": "7081.json"
+    },
+    "7082": {
+      "name": "Move:SCARYFACE",
+      "file": "7082.json"
+    },
+    "7083": {
+      "name": "OppMove:SCARYFACE",
+      "file": "7083.json"
+    },
+    "7084": {
+      "name": "Move:SCORCHINGSANDS",
+      "file": "7084.json"
+    },
+    "7085": {
+      "name": "Move:SCRATCH",
+      "file": "7085.json"
+    },
+    "7086": {
+      "name": "Move:SCREECH",
+      "file": "7086.json"
+    },
+    "7087": {
+      "name": "OppMove:SCREECH",
+      "file": "7087.json"
+    },
+    "7088": {
+      "name": "Move:SEARINGSHOT",
+      "file": "7088.json"
+    },
+    "7089": {
+      "name": "Move:SECRETPOWER",
+      "file": "7089.json"
+    },
+    "7090": {
+      "name": "Move:SECRETSWORD",
+      "file": "7090.json"
+    },
+    "7091": {
+      "name": "OppMove:SECRETSWORD",
+      "file": "7091.json"
+    },
+    "7092": {
+      "name": "Move:SEEDBOMB",
+      "file": "7092.json"
+    },
+    "7093": {
+      "name": "OppMove:SEEDBOMB",
+      "file": "7093.json"
+    },
+    "7094": {
+      "name": "Move:SEEDFLARE",
+      "file": "7094.json"
+    },
+    "7095": {
+      "name": "Move:SEISMICTOSS",
+      "file": "7095.json"
+    },
+    "7096": {
+      "name": "OppMove:SEISMICTOSS",
+      "file": "7096.json"
+    },
+    "7097": {
+      "name": "Move:SELFDESTRUCT",
+      "file": "7097.json"
+    },
+    "7098": {
+      "name": "Move:SHADOWBALL",
+      "file": "7098.json"
+    },
+    "7099": {
+      "name": "OppMove:SHADOWBALL",
+      "file": "7099.json"
+    },
+    "7100": {
+      "name": "Move:SHADOWBONE",
+      "file": "7100.json"
+    },
+    "7101": {
+      "name": "OppMove:SHADOWBONE",
+      "file": "7101.json"
+    },
+    "7102": {
+      "name": "Move:SHADOWCLAW",
+      "file": "7102.json"
+    },
+    "7103": {
+      "name": "Move:SHADOWFORCE",
+      "file": "7103.json"
+    },
+    "7104": {
+      "name": "Move:SHADOWPUNCH",
+      "file": "7104.json"
+    },
+    "7105": {
+      "name": "Move:SHADOWSNEAK",
+      "file": "7105.json"
+    },
+    "7106": {
+      "name": "OppMove:SHADOWSNEAK",
+      "file": "7106.json"
+    },
+    "7107": {
+      "name": "Move:SHARPEN",
+      "file": "7107.json"
+    },
+    "7108": {
+      "name": "Move:SHEERCOLD",
+      "file": "7108.json"
+    },
+    "7109": {
+      "name": "Move:SHELLSIDEARM",
+      "file": "7109.json"
+    },
+    "7110": {
+      "name": "Move:SHELLSMASH",
+      "file": "7110.json"
+    },
+    "7111": {
+      "name": "Move:SHELLTRAP",
+      "file": "7111.json"
+    },
+    "7112": {
+      "name": "OppMove:SHELLTRAP",
+      "file": "7112.json"
+    },
+    "7113": {
+      "name": "Move:SHIFTGEAR",
+      "file": "7113.json"
+    },
+    "7114": {
+      "name": "Move:SHOCKWAVE",
+      "file": "7114.json"
+    },
+    "7115": {
+      "name": "OppMove:SHOCKWAVE",
+      "file": "7115.json"
+    },
+    "7116": {
+      "name": "Move:SHOREUP",
+      "file": "7116.json"
+    },
+    "7117": {
+      "name": "Move:SIGNALBEAM",
+      "file": "7117.json"
+    },
+    "7118": {
+      "name": "OppMove:SIGNALBEAM",
+      "file": "7118.json"
+    },
+    "7119": {
+      "name": "Move:SILVERWIND",
+      "file": "7119.json"
+    },
+    "7120": {
+      "name": "Move:SIMPLEBEAM",
+      "file": "7120.json"
+    },
+    "7121": {
+      "name": "OppMove:SIMPLEBEAM",
+      "file": "7121.json"
+    },
+    "7122": {
+      "name": "Move:SING",
+      "file": "7122.json"
+    },
+    "7123": {
+      "name": "OppMove:SING",
+      "file": "7123.json"
+    },
+    "7124": {
+      "name": "Move:SINISTERARROWRAID",
+      "file": "7124.json"
+    },
+    "7125": {
+      "name": "OppMove:SINISTERARROWRAID",
+      "file": "7125.json"
+    },
+    "7126": {
+      "name": "Move:SKETCH",
+      "file": "7126.json"
+    },
+    "7127": {
+      "name": "OppMove:SKETCH",
+      "file": "7127.json"
+    },
+    "7128": {
+      "name": "Move:SKILLSWAP",
+      "file": "7128.json"
+    },
+    "7129": {
+      "name": "Move:SKITTERSMACK",
+      "file": "7129.json"
+    },
+    "7130": {
+      "name": "OppMove:SKITTERSMACK",
+      "file": "7130.json"
+    },
+    "7131": {
+      "name": "Move:SKULLBASH",
+      "file": "7131.json"
+    },
+    "7132": {
+      "name": "Move:SKYATTACK",
+      "file": "7132.json"
+    },
+    "7133": {
+      "name": "OppMove:SKYATTACK",
+      "file": "7133.json"
+    },
+    "7134": {
+      "name": "Move:SKYDROP",
+      "file": "7134.json"
+    },
+    "7135": {
+      "name": "Move:SKYUPPERCUT",
+      "file": "7135.json"
+    },
+    "7136": {
+      "name": "Move:SLACKOFF",
+      "file": "7136.json"
+    },
+    "7137": {
+      "name": "OppMove:SLACKOFF",
+      "file": "7137.json"
+    },
+    "7138": {
+      "name": "Move:SLAM",
+      "file": "7138.json"
+    },
+    "7139": {
+      "name": "OppMove:SLAM",
+      "file": "7139.json"
+    },
+    "7140": {
+      "name": "Move:SLASH",
+      "file": "7140.json"
+    },
+    "7141": {
+      "name": "Move:SLEEPPOWDER",
+      "file": "7141.json"
+    },
+    "7142": {
+      "name": "Move:SLEEPTALK",
+      "file": "7142.json"
+    },
+    "7143": {
+      "name": "Move:SLUDGE",
+      "file": "7143.json"
+    },
+    "7144": {
+      "name": "OppMove:SLUDGE",
+      "file": "7144.json"
+    },
+    "7145": {
+      "name": "Move:SLUDGEBOMB",
+      "file": "7145.json"
+    },
+    "7146": {
+      "name": "OppMove:SLUDGEBOMB",
+      "file": "7146.json"
+    },
+    "7147": {
+      "name": "Move:SLUDGEWAVE",
+      "file": "7147.json"
+    },
+    "7148": {
+      "name": "OppMove:SLUDGEWAVE",
+      "file": "7148.json"
+    },
+    "7149": {
+      "name": "Move:SMACKDOWN",
+      "file": "7149.json"
+    },
+    "7150": {
+      "name": "OppMove:SMACKDOWN",
+      "file": "7150.json"
+    },
+    "7151": {
+      "name": "Move:SMARTSTRIKE",
+      "file": "7151.json"
+    },
+    "7152": {
+      "name": "OppMove:SMARTSTRIKE",
+      "file": "7152.json"
+    },
+    "7153": {
+      "name": "Move:SMELLINGSALTS",
+      "file": "7153.json"
+    },
+    "7154": {
+      "name": "Move:SMOG",
+      "file": "7154.json"
+    },
+    "7155": {
+      "name": "Move:SMOKESCREEN",
+      "file": "7155.json"
+    },
+    "7156": {
+      "name": "Move:SNAPTRAP",
+      "file": "7156.json"
+    },
+    "7157": {
+      "name": "Move:SNARL",
+      "file": "7157.json"
+    },
+    "7158": {
+      "name": "OppMove:SNARL",
+      "file": "7158.json"
+    },
+    "7159": {
+      "name": "Move:SNATCH",
+      "file": "7159.json"
+    },
+    "7160": {
+      "name": "Move:SNIPESHOT",
+      "file": "7160.json"
+    },
+    "7161": {
+      "name": "Move:SNORE",
+      "file": "7161.json"
+    },
+    "7162": {
+      "name": "Move:SOAK",
+      "file": "7162.json"
+    },
+    "7163": {
+      "name": "Move:SOFTBOILED",
+      "file": "7163.json"
+    },
+    "7164": {
+      "name": "Move:SOLARBEAM",
+      "file": "7164.json"
+    },
+    "7165": {
+      "name": "Move:SOLARBLADE",
+      "file": "7165.json"
+    },
+    "7166": {
+      "name": "OppMove:SOLARBLADE",
+      "file": "7166.json"
+    },
+    "7167": {
+      "name": "Move:SONICBOOM",
+      "file": "7167.json"
+    },
+    "7168": {
+      "name": "OppMove:SONICBOOM",
+      "file": "7168.json"
+    },
+    "7169": {
+      "name": "Move:SPACIALREND",
+      "file": "7169.json"
+    },
+    "7170": {
+      "name": "OppMove:SPACIALREND",
+      "file": "7170.json"
+    },
+    "7171": {
+      "name": "Move:SPARK",
+      "file": "7171.json"
+    },
+    "7172": {
+      "name": "Move:SPARKLINGARIA",
+      "file": "7172.json"
+    },
+    "7173": {
+      "name": "Move:SPECTRALTHIEF",
+      "file": "7173.json"
+    },
+    "7174": {
+      "name": "OppMove:SPECTRALTHIEF",
+      "file": "7174.json"
+    },
+    "7175": {
+      "name": "Move:SPEEDSWAP",
+      "file": "7175.json"
+    },
+    "7176": {
+      "name": "Move:SPIDERWEB",
+      "file": "7176.json"
+    },
+    "7177": {
+      "name": "Move:SPIKECANNON",
+      "file": "7177.json"
+    },
+    "7178": {
+      "name": "OppMove:SPIKECANNON",
+      "file": "7178.json"
+    },
+    "7179": {
+      "name": "Move:SPIKES",
+      "file": "7179.json"
+    },
+    "7180": {
+      "name": "OppMove:SPIKES",
+      "file": "7180.json"
+    },
+    "7181": {
+      "name": "Move:SPIKYSHIELD",
+      "file": "7181.json"
+    },
+    "7182": {
+      "name": "Move:SPIRITBREAK",
+      "file": "7182.json"
+    },
+    "7183": {
+      "name": "Move:SPIRITSHACKLE",
+      "file": "7183.json"
+    },
+    "7184": {
+      "name": "OppMove:SPIRITSHACKLE",
+      "file": "7184.json"
+    },
+    "7185": {
+      "name": "Move:SPITUP",
+      "file": "7185.json"
+    },
+    "7186": {
+      "name": "OppMove:SPITUP",
+      "file": "7186.json"
+    },
+    "7187": {
+      "name": "Move:SPITE",
+      "file": "7187.json"
+    },
+    "7188": {
+      "name": "Move:SPLASH",
+      "file": "7188.json"
+    },
+    "7189": {
+      "name": "Move:SPORE",
+      "file": "7189.json"
+    },
+    "7190": {
+      "name": "Move:SPOTLIGHT",
+      "file": "7190.json"
+    },
+    "7191": {
+      "name": "OppMove:SPOTLIGHT",
+      "file": "7191.json"
+    },
+    "7192": {
+      "name": "Move:STEALTHROCK",
+      "file": "7192.json"
+    },
+    "7193": {
+      "name": "OppMove:STEALTHROCK",
+      "file": "7193.json"
+    },
+    "7194": {
+      "name": "Move:STEAMERUPTION",
+      "file": "7194.json"
+    },
+    "7195": {
+      "name": "OppMove:STEAMERUPTION",
+      "file": "7195.json"
+    },
+    "7196": {
+      "name": "Move:STEAMROLLER",
+      "file": "7196.json"
+    },
+    "7197": {
+      "name": "Move:STEELBEAM",
+      "file": "7197.json"
+    },
+    "7198": {
+      "name": "Move:STEELROLLER",
+      "file": "7198.json"
+    },
+    "7199": {
+      "name": "Move:STEELWING",
+      "file": "7199.json"
+    },
+    "7200": {
+      "name": "OppMove:STEELWING",
+      "file": "7200.json"
+    },
+    "7201": {
+      "name": "Move:STICKYWEB",
+      "file": "7201.json"
+    },
+    "7202": {
+      "name": "OppMove:STICKYWEB",
+      "file": "7202.json"
+    },
+    "7203": {
+      "name": "Move:STOCKPILE",
+      "file": "7203.json"
+    },
+    "7204": {
+      "name": "Move:STOMP",
+      "file": "7204.json"
+    },
+    "7205": {
+      "name": "Move:STOMPINGTANTRUM",
+      "file": "7205.json"
+    },
+    "7206": {
+      "name": "Move:STONEEDGE",
+      "file": "7206.json"
+    },
+    "7207": {
+      "name": "Move:STOREDPOWER",
+      "file": "7207.json"
+    },
+    "7208": {
+      "name": "Move:STORMTHROW",
+      "file": "7208.json"
+    },
+    "7209": {
+      "name": "Move:STRANGESTEAM",
+      "file": "7209.json"
+    },
+    "7210": {
+      "name": "Move:STRENGTH",
+      "file": "7210.json"
+    },
+    "7211": {
+      "name": "Move:STRENGTHSAP",
+      "file": "7211.json"
+    },
+    "7212": {
+      "name": "OppMove:STRENGTHSAP",
+      "file": "7212.json"
+    },
+    "7213": {
+      "name": "Move:STRINGSHOT",
+      "file": "7213.json"
+    },
+    "7214": {
+      "name": "Move:STRUGGLE",
+      "file": "7214.json"
+    },
+    "7215": {
+      "name": "Move:STRUGGLEBUG",
+      "file": "7215.json"
+    },
+    "7216": {
+      "name": "Move:STUFFCHEEKS",
+      "file": "7216.json"
+    },
+    "7217": {
+      "name": "OppMove:STUFFCHEEKS",
+      "file": "7217.json"
+    },
+    "7218": {
+      "name": "Move:STUNSPORE",
+      "file": "7218.json"
+    },
+    "7219": {
+      "name": "Move:SUBMISSION",
+      "file": "7219.json"
+    },
+    "7220": {
+      "name": "Move:SUBSTITUTE",
+      "file": "7220.json"
+    },
+    "7221": {
+      "name": "OppMove:SUBSTITUTE",
+      "file": "7221.json"
+    },
+    "7222": {
+      "name": "Move:SUBZEROSLAMMER",
+      "file": "7222.json"
+    },
+    "7223": {
+      "name": "Move:SUCKERPUNCH",
+      "file": "7223.json"
+    },
+    "7224": {
+      "name": "Move:SUNNYDAY",
+      "file": "7224.json"
+    },
+    "7225": {
+      "name": "Move:SUNSTEELSTRIKE",
+      "file": "7225.json"
+    },
+    "7226": {
+      "name": "Move:SUPERFANG",
+      "file": "7226.json"
+    },
+    "7227": {
+      "name": "Move:SUPERPOWER",
+      "file": "7227.json"
+    },
+    "7228": {
+      "name": "Move:SUPERSONIC",
+      "file": "7228.json"
+    },
+    "7229": {
+      "name": "OppMove:SUPERSONIC",
+      "file": "7229.json"
+    },
+    "7230": {
+      "name": "Move:SUPERSONICSKYSTRIKE",
+      "file": "7230.json"
+    },
+    "7231": {
+      "name": "Move:SURF",
+      "file": "7231.json"
+    },
+    "7232": {
+      "name": "OppMove:SURF",
+      "file": "7232.json"
+    },
+    "7233": {
+      "name": "Move:SURGINGSTRIKES",
+      "file": "7233.json"
+    },
+    "7234": {
+      "name": "Move:SWAGGER",
+      "file": "7234.json"
+    },
+    "7235": {
+      "name": "OppMove:SWAGGER",
+      "file": "7235.json"
+    },
+    "7236": {
+      "name": "Move:SWALLOW",
+      "file": "7236.json"
+    },
+    "7237": {
+      "name": "OppMove:SWALLOW",
+      "file": "7237.json"
+    },
+    "7238": {
+      "name": "Move:SWEETKISS",
+      "file": "7238.json"
+    },
+    "7239": {
+      "name": "Move:SWEETSCENT",
+      "file": "7239.json"
+    },
+    "7240": {
+      "name": "Move:SWIFT",
+      "file": "7240.json"
+    },
+    "7241": {
+      "name": "OppMove:SWIFT",
+      "file": "7241.json"
+    },
+    "7242": {
+      "name": "Move:SWITCHEROO",
+      "file": "7242.json"
+    },
+    "7243": {
+      "name": "OppMove:SWITCHEROO",
+      "file": "7243.json"
+    },
+    "7244": {
+      "name": "Move:SWORDSDANCE",
+      "file": "7244.json"
+    },
+    "7245": {
+      "name": "Move:SYNCHRONOISE",
+      "file": "7245.json"
+    },
+    "7246": {
+      "name": "Move:SYNTHESIS",
+      "file": "7246.json"
+    }
+  },
+  "7247": {
+    "id": "7247",
+    "name": "Move:TACKLE",
+    "graphic": "PRAS- Strike.png",
+    "position": 3,
+    "frameCount": 7,
+    "timingCount": 0
+  },
+  "7248": {
+    "id": "7248",
+    "name": "Move:TACKLE",
+    "graphic": "PRAS- Strike.png",
+    "position": 3,
+    "frameCount": 7,
+    "timingCount": 0
+  },
+  "7249": {
+    "id": "7249",
+    "name": "Move:TAILGLOW",
+    "graphic": "PRAS- Tail Glow.png",
+    "position": 1,
+    "frameCount": 44,
+    "timingCount": 0
+  },
+  "7250": {
+    "id": "7250",
+    "name": "OppMove:TAILGLOW",
+    "graphic": "PRAS- Tail Glow.png",
+    "position": 1,
+    "frameCount": 44,
+    "timingCount": 0
+  },
+  "7251": {
+    "id": "7251",
+    "name": "Move:TAILSLAP",
+    "graphic": "PRAS- Tail slap.png",
+    "position": 1,
+    "frameCount": 12,
+    "timingCount": 0
+  },
+  "7252": {
+    "id": "7252",
+    "name": "Move:TAILSLAP",
+    "graphic": "PRAS- Tail slap.png",
+    "position": 1,
+    "frameCount": 12,
+    "timingCount": 0
+  },
+  "7253": {
+    "id": "7253",
+    "name": "Move:TAILWHIP",
+    "graphic": "PRAS- Tail Glow.png",
+    "position": 1,
+    "frameCount": 25,
+    "timingCount": 0
+  },
+  "7254": {
+    "id": "7254",
+    "name": "Move:TAILWHIP",
+    "graphic": "PRAS- Tail Glow.png",
+    "position": 1,
+    "frameCount": 25,
+    "timingCount": 0
+  },
+  "7255": {
+    "id": "7255",
+    "name": "Move:TAILWIND",
+    "graphic": "PRAS- Tailwind.png",
+    "position": 4,
+    "frameCount": 50,
+    "timingCount": 0
+  },
+  "7256": {
+    "id": "7256",
+    "name": "OppMove:TAILWIND",
+    "graphic": "PRAS- Tailwind.png",
+    "position": 4,
+    "frameCount": 50,
+    "timingCount": 0
+  },
+  "7257": {
+    "id": "7257",
+    "name": "Move:TAKEDOWN",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 20,
+    "timingCount": 0
+  },
+  "7258": {
+    "id": "7258",
+    "name": "OppMove:TAKEDOWN",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 20,
+    "timingCount": 0
+  },
+  "7259": {
+    "id": "7259",
+    "name": "Move:TARSHOT",
+    "graphic": "GEN8- Tar Shot.png",
+    "position": 1,
+    "frameCount": 27,
+    "timingCount": 0
+  },
+  "7260": {
+    "id": "7260",
+    "name": "OppMove:TARSHOT",
+    "graphic": "GEN8- Tar Shot.png",
+    "position": 1,
+    "frameCount": 27,
+    "timingCount": 0
+  },
+  "7261": {
+    "id": "7261",
+    "name": "Move:TAUNT",
+    "graphic": "PRAS- Taunt.png",
+    "position": 4,
+    "frameCount": 34,
+    "timingCount": 0
+  },
+  "7262": {
+    "id": "7262",
+    "name": "OppMove:TAUNT",
+    "graphic": "PRAS- Taunt.png",
+    "position": 4,
+    "frameCount": 34,
+    "timingCount": 0
+  },
+  "7263": {
+    "id": "7263",
+    "name": "Move:TEARFULLOOK",
+    "graphic": "PRAS- Baby Doll Eyes.png",
+    "position": 4,
+    "frameCount": 30,
+    "timingCount": 0
+  },
+  "7264": {
+    "id": "7264",
+    "name": "OppMove:TEARFULLOOK",
+    "graphic": "PRAS- Baby Doll Eyes.png",
+    "position": 4,
+    "frameCount": 30,
+    "timingCount": 0
+  },
+  "7265": {
+    "id": "7265",
+    "name": "Move:TEATIME",
+    "graphic": "GEN8- Tea Time.png",
+    "position": 4,
+    "frameCount": 48,
+    "timingCount": 0
+  },
+  "7266": {
+    "id": "7266",
+    "name": "Move:TEATIME",
+    "graphic": "GEN8- Tea Time.png",
+    "position": 4,
+    "frameCount": 48,
+    "timingCount": 0
+  },
+  "7267": {
+    "id": "7267",
+    "name": "Move:TECHNOBLAST",
+    "graphic": "PRAS- Techno Blast.png",
+    "position": 2,
+    "frameCount": 70,
+    "timingCount": 0
+  },
+  "7268": {
+    "id": "7268",
+    "name": "OppMove:TECHNOBLAST",
+    "graphic": "PRAS- Techno Blast.png",
+    "position": 2,
+    "frameCount": 70,
+    "timingCount": 0
+  },
+  "7269": {
+    "id": "7269",
+    "name": "Move:TEETERDANCE",
+    "graphic": "PRAS- Sound.png",
+    "position": 2,
+    "frameCount": 30,
+    "timingCount": 2
+  },
+  "7270": {
+    "id": "7270",
+    "name": "OppMove:TEETERDANCE",
+    "graphic": "PRAS- Sound.png",
+    "position": 2,
+    "frameCount": 30,
+    "timingCount": 2
+  },
+  "7271": {
+    "id": "7271",
+    "name": "Move:TELEKINESIS",
+    "graphic": "PRAS- Soft Boil.png",
+    "position": 2,
+    "frameCount": 30,
+    "timingCount": 1
+  },
+  "7272": {
+    "id": "7272",
+    "name": "OppMove:TELEKINESIS",
+    "graphic": "PRAS- Soft Boil.png",
+    "position": 2,
+    "frameCount": 30,
+    "timingCount": 1
+  },
+  "7273": {
+    "id": "7273",
+    "name": "Move:TELEPORT",
+    "graphic": "PRAS- Teleport.png",
+    "position": 1,
+    "frameCount": 21,
+    "timingCount": 0
+  },
+  "7274": {
+    "id": "7274",
+    "name": "Move:TELEPORT",
+    "graphic": "PRAS- Teleport.png",
+    "position": 1,
+    "frameCount": 21,
+    "timingCount": 0
+  },
+  "7275": {
+    "id": "7275",
+    "name": "Move:TERRAINPULSE",
+    "graphic": "PRAS- Soft Boil.png",
+    "position": 3,
+    "frameCount": 16,
+    "timingCount": 0
+  },
+  "7276": {
+    "id": "7276",
+    "name": "Move:TERRAINPULSE",
+    "graphic": "PRAS- Soft Boil.png",
+    "position": 3,
+    "frameCount": 16,
+    "timingCount": 0
+  },
+  "7277": {
+    "id": "7277",
+    "name": "Move:THIEF",
+    "graphic": "PRAS- Strike.png",
+    "position": 2,
+    "frameCount": 20,
+    "timingCount": 3
+  },
+  "7278": {
+    "id": "7278",
+    "name": "OppMove:THIEF",
+    "graphic": "PRAS- Strike.png",
+    "position": 2,
+    "frameCount": 20,
+    "timingCount": 3
+  },
+  "7279": {
+    "id": "7279",
+    "name": "Move:THOUSANDARROWS",
+    "graphic": "PRAS- ThousandWA.png",
+    "position": 2,
+    "frameCount": 82,
+    "timingCount": 0
+  },
+  "7280": {
+    "id": "7280",
+    "name": "Move:THOUSANDARROWS",
+    "graphic": "PRAS- ThousandWA.png",
+    "position": 2,
+    "frameCount": 82,
+    "timingCount": 0
+  },
+  "7281": {
+    "id": "7281",
+    "name": "Move:THOUSANDWAVES",
+    "graphic": "PRAS- ThousandWA.png",
+    "position": 4,
+    "frameCount": 80,
+    "timingCount": 0
+  },
+  "7282": {
+    "id": "7282",
+    "name": "Move:THOUSANDWAVES",
+    "graphic": "PRAS- ThousandWA.png",
+    "position": 4,
+    "frameCount": 80,
+    "timingCount": 0
+  },
+  "7283": {
+    "id": "7283",
+    "name": "Move:THRASH",
+    "graphic": "PRAS- Strike.png",
+    "position": 4,
+    "frameCount": 30,
+    "timingCount": 0
+  },
+  "7284": {
+    "id": "7284",
+    "name": "Move:THRASH",
+    "graphic": "PRAS- Strike.png",
+    "position": 4,
+    "frameCount": 30,
+    "timingCount": 0
+  },
+  "7285": {
+    "id": "7285",
+    "name": "Move:THROATCHOP",
+    "graphic": "PRAS- Sound.png",
+    "position": 1,
+    "frameCount": 37,
+    "timingCount": 0
+  },
+  "7286": {
+    "id": "7286",
+    "name": "OppMove:THROATCHOP",
+    "graphic": "PRAS- Sound.png",
+    "position": 1,
+    "frameCount": 37,
+    "timingCount": 0
+  },
+  "7287": {
+    "id": "7287",
+    "name": "Move:THUNDER",
+    "graphic": "PRAS- Electric.png",
+    "position": 1,
+    "frameCount": 46,
+    "timingCount": 0
+  },
+  "7288": {
+    "id": "7288",
+    "name": "Move:THUNDER",
+    "graphic": "PRAS- Electric.png",
+    "position": 1,
+    "frameCount": 46,
+    "timingCount": 0
+  },
+  "7289": {
+    "id": "7289",
+    "name": "Move:THUNDERCAGE",
+    "graphic": "GEN8- Thundercage.png",
+    "position": 1,
+    "frameCount": 25,
+    "timingCount": 0
+  },
+  "7290": {
+    "id": "7290",
+    "name": "Move:THUNDERCAGE",
+    "graphic": "GEN8- Thundercage.png",
+    "position": 1,
+    "frameCount": 25,
+    "timingCount": 0
+  },
+  "7291": {
+    "id": "7291",
+    "name": "Move:THUNDERFANG",
+    "graphic": "PRAS- Elemental Fangs.png",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 0
+  },
+  "7292": {
+    "id": "7292",
+    "name": "Move:THUNDERFANG",
+    "graphic": "PRAS- Elemental Fangs.png",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 0
+  },
+  "7293": {
+    "id": "7293",
+    "name": "Move:THUNDERPUNCH",
+    "graphic": "PRAS- Elemental Punch.png",
+    "position": 1,
+    "frameCount": 25,
+    "timingCount": 0
+  },
+  "7294": {
+    "id": "7294",
+    "name": "Move:THUNDERPUNCH",
+    "graphic": "PRAS- Elemental Punch.png",
+    "position": 1,
+    "frameCount": 25,
+    "timingCount": 0
+  },
+  "7295": {
+    "id": "7295",
+    "name": "Move:THUNDERSHOCK",
+    "graphic": "PRAS- Electric.png",
+    "position": 1,
+    "frameCount": 20,
+    "timingCount": 0
+  },
+  "7296": {
+    "id": "7296",
+    "name": "Move:THUNDERSHOCK",
+    "graphic": "PRAS- Electric.png",
+    "position": 1,
+    "frameCount": 20,
+    "timingCount": 0
+  },
+  "7297": {
+    "id": "7297",
+    "name": "Move:THUNDERWAVE",
+    "graphic": "PRAS- Electric.png",
+    "position": 1,
+    "frameCount": 16,
+    "timingCount": 1
+  },
+  "7298": {
+    "id": "7298",
+    "name": "Move:THUNDERWAVE",
+    "graphic": "PRAS- Electric.png",
+    "position": 1,
+    "frameCount": 16,
+    "timingCount": 1
+  },
+  "7299": {
+    "id": "7299",
+    "name": "Move:THUNDERBOLT",
+    "graphic": "PRAS- Electric.png",
+    "position": 1,
+    "frameCount": 27,
+    "timingCount": 2
+  },
+  "7300": {
+    "id": "7300",
+    "name": "Move:THUNDERBOLT",
+    "graphic": "PRAS- Electric.png",
+    "position": 1,
+    "frameCount": 27,
+    "timingCount": 2
+  },
+  "7301": {
+    "id": "7301",
+    "name": "Move:THUNDEROUSKICK",
+    "graphic": "Thunderous kick.png",
+    "position": 4,
+    "frameCount": 32,
+    "timingCount": 0
+  },
+  "7302": {
+    "id": "7302",
+    "name": "Move:THUNDEROUSKICK",
+    "graphic": "Thunderous kick.png",
+    "position": 4,
+    "frameCount": 32,
+    "timingCount": 0
+  },
+  "7303": {
+    "id": "7303",
+    "name": "Move:TICKLE",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 34,
+    "timingCount": 1
+  },
+  "7304": {
+    "id": "7304",
+    "name": "Move:TICKLE",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 34,
+    "timingCount": 1
+  },
+  "7305": {
+    "id": "7305",
+    "name": "Move:TOPSYTURVY",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 35,
+    "timingCount": 1
+  },
+  "7306": {
+    "id": "7306",
+    "name": "Move:TOPSYTURVY",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 35,
+    "timingCount": 1
+  },
+  "7307": {
+    "id": "7307",
+    "name": "Move:TORMENT",
+    "graphic": "PRAS- Torment.png",
+    "position": 3,
+    "frameCount": 17,
+    "timingCount": 4
+  },
+  "7308": {
+    "id": "7308",
+    "name": "Move:TORMENT",
+    "graphic": "PRAS- Torment.png",
+    "position": 3,
+    "frameCount": 17,
+    "timingCount": 4
+  },
+  "7309": {
+    "id": "7309",
+    "name": "Move:TOXIC",
+    "graphic": "PRAS- Poison.png",
+    "position": 1,
+    "frameCount": 16,
+    "timingCount": 5
+  },
+  "7310": {
+    "id": "7310",
+    "name": "Move:TOXIC",
+    "graphic": "PRAS- Poison.png",
+    "position": 1,
+    "frameCount": 16,
+    "timingCount": 5
+  },
+  "7311": {
+    "id": "7311",
+    "name": "Move:TOXICSPIKES",
+    "graphic": "PRAS- Spikes.png",
+    "position": 3,
+    "frameCount": 30,
+    "timingCount": 7
+  },
+  "7312": {
+    "id": "7312",
+    "name": "OppMove:TOXICSPIKES",
+    "graphic": "PRAS- Spikes.png",
+    "position": 3,
+    "frameCount": 31,
+    "timingCount": 7
+  },
+  "7313": {
+    "id": "7313",
+    "name": "Move:TOXICTHREAD",
+    "graphic": "PRAS- String Shot.png",
+    "position": 1,
+    "frameCount": 26,
+    "timingCount": 4
+  },
+  "7314": {
+    "id": "7314",
+    "name": "Move:TOXICTHREAD",
+    "graphic": "PRAS- String Shot.png",
+    "position": 1,
+    "frameCount": 26,
+    "timingCount": 4
+  },
+  "7315": {
+    "id": "7315",
+    "name": "Move:TRANSFORM",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "7316": {
+    "id": "7316",
+    "name": "Move:TRANSFORM",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 15,
+    "timingCount": 1
+  },
+  "7317": {
+    "id": "7317",
+    "name": "Move:TRIATTACK",
+    "graphic": "PRAS- Tri Attack.png",
+    "position": 1,
+    "frameCount": 70,
+    "timingCount": 4
+  },
+  "7318": {
+    "id": "7318",
+    "name": "OppMove:TRIATTACK",
+    "graphic": "PRAS- Tri Attack.png",
+    "position": 1,
+    "frameCount": 70,
+    "timingCount": 4
+  },
+  "7319": {
+    "id": "7319",
+    "name": "Move:TRICK",
+    "graphic": "PRAS- Trick.png",
+    "position": 3,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "7320": {
+    "id": "7320",
+    "name": "Move:TRICK",
+    "graphic": "PRAS- Trick.png",
+    "position": 3,
+    "frameCount": 20,
+    "timingCount": 1
+  },
+  "7321": {
+    "id": "7321",
+    "name": "Move:TRICKORTREAT",
+    "graphic": "PRAS- Strike.png",
+    "position": 3,
+    "frameCount": 21,
+    "timingCount": 1
+  },
+  "7322": {
+    "id": "7322",
+    "name": "OppMove:TRICKORTREAT",
+    "graphic": "PRAS- Strike.png",
+    "position": 3,
+    "frameCount": 21,
+    "timingCount": 1
+  },
+  "7323": {
+    "id": "7323",
+    "name": "Move:TRICKROOM",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 40,
+    "timingCount": 1
+  },
+  "7324": {
+    "id": "7324",
+    "name": "Move:TRICKROOM",
+    "graphic": "",
+    "position": 4,
+    "frameCount": 40,
+    "timingCount": 1
+  },
+  "7325": {
+    "id": "7325",
+    "name": "Move:TRIPLEAXEL",
+    "graphic": "GEN8- Elemental Punch.png",
+    "position": 1,
+    "frameCount": 13,
+    "timingCount": 4
+  },
+  "7326": {
+    "id": "7326",
+    "name": "Move:TRIPLEAXEL",
+    "graphic": "GEN8- Elemental Punch.png",
+    "position": 1,
+    "frameCount": 13,
+    "timingCount": 4
+  },
+  "7327": {
+    "id": "7327",
+    "name": "Move:TRIPLEKICK",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 7,
+    "timingCount": 1
+  },
+  "7328": {
+    "id": "7328",
+    "name": "Move:TRIPLEKICK",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 7,
+    "timingCount": 1
+  },
+  "7329": {
+    "id": "7329",
+    "name": "Move:TROPKICK",
+    "graphic": "PRAS- Trop Kick.png",
+    "position": 4,
+    "frameCount": 33,
+    "timingCount": 3
+  },
+  "7330": {
+    "id": "7330",
+    "name": "Move:TROPKICK",
+    "graphic": "PRAS- Trop Kick.png",
+    "position": 4,
+    "frameCount": 33,
+    "timingCount": 3
+  },
+  "7331": {
+    "id": "7331",
+    "name": "Move:TRUMPCARD",
+    "graphic": "PRAS- Trump card.png",
+    "position": 1,
+    "frameCount": 18,
+    "timingCount": 2
+  },
+  "7332": {
+    "id": "7332",
+    "name": "Move:TRUMPCARD",
+    "graphic": "PRAS- Trump card.png",
+    "position": 1,
+    "frameCount": 18,
+    "timingCount": 2
+  },
+  "7333": {
+    "id": "7333",
+    "name": "Move:TWINEEDLE",
+    "graphic": "PRAS- Megahorn.png",
+    "position": 1,
+    "frameCount": 23,
+    "timingCount": 2
+  },
+  "7334": {
+    "id": "7334",
+    "name": "OppMove:TWINEEDLE",
+    "graphic": "PRAS- Megahorn.png",
+    "position": 2,
+    "frameCount": 23,
+    "timingCount": 2
+  },
+  "7335": {
+    "id": "7335",
+    "name": "Move:TWINKLETACKLE",
+    "graphic": "PRAS- Twinkle Tackle.png",
+    "position": 3,
+    "frameCount": 69,
+    "timingCount": 5
+  },
+  "7336": {
+    "id": "7336",
+    "name": "OppMove:TWINKLETACKLE",
+    "graphic": "PRAS- Twinkle Tackle.png",
+    "position": 3,
+    "frameCount": 78,
+    "timingCount": 5
+  },
+  "7337": {
+    "id": "7337",
+    "name": "Move:TWISTER",
+    "graphic": "PRAS- Twister.png",
+    "position": 1,
+    "frameCount": 30,
+    "timingCount": 1
+  },
+  "7338": {
+    "id": "7338",
+    "name": "Move:TWISTER",
+    "graphic": "PRAS- Twister.png",
+    "position": 1,
+    "frameCount": 30,
+    "timingCount": 1
+  },
+  "7339": {
+    "id": "7339",
+    "name": "Move:UTURN",
+    "graphic": "PRAS- U-Turn.png",
+    "position": 4,
+    "frameCount": 28,
+    "timingCount": 1
+  },
+  "7340": {
+    "id": "7340",
+    "name": "OppMove:UTURN",
+    "graphic": "PRAS- U-Turn.png",
+    "position": 4,
+    "frameCount": 28,
+    "timingCount": 1
+  },
+  "7341": {
+    "id": "7341",
+    "name": "Move:UPROAR",
+    "graphic": "PRAS- Uproar.png",
+    "position": 4,
+    "frameCount": 27,
+    "timingCount": 4
+  },
+  "7342": {
+    "id": "7342",
+    "name": "OppMove:UPROAR",
+    "graphic": "PRAS- Uproar.png",
+    "position": 4,
+    "frameCount": 27,
+    "timingCount": 4
+  },
+  "7343": {
+    "id": "7343",
+    "name": "Move:VCREATE",
+    "graphic": "PRAS- Fire.png",
+    "position": 3,
+    "frameCount": 44,
+    "timingCount": 2
+  },
+  "7344": {
+    "id": "7344",
+    "name": "OppMove:VCREATE",
+    "graphic": "PRAS- Fire.png",
+    "position": 3,
+    "frameCount": 44,
+    "timingCount": 2
+  },
+  "7345": {
+    "id": "7345",
+    "name": "Move:VACUUMWAVE",
+    "graphic": "PRAS- Strike.png",
+    "position": 2,
+    "frameCount": 22,
+    "timingCount": 2
+  },
+  "7346": {
+    "id": "7346",
+    "name": "OppMove:VACUUMWAVE",
+    "graphic": "PRAS- Strike.png",
+    "position": 2,
+    "frameCount": 22,
+    "timingCount": 2
+  },
+  "7347": {
+    "id": "7347",
+    "name": "Move:VENOMDRENCH",
+    "graphic": "PRAS- Venom Drench.png",
+    "position": 4,
+    "frameCount": 27,
+    "timingCount": 1
+  },
+  "7348": {
+    "id": "7348",
+    "name": "OppMove:VENOMDRENCH",
+    "graphic": "PRAS- Venom Drench.png",
+    "position": 4,
+    "frameCount": 27,
+    "timingCount": 1
+  },
+  "7349": {
+    "id": "7349",
+    "name": "Move:VENOSHOCK",
+    "graphic": "PRAS- Venoshock.png",
+    "position": 1,
+    "frameCount": 40,
+    "timingCount": 2
+  },
+  "7350": {
+    "id": "7350",
+    "name": "OppMove:VENOSHOCK",
+    "graphic": "PRAS- Venoshock.png",
+    "position": 1,
+    "frameCount": 40,
+    "timingCount": 2
+  },
+  "7351": {
+    "id": "7351",
+    "name": "Move:VISEGRIP",
+    "graphic": "PRAS- Vice Grip.png",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 2
+  },
+  "7352": {
+    "id": "7352",
+    "name": "OppMove:VISEGRIP",
+    "graphic": "PRAS- Vice Grip.png",
+    "position": 1,
+    "frameCount": 15,
+    "timingCount": 2
+  },
+  "7353": {
+    "id": "7353",
+    "name": "Move:VINEWHIP",
+    "graphic": "PRAS- Grass.png",
+    "position": 1,
+    "frameCount": 14,
+    "timingCount": 1
+  },
+  "7354": {
+    "id": "7354",
+    "name": "OppMove:VINEWHIP",
+    "graphic": "PRAS- Grass.png",
+    "position": 1,
+    "frameCount": 14,
+    "timingCount": 1
+  },
+  "7355": {
+    "id": "7355",
+    "name": "Move:VITALTHROW",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 23,
+    "timingCount": 2
+  },
+  "7356": {
+    "id": "7356",
+    "name": "OppMove:VITALTHROW",
+    "graphic": "PRAS- Strike.png",
+    "position": 1,
+    "frameCount": 23,
+    "timingCount": 2
+  },
+  "7357": {
+    "id": "7357",
+    "name": "Move:VOLTSWITCH",
+    "graphic": "PRAS- Electric.png",
+    "position": 3,
+    "frameCount": 26,
+    "timingCount": 2
+  },
+  "7358": {
+    "id": "7358",
+    "name": "OppMove:VOLTSWITCH",
+    "graphic": "PRAS- Electric.png",
+    "position": 3,
+    "frameCount": 26,
+    "timingCount": 2
+  },
+  "7359": {
+    "id": "7359",
+    "name": "Move:VOLTTACKLE",
+    "graphic": "PRAS- Electric.png",
+    "position": 3,
+    "frameCount": 28,
+    "timingCount": 2
+  },
+  "7360": {
+    "id": "7360",
+    "name": "OppMove:VOLTTACKLE",
+    "graphic": "PRAS- Electric.png",
+    "position": 3,
+    "frameCount": 28,
+    "timingCount": 2
   }
 }

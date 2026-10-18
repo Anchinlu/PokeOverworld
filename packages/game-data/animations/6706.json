@@ -1,0 +1,292 @@
+{
+  "id": 6706,
+  "name": "Move:NATUREPOWER",
+  "graphic": "PRAS- Absorption.png",
+  "frameWidth": 192,
+  "frameHeight": 192,
+  "fps": 20,
+  "frames": [
+    {
+      "cels": [
+        {
+          "pattern": 0,
+          "x": 128,
+          "y": 224,
+          "zoomX": 80,
+          "zoomY": 80,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 220,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 82,
+          "zoomY": 82,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 220,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 2,
+          "x": 128,
+          "y": 224,
+          "zoomX": 85,
+          "zoomY": 85,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 220,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 3,
+          "x": 128,
+          "y": 224,
+          "zoomX": 88,
+          "zoomY": 88,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 220,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 4,
+          "x": 128,
+          "y": 224,
+          "zoomX": 91,
+          "zoomY": 91,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 220,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 5,
+          "x": 128,
+          "y": 224,
+          "zoomX": 94,
+          "zoomY": 94,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 220,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 6,
+          "x": 128,
+          "y": 224,
+          "zoomX": 97,
+          "zoomY": 97,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 220,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 7,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 220,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 8,
+          "x": 128,
+          "y": 224,
+          "zoomX": 102,
+          "zoomY": 102,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 220,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 9,
+          "x": 128,
+          "y": 224,
+          "zoomX": 105,
+          "zoomY": 105,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 78,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 9,
+          "x": 128,
+          "y": 224,
+          "zoomX": 108,
+          "zoomY": 108,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 62,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 9,
+          "x": 128,
+          "y": 224,
+          "zoomX": 111,
+          "zoomY": 111,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 47,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 9,
+          "x": 128,
+          "y": 224,
+          "zoomX": 114,
+          "zoomY": 114,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 31,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 9,
+          "x": 128,
+          "y": 224,
+          "zoomX": 117,
+          "zoomY": 117,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 15,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 9,
+          "x": 128,
+          "y": 224,
+          "zoomX": 120,
+          "zoomY": 120,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 0,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    }
+  ],
+  "timings": [
+    {
+      "frame": 0,
+      "type": "sound",
+      "payload": {
+        "sound": "PRSFX- Natural Gift1.wav",
+        "volume": 85,
+        "pitch": 110
+      }
+    }
+  ],
+  "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+}

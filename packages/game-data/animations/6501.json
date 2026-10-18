@@ -1038,7 +1038,7 @@
       "frame": 0,
       "type": "sound",
       "payload": {
-        "sound": "Anim/Screech.ogg",
+        "sound": "Anim/Thunder1.ogg",
         "volume": 90,
         "pitch": 115
       }
@@ -1059,16 +1059,25 @@
       }
     },
     {
-      "frame": 5,
+      "frame": 4,
       "type": "sound",
       "payload": {
-        "sound": "Anim/Metal Sound.ogg",
+        "sound": "Anim/metal.ogg",
+        "volume": 95,
+        "pitch": 125
+      }
+    },
+    {
+      "frame": 8,
+      "type": "sound",
+      "payload": {
+        "sound": "Anim/Sound2.ogg",
         "volume": 95,
         "pitch": 105
       }
     },
     {
-      "frame": 10,
+      "frame": 8,
       "type": "flash",
       "payload": {
         "flashDuration": 4,

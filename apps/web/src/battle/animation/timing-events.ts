@@ -10,10 +10,15 @@ export interface ActiveFlashState {
 
 function parseFlashColor(rawColor: unknown): [number, number, number, number] {
   if (Array.isArray(rawColor)) {
-    const r = Math.max(0, Math.min(255, Number(rawColor[0]) || 255));
-    const g = Math.max(0, Math.min(255, Number(rawColor[1]) || 255));
-    const b = Math.max(0, Math.min(255, Number(rawColor[2]) || 255));
-    const a = rawColor.length > 3 ? Math.max(0, Math.min(255, Number(rawColor[3]) || 255)) : 220;
+    const numR = Number(rawColor[0]);
+    const numG = Number(rawColor[1]);
+    const numB = Number(rawColor[2]);
+    const numA = rawColor.length > 3 ? Number(rawColor[3]) : 220;
+
+    const r = Math.max(0, Math.min(255, Number.isFinite(numR) ? numR : 255));
+    const g = Math.max(0, Math.min(255, Number.isFinite(numG) ? numG : 255));
+    const b = Math.max(0, Math.min(255, Number.isFinite(numB) ? numB : 255));
+    const a = Math.max(0, Math.min(255, Number.isFinite(numA) ? numA : 220));
     return [r, g, b, a];
   }
 
@@ -49,6 +54,7 @@ export class TimingEventManager {
    * Processes timing events at the specified frame.
    */
   public triggerFrameTimings(currentFrame: number, timings: AnimationTimingEvent[]): void {
+    if (!timings || !Array.isArray(timings)) return;
     for (let i = 0; i < timings.length; i++) {
       const event = timings[i];
       if (event.frame === currentFrame && !this.executedTimingIndices.has(i)) {
@@ -59,23 +65,56 @@ export class TimingEventManager {
   }
 
   private executeEvent(event: AnimationTimingEvent): void {
-    if (event.type === 'sound') {
-      const soundName = event.payload.sound as string;
-      if (soundName) {
-        const volume = typeof event.payload.volume === 'number' ? event.payload.volume / 100 : 0.8;
+    // 1. Sound event handling (supporting standard {type: 'sound', payload: {sound: ...}}, {sound: {file: ...}}, and legacy {se: ...})
+    let soundName: string | undefined;
+    let volume = 0.8;
+
+    const rawSoundObj = (event as unknown as { sound?: { file?: string; sound?: string; name?: string; volume?: number } }).sound;
+    if (event.type === 'sound' && event.payload) {
+      soundName = (event.payload.sound || event.payload.file || event.payload.name || rawSoundObj?.file || rawSoundObj?.sound || rawSoundObj?.name) as string;
+      if (typeof event.payload.volume === 'number') {
+        volume = event.payload.volume / 100;
+      } else if (typeof rawSoundObj?.volume === 'number') {
+        volume = rawSoundObj.volume / 100;
+      }
+    } else if (event.type === 'sound' && rawSoundObj) {
+      soundName = rawSoundObj.file || rawSoundObj.sound || rawSoundObj.name;
+      if (typeof rawSoundObj.volume === 'number') {
+        volume = rawSoundObj.volume / 100;
+      }
+    } else if ((event as unknown as { se?: unknown }).se) {
+      const rawObj = event as unknown as { se: unknown; volume?: number };
+      const rawSe = rawObj.se;
+      if (typeof rawSe === 'string') {
+        soundName = rawSe;
+      } else if (typeof rawSe === 'object' && rawSe !== null) {
+        const seObj = rawSe as Record<string, unknown>;
+        soundName = (seObj.name || seObj['@name'] || seObj.file || seObj.sound) as string;
+      }
+      if (typeof rawObj.volume === 'number') {
+        volume = rawObj.volume / 100;
+      }
+    }
+
+    if (soundName && typeof soundName === 'string') {
+      // Ignore graphic assets accidentally authored into timing SE
+      if (!/\.(png|jpe?g|bmp|gif)$/i.test(soundName)) {
         // Clean sound name and strip leading 'Audio/SE/' if already present
         let cleanName = soundName.replace(/\\/g, '/').replace(/^\/+/, '');
         if (cleanName.toLowerCase().startsWith('audio/se/')) {
           cleanName = cleanName.slice(9);
         }
         const hasExt = /\.(ogg|wav|mp3)$/i.test(cleanName);
-        // All EBDX move animations in Audio/SE/EBDX/Anim/ are .wav files on disk
-        const isEbdxWav =
+        // EBDX and PRSFX move animations are .wav files on disk
+        const isWav =
           !hasExt &&
-          (/^EBDX\/Anim\//i.test(cleanName) || /^Anim\/eb_/i.test(cleanName));
+          (/^EBDX\/Anim\//i.test(cleanName) ||
+            /^Anim\/eb_/i.test(cleanName) ||
+            /^Anim\/PRSFX-/i.test(cleanName) ||
+            /^PRSFX-/i.test(cleanName));
         const sePath = hasExt
           ? `Audio/SE/${cleanName}`
-          : isEbdxWav
+          : isWav
             ? `Audio/SE/${cleanName}.wav`
             : `Audio/SE/${cleanName}.ogg`;
         battleSePlayer.playSound(sePath, volume);

@@ -407,7 +407,7 @@
       "frame": 0,
       "type": "sound",
       "payload": {
-        "sound": "EBDX/Anim/ground1",
+        "sound": "EBDX/Anim/ground1.wav",
         "volume": 80,
         "pitch": 100
       }
@@ -416,7 +416,7 @@
       "frame": 3,
       "type": "sound",
       "payload": {
-        "sound": "EBDX/Anim/normal3",
+        "sound": "EBDX/Anim/normal3.wav",
         "volume": 90,
         "pitch": 105
       }

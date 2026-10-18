@@ -21,6 +21,7 @@ export interface DamageCalculationResult {
   healedDefender?: boolean;
   healAmount?: number;
   attackerSelfFainted?: boolean;
+  hitDamages?: number[];
 }
 
 export const MULTI_HIT_2_TO_5_MOVE_IDS = new Set([
@@ -75,6 +76,7 @@ import {
   isGrounded,
 } from './environment';
 import { calculateEffectiveSpeed } from './turn-order';
+import { normalizeMoveId } from '../moves-db';
 import type { PokemonSpeciesData } from '@pokemon/shared-types';
 import rawPokemonData from '@pokemon/game-data/pokemon-db.json';
 
@@ -165,7 +167,7 @@ export function calculateDamage(
   environment?: BattleEnvironment,
   defenderSide?: BattlerSide
 ): DamageCalculationResult {
-  const moveId = move.id.toLowerCase();
+  const moveId = normalizeMoveId(move.id);
   let effectiveMoveType: PokemonType = move.type;
   let effectivePower = move.power;
 
@@ -410,6 +412,7 @@ export function calculateDamage(
   let effText = '';
   let secMsg = '';
   let hitsCount = 1;
+  let hitDamages: number[] | undefined;
 
   // A. Special fixed-damage or unique calculation moves
   if (moveId === 'seismic_toss' || moveId === 'night_shade') {
@@ -450,6 +453,16 @@ export function calculateDamage(
       secMsg: ` ${attacker.name} đã ngất xỉu!`,
       attackerSelfFainted: true,
     };
+  } else if (moveId === 'bide') {
+    const storedDamage = attacker.bideDamageTaken ?? 0;
+    if (storedDamage <= 0) {
+      return {
+        damage: 0, isCritical: false, typeEffectiveness: 1, hitsCount: 1,
+        effText: '', secMsg: ' Nhưng Bide thất bại vì chưa tích trữ sát thương!', failed: true,
+      };
+    }
+    damage = storedDamage * 2;
+    secMsg = ` ${attacker.name} trả lại gấp đôi sát thương đã hứng chịu!`;
   } else if (
     moveId === 'fissure' ||
     moveId === 'guillotine' ||
@@ -645,6 +658,7 @@ export function calculateDamage(
       attacker,
       defender
     );
+    const glaiveRushDamageMult = (defender.glaiveRushTurns ?? 0) > 0 ? 2.0 : 1.0;
 
     let screenMult = 1.0;
     if (!isCrit && defenderSide) {
@@ -670,6 +684,7 @@ export function calculateDamage(
           heldItemDamageMult *
           abilityDamageMult *
           envDamageMult *
+          glaiveRushDamageMult *
           screenMult
       )
     );
@@ -711,6 +726,7 @@ export function calculateDamage(
       }
 
       let totalDmg = damage;
+      hitDamages = [damage];
       let hits = 1;
       let simDefenderHp = defender.currentHp - damage;
 
@@ -724,6 +740,7 @@ export function calculateDamage(
           )
         );
         totalDmg += hitDmg;
+        hitDamages.push(hitDmg);
         simDefenderHp -= hitDmg;
         hits++;
       }
@@ -754,6 +771,7 @@ export function calculateDamage(
     isCritical: isCrit,
     typeEffectiveness: typeEff,
     hitsCount,
+    hitDamages,
     effText,
     secMsg,
   };

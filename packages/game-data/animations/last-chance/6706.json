@@ -1,1 +1,292 @@
-{"id":"6706","name":"Move:NATUREPOWER","graphic":"last-chance/028-State01.png","hue":0,"position":4,"fps":20,"frames":[{"cels":[{"pattern":-1,"x":128,"y":224,"zoomX":100,"zoomY":100,"angle":0,"mirror":false,"opacity":255,"blendMode":"normal","visible":true,"priority":1,"focus":"user"},{"pattern":-2,"x":384,"y":96,"zoomX":100,"zoomY":100,"angle":0,"mirror":false,"opacity":255,"blendMode":"normal","visible":true,"priority":1,"focus":"target"},{"pattern":3,"x":126,"y":226,"zoomX":50,"zoomY":50,"angle":0,"mirror":false,"opacity":194,"blendMode":"normal","visible":true,"priority":1,"focus":"user"}]},{"cels":[{"pattern":-1,"x":128,"y":224,"zoomX":100,"zoomY":100,"angle":0,"mirror":false,"opacity":255,"blendMode":"normal","visible":true,"priority":1,"focus":"user"},{"pattern":-2,"x":384,"y":96,"zoomX":100,"zoomY":100,"angle":0,"mirror":false,"opacity":255,"blendMode":"normal","visible":true,"priority":1,"focus":"target"},{"pattern":3,"x":126,"y":226,"zoomX":70,"zoomY":70,"angle":0,"mirror":false,"opacity":194,"blendMode":"normal","visible":true,"priority":1,"focus":"user"}]},{"cels":[{"pattern":-1,"x":128,"y":224,"zoomX":100,"zoomY":100,"angle":0,"mirror":false,"opacity":255,"blendMode":"normal","visible":true,"priority":1,"focus":"user"},{"pattern":-2,"x":384,"y":96,"zoomX":100,"zoomY":100,"angle":0,"mirror":false,"opacity":255,"blendMode":"normal","visible":true,"priority":1,"focus":"target"},{"pattern":3,"x":126,"y":226,"zoomX":90,"zoomY":90,"angle":0,"mirror":false,"opacity":194,"blendMode":"normal","visible":true,"priority":1,"focus":"user"}]},{"cels":[{"pattern":-1,"x":128,"y":224,"zoomX":100,"zoomY":100,"angle":0,"mirror":false,"opacity":255,"blendMode":"normal","visible":true,"priority":1,"focus":"user"},{"pattern":-2,"x":384,"y":96,"zoomX":100,"zoomY":100,"angle":0,"mirror":false,"opacity":255,"blendMode":"normal","visible":true,"priority":1,"focus":"target"},{"pattern":3,"x":126,"y":226,"zoomX":110,"zoomY":110,"angle":0,"mirror":false,"opacity":194,"blendMode":"normal","visible":true,"priority":1,"focus":"user"}]},{"cels":[{"pattern":-1,"x":128,"y":224,"zoomX":100,"zoomY":100,"angle":0,"mirror":false,"opacity":255,"blendMode":"normal","visible":true,"priority":1,"focus":"user"},{"pattern":-2,"x":384,"y":96,"zoomX":100,"zoomY":100,"angle":0,"mirror":false,"opacity":255,"blendMode":"normal","visible":true,"priority":1,"focus":"target"},{"pattern":3,"x":126,"y":226,"zoomX":130,"zoomY":130,"angle":0,"mirror":false,"opacity":194,"blendMode":"normal","visible":true,"priority":1,"focus":"user"}]},{"cels":[{"pattern":-1,"x":128,"y":224,"zoomX":100,"zoomY":100,"angle":0,"mirror":false,"opacity":255,"blendMode":"normal","visible":true,"priority":1,"focus":"user"},{"pattern":-2,"x":384,"y":96,"zoomX":100,"zoomY":100,"angle":0,"mirror":false,"opacity":255,"blendMode":"normal","visible":true,"priority":1,"focus":"target"},{"pattern":3,"x":126,"y":226,"zoomX":150,"zoomY":150,"angle":0,"mirror":false,"opacity":194,"blendMode":"normal","visible":true,"priority":1,"focus":"user"}]},{"cels":[{"pattern":-1,"x":128,"y":224,"zoomX":100,"zoomY":100,"angle":0,"mirror":false,"opacity":255,"blendMode":"normal","visible":true,"priority":1,"focus":"user"},{"pattern":-2,"x":384,"y":96,"zoomX":100,"zoomY":100,"angle":0,"mirror":false,"opacity":255,"blendMode":"normal","visible":true,"priority":1,"focus":"target"},{"pattern":3,"x":126,"y":226,"zoomX":150,"zoomY":150,"angle":0,"mirror":false,"opacity":113,"blendMode":"normal","visible":true,"priority":1,"focus":"user"}]},{"cels":[{"pattern":-1,"x":128,"y":224,"zoomX":100,"zoomY":100,"angle":0,"mirror":false,"opacity":255,"blendMode":"normal","visible":true,"priority":1,"focus":"user"},{"pattern":-2,"x":384,"y":96,"zoomX":100,"zoomY":100,"angle":0,"mirror":false,"opacity":255,"blendMode":"normal","visible":true,"priority":1,"focus":"target"},{"pattern":3,"x":126,"y":226,"zoomX":150,"zoomY":150,"angle":0,"mirror":false,"opacity":42,"blendMode":"normal","visible":true,"priority":1,"focus":"user"}]},{"cels":[{"pattern":-1,"x":128,"y":224,"zoomX":100,"zoomY":100,"angle":0,"mirror":false,"opacity":255,"blendMode":"normal","visible":true,"priority":1,"focus":"user"},{"pattern":-2,"x":384,"y":96,"zoomX":100,"zoomY":100,"angle":0,"mirror":false,"opacity":255,"blendMode":"normal","visible":true,"priority":1,"focus":"target"}]},{"cels":[{"pattern":-1,"x":128,"y":224,"zoomX":100,"zoomY":100,"angle":0,"mirror":false,"opacity":255,"blendMode":"normal","visible":true,"priority":1,"focus":"user"},{"pattern":-2,"x":384,"y":96,"zoomX":100,"zoomY":100,"angle":0,"mirror":false,"opacity":255,"blendMode":"normal","visible":true,"priority":1,"focus":"target"}]}],"timings":[{"frame":0,"type":"sound","payload":{"sound":"Wind8.ogg","volume":80,"pitch":100}}],"sourcePack":"Pokémon Last Chance 1.22","sourceAnimationId":706}
+{
+  "id": 6706,
+  "name": "Move:NATUREPOWER",
+  "graphic": "PRAS- Absorption.png",
+  "frameWidth": 192,
+  "frameHeight": 192,
+  "fps": 20,
+  "frames": [
+    {
+      "cels": [
+        {
+          "pattern": 0,
+          "x": 128,
+          "y": 224,
+          "zoomX": 80,
+          "zoomY": 80,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 220,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 1,
+          "x": 128,
+          "y": 224,
+          "zoomX": 82,
+          "zoomY": 82,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 220,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 2,
+          "x": 128,
+          "y": 224,
+          "zoomX": 85,
+          "zoomY": 85,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 220,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 3,
+          "x": 128,
+          "y": 224,
+          "zoomX": 88,
+          "zoomY": 88,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 220,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 4,
+          "x": 128,
+          "y": 224,
+          "zoomX": 91,
+          "zoomY": 91,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 220,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 5,
+          "x": 128,
+          "y": 224,
+          "zoomX": 94,
+          "zoomY": 94,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 220,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 6,
+          "x": 128,
+          "y": 224,
+          "zoomX": 97,
+          "zoomY": 97,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 220,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 7,
+          "x": 128,
+          "y": 224,
+          "zoomX": 100,
+          "zoomY": 100,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 220,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 8,
+          "x": 128,
+          "y": 224,
+          "zoomX": 102,
+          "zoomY": 102,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 220,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 9,
+          "x": 128,
+          "y": 224,
+          "zoomX": 105,
+          "zoomY": 105,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 78,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 9,
+          "x": 128,
+          "y": 224,
+          "zoomX": 108,
+          "zoomY": 108,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 62,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 9,
+          "x": 128,
+          "y": 224,
+          "zoomX": 111,
+          "zoomY": 111,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 47,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 9,
+          "x": 128,
+          "y": 224,
+          "zoomX": 114,
+          "zoomY": 114,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 31,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 9,
+          "x": 128,
+          "y": 224,
+          "zoomX": 117,
+          "zoomY": 117,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 15,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    },
+    {
+      "cels": [
+        {
+          "pattern": 9,
+          "x": 128,
+          "y": 224,
+          "zoomX": 120,
+          "zoomY": 120,
+          "angle": 0,
+          "mirror": false,
+          "opacity": 0,
+          "blendMode": "additive",
+          "visible": true,
+          "priority": 1,
+          "focus": "user"
+        }
+      ]
+    }
+  ],
+  "timings": [
+    {
+      "frame": 0,
+      "type": "sound",
+      "payload": {
+        "sound": "PRSFX- Natural Gift1.wav",
+        "volume": 85,
+        "pitch": 110
+      }
+    }
+  ],
+  "sourcePack": "Pokemon Unbreakable Ties 4.1.2"
+}

@@ -22,6 +22,13 @@ import { pokemonCryPlayer } from '../ui/pokedex/pokemon-cry';
 import { battleBgmPlayer, battleSePlayer } from '../audio';
 import { BATTLE_ASSETS } from '../assets';
 import { battleAnimationPlayer } from './animation';
+import { partyService } from '../domain/party/party-service';
+import type { BattlePartyEffects } from './party-effects';
+
+const playerPartyEffects: BattlePartyEffects = {
+  healParty: (side, cureStatus) => (side === 'player' ? partyService.healParty(cureStatus) : 0),
+  reviveOne: (side, hpRatio) => side === 'player' && partyService.reviveOne(hpRatio),
+};
 
 export interface BattleScreenResult {
   outcome: 'caught' | 'victory' | 'fled' | 'defeated';
@@ -54,7 +61,14 @@ export class BattleScreen {
     this.onComplete = onComplete;
 
     // 1. Engine (pure game logic)
-    this.engine = new BattleEngine(playerPokemon, wildPokemon, environment, undefined, isWild);
+    this.engine = new BattleEngine(
+      playerPokemon,
+      wildPokemon,
+      environment,
+      undefined,
+      isWild,
+      playerPartyEffects
+    );
 
     // 2. State
     this.state = new BattleState(this.engine.rng);

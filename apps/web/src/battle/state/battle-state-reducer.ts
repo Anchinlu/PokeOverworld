@@ -58,6 +58,7 @@ export function ensureBattlerState(battler: BattlerPokemon): void {
   battler.isProtected ??= false;
   battler.mustRecharge ??= false;
   battler.isSeeded ??= false;
+  battler.bideDamageTaken ??= 0;
   battler.destinyBond ??= false;
   battler.isFlinched ??= false;
   battler.confusionTurns ??= 0;
@@ -65,6 +66,9 @@ export function ensureBattlerState(battler: BattlerPokemon): void {
   battler.firstTurnInBattle ??= true;
   battler.hasAquaRing ??= false;
   battler.isIngrained ??= false;
+  battler.wishTurns ??= 0;
+  battler.wishHealAmount ??= 0;
+  battler.healingWishPending ??= false;
   battler.safeguardTurns ??= 0;
   battler.isTrapped ??= false;
   battler.tauntTurns ??= 0;
@@ -73,6 +77,8 @@ export function ensureBattlerState(battler: BattlerPokemon): void {
   battler.uproarTurns ??= 0;
   battler.isEndured ??= false;
   battler.stockpileCount ??= 0;
+  battler.abilitySuppressed ??= false;
+  battler.glaiveRushTurns ??= 0;
 }
 
 /**
@@ -85,6 +91,7 @@ export function resetRoundCombatFlags(player: BattlerPokemon, enemy: BattlerPoke
   player.isProtected = false;
   player.isEndured = false;
   player.damagedThisRound = false;
+  if ((player.glaiveRushTurns ?? 0) > 0) player.glaiveRushTurns!--;
 
   enemy.isFlinched = false;
   enemy.hasActedThisRound = false;
@@ -92,6 +99,7 @@ export function resetRoundCombatFlags(player: BattlerPokemon, enemy: BattlerPoke
   enemy.isProtected = false;
   enemy.isEndured = false;
   enemy.damagedThisRound = false;
+  if ((enemy.glaiveRushTurns ?? 0) > 0) enemy.glaiveRushTurns!--;
 }
 
 /**

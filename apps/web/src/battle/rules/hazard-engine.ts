@@ -169,9 +169,12 @@ export function applyEntryHazards(
   // 1. Stealth Rock (damages based on Rock type effectiveness)
   if (hazards.stealthRock && pokemon.currentHp > 0 && !pokemon.isFainted) {
     const rockEff = getTypeEffectiveness('Rock', pokemon.types);
-    const dmg = Math.max(1, Math.floor(pokemon.maxHp * 0.125 * rockEff));
+    const hasMagicGuard = AbilityEngine.normalize(pokemon.ability) === 'magicguard';
+    const dmg = hasMagicGuard ? 0 : Math.max(1, Math.floor(pokemon.maxHp * 0.125 * rockEff));
     pokemon.currentHp = Math.max(0, pokemon.currentHp - dmg);
-    const msg = `${pokemon.name} bị đá nhọn đâm trúng! (-${dmg} HP)`;
+    const msg = hasMagicGuard
+      ? `${pokemon.name} nhờ [Bảo Hộ Ma Thuật] không bị ảnh hưởng bởi Đá Tàng Hình!`
+      : `${pokemon.name} bị đá nhọn đâm trúng! (-${dmg} HP)`;
     messages.push(msg);
     events.push(
       BattleEventFactory.damageDealt(
@@ -202,10 +205,13 @@ export function applyEntryHazards(
     pokemon.currentHp > 0 &&
     !pokemon.isFainted
   ) {
+    const hasMagicGuard = AbilityEngine.normalize(pokemon.ability) === 'magicguard';
     const spikeFraction = hazards.spikes === 1 ? 1 / 8 : hazards.spikes === 2 ? 1 / 6 : 1 / 4;
-    const dmg = Math.max(1, Math.floor(pokemon.maxHp * spikeFraction));
+    const dmg = hasMagicGuard ? 0 : Math.max(1, Math.floor(pokemon.maxHp * spikeFraction));
     pokemon.currentHp = Math.max(0, pokemon.currentHp - dmg);
-    const msg = `${pokemon.name} bị chông gai đâm trúng! (-${dmg} HP)`;
+    const msg = hasMagicGuard
+      ? `${pokemon.name} nhờ [Bảo Hộ Ma Thuật] không bị ảnh hưởng bởi Chông Gai!`
+      : `${pokemon.name} bị chông gai đâm trúng! (-${dmg} HP)`;
     messages.push(msg);
     events.push(
       BattleEventFactory.damageDealt(
