@@ -15,6 +15,7 @@ export class InputManager {
   private keys: Record<string, boolean> = {};
   private keyQueue: string[] = [];
   private actionListeners: ActionCallback[] = [];
+  private jumpRequested = false;
 
   constructor() {
     this.attachListeners();
@@ -23,6 +24,20 @@ export class InputManager {
   /** Checks if running modifier (Shift) is held. */
   public isRunning(): boolean {
     return !!this.keys['shift'];
+  }
+
+  /** Checks if Jump key (Space) is currently pressed or held. */
+  public isJumpPressed(): boolean {
+    return !!(this.keys[' '] || this.keys['space']);
+  }
+
+  /** Consumes a one-shot jump trigger request (returns true once per Space key press). */
+  public consumeJumpRequest(): boolean {
+    if (this.jumpRequested) {
+      this.jumpRequested = false;
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -85,6 +100,13 @@ export class InputManager {
       this.keys['shift'] = true;
     }
 
+    // Jump trigger (Space)
+    if (k === ' ' || e.code === 'Space') {
+      this.keys[' '] = true;
+      this.keys['space'] = true;
+      this.jumpRequested = true;
+    }
+
     // Interaction trigger
     if ([' ', 'enter', 'e'].includes(k)) {
       e.preventDefault();
@@ -99,11 +121,18 @@ export class InputManager {
       this.keyQueue.splice(idx, 1);
     }
     this.keys[k] = false;
+
+    if (k === ' ' || e.code === 'Space') {
+      this.keys[' '] = false;
+      this.keys['space'] = false;
+      this.jumpRequested = false;
+    }
   };
 
   private handleBlur = (): void => {
     // Reset all pressed keys when window loses focus to prevent stuck movement
     this.keys = {};
     this.keyQueue = [];
+    this.jumpRequested = false;
   };
 }

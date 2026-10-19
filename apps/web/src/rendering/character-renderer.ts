@@ -20,15 +20,26 @@ export class CharacterRenderer {
       list.push({
         ySort: follower.y + 55,
         draw: (ctx) => {
-          ctx.fillStyle = 'rgba(0, 0, 0, 0.30)';
+          const fJumpH = Math.max(0, -(follower.jumpY || 0));
+          const fShadowScale = Math.max(0.55, 1 - fJumpH / 32);
+          const fAlpha = (0.30 * Math.max(0.45, 1 - fJumpH / 36)).toFixed(2);
+          ctx.fillStyle = `rgba(0, 0, 0, ${fAlpha})`;
           ctx.beginPath();
-          ctx.ellipse(follower.x + 32, follower.y + 56, 10, 5, 0, 0, Math.PI * 2);
+          ctx.ellipse(
+            follower.x + 32,
+            follower.y + 56,
+            10 * fShadowScale,
+            5 * fShadowScale,
+            0,
+            0,
+            Math.PI * 2
+          );
           ctx.fill();
 
           if (follower.isShiny) {
             const now = Date.now();
             const pulse = 0.5 + 0.5 * Math.sin(now * 0.005 + follower.gx * 3);
-            const glowRadius = 14 + pulse * 6;
+            const glowRadius = (14 + pulse * 6) * fShadowScale;
             const auraGrad = ctx.createRadialGradient(
               follower.x + 32,
               follower.y + 56,
@@ -60,9 +71,20 @@ export class CharacterRenderer {
     list.push({
       ySort: player.y + 57,
       draw: (ctx) => {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+        const jumpH = Math.max(0, -(player.jumpY || 0));
+        const shadowScale = Math.max(0.55, 1 - jumpH / 36);
+        const alpha = (0.35 * Math.max(0.45, 1 - jumpH / 40)).toFixed(2);
+        ctx.fillStyle = `rgba(0, 0, 0, ${alpha})`;
         ctx.beginPath();
-        ctx.ellipse(player.x + 32, player.y + 58, 12, 6, 0, 0, Math.PI * 2);
+        ctx.ellipse(
+          player.x + 32,
+          player.y + 58,
+          12 * shadowScale,
+          6 * shadowScale,
+          0,
+          0,
+          Math.PI * 2
+        );
         ctx.fill();
       },
     });
@@ -81,6 +103,7 @@ export class CharacterRenderer {
     list.push({
       ySort: follower.y + 56,
       draw: (ctx) => {
+        const drawY = follower.y + (follower.jumpY || 0);
         if (img && img.complete) {
           ctx.drawImage(
             img,
@@ -89,14 +112,14 @@ export class CharacterRenderer {
             64,
             64,
             follower.x,
-            follower.y,
+            drawY,
             64,
             64
           );
         }
 
         if (follower.isShiny) {
-          this.drawOverworldShinySparkles(ctx, follower.x + 32, follower.y + 28, 42);
+          this.drawOverworldShinySparkles(ctx, follower.x + 32, drawY + 28, 42);
         }
       },
     });
@@ -108,6 +131,7 @@ export class CharacterRenderer {
     list.push({
       ySort: player.y + 58,
       draw: (ctx) => {
+        const drawY = player.y + (player.jumpY || 0);
         if (img && img.complete) {
           ctx.drawImage(
             img,
@@ -116,7 +140,7 @@ export class CharacterRenderer {
             64,
             64,
             player.x,
-            player.y,
+            drawY,
             64,
             64
           );

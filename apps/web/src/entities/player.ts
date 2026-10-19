@@ -44,6 +44,12 @@ export class Player {
 
   public speedMode: SpeedMode = 'classic';
 
+  // Cliff Jumping & Elevation Drop State
+  public isJumping = false;
+  public jumpType: 'jump_up' | 'drop_down' | null = null;
+  public jumpY = 0;
+  private landingSquashTimer = 0;
+
   // Idle Animation State (4-Frame Idle from char_red_idle.png)
   public isIdling = false;
   private idleTimer = 0; // Accumulated time standing still (seconds)
@@ -76,6 +82,10 @@ export class Player {
     this.targetGY = gy;
     this.stepProgress = 0;
     this.isMoving = false;
+    this.isJumping = false;
+    this.jumpType = null;
+    this.jumpY = 0;
+    this.landingSquashTimer = 0;
     this.frame = 0;
     if (dir !== undefined) {
       this.direction = dir;
@@ -91,6 +101,9 @@ export class Player {
     this.stepCount++;
     this.isMoving = true;
     this.isBlocked = false;
+    this.isJumping = false;
+    this.jumpType = null;
+    this.jumpY = 0;
 
     this.fromGX = this.gx;
     this.fromGY = this.gy;
@@ -103,6 +116,22 @@ export class Player {
     this.targetY = targetGY * TILE_SIZE - 32;
 
     this.stepProgress = 0;
+  }
+
+  /**
+   * Initiates a dynamic jump up onto a cliff or drop down off a cliff.
+   */
+  public startJump(
+    targetGX: number,
+    targetGY: number,
+    dir: Direction,
+    type: 'jump_up' | 'drop_down'
+  ): void {
+    this.startStep(targetGX, targetGY, dir);
+    this.isJumping = true;
+    this.jumpType = type;
+    this.jumpY = 0;
+    this.landingSquashTimer = 0;
   }
 
   /**
@@ -182,6 +211,17 @@ export class Player {
    */
   public update(dtScale = 1.0, isRunning = false): boolean {
     if (!this.isMoving) {
+      if (this.landingSquashTimer > 0) {
+        const dtSeconds = (1 / 60) * dtScale;
+        this.landingSquashTimer -= dtSeconds;
+        if (this.landingSquashTimer <= 0) {
+          this.landingSquashTimer = 0;
+          this.jumpY = 0;
+        } else {
+          // Landing impact squash: brief 2.5px compression that rebounds
+          this.jumpY = Math.sin((this.landingSquashTimer / 0.08) * Math.PI) * 2.5;
+        }
+      }
       this.updateIdle(dtScale);
       return false;
     }
@@ -209,13 +249,35 @@ export class Player {
       this.y = this.targetY;
       this.isMoving = false;
       this.frame = 0;
+      if (this.isJumping) {
+        if (this.jumpType === 'drop_down') {
+          this.landingSquashTimer = 0.08;
+        }
+        this.isJumping = false;
+        this.jumpType = null;
+        this.jumpY = 0;
+      }
       return true;
     }
 
     // Smooth position interpolation
     this.x = this.fromX + (this.targetX - this.fromX) * this.stepProgress;
     this.y = this.fromY + (this.targetY - this.fromY) * this.stepProgress;
-    this.frame = getStepFrame(this.stepCount, this.stepProgress);
+
+    if (this.isJumping) {
+      const t = this.stepProgress;
+      if (this.jumpType === 'jump_up') {
+        // High parabolic leap up onto cliff ledge (clearing 22px height)
+        this.jumpY = -Math.sin(t * Math.PI) * 22;
+      } else {
+        // Drop down: forward hop lip followed by gravity fall down
+        this.jumpY = -Math.sin(t * Math.PI) * 16;
+      }
+      this.frame = 1;
+    } else {
+      this.jumpY = 0;
+      this.frame = getStepFrame(this.stepCount, this.stepProgress);
+    }
 
     return false;
   }

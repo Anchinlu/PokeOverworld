@@ -9,6 +9,7 @@
       "default": "./index.ts"
     },
     "./api-contract": "./api-contract.ts",
+    "./player-domain": "./player-domain.ts",
     "./schemas/*": "./*.schema.json"
   }
 }

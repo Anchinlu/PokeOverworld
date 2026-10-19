@@ -25,6 +25,11 @@ export class Follower {
   public stepProgress = 0;
   public idleAnimTimer = 0;
 
+  // Cliff Jumping & Elevation Drop State
+  public isJumping = false;
+  public jumpType: 'jump_up' | 'drop_down' | null = null;
+  public jumpY = 0;
+
   public speciesKey = 'PIKACHU';
   public isShiny = false;
   public nickname = 'Pikachu';
@@ -68,6 +73,9 @@ export class Follower {
     this.stepProgress = 0;
     this.isMoving = false;
     this.isDodge = false;
+    this.isJumping = false;
+    this.jumpType = null;
+    this.jumpY = 0;
     this.frame = 0;
     this.idleAnimTimer = 0;
     if (dir !== undefined) {
@@ -83,7 +91,8 @@ export class Follower {
     playerCurrentGY: number,
     playerNextGX: number,
     playerNextGY: number,
-    playerStepCount: number
+    playerStepCount: number,
+    jumpType?: 'jump_up' | 'drop_down' | null
   ): void {
     // Only move if follower is not already on player's current tile
     if (this.gx === playerCurrentGX && this.gy === playerCurrentGY) {
@@ -92,6 +101,9 @@ export class Follower {
 
     this.stepCount = playerStepCount;
     this.isMoving = true;
+    this.isJumping = !!jumpType;
+    this.jumpType = jumpType || null;
+    this.jumpY = 0;
 
     this.fromX = this.gx * TILE_SIZE - 16;
     this.fromY = this.gy * TILE_SIZE - 32;
@@ -144,7 +156,19 @@ export class Follower {
 
     this.x = px;
     this.y = py;
-    this.frame = getStepFrame(this.stepCount, this.stepProgress);
+
+    if (this.isJumping) {
+      const t = this.stepProgress;
+      if (this.jumpType === 'jump_up') {
+        this.jumpY = -Math.sin(t * Math.PI) * 20;
+      } else {
+        this.jumpY = -14 * Math.sin(Math.pow(t, 0.6) * Math.PI);
+      }
+      this.frame = 1;
+    } else {
+      this.jumpY = 0;
+      this.frame = getStepFrame(this.stepCount, this.stepProgress);
+    }
   }
 
   /**
@@ -159,6 +183,9 @@ export class Follower {
     this.y = this.targetY;
     this.isMoving = false;
     this.isDodge = false;
+    this.isJumping = false;
+    this.jumpType = null;
+    this.jumpY = 0;
     this.idleAnimTimer = this.frame * 180;
   }
 

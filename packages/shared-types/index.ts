@@ -2,7 +2,7 @@ export * from './api-contract';
 export * from './pokemon';
 export * from './battle-events';
 export * from './world-time';
-
+export * from './player-domain';
 
 /** Schema files are distributed beside this package for validators and tooling. */
 export const SCHEMA_FILES = {

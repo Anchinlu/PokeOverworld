@@ -346,19 +346,64 @@ export class ChunkManager {
 
   /**
    * Checks whether global tile (gx, gy) is physically walkable by character feet.
+   * If (fromGX, fromGY) is supplied, handles elevation differences:
+   * - Flat to Hill: requires jump (isWalkable returns false for standard walking)
+   * - Hill to Hill: walkable on the plateau
+   * - Hill to Flat: walkable as a cliff drop
    */
-  public isWalkable(gx: number, gy: number): boolean {
+  public isWalkable(gx: number, gy: number, fromGX?: number, fromGY?: number): boolean {
     const tileData = this.getTileData(gx, gy);
-    // Hills, empty voids, and water bodies are impassable
-    if (
-      tileData.terrain === TERRAIN.HILL ||
-      tileData.terrain === TERRAIN.EMPTY ||
-      tileData.terrain === TERRAIN.OCEAN_WATER
-    ) {
+    // Empty voids and water bodies are impassable for feet
+    if (tileData.terrain === TERRAIN.EMPTY || tileData.terrain === TERRAIN.OCEAN_WATER) {
       return false;
     }
 
+    if (fromGX !== undefined && fromGY !== undefined) {
+      const fromTile = this.getTileData(fromGX, fromGY);
+      const fromHill = fromTile.terrain === TERRAIN.HILL;
+      const toHill = tileData.terrain === TERRAIN.HILL;
+
+      if (!fromHill && toHill) {
+        // Flat ground to hill: blocked for standard walk (must jump with Space)
+        return false;
+      }
+      // If fromHill && toHill: allowed on plateau
+      // If fromHill && !toHill: allowed to drop down off cliff
+    } else {
+      // If no origin specified, default behavior: hills are impassable
+      if (tileData.terrain === TERRAIN.HILL) {
+        return false;
+      }
+    }
+
     // Check tree colliders in the target chunk
+    const chunk = this.getChunk(tileData.cx, tileData.cy);
+    const px = gx * TILE_SIZE - 16;
+    const py = gy * TILE_SIZE - 32;
+    const footX = px + 22;
+    const footY = py + 48;
+    const footW = 20;
+    const footH = 14;
+
+    for (const c of chunk.colliders) {
+      if (footX < c.x + c.w && footX + footW > c.x && footY < c.y + c.h && footY + footH > c.y) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Checks whether global tile (gx, gy) is an elevated cliff/hill tile
+   * that can be jumped onto with the Space key (not blocked by trees, ruins, or boulders).
+   */
+  public canJumpOntoCliff(gx: number, gy: number): boolean {
+    const tileData = this.getTileData(gx, gy);
+    if (tileData.terrain !== TERRAIN.HILL) {
+      return false;
+    }
+
     const chunk = this.getChunk(tileData.cx, tileData.cy);
     const px = gx * TILE_SIZE - 16;
     const py = gy * TILE_SIZE - 32;

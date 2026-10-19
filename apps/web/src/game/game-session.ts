@@ -18,7 +18,7 @@ import { getPresetConfig } from '../battle/battle-environment-presets';
 import { showBerryToast } from '../ui/toast';
 import { checkPartyEvolutionNotifications } from '../ui/evolution-notification';
 import { playEncounterTransition } from '../ui/encounter-transition';
-import { battleBgmPlayer, overworldShinyAudio } from '../audio';
+import { battleBgmPlayer, battleSePlayer, overworldShinyAudio } from '../audio';
 import {
   partyService,
   playerService,
@@ -161,9 +161,11 @@ export class GameSession {
       progressive: true,
     });
 
-    // 2. Process movement if player is idle on grid
+    // 2. Process movement or cliff jumping if player is idle on grid
     if (!this.player.isMoving) {
       const requestedDir = this.input.getRequestedDirection();
+      const jumpRequested = this.input.consumeJumpRequest() || this.input.isJumpPressed();
+
       if (requestedDir !== null) {
         let nextGX = this.player.gx;
         let nextGY = this.player.gy;
@@ -173,19 +175,117 @@ export class GameSession {
         else if (requestedDir === 2) nextGX += 1;
         else if (requestedDir === 3) nextGY -= 1;
 
-        const canMove = !collisionEnabled || this.chunkManager.isWalkable(nextGX, nextGY);
+        const currentTile = this.chunkManager.getTileData(this.player.gx, this.player.gy);
+        const targetTile = this.chunkManager.getTileData(nextGX, nextGY);
+        const isCurrentHill = currentTile.terrain === TERRAIN.HILL;
+        const isTargetHill = targetTile.terrain === TERRAIN.HILL;
 
-        if (canMove) {
-          this.player.startStep(nextGX, nextGY, requestedDir);
-          this.follower.startFollow(
-            this.player.fromGX,
-            this.player.fromGY,
-            nextGX,
-            nextGY,
-            this.player.stepCount
-          );
+        if (!isCurrentHill && isTargetHill) {
+          // Jumping UP onto cliff ledge
+          if (jumpRequested && (!collisionEnabled || this.chunkManager.canJumpOntoCliff(nextGX, nextGY))) {
+            this.player.startJump(nextGX, nextGY, requestedDir, 'jump_up');
+            battleSePlayer.playSound('Audio/SE/Battle jump to ball.ogg', 0.85);
+
+            const fFromHill = this.chunkManager.getTileData(this.follower.gx, this.follower.gy).terrain === TERRAIN.HILL;
+            const followerJump = !fFromHill && isCurrentHill ? 'jump_up' : fFromHill && !isCurrentHill ? 'drop_down' : null;
+            this.follower.startFollow(
+              this.player.fromGX,
+              this.player.fromGY,
+              nextGX,
+              nextGY,
+              this.player.stepCount,
+              followerJump
+            );
+          } else {
+            this.player.setBlocked(requestedDir);
+          }
+        } else if (isCurrentHill && !isTargetHill) {
+          // Stepping / dropping DOWN off cliff
+          const canDrop = !collisionEnabled || this.chunkManager.isWalkable(nextGX, nextGY, this.player.gx, this.player.gy);
+          if (canDrop) {
+            this.player.startJump(nextGX, nextGY, requestedDir, 'drop_down');
+            battleSePlayer.playSound('Audio/SE/Battle jump to ball.ogg', 0.75);
+
+            const fFromHill = this.chunkManager.getTileData(this.follower.gx, this.follower.gy).terrain === TERRAIN.HILL;
+            const followerJump = !fFromHill && isCurrentHill ? 'jump_up' : fFromHill && !isCurrentHill ? 'drop_down' : null;
+            this.follower.startFollow(
+              this.player.fromGX,
+              this.player.fromGY,
+              nextGX,
+              nextGY,
+              this.player.stepCount,
+              followerJump
+            );
+          } else {
+            this.player.setBlocked(requestedDir);
+          }
         } else {
-          this.player.setBlocked(requestedDir);
+          // Standard walking (flat-to-flat or plateau-to-plateau)
+          const canMove = !collisionEnabled || this.chunkManager.isWalkable(nextGX, nextGY, this.player.gx, this.player.gy);
+          if (canMove) {
+            this.player.startStep(nextGX, nextGY, requestedDir);
+
+            const fFromHill = this.chunkManager.getTileData(this.follower.gx, this.follower.gy).terrain === TERRAIN.HILL;
+            const followerJump = !fFromHill && isCurrentHill ? 'jump_up' : fFromHill && !isCurrentHill ? 'drop_down' : null;
+            this.follower.startFollow(
+              this.player.fromGX,
+              this.player.fromGY,
+              nextGX,
+              nextGY,
+              this.player.stepCount,
+              followerJump
+            );
+          } else {
+            this.player.setBlocked(requestedDir);
+          }
+        }
+      } else if (jumpRequested) {
+        // Space pressed while stationary without directional arrow: jump/drop in facing direction
+        const facingDir = this.player.direction;
+        let frontGX = this.player.gx;
+        let frontGY = this.player.gy;
+        if (facingDir === 0) frontGY += 1;
+        else if (facingDir === 1) frontGX -= 1;
+        else if (facingDir === 2) frontGX += 1;
+        else if (facingDir === 3) frontGY -= 1;
+
+        const currentTile = this.chunkManager.getTileData(this.player.gx, this.player.gy);
+        const frontTile = this.chunkManager.getTileData(frontGX, frontGY);
+        const isCurrentHill = currentTile.terrain === TERRAIN.HILL;
+        const isFrontHill = frontTile.terrain === TERRAIN.HILL;
+
+        if (!isCurrentHill && isFrontHill) {
+          if (!collisionEnabled || this.chunkManager.canJumpOntoCliff(frontGX, frontGY)) {
+            this.player.startJump(frontGX, frontGY, facingDir, 'jump_up');
+            battleSePlayer.playSound('Audio/SE/Battle jump to ball.ogg', 0.85);
+
+            const fFromHill = this.chunkManager.getTileData(this.follower.gx, this.follower.gy).terrain === TERRAIN.HILL;
+            const followerJump = !fFromHill && isCurrentHill ? 'jump_up' : fFromHill && !isCurrentHill ? 'drop_down' : null;
+            this.follower.startFollow(
+              this.player.fromGX,
+              this.player.fromGY,
+              frontGX,
+              frontGY,
+              this.player.stepCount,
+              followerJump
+            );
+          }
+        } else if (isCurrentHill && !isFrontHill) {
+          if (!collisionEnabled || this.chunkManager.isWalkable(frontGX, frontGY, this.player.gx, this.player.gy)) {
+            this.player.startJump(frontGX, frontGY, facingDir, 'drop_down');
+            battleSePlayer.playSound('Audio/SE/Battle jump to ball.ogg', 0.75);
+
+            const fFromHill = this.chunkManager.getTileData(this.follower.gx, this.follower.gy).terrain === TERRAIN.HILL;
+            const followerJump = !fFromHill && isCurrentHill ? 'jump_up' : fFromHill && !isCurrentHill ? 'drop_down' : null;
+            this.follower.startFollow(
+              this.player.fromGX,
+              this.player.fromGY,
+              frontGX,
+              frontGY,
+              this.player.stepCount,
+              followerJump
+            );
+          }
         }
       } else {
         this.player.setIdle();
@@ -193,6 +293,7 @@ export class GameSession {
     }
 
     // 3. Advance player and follower step progress
+    const wasJumping = this.player.isJumping;
     const stepCompleted = this.player.update(dtScale, isRunning);
     if (this.follower.isMoving) {
       this.follower.updateSync(this.player.stepProgress);
@@ -200,6 +301,9 @@ export class GameSession {
       this.follower.updateIdle(dtScale);
     }
     if (stepCompleted) {
+      if (wasJumping) {
+        battleSePlayer.playSound('Audio/SE/Battle ball drop.ogg', 0.8);
+      }
       this.follower.completeStep();
       const fTile = this.chunkManager.getTileData(this.follower.gx, this.follower.gy);
       const isOcean = fTile.terrain === TERRAIN.OCEAN_WATER;
