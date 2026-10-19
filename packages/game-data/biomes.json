@@ -36,6 +36,12 @@
       "hasBeach": false,
       "hasRoad": true,
       "defaultTree": "dead_1"
+    },
+    "dark_land": {
+      "name": "Cursed Dark Grounds",
+      "hasBeach": false,
+      "hasRoad": false,
+      "defaultTree": "dark_forest"
     }
   }
 }

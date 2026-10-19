@@ -16,6 +16,7 @@ export const WORLD_MAP_PALETTE = {
   hillHighlight: '#a49f8b',
   roadFallback: '#b28b68',
   bridgeFallback: '#8b684e',
+  darkFallback: '#2d2538',
   edgeShadow: 'rgba(25, 42, 42, 0.18)',
   detailLight: 'rgba(255, 255, 255, 0.08)',
   detailDark: 'rgba(25, 42, 42, 0.12)',
@@ -23,4 +24,4 @@ export const WORLD_MAP_PALETTE = {
   fogEdge: 'rgba(148, 163, 184, 0.08)',
 } as const;
 
-export type WorldMapTerrainClass = 'grass' | 'sand' | 'water' | 'hill' | 'road';
+export type WorldMapTerrainClass = 'grass' | 'sand' | 'water' | 'hill' | 'road' | 'dark_land';

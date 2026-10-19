@@ -181,7 +181,7 @@ export class ObjectRenderer {
           b.renderY + b.spriteHeight >= bounds.minY &&
           b.renderY <= bounds.maxY
         ) {
-          const img = this.loader.getImage(`building_${b.type}`);
+          const img = this.loader.getImage(b.type) || this.loader.getImage(`building_${b.type}`);
           if (img && img.complete) {
             list.push({
               ySort: b.ySort,
@@ -206,11 +206,30 @@ export class ObjectRenderer {
         const isDead = tree.type === 'dead_1' || tree.type === 'dead_2';
         const isCactusLarge = tree.type === 'cactus_large';
         const isBoulder = tree.type === 'desert_boulder';
+        const isDarkLarge =
+          tree.type === 'dark_large_1' ||
+          tree.type === 'dark_large_2' ||
+          tree.type === 'dark_dead';
+        const isDarkForest = tree.type === 'dark_forest';
 
-        const w = isPalm ? 128 : 64;
-        const h = isPalm ? 200 : isCactusLarge ? 96 : isDead || isBoulder ? 64 : 120;
+        const w = isPalm || isDarkLarge ? 128 : isDarkForest ? 96 : 64;
+        const h = isPalm
+          ? 200
+          : isDarkLarge
+          ? 128
+          : isDarkForest
+          ? 96
+          : isCactusLarge
+          ? 96
+          : isDead || isBoulder
+          ? 64
+          : 120;
         const ySort = isPalm
           ? tree.y + 151
+          : isDarkLarge
+          ? tree.y + 118
+          : isDarkForest
+          ? tree.y + 88
           : isCactusLarge
           ? tree.y + 88
           : isDead || isBoulder

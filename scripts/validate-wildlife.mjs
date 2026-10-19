@@ -24,7 +24,7 @@ if (Math.abs(sumProb - 1.0) > 0.0001) {
 }
 
 // 2. Validate valid biomes and contexts
-const VALID_BIOMES = new Set(['dense_forest', 'light_forest', 'meadow', 'dryland', 'wetland', 'coast', 'hill_edge']);
+const VALID_BIOMES = new Set(['dense_forest', 'light_forest', 'meadow', 'dryland', 'wetland', 'coast', 'hill_edge', 'dark_land']);
 const VALID_CONTEXTS = new Set(['tall_grass', 'forest_floor', 'water_surface', 'shore', 'rock', 'sand', 'walkable_ground']);
 const VALID_FLAGS = new Set(['legendary', 'mythical', 'starter', 'fossil', 'static', 'no_wild']);
 

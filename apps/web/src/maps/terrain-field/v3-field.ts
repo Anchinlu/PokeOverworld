@@ -40,6 +40,7 @@ export class V3Field implements TerrainField {
     isSand: boolean;
     isHill: boolean;
     isDesert: boolean;
+    isDarkLand: boolean;
   } {
     const cx = Math.floor(gx / 16);
     const cy = Math.floor(gy / 16);
@@ -54,6 +55,7 @@ export class V3Field implements TerrainField {
       isSand: plan.isSand[idx] === 1,
       isHill: plan.isHill[idx] === 1,
       isDesert: Boolean(plan.isDesert && plan.isDesert[idx] === 1),
+      isDarkLand: Boolean(plan.isDarkLand && plan.isDarkLand[idx] === 1),
     };
   }
 
@@ -67,6 +69,10 @@ export class V3Field implements TerrainField {
 
   public isDesert(gx: number, gy: number): boolean {
     return this.getCell(gx, gy).isDesert;
+  }
+
+  public isDarkLand(gx: number, gy: number): boolean {
+    return this.getCell(gx, gy).isDarkLand;
   }
 
   public isHill(gx: number, gy: number): boolean {

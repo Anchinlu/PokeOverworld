@@ -765,6 +765,11 @@
         "biome": "dense_forest",
         "context": "forest_floor",
         "affinity": 0.6
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.7
       }
     ],
     "activeTime": [
@@ -783,6 +788,11 @@
         "biome": "hill_edge",
         "context": "rock",
         "affinity": 0.7
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.5
       }
     ],
     "activeTime": [
@@ -1201,6 +1211,11 @@
         "biome": "meadow",
         "context": "tall_grass",
         "affinity": 0.7
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.85
       }
     ],
     "activeTime": [
@@ -1219,6 +1234,11 @@
         "biome": "meadow",
         "context": "tall_grass",
         "affinity": 0.4
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.6
       }
     ],
     "activeTime": [
@@ -1774,12 +1794,18 @@
         "biome": "dense_forest",
         "context": "forest_floor",
         "affinity": 0.7
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.95
       }
     ],
     "activeTime": [
       "dusk",
       "night"
-    ]
+    ],
+    "apexSpecies": "GENGAR"
   },
   "HAUNTER": {
     "stage": 1,
@@ -1791,12 +1817,18 @@
         "biome": "wetland",
         "context": "tall_grass",
         "affinity": 0.6
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.75
       }
     ],
     "activeTime": [
       "dusk",
       "night"
-    ]
+    ],
+    "apexSpecies": "GENGAR"
   },
   "GENGAR": {
     "stage": 2,
@@ -1845,6 +1877,11 @@
         "biome": "meadow",
         "context": "tall_grass",
         "affinity": 0.6
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.9
       }
     ],
     "activeTime": [
@@ -1862,6 +1899,11 @@
         "biome": "wetland",
         "context": "tall_grass",
         "affinity": 0.5
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.7
       }
     ],
     "activeTime": [
@@ -1993,6 +2035,11 @@
         "biome": "dryland",
         "context": "walkable_ground",
         "affinity": 0.8
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.8
       }
     ],
     "activeTime": [
@@ -2011,6 +2058,11 @@
         "biome": "dryland",
         "context": "walkable_ground",
         "affinity": 0.5
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.6
       }
     ],
     "activeTime": [
@@ -2331,6 +2383,11 @@
         "biome": "meadow",
         "context": "tall_grass",
         "affinity": 0.5
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.85
       }
     ],
     "activeTime": [

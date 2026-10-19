@@ -203,6 +203,7 @@ export function generateChunkTrees(
     if (overlapsNeighbor) continue;
 
     const isDesert = Boolean(field.isDesert && field.isDesert(gx, gy));
+    const isDark = Boolean(field.isDarkLand && field.isDarkLand(gx, gy));
     if (isDesert) {
       const roll = seededHash(gx, gy, seed + 919);
       if (roll < 0.35) {
@@ -217,6 +218,21 @@ export function generateChunkTrees(
       } else {
         trees.push({ gx, gy, x: tx, y: ty + 56, type: 'desert_boulder' });
         colliders.push({ x: tx + 8, y: ty + 84, w: 48, h: 26, type: 'tree' });
+      }
+    } else if (isDark) {
+      const roll = seededHash(gx, gy, seed + 919);
+      if (roll < 0.30) {
+        trees.push({ gx, gy, x: tx - 32, y: ty, type: 'dark_large_1' });
+        colliders.push({ x: tx, y: ty + 88, w: 64, h: 26, type: 'tree' });
+      } else if (roll < 0.55) {
+        trees.push({ gx, gy, x: tx - 32, y: ty, type: 'dark_large_2' });
+        colliders.push({ x: tx, y: ty + 88, w: 64, h: 26, type: 'tree' });
+      } else if (roll < 0.75) {
+        trees.push({ gx, gy, x: tx - 32, y: ty, type: 'dark_dead' });
+        colliders.push({ x: tx, y: ty + 88, w: 64, h: 26, type: 'tree' });
+      } else {
+        trees.push({ gx, gy, x: tx - 16, y: ty + 24, type: 'dark_forest' });
+        colliders.push({ x: tx, y: ty + 84, w: 32, h: 24, type: 'tree' });
       }
     } else {
       const sample = sampleEcology(gx, gy, field);
@@ -339,6 +355,202 @@ export function generateChunkBuildings(
               type: 'building',
             });
           }
+        }
+      }
+    }
+  }
+
+  // 2. Procedural Landmarks in Dark Land (Graveyard & Gothic Ruins)
+  if (entities.length === 0 && field.isDarkLand) {
+    const isDark = field.isDarkLand;
+    const centerGX = chunkStartGX + 8;
+    const centerGY = chunkStartGY + 8;
+    if (
+      isDark(centerGX, centerGY) &&
+      !field.isOcean(centerGX, centerGY) &&
+      !field.isHill(centerGX, centerGY) &&
+      !field.isRoad(centerGX, centerGY)
+    ) {
+      const landmarkRoll = seededHash(cx, cy, field.seed + 6606);
+      if (landmarkRoll < 0.35) {
+        if (landmarkRoll < 0.18) {
+          // 1. Ancient Graveyard
+          const anchorGX = chunkStartGX + 3;
+          const anchorGY = chunkStartGY + 4;
+          entities.push({
+            id: `graveyard_fence_${cx}_${cy}`,
+            type: 'fence_cemetery',
+            gx: anchorGX,
+            gy: anchorGY,
+            renderX: anchorGX * TILE_SIZE,
+            renderY: anchorGY * TILE_SIZE,
+            spriteWidth: 96,
+            spriteHeight: 96,
+            ySort: anchorGY * TILE_SIZE + 84,
+            doorGX: anchorGX + 1,
+            doorGY: anchorGY + 2,
+          });
+          colliders.push({ x: anchorGX * TILE_SIZE, y: anchorGY * TILE_SIZE, w: 96, h: 20, type: 'building' });
+          colliders.push({ x: anchorGX * TILE_SIZE, y: anchorGY * TILE_SIZE, w: 16, h: 96, type: 'building' });
+          colliders.push({ x: (anchorGX + 2) * TILE_SIZE + 16, y: anchorGY * TILE_SIZE, w: 16, h: 96, type: 'building' });
+          colliders.push({ x: anchorGX * TILE_SIZE, y: (anchorGY + 2) * TILE_SIZE + 12, w: 32, h: 20, type: 'building' });
+          colliders.push({ x: (anchorGX + 2) * TILE_SIZE, y: (anchorGY + 2) * TILE_SIZE + 12, w: 32, h: 20, type: 'building' });
+
+          const scGX = anchorGX + 7;
+          const scGY = anchorGY + 1;
+          entities.push({
+            id: `graveyard_sc_${cx}_${cy}`,
+            type: 'scarecrow_dark',
+            gx: scGX,
+            gy: scGY,
+            renderX: scGX * TILE_SIZE,
+            renderY: scGY * TILE_SIZE,
+            spriteWidth: 96,
+            spriteHeight: 96,
+            ySort: scGY * TILE_SIZE + 80,
+            doorGX: scGX,
+            doorGY: scGY,
+          });
+          colliders.push({ x: scGX * TILE_SIZE + 36, y: scGY * TILE_SIZE + 64, w: 24, h: 20, type: 'building' });
+
+          const t1GX = anchorGX + 1;
+          const t1GY = anchorGY + 1;
+          entities.push({
+            id: `tombstone_1_${cx}_${cy}`,
+            type: 'tombstone_1',
+            gx: t1GX,
+            gy: t1GY,
+            renderX: t1GX * TILE_SIZE,
+            renderY: t1GY * TILE_SIZE,
+            spriteWidth: 32,
+            spriteHeight: 64,
+            ySort: t1GY * TILE_SIZE + 56,
+            doorGX: t1GX,
+            doorGY: t1GY,
+          });
+          colliders.push({ x: t1GX * TILE_SIZE + 4, y: t1GY * TILE_SIZE + 36, w: 24, h: 20, type: 'building' });
+
+          const t2GX = anchorGX + 4;
+          const t2GY = anchorGY + 5;
+          entities.push({
+            id: `tombstone_2_${cx}_${cy}`,
+            type: 'tombstone_2',
+            gx: t2GX,
+            gy: t2GY,
+            renderX: t2GX * TILE_SIZE,
+            renderY: t2GY * TILE_SIZE,
+            spriteWidth: 32,
+            spriteHeight: 64,
+            ySort: t2GY * TILE_SIZE + 56,
+            doorGX: t2GX,
+            doorGY: t2GY,
+          });
+          colliders.push({ x: t2GX * TILE_SIZE + 4, y: t2GY * TILE_SIZE + 36, w: 24, h: 20, type: 'building' });
+
+          const t3GX = anchorGX + 7;
+          const t3GY = anchorGY + 6;
+          entities.push({
+            id: `tombstone_3_${cx}_${cy}`,
+            type: 'tombstone_1',
+            gx: t3GX,
+            gy: t3GY,
+            renderX: t3GX * TILE_SIZE,
+            renderY: t3GY * TILE_SIZE,
+            spriteWidth: 32,
+            spriteHeight: 64,
+            ySort: t3GY * TILE_SIZE + 56,
+            doorGX: t3GX,
+            doorGY: t3GY,
+          });
+          colliders.push({ x: t3GX * TILE_SIZE + 4, y: t3GY * TILE_SIZE + 36, w: 24, h: 20, type: 'building' });
+        } else {
+          // 2. Ruined Gothic Shrine
+          const shrineGX = chunkStartGX + 5;
+          const shrineGY = chunkStartGY + 2;
+          entities.push({
+            id: `ruin_temple_${cx}_${cy}`,
+            type: 'ruin_temple',
+            gx: shrineGX,
+            gy: shrineGY,
+            renderX: shrineGX * TILE_SIZE,
+            renderY: shrineGY * TILE_SIZE,
+            spriteWidth: 128,
+            spriteHeight: 128,
+            ySort: shrineGY * TILE_SIZE + 116,
+            doorGX: shrineGX + 1,
+            doorGY: shrineGY + 3,
+            doorWidthTiles: 2,
+          });
+          colliders.push({ x: shrineGX * TILE_SIZE + 8, y: shrineGY * TILE_SIZE + 64, w: 112, h: 56, type: 'building' });
+
+          const archGX = shrineGX;
+          const archGY = shrineGY + 5;
+          entities.push({
+            id: `ruin_archway_${cx}_${cy}`,
+            type: 'ruin_archway',
+            gx: archGX,
+            gy: archGY,
+            renderX: archGX * TILE_SIZE + 16,
+            renderY: archGY * TILE_SIZE,
+            spriteWidth: 96,
+            spriteHeight: 96,
+            ySort: archGY * TILE_SIZE + 84,
+            doorGX: archGX + 1,
+            doorGY: archGY + 2,
+          });
+          colliders.push({ x: archGX * TILE_SIZE + 16, y: archGY * TILE_SIZE + 48, w: 24, h: 36, type: 'building' });
+          colliders.push({ x: archGX * TILE_SIZE + 88, y: archGY * TILE_SIZE + 48, w: 24, h: 36, type: 'building' });
+
+          const pil1GX = shrineGX - 3;
+          const pil1GY = shrineGY + 3;
+          entities.push({
+            id: `ruin_pillar_1_${cx}_${cy}`,
+            type: 'ruin_pillar_tall',
+            gx: pil1GX,
+            gy: pil1GY,
+            renderX: pil1GX * TILE_SIZE,
+            renderY: pil1GY * TILE_SIZE,
+            spriteWidth: 32,
+            spriteHeight: 128,
+            ySort: pil1GY * TILE_SIZE + 120,
+            doorGX: pil1GX,
+            doorGY: pil1GY,
+          });
+          colliders.push({ x: pil1GX * TILE_SIZE + 4, y: pil1GY * TILE_SIZE + 96, w: 24, h: 24, type: 'building' });
+
+          const pil2GX = shrineGX + 6;
+          const pil2GY = shrineGY + 4;
+          entities.push({
+            id: `ruin_pillar_2_${cx}_${cy}`,
+            type: 'ruin_pillar_broken',
+            gx: pil2GX,
+            gy: pil2GY,
+            renderX: pil2GX * TILE_SIZE,
+            renderY: pil2GY * TILE_SIZE,
+            spriteWidth: 32,
+            spriteHeight: 96,
+            ySort: pil2GY * TILE_SIZE + 88,
+            doorGX: pil2GX,
+            doorGY: pil2GY,
+          });
+          colliders.push({ x: pil2GX * TILE_SIZE + 4, y: pil2GY * TILE_SIZE + 68, w: 24, h: 20, type: 'building' });
+
+          const wallGX = shrineGX - 3;
+          const wallGY = shrineGY + 8;
+          entities.push({
+            id: `ruin_wall_${cx}_${cy}`,
+            type: 'ruin_wall_large',
+            gx: wallGX,
+            gy: wallGY,
+            renderX: wallGX * TILE_SIZE,
+            renderY: wallGY * TILE_SIZE,
+            spriteWidth: 96,
+            spriteHeight: 128,
+            ySort: wallGY * TILE_SIZE + 120,
+            doorGX: wallGX,
+            doorGY: wallGY,
+          });
+          colliders.push({ x: wallGX * TILE_SIZE + 8, y: wallGY * TILE_SIZE + 92, w: 80, h: 28, type: 'building' });
         }
       }
     }
@@ -521,12 +733,17 @@ export function generateChunkFoliage(
       const isGrass = terrainGrid[ly]?.[lx] === TERRAIN.GRASS;
       const isHillFlat =
         terrainGrid[ly]?.[lx] === TERRAIN.HILL &&
-        (tileIdGrid[ly]?.[lx] === TILE_IDS.cliff_pure || tileIdGrid[ly]?.[lx] === TILE_IDS.dune_cliff_pure);
+        (tileIdGrid[ly]?.[lx] === TILE_IDS.cliff_pure ||
+          tileIdGrid[ly]?.[lx] === TILE_IDS.dune_cliff_pure ||
+          tileIdGrid[ly]?.[lx] === TILE_IDS.dark_cliff_pure);
       const isDesert =
         terrainGrid[ly]?.[lx] === TERRAIN.DESERT ||
         (terrainGrid[ly]?.[lx] === TERRAIN.HILL && Boolean(field.isDesert && field.isDesert(gx, gy)));
+      const isDark =
+        terrainGrid[ly]?.[lx] === TERRAIN.DARK_LAND ||
+        (terrainGrid[ly]?.[lx] === TERRAIN.HILL && Boolean(field.isDarkLand && field.isDarkLand(gx, gy)));
 
-      if (isGrass || isHillFlat || isDesert) {
+      if (isGrass || isHillFlat || isDesert || isDark) {
         if (
           field.isNearCliffEdge(gx, gy) ||
           field.isNearWater(gx, gy, 1) ||
@@ -553,6 +770,17 @@ export function generateChunkFoliage(
           } else {
             type = 'cactus_small';
           }
+        } else if (isDark) {
+          const darkShrubRoll = seededHash(gx, gy, seed + 1505);
+          if (darkShrubRoll < 0.45) {
+            const bIdx = Math.floor(seededHash(gx, gy, seed + 1507) * 6) + 1;
+            type = `bush_dark_${bIdx}`;
+          } else if (darkShrubRoll < 0.75) {
+            const sIdx = Math.floor(seededHash(gx, gy, seed + 1509) * 3) + 1;
+            type = `dark_sprout_${sIdx}`;
+          } else {
+            type = 'rock_dark_spires';
+          }
         } else {
           const sample = sampleEcology(gx, gy, field);
           const zone = getEcologyZone(sample);
@@ -569,20 +797,26 @@ export function generateChunkFoliage(
         const isStump = type === 'nature_tree_stump';
         const isLogNow = type === 'nature_fallen_log';
         const isCactusSmall = type === 'cactus_small';
+        const isRockSpires = type === 'rock_dark_spires';
+        const isDarkBush = type.startsWith('bush_dark_');
+        const isDarkSprout = type.startsWith('dark_sprout_');
 
         let px = gx * TILE_SIZE;
         let py = gy * TILE_SIZE - 32;
 
-        if (isWhiteBush) {
+        if (isWhiteBush || isRockSpires) {
           px = gx * TILE_SIZE - 16;
           py = gy * TILE_SIZE - 32;
-        } else if (isStump || isLogNow || isCactusSmall) {
+        } else if (isStump || isLogNow || isCactusSmall || isDarkSprout) {
           px = gx * TILE_SIZE;
           py = gy * TILE_SIZE;
+        } else if (isDarkBush) {
+          px = gx * TILE_SIZE;
+          py = gy * TILE_SIZE - 32;
         }
 
         // Check collision clearance with trees or other solids
-        const checkW = isLogNow ? 60 : isWhiteBush ? 40 : 24;
+        const checkW = isLogNow ? 60 : isWhiteBush || isRockSpires ? 40 : 24;
         const blocked = colliders.some(
           (c) => px + checkW > c.x && px + 4 < c.x + c.w && py + 28 > c.y && py + 4 < c.y + c.h
         );
@@ -605,6 +839,10 @@ export function generateChunkFoliage(
           colliders.push({ x: px + 6, y: py + 40, w: 20, h: 20, type: 'tree' });
         } else if (type === 'desert_dry_bush' || type === 'desert_succulent') {
           colliders.push({ x: px + 4, y: py + 40, w: 24, h: 18, type: 'tree' });
+        } else if (isRockSpires) {
+          colliders.push({ x: px + 12, y: py + 48, w: 40, h: 20, type: 'tree' });
+        } else if (isDarkBush) {
+          colliders.push({ x: px + 4, y: py + 36, w: 24, h: 20, type: 'tree' });
         }
       }
     }

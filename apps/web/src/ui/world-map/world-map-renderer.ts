@@ -1,4 +1,4 @@
-import { CHUNK_SIZE, TILE_IDS, TILE_SIZE } from '@pokemon/game-data';
+import { CHUNK_SIZE, isDarkLandTile, TILE_IDS, TILE_SIZE } from '@pokemon/game-data';
 import { seededHash } from '../../maps/noise';
 import type { WorldChunk } from '../../maps/chunk';
 import { AssetLoader } from '../../rendering/asset-loader';
@@ -78,6 +78,7 @@ export class WorldMapRenderer {
   }
 
   private getTerrainClass(tileId: number): WorldMapTerrainClass {
+    if (isDarkLandTile(tileId)) return 'dark_land';
     if (tileId >= 700 && tileId <= 742) return 'water';
     if (tileId >= 400 && tileId < 500) return 'hill';
     if (tileId >= 300 && tileId < 400) return 'sand';
@@ -97,6 +98,7 @@ export class WorldMapRenderer {
       water: WORLD_MAP_PALETTE.waterDeep,
       hill: WORLD_MAP_PALETTE.hillFallback,
       road: WORLD_MAP_PALETTE.roadFallback,
+      dark_land: WORLD_MAP_PALETTE.darkFallback,
     };
     ctx.fillStyle = colours[terrainClass];
     ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
@@ -122,6 +124,13 @@ export class WorldMapRenderer {
     if (terrainClass === 'hill' && tileId === TILE_IDS.cliff_pure) {
       ctx.fillStyle = WORLD_MAP_PALETTE.hillHighlight;
       ctx.globalAlpha = 0.16;
+      ctx.fillRect(x + 3, y + 3, TILE_SIZE - 6, 3);
+      ctx.globalAlpha = 1;
+    }
+
+    if (terrainClass === 'dark_land' && tileId === TILE_IDS.dark_cliff_pure) {
+      ctx.fillStyle = '#5c4873';
+      ctx.globalAlpha = 0.2;
       ctx.fillRect(x + 3, y + 3, TILE_SIZE - 6, 3);
       ctx.globalAlpha = 1;
     }

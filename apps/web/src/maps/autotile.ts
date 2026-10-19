@@ -229,6 +229,153 @@ export function getDuneCliffTileKey(
 }
 
 /**
+ * Resolves 3x3 autotile connectivity for Cursed Dark Ground (440 series).
+ */
+export function getDarkGroundTileKey(
+  gx: number,
+  gy: number,
+  seedOrField: number | TerrainField = 101
+): AutotileResult {
+  const field = toField(seedOrField);
+  const isDark = (x: number, y: number) => Boolean(field.isDarkLand && field.isDarkLand(x, y));
+
+  const n = isDark(gx, gy - 1);
+  const s = isDark(gx, gy + 1);
+  const w = isDark(gx - 1, gy);
+  const e = isDark(gx + 1, gy);
+  const nw = isDark(gx - 1, gy - 1);
+  const ne = isDark(gx + 1, gy - 1);
+  const sw = isDark(gx - 1, gy + 1);
+  const se = isDark(gx + 1, gy + 1);
+
+  let key = 'pure';
+  let tileId: number = TILE_IDS.dark_ground_pure;
+
+  if (!n && !w) {
+    key = 'tl';
+    tileId = TILE_IDS.dark_ground_tl;
+  } else if (!n && !e) {
+    key = 'tr';
+    tileId = TILE_IDS.dark_ground_tr;
+  } else if (!s && !w) {
+    key = 'bl';
+    tileId = TILE_IDS.dark_ground_bl;
+  } else if (!s && !e) {
+    key = 'br';
+    tileId = TILE_IDS.dark_ground_br;
+  } else if (!n) {
+    key = 'top';
+    tileId = TILE_IDS.dark_ground_top;
+  } else if (!s) {
+    key = 'bot';
+    tileId = TILE_IDS.dark_ground_bot;
+  } else if (!w) {
+    key = 'left';
+    tileId = TILE_IDS.dark_ground_left;
+  } else if (!e) {
+    key = 'right';
+    tileId = TILE_IDS.dark_ground_right;
+  } else if (n && s && w && e) {
+    if (!nw) {
+      key = 'in_tl';
+      tileId = TILE_IDS.dark_ground_in_tl;
+    } else if (!ne) {
+      key = 'in_tr';
+      tileId = TILE_IDS.dark_ground_in_tr;
+    } else if (!sw) {
+      key = 'in_bl';
+      tileId = TILE_IDS.dark_ground_in_bl;
+    } else if (!se) {
+      key = 'in_br';
+      tileId = TILE_IDS.dark_ground_in_br;
+    } else {
+      key = 'pure';
+      const r = seededHash(gx, gy, field.seed + 777);
+      if (r < 0.15) tileId = TILE_IDS.dark_ground_var1;
+      else if (r < 0.28) tileId = TILE_IDS.dark_ground_var2;
+      else if (r < 0.40) tileId = TILE_IDS.dark_ground_var3;
+      else tileId = TILE_IDS.dark_ground_pure;
+    }
+  }
+
+  return { key, tileId };
+}
+
+/**
+ * Resolves 3x3 autotile connectivity for Cursed Dark Cliffs (460 series).
+ * Used exclusively for elevated hills / plateaus in the dark land biome.
+ */
+export function getDarkCliffTileKey(
+  gx: number,
+  gy: number,
+  seedOrField: number | TerrainField = 101,
+  hasHills = true,
+  hasRoad = true,
+  hasBeach = true
+): AutotileResult {
+  const field = toField(seedOrField);
+  const n = field.isHill(gx, gy - 1, hasHills, hasRoad, hasBeach);
+  const s = field.isHill(gx, gy + 1, hasHills, hasRoad, hasBeach);
+  const w = field.isHill(gx - 1, gy, hasHills, hasRoad, hasBeach);
+  const e = field.isHill(gx + 1, gy, hasHills, hasRoad, hasBeach);
+  const nw = field.isHill(gx - 1, gy - 1, hasHills, hasRoad, hasBeach);
+  const ne = field.isHill(gx + 1, gy - 1, hasHills, hasRoad, hasBeach);
+  const sw = field.isHill(gx - 1, gy + 1, hasHills, hasRoad, hasBeach);
+  const se = field.isHill(gx + 1, gy + 1, hasHills, hasRoad, hasBeach);
+
+  let key = 'pure';
+  let tileId: number = TILE_IDS.dark_cliff_pure;
+
+  if (!n && !w) {
+    key = 'tl';
+    tileId = TILE_IDS.dark_cliff_tl;
+  } else if (!n && !e) {
+    key = 'tr';
+    tileId = TILE_IDS.dark_cliff_tr;
+  } else if (!s && !w) {
+    key = 'bl';
+    tileId = TILE_IDS.dark_cliff_bl;
+  } else if (!s && !e) {
+    key = 'br';
+    tileId = TILE_IDS.dark_cliff_br;
+  } else if (!n) {
+    key = 'top';
+    tileId = TILE_IDS.dark_cliff_top;
+  } else if (!s) {
+    key = 'bot';
+    tileId = TILE_IDS.dark_cliff_bot;
+  } else if (!w) {
+    key = 'left';
+    tileId = TILE_IDS.dark_cliff_left;
+  } else if (!e) {
+    key = 'right';
+    tileId = TILE_IDS.dark_cliff_right;
+  } else if (n && s && w && e) {
+    if (!nw) {
+      key = 'in_bl';
+      tileId = TILE_IDS.dark_cliff_in_bl;
+    } else if (!ne) {
+      key = 'in_br';
+      tileId = TILE_IDS.dark_cliff_in_br;
+    } else if (!sw) {
+      key = 'in_tr';
+      tileId = TILE_IDS.dark_cliff_in_tr;
+    } else if (!se) {
+      key = 'in_tl';
+      tileId = TILE_IDS.dark_cliff_in_tl;
+    } else {
+      const res = getDarkGroundTileKey(gx, gy, field);
+      if (res.key === 'pure') {
+        return { key: 'pure', tileId: TILE_IDS.dark_cliff_pure };
+      }
+      return res;
+    }
+  }
+
+  return { key, tileId };
+}
+
+/**
  * Resolves 3x3 autotile connectivity for Dirt Road / Path (200 series).
  */
 export function getRoadTileKey(

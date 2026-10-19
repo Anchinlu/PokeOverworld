@@ -13,6 +13,7 @@ export interface TerrainField {
   isOcean(gx: number, gy: number, hasBeach?: boolean): boolean;
   isSand(gx: number, gy: number, hasBeach?: boolean): boolean;
   isDesert?(gx: number, gy: number): boolean;
+  isDarkLand?(gx: number, gy: number): boolean;
   isHill(
     gx: number,
     gy: number,

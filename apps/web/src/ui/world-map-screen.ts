@@ -1030,7 +1030,13 @@ export class WorldMapScreen {
     let terrainName = 'Đồng cỏ xanh';
 
     if (field.isHill(gx, gy)) {
-      terrainName = field.isNearCliffEdge(gx, gy) ? 'Vách núi đá' : 'Đồi núi';
+      if (field.isDarkLand && field.isDarkLand(gx, gy)) {
+        terrainName = field.isNearCliffEdge(gx, gy) ? 'Vách núi tối' : 'Đồi đất tối';
+      } else if (field.isDesert && field.isDesert(gx, gy)) {
+        terrainName = field.isNearCliffEdge(gx, gy) ? 'Vách cồn cát' : 'Cồn cát cao';
+      } else {
+        terrainName = field.isNearCliffEdge(gx, gy) ? 'Vách núi đá' : 'Đồi núi';
+      }
     } else if (field.isOcean(gx, gy)) {
       terrainName = field.isNearWater(gx, gy, 2) ? 'Vùng nước ven bờ' : 'Đại dương sâu';
     } else if (field.isWater(gx, gy) || field.isLake(gx, gy)) {
@@ -1039,6 +1045,8 @@ export class WorldMapScreen {
       terrainName = 'Bờ cát vàng';
     } else if (field.isDesert && field.isDesert(gx, gy)) {
       terrainName = 'Sa mạc cằn cỗi';
+    } else if (field.isDarkLand && field.isDarkLand(gx, gy)) {
+      terrainName = 'Vùng đất tối hoang tàn';
     } else if (field.isBridge(gx, gy)) {
       terrainName = 'Cầu gỗ qua sông';
     } else if (field.isRoad(gx, gy)) {

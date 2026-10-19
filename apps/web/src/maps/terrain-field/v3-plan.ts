@@ -184,11 +184,44 @@ export class V3TerrainPlanCache {
     const desertOpened = open(rawDesertGrid, totalDim, totalDim, 2);
     const desertClosed = close(desertOpened, totalDim, totalDim, 2);
 
+    // 3.6. Cursed Dark Grounds (outside safe core and corridors, distinct from desert)
+    const rawDarkGrid = new Uint8Array(totalCells);
+    for (let y = 0; y < totalDim; y++) {
+      const gy = startGY + y;
+      const rowOffset = y * totalDim;
+      for (let x = 0; x < totalDim; x++) {
+        const idx = rowOffset + x;
+        if (landGrid[idx] === 1 && sandStrictBuffer[idx] === 0 && rawDesertGrid[idx] === 0) {
+          const gx = startGX + x;
+          const { radialDist, corridorInfluence } = computeV3EffectiveDistance(
+            gx,
+            gy,
+            this.seed
+          );
+          if (radialDist > 64 && corridorInfluence < 0.35) {
+            const darkVal = fbm2(
+              gx / 180,
+              gy / 180,
+              this.seed,
+              0xda7c,
+              3
+            );
+            if (darkVal >= 0.58) {
+              rawDarkGrid[idx] = 1;
+            }
+          }
+        }
+      }
+    }
+    const darkOpened = open(rawDarkGrid, totalDim, totalDim, 2);
+    const darkClosed = close(darkOpened, totalDim, totalDim, 2);
+
     // 4. Extract interior 16x16 chunk area
     const isOcean = new Uint8Array(256);
     const isSand = new Uint8Array(256);
     const isHill = new Uint8Array(256);
     const isDesert = new Uint8Array(256);
+    const isDarkLand = new Uint8Array(256);
 
     for (let ly = 0; ly < 16; ly++) {
       const py = margin + ly;
@@ -207,6 +240,8 @@ export class V3TerrainPlanCache {
         } else {
           if (desertClosed[srcIdx] === 1) {
             isDesert[dstIdx] = 1;
+          } else if (darkClosed[srcIdx] === 1) {
+            isDarkLand[dstIdx] = 1;
           }
           if (hillFinal[srcIdx] === 1) {
             isHill[dstIdx] = 1;
@@ -222,6 +257,7 @@ export class V3TerrainPlanCache {
       isSand,
       isHill,
       isDesert,
+      isDarkLand,
     };
   }
 }

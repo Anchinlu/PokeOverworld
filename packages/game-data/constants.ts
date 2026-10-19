@@ -7,6 +7,7 @@ export const TERRAIN = {
   // Kept at 5 for compatibility with the current Python generator and viewer.
   HILL: 5,
   DESERT: 6,
+  DARK_LAND: 7,
 } as const;
 
 export const TILE_IDS = {
@@ -82,6 +83,35 @@ export const TILE_IDS = {
   dune_cliff_in_tr: 430,
   dune_cliff_in_bl: 431,
   dune_cliff_in_br: 432,
+  dark_ground_pure: 440,
+  dark_ground_top: 441,
+  dark_ground_bot: 442,
+  dark_ground_left: 443,
+  dark_ground_right: 444,
+  dark_ground_tl: 445,
+  dark_ground_tr: 446,
+  dark_ground_bl: 447,
+  dark_ground_br: 448,
+  dark_ground_in_tl: 449,
+  dark_ground_in_tr: 450,
+  dark_ground_in_bl: 451,
+  dark_ground_in_br: 452,
+  dark_ground_var1: 453,
+  dark_ground_var2: 454,
+  dark_ground_var3: 455,
+  dark_cliff_pure: 460,
+  dark_cliff_top: 461,
+  dark_cliff_bot: 462,
+  dark_cliff_left: 463,
+  dark_cliff_right: 464,
+  dark_cliff_tl: 465,
+  dark_cliff_tr: 466,
+  dark_cliff_bl: 467,
+  dark_cliff_br: 468,
+  dark_cliff_in_tl: 469,
+  dark_cliff_in_tr: 470,
+  dark_cliff_in_bl: 471,
+  dark_cliff_in_br: 472,
   tree_autumn: 501,
   tree_vibrant: 502,
   tree_coastal: 503,
@@ -132,6 +162,10 @@ export function isWaterTile(tileId: number): boolean {
 
 export function isDesertTile(tileId: number): boolean {
   return (tileId >= 350 && tileId <= 364) || (tileId >= 420 && tileId <= 432);
+}
+
+export function isDarkLandTile(tileId: number): boolean {
+  return (tileId >= 440 && tileId <= 455) || (tileId >= 460 && tileId <= 472);
 }
 
 export const CHUNK_SIZE = 16 as const;

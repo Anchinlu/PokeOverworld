@@ -82,6 +82,7 @@ export class GroundRenderer {
 
         const isSand = tileId >= 300 && tileId < 350;
         const isDesert = tileId >= 350 && tileId < 400;
+        const isDarkLand = (tileId >= 440 && tileId < 460) || (tileId >= 460 && tileId < 475);
         const isRoad = tileId >= 200 && tileId < 300;
         const isCliff = tileId >= 400 && tileId < 500;
         const isWaterOrBridge = tileId >= 700 && tileId < 730;
@@ -105,6 +106,7 @@ export class GroundRenderer {
         } else if (
           (isSand && options.showBeach) ||
           isDesert ||
+          isDarkLand ||
           (isRoad && options.showRoad) ||
           (isCliff && options.showHills)
         ) {
@@ -140,6 +142,16 @@ export class GroundRenderer {
               gCtx.drawImage(decoImg, px, py, TILE_SIZE, TILE_SIZE);
             }
           }
+
+          // Optional natural dark sprouts on pure dark ground
+          if (tileId === TILE_IDS.dark_ground_pure && seededHash(gx, gy, chunk.seed + 67) < 0.07) {
+            const darkDecos = ['dark_sprout_1', 'dark_sprout_2', 'dark_sprout_3'];
+            const decoIdx = Math.floor(seededHash(gx, gy, chunk.seed + 73) * darkDecos.length);
+            const decoImg = this.loader.getImage(darkDecos[decoIdx]);
+            if (decoImg && decoImg.complete) {
+              gCtx.drawImage(decoImg, px, py, TILE_SIZE, TILE_SIZE);
+            }
+          }
         }
       }
     }
@@ -167,8 +179,23 @@ export class GroundRenderer {
         const isDead = tree.type === 'dead_1' || tree.type === 'dead_2';
         const isCactusLarge = tree.type === 'cactus_large';
         const isBoulder = tree.type === 'desert_boulder';
-        const w = isPalm ? 128 : 64;
-        const h = isPalm ? 200 : isCactusLarge ? 96 : isDead || isBoulder ? 64 : 120;
+        const isDarkLarge =
+          tree.type === 'dark_large_1' ||
+          tree.type === 'dark_large_2' ||
+          tree.type === 'dark_dead';
+        const isDarkForest = tree.type === 'dark_forest';
+        const w = isPalm || isDarkLarge ? 128 : isDarkForest ? 96 : 64;
+        const h = isPalm
+          ? 200
+          : isDarkLarge
+          ? 128
+          : isDarkForest
+          ? 96
+          : isCactusLarge
+          ? 96
+          : isDead || isBoulder
+          ? 64
+          : 120;
 
         if (
           tree.x + w < bounds.minX ||
@@ -183,6 +210,14 @@ export class GroundRenderer {
           if (palmShadowImg && palmShadowImg.complete) {
             ctx.drawImage(palmShadowImg, tree.x, tree.y);
           }
+        } else if (isDarkLarge) {
+          ctx.beginPath();
+          ctx.ellipse(tree.x + 64, tree.y + 118, 38, 12, 0, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (isDarkForest) {
+          ctx.beginPath();
+          ctx.ellipse(tree.x + 48, tree.y + 88, 28, 9, 0, 0, Math.PI * 2);
+          ctx.fill();
         } else if (isDead || isBoulder) {
           ctx.beginPath();
           ctx.ellipse(tree.x + 32, tree.y + 60, isBoulder ? 24 : 18, 7, 0, 0, Math.PI * 2);

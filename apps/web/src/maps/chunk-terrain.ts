@@ -5,6 +5,8 @@ import {
   getSandTileKey,
   getDesertTileKey,
   getDuneCliffTileKey,
+  getDarkGroundTileKey,
+  getDarkCliffTileKey,
   getRoadTileKey,
   getCliffTileKey,
   getWaterTileKey,
@@ -48,15 +50,21 @@ export function generateChunkTerrain(
       let tileId = getGrassTileId(gx, gy, seed);
 
       const isDesert = Boolean(field.isDesert && field.isDesert(gx, gy));
+      const isDarkLand = Boolean(field.isDarkLand && field.isDarkLand(gx, gy));
 
       if (field.isHill(gx, gy, hasHills, hasRoad, hasBeach)) {
         terrain = TERRAIN.HILL;
         tileId = isDesert
           ? getDuneCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId
+          : isDarkLand
+          ? getDarkCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId
           : getCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId;
       } else if (isDesert) {
         terrain = TERRAIN.DESERT;
         tileId = getDesertTileKey(gx, gy, field).tileId;
+      } else if (isDarkLand) {
+        terrain = TERRAIN.DARK_LAND;
+        tileId = getDarkGroundTileKey(gx, gy, field).tileId;
       } else if (field.isSand(gx, gy, hasBeach)) {
         terrain = TERRAIN.BEACH_SAND;
         tileId = getSandTileKey(gx, gy, field, hasBeach).tileId;

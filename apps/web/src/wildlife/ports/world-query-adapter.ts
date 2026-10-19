@@ -67,6 +67,9 @@ export function createWorldQueryAdapter(
     },
 
     biomeAt(gx: number, gy: number): string {
+      if (field.isDarkLand && field.isDarkLand(gx, gy)) {
+        return 'dark_land';
+      }
       if (field.isDesert && field.isDesert(gx, gy)) {
         return 'dryland';
       }
