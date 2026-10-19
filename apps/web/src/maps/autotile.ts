@@ -217,8 +217,11 @@ export function getDuneCliffTileKey(
       key = 'in_tl';
       tileId = TILE_IDS.dune_cliff_in_tl;
     } else {
-      key = 'pure';
-      tileId = TILE_IDS.dune_cliff_pure;
+      const res = getDesertTileKey(gx, gy, field);
+      if (res.key === 'pure') {
+        return { key: 'pure', tileId: TILE_IDS.dune_cliff_pure };
+      }
+      return res;
     }
   }
 

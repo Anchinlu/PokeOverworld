@@ -116,6 +116,18 @@ describe('Desert Biome (Sa Mạc) Integration', () => {
     inBLHillCoords.delete(`${4},${4}`); // missing NW -> inner corner in_bl
     const inBLDuneField = makeMockField(blockCoords, inBLHillCoords);
     expect(getDuneCliffTileKey(5, 5, inBLDuneField)).toEqual({ key: 'in_bl', tileId: TILE_IDS.dune_cliff_in_bl });
+
+    // Dune plateau bordering grass plateau: uses boundary grass fringe autotile (sand_*) instead of raw cut
+    const plateauGrassDesertBorder = makeMockField(
+      new Set(['5,5', '6,5', '5,6', '6,6']), // desert right half
+      new Set([
+        '4,4', '5,4', '6,4',
+        '4,5', '5,5', '6,5',
+        '4,6', '5,6', '6,6',
+      ]) // all 3x3 are hills
+    );
+    // At (5,5), N (5,4) and W (4,5) are grass hills, so top-left boundary grass fringe is applied
+    expect(getDuneCliffTileKey(5, 5, plateauGrassDesertBorder)).toEqual({ key: 'tl', tileId: TILE_IDS.sand_tl });
   });
 
   it('4. World Gen V3: strictly protects safe starter core from desert dunes', () => {
