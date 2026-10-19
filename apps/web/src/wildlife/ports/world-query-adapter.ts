@@ -57,6 +57,13 @@ export function createWorldQueryAdapter(
         return 'rock';
       }
 
+      // Dark Land has its own biome pool. Keep walkable dark ground distinct
+      // from the regular ecology sample so dark-land species can resolve the
+      // `dark_land + walkable_ground` habitat pair deterministically.
+      if (field.isDarkLand && field.isDarkLand(gx, gy)) {
+        return 'walkable_ground';
+      }
+
       const sample = sampleEcology(gx, gy, field);
       const zone = getEcologyZone(sample);
       if (zone === 'dense_forest') {

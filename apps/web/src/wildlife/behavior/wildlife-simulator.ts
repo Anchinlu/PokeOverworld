@@ -181,11 +181,24 @@ export class WildlifeSimulator {
             // Shore / boundary tile counts as ground (isSwimming = false)
             ent.isSwimming = world.contextAt(ent.gx, ent.gy) === 'water_surface';
           }
+          ent.idleAnimTimer = (ent.frame ?? 0) * 180;
         }
       } else {
         if (ent.isWaterDweller) {
           ent.isSwimming = world.contextAt(ent.gx, ent.gy) === 'water_surface';
         }
+
+        // Continuous Idle Animation for stationary Pokémon
+        if (ent.state !== 'rest_sleep') {
+          if (ent.idleAnimTimer === undefined) {
+            ent.idleAnimTimer = (Math.abs(ent.seed ?? 0) % 4) * 180;
+          }
+          ent.idleAnimTimer += dtMs;
+          ent.frame = Math.floor(ent.idleAnimTimer / 180) % 4;
+        } else {
+          ent.frame = 0;
+        }
+
         // Idle / Behavior Decision
         const profile = getBehaviorProfile(ent.behavior);
         const timerKey = entId;

@@ -5,8 +5,14 @@ import speciesSpawnData from '@pokemon/game-data/wildlife/species-spawn.json';
 import { getDarkGroundTileKey, getDarkCliffTileKey } from '../src/maps/autotile';
 import { V3Field } from '../src/maps/terrain-field/v3-field';
 import { generateChunkTerrain } from '../src/maps/chunk-terrain';
-import { generateChunkBuildings, generateChunkTrees, generateChunkFoliage } from '../src/maps/chunk-objects';
+import {
+  generateChunkBuildings,
+  generateChunkTrees,
+  generateChunkFoliage,
+} from '../src/maps/chunk-objects';
 import { createWorldQueryAdapter } from '../src/wildlife/ports/world-query-adapter';
+import { populateChunkWildlife } from '../src/wildlife/spawn/spawn-director';
+import spawnConfigData from '@pokemon/game-data/wildlife/spawn-config.json';
 import type { TerrainField } from '../src/maps/terrain-field';
 
 describe('Dark Land Biome (Vùng Đất Tối) Integration', () => {
@@ -54,7 +60,8 @@ describe('Dark Land Biome (Vùng Đất Tối) Integration', () => {
 
   it('2. Biome Data: registers dark_land biome in biomes.json', () => {
     expect(biomesData.biomes).toHaveProperty('dark_land');
-    const darkLand = (biomesData.biomes as Record<string, { name: string; defaultTree: string }>).dark_land;
+    const darkLand = (biomesData.biomes as Record<string, { name: string; defaultTree: string }>)
+      .dark_land;
     expect(darkLand.name).toBe('Cursed Dark Grounds');
     expect(darkLand.defaultTree).toBe('dark_forest');
   });
@@ -62,7 +69,10 @@ describe('Dark Land Biome (Vùng Đất Tối) Integration', () => {
   it('3. Circadian Wildlife: validates Psychic (Day/Dusk) and Ghost (Night/Dusk) schedule in dark_land', () => {
     const data = speciesSpawnData as Record<
       string,
-      { habitats: Array<{ biome: string; context: string; affinity: number }>; activeTime: string[] }
+      {
+        habitats: Array<{ biome: string; context: string; affinity: number }>;
+        activeTime: string[];
+      }
     >;
 
     // Psychic Pokémon in dark_land
@@ -104,7 +114,10 @@ describe('Dark Land Biome (Vùng Đất Tối) Integration', () => {
   });
 
   it('4. Autotiling: resolves dark ground and dark cliff autotiles', () => {
-    const makeMockField = (darkCoords: Set<string>, hillCoords: Set<string> = new Set()): TerrainField => ({
+    const makeMockField = (
+      darkCoords: Set<string>,
+      hillCoords: Set<string> = new Set()
+    ): TerrainField => ({
       version: 3,
       seed: 101,
       isOcean: () => false,
@@ -145,32 +158,86 @@ describe('Dark Land Biome (Vùng Đất Tối) Integration', () => {
     ]).toContain(pureRes.tileId);
 
     // Borders transition to grass
-    expect(getDarkGroundTileKey(4, 4, blockField)).toEqual({ key: 'tl', tileId: TILE_IDS.dark_ground_tl });
-    expect(getDarkGroundTileKey(6, 4, blockField)).toEqual({ key: 'tr', tileId: TILE_IDS.dark_ground_tr });
-    expect(getDarkGroundTileKey(4, 6, blockField)).toEqual({ key: 'bl', tileId: TILE_IDS.dark_ground_bl });
-    expect(getDarkGroundTileKey(6, 6, blockField)).toEqual({ key: 'br', tileId: TILE_IDS.dark_ground_br });
-    expect(getDarkGroundTileKey(5, 4, blockField)).toEqual({ key: 'top', tileId: TILE_IDS.dark_ground_top });
-    expect(getDarkGroundTileKey(5, 6, blockField)).toEqual({ key: 'bot', tileId: TILE_IDS.dark_ground_bot });
-    expect(getDarkGroundTileKey(4, 5, blockField)).toEqual({ key: 'left', tileId: TILE_IDS.dark_ground_left });
-    expect(getDarkGroundTileKey(6, 5, blockField)).toEqual({ key: 'right', tileId: TILE_IDS.dark_ground_right });
+    expect(getDarkGroundTileKey(4, 4, blockField)).toEqual({
+      key: 'tl',
+      tileId: TILE_IDS.dark_ground_tl,
+    });
+    expect(getDarkGroundTileKey(6, 4, blockField)).toEqual({
+      key: 'tr',
+      tileId: TILE_IDS.dark_ground_tr,
+    });
+    expect(getDarkGroundTileKey(4, 6, blockField)).toEqual({
+      key: 'bl',
+      tileId: TILE_IDS.dark_ground_bl,
+    });
+    expect(getDarkGroundTileKey(6, 6, blockField)).toEqual({
+      key: 'br',
+      tileId: TILE_IDS.dark_ground_br,
+    });
+    expect(getDarkGroundTileKey(5, 4, blockField)).toEqual({
+      key: 'top',
+      tileId: TILE_IDS.dark_ground_top,
+    });
+    expect(getDarkGroundTileKey(5, 6, blockField)).toEqual({
+      key: 'bot',
+      tileId: TILE_IDS.dark_ground_bot,
+    });
+    expect(getDarkGroundTileKey(4, 5, blockField)).toEqual({
+      key: 'left',
+      tileId: TILE_IDS.dark_ground_left,
+    });
+    expect(getDarkGroundTileKey(6, 5, blockField)).toEqual({
+      key: 'right',
+      tileId: TILE_IDS.dark_ground_right,
+    });
 
     // Elevated dark cliffs: 3x3 hill plateau in dark land
     const cliffField = makeMockField(blockCoords, blockCoords);
-    expect(getDarkCliffTileKey(5, 5, cliffField)).toEqual({ key: 'pure', tileId: TILE_IDS.dark_cliff_pure });
-    expect(getDarkCliffTileKey(4, 4, cliffField)).toEqual({ key: 'tl', tileId: TILE_IDS.dark_cliff_tl });
-    expect(getDarkCliffTileKey(6, 4, cliffField)).toEqual({ key: 'tr', tileId: TILE_IDS.dark_cliff_tr });
-    expect(getDarkCliffTileKey(4, 6, cliffField)).toEqual({ key: 'bl', tileId: TILE_IDS.dark_cliff_bl });
-    expect(getDarkCliffTileKey(6, 6, cliffField)).toEqual({ key: 'br', tileId: TILE_IDS.dark_cliff_br });
-    expect(getDarkCliffTileKey(5, 4, cliffField)).toEqual({ key: 'top', tileId: TILE_IDS.dark_cliff_top });
-    expect(getDarkCliffTileKey(5, 6, cliffField)).toEqual({ key: 'bot', tileId: TILE_IDS.dark_cliff_bot });
-    expect(getDarkCliffTileKey(4, 5, cliffField)).toEqual({ key: 'left', tileId: TILE_IDS.dark_cliff_left });
-    expect(getDarkCliffTileKey(6, 5, cliffField)).toEqual({ key: 'right', tileId: TILE_IDS.dark_cliff_right });
+    expect(getDarkCliffTileKey(5, 5, cliffField)).toEqual({
+      key: 'pure',
+      tileId: TILE_IDS.dark_cliff_pure,
+    });
+    expect(getDarkCliffTileKey(4, 4, cliffField)).toEqual({
+      key: 'tl',
+      tileId: TILE_IDS.dark_cliff_tl,
+    });
+    expect(getDarkCliffTileKey(6, 4, cliffField)).toEqual({
+      key: 'tr',
+      tileId: TILE_IDS.dark_cliff_tr,
+    });
+    expect(getDarkCliffTileKey(4, 6, cliffField)).toEqual({
+      key: 'bl',
+      tileId: TILE_IDS.dark_cliff_bl,
+    });
+    expect(getDarkCliffTileKey(6, 6, cliffField)).toEqual({
+      key: 'br',
+      tileId: TILE_IDS.dark_cliff_br,
+    });
+    expect(getDarkCliffTileKey(5, 4, cliffField)).toEqual({
+      key: 'top',
+      tileId: TILE_IDS.dark_cliff_top,
+    });
+    expect(getDarkCliffTileKey(5, 6, cliffField)).toEqual({
+      key: 'bot',
+      tileId: TILE_IDS.dark_cliff_bot,
+    });
+    expect(getDarkCliffTileKey(4, 5, cliffField)).toEqual({
+      key: 'left',
+      tileId: TILE_IDS.dark_cliff_left,
+    });
+    expect(getDarkCliffTileKey(6, 5, cliffField)).toEqual({
+      key: 'right',
+      tileId: TILE_IDS.dark_cliff_right,
+    });
 
     // Inner corners
     const inBLHillCoords = new Set(blockCoords);
     inBLHillCoords.delete('4,4'); // missing NW -> inner corner in_bl
     const inBLCliffField = makeMockField(blockCoords, inBLHillCoords);
-    expect(getDarkCliffTileKey(5, 5, inBLCliffField)).toEqual({ key: 'in_bl', tileId: TILE_IDS.dark_cliff_in_bl });
+    expect(getDarkCliffTileKey(5, 5, inBLCliffField)).toEqual({
+      key: 'in_bl',
+      tileId: TILE_IDS.dark_cliff_in_bl,
+    });
   });
 
   it('5. World Gen V3: protects starter core from dark land', () => {
@@ -269,7 +336,16 @@ describe('Dark Land Biome (Vùng Đất Tối) Integration', () => {
       expect(['dark_large_1', 'dark_large_2', 'dark_dead', 'dark_forest']).toContain(tree.type);
     }
 
-    const plants = generateChunkFoliage(15, 15, darkField, terrain.terrainGrid, terrain.tileIdGrid, [], [], colliders);
+    const plants = generateChunkFoliage(
+      15,
+      15,
+      darkField,
+      terrain.terrainGrid,
+      terrain.tileIdGrid,
+      [],
+      [],
+      colliders
+    );
     const validDarkFoliage = [
       'dark_sprout',
       'rock_dark_spires',
@@ -281,13 +357,17 @@ describe('Dark Land Biome (Vùng Đất Tối) Integration', () => {
       'bush_dark_6',
     ];
     for (const plant of plants) {
-      if (plant.type.startsWith('bush_dark_') || plant.type === 'dark_sprout' || plant.type === 'rock_dark_spires') {
+      if (
+        plant.type.startsWith('bush_dark_') ||
+        plant.type === 'dark_sprout' ||
+        plant.type === 'rock_dark_spires'
+      ) {
         expect(validDarkFoliage).toContain(plant.type);
       }
     }
   });
 
-  it('8. Wildlife Query Adapter: classifies dark land as dark_land biome and forest_floor context', () => {
+  it('8. Wildlife Query Adapter: classifies dark land as dark_land biome and walkable ground', () => {
     const mockField: TerrainField = {
       version: 3,
       seed: 101,
@@ -312,5 +392,54 @@ describe('Dark Land Biome (Vùng Đất Tối) Integration', () => {
     const adapter = createWorldQueryAdapter(mockField);
     expect(adapter.contextAt(100, 100)).toBe('walkable_ground');
     expect(adapter.biomeAt(100, 100)).toBe('dark_land');
+  });
+
+  it('9. Wildlife spawning: uses the Dark Land group budget and circadian pool', () => {
+    expect(spawnConfigData.groupsPerChunk.dark_land).toEqual([1, 3]);
+
+    const darkField: TerrainField = {
+      version: 3,
+      seed: 101,
+      isOcean: () => false,
+      isSand: () => false,
+      isHill: () => false,
+      isRoad: () => false,
+      isBridge: () => false,
+      isWater: () => false,
+      isLake: () => false,
+      isWaterOrBridge: () => false,
+      isNearWater: () => false,
+      isNearCliffEdge: () => false,
+      getOceanTileId: () => 730,
+      getSpawn: () => ({ gx: 0, gy: 0 }),
+      getRoadCenterX: () => 0,
+      isValidTreePos: () => true,
+      isValidPalmTreePos: () => false,
+      isDarkLand: () => true,
+    };
+
+    const dayWorld = createWorldQueryAdapter(darkField, [], [], () => 'day');
+    const nightWorld = createWorldQueryAdapter(darkField, [], [], () => 'night');
+    const daySpecies = new Set<string>();
+    const nightSpecies = new Set<string>();
+
+    for (let cx = 0; cx < 12; cx++) {
+      for (let cy = 0; cy < 12; cy++) {
+        for (const entity of populateChunkWildlife(cx, cy, dayWorld, { seed: 101 })) {
+          daySpecies.add(entity.speciesKey);
+        }
+        for (const entity of populateChunkWildlife(cx, cy, nightWorld, { seed: 101 })) {
+          nightSpecies.add(entity.speciesKey);
+        }
+      }
+    }
+
+    expect(daySpecies.size).toBeGreaterThan(0);
+    expect(nightSpecies.size).toBeGreaterThan(0);
+
+    const dayEligible = new Set(['ABRA', 'KADABRA', 'MRMIME', 'CUBONE', 'MAROWAK']);
+    const nightEligible = new Set(['ZUBAT', 'GOLBAT', 'GASTLY', 'HAUNTER', 'DROWZEE', 'HYPNO']);
+    expect([...daySpecies].every((species) => dayEligible.has(species))).toBe(true);
+    expect([...nightSpecies].every((species) => nightEligible.has(species))).toBe(true);
   });
 });

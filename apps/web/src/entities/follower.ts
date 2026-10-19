@@ -23,6 +23,7 @@ export class Follower {
   public targetGX = 0;
   public targetGY = 0;
   public stepProgress = 0;
+  public idleAnimTimer = 0;
 
   public speciesKey = 'PIKACHU';
   public isShiny = false;
@@ -68,6 +69,7 @@ export class Follower {
     this.isMoving = false;
     this.isDodge = false;
     this.frame = 0;
+    this.idleAnimTimer = 0;
     if (dir !== undefined) {
       this.direction = dir;
     }
@@ -157,6 +159,15 @@ export class Follower {
     this.y = this.targetY;
     this.isMoving = false;
     this.isDodge = false;
-    this.frame = 0;
+    this.idleAnimTimer = this.frame * 180;
+  }
+
+  /**
+   * Updates idle animation when follower is stationary.
+   * Continues natural breathing / stepping cycle without freezing.
+   */
+  public updateIdle(dtScale = 1.0): void {
+    this.idleAnimTimer += 16.6 * dtScale;
+    this.frame = Math.floor(this.idleAnimTimer / 180) % 4;
   }
 }

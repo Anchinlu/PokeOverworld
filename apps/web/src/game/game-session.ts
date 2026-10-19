@@ -194,8 +194,10 @@ export class GameSession {
 
     // 3. Advance player and follower step progress
     const stepCompleted = this.player.update(dtScale, isRunning);
-    if (this.player.isMoving) {
+    if (this.follower.isMoving) {
       this.follower.updateSync(this.player.stepProgress);
+    } else {
+      this.follower.updateIdle(dtScale);
     }
     if (stepCompleted) {
       this.follower.completeStep();

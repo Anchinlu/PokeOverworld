@@ -28,6 +28,7 @@ export function updateWildPokemon(
         wp.isMoving = false;
         wp.isPecking = false;
         wp.bobY = 0;
+        wp.frame = 0;
         continue;
       }
 
@@ -46,7 +47,7 @@ export function updateWildPokemon(
         }
       }
 
-      // 2. Idle Pecking animation (Birds)
+      // 2. Idle Pecking animation (Birds) & Continuous Idle Animation
       if (!wp.isMoving) {
         if (wp.isPecking && wp.peckStartTime !== undefined) {
           const elapsed = now - wp.peckStartTime;
@@ -58,6 +59,17 @@ export function updateWildPokemon(
           }
         } else {
           wp.bobY = 0;
+        }
+
+        // Continuous Idle Animation: Pokémon keeps animating continuously instead of freezing
+        if (wp.state !== 'rest_sleep') {
+          if (wp.idleAnimTimer === undefined) {
+            wp.idleAnimTimer = (Math.abs(wp.seed || 0) % 4) * 180;
+          }
+          wp.idleAnimTimer += 16.6 * dtScale;
+          wp.frame = Math.floor(wp.idleAnimTimer / 180) % 4;
+        } else {
+          wp.frame = 0;
         }
       }
 
@@ -80,7 +92,7 @@ export function updateWildPokemon(
           wp.x = wp.targetX;
           wp.y = wp.targetY;
           wp.isMoving = false;
-          wp.frame = 0;
+          wp.idleAnimTimer = wp.frame * 180;
           wp.stepProgress = 0;
           wp.bobY = 0;
           wp.lastMoveTime = now;

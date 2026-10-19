@@ -62,6 +62,7 @@ export interface WildEntity {
   peckStartTime?: number;
   bobY?: number;
   frame: number;
+  idleAnimTimer?: number;
   emote?: WildEmote | null;
   seed: number;
   chunkCx: number;
