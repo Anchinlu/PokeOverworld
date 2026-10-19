@@ -84,6 +84,9 @@ export const TILE_IDS = {
   shore_corner_out: 733,
   shore_corner_in_flip: 734,
   shore_corner_out_flip: 735,
+  shore_h: 736,
+  shore_h_top: 737,
+  shore_v_right: 738,
 } as const;
 
 export const CHUNK_SIZE = 16 as const;

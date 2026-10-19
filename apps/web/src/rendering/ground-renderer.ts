@@ -6,7 +6,6 @@ import type { ChunkManager } from '../maps/chunk-manager';
 import type { WorldChunk } from '../maps/chunk';
 import type { AssetLoader } from './asset-loader';
 import { seededHash } from '../maps/noise';
-import { isLakeTile } from '../maps/terrain-rules';
 import { TILE_KEY_BY_ID, type RenderOptions } from './types';
 
 export class GroundRenderer {
@@ -69,7 +68,7 @@ export class GroundRenderer {
         const isRoad = tileId >= 200 && tileId < 300;
         const isCliff = tileId >= 400 && tileId < 500;
         const isWaterOrBridge = tileId >= 700 && tileId < 730;
-        const isOceanOrShore = tileId >= 730 && tileId <= 735;
+        const isOceanOrShore = tileId >= 730 && tileId <= 738;
 
         if (isWaterOrBridge && options.showWater) {
           // Clear ground grass so live animated caustic water waves ripple underneath
@@ -284,7 +283,7 @@ export class GroundRenderer {
           if (tileId >= 700 && tileId < 730) {
             const gx = startGX + lx;
             const gy = startGY + ly;
-            const isLake = isLakeTile(gx, gy, chunk.seed);
+            const isLake = chunk.field.isLake(gx, gy);
             const imgToUse = isLake && imgLake && imgLake.complete ? imgLake : imgRiver;
             if (!imgToUse || !imgToUse.complete) continue;
             const px = gx * TILE_SIZE;
@@ -318,9 +317,11 @@ export class GroundRenderer {
 
             ctx.drawImage(imgOcean, sx, 0, TILE_SIZE, TILE_SIZE, px, py, TILE_SIZE, TILE_SIZE);
           }
-          // 3. Shoreline crashing waves (731..735)
-          else if (tileId >= 731 && tileId <= 735 && options.showBeach) {
+          // 3. Shoreline crashing waves (731..738)
+          else if (tileId >= 731 && tileId <= 738 && options.showBeach) {
             let shoreImg = imgShoreV;
+            let rotation = 0; // default 0 for shore_v and corners
+
             if (tileId === TILE_IDS.shore_corner_in) {
               shoreImg = imgShoreCin;
             } else if (tileId === TILE_IDS.shore_corner_out) {
@@ -329,6 +330,18 @@ export class GroundRenderer {
               shoreImg = imgShoreCinFlip ?? imgShoreCin;
             } else if (tileId === TILE_IDS.shore_corner_out_flip) {
               shoreImg = imgShoreCoutFlip ?? imgShoreCout;
+            } else if (tileId === TILE_IDS.shore_h) {
+              // Sand on South, Ocean on North -> rotate -90° (-Math.PI / 2)
+              shoreImg = imgShoreV;
+              rotation = -Math.PI / 2;
+            } else if (tileId === TILE_IDS.shore_h_top) {
+              // Sand on North, Ocean on South -> rotate 90° (Math.PI / 2)
+              shoreImg = imgShoreV;
+              rotation = Math.PI / 2;
+            } else if (tileId === TILE_IDS.shore_v_right) {
+              // Sand on East, Ocean on West -> rotate 180° (Math.PI)
+              shoreImg = imgShoreV;
+              rotation = Math.PI;
             }
 
             if (!shoreImg || !shoreImg.complete) continue;
@@ -344,7 +357,29 @@ export class GroundRenderer {
               continue;
             }
 
-            ctx.drawImage(shoreImg, sx, 0, TILE_SIZE, TILE_SIZE, px, py, TILE_SIZE, TILE_SIZE);
+            if (imgOcean && imgOcean.complete) {
+              ctx.drawImage(imgOcean, sx, 0, TILE_SIZE, TILE_SIZE, px, py, TILE_SIZE, TILE_SIZE);
+            }
+
+            if (rotation !== 0) {
+              ctx.save();
+              ctx.translate(px + TILE_SIZE / 2, py + TILE_SIZE / 2);
+              ctx.rotate(rotation);
+              ctx.drawImage(
+                shoreImg,
+                sx,
+                0,
+                TILE_SIZE,
+                TILE_SIZE,
+                -TILE_SIZE / 2,
+                -TILE_SIZE / 2,
+                TILE_SIZE,
+                TILE_SIZE
+              );
+              ctx.restore();
+            } else {
+              ctx.drawImage(shoreImg, sx, 0, TILE_SIZE, TILE_SIZE, px, py, TILE_SIZE, TILE_SIZE);
+            }
           }
         }
       }

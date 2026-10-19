@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Shore Tile Layout Test</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #1a1a2e;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', sans-serif;
+    padding: 20px;
+  }
+  h1 { color: #4fc3f7; margin-bottom: 10px; }
+  h2 { color: #81d4fa; margin: 20px 0 10px; }
+  .note { color: #aaa; font-size: 13px; margin-bottom: 20px; }
+
+  .section {
+    background: #16213e;
+    border: 1px solid #0f3460;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+
+  /* Tile catalog */
+  .tile-catalog {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .tile-item {
+    text-align: center;
+  }
+  .tile-item canvas {
+    border: 1px solid #333;
+    image-rendering: pixelated;
+  }
+  .tile-item .label {
+    font-size: 11px;
+    color: #90caf9;
+    margin-top: 4px;
+  }
+
+  /* Layout grids */
+  .layout-row {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  .layout-group {
+    text-align: center;
+  }
+  .layout-group .title {
+    font-size: 13px;
+    color: #ce93d8;
+    margin-bottom: 6px;
+    font-weight: bold;
+  }
+  .layout-group canvas {
+    border: 1px solid #444;
+    image-rendering: pixelated;
+    background: #000;
+  }
+
+  #animToggle {
+    background: #0f3460;
+    color: #4fc3f7;
+    border: 1px solid #4fc3f7;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+  #animToggle:hover { background: #1a4a7a; }
+
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    font-size: 12px;
+  }
+  .legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .legend .swatch {
+    width: 16px;
+    height: 16px;
+    border: 1px solid #555;
+    display: inline-block;
+  }
+</style>
+</head>
+<body>
+
+<h1>🌊 Shore Tile Layout Test</h1>
+<p class="note">Sắp xếp 5 loại shore tiles hiện có thành các dạng đường cong bờ biển.</p>
+<button id="animToggle">▶ Chạy Animation</button>
+
+<!-- Section 1: Individual tiles -->
+<div class="section">
+  <h2>1. Catalog — 5 Shore Tiles Hiện Có</h2>
+  <div class="tile-catalog" id="catalog"></div>
+</div>
+
+<!-- Section 2: Straight coastline -->
+<div class="section">
+  <h2>2. Đường bờ biển thẳng (Vertical Shore)</h2>
+  <div class="layout-row" id="straightLayouts"></div>
+</div>
+
+<!-- Section 3: Step West curve -->
+<div class="section">
+  <h2>3. Bậc Tây (Coastline steps West) — corner_in + corner_out</h2>
+  <div class="layout-row" id="stepWestLayouts"></div>
+</div>
+
+<!-- Section 4: Step East curve -->
+<div class="section">
+  <h2>4. Bậc Đông (Coastline steps East) — corner_in_flip + corner_out_flip</h2>
+  <div class="layout-row" id="stepEastLayouts"></div>
+</div>
+
+<!-- Section 5: Full composite curve -->
+<div class="section">
+  <h2>5. Đường Cong Tổng Hợp — Bờ biển tự nhiên</h2>
+  <p class="note">Ghép tất cả 5 tiles thành một đoạn bờ biển có cả bậc tây + đông</p>
+  <div class="layout-row" id="compositeLayouts"></div>
+</div>
+
+<!-- Section 6: Missing horizontal -->
+<div class="section">
+  <h2>6. 🔴 Phần Thiếu — Cạnh Ngang (Horizontal Shore)</h2>
+  <p class="note">Các ô đánh dấu đỏ = nơi cần shore ngang nhưng hiện chưa có asset</p>
+  <div class="layout-row" id="missingLayouts"></div>
+</div>
+
+<!-- Section 7: Solved with Rotated Horizontal Shore -->
+<div class="section">
+  <h2>7. ✅ Giải Pháp Hoàn Chỉnh: Shore Ngang (Rotated -90°) + Bờ Biển Thực Tế</h2>
+  <p class="note">Mô phỏng chính xác đoạn bờ biển có bậc thang ngang 2-3 ô từ ảnh screenshot của bạn</p>
+  <div class="layout-row" id="solutionLayouts"></div>
+</div>
+
+<div class="legend">
+  <span><span class="swatch" style="background:#5c9e31"></span> Cỏ (Grass)</span>
+  <span><span class="swatch" style="background:#e8d9a0"></span> Cát (Sand)</span>
+  <span><span class="swatch" style="background:#4a90b8"></span> Biển (Ocean)</span>
+  <span><span class="swatch" style="background:#ff4444"></span> Shore tile</span>
+  <span><span class="swatch" style="background:rgba(255,0,0,0.3)"></span> Thiếu asset</span>
+</div>
+
+<script>
+const T = 32; // tile size
+const SCALE = 2; // display scale
+const ASSET_BASE = '/assets/';
+
+// Shore tile definitions
+const SHORE_TILES = [
+  { key: 'shore_anim_vertical',         label: 'shore_v (731)',          file: 'shore_anim_vertical.png' },
+  { key: 'shore_anim_corner_in',        label: 'corner_in (732)',        file: 'shore_anim_corner_in.png' },
+  { key: 'shore_anim_corner_out',       label: 'corner_out (733)',       file: 'shore_anim_corner_out.png' },
+  { key: 'shore_anim_corner_in_flip',   label: 'corner_in_flip (734)',   file: 'shore_anim_corner_in_flip.png' },
+  { key: 'shore_anim_corner_out_flip',  label: 'corner_out_flip (735)',  file: 'shore_anim_corner_out_flip.png' },
+];
+
+const EXTRA_ASSETS = {
+  ocean: 'ocean_anim_strip.png',
+  sand_pure: 'sand_pure.png',
+};
+
+// Load images
+const images = {};
+let loadedCount = 0;
+const totalAssets = SHORE_TILES.length + Object.keys(EXTRA_ASSETS).length;
+
+function loadAll(callback) {
+  function onLoad() {
+    loadedCount++;
+    if (loadedCount >= totalAssets) callback();
+  }
+  for (const tile of SHORE_TILES) {
+    const img = new Image();
+    img.onload = onLoad;
+    img.onerror = onLoad;
+    img.src = ASSET_BASE + tile.file;
+    images[tile.key] = img;
+  }
+  for (const [k, file] of Object.entries(EXTRA_ASSETS)) {
+    const img = new Image();
+    img.onload = onLoad;
+    img.onerror = onLoad;
+    img.src = ASSET_BASE + file;
+    images[k] = img;
+  }
+}
+
+// Animation state
+let animFrame = 0;
+let animating = false;
+let animRAF = null;
+const allCanvases = []; // { canvas, drawFn }
+
+// Colors
+const COL_GRASS = '#5c9e31';
+const COL_SAND  = '#e8d9a0';
+const COL_OCEAN = '#4a90b8';
+const COL_MISSING = 'rgba(255, 50, 50, 0.35)';
+
+// Tile types for grid layouts
+const EMPTY = 0;
+const GRASS = 1;
+const SAND = 2;
+const OCEAN = 3;
+const SHORE_V = 4;
+const CORNER_IN = 5;
+const CORNER_OUT = 6;
+const CORNER_IN_FLIP = 7;
+const CORNER_OUT_FLIP = 8;
+const MISSING_H = 9; // Missing horizontal shore
+const SHORE_H = 10;   // Rotated horizontal shore (sand South, ocean North)
+
+const TILE_TO_IMAGE = {
+  [SHORE_V]: 'shore_anim_vertical',
+  [CORNER_IN]: 'shore_anim_corner_in',
+  [CORNER_OUT]: 'shore_anim_corner_out',
+  [CORNER_IN_FLIP]: 'shore_anim_corner_in_flip',
+  [CORNER_OUT_FLIP]: 'shore_anim_corner_out_flip',
+};
+
+const TILE_TO_COLOR = {
+  [GRASS]: COL_GRASS,
+  [SAND]: COL_SAND,
+  [OCEAN]: COL_OCEAN,
+};
+
+function createGridCanvas(grid, parentEl, title) {
+  const rows = grid.length;
+  const cols = grid[0].length;
+  const w = cols * T * SCALE;
+  const h = rows * T * SCALE;
+
+  const group = document.createElement('div');
+  group.className = 'layout-group';
+
+  if (title) {
+    const t = document.createElement('div');
+    t.className = 'title';
+    t.textContent = title;
+    group.appendChild(t);
+  }
+
+  const canvas = document.createElement('canvas');
+  canvas.width = w;
+  canvas.height = h;
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+  group.appendChild(canvas);
+  parentEl.appendChild(group);
+
+  function draw(frame) {
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+    ctx.clearRect(0, 0, w, h);
+
+    const sx = frame * T;
+
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const tile = grid[r][c];
+        const px = c * T * SCALE;
+        const py = r * T * SCALE;
+        const sz = T * SCALE;
+
+        // Background color
+        const bgColor = TILE_TO_COLOR[tile];
+        if (bgColor) {
+          ctx.fillStyle = bgColor;
+          ctx.fillRect(px, py, sz, sz);
+        }
+
+        // Animated shore/ocean tiles
+        const imgKey = TILE_TO_IMAGE[tile];
+        if (imgKey && images[imgKey] && images[imgKey].complete && images[imgKey].naturalWidth > 0) {
+          // Draw ocean underneath first
+          if (images.ocean && images.ocean.complete) {
+            ctx.drawImage(images.ocean, sx, 0, T, T, px, py, sz, sz);
+          }
+          ctx.drawImage(images[imgKey], sx, 0, T, T, px, py, sz, sz);
+        } else if (tile === SHORE_H) {
+          if (images.ocean && images.ocean.complete && images.ocean.naturalWidth > 0) {
+            ctx.drawImage(images.ocean, sx, 0, T, T, px, py, sz, sz);
+          }
+          if (images.shore_anim_vertical && images.shore_anim_vertical.complete) {
+            ctx.save();
+            ctx.translate(px + sz / 2, py + sz / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.drawImage(images.shore_anim_vertical, sx, 0, T, T, -sz / 2, -sz / 2, sz, sz);
+            ctx.restore();
+          }
+        } else if (tile === OCEAN) {
+          // Animated ocean
+          if (images.ocean && images.ocean.complete && images.ocean.naturalWidth > 0) {
+            ctx.drawImage(images.ocean, sx, 0, T, T, px, py, sz, sz);
+          }
+        } else if (tile === MISSING_H) {
+          // Draw ocean underneath
+          if (images.ocean && images.ocean.complete && images.ocean.naturalWidth > 0) {
+            ctx.drawImage(images.ocean, sx, 0, T, T, px, py, sz, sz);
+          }
+          // Red overlay to mark missing
+          ctx.fillStyle = COL_MISSING;
+          ctx.fillRect(px, py, sz, sz);
+          ctx.strokeStyle = '#ff4444';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(px + 1, py + 1, sz - 2, sz - 2);
+          // Question mark
+          ctx.fillStyle = '#ff4444';
+          ctx.font = `bold ${sz * 0.5}px monospace`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText('?', px + sz / 2, py + sz / 2);
+        }
+
+        // Grid lines
+        ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(px, py, sz, sz);
+      }
+    }
+  }
+
+  allCanvases.push({ canvas, draw });
+  draw(0);
+  return canvas;
+}
+
+function buildCatalog() {
+  const parent = document.getElementById('catalog');
+  for (const tile of SHORE_TILES) {
+    const item = document.createElement('div');
+    item.className = 'tile-item';
+
+    const canvas = document.createElement('canvas');
+    const cw = T * 8 * SCALE;
+    const ch = T * SCALE;
+    canvas.width = cw;
+    canvas.height = ch;
+    canvas.style.width = cw + 'px';
+    canvas.style.height = ch + 'px';
+
+    const img = images[tile.key];
+    function draw() {
+      const ctx = canvas.getContext('2d');
+      ctx.imageSmoothingEnabled = false;
+      ctx.clearRect(0, 0, cw, ch);
+      if (img && img.complete && img.naturalWidth > 0) {
+        ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight, 0, 0, cw, ch);
+      }
+    }
+    draw();
+
+    const label = document.createElement('div');
+    label.className = 'label';
+    label.textContent = tile.label;
+
+    item.appendChild(canvas);
+    item.appendChild(label);
+    parent.appendChild(item);
+  }
+}
+
+function buildStraightLayouts() {
+  const parent = document.getElementById('straightLayouts');
+  // 8 rows of straight coastline
+  const grid = [];
+  for (let r = 0; r < 8; r++) {
+    grid.push([GRASS, GRASS, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN]);
+  }
+  createGridCanvas(grid, parent, 'Bờ thẳng: Cỏ → Cát → Shore_V → Biển');
+}
+
+function buildStepWestLayouts() {
+  const parent = document.getElementById('stepWestLayouts');
+
+  // Step west: coastline moves 1 tile to the left
+  // Before step: shore_v at col 5
+  // After step: shore_v at col 4
+  // Transition row: corner_in at col 4, corner_out at col 5
+  const grid = [
+    [GRASS, GRASS, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN],
+    [GRASS, GRASS, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN],
+    [GRASS, GRASS, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN],
+    [GRASS, GRASS, SAND, SAND, CORNER_IN, CORNER_OUT, OCEAN, OCEAN, OCEAN],  // transition
+    [GRASS, GRASS, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN, OCEAN],
+    [GRASS, GRASS, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN, OCEAN],
+    [GRASS, GRASS, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN, OCEAN],
+    [GRASS, GRASS, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN, OCEAN],
+  ];
+  createGridCanvas(grid, parent, 'Bậc Tây: corner_in → corner_out');
+
+  // Current problem: the row above transition has sand touching ocean directly
+  const gridProblem = [
+    [GRASS, GRASS, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN],
+    [GRASS, GRASS, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN],
+    [GRASS, GRASS, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN],
+    [GRASS, GRASS, SAND, SAND, CORNER_IN, CORNER_OUT, OCEAN, OCEAN, OCEAN],
+    [GRASS, GRASS, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN, OCEAN],
+    [GRASS, GRASS, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN, OCEAN],
+  ];
+  createGridCanvas(gridProblem, parent, 'Hiện tại (OK)');
+}
+
+function buildStepEastLayouts() {
+  const parent = document.getElementById('stepEastLayouts');
+
+  // Step east: coastline moves 1 tile to the right
+  const grid = [
+    [GRASS, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN, OCEAN],
+    [GRASS, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN, OCEAN],
+    [GRASS, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN, OCEAN],
+    [GRASS, SAND, SAND, SAND, CORNER_IN_FLIP, CORNER_OUT_FLIP, OCEAN, OCEAN, OCEAN],  // transition
+    [GRASS, SAND, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN],
+    [GRASS, SAND, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN],
+    [GRASS, SAND, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN],
+    [GRASS, SAND, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN],
+  ];
+  createGridCanvas(grid, parent, 'Bậc Đông: corner_in_flip → corner_out_flip');
+}
+
+function buildCompositeLayouts() {
+  const parent = document.getElementById('compositeLayouts');
+
+  // Full natural coastline with multiple steps
+  // Coast starts at col 6, steps west to 5, stays, steps east to 6, stays
+  const grid = [
+    [GRASS, GRASS, SAND, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN],
+    [GRASS, GRASS, SAND, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN],
+    [GRASS, GRASS, SAND, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN],
+    [GRASS, GRASS, SAND, SAND, SAND, CORNER_IN, CORNER_OUT, OCEAN, OCEAN, OCEAN],     // step west
+    [GRASS, GRASS, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN, OCEAN],
+    [GRASS, GRASS, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN, OCEAN],
+    [GRASS, GRASS, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN, OCEAN],
+    [GRASS, GRASS, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN, OCEAN],
+    [GRASS, GRASS, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN, OCEAN],
+    [GRASS, GRASS, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN, OCEAN],
+    [GRASS, GRASS, SAND, SAND, SAND, CORNER_IN_FLIP, CORNER_OUT_FLIP, OCEAN, OCEAN, OCEAN], // step east
+    [GRASS, GRASS, SAND, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN],
+    [GRASS, GRASS, SAND, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN],
+    [GRASS, GRASS, SAND, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN],
+    [GRASS, GRASS, SAND, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN],
+    [GRASS, GRASS, SAND, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN],
+  ];
+  createGridCanvas(grid, parent, 'Bờ biển tổng hợp (5 tiles)');
+
+  // Double step west (2 tiles)
+  const grid2 = [
+    [GRASS, SAND, SAND, SAND, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN],
+    [GRASS, SAND, SAND, SAND, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN],
+    [GRASS, SAND, SAND, SAND, SAND, SAND, CORNER_IN, CORNER_OUT, OCEAN, OCEAN, OCEAN],
+    [GRASS, SAND, SAND, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN, OCEAN],
+    [GRASS, SAND, SAND, SAND, SAND, CORNER_IN, CORNER_OUT, OCEAN, OCEAN, OCEAN, OCEAN],
+    [GRASS, SAND, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN, OCEAN, OCEAN],
+    [GRASS, SAND, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN, OCEAN, OCEAN],
+    [GRASS, SAND, SAND, SAND, SAND, CORNER_IN_FLIP, CORNER_OUT_FLIP, OCEAN, OCEAN, OCEAN, OCEAN],
+    [GRASS, SAND, SAND, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN, OCEAN],
+    [GRASS, SAND, SAND, SAND, SAND, SAND, CORNER_IN_FLIP, CORNER_OUT_FLIP, OCEAN, OCEAN, OCEAN],
+    [GRASS, SAND, SAND, SAND, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN],
+    [GRASS, SAND, SAND, SAND, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN],
+  ];
+  createGridCanvas(grid2, parent, 'Bậc thang liên tiếp (zigzag)');
+}
+
+function buildMissingLayouts() {
+  const parent = document.getElementById('missingLayouts');
+
+  // Show where horizontal shore would be needed
+  // When there's a 2-tile step, the horizontal edge between sand row and ocean row
+  // currently has no shore transition
+  
+  // Case: step west by 2 (nextOcean = ocean - 2)
+  // This creates a larger staircase where horizontal edges are exposed
+  const gridMissing = [
+    [GRASS, SAND, SAND, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN],
+    [GRASS, SAND, SAND, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN],
+    [GRASS, SAND, SAND, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN],
+    [GRASS, SAND, SAND, SAND, CORNER_IN, CORNER_OUT, OCEAN, OCEAN, OCEAN, OCEAN],  // step
+    [GRASS, SAND, SAND, SAND, SHORE_V, MISSING_H, OCEAN, OCEAN, OCEAN, OCEAN],     // 🔴 top of ocean col 5 touching sand above
+    [GRASS, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN, OCEAN, OCEAN],
+    [GRASS, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN, OCEAN, OCEAN],
+  ];
+  createGridCanvas(gridMissing, parent, '🔴 Bậc Tây — thiếu shore ở cạnh ngang?');
+
+  // The actual current game rendering (from screenshot):
+  // Sand and ocean meet at a staircase without any shore wave
+  const gridActual = [
+    [SAND, SAND, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN],
+    [SAND, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN],     // step happens here
+    [SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN, OCEAN],    // another step
+    [SAND, SAND, SHORE_V, OCEAN, OCEAN, OCEAN, OCEAN, OCEAN],   // another step
+    [SAND, SHORE_V, OCEAN, OCEAN, OCEAN, OCEAN, OCEAN, OCEAN],
+  ];
+  createGridCanvas(gridActual, parent, 'Nếu nhiều bậc liên tiếp = bậc thang cứng');
+
+  // What it should look like with corners
+  const gridFixed = [
+    [SAND, SAND, SAND, SAND, SAND, SHORE_V, OCEAN, OCEAN],
+    [SAND, SAND, SAND, SAND, CORNER_IN, CORNER_OUT, OCEAN, OCEAN],
+    [SAND, SAND, SAND, CORNER_IN, CORNER_OUT, OCEAN, OCEAN, OCEAN],
+    [SAND, SAND, CORNER_IN, CORNER_OUT, OCEAN, OCEAN, OCEAN, OCEAN],
+    [SAND, CORNER_IN, CORNER_OUT, OCEAN, OCEAN, OCEAN, OCEAN, OCEAN],
+  ];
+  createGridCanvas(gridFixed, parent, '✅ Sửa: dùng corner pairs mỗi bậc');
+}
+
+function buildSolutionLayouts() {
+  const parent = document.getElementById('solutionLayouts');
+
+  // Exact reproduction of the user's screenshot coastline
+  // NW to SE diagonal with horizontal runs of 2-3 tiles and vertical runs of 2 tiles:
+  const grid = [
+    [GRASS, SAND, SAND, SAND, SHORE_V,        OCEAN,   OCEAN,   OCEAN,          OCEAN,   OCEAN,   OCEAN],
+    [GRASS, SAND, SAND, SAND, CORNER_IN_FLIP, SHORE_H, SHORE_H, CORNER_OUT_FLIP, OCEAN,   OCEAN,   OCEAN],
+    [GRASS, SAND, SAND, SAND, SAND,           SAND,    SAND,    SHORE_V,        OCEAN,   OCEAN,   OCEAN],
+    [GRASS, SAND, SAND, SAND, SAND,           SAND,    SAND,    CORNER_IN_FLIP, SHORE_H, SHORE_H, CORNER_OUT_FLIP],
+    [GRASS, SAND, SAND, SAND, SAND,           SAND,    SAND,    SAND,           SAND,    SAND,    SHORE_V],
+  ];
+  createGridCanvas(grid, parent, '✅ Bờ biển thực tế (Khắc phục lỗi Screenshot)');
+}
+
+// Animation loop
+function animationLoop() {
+  if (!animating) return;
+  animFrame = Math.floor((performance.now() / 280) % 8);
+  for (const { draw } of allCanvases) {
+    draw(animFrame);
+  }
+  animRAF = requestAnimationFrame(animationLoop);
+}
+
+document.getElementById('animToggle').addEventListener('click', () => {
+  animating = !animating;
+  document.getElementById('animToggle').textContent = animating ? '⏸ Dừng Animation' : '▶ Chạy Animation';
+  if (animating) {
+    animationLoop();
+  } else if (animRAF) {
+    cancelAnimationFrame(animRAF);
+  }
+});
+
+// Init
+loadAll(() => {
+  buildCatalog();
+  buildStraightLayouts();
+  buildStepWestLayouts();
+  buildStepEastLayouts();
+  buildCompositeLayouts();
+  buildMissingLayouts();
+  buildSolutionLayouts();
+});
+</script>
+</body>
+</html>

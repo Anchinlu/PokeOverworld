@@ -1,0 +1,226 @@
+{
+  "skittish_bird": {
+    "id": "skittish_bird",
+    "temperament": "skittish",
+    "social": "flock",
+    "activity": "diurnal",
+    "senses": {
+      "detectRadius": 4,
+      "runNoiseMult": 1.5,
+      "grassStealthMult": 0.6
+    },
+    "needs": {
+      "hungerRate": 0.002,
+      "energyRate": 0.0015
+    },
+    "anchors": ["nest", "tree"],
+    "threat": {
+      "fleeBelowRatio": 1.0,
+      "warnAboveRatio": 2.0
+    },
+    "moveSpeed": 1.0,
+    "weights": {
+      "wander": 0.25,
+      "forage": 0.35,
+      "rest": 0.15,
+      "curious": 0.05,
+      "alert": 0.2
+    }
+  },
+  "curious_rodent": {
+    "id": "curious_rodent",
+    "temperament": "curious",
+    "social": "herd",
+    "activity": "all_day",
+    "senses": {
+      "detectRadius": 5,
+      "runNoiseMult": 1.5,
+      "grassStealthMult": 0.6
+    },
+    "needs": {
+      "hungerRate": 0.0025,
+      "energyRate": 0.002
+    },
+    "anchors": ["burrow", "bush"],
+    "threat": {
+      "fleeBelowRatio": 0.7,
+      "warnAboveRatio": 1.3
+    },
+    "moveSpeed": 0.9,
+    "weights": {
+      "wander": 0.3,
+      "forage": 0.3,
+      "rest": 0.15,
+      "curious": 0.2,
+      "alert": 0.05
+    }
+  },
+  "aggressive_bird": {
+    "id": "aggressive_bird",
+    "temperament": "aggressive",
+    "social": "pair",
+    "activity": "diurnal",
+    "senses": {
+      "detectRadius": 5,
+      "runNoiseMult": 1.4,
+      "grassStealthMult": 0.7
+    },
+    "needs": {
+      "hungerRate": 0.002,
+      "energyRate": 0.0015
+    },
+    "anchors": ["perch", "tree"],
+    "threat": {
+      "fleeBelowRatio": 0.5,
+      "warnAboveRatio": 1.1
+    },
+    "moveSpeed": 1.0,
+    "weights": {
+      "wander": 0.2,
+      "forage": 0.25,
+      "rest": 0.1,
+      "curious": 0.15,
+      "alert": 0.3
+    }
+  },
+  "slow_bug": {
+    "id": "slow_bug",
+    "temperament": "skittish",
+    "social": "solitary",
+    "activity": "diurnal",
+    "senses": {
+      "detectRadius": 3,
+      "runNoiseMult": 1.2,
+      "grassStealthMult": 0.8
+    },
+    "needs": {
+      "hungerRate": 0.003,
+      "energyRate": 0.001
+    },
+    "anchors": ["leaf", "tall_grass"],
+    "threat": {
+      "fleeBelowRatio": 1.2,
+      "warnAboveRatio": 2.5
+    },
+    "moveSpeed": 0.45,
+    "weights": {
+      "wander": 0.2,
+      "forage": 0.5,
+      "rest": 0.25,
+      "curious": 0.05,
+      "alert": 0.0
+    }
+  },
+  "dormant_cocoon": {
+    "id": "dormant_cocoon",
+    "temperament": "dormant",
+    "social": "solitary",
+    "activity": "all_day",
+    "senses": {
+      "detectRadius": 1,
+      "runNoiseMult": 1.0,
+      "grassStealthMult": 1.0
+    },
+    "needs": {
+      "hungerRate": 0.0001,
+      "energyRate": 0.0001
+    },
+    "anchors": ["bark", "branch"],
+    "threat": {
+      "fleeBelowRatio": 0.0,
+      "warnAboveRatio": 99.0
+    },
+    "moveSpeed": 0.0,
+    "weights": {
+      "wander": 0.0,
+      "forage": 0.0,
+      "rest": 0.95,
+      "curious": 0.05,
+      "alert": 0.0
+    }
+  },
+  "herd_grazer": {
+    "id": "herd_grazer",
+    "temperament": "passive",
+    "social": "herd",
+    "activity": "diurnal",
+    "senses": {
+      "detectRadius": 6,
+      "runNoiseMult": 1.6,
+      "grassStealthMult": 0.5
+    },
+    "needs": {
+      "hungerRate": 0.003,
+      "energyRate": 0.002
+    },
+    "anchors": ["pasture"],
+    "threat": {
+      "fleeBelowRatio": 0.8,
+      "warnAboveRatio": 1.4
+    },
+    "moveSpeed": 0.85,
+    "weights": {
+      "wander": 0.35,
+      "forage": 0.4,
+      "rest": 0.15,
+      "curious": 0.05,
+      "alert": 0.05
+    }
+  },
+  "territorial_brute": {
+    "id": "territorial_brute",
+    "temperament": "territorial",
+    "social": "solitary",
+    "activity": "all_day",
+    "senses": {
+      "detectRadius": 6,
+      "runNoiseMult": 1.8,
+      "grassStealthMult": 0.6
+    },
+    "needs": {
+      "hungerRate": 0.002,
+      "energyRate": 0.0015
+    },
+    "anchors": ["den", "rock"],
+    "threat": {
+      "fleeBelowRatio": 0.4,
+      "warnAboveRatio": 0.9
+    },
+    "moveSpeed": 0.95,
+    "weights": {
+      "wander": 0.2,
+      "forage": 0.2,
+      "rest": 0.2,
+      "curious": 0.1,
+      "alert": 0.3
+    }
+  },
+  "nocturnal_flyer": {
+    "id": "nocturnal_flyer",
+    "temperament": "skittish",
+    "social": "flock",
+    "activity": "nocturnal",
+    "senses": {
+      "detectRadius": 5,
+      "runNoiseMult": 1.6,
+      "grassStealthMult": 0.5
+    },
+    "needs": {
+      "hungerRate": 0.002,
+      "energyRate": 0.002
+    },
+    "anchors": ["cave", "shadow"],
+    "threat": {
+      "fleeBelowRatio": 0.8,
+      "warnAboveRatio": 1.5
+    },
+    "moveSpeed": 1.1,
+    "weights": {
+      "wander": 0.4,
+      "forage": 0.3,
+      "rest": 0.2,
+      "curious": 0.05,
+      "alert": 0.05
+    }
+  }
+}

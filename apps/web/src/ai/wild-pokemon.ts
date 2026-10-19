@@ -3,7 +3,6 @@ import type { ChunkManager } from '../maps/chunk-manager';
 import type { Player } from '../entities/player';
 import type { Follower } from '../entities/follower';
 import type { WildPokemonEntity } from '../maps/chunk';
-import { isRoadTile, isSandTile, isHillTile } from '../maps/terrain-rules';
 import { defaultRng } from '../core/rng';
 
 const DX_MAP = [0, -1, 1, 0];
@@ -347,9 +346,10 @@ function tryWildMove(
   if (localX < 0 || localX >= 16 || localY < 0 || localY >= 16) return false;
   if (!chunk.terrainGrid[localY] || chunk.terrainGrid[localY][localX] !== TERRAIN.GRASS)
     return false;
-  if (isRoadTile(newGX, newGY, wp.seed)) return false;
-  if (isSandTile(newGX, newGY, wp.seed)) return false;
-  if (isHillTile(newGX, newGY, wp.seed)) return false;
+  const field = chunkManager.field;
+  if (field.isRoad(newGX, newGY)) return false;
+  if (field.isSand(newGX, newGY)) return false;
+  if (field.isHill(newGX, newGY)) return false;
 
   // Check colliders (trees, obstacles)
   const px = newGX * TILE_SIZE;

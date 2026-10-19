@@ -141,11 +141,6 @@ export function validateAnimationAtlas() {
       }
 
       if (atlasEntry) {
-        const maxPattern = atlasEntry.maxPattern;
-        const cellW = atlasEntry.cellWidth || 192;
-        const cellH = atlasEntry.cellHeight || 192;
-        const cols = atlasEntry.columns || 1;
-
         for (let frameIdx = 0; frameIdx < def.frames.length; frameIdx++) {
           const frame = def.frames[frameIdx];
           for (let celIdx = 0; celIdx < frame.cels.length; celIdx++) {

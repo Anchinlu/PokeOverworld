@@ -2,17 +2,11 @@ import type { Collider, TerrainId } from '@pokemon/shared-types';
 import { CHUNK_SIZE, TILE_SIZE, TERRAIN, TILE_IDS } from '@pokemon/game-data';
 import { seededHash } from './noise';
 import {
-  isSandTile,
-  isRoadTile,
-  isHillTile,
-  isValidTreePosGlobal,
-  isValidPalmTreePosGlobal,
-  isNearWater,
-  isNearCliffEdge,
-  isBridgeTile,
-  isOceanTile,
-  isWaterTile,
-} from './terrain-rules';
+  createTerrainField,
+  type TerrainField,
+  getV0VillageBuildingsForChunk,
+  getV0VillageGardenPlantsForChunk,
+} from './terrain-field';
 import {
   isVillageArea,
   isVillageBuildingTile,
@@ -31,6 +25,11 @@ import {
   TREE_MIN_CANDIDATES,
   TREE_MAX_CANDIDATES,
 } from './ecology';
+
+
+function toField(seedOrField: number | TerrainField = 101): TerrainField {
+  return typeof seedOrField === 'number' ? createTerrainField(1, seedOrField) : seedOrField;
+}
 
 export interface TreeEntity {
   gx: number;
@@ -124,9 +123,11 @@ const chunkTreeLocsCache = new Map<string, Array<{ x: number; y: number }>>();
 export function getChunkTreeLocations(
   cx: number,
   cy: number,
-  seed: number
+  seedOrField: number | TerrainField = 101
 ): Array<{ x: number; y: number }> {
-  const key = `${cx},${cy},${seed}`;
+  const field = toField(seedOrField);
+  const seed = field.seed;
+  const key = `${cx},${cy},${seed},${field.version}`;
   const cached = chunkTreeLocsCache.get(key);
   if (cached) return cached;
 
@@ -134,7 +135,7 @@ export function getChunkTreeLocations(
   const startGY = cy * CHUNK_SIZE;
   const centerGX = startGX + 8;
   const centerGY = startGY + 8;
-  const chunkEcology = sampleEcology(centerGX, centerGY, seed);
+  const chunkEcology = sampleEcology(centerGX, centerGY, field);
   const numCandidates = Math.round(
     TREE_MIN_CANDIDATES + chunkEcology.density * (TREE_MAX_CANDIDATES - TREE_MIN_CANDIDATES)
   );
@@ -152,7 +153,7 @@ export function getChunkTreeLocations(
     const tx = gx * TILE_SIZE - 16;
     const ty = gy * TILE_SIZE - 86;
 
-    if (isValidTreePosGlobal(tx, ty, seed)) {
+    if (field.isValidTreePos(tx, ty)) {
       const overlaps = list.some((t) => isTreeOverlappingTree(tx, ty, t.x, t.y));
       if (!overlaps) {
         list.push({ x: tx, y: ty });
@@ -169,7 +170,7 @@ export function getChunkTreeLocations(
     const pgx = startGX + plx;
     const pgy = startGY + ply;
 
-    if (isValidPalmTreePosGlobal(pgx, pgy, seed)) {
+    if (field.isValidPalmTreePos(pgx, pgy)) {
       const ptx = pgx * TILE_SIZE - 48;
       const pty = pgy * TILE_SIZE - 119;
 
@@ -187,14 +188,16 @@ export function getChunkTreeLocations(
 export function generateChunkTrees(
   cx: number,
   cy: number,
-  seed: number,
-  colliders: Collider[]
+  seedOrField: number | TerrainField = 101,
+  colliders: Collider[] = []
 ): TreeEntity[] {
+  const field = toField(seedOrField);
+  const seed = field.seed;
   const startGX = cx * CHUNK_SIZE;
   const startGY = cy * CHUNK_SIZE;
   const centerGX = startGX + 8;
   const centerGY = startGY + 8;
-  const chunkEcology = sampleEcology(centerGX, centerGY, seed);
+  const chunkEcology = sampleEcology(centerGX, centerGY, field);
   const numCandidates = Math.round(
     TREE_MIN_CANDIDATES + chunkEcology.density * (TREE_MAX_CANDIDATES - TREE_MIN_CANDIDATES)
   );
@@ -213,7 +216,7 @@ export function generateChunkTrees(
     const tx = gx * TILE_SIZE - 16;
     const ty = gy * TILE_SIZE - 86;
 
-    if (isValidTreePosGlobal(tx, ty, seed)) {
+    if (field.isValidTreePos(tx, ty)) {
       // Prevent overlap with already placed trees in THIS chunk
       const overlapsInChunk = trees.some((t) => isTreeOverlappingTree(tx, ty, t.x, t.y));
       if (overlapsInChunk) continue;
@@ -224,7 +227,7 @@ export function generateChunkTrees(
         for (let dx = -1; dx <= 1; dx++) {
           if (dx === 0 && dy === 0) continue;
           if (dy > 0 || (dy === 0 && dx > 0)) continue;
-          const nTrees = getChunkTreeLocations(cx + dx, cy + dy, seed);
+          const nTrees = getChunkTreeLocations(cx + dx, cy + dy, field);
           if (nTrees.some((nt) => isTreeOverlappingTree(tx, ty, nt.x, nt.y))) {
             overlapsNeighbor = true;
             break;
@@ -234,7 +237,7 @@ export function generateChunkTrees(
       }
       if (overlapsNeighbor) continue;
 
-      const sample = sampleEcology(gx, gy, seed);
+      const sample = sampleEcology(gx, gy, field);
       const zone = getEcologyZone(sample);
       const tType = getTreeTypeForEcology(sample, zone);
 
@@ -252,7 +255,7 @@ export function generateChunkTrees(
     const pgx = startGX + plx;
     const pgy = startGY + ply;
 
-    if (isValidPalmTreePosGlobal(pgx, pgy, seed)) {
+    if (field.isValidPalmTreePos(pgx, pgy)) {
       const ptx = pgx * TILE_SIZE - 48;
       const pty = pgy * TILE_SIZE - 119;
 
@@ -266,7 +269,7 @@ export function generateChunkTrees(
         for (let dx = -1; dx <= 1; dx++) {
           if (dx === 0 && dy === 0) continue;
           if (dy > 0 || (dy === 0 && dx > 0)) continue;
-          const nTrees = getChunkTreeLocations(cx + dx, cy + dy, seed);
+          const nTrees = getChunkTreeLocations(cx + dx, cy + dy, field);
           if (nTrees.some((nt) => isTreeOverlappingTree(ptx, pty, nt.x, nt.y))) {
             overlapsNeighbor = true;
             break;
@@ -284,15 +287,16 @@ export function generateChunkTrees(
   return trees;
 }
 
-export { isNearCliffEdge } from './terrain-rules';
-
 export function generateChunkBuildings(
   cx: number,
   cy: number,
-  seed: number,
+  seedOrField: number | TerrainField = 101,
   colliders: Collider[]
 ): BuildingEntity[] {
-  const buildings = getVillageBuildingsForChunk(cx, cy, seed);
+  const field = toField(seedOrField);
+  const buildings = field.version === 2
+    ? getV0VillageBuildingsForChunk(cx, cy, field)
+    : getVillageBuildingsForChunk(cx, cy, field.seed);
   const entities: BuildingEntity[] = [];
 
   const chunkStartGX = cx * CHUNK_SIZE;
@@ -363,19 +367,23 @@ export function generateChunkBuildings(
 export function generateChunkFoliage(
   cx: number,
   cy: number,
-  seed: number,
+  seedOrField: number | TerrainField = 101,
   terrainGrid: TerrainId[][],
   tileIdGrid: number[][],
   tallGrass: TallGrassEntity[],
   berryBushes: BerryBushEntity[],
   colliders: Collider[]
 ): PlantEntity[] {
+  const field = toField(seedOrField);
+  const seed = field.seed;
   const startGX = cx * CHUNK_SIZE;
   const startGY = cy * CHUNK_SIZE;
   const plants: PlantEntity[] = [];
 
   // 0. Curated Town Garden Landscaping
-  const townGardenPlants = getVillageGardenPlantsForChunk(cx, cy, seed);
+  const townGardenPlants = field.version === 2
+    ? getV0VillageGardenPlantsForChunk(cx, cy, field)
+    : getVillageGardenPlantsForChunk(cx, cy, seed);
   for (const gp of townGardenPlants) {
     plants.push({
       gx: gp.gx,
@@ -401,11 +409,11 @@ export function generateChunkFoliage(
 
           // STRICT: Prevent flowers/sprouts from spawning right at cliff base/rim, water edge, roads, or building footprints
           if (
-            isNearCliffEdge(gx, gy, seed) ||
-            isNearWater(gx, gy, seed, 1) ||
-            isRoadTile(gx, gy, seed) ||
-            isVillageBuildingTile(gx, gy, seed, 1) ||
-            isBuildingRoofOrFootprint(gx, gy, seed, 1)
+            field.isNearCliffEdge(gx, gy) ||
+            field.isNearWater(gx, gy, 1) ||
+            field.isRoad(gx, gy) ||
+            isVillageBuildingTile(gx, gy, field, 1) ||
+            isBuildingRoofOrFootprint(gx, gy, field, 1)
           ) {
             continue;
           }
@@ -441,7 +449,7 @@ export function generateChunkFoliage(
             continue;
           }
 
-          const sample = sampleEcology(gx, gy, seed);
+          const sample = sampleEcology(gx, gy, field);
           const zone = getEcologyZone(sample);
           const tileRoll = seededHash(gx, gy, seed + 808);
           const type = getFlowerTypeForCluster(zone, cx * 2 + qx, cy * 2 + qy, tileRoll, seed);
@@ -470,7 +478,7 @@ export function generateChunkFoliage(
             const gy = startGY + ly;
 
             // STRICT: Must only spawn on the flat interior plateau, NEVER on the cliff edge/rim/wall!
-            if (isNearCliffEdge(gx, gy, seed) || tileIdGrid[ly]?.[lx] !== TILE_IDS.cliff_pure) {
+            if (field.isNearCliffEdge(gx, gy) || tileIdGrid[ly]?.[lx] !== TILE_IDS.cliff_pure) {
               continue;
             }
 
@@ -496,7 +504,7 @@ export function generateChunkFoliage(
             const alreadyHasPlant = plants.some((p) => p.gx === gx && p.gy === gy);
 
             if (!blocked && !alreadyHasPlant) {
-              const sample = sampleEcology(gx, gy, seed);
+              const sample = sampleEcology(gx, gy, field);
               const zone = getEcologyZone(sample);
               const tileRoll = seededHash(gx, gy, seed + 818);
               const type = getFlowerTypeForCluster(zone, cx * 2 + qx, cy * 2 + qy, tileRoll, seed);
@@ -530,12 +538,12 @@ export function generateChunkFoliage(
 
       if (isGrass || isHillFlat) {
         if (
-          isNearCliffEdge(gx, gy, seed) ||
-          isNearWater(gx, gy, seed, 1) ||
-          isRoadTile(gx, gy, seed) ||
-          isVillageBuildingTile(gx, gy, seed, 1) ||
-          isBuildingRoofOrFootprint(gx, gy, seed, 1) ||
-          isVillageArea(gx, gy, seed, 0)
+          field.isNearCliffEdge(gx, gy) ||
+          field.isNearWater(gx, gy, 1) ||
+          field.isRoad(gx, gy) ||
+          isVillageBuildingTile(gx, gy, field, 1) ||
+          isBuildingRoofOrFootprint(gx, gy, field, 1) ||
+          isVillageArea(gx, gy, field, 0)
         ) {
           continue;
         }
@@ -543,7 +551,7 @@ export function generateChunkFoliage(
         if (berryBushes.some((b) => Math.abs(b.gx - gx) <= 1 && Math.abs(b.gy - gy) <= 1)) continue;
         if (plants.some((p) => Math.abs(p.gx - gx) <= 1 && Math.abs(p.gy - gy) <= 1)) continue;
 
-        const sample = sampleEcology(gx, gy, seed);
+        const sample = sampleEcology(gx, gy, field);
         const zone = getEcologyZone(sample);
         const shrubRoll = seededHash(gx, gy, seed + 1505);
         let type = getNaturalShrubForZone(zone, shrubRoll);
@@ -607,8 +615,13 @@ export interface WaterFloraEntity {
  * Checks if a tile is interior freshwater (at least 1 tile away from shorelines, river banks, and bridges).
  * Guarantees that water flora never clips into river bank cliffs or touches bridge structures.
  */
-export function isInteriorFreshwater(gx: number, gy: number, seed: number): boolean {
-  if (!isWaterTile(gx, gy, seed) || isOceanTile(gx, gy, seed) || isBridgeTile(gx, gy, seed)) {
+export function isInteriorFreshwater(
+  gx: number,
+  gy: number,
+  seedOrField: number | TerrainField = 101
+): boolean {
+  const field = toField(seedOrField);
+  if (!field.isWater(gx, gy) || field.isOcean(gx, gy) || field.isBridge(gx, gy)) {
     return false;
   }
   for (let dx = -1; dx <= 1; dx++) {
@@ -616,9 +629,9 @@ export function isInteriorFreshwater(gx: number, gy: number, seed: number): bool
       if (dx === 0 && dy === 0) continue;
       const nx = gx + dx;
       const ny = gy + dy;
-      if (!isWaterTile(nx, ny, seed)) return false;
-      if (isOceanTile(nx, ny, seed)) return false;
-      if (isBridgeTile(nx, ny, seed)) return false;
+      if (!field.isWater(nx, ny)) return false;
+      if (field.isOcean(nx, ny)) return false;
+      if (field.isBridge(nx, ny)) return false;
     }
   }
   return true;
@@ -628,10 +641,16 @@ export function isInteriorFreshwater(gx: number, gy: number, seed: number): bool
  * Helper to check if a tile is near a bridge structure.
  * Leaves a minimum 2-tile clearance buffer from bridges so flora never crowds around bridge piers.
  */
-function isNearBridgeStructure(gx: number, gy: number, seed: number, radius = 2): boolean {
+function isNearBridgeStructure(
+  gx: number,
+  gy: number,
+  seedOrField: number | TerrainField = 101,
+  radius = 2
+): boolean {
+  const field = toField(seedOrField);
   for (let dx = -radius; dx <= radius; dx++) {
     for (let dy = -radius; dy <= radius; dy++) {
-      if (isBridgeTile(gx + dx, gy + dy, seed)) {
+      if (field.isBridge(gx + dx, gy + dy)) {
         return true;
       }
     }
@@ -644,7 +663,13 @@ function isNearBridgeStructure(gx: number, gy: number, seed: number, radius = 2)
  * Strictly spawns only on interior river and lake water tiles with at least 1 tile buffer from shores and 2 tiles from bridges.
  * Employs a global Poisson-cell grid (4x4 tiles) to ensure natural, well-spaced placement with zero overcrowding.
  */
-export function generateChunkWaterFlora(cx: number, cy: number, seed: number): WaterFloraEntity[] {
+export function generateChunkWaterFlora(
+  cx: number,
+  cy: number,
+  seedOrField: number | TerrainField = 101
+): WaterFloraEntity[] {
+  const field = toField(seedOrField);
+  const seed = field.seed;
   const startGX = cx * CHUNK_SIZE;
   const startGY = cy * CHUNK_SIZE;
   const waterFlora: WaterFloraEntity[] = [];
@@ -656,7 +681,7 @@ export function generateChunkWaterFlora(cx: number, cy: number, seed: number): W
     for (let lx = 0; lx < CHUNK_SIZE; lx++) {
       const gx = startGX + lx;
       const gy = startGY + ly;
-      if (isInteriorFreshwater(gx, gy, seed) && !isNearBridgeStructure(gx, gy, seed, 2)) {
+      if (isInteriorFreshwater(gx, gy, field) && !isNearBridgeStructure(gx, gy, field, 2)) {
         candidates.push({ gx, gy });
       }
     }
@@ -770,11 +795,13 @@ export function generateChunkWaterFlora(cx: number, cy: number, seed: number): W
 export function generateChunkTallGrass(
   cx: number,
   cy: number,
-  seed: number,
+  seedOrField: number | TerrainField = 101,
   terrainGrid: TerrainId[][],
   tileIdGrid: number[][],
   colliders: Collider[]
 ): TallGrassEntity[] {
+  const field = toField(seedOrField);
+  const seed = field.seed;
   const startGX = cx * CHUNK_SIZE;
   const startGY = cy * CHUNK_SIZE;
   const tallGrass: TallGrassEntity[] = [];
@@ -791,16 +818,16 @@ export function generateChunkTallGrass(
       if (terrainGrid[ly]?.[lx] !== TERRAIN.HILL || tileIdGrid[ly]?.[lx] !== TILE_IDS.cliff_pure) {
         return false;
       }
-      if (isNearCliffEdge(gx, gy, seed)) return false;
+      if (field.isNearCliffEdge(gx, gy)) return false;
     } else {
       if (terrainGrid[ly]?.[lx] !== TERRAIN.GRASS) return false;
       if (
-        isNearCliffEdge(gx, gy, seed) ||
-        isNearWater(gx, gy, seed, 1) ||
-        isVillageArea(gx, gy, seed)
+        field.isNearCliffEdge(gx, gy) ||
+        field.isNearWater(gx, gy, 1) ||
+        isVillageArea(gx, gy, field)
       )
         return false;
-      if (isRoadTile(gx, gy, seed) || isSandTile(gx, gy, seed)) return false;
+      if (field.isRoad(gx, gy) || field.isSand(gx, gy)) return false;
     }
 
     const px = gx * TILE_SIZE;
@@ -916,7 +943,7 @@ export function generateChunkTallGrass(
           ) {
             const gx = startGX + lx;
             const gy = startGY + ly;
-            if (!isNearCliffEdge(gx, gy, seed)) {
+            if (!field.isNearCliffEdge(gx, gy)) {
               plateauCandidates.push({ lx, ly, gx, gy });
             }
           }
@@ -958,13 +985,15 @@ export function generateChunkTallGrass(
 export function generateChunkBerryBushes(
   cx: number,
   cy: number,
-  seed: number,
+  seedOrField: number | TerrainField = 101,
   terrainGrid: TerrainId[][],
   tileIdGrid: number[][],
   tallGrass: TallGrassEntity[],
   trees: TreeEntity[],
   colliders: Collider[]
 ): BerryBushEntity[] {
+  const field = toField(seedOrField);
+  const seed = field.seed;
   const startGX = cx * CHUNK_SIZE;
   const startGY = cy * CHUNK_SIZE;
   const berryBushes: BerryBushEntity[] = [];
@@ -974,7 +1003,7 @@ export function generateChunkBerryBushes(
   for (let dy = -1; dy <= 1; dy++) {
     for (let dx = -1; dx <= 1; dx++) {
       if (dx === 0 && dy === 0) continue;
-      const nTrees = getChunkTreeLocations(cx + dx, cy + dy, seed);
+      const nTrees = getChunkTreeLocations(cx + dx, cy + dy, field);
       allNearbyTrees.push(...nTrees);
     }
   }
@@ -1013,16 +1042,16 @@ export function generateChunkBerryBushes(
         const bgy = startGY + bLY;
 
         if (
-          isRoadTile(bgx, bgy, seed) ||
-          isSandTile(bgx, bgy, seed) ||
-          isHillTile(bgx, bgy, seed) ||
-          isNearWater(bgx, bgy, seed, 1) ||
-          isVillageArea(bgx, bgy, seed) ||
-          isRoadTile(bgx, bgy - 1, seed) ||
-          isSandTile(bgx, bgy - 1, seed) ||
-          isHillTile(bgx, bgy - 1, seed) ||
-          isNearWater(bgx, bgy - 1, seed, 1) ||
-          isVillageArea(bgx, bgy - 1, seed)
+          field.isRoad(bgx, bgy) ||
+          field.isSand(bgx, bgy) ||
+          field.isHill(bgx, bgy) ||
+          field.isNearWater(bgx, bgy, 1) ||
+          isVillageArea(bgx, bgy, field) ||
+          field.isRoad(bgx, bgy - 1) ||
+          field.isSand(bgx, bgy - 1) ||
+          field.isHill(bgx, bgy - 1) ||
+          field.isNearWater(bgx, bgy - 1, 1) ||
+          isVillageArea(bgx, bgy - 1, field)
         ) {
           continue;
         }
@@ -1031,7 +1060,7 @@ export function generateChunkBerryBushes(
         let nearCliff = false;
         for (let dy = -2; dy <= 1; dy++) {
           for (let dx = -1; dx <= 1; dx++) {
-            if (isHillTile(bgx + dx, bgy + dy, seed)) {
+            if (field.isHill(bgx + dx, bgy + dy)) {
               nearCliff = true;
               break;
             }

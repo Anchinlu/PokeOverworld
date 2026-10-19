@@ -6,3 +6,4 @@ export * from './chunk-manager';
 export * from './berry-data';
 export * from './ecology';
 export * from './village-rules';
+export * from './terrain-field';

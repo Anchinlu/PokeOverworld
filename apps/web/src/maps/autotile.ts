@@ -1,10 +1,14 @@
 import { TILE_IDS } from '@pokemon/game-data';
-import { isSandTile, isOceanTile, isRoadTile, isHillTile, isWaterOrBridge } from './terrain-rules';
+import { createTerrainField, type TerrainField } from './terrain-field';
 import { seededHash } from './noise';
 
 export interface AutotileResult {
   key: string;
   tileId: number;
+}
+
+function toField(seedOrField: number | TerrainField = 101): TerrainField {
+  return typeof seedOrField === 'number' ? createTerrainField(1, seedOrField) : seedOrField;
 }
 
 /**
@@ -13,11 +17,12 @@ export interface AutotileResult {
 export function getSandTileKey(
   gx: number,
   gy: number,
-  seed: number,
+  seedOrField: number | TerrainField = 101,
   hasBeach = true
 ): AutotileResult {
+  const field = toField(seedOrField);
   const isSandOrOcean = (x: number, y: number) =>
-    isSandTile(x, y, seed, hasBeach) || isOceanTile(x, y, seed, hasBeach);
+    field.isSand(x, y, hasBeach) || field.isOcean(x, y, hasBeach);
 
   const n = isSandOrOcean(gx, gy - 1);
   const s = isSandOrOcean(gx, gy + 1);
@@ -83,18 +88,19 @@ export function getSandTileKey(
 export function getRoadTileKey(
   gx: number,
   gy: number,
-  seed: number,
+  seedOrField: number | TerrainField = 101,
   hasRoad = true,
   hasBeach = true
 ): AutotileResult {
-  const n = isRoadTile(gx, gy - 1, seed, hasRoad, hasBeach);
-  const s = isRoadTile(gx, gy + 1, seed, hasRoad, hasBeach);
-  const w = isRoadTile(gx - 1, gy, seed, hasRoad, hasBeach);
-  const e = isRoadTile(gx + 1, gy, seed, hasRoad, hasBeach);
-  const nw = isRoadTile(gx - 1, gy - 1, seed, hasRoad, hasBeach);
-  const ne = isRoadTile(gx + 1, gy - 1, seed, hasRoad, hasBeach);
-  const sw = isRoadTile(gx - 1, gy + 1, seed, hasRoad, hasBeach);
-  const se = isRoadTile(gx + 1, gy + 1, seed, hasRoad, hasBeach);
+  const field = toField(seedOrField);
+  const n = field.isRoad(gx, gy - 1, hasRoad, hasBeach);
+  const s = field.isRoad(gx, gy + 1, hasRoad, hasBeach);
+  const w = field.isRoad(gx - 1, gy, hasRoad, hasBeach);
+  const e = field.isRoad(gx + 1, gy, hasRoad, hasBeach);
+  const nw = field.isRoad(gx - 1, gy - 1, hasRoad, hasBeach);
+  const ne = field.isRoad(gx + 1, gy - 1, hasRoad, hasBeach);
+  const sw = field.isRoad(gx - 1, gy + 1, hasRoad, hasBeach);
+  const se = field.isRoad(gx + 1, gy + 1, hasRoad, hasBeach);
 
   let key = 'pure';
   let tileId: number = TILE_IDS.dirt_pure;
@@ -153,19 +159,20 @@ export function getRoadTileKey(
 export function getCliffTileKey(
   gx: number,
   gy: number,
-  seed: number,
+  seedOrField: number | TerrainField = 101,
   hasHills = true,
   hasRoad = true,
   hasBeach = true
 ): AutotileResult {
-  const n = isHillTile(gx, gy - 1, seed, hasHills, hasRoad, hasBeach);
-  const s = isHillTile(gx, gy + 1, seed, hasHills, hasRoad, hasBeach);
-  const w = isHillTile(gx - 1, gy, seed, hasHills, hasRoad, hasBeach);
-  const e = isHillTile(gx + 1, gy, seed, hasHills, hasRoad, hasBeach);
-  const nw = isHillTile(gx - 1, gy - 1, seed, hasHills, hasRoad, hasBeach);
-  const ne = isHillTile(gx + 1, gy - 1, seed, hasHills, hasRoad, hasBeach);
-  const sw = isHillTile(gx - 1, gy + 1, seed, hasHills, hasRoad, hasBeach);
-  const se = isHillTile(gx + 1, gy + 1, seed, hasHills, hasRoad, hasBeach);
+  const field = toField(seedOrField);
+  const n = field.isHill(gx, gy - 1, hasHills, hasRoad, hasBeach);
+  const s = field.isHill(gx, gy + 1, hasHills, hasRoad, hasBeach);
+  const w = field.isHill(gx - 1, gy, hasHills, hasRoad, hasBeach);
+  const e = field.isHill(gx + 1, gy, hasHills, hasRoad, hasBeach);
+  const nw = field.isHill(gx - 1, gy - 1, hasHills, hasRoad, hasBeach);
+  const ne = field.isHill(gx + 1, gy - 1, hasHills, hasRoad, hasBeach);
+  const sw = field.isHill(gx - 1, gy + 1, hasHills, hasRoad, hasBeach);
+  const se = field.isHill(gx + 1, gy + 1, hasHills, hasRoad, hasBeach);
 
   let key = 'pure';
   let tileId: number = TILE_IDS.cliff_pure;
@@ -235,20 +242,21 @@ export function getGrassTileId(gx: number, gy: number, seed: number): number {
 export function getWaterTileKey(
   gx: number,
   gy: number,
-  seed: number,
+  seedOrField: number | TerrainField = 101,
   hasWater = true,
   hasRoad = true,
   hasBeach = true,
   hasHills = true
 ): AutotileResult {
-  const n = isWaterOrBridge(gx, gy - 1, seed, hasWater, hasRoad, hasBeach, hasHills);
-  const s = isWaterOrBridge(gx, gy + 1, seed, hasWater, hasRoad, hasBeach, hasHills);
-  const w = isWaterOrBridge(gx - 1, gy, seed, hasWater, hasRoad, hasBeach, hasHills);
-  const e = isWaterOrBridge(gx + 1, gy, seed, hasWater, hasRoad, hasBeach, hasHills);
-  const nw = isWaterOrBridge(gx - 1, gy - 1, seed, hasWater, hasRoad, hasBeach, hasHills);
-  const ne = isWaterOrBridge(gx + 1, gy - 1, seed, hasWater, hasRoad, hasBeach, hasHills);
-  const sw = isWaterOrBridge(gx - 1, gy + 1, seed, hasWater, hasRoad, hasBeach, hasHills);
-  const se = isWaterOrBridge(gx + 1, gy + 1, seed, hasWater, hasRoad, hasBeach, hasHills);
+  const field = toField(seedOrField);
+  const n = field.isWaterOrBridge(gx, gy - 1, hasWater, hasRoad, hasBeach, hasHills);
+  const s = field.isWaterOrBridge(gx, gy + 1, hasWater, hasRoad, hasBeach, hasHills);
+  const w = field.isWaterOrBridge(gx - 1, gy, hasWater, hasRoad, hasBeach, hasHills);
+  const e = field.isWaterOrBridge(gx + 1, gy, hasWater, hasRoad, hasBeach, hasHills);
+  const nw = field.isWaterOrBridge(gx - 1, gy - 1, hasWater, hasRoad, hasBeach, hasHills);
+  const ne = field.isWaterOrBridge(gx + 1, gy - 1, hasWater, hasRoad, hasBeach, hasHills);
+  const sw = field.isWaterOrBridge(gx - 1, gy + 1, hasWater, hasRoad, hasBeach, hasHills);
+  const se = field.isWaterOrBridge(gx + 1, gy + 1, hasWater, hasRoad, hasBeach, hasHills);
 
   let key = 'pure';
   let tileId: number = TILE_IDS.water_pure;

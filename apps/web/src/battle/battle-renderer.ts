@@ -1362,7 +1362,7 @@ export class BattleRenderer {
             // Phase 2 (frames 44→0): status-colored glow pulsing every 6 frames
             const alpha = Math.min(1.0, t / 12);
             const pulsePhase = Math.floor(t / 6) % 2;
-            const col = state.enemyStatusInflictColor.replace(/[\.\d]+\)$/, `${(alpha * 0.95).toFixed(2)})`);
+            const col = state.enemyStatusInflictColor.replace(/[.\d]+\)$/, `${(alpha * 0.95).toFixed(2)})`);
             if (pulsePhase === 0) {
               ctx.filter = `drop-shadow(0 0 16px ${col}) saturate(2.2) brightness(1.6)`;
             } else {
@@ -1589,7 +1589,7 @@ export class BattleRenderer {
             // Phase 2 (frames 44→0): status-colored glow pulsing every 6 frames
             const alpha = Math.min(1.0, t / 12);
             const pulsePhase = Math.floor(t / 6) % 2;
-            const col = state.playerStatusInflictColor.replace(/[\.\d]+\)$/, `${(alpha * 0.95).toFixed(2)})`);
+            const col = state.playerStatusInflictColor.replace(/[.\d]+\)$/, `${(alpha * 0.95).toFixed(2)})`);
             if (pulsePhase === 0) {
               ctx.filter = `drop-shadow(0 0 16px ${col}) saturate(2.2) brightness(1.6)`;
             } else {

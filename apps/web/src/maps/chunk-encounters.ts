@@ -4,6 +4,11 @@ import { pokemonCatalog, type EncounterDefinition } from '../data';
 import { seededHash } from './noise';
 import { sampleEcology, getEcologyZone, LEVEL_SALT, type EcologyZone } from './ecology';
 import type { TallGrassEntity, TreeEntity } from './chunk-objects';
+import { createTerrainField, type TerrainField } from './terrain-field';
+
+function toField(seedOrField: number | TerrainField = 101): TerrainField {
+  return typeof seedOrField === 'number' ? createTerrainField(1, seedOrField) : seedOrField;
+}
 
 export interface EncounterContext {
   zone: EcologyZone;
@@ -28,59 +33,21 @@ export function getRosterForContext(context: EncounterContext): readonly Encount
   return pokemonCatalog.getEncounterRoster('ROUTE_1');
 }
 
-export interface WildEmote {
-  type: '!' | '?' | 'sweat' | 'dots';
-  timer: number;
-  maxTime: number;
-}
-
-export interface WildPokemonEntity {
-  gx: number;
-  gy: number;
-  x: number;
-  y: number;
-  speciesKey: string;
-  name: string;
-  level: number;
-  isShiny?: boolean;
-  behavior: string;
-  dir: number;
-  homeGX: number;
-  homeGY: number;
-  wanderRadius: number;
-  state: 'idle' | 'curious' | 'fleeing';
-  isMoving: boolean;
-  fromX: number;
-  fromY: number;
-  targetGX: number;
-  targetGY: number;
-  targetX: number;
-  targetY: number;
-  stepProgress: number;
-  moveSpeed: number;
-  stepsRemaining: number;
-  currentDir: number;
-  lastMoveTime: number;
-  idleTimer: number;
-  isPecking?: boolean;
-  peckStartTime?: number;
-  bobY?: number;
-  frame: number;
-  emote?: WildEmote | null;
-  seed: number;
-  chunkCx: number;
-  chunkCy: number;
-}
+import type { WildEmote, WildPokemonEntity, WildRole } from '../wildlife/model';
+export type { WildEmote, WildPokemonEntity, WildRole };
 
 export function generateChunkWildPokemon(
   cx: number,
   cy: number,
-  seed: number,
+  seedOrField: number | TerrainField = 101,
   _terrainGrid: TerrainId[][],
   colliders: Collider[],
   tallGrass: TallGrassEntity[] = [],
   trees: TreeEntity[] = []
 ): WildPokemonEntity[] {
+  const field = toField(seedOrField);
+  const seed = field.seed;
+
   // Section 8.2: Standard encounters strictly require onTallGrass === true
   if (!tallGrass || tallGrass.length === 0) {
     return [];
@@ -106,7 +73,7 @@ export function generateChunkWildPokemon(
     );
 
     if (!collides) {
-      const sample = sampleEcology(gx, gy, seed);
+      const sample = sampleEcology(gx, gy, field);
       const zone = getEcologyZone(sample);
       const nearTree = trees.some((t) => Math.hypot(t.gx - gx, t.gy - gy) <= 3);
 

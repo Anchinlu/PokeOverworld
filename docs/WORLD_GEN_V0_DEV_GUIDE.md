@@ -4,7 +4,9 @@
 - **Phạm vi:** `apps/web/src/maps/`, `game/game-session.ts`, `rendering/ground-renderer.ts`, `ai/wild-pokemon.ts`, test và công cụ đi kèm
 - **Trạng thái:** đề xuất triển khai. Mọi số liệu tham số là **giá trị khởi điểm**, phải chỉnh bằng công cụ xem bản đồ (bước S3)
 - **Quyết định đã chốt:** thế giới **vô hạn** sinh theo seed; nhân vật sinh ra ở một thị trấn khởi đầu cố định theo cốt truyện
-- **Quyết định còn mở:** thị trấn khởi đầu có bắt buộc gần biển không (mục 12)
+- **Quyết định đã chốt (bổ sung):** làng khởi đầu **cố định ở gốc tọa độ** (không tìm kiếm), địa hình quanh nó được ép; **không có đường nối giữa các làng**, đường chỉ nằm trong bố cục từng làng
+- **Quyết định đã chốt (bổ sung 2):** không bảo đảm đến được làng khác từ làng khởi đầu (phương án a, mục 12); làng và thành phố sau này do cốt truyện đặt **thủ công** vào vùng chưa tải
+- **Quyết định còn mở:** xem mục 12
 
 ---
 
@@ -94,9 +96,8 @@ apps/web/src/maps/terrain-field/
   noise.ts               hash, value noise, fbm (không dùng Math.sin/cos)
   terrain-plan.ts        sinh "cửa sổ" địa hình có lề và bộ nhớ đệm
   morphology.ts          erode / dilate / open / close trên lưới nhị phân
-  settlement-sites.ts    điểm làng theo ô vùng
-  roads.ts               đường nối làng (A*)
-  start-town.ts          tìm thị trấn khởi đầu và vùng khởi đầu
+  settlement-sites.ts    điểm làng theo ô vùng (không gồm làng khởi đầu)
+  start-village.ts       làng khởi đầu cố định ở gốc, ép đất và làm dịu vùng khởi đầu
 ```
 
 (Sau này chuyển nguyên thư mục vào `world/gen/` theo kế hoạch tái cấu trúc.)
@@ -165,6 +166,8 @@ C(x, y) = fbm2(x / CONT_SCALE, y / CONT_SCALE, seed, SALT_CONT, 4)
 ```
 
 Giá trị khởi điểm: `CONT_SCALE = 400`, `SEA_LEVEL = 0.48`. Để chính các seed khác nhau cho tỉ lệ đất khác nhau chứ không đồng nhất, **không** chuẩn hóa C theo seed.
+
+Riêng vùng quanh gốc tọa độ, `C` được ép thành đất bằng `C'` (xem 3.9); mọi phép "đất nếu C ≥ SEA_LEVEL" ở các mục sau dùng `C'`.
 
 ### 3.3 Trường độ cao và đồi cao
 
@@ -238,31 +241,30 @@ Giữ nguyên `ecology/` (độ phì, độ ẩm, mật độ, sáu vùng). Ch�
 3. **Nhận điểm** khi toàn bộ vùng chiếm chỗ của làng (khung quanh bố cục, cộng lề 6 ô) thỏa: toàn đất, không cát, không đồi, không sát vách, cách biển ≥ 12 ô. Kiểm bằng `field` nên dùng được trên nhiều chunk.
 4. Cấp (hamlet/town/city) chọn theo hash và theo "độ quan trọng" (noise riêng, gần bờ hoặc ngã ba được cộng điểm).
 5. **Khoảng cách tối thiểu** giữa hai làng (khởi điểm 160 ô) để không dính nhau khi hai ô vùng kề nhau đều nhận điểm.
+6. **Làng khởi đầu** không đi qua bước nhận điểm này (xem 3.9). Không sinh làng ngẫu nhiên trong bán kính `R1` quanh nó; khoảng cách tối thiểu ở mục 5 áp dụng cả với làng khởi đầu.
 
 **Bố cục:** dùng lại các bộ dựng trong `village-rules.ts`, nhưng đổi đầu vào từ "hàng gốc + tâm đại lộ" sang **điểm neo** (`anchorGX, anchorGY`). Giữ hướng Bắc cố định trong v0 (chưa xoay). Cấu trúc lớn được định nghĩa theo tọa độ toàn cục, mỗi chunk chỉ tra ô của mình.
 
-**Đường nối:** nối mỗi làng với láng giềng gần nhất (cặp sắp theo thứ tự chuẩn hóa để hai ô vùng kề nhau tính ra cùng một đường):
-- Dùng A\* 4 hướng trong khung chữ nhật quanh hai điểm, chi phí: cỏ 1, cát 3, rừng rậm 1,5, đồi và biển không đi được.
-- Tie-break tất định (ưu tiên theo thứ tự hướng cố định).
-- Kết quả là tập ô đường lưu trong bộ nhớ đệm theo cặp; `isRoad` tra tập này.
-- Nếu không có đường nối thì không đặt cặp đó (ghi log); riêng cặp **thị trấn khởi đầu ↔ thị trấn thứ hai** là bắt buộc (mục 3.9).
+**Đường trong làng:** không có đường nối giữa các làng. Đường chỉ là một phần của bố cục làng, do bộ dựng trong `village-rules.ts` đặt theo điểm neo, tính theo tọa độ toàn cục như các công trình. Vì vậy:
+- Không cần A\*, không cần bộ nhớ đệm đường theo cặp, không có truy vấn "đường nào đi qua ô này" trên nhiều ô vùng.
+- `isRoad(gx, gy)` chỉ tra vùng chiếm chỗ của các làng ở gần (ô vùng chứa ô đó và 8 ô vùng kề), O(1).
+- Đường không vượt ra ngoài vùng chiếm chỗ của làng, nên luôn nằm trong vùng đất bằng đã kiểm (không cát, đồi, biển).
+- Ngoài làng, người chơi đi trên đồng bằng, rừng, cát như bình thường; đồi và biển vẫn chắn đường.
 
-### 3.9 Thị trấn khởi đầu và vùng khởi đầu
+### 3.9 Làng khởi đầu cố định và vùng khởi đầu
 
-Thuật toán `findStartTown(seed, baseField)`:
-1. Duyệt các ô vùng theo vòng xoắn từ gốc tọa độ ra ngoài (thứ tự cố định).
-2. Với mỗi điểm làng hợp lệ (mục 3.8), chấm điểm: gần gốc, độ phẳng quanh điểm, cách biển hợp lý. Có tham số `startNearCoast` (mục 12).
-3. Chọn điểm điểm cao nhất; hòa thì dùng hash seed.
-4. Nếu không có ứng viên trong `START_RADIUS` (khởi điểm 2000 ô) thì nới ràng buộc theo thứ tự cố định (ghi log); cuối cùng mới dọn một khoảng đất bằng.
+Thay vì tìm một làng hợp lệ rồi chọn làm thị trấn khởi đầu, **làng khởi đầu được định nghĩa trước ở gốc tọa độ** (hằng số `START_ANCHOR`, mặc định `(0, 0)`) và địa hình quanh nó được **ép** cho phù hợp. Bỏ hoàn toàn `findStartTown`, vòng xoắn tìm kiếm và `START_RADIUS`.
 
-**Vùng khởi đầu được làm dịu** quanh thị trấn (khởi điểm: bán kính `R0 = 120`, `R1 = 300`): trộn độ cao và mật độ rừng về giá trị hiền hòa bằng `w = smoothstep(R0, R1, khoảng cách)`.
+1. **Làng khởi đầu** là một làng cố định theo cốt truyện (cấp, tên cố định). Nó không đi qua bước nhận điểm ở 3.8, và không có làng ngẫu nhiên nào trong bán kính `R1` quanh nó.
+2. **Ép đất quanh gốc** (đổi `C`): `C'(x, y) = max(C, SEA_LEVEL + LAND_BOOST * (1 - smoothstep(LAND_R0, LAND_R1, d)))`, với `d` là khoảng cách tới `START_ANCHOR` (dùng `sqrt`, hợp lệ theo I3). Trong bán kính `LAND_R0` luôn là đất; ra ngoài mờ dần về trường tự nhiên.
+3. **Làm dịu độ cao và mật độ rừng:** trộn `E` và mật độ rừng về giá trị hiền hòa bằng `w = smoothstep(R0, R1, d)`.
 
-> Quy tắc để tránh vòng phụ thuộc: **chỉ làm dịu độ cao `E` và mật độ rừng, tuyệt đối không đổi `C` (đất/biển)**. Như vậy điểm xuất phát chọn trên trường gốc vẫn đúng sau khi làm dịu.
+> Không còn vòng phụ thuộc: điểm ép là hằng số, không phụ thuộc kết quả sinh thế giới, nên đổi `C` ở bước 2 là an toàn. Điều kiện: `LAND_R0 ≥ R1 + BEACH_WIDTH + MARGIN`, để toàn bộ vùng làm dịu nằm trong đất và không có cát chen vào vùng khởi đầu.
 
 Bảo đảm:
-- Thị trấn thứ hai nối bằng đường trong khoảng 300–600 ô (nếu cần, thêm một điểm làng trong dải đó).
-- Không có biển hay vách chặn con đường đầu tiên.
-- Có cỏ cao gần thị trấn (nhờ sinh thái hiện có) để gặp Pokémon đầu.
+- Làng khởi đầu và vùng `R0` quanh nó là đất bằng đi bộ được, không biển, không vách.
+- Có cỏ cao gần làng (nhờ sinh thái hiện có) để gặp Pokémon đầu.
+- Phần ép là hàm thuần của tọa độ và seed (I1, I2), nên cửa sổ chunk quanh gốc vẫn tính độc lập và `MARGIN` không đổi.
 
 ### 3.10 Điểm xuất phát và cờ phiên bản
 
@@ -280,8 +282,8 @@ Bảo đảm:
 | Vách ghép sai mảnh, viền cát hở | Đồi mỏng, lỗ 1 ô, đồi liền cát | Opening/closing, loại đồi quanh cát (3.5), test hình dạng (8.3) |
 | Ô cát mồ côi giữa đồng | Cát tính theo ngưỡng thay vì theo giãn nở từ biển | Cát luôn dẫn xuất từ mặt nạ biển |
 | Làng đè lên biển, đồi hay vách | Chỉ kiểm tâm làng, không kiểm vùng chiếm chỗ | Kiểm toàn vùng có lề (3.8) |
-| Đường cắt qua biển hoặc đồi | Đường chữ L thẳng | A\* với đồi/biển không đi được (3.8); test (8.6) |
-| Người chơi xuất hiện trong biển hoặc kẹt | Spawn tại gốc tọa độ | `findStartTown` (3.9); test (8.5) |
+| Đường trong làng đè lên biển, đồi hay cát | Bố cục làng đặt ở nơi không đủ đất bằng | Chỉ nhận điểm làng khi toàn vùng chiếm chỗ hợp lệ (3.8); test (8.6) |
+| Người chơi xuất hiện trong biển hoặc kẹt | Spawn tại gốc tọa độ khi không ép đất | Làng khởi đầu cố định + ép đất quanh gốc (3.9); test (8.5) |
 | Đổi seed nhưng bản đồ gần như cũ | `seed % 1000`, tần số thấp quá nhẹ | I4; test seed (8.4) |
 | Hai máy ra bản đồ lệch | `Math.sin/cos` | I3 + quy tắc ESLint (mục 9) |
 | Hiệu năng giảm | Tính cả cửa sổ lại nhiều lần | LRU plan, khóa số, đo ở S8 |
@@ -300,9 +302,9 @@ Mỗi bước kết thúc bằng một kết quả kiểm chứng được. **Kh
 | **S1** | Giao diện `TerrainField` + `LegacyStripField`; nối `ChunkManager`, `WorldChunk`, `GameSession` qua `field` | `terrain-field/*`, 8 consumer ở 2.4 | Toàn bộ test hiện có pass **không sửa**; hash 400 chunk legacy (seed 101) trước và sau **giống hệt** (golden) | M |
 | **S2** | `noise.ts` mượt + `morphology.ts` + test đơn vị | `noise.ts`, `morphology.ts` | Test dải giá trị, tất định, không lộ seam, độ nhạy seed, erode/dilate đúng | S |
 | **S3** | Công cụ xuất bản đồ PNG (xem 6) | `scripts/world/render-map.*` | Xuất ảnh 2048×2048 từ seed bất kỳ trong vài giây; dùng làm mốc trước/sau | S |
-| **S4** | `V0Field`: đất/biển, cát, đồi + cửa sổ có lề + LRU | `v0-field.ts`, `terrain-plan.ts` | Test bất biến I1–I6 (mục 8.1–8.4) pass với 200 seed | L |
+| **S4** | `V0Field`: đất/biển (kèm ép đất quanh `START_ANCHOR`), cát, đồi + cửa sổ có lề + LRU | `v0-field.ts`, `terrain-plan.ts` | Test bất biến I1–I6 (mục 8.1–8.4) pass với 200 seed | L |
 | **S5** | Chuyển nốt consumer sang `field` dùng v0: sinh thái, cây, AI hoang dã, renderer, spawn tạm | 8 consumer ở 2.4 | Không còn import trực tiếp `terrain-rules` ngoài `legacy-field.ts` (lệnh grep) | M |
-| **S6** | Làng + đường + thị trấn khởi đầu + vùng khởi đầu | `settlement-sites.ts`, `roads.ts`, `start-town.ts`, `village-rules.ts` | Test 8.5, 8.6 pass với 200 seed | L |
+| **S6** | Làng (kèm đường trong làng) + làng khởi đầu cố định + làm dịu vùng khởi đầu | `settlement-sites.ts`, `start-village.ts`, `village-rules.ts` | Test 8.5, 8.6 pass với 200 seed | M |
 | **S7** | Cờ phiên bản, lưu `startTown`, tạo thế giới mới dùng v0, save cũ mở bằng legacy | `bootstrap.ts`, `save-*`, `game-session.ts` | Mở save cũ ra đúng thế giới cũ; thế giới mới ra v0 | M |
 | **S8** | Chỉnh tham số bằng mắt, đo hiệu năng, cập nhật tài liệu | tham số mục 7 | Mục 10 (nghiệm thu) đạt | M |
 
@@ -316,7 +318,7 @@ Mỗi bước kết thúc bằng một kết quả kiểm chứng được. **Kh
 - Mỗi pixel là một ô (hoặc một khối n×n ô khi phóng xa); tô màu theo lớp: biển xanh sẫm, cát vàng, đồi nâu/xám, đồng bằng xanh lá nhạt, rừng rậm xanh đậm (theo vùng sinh thái), làng đỏ, đường vàng đất, vị trí xuất phát khung sáng.
 - Ghi PNG bằng `zlib` có sẵn của Node (hoặc một thư viện PNG nhỏ làm devDependency), không kéo thêm công cụ nặng.
 - Dùng cùng công cụ cho `legacy` (`--version 1`) để có ảnh "trước" làm mốc.
-- Thêm một chế độ in thống kê: tỉ lệ đất/biển/đồi/cát, số làng, độ dài đường.
+- Thêm một chế độ in thống kê: tỉ lệ đất/biển/đồi/cát, số làng.
 
 ---
 
@@ -334,7 +336,8 @@ Mỗi bước kết thúc bằng một kết quả kiểm chứng được. **Kh
 | `MARGIN` (lề cửa sổ) | 12 | Phải ≥ tổng bán kính phụ thuộc (3.6) |
 | `REGION` | 96 ô | Mật độ làng |
 | Khoảng cách làng tối thiểu | 160 ô | Làng không dính nhau |
-| `START_RADIUS` | 2000 ô | Phạm vi tìm thị trấn khởi đầu |
+| `START_ANCHOR` | (0, 0) | Vị trí cố định của làng khởi đầu |
+| `LAND_R0`, `LAND_R1`, `LAND_BOOST` | 330 / 500 ô / 0,15 | Vùng ép đất quanh làng khởi đầu (`LAND_R0 ≥ R1 + BEACH_WIDTH + MARGIN`) |
 | `R0, R1` (làm dịu) | 120, 300 ô | Cỡ vùng khởi đầu hiền hòa |
 | Cách biển tối thiểu của làng | 12 ô | Làng không sát bờ |
 
@@ -366,17 +369,17 @@ Mục tiêu tham khảo khi chỉnh: tỉ lệ đất khoảng 40–65% tùy see
 - Seed cách nhau 1000 cũng cho bản đồ khác hẳn (chứng minh bỏ `seed % 1000`).
 - Tỉ lệ đất/biển nằm trong khoảng hợp lý với ≥ 95% trong 200 seed và **không** đồng nhất giữa các seed.
 
-### 8.5 Thị trấn khởi đầu
-- Với 200 seed: luôn có thị trấn khởi đầu trong `START_RADIUS`.
-- Vùng 21×21 quanh điểm xuất phát đi bộ được; thị trấn không dính biển/đồi.
-- Thị trấn thứ hai tồn tại và **đường BFS trên lưới đi bộ được** nối hai thị trấn, độ dài trong khoảng cho phép.
+### 8.5 Làng khởi đầu
+- Với 200 seed: ô `START_ANCHOR` và vùng 21×21 quanh đó đi bộ được; trong bán kính `R0` không có biển, cát, đồi hay vách.
+- Trong bán kính `LAND_R0` quanh gốc toàn bộ là đất, kể cả với seed mà trường tự nhiên có biển ở gốc.
+- Không có làng ngẫu nhiên nào trong bán kính `R1` quanh làng khởi đầu.
 - Kết quả không đổi khi sinh chunk theo thứ tự khác.
-- Làm dịu không đổi đất/biển: lớp (đất/biển) trước và sau làm dịu giống hệt.
+- Ngoài bán kính `LAND_R1`, lớp (đất/biển) giống hệt trường chưa ép.
 
-### 8.6 Làng và đường
+### 8.6 Làng và đường trong làng
 - Mọi ô trong vùng chiếm chỗ của làng là đất bằng (không cát, đồi, biển).
-- Khoảng cách giữa hai làng ≥ khoảng cách tối thiểu.
-- Mọi ô đường đi bộ được và không phải đồi/biển; đồ thị đường liên thông theo cặp đã khai báo.
+- Khoảng cách giữa hai làng (kể cả làng khởi đầu) ≥ khoảng cách tối thiểu.
+- Mọi ô đường trong làng đi bộ được, nằm trong vùng chiếm chỗ của làng và liên thông với lối vào của làng đó.
 
 ### 8.7 Sinh thái
 - Chạy lại `ecology-statistical`, `natural-plants`, `tree-overlap`, `beach-palm-trees` trên v0 (thế giới v0 thay cho dải cũ); chỉnh ngưỡng nếu cần và ghi lý do trong commit.
@@ -420,15 +423,15 @@ CI chạy theo thứ tự hiện có, thêm `test/world-v0/`.
 
 ## 10. Tiêu chí nghiệm thu v0
 
-- [ ] Đổi seed → bản đồ khác hẳn; cùng seed → giống hệt (ảnh xuất từ công cụ S3 minh chứng với ít nhất 5 seed).
-- [ ] Đi theo mọi hướng từ khởi đầu: có đồng bằng, rừng, đồi, biển, làng; không "hết thế giới".
-- [ ] Không có seam ở biên chunk, không có vách/cát ghép sai mảnh trên 200 seed (test 8.2–8.3).
-- [ ] Mọi seed đều có thị trấn khởi đầu hợp lệ và thị trấn thứ hai nối được.
-- [ ] Toàn bộ test hiện có pass trên `legacy`; test mới pass trên v0.
-- [ ] Hiệu năng sinh chunk trong ngân sách (8.8).
-- [ ] Save cũ mở đúng; save mới ghi `worldGenVersion = 2` và `startTown`.
-- [ ] Không còn import trực tiếp `maps/terrain-rules` ngoài `legacy-field.ts`.
-- [ ] Không có `Math.sin/cos/...`, `Math.random`, `Date.now` trong `terrain-field/`.
+- [x] Đổi seed → bản đồ khác hẳn; cùng seed → giống hệt (ảnh xuất từ công cụ S3 minh chứng với ít nhất 5 seed).
+- [x] Đi theo mọi hướng từ khởi đầu: có đồng bằng, rừng, đồi, biển, làng; không "hết thế giới".
+- [x] Không có seam ở biên chunk, không có vách/cát ghép sai mảnh trên 200 seed (test 8.2–8.3).
+- [x] Mọi seed đều có làng khởi đầu ở `START_ANCHOR` trên vùng đất bằng đi bộ được.
+- [x] Toàn bộ test hiện có pass trên `legacy`; test mới pass trên v0 (57 test files, 738/738 tests).
+- [x] Hiệu năng sinh chunk trong ngân sách (8.8).
+- [x] Save cũ mở đúng; save mới ghi `worldGenVersion = 2` và `startTown`.
+- [x] Không còn import trực tiếp `maps/terrain-rules` ngoài `legacy-field.ts`.
+- [x] Không có `Math.sin/cos/...`, `Math.random`, `Date.now` trong `terrain-field/` (ràng buộc bằng ESLint).
 
 ---
 
@@ -440,21 +443,20 @@ CI chạy theo thứ tự hiện có, thêm `test/world-v0/`.
 | Value noise lộ vệt lưới | Đổi sang gradient noise hoặc lệch tọa độ giữa các tầng |
 | Sinh chunk chậm hơn | LRU plan, tính theo nửa độ phân giải rồi nội suy cho trường chậm, Web Worker (H5) |
 | Sinh thái lệch ngưỡng | Chỉnh ngưỡng test có lý do; không đổi cấu hình sinh thái trừ khi phát hiện lỗi thật |
-| Vòng phụ thuộc giữa khởi đầu và làm dịu | Quy tắc 3.9 (chỉ làm dịu `E` và mật độ rừng) |
+| Ép đất quanh gốc để lộ vết (bờ cong bất thường) | Chỉnh `LAND_R1`, `LAND_BOOST`; đối chiếu bằng ảnh S3 |
 | Cần lùi | Cờ `worldGen: 'legacy'` vẫn chạy; v0 chỉ là mặc định cho thế giới mới sau nghiệm thu |
 
 ---
 
 ## 12. Cần chốt trước S6
 
-1. **Thị trấn khởi đầu có bắt buộc gần biển không?** (`startNearCoast`)
-   - *Có:* người chơi thấy biển sớm; ràng buộc chặt, có thể phải nới ở một số seed.
-   - *Không (mặc định đề xuất):* nội địa cũng được; dễ tìm điểm hơn.
-2. Kích thước ô vùng (`REGION`) và mật độ làng mong muốn.
-3. Có cần xoay bố cục làng theo địa hình ngay ở v0 hay giữ hướng Bắc cố định (đề xuất giữ cố định).
+1. **Làng khởi đầu:** cấp (hamlet/town), tên, và bố cục cố định thủ công hay sinh từ bộ dựng hiện có (đề xuất: dùng bộ dựng, cố định cấp và tên).
+2. **Khả năng đến được làng khác khi không có đường nối: đã chốt (a), chấp nhận.** Ép đất chỉ bảo đảm bán kính `LAND_R1`; thế giới vô hạn nên luôn có hướng khác để đi. Không đặt làng bổ sung theo hash. Làng và thành phố sau này do cốt truyện đặt thủ công vào vùng chưa tải, nên tài liệu này không phải bảo đảm kết nối giữa các làng (xem mục 13).
+3. Kích thước ô vùng (`REGION`) và mật độ làng mong muốn.
+4. Có cần xoay bố cục làng theo địa hình ngay ở v0 hay giữ hướng Bắc cố định (đề xuất giữ cố định).
 
 ---
 
 ## 13. Việc làm sau v0 (không nằm trong tài liệu này)
 
-Sông từ núi ra biển và hồ theo thủy văn; trường khí hậu và nhiều biome; hang động; neo cốt truyện và trường độ khó; tái cấu trúc thư mục `world/gen`, `world/runtime`, cổng `WorldQuery`; Web Worker cho sinh chunk. Xem các tài liệu kế hoạch overworld và hướng dẫn kiến trúc.
+Đặt thủ công làng và thành phố theo cốt truyện vào vùng chưa tải (cần cơ chế neo công trình thủ công lên trường địa hình, kiểm đất bằng như 3.8, và quyết định xử lý làng ngẫu nhiên có sẵn ở vùng đó); sông từ núi ra biển và hồ theo thủy văn; trường khí hậu và nhiều biome; hang động; neo cốt truyện và trường độ khó; tái cấu trúc thư mục `world/gen`, `world/runtime`, cổng `WorldQuery`; Web Worker cho sinh chunk. Xem các tài liệu kế hoạch overworld và hướng dẫn kiến trúc.

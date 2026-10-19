@@ -461,12 +461,30 @@ export class SaveGameRepository {
     }
 
     // 2. Resolve world data
-    const resolvedWorldData: SaveGameData['world'] = options.worldData ??
+    let resolvedWorldData: SaveGameData['world'] = options.worldData ??
       (this.worldDataProvider ? this.worldDataProvider() : undefined) ?? {
         seed: 101,
-        worldGenVersion: 1,
+        worldGenVersion: 2,
         position: profile.position,
+        startTown: {
+          name: 'Twinleaf Hamlet',
+          gx: 0,
+          gy: 0,
+          tier: 0,
+        },
       };
+
+    if (resolvedWorldData.worldGenVersion === 2 && !resolvedWorldData.startTown) {
+      resolvedWorldData = {
+        ...resolvedWorldData,
+        startTown: {
+          name: 'Twinleaf Hamlet',
+          gx: 0,
+          gy: 0,
+          tier: 0,
+        },
+      };
+    }
 
     // 3. Write Main Partition
     const metadata: SaveGameMetadata = {
@@ -610,6 +628,20 @@ export class SaveGameRepository {
     try {
       const data = JSON.parse(raw) as SaveGameData;
       return typeof data?.world?.seed === 'number' ? data.world.seed : null;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Safely reads only the worldGenVersion from stored JSON without dispatching state to services.
+   */
+  public getSavedWorldGenVersion(slotId: string = DEFAULT_SAVE_SLOT): number | null {
+    const raw = this.safeGetItem(this.getSlotStorageKey(slotId));
+    if (!raw) return null;
+    try {
+      const data = JSON.parse(raw) as SaveGameData;
+      return typeof data?.world?.worldGenVersion === 'number' ? data.world.worldGenVersion : null;
     } catch {
       return null;
     }

@@ -1,13 +1,10 @@
 import { seededHash } from './noise';
 import {
-  getRoadCenterX,
-  isRiverTile,
-  isLakeTile,
-  isHillTile,
-  isSandTile,
-  isOceanTile,
-  isNearWater,
-} from './terrain-rules';
+  createTerrainField,
+  type TerrainField,
+  isV0VillageArea,
+  getNearbySettlements,
+} from './terrain-field';
 
 export type BuildingType =
   'house_red' | 'pokecenter' | 'house_cottage' | 'house_flowers' | 'pokemart' | 'signpost';
@@ -137,12 +134,12 @@ const villageCache = new Map<string, VillagePlacement | null>();
 /**
  * Checks if a proposed building footprint collides with any water, cliff, sand, or existing building.
  */
-function canPlaceBuilding(
+export function canPlaceBuilding(
   gx: number,
   gy: number,
   widthTiles: number,
   heightTiles: number,
-  seed: number,
+  field: TerrainField,
   existingBuildings: BuildingPlacement[]
 ): boolean {
   for (let dy = 0; dy < heightTiles; dy++) {
@@ -150,12 +147,11 @@ function canPlaceBuilding(
       const tx = gx + dx;
       const ty = gy + dy;
       if (
-        isRiverTile(tx, ty, seed) ||
-        isLakeTile(tx, ty, seed) ||
-        isHillTile(tx, ty, seed) ||
-        isSandTile(tx, ty, seed) ||
-        isOceanTile(tx, ty, seed) ||
-        isNearWater(tx, ty, seed, 2)
+        field.isWater(tx, ty) ||
+        field.isHill(tx, ty) ||
+        field.isSand(tx, ty) ||
+        field.isOcean(tx, ty) ||
+        field.isNearWater(tx, ty, 2)
       ) {
         return false;
       }
@@ -177,7 +173,7 @@ function canPlaceBuilding(
   return true;
 }
 
-function createBuildingPlacement(
+export function createBuildingPlacement(
   id: string,
   type: BuildingType,
   gx: number,
@@ -235,7 +231,8 @@ function computeVillagePlacement(
 ): VillagePlacement | null {
   // Midpoint between rivers (rivers are at k * 96 + 48)
   const baseY = k * VILLAGE_CYCLE_HEIGHT;
-  const roadX = getRoadCenterX(baseY, seed);
+  const field = createTerrainField(1, seed);
+  const roadX = field.getRoadCenterX(baseY);
 
   // Cycle 0 always spawns (Starter Village: Twinleaf Town)
   // For other cycles, roll deterministic chance (approx 75% spawn rate)
@@ -311,7 +308,7 @@ function computeVillagePlacement(
 
       let allFit = true;
       for (const b of candidates) {
-        if (!canPlaceBuilding(b.gx, b.gy, b.widthTiles, b.heightTiles, seed, buildings)) {
+        if (!canPlaceBuilding(b.gx, b.gy, b.widthTiles, b.heightTiles, field, buildings)) {
           allFit = false;
           break;
         }
@@ -435,7 +432,7 @@ function computeVillagePlacement(
 
       let allFit = true;
       for (const b of candidates) {
-        if (!canPlaceBuilding(b.gx, b.gy, b.widthTiles, b.heightTiles, seed, buildings)) {
+        if (!canPlaceBuilding(b.gx, b.gy, b.widthTiles, b.heightTiles, field, buildings)) {
           allFit = false;
           break;
         }
@@ -581,11 +578,23 @@ export function isVillagePathTile(gx: number, gy: number, seed: number): boolean
 /**
  * Checks if a global tile is occupied by a building solid footprint (with optional margin).
  */
-export function isVillageBuildingTile(gx: number, gy: number, seed: number, buffer = 0): boolean {
+export function isVillageBuildingTile(
+  gx: number,
+  gy: number,
+  seedOrField: number | TerrainField = 101,
+  buffer = 0
+): boolean {
   if (isResolvingVillage) return false;
-  const k = Math.round(gy / VILLAGE_CYCLE_HEIGHT);
-  for (let dk = -1; dk <= 1; dk++) {
-    const v = getVillagePlacement(k + dk, seed);
+  const field = typeof seedOrField === 'number' ? createTerrainField(1, seedOrField) : seedOrField;
+  const villages = field.version === 2
+    ? getNearbySettlements(gx, gy, field)
+    : [
+        getVillagePlacement(Math.round(gy / VILLAGE_CYCLE_HEIGHT) - 1, field.seed),
+        getVillagePlacement(Math.round(gy / VILLAGE_CYCLE_HEIGHT), field.seed),
+        getVillagePlacement(Math.round(gy / VILLAGE_CYCLE_HEIGHT) + 1, field.seed),
+      ].filter(Boolean) as VillagePlacement[];
+
+  for (const v of villages) {
     if (!v) continue;
     for (const b of v.buildings) {
       if (
@@ -607,13 +616,20 @@ export function isVillageBuildingTile(gx: number, gy: number, seed: number, buff
 export function isBuildingRoofOrFootprint(
   gx: number,
   gy: number,
-  seed: number,
+  seedOrField: number | TerrainField = 101,
   buffer = 0
 ): boolean {
   if (isResolvingVillage) return false;
-  const k = Math.round(gy / VILLAGE_CYCLE_HEIGHT);
-  for (let dk = -1; dk <= 1; dk++) {
-    const v = getVillagePlacement(k + dk, seed);
+  const field = typeof seedOrField === 'number' ? createTerrainField(1, seedOrField) : seedOrField;
+  const villages = field.version === 2
+    ? getNearbySettlements(gx, gy, field)
+    : [
+        getVillagePlacement(Math.round(gy / VILLAGE_CYCLE_HEIGHT) - 1, field.seed),
+        getVillagePlacement(Math.round(gy / VILLAGE_CYCLE_HEIGHT), field.seed),
+        getVillagePlacement(Math.round(gy / VILLAGE_CYCLE_HEIGHT) + 1, field.seed),
+      ].filter(Boolean) as VillagePlacement[];
+
+  for (const v of villages) {
     if (!v) continue;
     for (const b of v.buildings) {
       const roofTopGY = Math.floor(b.renderY / 32);
@@ -634,17 +650,28 @@ export function isBuildingRoofOrFootprint(
  * Checks if a tree at top-left pixel (tx, ty) overlaps any building roof, wall, or door approach.
  * Used by tree generator to allow handsome garden trees while avoiding building clipping.
  */
-export function isTreeClippingBuilding(tx: number, ty: number, seed: number): boolean {
+export function isTreeClippingBuilding(
+  tx: number,
+  ty: number,
+  seedOrField: number | TerrainField = 101
+): boolean {
   const treeLeft = tx - 4;
   const treeRight = tx + 64 + 4;
   const treeTop = ty + 10;
   const treeBottom = ty + 120 + 4;
 
   const centerGY = Math.floor((ty + 60) / 32);
-  const k = Math.round(centerGY / VILLAGE_CYCLE_HEIGHT);
+  const field = typeof seedOrField === 'number' ? createTerrainField(1, seedOrField) : seedOrField;
 
-  for (let dk = -1; dk <= 1; dk++) {
-    const v = getVillagePlacement(k + dk, seed);
+  const villages = field.version === 2
+    ? getNearbySettlements(Math.floor((tx + 32) / 32), centerGY, field)
+    : [
+        getVillagePlacement(Math.round(centerGY / VILLAGE_CYCLE_HEIGHT) - 1, field.seed),
+        getVillagePlacement(Math.round(centerGY / VILLAGE_CYCLE_HEIGHT), field.seed),
+        getVillagePlacement(Math.round(centerGY / VILLAGE_CYCLE_HEIGHT) + 1, field.seed),
+      ].filter(Boolean) as VillagePlacement[];
+
+  for (const v of villages) {
     if (!v) continue;
     for (const b of v.buildings) {
       const bLeft = b.gx * 32 - 16;
@@ -669,8 +696,18 @@ export function isTreeClippingBuilding(tx: number, ty: number, seed: number): bo
  * Checks if a global tile is within a village boundary (plus buffer)
  * used exclusively to clear wild tall grass so encounters do not spawn in town.
  */
-export function isVillageArea(gx: number, gy: number, seed: number, buffer = 1): boolean {
+export function isVillageArea(
+  gx: number,
+  gy: number,
+  seedOrField: number | TerrainField = 101,
+  buffer = 1
+): boolean {
   if (isResolvingVillage) return false;
+  const field = typeof seedOrField === 'number' ? createTerrainField(1, seedOrField) : seedOrField;
+  if (field.version === 2) {
+    return isV0VillageArea(gx, gy, field, buffer);
+  }
+  const seed = field.seed;
   const k = Math.round(gy / VILLAGE_CYCLE_HEIGHT);
   for (let dk = -1; dk <= 1; dk++) {
     const v = getVillagePlacement(k + dk, seed);

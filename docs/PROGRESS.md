@@ -1,8 +1,8 @@
 # PokeOverworld - Tài Liệu Tiến Độ Phát Triển Dự Án (Project Progress)
 
-> **Phiên bản hiện tại**: `0.1.0` (Milestone 1.92 Complete)
+> **Phiên bản hiện tại**: `0.1.0` (Milestone 1.95 Complete - Wildlife System W1..W8 Full Parity & Acceptance)
 > **Ngày cập nhật**: `2026-10-18`
-> **Tình trạng kiểm thử**: **100% PASS** (49/49 test files, 707/707 unit tests, 0 lỗi TypeScript, 3.234 animations & atlas assets validated).
+> **Tình trạng kiểm thử**: **100% PASS** (66/66 test files, 792/792 unit tests, 0 lỗi TypeScript, 3.234 animations & atlas assets validated).
 > **Lưu trữ lịch sử**: Bản nhật ký chi tiết lịch sử 92 milestones trước đây được lưu trữ tại [docs/archive/PROGRESS_v1.92_FULL_HISTORY.md](file:///e:/Pokemon/docs/archive/PROGRESS_v1.92_FULL_HISTORY.md).
 
 ---
@@ -11,11 +11,56 @@
 
 | Hệ thống | Trạng thái | Điểm nổi bật & Tính năng chính |
 | :--- | :---: | :--- |
-| **Thế giới mở & Sinh thái** | Hoàn thiện 100% | Phân chia Chunk không biên giới (Spatial Partitioning), thuật toán ngăn cây to và bụi Berry đè lên nhau, sinh thái sông hồ, bãi biển, đảo biển, bụi rậm va chạm thực tế. |
+| **Hệ thống Sinh vật Hoang dã (Wildlife System)** | **Hoàn thiện 100%** (W1..W8 Complete) | Kiến trúc mô-đun hóa độc lập `apps/web/src/wildlife/` theo [WILDLIFE_DEV_GUIDE.md](file:///e:/Pokemon/docs/WILDLIFE_DEV_GUIDE.md): Độ hiếm 2 bước (Tier Probability + Affinity), sinh theo bầy đàn (`solo`, `member`, `leader`, `apex`), cấp cơ sở theo khoảng cách khởi đầu $L(d)$, tỉ lệ Shiny chuẩn 1/4096 tất định theo hash seed; Hiển thị cấp trên đầu với `???` đỏ đe dọa cho leader/apex và `Lv.X` cho Pokémon thường; Bộ não Utility AI chấm điểm theo nhu cầu, giác quan, phản ứng đe dọa (flee/warn/chase), nhịp ngày đêm (ngủ ngày, thức khi lại gần $\le 2$ ô), phản ứng thời tiết; Mạng báo động bầy lan truyền trễ 3–8 nhịp, điều hướng lực kéo gắn kết $R \le 3$, phản ứng hậu chiến (bắt/hạ thành viên $\to$ bầy chạy, hạ đầu đàn $\to$ bầy tan); Spatial Hash 4x4, phân tầng LOD (LOD1 $\le 12$, LOD2 $\le 24$, LOD3 đóng băng $> 24$) và kiểm soát ngân sách khung hình $\le 1.5$ms. Đạt 100% 9/9 test suites (53 tests). |
+| **Thế giới mở vô hạn 2D (World Gen v0)** | **Hoàn thiện 100%** (S1..S8 Complete + Shore Wave Autotiling) | Hoàn thành toàn diện 8 bước theo tài liệu [WORLD_GEN_V0_DEV_GUIDE.md](file:///e:/Pokemon/docs/WORLD_GEN_V0_DEV_GUIDE.md): Trừu tượng hóa `TerrainField` đa engine, tương thích ngược 100% thế giới dải (`LegacyStripField`, golden hash `867984b3`), động cơ nhiễu tất định `noise.ts` (không hàm siêu việt, bảo vệ bởi quy tắc ESLint), toán tử hình thái học `morphology.ts`, xuất PNG bản đồ `render-map.ts`, `V0Field` với lục địa 2D tự nhiên, vùng xuất phát an toàn $R_0 = 330$, đồi mảng $\ge 3$ ô cách cát $\ge 2$ ô, làng khởi đầu cố định Twinleaf Hamlet tại gốc `(0, 0)`, đường nội bộ liên thông, Poisson-disk pruning cho các thị trấn cách nhau $\ge 160$ ô, lưu và di trú `worldGenVersion = 2` kèm `startTown`. Tích hợp hệ thống Autotiling sóng bờ biển vỗ bờ sống động (`shore_v`, `shore_corner_in`, `shore_corner_out`, `shore_corner_in_flip`, `shore_corner_out_flip`) chuyển tiếp mượt mà giữa cát và biển. Đạt toàn bộ 9/9 tiêu chí nghiệm thu. |
+| **Sinh thái & Phân vùng Spatial** | Hoàn thiện 100% | Phân chia Chunk không biên giới (Spatial Partitioning), thuật toán ngăn cây to và bụi Berry đè lên nhau, sinh thái sông hồ, bãi biển, đảo biển, bụi rậm va chạm thực tế. |
 | **Hệ thống Trận đấu (Battle Engine)** | Hoàn thiện 100% | Kiến trúc dòng thời gian chuẩn Essentials/EBDX, cơ chế Gen 9 (Terastallization, Volatile statuses, Hazards, Weather indicator, Screens, Trick Room, Substitute, Trapping). |
-| **Lưu trữ & Dữ liệu (Autosave V3)** | Hoàn thiện 100% | Phân vùng Slot chính + Hộp PC, cơ chế tự động sao lưu `.bak` và khôi phục khi tệp chính lỗi, khóa an toàn trong trận (in-battle lock), kiểm soát quota lưu trữ. |
+| **Lưu trữ & Dữ liệu (Autosave V3)** | Hoàn thiện 100% | Phân vùng Slot chính + Hộp PC, cơ chế tự động sao lưu `.bak` và khôi phục khi tệp chính lỗi, khóa an toàn trong trận (in-battle lock), kiểm soát quota lưu trữ, lưu `worldGenVersion`. |
 | **Âm thanh (Audio Engine)** | Hoàn thiện 100% | 100% tệp âm thanh SE hoạt ảnh được chuẩn hóa sang **16-bit 48.000 Hz Stereo PCM** (giải quyết triệt để lỗi câm tiếng do trình duyệt không hỗ trợ 8-bit unsigned PCM), tự động fallback định dạng/thư mục. |
 | **Công cụ Gỡ lỗi (Dev/Bot Tools)** | Hoàn thiện 100% | Remote Bridge & Custom Bot Battler Overlay Cheat Tools, hỗ trợ kiểm thử trận đấu độc lập. |
+
+### 1.1. Chi Tiết Triển Khai Hệ Thống Sinh Vật Hoang Dã (Milestone 1.95 - Wildlife System W1..W8)
+
+Theo hướng dẫn tại [docs/WILDLIFE_DEV_GUIDE.md](file:///e:/Pokemon/docs/WILDLIFE_DEV_GUIDE.md), hệ thống sinh vật hoang dã đã được đóng gói thành mô-đun độc lập `apps/web/src/wildlife/`:
+
+1. **W1 - Mô hình dữ liệu & Tương thích ngược (`model/`)**:
+   - `WildEntity` kế thừa và mở rộng toàn diện từ `WildPokemonEntity`, hỗ trợ vai trò sinh thái `WildRole` (`solo`, `member`, `leader`, `apex`), bầy đàn `herdId`, giới tính `gender`, và các trạng thái AI `WildState`. Re-export liền mạch qua `maps/chunk-encounters.ts` và `maps/chunk.ts`.
+
+2. **W2 - Hiển thị cấp & Chỉ báo đe dọa (`indicators/` & `rendering/wildlife/`)**:
+   - `getLevelIndicator(entity, playerRefLevel, opts)`: hàm thuần logic kiểm tra bảng chân trị Section 5.1.
+   - Trả về `{ kind: 'unknown_red', text: '???' }` khi đối mặt `leader` hoặc `apex`.
+   - Trả về `{ kind: 'level', text: 'Lv.X' }` khi cấp hoang dã thấp hơn cấp người chơi tham chiếu; ẩn khi $\ge$ cấp tham chiếu.
+   - `drawWildOverheadIndicator` vẽ pill badge bo góc, hiệu ứng nhịp tim đỏ cảnh báo đe dọa trên canvas.
+
+3. **W3 - Dữ liệu sinh thái Gen 1 (`species-spawn.json`, `spawn-config.json`, `validate-wildlife.mjs`)**:
+   - 151 loài Pokémon Gen 1 được phân loại đầy đủ với ái lực theo Biome và TileContext (`tall_grass`, `forest_floor`, `water_surface`, `shore`, `rock`, `sand`, `walkable_ground`).
+   - Cờ loại trừ đặc biệt: `legendary`, `mythical`, `starter`, `fossil`, `static`, `no_wild`.
+   - Script CI `scripts/validate-wildlife.mjs` bảo đảm tính hợp lệ, đầy đủ của 151 loài, kiểm tra tổng xác suất cấp bằng 1.0 và độ phủ sinh vật hoang dã tại mọi Biome.
+
+4. **W4 - Động cơ sinh sinh vật hai bước (`spawn/`)**:
+   - Thuật toán 2 bước chống biến dị phân bố (Bước 1: chọn Tier $0..4$ theo xác suất; Bước 2: chọn loài theo trọng số sinh thái và thời tiết).
+   - Mô hình cấp cơ sở theo cự ly $L(d) = \text{clamp}(L_0 + \lfloor d / 120 \rfloor, 2, 60)$. Khống chế trần cấp 5 tại vùng xuất phát an toàn.
+   - Tỉ lệ Shiny chuẩn 1/4096 tất định qua `hashWildlife` seed không dùng hàm ngẫu nhiên của trình duyệt.
+   - Dựng cấu trúc bầy `composeHerd`: phân phối 1 Leader (+3..+8 cấp) và các Member; xác suất xuất hiện Apex (+10..+20 cấp) ngoài vùng khởi đầu.
+
+5. **W5 - Tập tính & Bộ điều khiển di chuyển ô lưới (`behavior/movement/`, `behavior/profiles/`)**:
+   - Chuyển giao toàn bộ 5 hành vi di sản sang `behavior-archetypes.json` (`skittish_bird`, `aggressive_bird`, `curious_rodent`, `slow_bug`, `dormant_cocoon`) cùng các mẫu mới (`herd_grazer`, `territorial_brute`, `nocturnal_flyer`).
+   - `grid-mover.ts`: di chuyển nội suy 32px mượt mà với hiệu ứng nhún bước chân tự nhiên (`bobY`), kiểm tra va chạm địa hình không thể đi (`isWalkable`) và tránh đi trùng ô với sinh vật khác.
+
+6. **W6 - Bộ não chấm điểm Utility Brain (`behavior/brain/`, `behavior/schedule/`)**:
+   - `utility-brain.ts` & `considerations.ts`: chấm điểm tiện ích liên tục theo nhu cầu (đói, năng lượng, sợ hãi), kích thích từ người chơi, và tính khí của loài.
+   - Quán tính trạng thái (`MIN_STATE_DURATION_MS = 600ms`) và biên độ trễ (`HYSTERESIS_MARGIN = 0.15`) triệt tiêu hiện tượng rung lắc/dao động trạng thái.
+   - `daily-rhythm.ts`: loài ăn đêm (Nocturnal) ngủ ngày (hiện bong bóng `"z"`), giật mình thức giấc khi người chơi tiến vào phạm vi $\le 2$ ô.
+   - `weather-response.ts`: biến đổi tốc độ và độ tích cực khi gặp mưa hoặc bão cát.
+
+7. **W7 - Tương tác xã hội & Mạng báo động bầy (`behavior/social/`, `encounter/`)**:
+   - `herd-controller.ts`: gắn kết đàn với bán kính $R_{\text{cohesion}} = 3$ ô, đẩy nhẹ khi quá sát $< 1$ ô.
+   - `alarm.ts`: mạng báo động lan truyền độ trễ tỉ lệ khoảng cách (3–8 nhịp mô phỏng).
+   - `handleHerdPostBattle`: sau trận đấu, nếu thành viên bị hạ/bắt thì bầy hoảng sợ bỏ chạy; nếu đầu đàn bị hạ thì bầy giải tán thành cá thể đơn lẻ.
+
+8. **W8 - Điều phối WildlifeSimulator & Cổng WildlifeSystem (`wildlife/index.ts`)**:
+   - Phân tầng LOD 3 cấp theo cự ly tới người chơi (LOD 1: $\le 12$ ô mô phỏng toàn phần; LOD 2: $\le 24$ ô mô phỏng thưa 6 nhịp; LOD 3: $> 24$ ô đóng băng).
+   - Spatial Hash ô 4x4 phục vụ truy vấn vùng lân cận cực nhanh; kiểm soát ngân sách khung hình $\le 1.5$ms cho 200 thực thể.
 
 ---
 

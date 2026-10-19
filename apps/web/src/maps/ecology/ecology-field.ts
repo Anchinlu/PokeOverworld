@@ -1,5 +1,5 @@
 import { seededHash } from '../noise';
-import { isNearWater, isHillTile, isNearCliffEdge, isSandTile } from '../terrain-rules';
+import { createTerrainField, type TerrainField } from '../terrain-field';
 import {
   ECOLOGY_FERTILITY_SALT,
   ECOLOGY_MOISTURE_SALT,
@@ -25,6 +25,10 @@ export interface EcologySample {
 
 function smoothstep(t: number): number {
   return t * t * (3 - 2 * t);
+}
+
+function toField(seedOrField: number | TerrainField = 101): TerrainField {
+  return typeof seedOrField === 'number' ? createTerrainField(1, seedOrField) : seedOrField;
 }
 
 /**
@@ -59,20 +63,27 @@ export function sampleEcologicalNoise(
   return Math.max(0, Math.min(1, val));
 }
 
-export function sampleEcology(gx: number, gy: number, seed: number): EcologySample {
+export function sampleEcology(
+  gx: number,
+  gy: number,
+  seedOrField: number | TerrainField = 101
+): EcologySample {
+  const field = toField(seedOrField);
+  const seed = field.seed;
+
   const fertility = sampleEcologicalNoise(gx, gy, seed, ECOLOGY_FERTILITY_SALT);
   const moisture = sampleEcologicalNoise(gx, gy, seed, ECOLOGY_MOISTURE_SALT);
   const density = sampleEcologicalNoise(gx, gy, seed, ECOLOGY_DENSITY_SALT);
 
-  const nearWater = isNearWater(gx, gy, seed, 2);
-  const nearHill = isNearCliffEdge(gx, gy, seed) || isHillTile(gx, gy, seed);
+  const nearWater = field.isNearWater(gx, gy, 2);
+  const nearHill = field.isNearCliffEdge(gx, gy) || field.isHill(gx, gy);
   const nearSand =
-    isSandTile(gx, gy, seed) ||
-    isSandTile(gx + 1, gy, seed) ||
-    isSandTile(gx - 1, gy, seed) ||
-    isSandTile(gx, gy + 1, seed) ||
-    isSandTile(gx, gy - 1, seed);
-  const elevation = isHillTile(gx, gy, seed) ? 1.0 : 0.0;
+    field.isSand(gx, gy) ||
+    field.isSand(gx + 1, gy) ||
+    field.isSand(gx - 1, gy) ||
+    field.isSand(gx, gy + 1) ||
+    field.isSand(gx, gy - 1);
+  const elevation = field.isHill(gx, gy) ? 1.0 : 0.0;
 
   return {
     fertility,

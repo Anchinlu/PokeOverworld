@@ -1,13 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import {
-  BattleAtmosphereManager,
-  battleAtmosphereManager,
-  TYPE_ATMOSPHERE_THEMES,
-} from '../src/battle/animation/battle-atmosphere';
-import {
-  BattleCameraManager,
-  battleCameraManager,
-} from '../src/battle/animation/battle-camera';
+import { BattleAtmosphereManager } from '../src/battle/animation/battle-atmosphere';
+import { BattleCameraManager } from '../src/battle/animation/battle-camera';
 import { battleAnimationPlayer } from '../src/battle/animation/animation-player';
 
 describe('Battle Environment Evolution (EBDX Atmosphere & Camera Systems)', () => {

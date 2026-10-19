@@ -18,20 +18,35 @@ export interface TileData {
   berryBush?: BerryBushEntity;
 }
 
+import { createTerrainField, type TerrainField } from './terrain-field';
+
 export class ChunkManager {
   public cache = new Map<string, WorldChunk>();
   public activeChunks: WorldChunk[] = [];
   public currentSeed = 101;
+  public field: TerrainField;
 
   private lastChunkX: number | null = null;
   private lastChunkY: number | null = null;
 
-  constructor(seed = 101) {
-    this.currentSeed = seed;
+  constructor(seedOrField: number | TerrainField = 101) {
+    if (typeof seedOrField === 'number') {
+      this.currentSeed = seedOrField;
+      this.field = createTerrainField(1, seedOrField);
+    } else {
+      this.field = seedOrField;
+      this.currentSeed = seedOrField.seed;
+    }
   }
 
-  public reset(seed: number): void {
-    this.currentSeed = seed;
+  public reset(seedOrField: number | TerrainField): void {
+    if (typeof seedOrField === 'number') {
+      this.currentSeed = seedOrField;
+      this.field = createTerrainField(1, seedOrField);
+    } else {
+      this.field = seedOrField;
+      this.currentSeed = seedOrField.seed;
+    }
     this.cache.clear();
     this.activeChunks = [];
     this.lastChunkX = null;
@@ -41,7 +56,7 @@ export class ChunkManager {
   public getChunk(cx: number, cy: number): WorldChunk {
     const key = `${cx},${cy}`;
     if (!this.cache.has(key)) {
-      this.cache.set(key, new WorldChunk(cx, cy, this.currentSeed));
+      this.cache.set(key, new WorldChunk(cx, cy, this.field));
     }
     return this.cache.get(key)!;
   }

@@ -1,12 +1,11 @@
 import { Camera, InputManager } from '../core';
 import { Player, Follower } from '../entities';
-import { ChunkManager, getRoadCenterX } from '../maps';
+import { ChunkManager, createTerrainField, type TerrainField } from '../maps';
 import { updateWildPokemon } from '../ai';
 import type { GameRenderer } from '../rendering';
 import type { BerryBushEntity, WildPokemonEntity, WorldChunk } from '../maps/chunk';
 import { interactWithBerryBush } from '../ui/berry-panel';
 import { sampleEcology, getEcologyZone } from '../maps/ecology';
-import { isNearWater } from '../maps/terrain-rules';
 import {
   BattleScreen,
   createBattler,
@@ -30,9 +29,11 @@ import {
 } from '../domain';
 import { defaultRng } from '../core/rng';
 import type { Direction } from '@pokemon/shared-types';
+import { handleHerdPostBattle } from '../wildlife/behavior/social/herd-controller';
 
 export class GameSession {
   public seed: number;
+  public field: TerrainField;
   public camera: Camera;
   public input: InputManager;
   public chunkManager: ChunkManager;
@@ -41,16 +42,18 @@ export class GameSession {
   public isBattling = false;
   private lastBattleEndTime = 0;
 
-  constructor(initialSeed = 101) {
+  constructor(initialSeed = 101, version = 2) {
     this.seed = initialSeed;
+    this.field = createTerrainField(version, this.seed);
     this.camera = new Camera(0, 0);
     this.input = new InputManager();
-    this.chunkManager = new ChunkManager(this.seed);
+    this.chunkManager = new ChunkManager(this.field);
 
     const savedPos = playerService.getProfile().position;
     const hasSavedPos = Boolean(savedPos && (savedPos.gx !== 0 || savedPos.gy !== 0));
-    const initGX = hasSavedPos ? savedPos.gx : getRoadCenterX(0, this.seed);
-    const initGY = hasSavedPos ? savedPos.gy : 0;
+    const spawn = this.field.getSpawn();
+    const initGX = hasSavedPos ? savedPos.gx : spawn.gx;
+    const initGY = hasSavedPos ? savedPos.gy : spawn.gy;
     const initDir = (hasSavedPos ? (savedPos.direction ?? 0) : 0) as Direction;
 
     this.player = new Player(initGX, initGY, initDir);
@@ -67,12 +70,18 @@ export class GameSession {
     autosaveCoordinator.setBattlingProvider(() => this.isBattling);
     autosaveCoordinator.setWorldDataProvider(() => ({
       seed: this.seed,
-      worldGenVersion: 1,
+      worldGenVersion: this.field.version,
       position: {
         gx: this.player.gx,
         gy: this.player.gy,
         direction: this.player.direction,
       },
+      startTown: this.field.version === 2 ? {
+        name: 'Twinleaf Hamlet',
+        gx: 0,
+        gy: 0,
+        tier: 0,
+      } : undefined,
     }));
   }
 
@@ -208,9 +217,9 @@ export class GameSession {
     // Play Iris Pokéball Encounter Transition with Screen Shake
     playEncounterTransition({
       onComplete: () => {
-        const sample = sampleEcology(wp.gx, wp.gy, this.seed);
+        const sample = sampleEcology(wp.gx, wp.gy, this.field);
         const zone = getEcologyZone(sample);
-        const nearWater = isNearWater(wp.gx, wp.gy, this.seed, 1);
+        const nearWater = this.field.isNearWater(wp.gx, wp.gy, 1);
         const inTallGrass =
           chunk?.tallGrass?.some(
             (tg) =>
@@ -342,6 +351,19 @@ export class GameSession {
                   chunk.wildPokemon.splice(idx, 1);
                 }
               }
+
+              // Section 6.4 & W7: Post-battle herd panic or dissolution
+              if (wp.herdId) {
+                const activeWild = this.chunkManager.activeChunks.flatMap((c) => c.wildPokemon || []);
+                const entId = (wp as WildPokemonEntity).id ?? `${wp.gx},${wp.gy}`;
+                const entRole = (wp as WildPokemonEntity).role ?? 'solo';
+                handleHerdPostBattle(
+                  entId,
+                  entRole,
+                  activeWild,
+                  result.outcome === 'caught' ? 'caught' : 'defeated'
+                );
+              }
             }
           } catch (err) {
             console.error('[GameSession] Error finalizing wild battle outcome:', err);
@@ -404,9 +426,9 @@ export class GameSession {
     // Play Iris Pokéball Encounter Transition with Screen Shake
     playEncounterTransition({
       onComplete: () => {
-        const sample = sampleEcology(this.player.gx, this.player.gy, this.seed);
+        const sample = sampleEcology(this.player.gx, this.player.gy, this.field);
         const zone = getEcologyZone(sample);
-        const nearWater = isNearWater(this.player.gx, this.player.gy, this.seed, 1);
+        const nearWater = this.field.isNearWater(this.player.gx, this.player.gy, 1);
         const env = getBattleEnvironment(zone, nearWater, false);
         if (envPresetOverride && envPresetOverride !== 'auto') {
           const cfg = getPresetConfig(envPresetOverride as BattleEnvPresetId);
@@ -599,20 +621,21 @@ export class GameSession {
     return shinyWp;
   }
 
-  public regenerate(seed?: number): void {
+  public regenerate(seed?: number, version = this.field.version): void {
     if (seed !== undefined) {
       this.seed = seed;
     }
-    this.chunkManager.reset(this.seed);
+    this.field = createTerrainField(version, this.seed);
+    this.chunkManager.reset(this.field);
     this.resetPlayer();
     playerService.updatePosition(this.player.gx, this.player.gy, this.player.direction);
     autosaveCoordinator.flushImmediate('regenerate_map');
   }
 
   public resetPlayer(): void {
-    const rc = getRoadCenterX(0, this.seed);
-    this.player.snapTo(rc, 0);
-    this.follower.snapTo(rc, -1);
+    const spawn = this.field.getSpawn();
+    this.player.snapTo(spawn.gx, spawn.gy);
+    this.follower.snapTo(spawn.gx, spawn.gy - 1);
     this.camera.snapTo(this.player);
     this.chunkManager.update(this.player.x, this.player.y);
   }

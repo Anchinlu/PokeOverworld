@@ -26,10 +26,19 @@ export interface SaveGameMetadata {
   pcSavedAt?: number; // Timestamp when PC partition was last saved
 }
 
+export interface StartTownData {
+  name: string;
+  gx: number;
+  gy: number;
+  tier: number;
+  siteId?: string;
+}
+
 export interface SaveWorldData {
   seed?: number;
   worldGenVersion?: number;
   position?: PlayerPosition;
+  startTown?: StartTownData;
 }
 
 /**

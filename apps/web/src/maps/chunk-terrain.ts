@@ -1,14 +1,6 @@
 import type { TerrainId } from '@pokemon/shared-types';
 import { CHUNK_SIZE, TERRAIN, TILE_IDS } from '@pokemon/game-data';
-import {
-  isSandTile,
-  isOceanTile,
-  getOceanTileId,
-  isRoadTile,
-  isHillTile,
-  isBridgeTile,
-  isWaterTile,
-} from './terrain-rules';
+import { createTerrainField, type TerrainField } from './terrain-field';
 import {
   getSandTileKey,
   getRoadTileKey,
@@ -25,12 +17,17 @@ export interface ChunkTerrainResult {
 export function generateChunkTerrain(
   cx: number,
   cy: number,
-  seed: number,
+  seedOrField: number | TerrainField = 101,
   hasRoad = true,
   hasBeach = true,
   hasHills = true,
   hasWater = true
 ): ChunkTerrainResult {
+  const field =
+    typeof seedOrField === 'number'
+      ? createTerrainField(1, seedOrField)
+      : seedOrField;
+  const seed = field.seed;
   const startGX = cx * CHUNK_SIZE;
   const startGY = cy * CHUNK_SIZE;
 
@@ -48,24 +45,24 @@ export function generateChunkTerrain(
       let terrain: TerrainId = TERRAIN.GRASS;
       let tileId = getGrassTileId(gx, gy, seed);
 
-      if (isHillTile(gx, gy, seed, hasHills, hasRoad, hasBeach)) {
+      if (field.isHill(gx, gy, hasHills, hasRoad, hasBeach)) {
         terrain = TERRAIN.HILL;
-        tileId = getCliffTileKey(gx, gy, seed, hasHills, hasRoad, hasBeach).tileId;
-      } else if (isSandTile(gx, gy, seed, hasBeach)) {
+        tileId = getCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId;
+      } else if (field.isSand(gx, gy, hasBeach)) {
         terrain = TERRAIN.BEACH_SAND;
-        tileId = getSandTileKey(gx, gy, seed, hasBeach).tileId;
-      } else if (isOceanTile(gx, gy, seed, hasBeach)) {
+        tileId = getSandTileKey(gx, gy, field, hasBeach).tileId;
+      } else if (field.isOcean(gx, gy, hasBeach)) {
         terrain = TERRAIN.OCEAN_WATER;
-        tileId = getOceanTileId(gx, gy, seed, hasBeach);
-      } else if (isBridgeTile(gx, gy, seed, hasRoad)) {
+        tileId = field.getOceanTileId(gx, gy, hasBeach);
+      } else if (field.isBridge(gx, gy, hasRoad)) {
         terrain = TERRAIN.ROAD;
         tileId = TILE_IDS.bridge_wood_v;
-      } else if (isRoadTile(gx, gy, seed, hasRoad, hasBeach)) {
+      } else if (field.isRoad(gx, gy, hasRoad, hasBeach)) {
         terrain = TERRAIN.ROAD;
-        tileId = getRoadTileKey(gx, gy, seed, hasRoad, hasBeach).tileId;
-      } else if (isWaterTile(gx, gy, seed, hasWater, hasRoad, hasBeach, hasHills)) {
+        tileId = getRoadTileKey(gx, gy, field, hasRoad, hasBeach).tileId;
+      } else if (field.isWater(gx, gy, hasWater, hasRoad, hasBeach, hasHills)) {
         terrain = TERRAIN.OCEAN_WATER;
-        tileId = getWaterTileKey(gx, gy, seed, hasWater, hasRoad, hasBeach, hasHills).tileId;
+        tileId = getWaterTileKey(gx, gy, field, hasWater, hasRoad, hasBeach, hasHills).tileId;
       }
 
       rowTerrain.push(terrain);

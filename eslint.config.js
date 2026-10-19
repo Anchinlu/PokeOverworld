@@ -58,4 +58,21 @@ export default [
       'no-useless-assignment': 'off',
     },
   },
+  {
+    files: ['apps/web/src/maps/terrain-field/**/*.ts'],
+    rules: {
+      'no-restricted-properties': [
+        'error',
+        { object: 'Math', property: 'sin' },
+        { object: 'Math', property: 'cos' },
+        { object: 'Math', property: 'tan' },
+        { object: 'Math', property: 'exp' },
+        { object: 'Math', property: 'log' },
+        { object: 'Math', property: 'pow' },
+        { object: 'Math', property: 'atan2' },
+        { object: 'Math', property: 'random' },
+        { object: 'Date', property: 'now' },
+      ],
+    },
+  },
 ];

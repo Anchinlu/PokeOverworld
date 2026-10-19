@@ -16,6 +16,7 @@
     "test": "npm run test:web",
     "test:python": "python -m unittest discover tests",
     "validate:schemas": "node scripts/validate-schemas.mjs",
+    "validate:wildlife": "node scripts/validate-wildlife.mjs",
     "audit:moves": "node scripts/audit-move-descriptions.mjs",
     "translate:moves": "node scripts/translate-move-descriptions.mjs",
     "lint": "eslint .",
@@ -23,7 +24,8 @@
     "format": "prettier --write \"**/*.{ts,js,mjs,json,html,css}\" --ignore-path .prettierignore",
     "desktop:dev": "npm --workspace @pokemon/desktop run dev",
     "desktop:build": "npm --workspace @pokemon/desktop run build",
-    "ci": "npm run validate:schemas && npm run lint && npm run format:check && npm run typecheck:web && npm run test:web && npm run build:web"
+    "world:render": "npx --prefix apps/web tsx scripts/world/render-map.ts",
+    "ci": "npm run validate:schemas && npm run validate:wildlife && npm run lint && npm run format:check && npm run typecheck:web && npm run test:web && npm run build:web"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

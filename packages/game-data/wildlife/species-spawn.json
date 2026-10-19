@@ -1,0 +1,2998 @@
+{
+  "BULBASAUR": {
+    "stage": 1,
+    "flags": [
+      "starter"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "IVYSAUR": {
+    "stage": 2,
+    "flags": [
+      "starter"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "VENUSAUR": {
+    "stage": 3,
+    "flags": [
+      "starter"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "CHARMANDER": {
+    "stage": 1,
+    "flags": [
+      "starter"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "CHARMELEON": {
+    "stage": 2,
+    "flags": [
+      "starter"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "CHARIZARD": {
+    "stage": 3,
+    "flags": [
+      "starter"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "SQUIRTLE": {
+    "stage": 1,
+    "flags": [
+      "starter"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "WARTORTLE": {
+    "stage": 2,
+    "flags": [
+      "starter"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "BLASTOISE": {
+    "stage": 3,
+    "flags": [
+      "starter"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "CATERPIE": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "herd",
+    "habitats": [
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 1
+      },
+      {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.8
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ],
+    "apexSpecies": "BUTTERFREE"
+  },
+  "METAPOD": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.9
+      },
+      {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ],
+    "apexSpecies": "BUTTERFREE"
+  },
+  "BUTTERFREE": {
+    "stage": 3,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "pair",
+    "habitats": [
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.7
+      },
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.5
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "WEEDLE": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "herd",
+    "habitats": [
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 1
+      },
+      {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.8
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ],
+    "apexSpecies": "BEEDRILL"
+  },
+  "KAKUNA": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.9
+      },
+      {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ],
+    "apexSpecies": "BEEDRILL"
+  },
+  "BEEDRILL": {
+    "stage": 3,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "flock",
+    "habitats": [
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.7
+      },
+      {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.5
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "PIDGEY": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "flock",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 1
+      },
+      {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.8
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ],
+    "apexSpecies": "PIDGEOT"
+  },
+  "PIDGEOTTO": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "flock",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.8
+      },
+      {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ],
+    "apexSpecies": "PIDGEOT"
+  },
+  "PIDGEOT": {
+    "stage": 3,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.4
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "RATTATA": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "herd",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 1
+      },
+      {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.7
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ],
+    "apexSpecies": "RATICATE"
+  },
+  "RATICATE": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "pair",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.7
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "SPEAROW": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "flock",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.9
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ],
+    "apexSpecies": "FEAROW"
+  },
+  "FEAROW": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "pair",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.6
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.5
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "EKANS": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.9
+      },
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ],
+    "apexSpecies": "ARBOK"
+  },
+  "ARBOK": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "PIKACHU": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 1,
+    "social": "pair",
+    "habitats": [
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 1
+      },
+      {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.7
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "RAICHU": {
+    "stage": 2,
+    "flags": [
+      "no_wild"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "SANDSHREW": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 1
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.8
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ],
+    "apexSpecies": "SANDSLASH"
+  },
+  "SANDSLASH": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.7
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "NIDORANfE": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "herd",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.9
+      },
+      {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "NIDORINA": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "pair",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.7
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "NIDOQUEEN": {
+    "stage": 3,
+    "flags": [
+      "no_wild"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "NIDORANmA": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "herd",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.9
+      },
+      {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "NIDORINO": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "pair",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.7
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "NIDOKING": {
+    "stage": 2,
+    "flags": [
+      "no_wild"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "CLEFAIRY": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.7
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "CLEFABLE": {
+    "stage": 1,
+    "flags": [
+      "no_wild"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "VULPIX": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.7
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "NINETALES": {
+    "stage": 1,
+    "flags": [
+      "no_wild"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "JIGGLYPUFF": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.8
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "WIGGLYTUFF": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.4
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "ZUBAT": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "flock",
+    "habitats": [
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 1
+      },
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ],
+    "apexSpecies": "GOLBAT"
+  },
+  "GOLBAT": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "flock",
+    "habitats": [
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.7
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "ODDISH": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "pair",
+    "habitats": [
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.9
+      },
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.7
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "GLOOM": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.8
+      },
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "VILEPLUME": {
+    "stage": 3,
+    "flags": [
+      "no_wild"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "PARAS": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 1
+      },
+      {
+        "biome": "light_forest",
+        "context": "forest_floor",
+        "affinity": 0.7
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "PARASECT": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.8
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "VENONAT": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.9
+      },
+      {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.7
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "VENOMOTH": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "DIGLETT": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "pair",
+    "habitats": [
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.9
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.7
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "DUGTRIO": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "MEOWTH": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.8
+      },
+      {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "PERSIAN": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.5
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "PSYDUCK": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "wetland",
+        "context": "water_surface",
+        "affinity": 0.9
+      },
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
+        "affinity": 0.7
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "GOLDUCK": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "wetland",
+        "context": "water_surface",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "MANKEY": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "herd",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.8
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.7
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "PRIMEAPE": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "pair",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.5
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "GROWLITHE": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.8
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "ARCANINE": {
+    "stage": 2,
+    "flags": [
+      "no_wild"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "POLIWAG": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "pair",
+    "habitats": [
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
+        "affinity": 1
+      },
+      {
+        "biome": "wetland",
+        "context": "water_surface",
+        "affinity": 0.8
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "POLIWHIRL": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
+        "affinity": 0.7
+      },
+      {
+        "biome": "wetland",
+        "context": "water_surface",
+        "affinity": 0.7
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "POLIWRATH": {
+    "stage": 2,
+    "flags": [
+      "no_wild"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "ABRA": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.7
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "KADABRA": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.4
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "ALAKAZAM": {
+    "stage": 2,
+    "flags": [
+      "no_wild"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "MACHOP": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.9
+      },
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.7
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ],
+    "apexSpecies": "MACHOKE"
+  },
+  "MACHOKE": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "MACHAMP": {
+    "stage": 3,
+    "flags": [
+      "no_wild"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "BELLSPROUT": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "pair",
+    "habitats": [
+      {
+        "biome": "dense_forest",
+        "context": "tall_grass",
+        "affinity": 0.9
+      },
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.8
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "WEEPINBELL": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dense_forest",
+        "context": "tall_grass",
+        "affinity": 0.7
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "VICTREEBEL": {
+    "stage": 3,
+    "flags": [
+      "no_wild"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "TENTACOOL": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "flock",
+    "habitats": [
+      {
+        "biome": "coast",
+        "context": "water_surface",
+        "affinity": 1
+      },
+      {
+        "biome": "coast",
+        "context": "shore",
+        "affinity": 0.7
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "TENTACRUEL": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "coast",
+        "context": "water_surface",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "GEODUDE": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "herd",
+    "habitats": [
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 1
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.8
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ],
+    "apexSpecies": "GRAVELER"
+  },
+  "GRAVELER": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "pair",
+    "habitats": [
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.8
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "GOLEM": {
+    "stage": 3,
+    "flags": [
+      "no_wild"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "PONYTA": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "herd",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.9
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.7
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ],
+    "apexSpecies": "RAPIDASH"
+  },
+  "RAPIDASH": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "pair",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.5
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "SLOWPOKE": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "wetland",
+        "context": "water_surface",
+        "affinity": 0.8
+      },
+      {
+        "biome": "coast",
+        "context": "shore",
+        "affinity": 0.7
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "SLOWBRO": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "wetland",
+        "context": "water_surface",
+        "affinity": 0.5
+      },
+      {
+        "biome": "coast",
+        "context": "shore",
+        "affinity": 0.5
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "MAGNEMITE": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.8
+      },
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ],
+    "apexSpecies": "MAGNETON"
+  },
+  "MAGNETON": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.5
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "FARFETCHD": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "DODUO": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "flock",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.9
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ],
+    "apexSpecies": "DODRIO"
+  },
+  "DODRIO": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "pair",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.5
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "SEEL": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "herd",
+    "habitats": [
+      {
+        "biome": "coast",
+        "context": "shore",
+        "affinity": 0.8
+      },
+      {
+        "biome": "coast",
+        "context": "water_surface",
+        "affinity": 0.8
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "DEWGONG": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "coast",
+        "context": "water_surface",
+        "affinity": 0.5
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "GRIMER": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
+        "affinity": 0.9
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ],
+    "apexSpecies": "MUK"
+  },
+  "MUK": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "SHELLDER": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "pair",
+    "habitats": [
+      {
+        "biome": "coast",
+        "context": "shore",
+        "affinity": 0.9
+      },
+      {
+        "biome": "coast",
+        "context": "sand",
+        "affinity": 0.8
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "CLOYSTER": {
+    "stage": 2,
+    "flags": [
+      "no_wild"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "GASTLY": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
+        "affinity": 0.8
+      },
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.7
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "HAUNTER": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "GENGAR": {
+    "stage": 2,
+    "flags": [
+      "no_wild"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "ONIX": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.8
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "DROWZEE": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "pair",
+    "habitats": [
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
+        "affinity": 0.8
+      },
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "HYPNO": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
+        "affinity": 0.5
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "KRABBY": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "pair",
+    "habitats": [
+      {
+        "biome": "coast",
+        "context": "shore",
+        "affinity": 1
+      },
+      {
+        "biome": "coast",
+        "context": "sand",
+        "affinity": 0.9
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "KINGLER": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "coast",
+        "context": "shore",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "VOLTORB": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.8
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "ELECTRODE": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.5
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "EXEGGCUTE": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.8
+      },
+      {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "EXEGGUTOR": {
+    "stage": 2,
+    "flags": [
+      "no_wild"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "CUBONE": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.8
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "MAROWAK": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.5
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "HITMONLEE": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.5
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "HITMONCHAN": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.5
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "LICKITUNG": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "KOFFING": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
+        "affinity": 0.9
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ],
+    "apexSpecies": "WEEZING"
+  },
+  "WEEZING": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "RHYHORN": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.8
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.7
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ],
+    "apexSpecies": "RHYDON"
+  },
+  "RHYDON": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.5
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "CHANSEY": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.4
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "TANGELA": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.6
+      },
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
+        "affinity": 0.7
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "KANGASKHAN": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.5
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "HORSEA": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "coast",
+        "context": "water_surface",
+        "affinity": 0.9
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "SEADRA": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "coast",
+        "context": "water_surface",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "GOLDEEN": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "wetland",
+        "context": "water_surface",
+        "affinity": 0.9
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ],
+    "apexSpecies": "SEAKING"
+  },
+  "SEAKING": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "wetland",
+        "context": "water_surface",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "STARYU": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "coast",
+        "context": "shore",
+        "affinity": 0.9
+      },
+      {
+        "biome": "coast",
+        "context": "water_surface",
+        "affinity": 0.8
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "STARMIE": {
+    "stage": 2,
+    "flags": [
+      "no_wild"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "MRMIME": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.5
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "SCYTHER": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dense_forest",
+        "context": "tall_grass",
+        "affinity": 0.7
+      },
+      {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.5
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "JYNX": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.5
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "ELECTABUZZ": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.5
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "MAGMAR": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.5
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "PINSIR": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.7
+      },
+      {
+        "biome": "light_forest",
+        "context": "forest_floor",
+        "affinity": 0.5
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "TAUROS": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "herd",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.8
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "MAGIKARP": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "flock",
+    "habitats": [
+      {
+        "biome": "wetland",
+        "context": "water_surface",
+        "affinity": 1
+      },
+      {
+        "biome": "coast",
+        "context": "water_surface",
+        "affinity": 1
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ],
+    "apexSpecies": "GYARADOS"
+  },
+  "GYARADOS": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "wetland",
+        "context": "water_surface",
+        "affinity": 0.3
+      },
+      {
+        "biome": "coast",
+        "context": "water_surface",
+        "affinity": 0.4
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "LAPRAS": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "coast",
+        "context": "water_surface",
+        "affinity": 0.4
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "DITTO": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.4
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "EEVEE": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.6
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "VAPOREON": {
+    "stage": 2,
+    "flags": [
+      "no_wild"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "JOLTEON": {
+    "stage": 1,
+    "flags": [
+      "no_wild"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "FLAREON": {
+    "stage": 1,
+    "flags": [
+      "no_wild"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "PORYGON": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.3
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "OMANYTE": {
+    "stage": 1,
+    "flags": [
+      "fossil"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "OMASTAR": {
+    "stage": 1,
+    "flags": [
+      "fossil"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "KABUTO": {
+    "stage": 1,
+    "flags": [
+      "fossil"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "KABUTOPS": {
+    "stage": 2,
+    "flags": [
+      "fossil"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "AERODACTYL": {
+    "stage": 1,
+    "flags": [
+      "fossil"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "SNORLAX": {
+    "stage": 1,
+    "flags": [
+      "static"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "ARTICUNO": {
+    "stage": 1,
+    "flags": [
+      "legendary"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "ZAPDOS": {
+    "stage": 1,
+    "flags": [
+      "legendary"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "MOLTRES": {
+    "stage": 1,
+    "flags": [
+      "legendary"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "DRATINI": {
+    "stage": 1,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "wetland",
+        "context": "water_surface",
+        "affinity": 0.5
+      },
+      {
+        "biome": "coast",
+        "context": "water_surface",
+        "affinity": 0.4
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ],
+    "apexSpecies": "DRAGONITE"
+  },
+  "DRAGONAIR": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "wetland",
+        "context": "water_surface",
+        "affinity": 0.3
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ],
+    "apexSpecies": "DRAGONITE"
+  },
+  "DRAGONITE": {
+    "stage": 3,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "wetland",
+        "context": "water_surface",
+        "affinity": 0.1
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "MEWTWO": {
+    "stage": 1,
+    "flags": [
+      "legendary"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "MEW": {
+    "stage": 1,
+    "flags": [
+      "mythical"
+    ],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  }
+}

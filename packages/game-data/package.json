@@ -15,6 +15,9 @@
     "./moves-db.json": "./moves-db.json",
     "./move-animations-db.json": "./move-animations-db.json",
     "./items-db.json": "./items-db.json",
-    "./unmatched-items.json": "./unmatched-items.json"
+    "./unmatched-items.json": "./unmatched-items.json",
+    "./wildlife/species-spawn.json": "./wildlife/species-spawn.json",
+    "./wildlife/spawn-config.json": "./wildlife/spawn-config.json",
+    "./wildlife/behavior-archetypes.json": "./wildlife/behavior-archetypes.json"
   }
 }

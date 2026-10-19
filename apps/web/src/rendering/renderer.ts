@@ -8,6 +8,7 @@ import { GroundRenderer } from './ground-renderer';
 import { ObjectRenderer } from './object-renderer';
 import { CharacterRenderer } from './character-renderer';
 import { DebugRenderer } from './debug-renderer';
+import { partyService } from '../domain/party/party-service';
 
 export * from './types';
 export * from './ground-renderer';
@@ -170,7 +171,17 @@ export class GameRenderer {
     this.characterRenderer.collectPlayer(player, renderList);
 
     // Wild Pokemon
-    this.characterRenderer.collectWildPokemon(bounds, chunkManager, renderList);
+    const playerRefLevel =
+      partyService.getFirstAlivePokemon()?.level ??
+      partyService.getLeader()?.level ??
+      5;
+    this.characterRenderer.collectWildPokemon(
+      bounds,
+      chunkManager,
+      renderList,
+      { gx: player.gx, gy: player.gy },
+      playerRefLevel
+    );
 
     // GBA Tall Grass Foot Wading
     if (this.options.showTallGrass) {

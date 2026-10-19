@@ -1794,7 +1794,7 @@ describe('Battle Timeline Animation System (Essentials/EBDX Engine)', () => {
       const enemyCenter = { x: 380, y: 115 };
 
       // Dragon Tail (938), Drill Run (951), Dual Chop (897), Dual Wingbeat (1305)
-      for (const moveName of ['dragon_tail', 'drill_run', 'dual_chop', 'dual_wingbeat']) {
+      for (const _moveName of ['dragon_tail', 'drill_run', 'dual_chop', 'dual_wingbeat']) {
         const pos = CoordinateTransformer.resolveCelPosition(
           384,
           96,

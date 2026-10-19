@@ -121,4 +121,7 @@ export const TILE_KEY_BY_ID: Record<number, string> = {
   [TILE_IDS.shore_corner_out]: 'shore_anim_corner_out',
   [TILE_IDS.shore_corner_in_flip]: 'shore_anim_corner_in_flip',
   [TILE_IDS.shore_corner_out_flip]: 'shore_anim_corner_out_flip',
+  [TILE_IDS.shore_h]: 'shore_anim_vertical',
+  [TILE_IDS.shore_h_top]: 'shore_anim_vertical',
+  [TILE_IDS.shore_v_right]: 'shore_anim_vertical',
 };

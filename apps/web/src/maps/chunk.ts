@@ -15,6 +15,10 @@ import {
   type BuildingEntity,
 } from './chunk-objects';
 import { generateChunkWildPokemon, type WildPokemonEntity } from './chunk-encounters';
+import { populateChunkWildlife } from '../wildlife/spawn';
+import { createWorldQueryAdapter } from '../wildlife/ports/world-query-adapter';
+
+import { createTerrainField, type TerrainField } from './terrain-field';
 
 export * from './chunk-terrain';
 export * from './chunk-objects';
@@ -22,11 +26,12 @@ export * from './chunk-encounters';
 export * from './village-rules';
 
 export class WorldChunk implements MapChunk {
-  public readonly version = 1;
+  public readonly version: number;
   public readonly size = 16 as const;
   public readonly cx: number;
   public readonly cy: number;
   public readonly seed: number;
+  public readonly field: TerrainField;
 
   public terrainGrid: TerrainId[][] = [];
   public tileIdGrid: number[][] = [];
@@ -43,7 +48,7 @@ export class WorldChunk implements MapChunk {
   constructor(
     cx: number,
     cy: number,
-    seed: number,
+    seedOrField: number | TerrainField = 101,
     hasRoad = true,
     hasBeach = true,
     hasHills = true,
@@ -52,13 +57,20 @@ export class WorldChunk implements MapChunk {
   ) {
     this.cx = cx;
     this.cy = cy;
-    this.seed = seed;
+    if (typeof seedOrField === 'number') {
+      this.seed = seedOrField;
+      this.field = createTerrainField(1, seedOrField);
+    } else {
+      this.field = seedOrField;
+      this.seed = seedOrField.seed;
+    }
+    this.version = this.field.version;
 
     // 1. Generate Terrain
     const { terrainGrid, tileIdGrid } = generateChunkTerrain(
       cx,
       cy,
-      seed,
+      this.field,
       hasRoad,
       hasBeach,
       hasHills,
@@ -68,18 +80,18 @@ export class WorldChunk implements MapChunk {
     this.tileIdGrid = tileIdGrid;
 
     // 1.5. Generate Village Buildings and Colliders (before trees/plants)
-    this.buildings = generateChunkBuildings(cx, cy, seed, this.colliders);
+    this.buildings = generateChunkBuildings(cx, cy, this.field, this.colliders);
 
     // 2. Generate Trees & Natural Colliders
     if (hasTrees) {
-      this.trees = generateChunkTrees(cx, cy, seed, this.colliders);
+      this.trees = generateChunkTrees(cx, cy, this.field, this.colliders);
     }
 
     // 3. Generate GBA Tall Grass Patches (pure encounter patches on grass terrain)
     this.tallGrass = generateChunkTallGrass(
       cx,
       cy,
-      seed,
+      this.field,
       this.terrainGrid,
       this.tileIdGrid,
       this.colliders
@@ -89,7 +101,7 @@ export class WorldChunk implements MapChunk {
     this.berryBushes = generateChunkBerryBushes(
       cx,
       cy,
-      seed,
+      this.field,
       this.terrainGrid,
       this.tileIdGrid,
       this.tallGrass,
@@ -101,7 +113,7 @@ export class WorldChunk implements MapChunk {
     this.plants = generateChunkFoliage(
       cx,
       cy,
-      seed,
+      this.field,
       this.terrainGrid,
       this.tileIdGrid,
       this.tallGrass,
@@ -111,18 +123,23 @@ export class WorldChunk implements MapChunk {
 
     // 5.5. Generate Freshwater Flora (Water lilies & lotus pads on lakes and rivers)
     if (hasWater) {
-      this.waterFlora = generateChunkWaterFlora(cx, cy, seed);
+      this.waterFlora = generateChunkWaterFlora(cx, cy, this.field);
     }
 
     // 6. Generate Wild Pokémon Spawns
-    this.wildPokemon = generateChunkWildPokemon(
-      cx,
-      cy,
-      seed,
-      this.terrainGrid,
-      this.colliders,
-      this.tallGrass,
-      this.trees
-    );
+    if (this.field.version === 2) {
+      const worldQuery = createWorldQueryAdapter(this.field, this.colliders, this.tallGrass);
+      this.wildPokemon = populateChunkWildlife(cx, cy, worldQuery, { seed: this.field.seed });
+    } else {
+      this.wildPokemon = generateChunkWildPokemon(
+        cx,
+        cy,
+        this.field,
+        this.terrainGrid,
+        this.colliders,
+        this.tallGrass,
+        this.trees
+      );
+    }
   }
 }

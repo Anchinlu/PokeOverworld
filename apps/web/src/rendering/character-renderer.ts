@@ -4,6 +4,7 @@ import type { Follower } from '../entities/follower';
 import type { ChunkManager } from '../maps/chunk-manager';
 import type { AssetLoader } from './asset-loader';
 import type { RenderItem } from './types';
+import { drawWildOverheadIndicator } from './wildlife/wild-overlay';
 
 export class CharacterRenderer {
   private loader: AssetLoader;
@@ -136,7 +137,9 @@ export class CharacterRenderer {
   public collectWildPokemon(
     bounds: ViewportBounds,
     chunkManager: ChunkManager,
-    list: RenderItem[]
+    list: RenderItem[],
+    playerPos?: { gx: number; gy: number },
+    playerRefLevel = 5
   ): void {
     for (const chunk of chunkManager.activeChunks) {
       for (const wp of chunk.wildPokemon) {
@@ -199,7 +202,7 @@ export class CharacterRenderer {
               },
             });
 
-            // Sprite + Shiny Sparkles + Emote Bubble
+            // Sprite + Shiny Sparkles + Emote Bubble + Wildlife Overhead Level Indicator
             list.push({
               ySort: wp.y + 58,
               draw: (ctx) => {
@@ -211,6 +214,13 @@ export class CharacterRenderer {
 
                 if (wp.emote && wp.emote.timer > 0) {
                   this.drawEmoteBubble(ctx, wp.x + 32, drawY + 14, wp.emote);
+                }
+
+                if (playerPos) {
+                  drawWildOverheadIndicator(ctx, wp, playerRefLevel, playerPos, {
+                    showLowApexAsLevel: true,
+                    lowApexGap: 10,
+                  });
                 }
               },
             });

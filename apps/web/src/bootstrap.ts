@@ -114,13 +114,18 @@ export async function bootstrap(): Promise<void> {
     isWorldLaunched = true;
 
     let currentSeed = seedOverride ?? 101;
+    let currentVersion = 2; // Default for new worlds is World Gen v0 (version 2)
     if (seedOverride === undefined) {
       const savedSeed = saveGameRepository.getSavedWorldSeed('slot_1');
       if (savedSeed !== null) {
         currentSeed = savedSeed;
       }
+      const savedVersion = saveGameRepository.getSavedWorldGenVersion('slot_1');
+      if (savedVersion !== null) {
+        currentVersion = savedVersion;
+      }
     }
-    const session = new GameSession(currentSeed);
+    const session = new GameSession(currentSeed, currentVersion);
     const renderer = new GameRenderer(canvas, assetLoader);
 
     // Wire Debug Overlay via decoupled Remote Action Bridge
@@ -355,12 +360,18 @@ export async function bootstrap(): Promise<void> {
         savePc: true,
         worldData: {
           seed: session.seed,
-          worldGenVersion: 1,
+          worldGenVersion: session.field.version,
           position: {
             gx: session.player.gx,
             gy: session.player.gy,
             direction: session.player.direction,
           },
+          startTown: session.field.version === 2 ? {
+            name: 'Twinleaf Hamlet',
+            gx: 0,
+            gy: 0,
+            tier: 0,
+          } : undefined,
         },
       });
       if (res.success) {
@@ -373,8 +384,10 @@ export async function bootstrap(): Promise<void> {
     window.loadGame = () => {
       const data = saveGameRepository.load('slot_1');
       if (data) {
-        if (data.world?.seed && data.world.seed !== session.seed) {
-          session.regenerate(data.world.seed);
+        const targetSeed = data.world?.seed ?? session.seed;
+        const targetVersion = data.world?.worldGenVersion ?? 1;
+        if (targetSeed !== session.seed || targetVersion !== session.field.version) {
+          session.regenerate(targetSeed, targetVersion);
           renderer.clearCache();
         }
         if (data.world?.position) {
