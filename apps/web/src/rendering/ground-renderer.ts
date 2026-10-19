@@ -142,16 +142,6 @@ export class GroundRenderer {
               gCtx.drawImage(decoImg, px, py, TILE_SIZE, TILE_SIZE);
             }
           }
-
-          // Optional natural dark sprouts on pure dark ground
-          if (tileId === TILE_IDS.dark_ground_pure && seededHash(gx, gy, chunk.seed + 67) < 0.07) {
-            const darkDecos = ['dark_sprout_1', 'dark_sprout_2', 'dark_sprout_3'];
-            const decoIdx = Math.floor(seededHash(gx, gy, chunk.seed + 73) * darkDecos.length);
-            const decoImg = this.loader.getImage(darkDecos[decoIdx]);
-            if (decoImg && decoImg.complete) {
-              gCtx.drawImage(decoImg, px, py, TILE_SIZE, TILE_SIZE);
-            }
-          }
         }
       }
     }

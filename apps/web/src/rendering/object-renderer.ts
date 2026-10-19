@@ -24,18 +24,23 @@ export class ObjectRenderer {
         const isWhiteBush = plant.type === 'bush_flowering_white';
         const isStump = plant.type === 'nature_tree_stump';
         const isCactusSmall = plant.type === 'cactus_small';
+        const isRockSpires = plant.type === 'rock_dark_spires';
+        const isDarkBush = plant.type.startsWith('bush_dark_');
+        const isDarkSprout = plant.type === 'dark_sprout' || plant.type.startsWith('dark_sprout_');
         const isTall =
           isWhiteBush ||
+          isDarkBush ||
           plant.type === 'bush_cone_autumn' ||
           plant.type === 'bush_cone_forest' ||
           plant.type === 'flower_purple_bell' ||
           plant.type === 'desert_dry_bush' ||
           plant.type === 'desert_succulent' ||
           plant.type === 'cactus_medium';
-        const isStaticNatural = isTall || isLog || isStump || isCactusSmall;
+        const isVeryTall = isRockSpires || isDarkSprout;
+        const isStaticNatural = isTall || isVeryTall || isLog || isStump || isCactusSmall;
 
-        const w = isWhiteBush || isLog ? 64 : 32;
-        const h = isTall ? 64 : 32;
+        const w = isRockSpires ? 64 : isWhiteBush || isLog ? 64 : 32;
+        const h = isVeryTall ? 96 : isTall ? 64 : 32;
 
         if (
           plant.x + w >= bounds.minX &&
@@ -46,7 +51,13 @@ export class ObjectRenderer {
           const img = this.loader.getImage(plant.type);
           if (img && img.complete) {
             if (isStaticNatural) {
-              const ySort = isWhiteBush ? plant.y + 56 : isTall ? plant.y + 58 : plant.y + 26;
+              const ySort = isVeryTall
+                ? plant.y + 90
+                : isWhiteBush
+                ? plant.y + 56
+                : isTall
+                ? plant.y + 58
+                : plant.y + 26;
               list.push({
                 ySort,
                 draw: (ctx) => {

@@ -270,10 +270,19 @@ describe('Dark Land Biome (Vùng Đất Tối) Integration', () => {
     }
 
     const plants = generateChunkFoliage(15, 15, darkField, terrain.terrainGrid, terrain.tileIdGrid, [], [], colliders);
-    const darkFoliageTypes = ['bush_dark', 'sprouts_dark', 'rock_dark_spires', 'tall_grass'];
+    const validDarkFoliage = [
+      'dark_sprout',
+      'rock_dark_spires',
+      'bush_dark_1',
+      'bush_dark_2',
+      'bush_dark_3',
+      'bush_dark_4',
+      'bush_dark_5',
+      'bush_dark_6',
+    ];
     for (const plant of plants) {
-      if (['bush_dark', 'sprouts_dark', 'rock_dark_spires'].includes(plant.type)) {
-        expect(darkFoliageTypes).toContain(plant.type);
+      if (plant.type.startsWith('bush_dark_') || plant.type === 'dark_sprout' || plant.type === 'rock_dark_spires') {
+        expect(validDarkFoliage).toContain(plant.type);
       }
     }
   });

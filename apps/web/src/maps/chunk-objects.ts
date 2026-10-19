@@ -776,8 +776,7 @@ export function generateChunkFoliage(
             const bIdx = Math.floor(seededHash(gx, gy, seed + 1507) * 6) + 1;
             type = `bush_dark_${bIdx}`;
           } else if (darkShrubRoll < 0.75) {
-            const sIdx = Math.floor(seededHash(gx, gy, seed + 1509) * 3) + 1;
-            type = `dark_sprout_${sIdx}`;
+            type = 'dark_sprout';
           } else {
             type = 'rock_dark_spires';
           }
@@ -799,15 +798,18 @@ export function generateChunkFoliage(
         const isCactusSmall = type === 'cactus_small';
         const isRockSpires = type === 'rock_dark_spires';
         const isDarkBush = type.startsWith('bush_dark_');
-        const isDarkSprout = type.startsWith('dark_sprout_');
+        const isDarkSprout = type === 'dark_sprout';
 
         let px = gx * TILE_SIZE;
         let py = gy * TILE_SIZE - 32;
 
-        if (isWhiteBush || isRockSpires) {
+        if (isWhiteBush) {
           px = gx * TILE_SIZE - 16;
           py = gy * TILE_SIZE - 32;
-        } else if (isStump || isLogNow || isCactusSmall || isDarkSprout) {
+        } else if (isRockSpires || isDarkSprout) {
+          px = gx * TILE_SIZE;
+          py = gy * TILE_SIZE - 64;
+        } else if (isStump || isLogNow || isCactusSmall) {
           px = gx * TILE_SIZE;
           py = gy * TILE_SIZE;
         } else if (isDarkBush) {
@@ -840,7 +842,9 @@ export function generateChunkFoliage(
         } else if (type === 'desert_dry_bush' || type === 'desert_succulent') {
           colliders.push({ x: px + 4, y: py + 40, w: 24, h: 18, type: 'tree' });
         } else if (isRockSpires) {
-          colliders.push({ x: px + 12, y: py + 48, w: 40, h: 20, type: 'tree' });
+          colliders.push({ x: px + 12, y: py + 68, w: 40, h: 24, type: 'tree' });
+        } else if (isDarkSprout) {
+          colliders.push({ x: px + 6, y: py + 68, w: 20, h: 24, type: 'tree' });
         } else if (isDarkBush) {
           colliders.push({ x: px + 4, y: py + 36, w: 24, h: 20, type: 'tree' });
         }
