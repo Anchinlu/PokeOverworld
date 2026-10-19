@@ -177,8 +177,15 @@ export class WildlifeSimulator {
         const moveRes = updateGridMovement(ent, dtScale);
         if (moveRes.reachedTarget) {
           this.rebuildSpatialHash();
+          if (ent.isWaterDweller) {
+            // Shore / boundary tile counts as ground (isSwimming = false)
+            ent.isSwimming = world.contextAt(ent.gx, ent.gy) === 'water_surface';
+          }
         }
       } else {
+        if (ent.isWaterDweller) {
+          ent.isSwimming = world.contextAt(ent.gx, ent.gy) === 'water_surface';
+        }
         // Idle / Behavior Decision
         const profile = getBehaviorProfile(ent.behavior);
         const timerKey = entId;
@@ -210,7 +217,8 @@ export class WildlifeSimulator {
           const targetGY = ent.gy + DY_MAP[chosenDir];
 
           // Collision and boundary check
-          if (canWildEntityEnter(targetGX, targetGY, world, occupiedTiles)) {
+          const isDweller = ent.isWaterDweller ?? ent.isSwimming;
+          if (canWildEntityEnter(targetGX, targetGY, world, occupiedTiles, isDweller)) {
             occupiedTiles.add(`${targetGX},${targetGY}`);
             startWildStep(ent, chosenDir);
           }

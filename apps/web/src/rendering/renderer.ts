@@ -8,6 +8,9 @@ import { GroundRenderer } from './ground-renderer';
 import { ObjectRenderer } from './object-renderer';
 import { CharacterRenderer } from './character-renderer';
 import { DebugRenderer } from './debug-renderer';
+import { AmbientOverlayRenderer } from './ambient-overlay-renderer';
+import type { AmbientLightProfile } from '@pokemon/shared-types';
+import type { TimeBand } from '../wildlife/ports/world-query';
 import { partyService } from '../domain/party/party-service';
 
 export * from './types';
@@ -15,6 +18,7 @@ export * from './ground-renderer';
 export * from './object-renderer';
 export * from './character-renderer';
 export * from './debug-renderer';
+export * from './ambient-overlay-renderer';
 
 export class GameRenderer {
   private canvas: HTMLCanvasElement;
@@ -25,6 +29,7 @@ export class GameRenderer {
   private objectRenderer: ObjectRenderer;
   private characterRenderer: CharacterRenderer;
   private debugRenderer: DebugRenderer;
+  private ambientOverlayRenderer: AmbientOverlayRenderer;
 
   private berryCycleSeconds = 60;
   private berryStageOverride: number | null = null;
@@ -37,6 +42,7 @@ export class GameRenderer {
     this.objectRenderer = new ObjectRenderer(loader);
     this.characterRenderer = new CharacterRenderer(loader);
     this.debugRenderer = new DebugRenderer();
+    this.ambientOverlayRenderer = new AmbientOverlayRenderer();
   }
 
   public setOptions(opts: Partial<RenderOptions>): void {
@@ -72,7 +78,9 @@ export class GameRenderer {
     camera: Camera,
     player: Player,
     follower: Follower,
-    chunkManager: ChunkManager
+    chunkManager: ChunkManager,
+    ambientLight?: AmbientLightProfile,
+    timeBand: TimeBand = 'day'
   ): void {
     const ctx = this.ctx;
     const canvas = this.canvas;
@@ -85,6 +93,7 @@ export class GameRenderer {
     ctx.imageSmoothingEnabled = false;
 
     const bounds = camera.getVisibleBounds(canvas.width, canvas.height);
+    chunkManager.refreshRenderChunks(bounds);
 
     // 0. Render Live Animated Water Waves (Layer -0.1)
     if (this.options.showWater) {
@@ -172,15 +181,14 @@ export class GameRenderer {
 
     // Wild Pokemon
     const playerRefLevel =
-      partyService.getFirstAlivePokemon()?.level ??
-      partyService.getLeader()?.level ??
-      5;
+      partyService.getFirstAlivePokemon()?.level ?? partyService.getLeader()?.level ?? 5;
     this.characterRenderer.collectWildPokemon(
       bounds,
       chunkManager,
       renderList,
       { gx: player.gx, gy: player.gy },
-      playerRefLevel
+      playerRefLevel,
+      timeBand
     );
 
     // GBA Tall Grass Foot Wading
@@ -211,5 +219,10 @@ export class GameRenderer {
     }
 
     ctx.restore();
+
+    // 8. Screen-Space Ambient Light Overlay
+    if (ambientLight) {
+      this.ambientOverlayRenderer.render(ctx, canvas.width, canvas.height, ambientLight);
+    }
   }
 }

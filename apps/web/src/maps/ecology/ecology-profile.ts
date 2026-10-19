@@ -3,6 +3,7 @@ import { seededHash } from '../noise';
 import type { EcologySample } from './ecology-field';
 import {
   DENSE_FOREST_DENSITY_THRESHOLD,
+  LIGHT_FOREST_DENSITY_THRESHOLD,
   DRYLAND_MOISTURE_THRESHOLD,
   DRYLAND_FERTILITY_THRESHOLD,
 } from './ecology-config';
@@ -12,18 +13,28 @@ export const BIOME_DEFAULT_TREES = {
   forest: biomesData.biomes.forest.defaultTree,
   autumn: biomesData.biomes.autumn.defaultTree,
   neutral: biomesData.biomes.route.defaultTree,
+  desert: biomesData.biomes.desert.defaultTree,
 };
 
-export type EcologyZone = 'coast' | 'wetland' | 'meadow' | 'dryland' | 'dense_forest' | 'hill_edge';
+export type EcologyZone =
+  | 'coast'
+  | 'wetland'
+  | 'meadow'
+  | 'dryland'
+  | 'dense_forest'
+  | 'light_forest'
+  | 'hill_edge'
+  | 'desert';
 
 /**
  * Classifies an ecology sample into an ecological zone.
  * Order:
  * 1. Coast (near sand) / Wetland (near water)
  * 2. Hill Edge (near cliffs/hills)
- * 3. Dense Forest (density >= threshold)
- * 4. Dryland (moisture <= threshold or fertility <= threshold)
- * 5. Meadow (neutral default)
+ * 3. Dense Forest (density >= 0.68)
+ * 4. Light Forest (density >= 0.42)
+ * 5. Dryland (moisture <= threshold or fertility <= threshold)
+ * 6. Meadow (neutral default)
  */
 export function getEcologyZone(sample: EcologySample): EcologyZone {
   if (sample.nearSand) {
@@ -44,6 +55,9 @@ export function getEcologyZone(sample: EcologySample): EcologyZone {
   ) {
     return 'dryland';
   }
+  if (sample.density >= LIGHT_FOREST_DENSITY_THRESHOLD) {
+    return 'light_forest';
+  }
   return 'meadow';
 }
 
@@ -51,7 +65,8 @@ export function getEcologyZone(sample: EcologySample): EcologyZone {
  * Determines the tree type based on ecological sample and zone.
  * Rules per Section 5:
  * - Near sand/water -> 'coastal'
- * - density >= 0.68 -> 'deep'
+ * - density >= 0.68 -> 'deep' (forest)
+ * - density >= 0.42 -> 'vibrant' (neutral / open canopy)
  * - moisture <= 0.30 or fertility <= 0.30 -> 'autumn'
  * - Neutral meadow -> 'vibrant'
  */
@@ -62,12 +77,18 @@ export function getTreeTypeForEcology(sample: EcologySample, zone: EcologyZone):
   if (sample.density >= DENSE_FOREST_DENSITY_THRESHOLD || zone === 'dense_forest') {
     return BIOME_DEFAULT_TREES.forest;
   }
+  if (sample.density >= LIGHT_FOREST_DENSITY_THRESHOLD || zone === 'light_forest') {
+    return BIOME_DEFAULT_TREES.neutral;
+  }
   if (
     sample.moisture <= DRYLAND_MOISTURE_THRESHOLD ||
     sample.fertility <= DRYLAND_FERTILITY_THRESHOLD ||
     zone === 'dryland'
   ) {
     return BIOME_DEFAULT_TREES.autumn;
+  }
+  if (zone === 'desert') {
+    return BIOME_DEFAULT_TREES.desert;
   }
   return BIOME_DEFAULT_TREES.neutral;
 }
@@ -94,6 +115,10 @@ export const ZONE_FLOWER_PALETTES: Record<EcologyZone, FlowerClusterPalette> = {
     primary: ['flower_blue', 'flower_purple'],
     secondary: ['plant_sprout', 'flower_white'],
   },
+  light_forest: {
+    primary: ['flower_white', 'flower_blue'],
+    secondary: ['flower_purple', 'plant_sprout'],
+  },
   meadow: {
     primary: ['flower_red', 'flower_white'],
     secondary: ['flower_blue', 'plant_sprout'],
@@ -101,6 +126,10 @@ export const ZONE_FLOWER_PALETTES: Record<EcologyZone, FlowerClusterPalette> = {
   hill_edge: {
     primary: ['flower_white', 'plant_sprout'],
     secondary: ['flower_purple', 'flower_blue'],
+  },
+  desert: {
+    primary: ['flower_red'],
+    secondary: ['plant_sprout'],
   },
 };
 
@@ -138,10 +167,17 @@ export const ZONE_NATURAL_SHRUBS: Record<EcologyZone, string[]> = {
     'nature_tree_stump',
     'bush_flowering_white',
   ],
+  light_forest: [
+    'bush_flowering_white',
+    'bush_cone_forest',
+    'nature_tree_stump',
+    'nature_fallen_log',
+  ],
   wetland: ['flower_purple_bell', 'nature_fallen_log', 'bush_cone_forest'],
   dryland: ['bush_cone_autumn', 'nature_tree_stump'],
   hill_edge: ['bush_cone_autumn', 'nature_tree_stump', 'bush_flowering_white'],
   coast: ['flower_purple_bell', 'nature_fallen_log'],
+  desert: ['desert_dry_bush', 'desert_succulent', 'cactus_medium', 'cactus_small'],
 };
 
 export function getNaturalShrubForZone(zone: EcologyZone, roll: number): string {

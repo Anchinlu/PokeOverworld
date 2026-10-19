@@ -86,4 +86,30 @@ describe('WildlifeSystem Public Interface & Integration (Section 8.2 & W8)', () 
     const found = refreshed.find((e) => (e.id ?? `${e.gx},${e.gy}`) === targetId);
     expect(found).toBeUndefined();
   });
+
+  it('spawns aquatic entities in water biomes with isSwimming flag and confines them to water', () => {
+    const waterWorld: WorldQuery = {
+      isWalkable: () => false,
+      contextAt: () => 'water_surface',
+      biomeAt: () => 'coast',
+      difficultyAt: () => 0.2,
+      timeBand: () => 'day',
+      weather: () => 'clear',
+    };
+
+    const system = createWildlifeSystem({
+      seed: 9999,
+      world: waterWorld,
+      player: mockPlayer,
+    });
+
+    const entities = system.populateChunk(0, 0);
+    expect(entities.length).toBeGreaterThan(0);
+    expect(entities[0].isSwimming).toBe(true);
+
+    // Verify species spawned belongs to coast water habitat
+    const coastWaterSpecies = ['TENTACOOL', 'TENTACRUEL', 'SEEL', 'DEWGONG', 'HORSEA', 'SEADRA', 'STARYU', 'MAGIKARP', 'GYARADOS', 'LAPRAS', 'DRATINI'];
+    expect(coastWaterSpecies).toContain(entities[0].speciesKey);
+  });
 });
+

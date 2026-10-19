@@ -83,6 +83,149 @@ export function getSandTileKey(
 }
 
 /**
+ * Resolves autotile connectivity for Flat Desert Ground (350 series).
+ * Ground is pure, smooth sand. When bordering grass, it creates a soft,
+ * seamless flat transition (using smooth sand autotile) without vertical rock walls.
+ */
+export function getDesertTileKey(
+  gx: number,
+  gy: number,
+  seedOrField: number | TerrainField = 101
+): AutotileResult {
+  const field = toField(seedOrField);
+  const isD = (x: number, y: number) => Boolean(field.isDesert && field.isDesert(x, y));
+
+  const n = isD(gx, gy - 1);
+  const s = isD(gx, gy + 1);
+  const w = isD(gx - 1, gy);
+  const e = isD(gx + 1, gy);
+  const nw = isD(gx - 1, gy - 1);
+  const ne = isD(gx + 1, gy - 1);
+  const sw = isD(gx - 1, gy + 1);
+  const se = isD(gx + 1, gy + 1);
+
+  let key = 'pure';
+  let tileId: number = TILE_IDS.desert_pure;
+
+  if (!n && !w) {
+    key = 'tl';
+    tileId = TILE_IDS.sand_tl;
+  } else if (!n && !e) {
+    key = 'tr';
+    tileId = TILE_IDS.sand_tr;
+  } else if (!s && !w) {
+    key = 'bl';
+    tileId = TILE_IDS.sand_bl;
+  } else if (!s && !e) {
+    key = 'br';
+    tileId = TILE_IDS.sand_br;
+  } else if (!n) {
+    key = 'top';
+    tileId = TILE_IDS.sand_top;
+  } else if (!s) {
+    key = 'bot';
+    tileId = TILE_IDS.sand_bot;
+  } else if (!w) {
+    key = 'left';
+    tileId = TILE_IDS.sand_left;
+  } else if (!e) {
+    key = 'right';
+    tileId = TILE_IDS.sand_right;
+  } else if (n && s && w && e) {
+    if (!nw) {
+      key = 'in_tl';
+      tileId = TILE_IDS.sand_in_tl;
+    } else if (!ne) {
+      key = 'in_tr';
+      tileId = TILE_IDS.sand_in_tr;
+    } else if (!sw) {
+      key = 'in_bl';
+      tileId = TILE_IDS.sand_in_bl;
+    } else if (!se) {
+      key = 'in_br';
+      tileId = TILE_IDS.sand_in_br;
+    } else {
+      key = 'pure';
+      tileId = TILE_IDS.desert_pure;
+    }
+  }
+
+  return { key, tileId };
+}
+
+/**
+ * Resolves 3x3 autotile connectivity for Desert Dune Cliffs (420 series).
+ * Sliced from the desert cliff tileset (đất xa mạc & đất xa mạc bổ sung).
+ * Used exclusively for elevated sand dunes / hills (đồi cát cao với vách đá) in the desert.
+ */
+export function getDuneCliffTileKey(
+  gx: number,
+  gy: number,
+  seedOrField: number | TerrainField = 101,
+  hasHills = true,
+  hasRoad = true,
+  hasBeach = true
+): AutotileResult {
+  const field = toField(seedOrField);
+  const n = field.isHill(gx, gy - 1, hasHills, hasRoad, hasBeach);
+  const s = field.isHill(gx, gy + 1, hasHills, hasRoad, hasBeach);
+  const w = field.isHill(gx - 1, gy, hasHills, hasRoad, hasBeach);
+  const e = field.isHill(gx + 1, gy, hasHills, hasRoad, hasBeach);
+  const nw = field.isHill(gx - 1, gy - 1, hasHills, hasRoad, hasBeach);
+  const ne = field.isHill(gx + 1, gy - 1, hasHills, hasRoad, hasBeach);
+  const sw = field.isHill(gx - 1, gy + 1, hasHills, hasRoad, hasBeach);
+  const se = field.isHill(gx + 1, gy + 1, hasHills, hasRoad, hasBeach);
+
+  let key = 'pure';
+  let tileId: number = TILE_IDS.dune_cliff_pure;
+
+  if (!n && !w) {
+    key = 'tl';
+    tileId = TILE_IDS.dune_cliff_tl;
+  } else if (!n && !e) {
+    key = 'tr';
+    tileId = TILE_IDS.dune_cliff_tr;
+  } else if (!s && !w) {
+    key = 'bl';
+    tileId = TILE_IDS.dune_cliff_bl;
+  } else if (!s && !e) {
+    key = 'br';
+    tileId = TILE_IDS.dune_cliff_br;
+  } else if (!n) {
+    key = 'top';
+    tileId = TILE_IDS.dune_cliff_top;
+  } else if (!s) {
+    key = 'bot';
+    tileId = TILE_IDS.dune_cliff_bot;
+  } else if (!w) {
+    key = 'left';
+    tileId = TILE_IDS.dune_cliff_left;
+  } else if (!e) {
+    key = 'right';
+    tileId = TILE_IDS.dune_cliff_right;
+  } else if (n && s && w && e) {
+    if (!nw) {
+      key = 'in_bl';
+      tileId = TILE_IDS.dune_cliff_in_bl;
+    } else if (!ne) {
+      key = 'in_br';
+      tileId = TILE_IDS.dune_cliff_in_br;
+    } else if (!sw) {
+      key = 'in_tr';
+      tileId = TILE_IDS.dune_cliff_in_tr;
+    } else if (!se) {
+      key = 'in_tl';
+      tileId = TILE_IDS.dune_cliff_in_tl;
+    } else {
+      key = 'pure';
+      tileId = TILE_IDS.dune_cliff_pure;
+    }
+  }
+
+  return { key, tileId };
+}
+
+/**
  * Resolves 3x3 autotile connectivity for Dirt Road / Path (200 series).
  */
 export function getRoadTileKey(

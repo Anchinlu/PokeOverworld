@@ -82,6 +82,22 @@ export const TILE_KEY_BY_ID: Record<number, string> = {
   [TILE_IDS.sand_in_tr]: 'sand_in_tr',
   [TILE_IDS.sand_in_bl]: 'sand_in_bl',
   [TILE_IDS.sand_in_br]: 'sand_in_br',
+  // Desert
+  [TILE_IDS.desert_pure]: 'desert_pure',
+  [TILE_IDS.desert_top]: 'desert_top',
+  [TILE_IDS.desert_bot]: 'desert_bot',
+  [TILE_IDS.desert_left]: 'desert_left',
+  [TILE_IDS.desert_right]: 'desert_right',
+  [TILE_IDS.desert_tl]: 'desert_tl',
+  [TILE_IDS.desert_tr]: 'desert_tr',
+  [TILE_IDS.desert_bl]: 'desert_bl',
+  [TILE_IDS.desert_br]: 'desert_br',
+  [TILE_IDS.desert_in_tl]: 'desert_in_tl',
+  [TILE_IDS.desert_in_tr]: 'desert_in_tr',
+  [TILE_IDS.desert_in_bl]: 'desert_in_bl',
+  [TILE_IDS.desert_in_br]: 'desert_in_br',
+  [TILE_IDS.desert_pure_var1]: 'desert_pure_var1',
+  [TILE_IDS.desert_pure_var2]: 'desert_pure_var2',
   // Cliff
   [TILE_IDS.cliff_pure]: 'cliff_pure',
   [TILE_IDS.cliff_top]: 'cliff_top',
@@ -96,6 +112,20 @@ export const TILE_KEY_BY_ID: Record<number, string> = {
   [TILE_IDS.cliff_in_tr]: 'cliff_in_tr',
   [TILE_IDS.cliff_in_bl]: 'cliff_in_bl',
   [TILE_IDS.cliff_in_br]: 'cliff_in_br',
+  // Desert Dune Cliff
+  [TILE_IDS.dune_cliff_pure]: 'dune_cliff_pure',
+  [TILE_IDS.dune_cliff_top]: 'dune_cliff_top',
+  [TILE_IDS.dune_cliff_bot]: 'dune_cliff_bot',
+  [TILE_IDS.dune_cliff_left]: 'dune_cliff_left',
+  [TILE_IDS.dune_cliff_right]: 'dune_cliff_right',
+  [TILE_IDS.dune_cliff_tl]: 'dune_cliff_tl',
+  [TILE_IDS.dune_cliff_tr]: 'dune_cliff_tr',
+  [TILE_IDS.dune_cliff_bl]: 'dune_cliff_bl',
+  [TILE_IDS.dune_cliff_br]: 'dune_cliff_br',
+  [TILE_IDS.dune_cliff_in_tl]: 'dune_cliff_in_tl',
+  [TILE_IDS.dune_cliff_in_tr]: 'dune_cliff_in_tr',
+  [TILE_IDS.dune_cliff_in_bl]: 'dune_cliff_in_bl',
+  [TILE_IDS.dune_cliff_in_br]: 'dune_cliff_in_br',
   // Tall Grass
   [TILE_IDS.tall_grass]: 'tall_grass',
   // Water autotile & bridges
@@ -124,4 +154,9 @@ export const TILE_KEY_BY_ID: Record<number, string> = {
   [TILE_IDS.shore_h]: 'shore_anim_vertical',
   [TILE_IDS.shore_h_top]: 'shore_anim_vertical',
   [TILE_IDS.shore_v_right]: 'shore_anim_vertical',
+  [TILE_IDS.shore_corner_in_es]: 'shore_anim_corner_in',
+  [TILE_IDS.shore_corner_in_en]: 'shore_anim_corner_in',
+  [TILE_IDS.shore_corner_out_se]: 'shore_anim_corner_out',
+  [TILE_IDS.shore_corner_out_ne]: 'shore_anim_corner_out',
 };
+

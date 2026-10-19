@@ -26,8 +26,25 @@ export function findGroupAnchors(params: {
     for (let lx = 1; lx < 15; lx++) {
       const gx = chunkOriginX + lx;
       const gy = chunkOriginY + ly;
+      const ctx = world.contextAt(gx, gy);
       if (world.isWalkable(gx, gy)) {
         validTiles.push({ gx, gy });
+      } else if (ctx === 'water_surface') {
+        // Enforce safety margin from shoreline/boundary: check 2 tiles radius
+        let nearBoundary = false;
+        for (let dy = -2; dy <= 2; dy++) {
+          for (let dx = -2; dx <= 2; dx++) {
+            if (dx === 0 && dy === 0) continue;
+            if (world.contextAt(gx + dx, gy + dy) !== 'water_surface') {
+              nearBoundary = true;
+              break;
+            }
+          }
+          if (nearBoundary) break;
+        }
+        if (!nearBoundary) {
+          validTiles.push({ gx, gy });
+        }
       }
     }
   }
@@ -75,6 +92,8 @@ export function placeHerdMembers(params: {
   const coords: TileCoord[] = [anchor];
   if (count <= 1) return coords;
 
+  const isWaterAnchor = world.contextAt(anchor.gx, anchor.gy) === 'water_surface';
+
   // Search candidate tiles in concentric rings around anchor
   const candidates: TileCoord[] = [];
   for (let dy = -radius; dy <= radius; dy++) {
@@ -84,7 +103,10 @@ export function placeHerdMembers(params: {
       if (distSq <= radius * radius) {
         const gx = anchor.gx + dx;
         const gy = anchor.gy + dy;
-        if (world.isWalkable(gx, gy)) {
+        const isValid = isWaterAnchor
+          ? world.contextAt(gx, gy) === 'water_surface'
+          : world.isWalkable(gx, gy);
+        if (isValid) {
           candidates.push({ gx, gy });
         }
       }

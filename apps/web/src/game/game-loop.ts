@@ -15,6 +15,14 @@ export class GameLoop {
     this.gameTime.stop();
   }
 
+  public pause(): void {
+    this.gameTime.pause();
+  }
+
+  public resume(): void {
+    this.gameTime.resume();
+  }
+
   public getFps(): number {
     return this.gameTime.getStats().fps;
   }

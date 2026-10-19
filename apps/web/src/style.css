@@ -103,7 +103,7 @@ body {
   position: absolute;
   top: 0;
   right: 16px;
-  width: 360px;
+  width: 410px;
   height: 60px;
   z-index: 100;
   user-select: none;
@@ -113,6 +113,134 @@ body {
 
 .top-right-bar:hover {
   filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.85));
+}
+
+/* Quick World Time HUD Widget */
+.world-time-widget {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 105;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+  font-family: ui-monospace, 'JetBrains Mono', 'Outfit', sans-serif;
+  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.55));
+}
+
+.world-time-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 20px;
+  padding: 5px 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s ease;
+}
+
+.world-time-pill:hover {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: #38bdf8;
+  transform: translateY(-1px);
+}
+
+.world-time-icon {
+  font-size: 14px;
+}
+
+.world-time-text {
+  font-size: 12px;
+  font-weight: 700;
+  color: #f8fafc;
+  letter-spacing: 0.5px;
+}
+
+.world-time-phase {
+  font-size: 11px;
+  font-weight: 600;
+  color: #facc15;
+}
+
+.world-time-day {
+  font-size: 10px;
+  font-weight: 600;
+  color: #94a3b8;
+  padding-left: 4px;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.world-time-quick-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 3px 6px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+.btn-time-quick {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #e2e8f0;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.btn-time-quick:hover {
+  background: #38bdf8;
+  color: #0f172a;
+  border-color: #38bdf8;
+  transform: scale(1.05);
+}
+
+.btn-time-quick[data-time="360"]:hover {
+  background: #ea580c;
+  color: #fff;
+  border-color: #f97316;
+}
+
+.btn-time-quick[data-time="720"]:hover {
+  background: #0284c7;
+  color: #fff;
+  border-color: #38bdf8;
+}
+
+.btn-time-quick[data-time="1080"]:hover {
+  background: #9333ea;
+  color: #fff;
+  border-color: #c084fc;
+}
+
+.btn-time-quick[data-time="0"]:hover {
+  background: #1e1b4b;
+  color: #93c5fd;
+  border-color: #6366f1;
+}
+
+@media (max-width: 960px) {
+  .world-time-widget {
+    left: 16px;
+    top: 70px;
+    transform: none;
+  }
 }
 
 .menu-bar-blank {
@@ -153,6 +281,15 @@ body {
   transition:
     transform 0.15s ease,
     filter 0.15s ease;
+}
+
+.menu-bar-map-icon {
+  font-size: 22px;
+  line-height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
 }
 
 .menu-bar-btn:hover {
@@ -7883,6 +8020,304 @@ body {
 }
 
 /* ==========================================================================
+   Title Screen: New World & Load World Modals (Minecraft Pixel GUI)
+   ========================================================================== */
+.title-pixel-modal.new-world-modal {
+  width: clamp(380px, 36vw, 540px);
+}
+
+.title-pixel-modal.load-world-modal {
+  width: clamp(440px, 44vw, 640px);
+  max-height: 85vh;
+}
+
+.title-pixel-seed-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.title-pixel-text-input {
+  flex: 1;
+  background: #202020;
+  border: 2px solid #000000;
+  box-shadow:
+    inset 2px 2px 0px rgba(0, 0, 0, 0.7),
+    inset -1px -1px 0px rgba(255, 255, 255, 0.1);
+  color: #ffffa0;
+  font-family: 'Power Red and Blue', 'VT323', monospace;
+  font-size: 18px;
+  padding: 6px 10px;
+  outline: none;
+  letter-spacing: 1px;
+}
+
+.title-pixel-text-input:focus {
+  border-color: #f59e0b;
+}
+
+.title-pixel-btn.btn-seed-reroll {
+  width: auto;
+  min-width: 110px;
+  height: 36px;
+  font-size: 13px;
+  padding: 0 10px;
+}
+
+.title-pixel-select {
+  width: 100%;
+  background: #202020;
+  border: 2px solid #000000;
+  box-shadow:
+    inset 2px 2px 0px rgba(0, 0, 0, 0.7),
+    inset -1px -1px 0px rgba(255, 255, 255, 0.1);
+  color: #ffffa0;
+  font-family: 'Power Clear', 'VT323', sans-serif;
+  font-size: 15px;
+  padding: 6px 10px;
+  outline: none;
+  cursor: pointer;
+}
+
+.title-pixel-select option {
+  background: #333333;
+  color: #ffffff;
+}
+
+.title-pixel-hint {
+  font-family: 'Power Clear', sans-serif;
+  font-size: 12px;
+  color: #94a3b8;
+  line-height: 1.4;
+  margin-top: 3px;
+}
+
+.title-pixel-slot-status {
+  font-family: 'Power Clear', sans-serif;
+  font-size: 13px;
+  margin-top: 5px;
+  font-weight: 600;
+}
+
+.title-pixel-slot-status .status-warn {
+  color: #facc15;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.title-pixel-slot-status .status-ok {
+  color: #4ade80;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.title-pixel-version-banner {
+  background: #2b2b2b;
+  border: 2px solid #1a1a1a;
+  box-shadow: inset 2px 2px 0px rgba(0, 0, 0, 0.5);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.version-banner-badge {
+  background: #059669;
+  color: #ffffff;
+  font-family: 'Power Red and Blue', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border: 1px solid #10b981;
+  box-shadow: 1px 1px 0 #000;
+  flex-shrink: 0;
+  letter-spacing: 0.5px;
+}
+
+.version-banner-desc {
+  font-family: 'Power Clear', sans-serif;
+  font-size: 13px;
+  color: #cbd5e1;
+  line-height: 1.3;
+}
+
+.title-pixel-modal-footer .btn-modal-cancel {
+  background-color: #6b7280;
+}
+
+.title-pixel-modal-footer .btn-modal-confirm {
+  background-color: #15803d;
+}
+
+/* Load World Modal List & Cards */
+.title-pixel-save-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: clamp(260px, 45vh, 420px);
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.title-pixel-save-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.title-pixel-save-list::-webkit-scrollbar-track {
+  background: #222222;
+  border: 1px solid #000000;
+}
+
+.title-pixel-save-list::-webkit-scrollbar-thumb {
+  background: #555555;
+  border: 1px solid #000000;
+}
+
+.title-pixel-save-card {
+  background: #333333;
+  border: 2px solid #000000;
+  box-shadow:
+    inset 2px 2px 0px rgba(255, 255, 255, 0.15),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.5),
+    0 2px 4px rgba(0, 0, 0, 0.4);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: transform 0.1s ease, border-color 0.1s ease;
+}
+
+.title-pixel-save-card:hover {
+  border-color: #f59e0b;
+}
+
+.save-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #444444;
+  padding-bottom: 6px;
+}
+
+.save-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.slot-badge {
+  background: #d97706;
+  color: #ffffff;
+  font-family: 'Power Red and Blue', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border: 1px solid #000000;
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.seed-badge {
+  background: #0284c7;
+  color: #ffffff;
+  font-family: 'Power Red and Blue', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border: 1px solid #000000;
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.world-tag {
+  font-family: 'Power Clear', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border: 1px solid #000000;
+  color: #ffffff;
+}
+
+.world-tag.v3 {
+  background: #15803d;
+}
+
+.world-tag.v2 {
+  background: #0d9488;
+}
+
+.world-tag.v1 {
+  background: #475569;
+}
+
+.save-card-date {
+  font-family: 'Power Clear', sans-serif;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.save-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-family: 'Power Clear', sans-serif;
+  font-size: 13px;
+  color: #e2e8f0;
+}
+
+.save-card-body b {
+  color: #ffffa0;
+}
+
+.save-card-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.save-card-actions .btn-slot-play {
+  flex: 1;
+  max-width: 170px;
+  height: 34px;
+  background-color: #166534;
+}
+
+.save-card-actions .btn-slot-delete {
+  width: 44px;
+  height: 34px;
+  background-color: #991b1b;
+}
+
+/* Empty saves state */
+.title-pixel-empty-saves {
+  text-align: center;
+  padding: 30px 20px;
+  background: #2a2a2a;
+  border: 2px dashed #555555;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.title-pixel-empty-saves .empty-icon {
+  font-size: 36px;
+}
+
+.title-pixel-empty-saves .empty-title {
+  font-family: 'Power Red and Blue', monospace;
+  font-size: 18px;
+  color: #ffffa0;
+  font-weight: 700;
+}
+
+.title-pixel-empty-saves .empty-hint {
+  font-family: 'Power Clear', sans-serif;
+  font-size: 14px;
+  color: #94a3b8;
+  max-width: 380px;
+  line-height: 1.4;
+}
+
+/* ==========================================================================
    POKÉMON EVOLUTION SYSTEM & EVOLUTION SCREEN OVERLAY
    ========================================================================== */
 
@@ -8346,4 +8781,369 @@ body {
 
 .evolution-notify-toast:hover {
   filter: drop-shadow(0 0 14px rgba(245, 158, 11, 0.55));
+}
+
+/* ==========================================================================
+   🗺️ World Map Screen (Overview Map / Town Map)
+   ========================================================================== */
+
+.world-map-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  font-family: 'Power Green Narrow', 'VT323', sans-serif;
+  color: #f8fafc;
+}
+
+.world-map-backdrop {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(15, 23, 42, 0.88) 0%, rgba(2, 6, 23, 0.96) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+@keyframes worldMapWindowFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.world-map-window {
+  position: relative;
+  width: 92vw;
+  max-width: 1320px;
+  height: 86vh;
+  max-height: 860px;
+  background: #0f172a;
+  border-radius: 16px;
+  border: 2px solid rgba(245, 158, 11, 0.45);
+  box-shadow:
+    0 0 35px rgba(245, 158, 11, 0.2),
+    0 25px 60px -15px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: worldMapWindowFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Header */
+.world-map-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background: linear-gradient(180deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
+  border-bottom: 2px solid rgba(245, 158, 11, 0.35);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  z-index: 10;
+}
+
+.world-map-header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.world-map-compass-icon {
+  font-size: 28px;
+  filter: drop-shadow(0 2px 8px rgba(245, 158, 11, 0.5));
+  animation: compassWobble 6s ease-in-out infinite alternate;
+}
+
+@keyframes compassWobble {
+  0% { transform: rotate(-6deg); }
+  100% { transform: rotate(6deg); }
+}
+
+.world-map-title-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.world-map-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  background: linear-gradient(135deg, #fef08a 0%, #f59e0b 50%, #d97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+}
+
+.world-map-subtitle {
+  font-size: 11px;
+  color: #94a3b8;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+}
+
+.world-map-seed-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #6ee7b7;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.world-map-close-btn {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.15s ease;
+}
+
+.world-map-close-btn:hover {
+  background: rgba(239, 68, 68, 0.85);
+  color: #ffffff;
+  border-color: #ef4444;
+  transform: scale(1.08);
+  box-shadow: 0 0 14px rgba(239, 68, 68, 0.6);
+}
+
+.world-map-close-btn:active {
+  transform: scale(0.95);
+}
+
+/* Canvas Container */
+.world-map-canvas-container {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #020617;
+  cursor: grab;
+}
+
+.world-map-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Floating HUD Card: Top-Left */
+.world-map-hud-card {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.hud-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.hud-row.primary .hud-value {
+  color: #facc15;
+  font-weight: 700;
+  text-shadow: 0 0 8px rgba(250, 204, 21, 0.4);
+}
+
+.hud-row.secondary .hud-value {
+  color: #38bdf8;
+  font-weight: 600;
+}
+
+.hud-label {
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+/* Floating Tools: Top-Right */
+.world-map-tools {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 6px 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  z-index: 5;
+}
+
+.map-tool-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #f8fafc;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.12s ease;
+}
+
+.map-tool-btn.icon-only {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.map-tool-btn:hover {
+  background: rgba(245, 158, 11, 0.25);
+  border-color: #f59e0b;
+  color: #fef08a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(245, 158, 11, 0.35);
+}
+
+.map-tool-btn:active {
+  transform: translateY(1px);
+}
+
+.map-zoom-badge {
+  font-size: 12px;
+  font-weight: 700;
+  color: #cbd5e1;
+  padding: 0 4px;
+  min-width: 42px;
+  text-align: center;
+}
+
+.tool-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 0 4px;
+}
+
+/* Floating Legend: Bottom-Left */
+.world-map-legend {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.legend-title {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 4px;
+}
+
+.legend-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px 14px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #e2e8f0;
+}
+
+.map-tool-btn.active {
+  background: rgba(16, 185, 129, 0.35);
+  border-color: #10b981;
+  color: #a7f3d0;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.5);
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+}
+
+.legend-color.ocean-deep { background: #3e7895; }
+.legend-color.ocean-shallow { background: #78b5c2; }
+.legend-color.sand { background: #d8c38d; }
+.legend-color.grass { background: #769f6b; }
+.legend-color.hill { background: #77796f; }
+.legend-color.road { background: #b28b68; }
+.legend-color.village { background: #ec4899; }
+.legend-color.v3-corridor { background: #38bdf8; }
+.legend-color.v3-core { background: #10b981; }
+
+/* Floating Hint: Bottom-Right */
+.world-map-hint {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+  letter-spacing: 0.03em;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  z-index: 5;
 }

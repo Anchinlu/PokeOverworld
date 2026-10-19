@@ -23,6 +23,8 @@ export interface SpeciesSpawnDefinition {
 export interface SpawnConfigDefinition {
   tierProbability: number[];
   stagePenalty: number[];
+  rarityLevelBonus: [number, number][];
+  rarityLevelCap: number[];
   shinyOdds: number;
   maxEntitiesPerChunk: number;
   groupsPerChunk: Record<string, [number, number]>;

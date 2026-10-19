@@ -77,6 +77,46 @@ export function createDebugOverlayHtml(): string {
         </label>
       </div>
 
+      <!-- World Time & Day/Night Controls -->
+      <div class="time-controls-box" style="margin-bottom: 8px; padding: 8px; background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 8px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <span style="font-size: 11px; font-weight: 700; color: #38bdf8; display: flex; align-items: center; gap: 4px;">
+            🕒 Thời gian thế giới:
+          </span>
+          <span id="lblWorldTimeBadge" style="font-size: 11px; font-weight: 700; color: #facc15; background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(250, 204, 21, 0.3);">
+            08:00 (Ban ngày) · Ngày 1
+          </span>
+        </div>
+
+        <!-- Slider 24h -->
+        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+          <span style="font-size: 10px; color: #94a3b8; font-family: monospace;">00:00</span>
+          <input type="range" id="sliderWorldTime" min="0" max="1439" step="5" value="480" style="flex: 1; accent-color: #38bdf8; cursor: pointer;" title="Kéo để chỉnh thời gian thế giới">
+          <span style="font-size: 10px; color: #94a3b8; font-family: monospace;">23:59</span>
+        </div>
+
+        <!-- 4 Fast Phase Presets -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 6px;">
+          <button class="btn-time-phase" data-phase="dawn" title="06:00 - Bình minh (Hồng cam)" style="padding: 4px 2px; font-size: 10px; font-weight: 600; border-radius: 5px; background: #c2410c; color: #fed7aa; border: 1px solid #f97316; cursor: pointer;">🌅 Sáng</button>
+          <button class="btn-time-phase" data-phase="day" title="12:00 - Ban ngày (Trong suốt)" style="padding: 4px 2px; font-size: 10px; font-weight: 600; border-radius: 5px; background: #0369a1; color: #bae6fd; border: 1px solid #38bdf8; cursor: pointer;">☀️ Trưa</button>
+          <button class="btn-time-phase" data-phase="dusk" title="18:00 - Hoàng hôn (Tím chiều)" style="padding: 4px 2px; font-size: 10px; font-weight: 600; border-radius: 5px; background: #7e22ce; color: #f3e8ff; border: 1px solid #c084fc; cursor: pointer;">🌇 Chiều</button>
+          <button class="btn-time-phase" data-phase="night" title="00:00 - Ban đêm (Xanh thẫm)" style="padding: 4px 2px; font-size: 10px; font-weight: 600; border-radius: 5px; background: #1e1b4b; color: #bfdbfe; border: 1px solid #6366f1; cursor: pointer;">🌙 Đêm</button>
+        </div>
+
+        <!-- Step adjustments and Pause/Resume & Speed -->
+        <div style="display: flex; gap: 4px; align-items: center;">
+          <button class="btn-time-step" data-step="-60" title="Lùi 1 giờ (-60m)" style="flex: 1; padding: 4px 2px; font-size: 10px; font-weight: 600; border-radius: 4px; background: rgba(30, 41, 59, 0.85); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.15); cursor: pointer;">-1h</button>
+          <button class="btn-time-step" data-step="+60" title="Tiến 1 giờ (+60m)" style="flex: 1; padding: 4px 2px; font-size: 10px; font-weight: 600; border-radius: 4px; background: rgba(30, 41, 59, 0.85); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.15); cursor: pointer;">+1h</button>
+          <button id="btnToggleTimePause" title="Tạm dừng / Tiếp tục đồng hồ thế giới" style="flex: 1.2; padding: 4px 2px; font-size: 10px; font-weight: 600; border-radius: 4px; background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); cursor: pointer;">⏸️ Dừng</button>
+          <select id="selectTimeSpeed" style="flex: 1.4; padding: 3px 4px; font-size: 10px; border-radius: 4px; background: rgba(30, 41, 59, 0.85); color: #fff; border: 1px solid rgba(255,255,255,0.18); cursor: pointer;" title="Tốc độ trôi thời gian">
+            <option value="1" selected>Tốc độ: 1x</option>
+            <option value="5">5x (Nhanh)</option>
+            <option value="20">20x (Siêu nhanh)</option>
+            <option value="60">60x (1s = 1 giờ)</option>
+          </select>
+        </div>
+      </div>
+
       <!-- Berry Growth Cycle Controls -->
       <div class="berry-controls-box">
         <div class="control-row" style="margin-bottom: 6px; align-items: center;">

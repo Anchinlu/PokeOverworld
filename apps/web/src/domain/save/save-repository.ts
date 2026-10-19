@@ -347,6 +347,8 @@ export class SaveGameRepository {
       leaderLevel: leader?.level || 0,
       playTimeSeconds: profile.playTimeSeconds || 0,
       pcSavedAt: pcSavedAt > 0 ? pcSavedAt : undefined,
+      worldSeed: legacySlotData?.world?.seed ?? 101,
+      worldGenVersion: legacySlotData?.world?.worldGenVersion ?? 1,
     };
 
     const saveData: SaveGameData = {
@@ -474,7 +476,7 @@ export class SaveGameRepository {
         },
       };
 
-    if (resolvedWorldData.worldGenVersion === 2 && !resolvedWorldData.startTown) {
+    if ((resolvedWorldData.worldGenVersion ?? 0) >= 2 && !resolvedWorldData.startTown) {
       resolvedWorldData = {
         ...resolvedWorldData,
         startTown: {
@@ -500,6 +502,8 @@ export class SaveGameRepository {
       leaderLevel: leader?.level || 0,
       playTimeSeconds: profile.playTimeSeconds,
       pcSavedAt,
+      worldSeed: resolvedWorldData.seed,
+      worldGenVersion: resolvedWorldData.worldGenVersion,
     };
 
     const saveData: SaveGameData = {
@@ -663,12 +667,57 @@ export class SaveGameRepository {
 
   public listSaves(): SaveGameMetadata[] {
     const raw = this.adapter.getItem(this.getIndexStorageKey());
-    if (!raw) return [];
-    try {
-      return JSON.parse(raw) as SaveGameMetadata[];
-    } catch {
-      return [];
+    let list: SaveGameMetadata[] = [];
+    if (raw) {
+      try {
+        list = JSON.parse(raw) as SaveGameMetadata[];
+      } catch {
+        list = [];
+      }
     }
+
+    // Auto-discover existing slots (slot_1 to slot_4) directly from storage if missing or missing world metadata
+    let hasUpdatedIndex = false;
+    for (const slotId of ['slot_1', 'slot_2', 'slot_3', 'slot_4']) {
+      const existingIdx = list.findIndex((m) => m.slotId === slotId);
+      const slotRaw = this.safeGetItem(this.getSlotStorageKey(slotId));
+      if (slotRaw) {
+        try {
+          const data = JSON.parse(slotRaw) as SaveGameData;
+          if (data && data.metadata) {
+            const meta: SaveGameMetadata = {
+              ...data.metadata,
+              worldSeed: data.metadata.worldSeed ?? data.world?.seed ?? 101,
+              worldGenVersion: data.metadata.worldGenVersion ?? data.world?.worldGenVersion ?? 3,
+            };
+            if (existingIdx >= 0) {
+              if (
+                list[existingIdx].worldSeed === undefined ||
+                list[existingIdx].worldGenVersion === undefined
+              ) {
+                list[existingIdx] = { ...list[existingIdx], ...meta };
+                hasUpdatedIndex = true;
+              }
+            } else {
+              list.push(meta);
+              hasUpdatedIndex = true;
+            }
+          }
+        } catch {
+          // ignore corrupted data
+        }
+      } else if (existingIdx >= 0) {
+        // Slot removed from storage but still in index
+        list.splice(existingIdx, 1);
+        hasUpdatedIndex = true;
+      }
+    }
+
+    if (hasUpdatedIndex) {
+      this.adapter.setItem(this.getIndexStorageKey(), JSON.stringify(list));
+    }
+
+    return list;
   }
 
   private updateIndex(meta: SaveGameMetadata): void {

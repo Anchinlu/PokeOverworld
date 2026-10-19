@@ -10,6 +10,8 @@ import { hashWildlife, isEntityShiny } from './shiny';
 export interface SpawnDirectorOptions {
   seed: number;
   maxEntitiesPerChunk?: number;
+  /** Highest level among all Pokémon owned by the player (Party + PC). */
+  playerMaxOwnedLevel?: number;
 }
 
 function getDefaultBehaviorForSpecies(speciesKey: string): string {
@@ -22,7 +24,12 @@ function getDefaultBehaviorForSpecies(speciesKey: string): string {
   if (speciesKey === 'SPEAROW' || speciesKey === 'FEAROW') {
     return 'aggressive_bird';
   }
-  if (speciesKey === 'PIDGEY' || speciesKey === 'PIDGEOTTO' || speciesKey === 'PIDGEOT' || speciesKey === 'DODUO') {
+  if (
+    speciesKey === 'PIDGEY' ||
+    speciesKey === 'PIDGEOTTO' ||
+    speciesKey === 'PIDGEOT' ||
+    speciesKey === 'DODUO'
+  ) {
     return 'skittish_bird';
   }
   return 'curious_rodent';
@@ -40,13 +47,16 @@ export function populateChunkWildlife(
 ): WildEntity[] {
   const seed = opts.seed;
   const maxBudget = opts.maxEntitiesPerChunk ?? spawnConfigData.maxEntitiesPerChunk ?? 8;
+  const playerMaxOwnedLevel = Math.max(1, Math.min(100, Math.floor(opts.playerMaxOwnedLevel ?? 5)));
 
-  // Center coordinate of chunk for biome sampling
+  // Use the chunk-center biome only to determine the rough group budget.
+  // The actual species pool is resolved at each anchor below so boundary
+  // chunks cannot leak inland species onto beaches or other habitats.
   const centerGX = cx * 16 + 8;
   const centerGY = cy * 16 + 8;
-  const biome = world.biomeAt(centerGX, centerGY);
+  const centerBiome = world.biomeAt(centerGX, centerGY);
 
-  const groupBounds = spawnConfigData.groupsPerChunk[biome] || [2, 4];
+  const groupBounds = spawnConfigData.groupsPerChunk[centerBiome] || [2, 4];
   const [minG, maxG] = groupBounds;
   const groupCountRoll = hashWildlife(seed, cx, cy, 0, 101);
   const targetGroupCount = minG + Math.floor(groupCountRoll * (maxG - minG + 1));
@@ -68,6 +78,7 @@ export function populateChunkWildlife(
     if (entities.length >= maxBudget) break;
 
     const anchor = anchors[g];
+    const biome = world.biomeAt(anchor.gx, anchor.gy);
     const context = world.contextAt(anchor.gx, anchor.gy);
     const distFromStart = Math.hypot(anchor.gx, anchor.gy);
     const difficulty = world.difficultyAt(anchor.gx, anchor.gy);
@@ -108,6 +119,8 @@ export function populateChunkWildlife(
       baseLevel,
       difficulty,
       distance: distFromStart,
+      rarityTier: selection.tier,
+      playerMaxOwnedLevel,
       sizeRoll01: sizeRoll,
       apexRoll01: apexRoll,
       levelRolls,
@@ -135,6 +148,8 @@ export function populateChunkWildlife(
       const dirRoll = hashWildlife(seed, cx, cy, slot, 801);
       const dir = Math.floor(dirRoll * 4);
       const behavior = getDefaultBehaviorForSpecies(ind.speciesKey);
+      const isWaterSurface =
+        world.contextAt(pos.gx, pos.gy) === 'water_surface' || context === 'water_surface';
 
       const entity: WildEntity = {
         id: entityId,
@@ -146,8 +161,12 @@ export function populateChunkWildlife(
         name: ind.speciesKey,
         level: ind.level,
         role: ind.role,
+        rarityTier: selection.tier,
+        activeTime: [...selection.definition.activeTime] as WildEntity['activeTime'],
         herdId,
         isShiny,
+        isWaterDweller: isWaterSurface,
+        isSwimming: isWaterSurface && world.contextAt(pos.gx, pos.gy) === 'water_surface',
         behavior,
         dir,
         homeGX: anchor.gx,

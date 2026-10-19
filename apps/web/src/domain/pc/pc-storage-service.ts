@@ -513,6 +513,14 @@ export class PcStorageService {
     }
     return count;
   }
+
+  /**
+   * Resets all PC storage boxes to default empty state.
+   */
+  public reset(): void {
+    this.state = { currentBoxIndex: 0, boxes: this.createDefaultBoxes() };
+    this.notify();
+  }
 }
 
 export const pcStorageService = PcStorageService.getInstance();

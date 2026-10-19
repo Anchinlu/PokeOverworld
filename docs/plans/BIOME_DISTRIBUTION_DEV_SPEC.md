@@ -82,13 +82,7 @@ Các hằng số này là tham số cân bằng. Khi đổi phải cập nhật 
 ### 4.1. Profile vùng
 
 ```ts
-export type EcologyZone =
-  | 'coast'
-  | 'wetland'
-  | 'meadow'
-  | 'dryland'
-  | 'dense_forest'
-  | 'hill_edge';
+export type EcologyZone = 'coast' | 'wetland' | 'meadow' | 'dryland' | 'dense_forest' | 'hill_edge';
 ```
 
 Thứ tự phân loại:
@@ -182,7 +176,7 @@ interface EncounterContext {
 }
 ```
 
-`chunk-encounters.ts` chỉ chọn encounter từ context. Species và rate phải nằm trong `encounters.json` hoặc game-data, không hardcode trong generator.
+`wildlife/spawn/` chỉ chọn encounter từ context. Species và rate phải nằm trong `packages/game-data/wildlife/`, không hardcode trong generator.
 
 Encounter thông thường yêu cầu `onTallGrass === true`. Water encounter chỉ bật khi terrain/biome đã hỗ trợ. Nếu chưa có authoritative world clock, dùng mặc định `day` qua feature flag.
 
@@ -204,7 +198,7 @@ apps/web/src/maps/
 │   ├── ecology-profile.ts     # zone và ngưỡng
 │   └── ecology-config.ts      # constants cân bằng
 ├── chunk-objects.ts           # điều phối object generators
-├── chunk-encounters.ts        # chọn encounter theo context
+├── wildlife/spawn/            # chọn encounter theo biome/context
 └── berry-data.ts              # metadata và spawn profile Berry
 ```
 
@@ -279,4 +273,3 @@ Feature chỉ hoàn tất khi:
 - Statistical tests chứng minh sự khác biệt giữa ít nhất ba loại vùng.
 - Typecheck, web tests, schema validation, Python tests và production build đều đạt.
 - Tài liệu này chỉ đổi từ **Kế hoạch** sang **Đã triển khai** sau khi các tiêu chí trên đạt.
-

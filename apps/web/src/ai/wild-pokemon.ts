@@ -1,9 +1,10 @@
-import { TILE_SIZE, TERRAIN } from '@pokemon/game-data';
+import { TILE_SIZE, TERRAIN, TILE_IDS } from '@pokemon/game-data';
 import type { ChunkManager } from '../maps/chunk-manager';
 import type { Player } from '../entities/player';
 import type { Follower } from '../entities/follower';
 import type { WildPokemonEntity } from '../maps/chunk';
 import { defaultRng } from '../core/rng';
+import type { TimeBand } from '../wildlife/ports/world-query';
 
 const DX_MAP = [0, -1, 1, 0];
 const DY_MAP = [1, 0, 0, -1];
@@ -12,12 +13,31 @@ export function updateWildPokemon(
   chunkManager: ChunkManager,
   player: Player,
   follower: Follower,
-  dtScale = 1.0
+  dtScale = 1.0,
+  timeBand: TimeBand = 'day'
 ): void {
   const now = performance.now();
-
-  for (const chunk of chunkManager.activeChunks) {
+  for (const chunk of chunkManager.simulationChunks) {
     for (const wp of chunk.wildPokemon) {
+      const isActive = !wp.activeTime || wp.activeTime.includes(timeBand);
+      if (!isActive) {
+        if (wp.state !== 'rest_sleep') {
+          wp.emote = { type: 'dots', timer: 1200, maxTime: 1200 };
+        }
+        wp.state = 'rest_sleep';
+        wp.isMoving = false;
+        wp.isPecking = false;
+        wp.bobY = 0;
+        continue;
+      }
+
+      if (wp.state === 'rest_sleep') {
+        wp.state = 'idle';
+        wp.emote = null;
+        wp.lastMoveTime = now;
+        wp.idleTimer = 900 + defaultRng.next() * 1200;
+      }
+
       // 1. Update emote balloon timer
       if (wp.emote) {
         wp.emote.timer -= 16.6 * dtScale;
@@ -64,6 +84,10 @@ export function updateWildPokemon(
           wp.stepProgress = 0;
           wp.bobY = 0;
           wp.lastMoveTime = now;
+          if (wp.isWaterDweller) {
+            const tid = chunkManager.field.getOceanTileId(wp.gx, wp.gy);
+            wp.isSwimming = tid === TILE_IDS.ocean_water;
+          }
 
           if (wp.stepsRemaining > 0) {
             wp.stepsRemaining--;
@@ -344,12 +368,18 @@ function tryWildMove(
   const localY = newGY - startGY;
 
   if (localX < 0 || localX >= 16 || localY < 0 || localY >= 16) return false;
-  if (!chunk.terrainGrid[localY] || chunk.terrainGrid[localY][localX] !== TERRAIN.GRASS)
-    return false;
+  if (!chunk.terrainGrid[localY]) return false;
+  const targetTerrain = chunk.terrainGrid[localY][localX];
   const field = chunkManager.field;
-  if (field.isRoad(newGX, newGY)) return false;
-  if (field.isSand(newGX, newGY)) return false;
-  if (field.isHill(newGX, newGY)) return false;
+
+  if (wp.isWaterDweller) {
+    if (targetTerrain !== TERRAIN.OCEAN_WATER) return false;
+  } else {
+    if (targetTerrain !== TERRAIN.GRASS) return false;
+    if (field.isRoad(newGX, newGY)) return false;
+    if (field.isSand(newGX, newGY)) return false;
+    if (field.isHill(newGX, newGY)) return false;
+  }
 
   // Check colliders (trees, obstacles)
   const px = newGX * TILE_SIZE;

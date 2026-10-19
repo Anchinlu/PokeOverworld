@@ -10,8 +10,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "IVYSAUR": {
@@ -25,8 +24,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "VENUSAUR": {
@@ -40,8 +38,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "CHARMANDER": {
@@ -55,8 +52,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "CHARMELEON": {
@@ -70,8 +66,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "CHARIZARD": {
@@ -85,8 +80,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "SQUIRTLE": {
@@ -100,8 +94,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "WARTORTLE": {
@@ -115,8 +108,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "BLASTOISE": {
@@ -130,8 +122,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "CATERPIE": {
@@ -154,8 +145,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ],
     "apexSpecies": "BUTTERFREE"
   },
@@ -179,8 +169,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ],
     "apexSpecies": "BUTTERFREE"
   },
@@ -204,8 +193,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "WEEDLE": {
@@ -228,8 +216,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ],
     "apexSpecies": "BEEDRILL"
   },
@@ -253,8 +240,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ],
     "apexSpecies": "BEEDRILL"
   },
@@ -278,8 +264,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "PIDGEY": {
@@ -302,8 +287,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ],
     "apexSpecies": "PIDGEOT"
   },
@@ -327,8 +311,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ],
     "apexSpecies": "PIDGEOT"
   },
@@ -347,8 +330,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "RATTATA": {
@@ -369,8 +351,6 @@
       }
     ],
     "activeTime": [
-      "dawn",
-      "day",
       "dusk",
       "night"
     ],
@@ -389,8 +369,6 @@
       }
     ],
     "activeTime": [
-      "dawn",
-      "day",
       "dusk",
       "night"
     ]
@@ -415,8 +393,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ],
     "apexSpecies": "FEAROW"
   },
@@ -440,8 +417,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "EKANS": {
@@ -464,8 +440,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ],
     "apexSpecies": "ARBOK"
   },
@@ -484,8 +459,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "PIKACHU": {
@@ -508,8 +482,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "RAICHU": {
@@ -523,8 +496,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "SANDSHREW": {
@@ -547,8 +519,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ],
     "apexSpecies": "SANDSLASH"
   },
@@ -567,8 +538,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "NIDORANfE": {
@@ -591,8 +561,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "NIDORINA": {
@@ -610,8 +579,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "NIDOQUEEN": {
@@ -625,8 +593,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "NIDORANmA": {
@@ -649,8 +616,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "NIDORINO": {
@@ -668,8 +634,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "NIDOKING": {
@@ -683,8 +648,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "CLEFAIRY": {
@@ -700,8 +664,6 @@
       }
     ],
     "activeTime": [
-      "dawn",
-      "day",
       "dusk",
       "night"
     ]
@@ -717,8 +679,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "VULPIX": {
@@ -736,8 +697,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "NINETALES": {
@@ -751,8 +711,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "JIGGLYPUFF": {
@@ -770,8 +729,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "WIGGLYTUFF": {
@@ -789,8 +747,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "ZUBAT": {
@@ -811,8 +768,6 @@
       }
     ],
     "activeTime": [
-      "dawn",
-      "day",
       "dusk",
       "night"
     ],
@@ -831,8 +786,6 @@
       }
     ],
     "activeTime": [
-      "dawn",
-      "day",
       "dusk",
       "night"
     ]
@@ -857,8 +810,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "GLOOM": {
@@ -881,8 +833,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "VILEPLUME": {
@@ -896,8 +847,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "PARAS": {
@@ -920,8 +870,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "PARASECT": {
@@ -939,8 +888,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "VENONAT": {
@@ -963,8 +911,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "VENOMOTH": {
@@ -982,8 +929,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "DIGLETT": {
@@ -1006,8 +952,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "DUGTRIO": {
@@ -1025,8 +970,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "MEOWTH": {
@@ -1047,8 +991,6 @@
       }
     ],
     "activeTime": [
-      "dawn",
-      "day",
       "dusk",
       "night"
     ]
@@ -1066,8 +1008,6 @@
       }
     ],
     "activeTime": [
-      "dawn",
-      "day",
       "dusk",
       "night"
     ]
@@ -1092,8 +1032,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "GOLDUCK": {
@@ -1111,8 +1050,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "MANKEY": {
@@ -1135,8 +1073,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "PRIMEAPE": {
@@ -1159,8 +1096,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "GROWLITHE": {
@@ -1178,8 +1114,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "ARCANINE": {
@@ -1193,8 +1128,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "POLIWAG": {
@@ -1217,8 +1151,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "POLIWHIRL": {
@@ -1241,8 +1174,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "POLIWRATH": {
@@ -1256,8 +1188,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "ABRA": {
@@ -1275,8 +1206,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "KADABRA": {
@@ -1294,8 +1224,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "ALAKAZAM": {
@@ -1309,8 +1238,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "MACHOP": {
@@ -1333,8 +1261,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ],
     "apexSpecies": "MACHOKE"
   },
@@ -1353,8 +1280,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "MACHAMP": {
@@ -1368,8 +1294,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "BELLSPROUT": {
@@ -1392,8 +1317,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "WEEPINBELL": {
@@ -1411,8 +1335,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "VICTREEBEL": {
@@ -1426,8 +1349,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "TENTACOOL": {
@@ -1450,8 +1372,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "TENTACRUEL": {
@@ -1469,8 +1390,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "GEODUDE": {
@@ -1493,8 +1413,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ],
     "apexSpecies": "GRAVELER"
   },
@@ -1518,8 +1437,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "GOLEM": {
@@ -1533,8 +1451,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "PONYTA": {
@@ -1557,8 +1474,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ],
     "apexSpecies": "RAPIDASH"
   },
@@ -1577,8 +1493,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "SLOWPOKE": {
@@ -1601,8 +1516,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "SLOWBRO": {
@@ -1625,8 +1539,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "MAGNEMITE": {
@@ -1649,8 +1562,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ],
     "apexSpecies": "MAGNETON"
   },
@@ -1669,8 +1581,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "FARFETCHD": {
@@ -1688,8 +1599,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "DODUO": {
@@ -1712,8 +1622,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ],
     "apexSpecies": "DODRIO"
   },
@@ -1732,8 +1641,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "SEEL": {
@@ -1756,8 +1664,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "DEWGONG": {
@@ -1775,8 +1682,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "GRIMER": {
@@ -1794,8 +1700,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ],
     "apexSpecies": "MUK"
   },
@@ -1814,8 +1719,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "SHELLDER": {
@@ -1838,8 +1742,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "CLOYSTER": {
@@ -1853,8 +1756,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "GASTLY": {
@@ -1875,8 +1777,6 @@
       }
     ],
     "activeTime": [
-      "dawn",
-      "day",
       "dusk",
       "night"
     ]
@@ -1894,8 +1794,6 @@
       }
     ],
     "activeTime": [
-      "dawn",
-      "day",
       "dusk",
       "night"
     ]
@@ -1911,8 +1809,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "ONIX": {
@@ -1930,8 +1827,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "DROWZEE": {
@@ -1952,8 +1848,6 @@
       }
     ],
     "activeTime": [
-      "dawn",
-      "day",
       "dusk",
       "night"
     ]
@@ -1971,8 +1865,6 @@
       }
     ],
     "activeTime": [
-      "dawn",
-      "day",
       "dusk",
       "night"
     ]
@@ -1997,8 +1889,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "KINGLER": {
@@ -2016,8 +1907,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "VOLTORB": {
@@ -2035,8 +1925,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "ELECTRODE": {
@@ -2054,8 +1943,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "EXEGGCUTE": {
@@ -2078,8 +1966,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "EXEGGUTOR": {
@@ -2093,8 +1980,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "CUBONE": {
@@ -2112,8 +1998,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "MAROWAK": {
@@ -2131,8 +2016,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "HITMONLEE": {
@@ -2150,8 +2034,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "HITMONCHAN": {
@@ -2169,8 +2052,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "LICKITUNG": {
@@ -2188,8 +2070,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "KOFFING": {
@@ -2207,8 +2088,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ],
     "apexSpecies": "WEEZING"
   },
@@ -2227,8 +2107,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "RHYHORN": {
@@ -2251,8 +2130,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ],
     "apexSpecies": "RHYDON"
   },
@@ -2271,8 +2149,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "CHANSEY": {
@@ -2290,8 +2167,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "TANGELA": {
@@ -2314,8 +2190,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "KANGASKHAN": {
@@ -2333,8 +2208,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "HORSEA": {
@@ -2352,8 +2226,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "SEADRA": {
@@ -2371,8 +2244,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "GOLDEEN": {
@@ -2390,8 +2262,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ],
     "apexSpecies": "SEAKING"
   },
@@ -2410,8 +2281,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "STARYU": {
@@ -2434,8 +2304,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "STARMIE": {
@@ -2449,8 +2318,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "MRMIME": {
@@ -2468,8 +2336,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "SCYTHER": {
@@ -2492,8 +2359,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "JYNX": {
@@ -2511,8 +2377,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "ELECTABUZZ": {
@@ -2530,8 +2395,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "MAGMAR": {
@@ -2549,8 +2413,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "PINSIR": {
@@ -2573,8 +2436,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "TAUROS": {
@@ -2592,8 +2454,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "MAGIKARP": {
@@ -2616,8 +2477,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ],
     "apexSpecies": "GYARADOS"
   },
@@ -2641,8 +2501,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "LAPRAS": {
@@ -2660,8 +2519,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "DITTO": {
@@ -2679,8 +2537,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "EEVEE": {
@@ -2698,8 +2555,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "VAPOREON": {
@@ -2713,8 +2569,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "JOLTEON": {
@@ -2728,8 +2583,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "FLAREON": {
@@ -2743,8 +2597,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "PORYGON": {
@@ -2762,8 +2615,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "OMANYTE": {
@@ -2777,8 +2629,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "OMASTAR": {
@@ -2792,8 +2643,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "KABUTO": {
@@ -2807,8 +2657,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "KABUTOPS": {
@@ -2822,8 +2671,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "AERODACTYL": {
@@ -2837,8 +2685,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "SNORLAX": {
@@ -2852,8 +2699,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "ARTICUNO": {
@@ -2867,8 +2713,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "ZAPDOS": {
@@ -2882,8 +2727,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "MOLTRES": {
@@ -2897,8 +2741,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "DRATINI": {
@@ -2921,8 +2764,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ],
     "apexSpecies": "DRAGONITE"
   },
@@ -2941,8 +2783,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ],
     "apexSpecies": "DRAGONITE"
   },
@@ -2961,8 +2802,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "MEWTWO": {
@@ -2976,8 +2816,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   },
   "MEW": {
@@ -2991,8 +2830,7 @@
     "activeTime": [
       "dawn",
       "day",
-      "dusk",
-      "night"
+      "dusk"
     ]
   }
 }

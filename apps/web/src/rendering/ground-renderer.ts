@@ -49,13 +49,29 @@ export class GroundRenderer {
         if (grassImg && grassImg.complete) {
           gCtx.drawImage(grassImg, px, py, TILE_SIZE, TILE_SIZE);
         } else {
-          gCtx.fillStyle = '#5c9e31';
+          gCtx.fillStyle = '#aed97e';
           gCtx.fillRect(px, py, TILE_SIZE, TILE_SIZE);
         }
 
-        // Optional natural grass variant flower tufts
+        // Optional natural grass variant flower tufts & flora
         if (seededHash(gx, gy, chunk.seed + 1) < 0.08) {
-          const varImg = this.loader.getImage('grass_variant');
+          const varKeys = [
+            'grass_variant',
+            'flower_blue_bell',
+            'flower_white_daisy',
+            'flower_pink_white',
+            'flower_scatter_daisy',
+            'flower_pink_cluster',
+            'flower_blue_cluster',
+            'flower_dandelion',
+            'plant_clover',
+            'grass_white_dots',
+            'grass_tuft_single',
+            'grass_tuft_double',
+          ];
+          const varIdx = Math.floor(seededHash(gx, gy, chunk.seed + 7) * varKeys.length);
+          const varImg =
+            this.loader.getImage(varKeys[varIdx]) || this.loader.getImage('grass_variant');
           if (varImg && varImg.complete) {
             gCtx.drawImage(varImg, px, py, TILE_SIZE, TILE_SIZE);
           }
@@ -64,11 +80,12 @@ export class GroundRenderer {
         // 2. OVERLAY TERRAIN (Sand, Road, Cliff, Water, Bridges) RESPECTING USER TOGGLE FLAGS
         const tileId = chunk.tileIdGrid[ly][lx];
 
-        const isSand = tileId >= 300 && tileId < 400;
+        const isSand = tileId >= 300 && tileId < 350;
+        const isDesert = tileId >= 350 && tileId < 400;
         const isRoad = tileId >= 200 && tileId < 300;
         const isCliff = tileId >= 400 && tileId < 500;
         const isWaterOrBridge = tileId >= 700 && tileId < 730;
-        const isOceanOrShore = tileId >= 730 && tileId <= 738;
+        const isOceanOrShore = tileId >= 730 && tileId <= 742;
 
         if (isWaterOrBridge && options.showWater) {
           // Clear ground grass so live animated caustic water waves ripple underneath
@@ -87,6 +104,7 @@ export class GroundRenderer {
           gCtx.clearRect(px, py, TILE_SIZE, TILE_SIZE);
         } else if (
           (isSand && options.showBeach) ||
+          isDesert ||
           (isRoad && options.showRoad) ||
           (isCliff && options.showHills)
         ) {
@@ -95,6 +113,31 @@ export class GroundRenderer {
             const ovImg = this.loader.getImage(assetKey);
             if (ovImg && ovImg.complete) {
               gCtx.drawImage(ovImg, px, py, TILE_SIZE, TILE_SIZE);
+            }
+          }
+
+          // Optional natural beach decorations on sand
+          if (tileId === TILE_IDS.sand_pure && seededHash(gx, gy, chunk.seed + 13) < 0.06) {
+            const sandDecos = ['sand_grass', 'sand_mound', 'sand_shell'];
+            const decoIdx = Math.floor(seededHash(gx, gy, chunk.seed + 17) * sandDecos.length);
+            const decoImg = this.loader.getImage(sandDecos[decoIdx]);
+            if (decoImg && decoImg.complete) {
+              gCtx.drawImage(decoImg, px, py, TILE_SIZE, TILE_SIZE);
+            }
+          }
+
+          // Optional natural desert decorations on pure desert sand (small pebbles and rocks)
+          if (tileId === TILE_IDS.desert_pure && seededHash(gx, gy, chunk.seed + 47) < 0.08) {
+            const desertDecos = [
+              'rock_desert_small_orange',
+              'rock_desert_pebbles_orange',
+              'rock_desert_small_slate',
+              'rock_desert_pebbles_slate',
+            ];
+            const decoIdx = Math.floor(seededHash(gx, gy, chunk.seed + 59) * desertDecos.length);
+            const decoImg = this.loader.getImage(desertDecos[decoIdx]);
+            if (decoImg && decoImg.complete) {
+              gCtx.drawImage(decoImg, px, py, TILE_SIZE, TILE_SIZE);
             }
           }
         }
@@ -118,11 +161,14 @@ export class GroundRenderer {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
     const palmShadowImg = this.loader.getImage('tree_palm_shadow');
 
-    for (const chunk of chunkManager.activeChunks) {
+    for (const chunk of chunkManager.renderChunks) {
       for (const tree of chunk.trees) {
         const isPalm = tree.type === 'palm';
+        const isDead = tree.type === 'dead_1' || tree.type === 'dead_2';
+        const isCactusLarge = tree.type === 'cactus_large';
+        const isBoulder = tree.type === 'desert_boulder';
         const w = isPalm ? 128 : 64;
-        const h = isPalm ? 200 : 120;
+        const h = isPalm ? 200 : isCactusLarge ? 96 : isDead || isBoulder ? 64 : 120;
 
         if (
           tree.x + w < bounds.minX ||
@@ -137,6 +183,14 @@ export class GroundRenderer {
           if (palmShadowImg && palmShadowImg.complete) {
             ctx.drawImage(palmShadowImg, tree.x, tree.y);
           }
+        } else if (isDead || isBoulder) {
+          ctx.beginPath();
+          ctx.ellipse(tree.x + 32, tree.y + 60, isBoulder ? 24 : 18, 7, 0, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (isCactusLarge) {
+          ctx.beginPath();
+          ctx.ellipse(tree.x + 32, tree.y + 90, 18, 7, 0, 0, Math.PI * 2);
+          ctx.fill();
         } else {
           ctx.beginPath();
           ctx.ellipse(tree.x + 32, tree.y + 112, 20, 8, 0, 0, Math.PI * 2);
@@ -155,7 +209,7 @@ export class GroundRenderer {
   ): void {
     const chunkSizePx = 16 * TILE_SIZE;
 
-    for (const chunk of chunkManager.activeChunks) {
+    for (const chunk of chunkManager.renderChunks) {
       const chunkPixelX = chunk.cx * chunkSizePx;
       const chunkPixelY = chunk.cy * chunkSizePx;
 
@@ -196,7 +250,7 @@ export class GroundRenderer {
       movingTiles.add(tileKey(follower.gx, follower.gy));
       movingTiles.add(tileKey(follower.targetGX, follower.targetGY));
     }
-    for (const chunk of chunkManager.activeChunks) {
+    for (const chunk of chunkManager.renderChunks) {
       for (const wp of chunk.wildPokemon) {
         if (wp.isMoving) {
           movingTiles.add(tileKey(wp.gx, wp.gy));
@@ -205,13 +259,15 @@ export class GroundRenderer {
       }
     }
 
-    for (const chunk of chunkManager.activeChunks) {
+    for (const chunk of chunkManager.renderChunks) {
       for (const tg of chunk.tallGrass) {
+        const grassHeight = 32 * tg.heightScale;
+        const grassY = tg.y + 32 - grassHeight;
         if (
           tg.x + 32 < bounds.minX ||
           tg.x > bounds.maxX ||
-          tg.y + 32 < bounds.minY ||
-          tg.y > bounds.maxY
+          grassY + grassHeight < bounds.minY ||
+          grassY > bounds.maxY
         ) {
           continue;
         }
@@ -230,7 +286,7 @@ export class GroundRenderer {
           }
         }
 
-        ctx.drawImage(imgTG, fIdx * 32, 0, 32, 32, tg.x, tg.y, 32, 32);
+        ctx.drawImage(imgTG, fIdx * 32, 0, 32, 32, tg.x, grassY, 32, grassHeight);
       }
     }
   }
@@ -258,11 +314,11 @@ export class GroundRenderer {
     const sx = fIdx * TILE_SIZE;
     const CHUNK_PX = 16 * TILE_SIZE;
 
-    for (const chunk of chunkManager.activeChunks) {
+    for (const chunk of chunkManager.renderChunks) {
       const chunkPxX = chunk.cx * CHUNK_PX;
       const chunkPxY = chunk.cy * CHUNK_PX;
 
-      // H1 Optimization: Cull entire chunk before iterating 256 tiles
+      // Cull the complete chunk before iterating its indexed animated cells.
       if (
         chunkPxX + CHUNK_PX < bounds.minX ||
         chunkPxX > bounds.maxX ||
@@ -272,114 +328,123 @@ export class GroundRenderer {
         continue;
       }
 
-      const startGX = chunk.cx * 16;
-      const startGY = chunk.cy * 16;
+      // Water and shoreline cells are indexed once during chunk generation.
+      for (const waterTile of chunk.waterTiles) {
+        const { gx, gy, tileId } = waterTile;
 
-      for (let ly = 0; ly < 16; ly++) {
-        for (let lx = 0; lx < 16; lx++) {
-          const tileId = chunk.tileIdGrid[ly][lx];
+        // 1. Inland river / lake water (700..729)
+        if (tileId >= 700 && tileId < 730) {
+          const imgToUse = waterTile.isLake && imgLake && imgLake.complete ? imgLake : imgRiver;
+          if (!imgToUse || !imgToUse.complete) continue;
+          const px = gx * TILE_SIZE;
+          const py = gy * TILE_SIZE;
 
-          // 1. Inland river / lake water (700..729)
-          if (tileId >= 700 && tileId < 730) {
-            const gx = startGX + lx;
-            const gy = startGY + ly;
-            const isLake = chunk.field.isLake(gx, gy);
-            const imgToUse = isLake && imgLake && imgLake.complete ? imgLake : imgRiver;
-            if (!imgToUse || !imgToUse.complete) continue;
-            const px = gx * TILE_SIZE;
-            const py = gy * TILE_SIZE;
-
-            if (
-              px + TILE_SIZE < bounds.minX ||
-              px > bounds.maxX ||
-              py + TILE_SIZE < bounds.minY ||
-              py > bounds.maxY
-            ) {
-              continue;
-            }
-
-            ctx.drawImage(imgToUse, sx, 0, TILE_SIZE, TILE_SIZE, px, py, TILE_SIZE, TILE_SIZE);
+          if (
+            px + TILE_SIZE < bounds.minX ||
+            px > bounds.maxX ||
+            py + TILE_SIZE < bounds.minY ||
+            py > bounds.maxY
+          ) {
+            continue;
           }
-          // 2. Open ocean water (730)
-          else if (tileId === TILE_IDS.ocean_water && options.showBeach) {
-            if (!imgOcean || !imgOcean.complete) continue;
-            const px = (startGX + lx) * TILE_SIZE;
-            const py = (startGY + ly) * TILE_SIZE;
 
-            if (
-              px + TILE_SIZE < bounds.minX ||
-              px > bounds.maxX ||
-              py + TILE_SIZE < bounds.minY ||
-              py > bounds.maxY
-            ) {
-              continue;
-            }
+          ctx.drawImage(imgToUse, sx, 0, TILE_SIZE, TILE_SIZE, px, py, TILE_SIZE, TILE_SIZE);
+        }
+        // 2. Open ocean water (730)
+        else if (tileId === TILE_IDS.ocean_water && options.showBeach) {
+          if (!imgOcean || !imgOcean.complete) continue;
+          const px = gx * TILE_SIZE;
+          const py = gy * TILE_SIZE;
 
+          if (
+            px + TILE_SIZE < bounds.minX ||
+            px > bounds.maxX ||
+            py + TILE_SIZE < bounds.minY ||
+            py > bounds.maxY
+          ) {
+            continue;
+          }
+
+          ctx.drawImage(imgOcean, sx, 0, TILE_SIZE, TILE_SIZE, px, py, TILE_SIZE, TILE_SIZE);
+        }
+        // 3. Shoreline crashing waves (731..742)
+        else if (tileId >= 731 && tileId <= 742 && options.showBeach) {
+          let shoreImg = imgShoreV;
+          let rotation = 0; // default 0 for shore_v and corners
+
+          if (tileId === TILE_IDS.shore_corner_in) {
+            shoreImg = imgShoreCin;
+          } else if (tileId === TILE_IDS.shore_corner_out) {
+            shoreImg = imgShoreCout;
+          } else if (tileId === TILE_IDS.shore_corner_in_flip) {
+            shoreImg = imgShoreCinFlip ?? imgShoreCin;
+          } else if (tileId === TILE_IDS.shore_corner_out_flip) {
+            shoreImg = imgShoreCoutFlip ?? imgShoreCout;
+          } else if (tileId === TILE_IDS.shore_corner_in_es) {
+            // Sand on East & South -> rotate 180°
+            shoreImg = imgShoreCin;
+            rotation = Math.PI;
+          } else if (tileId === TILE_IDS.shore_corner_in_en) {
+            // Sand on East & North -> rotate 90°
+            shoreImg = imgShoreCin;
+            rotation = Math.PI / 2;
+          } else if (tileId === TILE_IDS.shore_corner_out_se) {
+            // Sand diagonal on South-East -> rotate 180°
+            shoreImg = imgShoreCout;
+            rotation = Math.PI;
+          } else if (tileId === TILE_IDS.shore_corner_out_ne) {
+            // Sand diagonal on North-East -> rotate 90°
+            shoreImg = imgShoreCout;
+            rotation = Math.PI / 2;
+          } else if (tileId === TILE_IDS.shore_h) {
+            // Sand on South, Ocean on North -> rotate -90° (-Math.PI / 2)
+            shoreImg = imgShoreV;
+            rotation = -Math.PI / 2;
+          } else if (tileId === TILE_IDS.shore_h_top) {
+            // Sand on North, Ocean on South -> rotate 90° (Math.PI / 2)
+            shoreImg = imgShoreV;
+            rotation = Math.PI / 2;
+          } else if (tileId === TILE_IDS.shore_v_right) {
+            // Sand on East, Ocean on West -> rotate 180° (Math.PI)
+            shoreImg = imgShoreV;
+            rotation = Math.PI;
+          }
+
+          if (!shoreImg || !shoreImg.complete) continue;
+          const px = gx * TILE_SIZE;
+          const py = gy * TILE_SIZE;
+
+          if (
+            px + TILE_SIZE < bounds.minX ||
+            px > bounds.maxX ||
+            py + TILE_SIZE < bounds.minY ||
+            py > bounds.maxY
+          ) {
+            continue;
+          }
+
+          if (imgOcean && imgOcean.complete) {
             ctx.drawImage(imgOcean, sx, 0, TILE_SIZE, TILE_SIZE, px, py, TILE_SIZE, TILE_SIZE);
           }
-          // 3. Shoreline crashing waves (731..738)
-          else if (tileId >= 731 && tileId <= 738 && options.showBeach) {
-            let shoreImg = imgShoreV;
-            let rotation = 0; // default 0 for shore_v and corners
 
-            if (tileId === TILE_IDS.shore_corner_in) {
-              shoreImg = imgShoreCin;
-            } else if (tileId === TILE_IDS.shore_corner_out) {
-              shoreImg = imgShoreCout;
-            } else if (tileId === TILE_IDS.shore_corner_in_flip) {
-              shoreImg = imgShoreCinFlip ?? imgShoreCin;
-            } else if (tileId === TILE_IDS.shore_corner_out_flip) {
-              shoreImg = imgShoreCoutFlip ?? imgShoreCout;
-            } else if (tileId === TILE_IDS.shore_h) {
-              // Sand on South, Ocean on North -> rotate -90° (-Math.PI / 2)
-              shoreImg = imgShoreV;
-              rotation = -Math.PI / 2;
-            } else if (tileId === TILE_IDS.shore_h_top) {
-              // Sand on North, Ocean on South -> rotate 90° (Math.PI / 2)
-              shoreImg = imgShoreV;
-              rotation = Math.PI / 2;
-            } else if (tileId === TILE_IDS.shore_v_right) {
-              // Sand on East, Ocean on West -> rotate 180° (Math.PI)
-              shoreImg = imgShoreV;
-              rotation = Math.PI;
-            }
-
-            if (!shoreImg || !shoreImg.complete) continue;
-            const px = (startGX + lx) * TILE_SIZE;
-            const py = (startGY + ly) * TILE_SIZE;
-
-            if (
-              px + TILE_SIZE < bounds.minX ||
-              px > bounds.maxX ||
-              py + TILE_SIZE < bounds.minY ||
-              py > bounds.maxY
-            ) {
-              continue;
-            }
-
-            if (imgOcean && imgOcean.complete) {
-              ctx.drawImage(imgOcean, sx, 0, TILE_SIZE, TILE_SIZE, px, py, TILE_SIZE, TILE_SIZE);
-            }
-
-            if (rotation !== 0) {
-              ctx.save();
-              ctx.translate(px + TILE_SIZE / 2, py + TILE_SIZE / 2);
-              ctx.rotate(rotation);
-              ctx.drawImage(
-                shoreImg,
-                sx,
-                0,
-                TILE_SIZE,
-                TILE_SIZE,
-                -TILE_SIZE / 2,
-                -TILE_SIZE / 2,
-                TILE_SIZE,
-                TILE_SIZE
-              );
-              ctx.restore();
-            } else {
-              ctx.drawImage(shoreImg, sx, 0, TILE_SIZE, TILE_SIZE, px, py, TILE_SIZE, TILE_SIZE);
-            }
+          if (rotation !== 0) {
+            ctx.save();
+            ctx.translate(px + TILE_SIZE / 2, py + TILE_SIZE / 2);
+            ctx.rotate(rotation);
+            ctx.drawImage(
+              shoreImg,
+              sx,
+              0,
+              TILE_SIZE,
+              TILE_SIZE,
+              -TILE_SIZE / 2,
+              -TILE_SIZE / 2,
+              TILE_SIZE,
+              TILE_SIZE
+            );
+            ctx.restore();
+          } else {
+            ctx.drawImage(shoreImg, sx, 0, TILE_SIZE, TILE_SIZE, px, py, TILE_SIZE, TILE_SIZE);
           }
         }
       }

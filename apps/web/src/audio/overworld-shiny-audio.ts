@@ -14,6 +14,9 @@ export class OverworldShinyAudio {
   private isPlaying = false;
   private masterVolume = 0.85;
   private currentVolume = 0;
+  private lastUpdateAt = -Infinity;
+  private readonly updateIntervalMs = 120;
+  private cachedRelativeVolume: number | null = null;
 
   private constructor() {}
 
@@ -51,6 +54,16 @@ export class OverworldShinyAudio {
     activeChunks: WorldChunk[],
     isBattling: boolean
   ): void {
+    const now = typeof performance !== 'undefined' ? performance.now() : Date.now();
+    if (now - this.lastUpdateAt < this.updateIntervalMs && !isBattling) {
+      // Keep the audio fade responsive while avoiding the expensive chunk scan.
+      if (this.cachedRelativeVolume !== null) {
+        this.play(this.cachedRelativeVolume);
+      }
+      return;
+    }
+    this.lastUpdateAt = now;
+
     // Stop immediately if player is in a battle
     if (isBattling) {
       this.stop();
@@ -84,6 +97,7 @@ export class OverworldShinyAudio {
     }
 
     if (!foundShinyInRange) {
+      this.cachedRelativeVolume = null;
       this.stop();
       return;
     }
@@ -94,6 +108,7 @@ export class OverworldShinyAudio {
 
     // Non-linear cubic curve: distinct presence at edge (0.08), swelling to full volume (1.0) near the Pokemon
     const targetVol = 0.08 + Math.pow(closenessRatio, 1.3) * 0.92;
+    this.cachedRelativeVolume = targetVol;
     this.play(targetVol);
   }
 
@@ -131,6 +146,8 @@ export class OverworldShinyAudio {
   }
 
   public stop(): void {
+    this.lastUpdateAt = -Infinity;
+    this.cachedRelativeVolume = null;
     if (this.audio && this.isPlaying) {
       this.audio.pause();
       this.audio.currentTime = 0;

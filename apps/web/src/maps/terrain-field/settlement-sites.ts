@@ -33,8 +33,11 @@ export function getSettlementForRegion(
   const regionCenterGX = rx * regionSize + regionSize / 2;
   const regionCenterGY = ry * regionSize + regionSize / 2;
 
-  // 1. Strict starter protection: no random village inside CALM_R1 (300 tiles)
-  if (Math.hypot(regionCenterGX, regionCenterGY) < V0_CONFIG.CALM_R1) {
+  const calmR1 = field.version === 3 ? 144 : V0_CONFIG.CALM_R1;
+  const minVillageDist = field.version === 3 ? 120 : V0_CONFIG.MIN_VILLAGE_DIST;
+
+  // 1. Strict starter protection: no random village inside calm zone
+  if (Math.hypot(regionCenterGX, regionCenterGY) < calmR1) {
     settlementCache.set(key, null);
     return null;
   }
@@ -53,7 +56,7 @@ export function getSettlementForRegion(
   const candGY = ry * regionSize + offY;
 
   // 4. Strict distance from (0, 0) starter village
-  if (Math.hypot(candGX, candGY) < V0_CONFIG.MIN_VILLAGE_DIST) {
+  if (Math.hypot(candGX, candGY) < minVillageDist) {
     settlementCache.set(key, null);
     return null;
   }
@@ -69,7 +72,7 @@ export function getSettlementForRegion(
       // Skip neighbors within calm start zone
       const nCenterGX = nrx * regionSize + regionSize / 2;
       const nCenterGY = nry * regionSize + regionSize / 2;
-      if (Math.hypot(nCenterGX, nCenterGY) < V0_CONFIG.CALM_R1) continue;
+      if (Math.hypot(nCenterGX, nCenterGY) < calmR1) continue;
 
       const nProbRoll = hash2(nrx, nry, seed, V0_CONFIG.VILLAGE_SALT);
       if (nProbRoll >= V0_CONFIG.VILLAGE_PROB) continue;

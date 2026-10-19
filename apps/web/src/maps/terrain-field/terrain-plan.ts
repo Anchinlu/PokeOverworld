@@ -10,6 +10,7 @@ export interface ChunkTerrainPlan {
   readonly isOcean: Uint8Array;
   readonly isSand: Uint8Array;
   readonly isHill: Uint8Array;
+  readonly isDesert?: Uint8Array;
 }
 
 export class TerrainPlanCache {

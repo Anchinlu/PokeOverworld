@@ -5,6 +5,8 @@ import type { ChunkManager } from '../maps/chunk-manager';
 import type { AssetLoader } from './asset-loader';
 import type { RenderItem } from './types';
 import { drawWildOverheadIndicator } from './wildlife/wild-overlay';
+import { pokemonCatalog } from '../data/pokemon-catalog';
+import type { TimeBand } from '../wildlife/ports/world-query';
 
 export class CharacterRenderer {
   private loader: AssetLoader;
@@ -69,7 +71,10 @@ export class CharacterRenderer {
   public collectFollower(follower: Follower, list: RenderItem[]): void {
     if (!follower.visible) return;
 
-    const wildImg = this.getWildSprite(follower.speciesKey, follower.isShiny);
+    const wildImg =
+      (follower.isSwimming
+        ? this.getWildSprite(follower.speciesKey, follower.isShiny, true)
+        : undefined) || this.getWildSprite(follower.speciesKey, follower.isShiny, false);
     const pikaImg = this.loader.getImage('char_pika_sheet');
     const img = wildImg && wildImg.complete && wildImg.naturalWidth > 0 ? wildImg : pikaImg;
 
@@ -98,7 +103,8 @@ export class CharacterRenderer {
   }
 
   public collectPlayer(player: Player, list: RenderItem[]): void {
-    const img = this.loader.getImage('char_red_sheet');
+    const imgKey = player.isIdling ? 'char_red_idle' : 'char_red_sheet';
+    const img = this.loader.getImage(imgKey) || this.loader.getImage('char_red_sheet');
     list.push({
       ySort: player.y + 58,
       draw: (ctx) => {
@@ -121,14 +127,31 @@ export class CharacterRenderer {
 
   private wildSpriteCache = new Map<string, HTMLImageElement>();
 
-  private getWildSprite(speciesKey: string, isShiny = false): HTMLImageElement | undefined {
+  private getWildSprite(
+    speciesKey: string,
+    isShiny = false,
+    isWater = false
+  ): HTMLImageElement | undefined {
     const keyUpper = speciesKey.toUpperCase();
-    const cacheKey = `${keyUpper}_${isShiny ? 'shiny' : 'normal'}`;
+    const cacheKey = `${keyUpper}_${isShiny ? 'shiny' : 'normal'}_${isWater ? 'water' : 'land'}`;
     let img = this.wildSpriteCache.get(cacheKey);
     if (!img) {
       img = new Image();
-      const folder = isShiny ? 'Followers shiny' : 'Followers';
-      img.src = `/Graphics/Characters/${folder}/${keyUpper}.png`;
+      if (isWater) {
+        const mon = pokemonCatalog.getBySpeciesKey(keyUpper);
+        const waterPath = isShiny
+          ? mon?.sprites.swimmingShiny || mon?.sprites.swimming
+          : mon?.sprites.swimming;
+        if (waterPath) {
+          img.src = `/${waterPath}`;
+        } else {
+          const folder = isShiny ? 'Followers shiny' : 'Followers';
+          img.src = `/Graphics/Characters/${folder}/${keyUpper}.png`;
+        }
+      } else {
+        const folder = isShiny ? 'Followers shiny' : 'Followers';
+        img.src = `/Graphics/Characters/${folder}/${keyUpper}.png`;
+      }
       this.wildSpriteCache.set(cacheKey, img);
     }
     return img.complete && img.naturalWidth > 0 ? img : undefined;
@@ -139,18 +162,22 @@ export class CharacterRenderer {
     chunkManager: ChunkManager,
     list: RenderItem[],
     playerPos?: { gx: number; gy: number },
-    playerRefLevel = 5
+    playerRefLevel = 5,
+    timeBand: TimeBand = 'day'
   ): void {
-    for (const chunk of chunkManager.activeChunks) {
+    for (const chunk of chunkManager.renderChunks) {
       for (const wp of chunk.wildPokemon) {
+        if (wp.activeTime && !wp.activeTime.includes(timeBand)) continue;
         if (
           wp.x + 64 >= bounds.minX &&
           wp.x <= bounds.maxX &&
           wp.y + 64 >= bounds.minY &&
           wp.y <= bounds.maxY
         ) {
+          const isWildWater = wp.isSwimming === true;
           const img =
-            this.getWildSprite(wp.speciesKey, wp.isShiny) ||
+            (isWildWater ? this.getWildSprite(wp.speciesKey, wp.isShiny, true) : undefined) ||
+            this.getWildSprite(wp.speciesKey, wp.isShiny, false) ||
             this.loader.getImage(`wild_${wp.speciesKey}`);
 
           if (img && img.complete) {

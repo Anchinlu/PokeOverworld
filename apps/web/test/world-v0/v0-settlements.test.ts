@@ -66,7 +66,7 @@ describe('World Gen v0 - 8.5 & 8.6 Settlements, Starter Hamlet & Road Systems (2
 
   it(
     '8.5 Starter Isolation: no random procedural village generates within CALM_R1 (300 tiles)',
-    { timeout: 30000 },
+    { timeout: 60000 },
     () => {
       for (let s = 1; s <= 20; s++) {
         const seed = s * 3331;

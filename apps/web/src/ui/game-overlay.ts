@@ -27,6 +27,10 @@ export function createOverlayTemplate(): string {
         <img src="${MENU_ASSETS.menuPC}" alt="PC Box" class="menu-bar-icon" />
         <span class="menu-bar-text">PC Box</span>
       </button>
+      <button class="menu-bar-btn" id="btnMenuMap" title="Bản đồ thế giới (Phím M)" aria-label="Bản đồ">
+        <span class="menu-bar-icon menu-bar-map-icon" aria-hidden="true">🗺️</span>
+        <span class="menu-bar-text">Bản đồ</span>
+      </button>
       <button class="menu-bar-btn" id="btnMenuTrainer" title="Huấn luyện viên (Trainer Card)" aria-label="Trainer Card">
         <img src="${MENU_ASSETS.menuTrainer}" alt="Hồ sơ" class="menu-bar-icon" />
         <span class="menu-bar-text">Hồ sơ</span>
@@ -35,12 +39,28 @@ export function createOverlayTemplate(): string {
         <img src="${MENU_ASSETS.menuOptions}" alt="Cài đặt" class="menu-bar-icon" />
         <span class="menu-bar-text">Cài đặt</span>
       </button>
-      <button class="menu-bar-btn" id="btnMenuQuit" title="Thoát / Thu gọn (Quit)" aria-label="Thoát">
+      <button class="menu-bar-btn" id="btnMenuQuit" title="Thoát ra màn hình chờ (Quit to Title Screen)" aria-label="Thoát">
         <img src="${MENU_ASSETS.menuQuit}" alt="Thoát" class="menu-bar-icon" />
         <span class="menu-bar-text">Thoát</span>
       </button>
     </div>
   </header>
+
+  <!-- Top Center/Left Quick World Time HUD Widget -->
+  <aside id="worldTimeWidget" class="world-time-widget" aria-label="Đồng hồ thế giới">
+    <div class="world-time-pill" id="worldTimePill" title="Nhấp để xoay vòng qua các pha thời gian">
+      <span class="world-time-icon" id="worldTimeIcon">☀️</span>
+      <span class="world-time-text" id="worldTimeText">08:00</span>
+      <span class="world-time-phase" id="worldTimePhase">Ban ngày</span>
+      <span class="world-time-day" id="worldTimeDay">Ngày 1</span>
+    </div>
+    <div class="world-time-quick-actions" id="worldTimeQuickActions">
+      <button class="btn-time-quick" data-time="360" title="06:00 Bình minh (Hồng cam)">🌅 Sáng</button>
+      <button class="btn-time-quick" data-time="720" title="12:00 Ban ngày (Trong suốt)">☀️ Trưa</button>
+      <button class="btn-time-quick" data-time="1080" title="18:00 Hoàng hôn (Tím chiều)">🌇 Chiều</button>
+      <button class="btn-time-quick" data-time="0" title="00:00 Ban đêm (Xanh thẫm)">🌙 Đêm</button>
+    </div>
+  </aside>
 
   <!-- Fullscreen Loading Screen -->
   <div id="loadingOverlay" class="loading-overlay">
@@ -59,4 +79,43 @@ export function bindOverlayToggle(): void {
       btnToggle.innerText = testOverlay.classList.contains('collapsed') ? '⚙️' : '✕';
     });
   }
+}
+
+export function updateWorldTimeWidget(
+  minutes: number,
+  phase: string,
+  day: number,
+  isPaused: boolean
+): void {
+  const widget = document.querySelector<HTMLElement>('#worldTimeWidget');
+  if (!widget) return;
+
+  const iconEl = widget.querySelector<HTMLElement>('#worldTimeIcon');
+  const textEl = widget.querySelector<HTMLElement>('#worldTimeText');
+  const phaseEl = widget.querySelector<HTMLElement>('#worldTimePhase');
+  const dayEl = widget.querySelector<HTMLElement>('#worldTimeDay');
+
+  const phaseIcons: Record<string, string> = {
+    dawn: '🌅',
+    day: '☀️',
+    dusk: '🌇',
+    night: '🌙',
+  };
+  const phaseNames: Record<string, string> = {
+    dawn: 'Bình minh',
+    day: 'Ban ngày',
+    dusk: 'Hoàng hôn',
+    night: 'Ban đêm',
+  };
+
+  const totalM = Math.floor(minutes);
+  const hours = Math.floor(totalM / 60)
+    .toString()
+    .padStart(2, '0');
+  const mins = (totalM % 60).toString().padStart(2, '0');
+
+  if (iconEl) iconEl.innerText = phaseIcons[phase] || '☀️';
+  if (textEl) textEl.innerText = `${hours}:${mins}`;
+  if (phaseEl) phaseEl.innerText = `${phaseNames[phase] || phase}${isPaused ? ' (⏸️)' : ''}`;
+  if (dayEl) dayEl.innerText = `Ngày ${day}`;
 }

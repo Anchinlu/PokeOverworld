@@ -15,10 +15,18 @@ export function canWildEntityEnter(
   targetGX: number,
   targetGY: number,
   world: WorldQuery,
-  occupiedTiles?: Set<string>
+  occupiedTiles?: Set<string>,
+  isWaterDweller?: boolean
 ): boolean {
-  if (!world.isWalkable(targetGX, targetGY)) {
-    return false;
+  if (isWaterDweller) {
+    const ctx = world.contextAt(targetGX, targetGY);
+    if (ctx !== 'water_surface' && ctx !== 'shore') {
+      return false;
+    }
+  } else {
+    if (!world.isWalkable(targetGX, targetGY)) {
+      return false;
+    }
   }
   if (occupiedTiles && occupiedTiles.has(`${targetGX},${targetGY}`)) {
     return false;

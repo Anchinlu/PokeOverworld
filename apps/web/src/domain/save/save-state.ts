@@ -24,6 +24,8 @@ export interface SaveGameMetadata {
   leaderLevel: number;
   playTimeSeconds: number;
   pcSavedAt?: number; // Timestamp when PC partition was last saved
+  worldSeed?: number;
+  worldGenVersion?: number;
 }
 
 export interface StartTownData {
@@ -39,7 +41,11 @@ export interface SaveWorldData {
   worldGenVersion?: number;
   position?: PlayerPosition;
   startTown?: StartTownData;
+  worldTimeMinutes?: number;
+  worldDay?: number;
+  lastWorldTimestamp?: number;
 }
+
 
 /**
  * Main save payload for slot (~15-25KB).

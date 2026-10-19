@@ -1,6 +1,14 @@
 {
-  "tierProbability": [0.62, 0.25, 0.10, 0.025, 0.005],
+  "tierProbability": [0.62, 0.25, 0.1, 0.025, 0.005],
   "stagePenalty": [0, 1, 2],
+  "rarityLevelBonus": [
+    [1, 6],
+    [4, 10],
+    [8, 16],
+    [12, 22],
+    [18, 30]
+  ],
+  "rarityLevelCap": [40, 55, 70, 85, 100],
   "shinyOdds": 4096,
   "maxEntitiesPerChunk": 8,
   "groupsPerChunk": {
@@ -20,7 +28,7 @@
   "leaderBonus": [3, 8],
   "apex": {
     "p0": 0.03,
-    "pMax": 0.10,
+    "pMax": 0.1,
     "levelBonus": [10, 20],
     "minDifficulty": 0.35
   },
@@ -28,7 +36,7 @@
     "l0": 3,
     "step": 120,
     "min": 2,
-    "max": 60,
+    "max": 100,
     "startZoneCap": 5,
     "startZoneRadius": 100
   }

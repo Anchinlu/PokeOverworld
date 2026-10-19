@@ -7,7 +7,10 @@
       "id": 1,
       "name": "Bulbasaur",
       "speciesKey": "BULBASAUR",
-      "types": ["Grass", "Poison"],
+      "types": [
+        "Grass",
+        "Poison"
+      ],
       "stats": {
         "hp": 45,
         "attack": 49,
@@ -25,7 +28,11 @@
         "cry": "Audio/Cries/BULBASAUR.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/BULBASAUR.png",
         "backShiny": "Graphics/Pokemon/Back shiny/BULBASAUR.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/BULBASAUR.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/BULBASAUR.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/BULBASAUR.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/BULBASAUR.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/BULBASAUR.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/BULBASAUR.png"
       },
       "species": "Seed Pokémon",
       "height": 0.7,
@@ -213,7 +220,10 @@
       "id": 2,
       "name": "Ivysaur",
       "speciesKey": "IVYSAUR",
-      "types": ["Grass", "Poison"],
+      "types": [
+        "Grass",
+        "Poison"
+      ],
       "stats": {
         "hp": 60,
         "attack": 62,
@@ -231,7 +241,11 @@
         "cry": "Audio/Cries/IVYSAUR.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/IVYSAUR.png",
         "backShiny": "Graphics/Pokemon/Back shiny/IVYSAUR.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/IVYSAUR.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/IVYSAUR.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/IVYSAUR.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/IVYSAUR.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/IVYSAUR.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/IVYSAUR.png"
       },
       "species": "Seed Pokémon",
       "height": 1,
@@ -420,7 +434,10 @@
       "id": 3,
       "name": "Venusaur",
       "speciesKey": "VENUSAUR",
-      "types": ["Grass", "Poison"],
+      "types": [
+        "Grass",
+        "Poison"
+      ],
       "stats": {
         "hp": 80,
         "attack": 82,
@@ -438,7 +455,11 @@
         "cry": "Audio/Cries/VENUSAUR.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/VENUSAUR.png",
         "backShiny": "Graphics/Pokemon/Back shiny/VENUSAUR.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/VENUSAUR.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/VENUSAUR.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/VENUSAUR.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/VENUSAUR.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/VENUSAUR.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/VENUSAUR.png"
       },
       "species": "Seed Pokémon",
       "height": 2,
@@ -638,7 +659,9 @@
       "id": 4,
       "name": "Charmander",
       "speciesKey": "CHARMANDER",
-      "types": ["Fire"],
+      "types": [
+        "Fire"
+      ],
       "stats": {
         "hp": 39,
         "attack": 52,
@@ -656,7 +679,11 @@
         "cry": "Audio/Cries/CHARMANDER_clean.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/CHARMANDER.png",
         "backShiny": "Graphics/Pokemon/Back shiny/CHARMANDER.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/CHARMANDER.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/CHARMANDER.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/CHARMANDER.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/CHARMANDER.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/CHARMANDER.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/CHARMANDER.png"
       },
       "species": "Lizard Pokémon",
       "height": 0.6,
@@ -829,7 +856,9 @@
       "id": 5,
       "name": "Charmeleon",
       "speciesKey": "CHARMELEON",
-      "types": ["Fire"],
+      "types": [
+        "Fire"
+      ],
       "stats": {
         "hp": 58,
         "attack": 64,
@@ -847,7 +876,11 @@
         "cry": "Audio/Cries/CHARMELEON.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/CHARMELEON.png",
         "backShiny": "Graphics/Pokemon/Back shiny/CHARMELEON.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/CHARMELEON.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/CHARMELEON.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/CHARMELEON.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/CHARMELEON.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/CHARMELEON.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/CHARMELEON.png"
       },
       "species": "Flame Pokémon",
       "height": 1.1,
@@ -1019,7 +1052,10 @@
       "id": 6,
       "name": "Charizard",
       "speciesKey": "CHARIZARD",
-      "types": ["Fire", "Flying"],
+      "types": [
+        "Fire",
+        "Flying"
+      ],
       "stats": {
         "hp": 78,
         "attack": 84,
@@ -1037,7 +1073,11 @@
         "cry": "Audio/Cries/CHARIZARD.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/CHARIZARD.png",
         "backShiny": "Graphics/Pokemon/Back shiny/CHARIZARD.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/CHARIZARD.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/CHARIZARD.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Levitates/CHARIZARD.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/CHARIZARD.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Levitates/CHARIZARD.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/CHARIZARD.png"
       },
       "species": "Flame Pokémon",
       "height": 1.7,
@@ -1242,7 +1282,9 @@
       "id": 7,
       "name": "Squirtle",
       "speciesKey": "SQUIRTLE",
-      "types": ["Water"],
+      "types": [
+        "Water"
+      ],
       "stats": {
         "hp": 44,
         "attack": 48,
@@ -1260,7 +1302,11 @@
         "cry": "Audio/Cries/SQUIRTLE.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/SQUIRTLE.png",
         "backShiny": "Graphics/Pokemon/Back shiny/SQUIRTLE.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/SQUIRTLE.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SQUIRTLE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SQUIRTLE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SQUIRTLE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SQUIRTLE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SQUIRTLE.png"
       },
       "species": "Tiny Turtle Pokémon",
       "height": 0.5,
@@ -1421,7 +1467,9 @@
       "id": 8,
       "name": "Wartortle",
       "speciesKey": "WARTORTLE",
-      "types": ["Water"],
+      "types": [
+        "Water"
+      ],
       "stats": {
         "hp": 59,
         "attack": 63,
@@ -1439,7 +1487,11 @@
         "cry": "Audio/Cries/WARTORTLE.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/WARTORTLE.png",
         "backShiny": "Graphics/Pokemon/Back shiny/WARTORTLE.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/WARTORTLE.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/WARTORTLE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/WARTORTLE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/WARTORTLE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/WARTORTLE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/WARTORTLE.png"
       },
       "species": "Turtle Pokémon",
       "height": 1,
@@ -1600,7 +1652,9 @@
       "id": 9,
       "name": "Blastoise",
       "speciesKey": "BLASTOISE",
-      "types": ["Water"],
+      "types": [
+        "Water"
+      ],
       "stats": {
         "hp": 79,
         "attack": 83,
@@ -1618,7 +1672,11 @@
         "cry": "Audio/Cries/BLASTOISE.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/BLASTOISE.png",
         "backShiny": "Graphics/Pokemon/Back shiny/BLASTOISE.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/BLASTOISE.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/BLASTOISE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/BLASTOISE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/BLASTOISE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/BLASTOISE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/BLASTOISE.png"
       },
       "species": "Shellfish Pokémon",
       "height": 1.6,
@@ -1796,7 +1854,9 @@
       "id": 10,
       "name": "Caterpie",
       "speciesKey": "CATERPIE",
-      "types": ["Bug"],
+      "types": [
+        "Bug"
+      ],
       "stats": {
         "hp": 45,
         "attack": 30,
@@ -1814,7 +1874,11 @@
         "cry": "Audio/Cries/CATERPIE.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/CATERPIE.png",
         "backShiny": "Graphics/Pokemon/Back shiny/CATERPIE.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/CATERPIE.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/CATERPIE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/CATERPIE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/CATERPIE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/CATERPIE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/CATERPIE.png"
       },
       "species": "Worm Pokémon",
       "height": 0.3,
@@ -1860,7 +1924,9 @@
       "id": 11,
       "name": "Metapod",
       "speciesKey": "METAPOD",
-      "types": ["Bug"],
+      "types": [
+        "Bug"
+      ],
       "stats": {
         "hp": 50,
         "attack": 20,
@@ -1878,7 +1944,11 @@
         "cry": "Audio/Cries/METAPOD.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/METAPOD.png",
         "backShiny": "Graphics/Pokemon/Back shiny/METAPOD.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/METAPOD.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/METAPOD.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/METAPOD.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/METAPOD.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/METAPOD.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/METAPOD.png"
       },
       "species": "Cocoon Pokémon",
       "height": 0.7,
@@ -1909,7 +1979,10 @@
       "id": 12,
       "name": "Butterfree",
       "speciesKey": "BUTTERFREE",
-      "types": ["Bug", "Flying"],
+      "types": [
+        "Bug",
+        "Flying"
+      ],
       "stats": {
         "hp": 60,
         "attack": 45,
@@ -1927,7 +2000,11 @@
         "cry": "Audio/Cries/BUTTERFREE.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/BUTTERFREE.png",
         "backShiny": "Graphics/Pokemon/Back shiny/BUTTERFREE.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/BUTTERFREE.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/BUTTERFREE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Levitates/BUTTERFREE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/BUTTERFREE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Levitates/BUTTERFREE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/BUTTERFREE.png"
       },
       "species": "Butterfly Pokémon",
       "height": 1.1,
@@ -2123,7 +2200,10 @@
       "id": 13,
       "name": "Weedle",
       "speciesKey": "WEEDLE",
-      "types": ["Bug", "Poison"],
+      "types": [
+        "Bug",
+        "Poison"
+      ],
       "stats": {
         "hp": 40,
         "attack": 35,
@@ -2141,7 +2221,11 @@
         "cry": "Audio/Cries/WEEDLE.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/WEEDLE.png",
         "backShiny": "Graphics/Pokemon/Back shiny/WEEDLE.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/WEEDLE.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/WEEDLE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/WEEDLE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/WEEDLE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/WEEDLE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/WEEDLE.png"
       },
       "species": "Hairy Bug Pokémon",
       "height": 0.3,
@@ -2169,7 +2253,10 @@
           "type": "Bug"
         }
       ],
-      "tmMoves": ["electroweb", "facade"],
+      "tmMoves": [
+        "electroweb",
+        "facade"
+      ],
       "abilities": {
         "primary": "shield-dust",
         "hidden": "run-away"
@@ -2180,7 +2267,10 @@
       "id": 14,
       "name": "Kakuna",
       "speciesKey": "KAKUNA",
-      "types": ["Bug", "Poison"],
+      "types": [
+        "Bug",
+        "Poison"
+      ],
       "stats": {
         "hp": 45,
         "attack": 25,
@@ -2198,7 +2288,11 @@
         "cry": "Audio/Cries/KAKUNA.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/KAKUNA.png",
         "backShiny": "Graphics/Pokemon/Back shiny/KAKUNA.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/KAKUNA.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/KAKUNA.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/KAKUNA.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/KAKUNA.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/KAKUNA.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/KAKUNA.png"
       },
       "species": "Cocoon Pokémon",
       "height": 0.6,
@@ -2233,7 +2327,11 @@
           "type": "Normal"
         }
       ],
-      "tmMoves": ["electroweb", "facade", "iron_defense"],
+      "tmMoves": [
+        "electroweb",
+        "facade",
+        "iron_defense"
+      ],
       "abilities": {
         "primary": "shed-skin"
       },
@@ -2243,7 +2341,10 @@
       "id": 15,
       "name": "Beedrill",
       "speciesKey": "BEEDRILL",
-      "types": ["Bug", "Poison"],
+      "types": [
+        "Bug",
+        "Poison"
+      ],
       "stats": {
         "hp": 65,
         "attack": 90,
@@ -2261,7 +2362,11 @@
         "cry": "Audio/Cries/BEEDRILL.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/BEEDRILL.png",
         "backShiny": "Graphics/Pokemon/Back shiny/BEEDRILL.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/BEEDRILL.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/BEEDRILL.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Levitates/BEEDRILL.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/BEEDRILL.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Levitates/BEEDRILL.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/BEEDRILL.png"
       },
       "species": "Poison Bee Pokémon",
       "height": 1,
@@ -2417,7 +2522,10 @@
       "id": 16,
       "name": "Pidgey",
       "speciesKey": "PIDGEY",
-      "types": ["Normal", "Flying"],
+      "types": [
+        "Normal",
+        "Flying"
+      ],
       "stats": {
         "hp": 40,
         "attack": 45,
@@ -2435,7 +2543,11 @@
         "cry": "Audio/Cries/PIDGEY.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/PIDGEY.png",
         "backShiny": "Graphics/Pokemon/Back shiny/PIDGEY.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/PIDGEY.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PIDGEY.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/PIDGEY.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/PIDGEY.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/PIDGEY.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/PIDGEY.png"
       },
       "species": "Tiny Bird Pokémon",
       "height": 0.3,
@@ -2580,7 +2692,10 @@
       "id": 17,
       "name": "Pidgeotto",
       "speciesKey": "PIDGEOTTO",
-      "types": ["Normal", "Flying"],
+      "types": [
+        "Normal",
+        "Flying"
+      ],
       "stats": {
         "hp": 63,
         "attack": 60,
@@ -2598,7 +2713,11 @@
         "cry": "Audio/Cries/PIDGEOTTO.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/PIDGEOTTO.png",
         "backShiny": "Graphics/Pokemon/Back shiny/PIDGEOTTO.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/PIDGEOTTO.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PIDGEOTTO.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Levitates/PIDGEOTTO.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/PIDGEOTTO.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Levitates/PIDGEOTTO.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/PIDGEOTTO.png"
       },
       "species": "Bird Pokémon",
       "height": 1.1,
@@ -2746,7 +2865,10 @@
       "id": 18,
       "name": "Pidgeot",
       "speciesKey": "PIDGEOT",
-      "types": ["Normal", "Flying"],
+      "types": [
+        "Normal",
+        "Flying"
+      ],
       "stats": {
         "hp": 83,
         "attack": 80,
@@ -2764,7 +2886,11 @@
         "cry": "Audio/Cries/PIDGEOT.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/PIDGEOT.png",
         "backShiny": "Graphics/Pokemon/Back shiny/PIDGEOT.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/PIDGEOT.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PIDGEOT.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Levitates/PIDGEOT.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/PIDGEOT.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Levitates/PIDGEOT.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/PIDGEOT.png"
       },
       "species": "Bird Pokémon",
       "height": 1.5,
@@ -2914,7 +3040,9 @@
       "id": 19,
       "name": "Rattata",
       "speciesKey": "RATTATA",
-      "types": ["Normal"],
+      "types": [
+        "Normal"
+      ],
       "stats": {
         "hp": 30,
         "attack": 56,
@@ -2932,7 +3060,11 @@
         "cry": "Audio/Cries/RATTATA.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/RATTATA.png",
         "backShiny": "Graphics/Pokemon/Back shiny/RATTATA.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/RATTATA.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/RATTATA.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/RATTATA.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/RATTATA.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/RATTATA.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/RATTATA.png"
       },
       "species": "Mouse Pokémon",
       "height": 0.3,
@@ -3096,7 +3228,9 @@
       "id": 20,
       "name": "Raticate",
       "speciesKey": "RATICATE",
-      "types": ["Normal"],
+      "types": [
+        "Normal"
+      ],
       "stats": {
         "hp": 55,
         "attack": 81,
@@ -3114,7 +3248,11 @@
         "cry": "Audio/Cries/RATICATE.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/RATICATE.png",
         "backShiny": "Graphics/Pokemon/Back shiny/RATICATE.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/RATICATE.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/RATICATE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/RATICATE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/RATICATE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/RATICATE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/RATICATE.png"
       },
       "species": "Mouse Pokémon",
       "height": 0.7,
@@ -3314,7 +3452,10 @@
       "id": 21,
       "name": "Spearow",
       "speciesKey": "SPEAROW",
-      "types": ["Normal", "Flying"],
+      "types": [
+        "Normal",
+        "Flying"
+      ],
       "stats": {
         "hp": 40,
         "attack": 60,
@@ -3332,7 +3473,11 @@
         "cry": "Audio/Cries/SPEAROW.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/SPEAROW.png",
         "backShiny": "Graphics/Pokemon/Back shiny/SPEAROW.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/SPEAROW.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SPEAROW.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SPEAROW.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SPEAROW.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SPEAROW.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SPEAROW.png"
       },
       "species": "Tiny Bird Pokémon",
       "height": 0.3,
@@ -3474,7 +3619,10 @@
       "id": 22,
       "name": "Fearow",
       "speciesKey": "FEAROW",
-      "types": ["Normal", "Flying"],
+      "types": [
+        "Normal",
+        "Flying"
+      ],
       "stats": {
         "hp": 65,
         "attack": 90,
@@ -3492,7 +3640,11 @@
         "cry": "Audio/Cries/FEAROW.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/FEAROW.png",
         "backShiny": "Graphics/Pokemon/Back shiny/FEAROW.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/FEAROW.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/FEAROW.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Levitates/FEAROW.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/FEAROW.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Levitates/FEAROW.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/FEAROW.png"
       },
       "species": "Beak Pokémon",
       "height": 1.2,
@@ -3664,7 +3816,9 @@
       "id": 23,
       "name": "Ekans",
       "speciesKey": "EKANS",
-      "types": ["Poison"],
+      "types": [
+        "Poison"
+      ],
       "stats": {
         "hp": 35,
         "attack": 60,
@@ -3682,7 +3836,11 @@
         "cry": "Audio/Cries/EKANS.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/EKANS.png",
         "backShiny": "Graphics/Pokemon/Back shiny/EKANS.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/EKANS.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/EKANS.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/EKANS.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/EKANS.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/EKANS.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/EKANS.png"
       },
       "species": "Snake Pokémon",
       "height": 2,
@@ -3858,7 +4016,9 @@
       "id": 24,
       "name": "Arbok",
       "speciesKey": "ARBOK",
-      "types": ["Poison"],
+      "types": [
+        "Poison"
+      ],
       "stats": {
         "hp": 60,
         "attack": 95,
@@ -3876,7 +4036,11 @@
         "cry": "Audio/Cries/ARBOK.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/ARBOK.png",
         "backShiny": "Graphics/Pokemon/Back shiny/ARBOK.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/ARBOK.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/ARBOK.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/ARBOK.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/ARBOK.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/ARBOK.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/ARBOK.png"
       },
       "species": "Cobra Pokémon",
       "height": 3.5,
@@ -4059,7 +4223,9 @@
       "id": 25,
       "name": "Pikachu",
       "speciesKey": "PIKACHU",
-      "types": ["Electric"],
+      "types": [
+        "Electric"
+      ],
       "stats": {
         "hp": 35,
         "attack": 55,
@@ -4077,7 +4243,11 @@
         "cry": "Audio/Cries/PIKACHU.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/PIKACHU.png",
         "backShiny": "Graphics/Pokemon/Back shiny/PIKACHU.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/PIKACHU.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PIKACHU.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/PIKACHU.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/PIKACHU.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/PIKACHU.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/PIKACHU.png"
       },
       "species": "Mouse Pokémon",
       "height": 0.4,
@@ -4263,7 +4433,9 @@
       "id": 26,
       "name": "Raichu",
       "speciesKey": "RAICHU",
-      "types": ["Electric"],
+      "types": [
+        "Electric"
+      ],
       "stats": {
         "hp": 60,
         "attack": 90,
@@ -4281,7 +4453,11 @@
         "cry": "Audio/Cries/RAICHU.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/RAICHU.png",
         "backShiny": "Graphics/Pokemon/Back shiny/RAICHU.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/RAICHU.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/RAICHU.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/RAICHU.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/RAICHU.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/RAICHU.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/RAICHU.png"
       },
       "species": "Mouse Pokémon",
       "height": 0.8,
@@ -4482,7 +4658,9 @@
       "id": 27,
       "name": "Sandshrew",
       "speciesKey": "SANDSHREW",
-      "types": ["Ground"],
+      "types": [
+        "Ground"
+      ],
       "stats": {
         "hp": 50,
         "attack": 75,
@@ -4500,7 +4678,11 @@
         "cry": "Audio/Cries/SANDSHREW.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/SANDSHREW.png",
         "backShiny": "Graphics/Pokemon/Back shiny/SANDSHREW.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/SANDSHREW.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SANDSHREW.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SANDSHREW.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SANDSHREW.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SANDSHREW.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SANDSHREW.png"
       },
       "species": "Mouse Pokémon",
       "height": 0.6,
@@ -4730,7 +4912,9 @@
       "id": 28,
       "name": "Sandslash",
       "speciesKey": "SANDSLASH",
-      "types": ["Ground"],
+      "types": [
+        "Ground"
+      ],
       "stats": {
         "hp": 75,
         "attack": 100,
@@ -4748,7 +4932,11 @@
         "cry": "Audio/Cries/SANDSLASH.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/SANDSLASH.png",
         "backShiny": "Graphics/Pokemon/Back shiny/SANDSLASH.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/SANDSLASH.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SANDSLASH.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SANDSLASH.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SANDSLASH.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SANDSLASH.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SANDSLASH.png"
       },
       "species": "Mouse Pokémon",
       "height": 1,
@@ -4990,7 +5178,9 @@
       "id": 29,
       "name": "Nidoran♀",
       "speciesKey": "NIDORANfE",
-      "types": ["Poison"],
+      "types": [
+        "Poison"
+      ],
       "stats": {
         "hp": 55,
         "attack": 47,
@@ -5008,7 +5198,11 @@
         "cry": "Audio/Cries/NIDORANfE.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/NIDORANfE.png",
         "backShiny": "Graphics/Pokemon/Back shiny/NIDORANfE.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/NIDORANfE.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/NIDORANfE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/NIDORANfE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/NIDORANfE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/NIDORANfE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/NIDORANfE.png"
       },
       "species": "Poison Pin Pokémon",
       "height": 0.4,
@@ -5166,7 +5360,9 @@
       "id": 30,
       "name": "Nidorina",
       "speciesKey": "NIDORINA",
-      "types": ["Poison"],
+      "types": [
+        "Poison"
+      ],
       "stats": {
         "hp": 70,
         "attack": 62,
@@ -5184,7 +5380,11 @@
         "cry": "Audio/Cries/NIDORINA.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/NIDORINA.png",
         "backShiny": "Graphics/Pokemon/Back shiny/NIDORINA.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/NIDORINA.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/NIDORINA.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/NIDORINA.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/NIDORINA.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/NIDORINA.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/NIDORINA.png"
       },
       "species": "Poison Pin Pokémon",
       "height": 0.8,
@@ -5342,7 +5542,10 @@
       "id": 31,
       "name": "Nidoqueen",
       "speciesKey": "NIDOQUEEN",
-      "types": ["Poison", "Ground"],
+      "types": [
+        "Poison",
+        "Ground"
+      ],
       "stats": {
         "hp": 90,
         "attack": 92,
@@ -5360,7 +5563,11 @@
         "cry": "Audio/Cries/NIDOQUEEN.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/NIDOQUEEN.png",
         "backShiny": "Graphics/Pokemon/Back shiny/NIDOQUEEN.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/NIDOQUEEN.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/NIDOQUEEN.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/NIDOQUEEN.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/NIDOQUEEN.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/NIDOQUEEN.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/NIDOQUEEN.png"
       },
       "species": "Drill Pokémon",
       "height": 1.3,
@@ -5569,7 +5776,9 @@
       "id": 32,
       "name": "Nidoran♂",
       "speciesKey": "NIDORANmA",
-      "types": ["Poison"],
+      "types": [
+        "Poison"
+      ],
       "stats": {
         "hp": 46,
         "attack": 57,
@@ -5587,7 +5796,11 @@
         "cry": "Audio/Cries/NIDORANmA.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/NIDORANmA.png",
         "backShiny": "Graphics/Pokemon/Back shiny/NIDORANmA.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/NIDORANmA.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/NIDORANmA.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/NIDORANmA.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/NIDORANmA.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/NIDORANmA.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/NIDORANmA.png"
       },
       "species": "Poison Pin Pokémon",
       "height": 0.5,
@@ -5746,7 +5959,9 @@
       "id": 33,
       "name": "Nidorino",
       "speciesKey": "NIDORINO",
-      "types": ["Poison"],
+      "types": [
+        "Poison"
+      ],
       "stats": {
         "hp": 61,
         "attack": 72,
@@ -5764,7 +5979,11 @@
         "cry": "Audio/Cries/NIDORINO.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/NIDORINO.png",
         "backShiny": "Graphics/Pokemon/Back shiny/NIDORINO.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/NIDORINO.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/NIDORINO.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/NIDORINO.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/NIDORINO.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/NIDORINO.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/NIDORINO.png"
       },
       "species": "Poison Pin Pokémon",
       "height": 0.9,
@@ -5923,7 +6142,10 @@
       "id": 34,
       "name": "Nidoking",
       "speciesKey": "NIDOKING",
-      "types": ["Poison", "Ground"],
+      "types": [
+        "Poison",
+        "Ground"
+      ],
       "stats": {
         "hp": 81,
         "attack": 102,
@@ -5941,7 +6163,11 @@
         "cry": "Audio/Cries/NIDOKING.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/NIDOKING.png",
         "backShiny": "Graphics/Pokemon/Back shiny/NIDOKING.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/NIDOKING.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/NIDOKING.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/NIDOKING.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/NIDOKING.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/NIDOKING.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/NIDOKING.png"
       },
       "species": "Drill Pokémon",
       "height": 1.4,
@@ -6151,7 +6377,9 @@
       "id": 35,
       "name": "Clefairy",
       "speciesKey": "CLEFAIRY",
-      "types": ["Fairy"],
+      "types": [
+        "Fairy"
+      ],
       "stats": {
         "hp": 70,
         "attack": 45,
@@ -6169,7 +6397,11 @@
         "cry": "Audio/Cries/CLEFAIRY.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/CLEFAIRY.png",
         "backShiny": "Graphics/Pokemon/Back shiny/CLEFAIRY.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/CLEFAIRY.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/CLEFAIRY.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/CLEFAIRY.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/CLEFAIRY.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/CLEFAIRY.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/CLEFAIRY.png"
       },
       "species": "Fairy Pokémon",
       "height": 0.6,
@@ -6400,7 +6632,9 @@
       "id": 36,
       "name": "Clefable",
       "speciesKey": "CLEFABLE",
-      "types": ["Fairy"],
+      "types": [
+        "Fairy"
+      ],
       "stats": {
         "hp": 95,
         "attack": 70,
@@ -6418,7 +6652,11 @@
         "cry": "Audio/Cries/CLEFABLE.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/CLEFABLE.png",
         "backShiny": "Graphics/Pokemon/Back shiny/CLEFABLE.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/CLEFABLE.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/CLEFABLE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/CLEFABLE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/CLEFABLE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/CLEFABLE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/CLEFABLE.png"
       },
       "species": "Fairy Pokémon",
       "height": 1.3,
@@ -6660,7 +6898,9 @@
       "id": 37,
       "name": "Vulpix",
       "speciesKey": "VULPIX",
-      "types": ["Fire"],
+      "types": [
+        "Fire"
+      ],
       "stats": {
         "hp": 38,
         "attack": 41,
@@ -6678,7 +6918,11 @@
         "cry": "Audio/Cries/VULPIX.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/VULPIX.png",
         "backShiny": "Graphics/Pokemon/Back shiny/VULPIX.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/VULPIX.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/VULPIX.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/VULPIX.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/VULPIX.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/VULPIX.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/VULPIX.png"
       },
       "species": "Fox Pokémon",
       "height": 0.6,
@@ -6883,7 +7127,9 @@
       "id": 38,
       "name": "Ninetales",
       "speciesKey": "NINETALES",
-      "types": ["Fire"],
+      "types": [
+        "Fire"
+      ],
       "stats": {
         "hp": 73,
         "attack": 76,
@@ -6901,7 +7147,11 @@
         "cry": "Audio/Cries/NINETALES.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/NINETALES.png",
         "backShiny": "Graphics/Pokemon/Back shiny/NINETALES.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/NINETALES.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/NINETALES.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/NINETALES.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/NINETALES.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/NINETALES.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/NINETALES.png"
       },
       "species": "Fox Pokémon",
       "height": 1.1,
@@ -7033,7 +7283,10 @@
       "id": 39,
       "name": "Jigglypuff",
       "speciesKey": "JIGGLYPUFF",
-      "types": ["Normal", "Fairy"],
+      "types": [
+        "Normal",
+        "Fairy"
+      ],
       "stats": {
         "hp": 115,
         "attack": 45,
@@ -7051,7 +7304,11 @@
         "cry": "Audio/Cries/JIGGLYPUFF.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/JIGGLYPUFF.png",
         "backShiny": "Graphics/Pokemon/Back shiny/JIGGLYPUFF.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/JIGGLYPUFF.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/JIGGLYPUFF.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/JIGGLYPUFF.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/JIGGLYPUFF.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/JIGGLYPUFF.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/JIGGLYPUFF.png"
       },
       "species": "Balloon Pokémon",
       "height": 0.5,
@@ -7302,7 +7559,10 @@
       "id": 40,
       "name": "Wigglytuff",
       "speciesKey": "WIGGLYTUFF",
-      "types": ["Normal", "Fairy"],
+      "types": [
+        "Normal",
+        "Fairy"
+      ],
       "stats": {
         "hp": 140,
         "attack": 70,
@@ -7320,7 +7580,11 @@
         "cry": "Audio/Cries/WIGGLYTUFF.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/WIGGLYTUFF.png",
         "backShiny": "Graphics/Pokemon/Back shiny/WIGGLYTUFF.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/WIGGLYTUFF.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/WIGGLYTUFF.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/WIGGLYTUFF.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/WIGGLYTUFF.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/WIGGLYTUFF.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/WIGGLYTUFF.png"
       },
       "species": "Balloon Pokémon",
       "height": 1,
@@ -7575,7 +7839,10 @@
       "id": 41,
       "name": "Zubat",
       "speciesKey": "ZUBAT",
-      "types": ["Poison", "Flying"],
+      "types": [
+        "Poison",
+        "Flying"
+      ],
       "stats": {
         "hp": 40,
         "attack": 45,
@@ -7593,7 +7860,11 @@
         "cry": "Audio/Cries/ZUBAT.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/ZUBAT.png",
         "backShiny": "Graphics/Pokemon/Back shiny/ZUBAT.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/ZUBAT.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/ZUBAT.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Levitates/ZUBAT.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/ZUBAT.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Levitates/ZUBAT.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/ZUBAT.png"
       },
       "species": "Bat Pokémon",
       "height": 0.8,
@@ -7757,7 +8028,10 @@
       "id": 42,
       "name": "Golbat",
       "speciesKey": "GOLBAT",
-      "types": ["Poison", "Flying"],
+      "types": [
+        "Poison",
+        "Flying"
+      ],
       "stats": {
         "hp": 75,
         "attack": 80,
@@ -7775,7 +8049,11 @@
         "cry": "Audio/Cries/GOLBAT.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/GOLBAT.png",
         "backShiny": "Graphics/Pokemon/Back shiny/GOLBAT.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/GOLBAT.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/GOLBAT.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Levitates/GOLBAT.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/GOLBAT.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Levitates/GOLBAT.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/GOLBAT.png"
       },
       "species": "Bat Pokémon",
       "height": 1.6,
@@ -7950,7 +8228,10 @@
       "id": 43,
       "name": "Oddish",
       "speciesKey": "ODDISH",
-      "types": ["Grass", "Poison"],
+      "types": [
+        "Grass",
+        "Poison"
+      ],
       "stats": {
         "hp": 45,
         "attack": 50,
@@ -7968,7 +8249,11 @@
         "cry": "Audio/Cries/ODDISH.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/ODDISH.png",
         "backShiny": "Graphics/Pokemon/Back shiny/ODDISH.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/ODDISH.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/ODDISH.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/ODDISH.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/ODDISH.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/ODDISH.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/ODDISH.png"
       },
       "species": "Weed Pokémon",
       "height": 0.5,
@@ -8135,7 +8420,10 @@
       "id": 44,
       "name": "Gloom",
       "speciesKey": "GLOOM",
-      "types": ["Grass", "Poison"],
+      "types": [
+        "Grass",
+        "Poison"
+      ],
       "stats": {
         "hp": 60,
         "attack": 65,
@@ -8153,7 +8441,11 @@
         "cry": "Audio/Cries/GLOOM.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/GLOOM.png",
         "backShiny": "Graphics/Pokemon/Back shiny/GLOOM.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/GLOOM.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/GLOOM.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/GLOOM.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/GLOOM.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/GLOOM.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/GLOOM.png"
       },
       "species": "Weed Pokémon",
       "height": 0.8,
@@ -8323,7 +8615,10 @@
       "id": 45,
       "name": "Vileplume",
       "speciesKey": "VILEPLUME",
-      "types": ["Grass", "Poison"],
+      "types": [
+        "Grass",
+        "Poison"
+      ],
       "stats": {
         "hp": 75,
         "attack": 80,
@@ -8341,7 +8636,11 @@
         "cry": "Audio/Cries/VILEPLUME.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/VILEPLUME.png",
         "backShiny": "Graphics/Pokemon/Back shiny/VILEPLUME.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/VILEPLUME.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/VILEPLUME.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/VILEPLUME.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/VILEPLUME.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/VILEPLUME.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/VILEPLUME.png"
       },
       "species": "Flower Pokémon",
       "height": 1.2,
@@ -8518,7 +8817,10 @@
       "id": 46,
       "name": "Paras",
       "speciesKey": "PARAS",
-      "types": ["Bug", "Grass"],
+      "types": [
+        "Bug",
+        "Grass"
+      ],
       "stats": {
         "hp": 35,
         "attack": 70,
@@ -8536,7 +8838,11 @@
         "cry": "Audio/Cries/PARAS.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/PARAS.png",
         "backShiny": "Graphics/Pokemon/Back shiny/PARAS.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/PARAS.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PARAS.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/PARAS.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/PARAS.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/PARAS.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/PARAS.png"
       },
       "species": "Mushroom Pokémon",
       "height": 0.3,
@@ -8658,7 +8964,10 @@
       "id": 47,
       "name": "Parasect",
       "speciesKey": "PARASECT",
-      "types": ["Bug", "Grass"],
+      "types": [
+        "Bug",
+        "Grass"
+      ],
       "stats": {
         "hp": 60,
         "attack": 95,
@@ -8676,7 +8985,11 @@
         "cry": "Audio/Cries/PARASECT.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/PARASECT.png",
         "backShiny": "Graphics/Pokemon/Back shiny/PARASECT.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/PARASECT.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PARASECT.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/PARASECT.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/PARASECT.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/PARASECT.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/PARASECT.png"
       },
       "species": "Mushroom Pokémon",
       "height": 1,
@@ -8800,7 +9113,10 @@
       "id": 48,
       "name": "Venonat",
       "speciesKey": "VENONAT",
-      "types": ["Bug", "Poison"],
+      "types": [
+        "Bug",
+        "Poison"
+      ],
       "stats": {
         "hp": 60,
         "attack": 55,
@@ -8818,7 +9134,11 @@
         "cry": "Audio/Cries/VENONAT.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/VENONAT.png",
         "backShiny": "Graphics/Pokemon/Back shiny/VENONAT.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/VENONAT.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/VENONAT.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/VENONAT.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/VENONAT.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/VENONAT.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/VENONAT.png"
       },
       "species": "Insect Pokémon",
       "height": 1,
@@ -8986,7 +9306,10 @@
       "id": 49,
       "name": "Venomoth",
       "speciesKey": "VENOMOTH",
-      "types": ["Bug", "Poison"],
+      "types": [
+        "Bug",
+        "Poison"
+      ],
       "stats": {
         "hp": 70,
         "attack": 65,
@@ -9004,7 +9327,11 @@
         "cry": "Audio/Cries/VENOMOTH.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/VENOMOTH.png",
         "backShiny": "Graphics/Pokemon/Back shiny/VENOMOTH.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/VENOMOTH.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/VENOMOTH.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Levitates/VENOMOTH.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/VENOMOTH.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Levitates/VENOMOTH.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/VENOMOTH.png"
       },
       "species": "Poison Moth Pokémon",
       "height": 1.5,
@@ -9191,7 +9518,9 @@
       "id": 50,
       "name": "Diglett",
       "speciesKey": "DIGLETT",
-      "types": ["Ground"],
+      "types": [
+        "Ground"
+      ],
       "stats": {
         "hp": 10,
         "attack": 55,
@@ -9209,7 +9538,11 @@
         "cry": "Audio/Cries/DIGLETT.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/DIGLETT.png",
         "backShiny": "Graphics/Pokemon/Back shiny/DIGLETT.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/DIGLETT.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/DIGLETT.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Levitates/DIGLETT.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/DIGLETT.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Levitates/DIGLETT.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/DIGLETT.png"
       },
       "species": "Mole Pokémon",
       "height": 0.2,
@@ -9391,7 +9724,9 @@
       "id": 51,
       "name": "Dugtrio",
       "speciesKey": "DUGTRIO",
-      "types": ["Ground"],
+      "types": [
+        "Ground"
+      ],
       "stats": {
         "hp": 35,
         "attack": 100,
@@ -9409,7 +9744,11 @@
         "cry": "Audio/Cries/DUGTRIO.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/DUGTRIO.png",
         "backShiny": "Graphics/Pokemon/Back shiny/DUGTRIO.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/DUGTRIO.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/DUGTRIO.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Levitates/DUGTRIO.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/DUGTRIO.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Levitates/DUGTRIO.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/DUGTRIO.png"
       },
       "species": "Mole Pokémon",
       "height": 0.7,
@@ -9609,7 +9948,9 @@
       "id": 52,
       "name": "Meowth",
       "speciesKey": "MEOWTH",
-      "types": ["Normal"],
+      "types": [
+        "Normal"
+      ],
       "stats": {
         "hp": 40,
         "attack": 45,
@@ -9627,7 +9968,11 @@
         "cry": "Audio/Cries/MEOWTH.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/MEOWTH.png",
         "backShiny": "Graphics/Pokemon/Back shiny/MEOWTH.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/MEOWTH.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MEOWTH.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MEOWTH.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MEOWTH.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MEOWTH.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MEOWTH.png"
       },
       "species": "Scratch Cat Pokémon",
       "height": 0.4,
@@ -9842,7 +10187,9 @@
       "id": 53,
       "name": "Persian",
       "speciesKey": "PERSIAN",
-      "types": ["Normal"],
+      "types": [
+        "Normal"
+      ],
       "stats": {
         "hp": 65,
         "attack": 70,
@@ -9860,7 +10207,11 @@
         "cry": "Audio/Cries/PERSIAN.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/PERSIAN.png",
         "backShiny": "Graphics/Pokemon/Back shiny/PERSIAN.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/PERSIAN.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PERSIAN.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/PERSIAN.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/PERSIAN.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/PERSIAN.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/PERSIAN.png"
       },
       "species": "Classy Cat Pokémon",
       "height": 1,
@@ -10082,7 +10433,9 @@
       "id": 54,
       "name": "Psyduck",
       "speciesKey": "PSYDUCK",
-      "types": ["Water"],
+      "types": [
+        "Water"
+      ],
       "stats": {
         "hp": 50,
         "attack": 52,
@@ -10100,7 +10453,11 @@
         "cry": "Audio/Cries/PSYDUCK.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/PSYDUCK.png",
         "backShiny": "Graphics/Pokemon/Back shiny/PSYDUCK.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/PSYDUCK.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PSYDUCK.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/PSYDUCK.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/PSYDUCK.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/PSYDUCK.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/PSYDUCK.png"
       },
       "species": "Duck Pokémon",
       "height": 0.8,
@@ -10303,7 +10660,9 @@
       "id": 55,
       "name": "Golduck",
       "speciesKey": "GOLDUCK",
-      "types": ["Water"],
+      "types": [
+        "Water"
+      ],
       "stats": {
         "hp": 80,
         "attack": 82,
@@ -10321,7 +10680,11 @@
         "cry": "Audio/Cries/GOLDUCK.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/GOLDUCK.png",
         "backShiny": "Graphics/Pokemon/Back shiny/GOLDUCK.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/GOLDUCK.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/GOLDUCK.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/GOLDUCK.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/GOLDUCK.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/GOLDUCK.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/GOLDUCK.png"
       },
       "species": "Duck Pokémon",
       "height": 1.7,
@@ -10544,7 +10907,9 @@
       "id": 56,
       "name": "Mankey",
       "speciesKey": "MANKEY",
-      "types": ["Fighting"],
+      "types": [
+        "Fighting"
+      ],
       "stats": {
         "hp": 40,
         "attack": 80,
@@ -10562,7 +10927,11 @@
         "cry": "Audio/Cries/MANKEY.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/MANKEY.png",
         "backShiny": "Graphics/Pokemon/Back shiny/MANKEY.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/MANKEY.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MANKEY.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MANKEY.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MANKEY.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MANKEY.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MANKEY.png"
       },
       "species": "Pig Monkey Pokémon",
       "height": 0.5,
@@ -10780,7 +11149,9 @@
       "id": 57,
       "name": "Primeape",
       "speciesKey": "PRIMEAPE",
-      "types": ["Fighting"],
+      "types": [
+        "Fighting"
+      ],
       "stats": {
         "hp": 65,
         "attack": 105,
@@ -10798,7 +11169,11 @@
         "cry": "Audio/Cries/PRIMEAPE.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/PRIMEAPE.png",
         "backShiny": "Graphics/Pokemon/Back shiny/PRIMEAPE.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/PRIMEAPE.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PRIMEAPE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/PRIMEAPE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/PRIMEAPE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/PRIMEAPE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/PRIMEAPE.png"
       },
       "species": "Pig Monkey Pokémon",
       "height": 1,
@@ -11027,7 +11402,9 @@
       "id": 58,
       "name": "Growlithe",
       "speciesKey": "GROWLITHE",
-      "types": ["Fire"],
+      "types": [
+        "Fire"
+      ],
       "stats": {
         "hp": 55,
         "attack": 70,
@@ -11045,7 +11422,11 @@
         "cry": "Audio/Cries/GROWLITHE.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/GROWLITHE.png",
         "backShiny": "Graphics/Pokemon/Back shiny/GROWLITHE.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/GROWLITHE.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/GROWLITHE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/GROWLITHE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/GROWLITHE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/GROWLITHE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/GROWLITHE.png"
       },
       "species": "Puppy Pokémon",
       "height": 0.7,
@@ -11252,7 +11633,9 @@
       "id": 59,
       "name": "Arcanine",
       "speciesKey": "ARCANINE",
-      "types": ["Fire"],
+      "types": [
+        "Fire"
+      ],
       "stats": {
         "hp": 90,
         "attack": 110,
@@ -11270,7 +11653,11 @@
         "cry": "Audio/Cries/ARCANINE.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/ARCANINE.png",
         "backShiny": "Graphics/Pokemon/Back shiny/ARCANINE.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/ARCANINE.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/ARCANINE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/ARCANINE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/ARCANINE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/ARCANINE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/ARCANINE.png"
       },
       "species": "Legendary Pokémon",
       "height": 1.9,
@@ -11487,7 +11874,9 @@
       "id": 60,
       "name": "Poliwag",
       "speciesKey": "POLIWAG",
-      "types": ["Water"],
+      "types": [
+        "Water"
+      ],
       "stats": {
         "hp": 40,
         "attack": 50,
@@ -11505,7 +11894,11 @@
         "cry": "Audio/Cries/POLIWAG.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/POLIWAG.png",
         "backShiny": "Graphics/Pokemon/Back shiny/POLIWAG.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/POLIWAG.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/POLIWAG.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/POLIWAG.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/POLIWAG.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/POLIWAG.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/POLIWAG.png"
       },
       "species": "Tadpole Pokémon",
       "height": 0.6,
@@ -11661,7 +12054,9 @@
       "id": 61,
       "name": "Poliwhirl",
       "speciesKey": "POLIWHIRL",
-      "types": ["Water"],
+      "types": [
+        "Water"
+      ],
       "stats": {
         "hp": 65,
         "attack": 65,
@@ -11679,7 +12074,11 @@
         "cry": "Audio/Cries/POLIWHIRL.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/POLIWHIRL.png",
         "backShiny": "Graphics/Pokemon/Back shiny/POLIWHIRL.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/POLIWHIRL.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/POLIWHIRL.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/POLIWHIRL.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/POLIWHIRL.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/POLIWHIRL.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/POLIWHIRL.png"
       },
       "species": "Tadpole Pokémon",
       "height": 1,
@@ -11846,7 +12245,10 @@
       "id": 62,
       "name": "Poliwrath",
       "speciesKey": "POLIWRATH",
-      "types": ["Water", "Fighting"],
+      "types": [
+        "Water",
+        "Fighting"
+      ],
       "stats": {
         "hp": 90,
         "attack": 95,
@@ -11864,7 +12266,11 @@
         "cry": "Audio/Cries/POLIWRATH.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/POLIWRATH.png",
         "backShiny": "Graphics/Pokemon/Back shiny/POLIWRATH.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/POLIWRATH.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/POLIWRATH.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/POLIWRATH.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/POLIWRATH.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/POLIWRATH.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/POLIWRATH.png"
       },
       "species": "Tadpole Pokémon",
       "height": 1.3,
@@ -11997,7 +12403,9 @@
       "id": 63,
       "name": "Abra",
       "speciesKey": "ABRA",
-      "types": ["Psychic"],
+      "types": [
+        "Psychic"
+      ],
       "stats": {
         "hp": 25,
         "attack": 20,
@@ -12015,7 +12423,11 @@
         "cry": "Audio/Cries/ABRA.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/ABRA.png",
         "backShiny": "Graphics/Pokemon/Back shiny/ABRA.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/ABRA.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/ABRA.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Levitates/ABRA.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/ABRA.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Levitates/ABRA.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/ABRA.png"
       },
       "species": "Psi Pokémon",
       "height": 0.9,
@@ -12102,7 +12514,9 @@
       "id": 64,
       "name": "Kadabra",
       "speciesKey": "KADABRA",
-      "types": ["Psychic"],
+      "types": [
+        "Psychic"
+      ],
       "stats": {
         "hp": 40,
         "attack": 35,
@@ -12120,7 +12534,11 @@
         "cry": "Audio/Cries/KADABRA.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/KADABRA.png",
         "backShiny": "Graphics/Pokemon/Back shiny/KADABRA.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/KADABRA.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/KADABRA.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/KADABRA.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/KADABRA.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/KADABRA.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/KADABRA.png"
       },
       "species": "Psi Pokémon",
       "height": 1.3,
@@ -12272,7 +12690,9 @@
       "id": 65,
       "name": "Alakazam",
       "speciesKey": "ALAKAZAM",
-      "types": ["Psychic"],
+      "types": [
+        "Psychic"
+      ],
       "stats": {
         "hp": 55,
         "attack": 50,
@@ -12290,7 +12710,11 @@
         "cry": "Audio/Cries/ALAKAZAM.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/ALAKAZAM.png",
         "backShiny": "Graphics/Pokemon/Back shiny/ALAKAZAM.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/ALAKAZAM.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/ALAKAZAM.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/ALAKAZAM.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/ALAKAZAM.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/ALAKAZAM.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/ALAKAZAM.png"
       },
       "species": "Psi Pokémon",
       "height": 1.5,
@@ -12446,7 +12870,9 @@
       "id": 66,
       "name": "Machop",
       "speciesKey": "MACHOP",
-      "types": ["Fighting"],
+      "types": [
+        "Fighting"
+      ],
       "stats": {
         "hp": 70,
         "attack": 80,
@@ -12464,7 +12890,11 @@
         "cry": "Audio/Cries/MACHOP.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/MACHOP.png",
         "backShiny": "Graphics/Pokemon/Back shiny/MACHOP.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/MACHOP.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MACHOP.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MACHOP.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MACHOP.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MACHOP.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MACHOP.png"
       },
       "species": "Superpower Pokémon",
       "height": 0.8,
@@ -12639,7 +13069,9 @@
       "id": 67,
       "name": "Machoke",
       "speciesKey": "MACHOKE",
-      "types": ["Fighting"],
+      "types": [
+        "Fighting"
+      ],
       "stats": {
         "hp": 80,
         "attack": 100,
@@ -12657,7 +13089,11 @@
         "cry": "Audio/Cries/MACHOKE.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/MACHOKE.png",
         "backShiny": "Graphics/Pokemon/Back shiny/MACHOKE.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/MACHOKE.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MACHOKE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MACHOKE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MACHOKE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MACHOKE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MACHOKE.png"
       },
       "species": "Superpower Pokémon",
       "height": 1.5,
@@ -12832,7 +13268,9 @@
       "id": 68,
       "name": "Machamp",
       "speciesKey": "MACHAMP",
-      "types": ["Fighting"],
+      "types": [
+        "Fighting"
+      ],
       "stats": {
         "hp": 90,
         "attack": 130,
@@ -12850,7 +13288,11 @@
         "cry": "Audio/Cries/MACHAMP.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/MACHAMP.png",
         "backShiny": "Graphics/Pokemon/Back shiny/MACHAMP.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/MACHAMP.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MACHAMP.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MACHAMP.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MACHAMP.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MACHAMP.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MACHAMP.png"
       },
       "species": "Superpower Pokémon",
       "height": 1.6,
@@ -13036,7 +13478,10 @@
       "id": 69,
       "name": "Bellsprout",
       "speciesKey": "BELLSPROUT",
-      "types": ["Grass", "Poison"],
+      "types": [
+        "Grass",
+        "Poison"
+      ],
       "stats": {
         "hp": 50,
         "attack": 75,
@@ -13054,7 +13499,11 @@
         "cry": "Audio/Cries/BELLSPROUT.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/BELLSPROUT.png",
         "backShiny": "Graphics/Pokemon/Back shiny/BELLSPROUT.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/BELLSPROUT.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/BELLSPROUT.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/BELLSPROUT.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/BELLSPROUT.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/BELLSPROUT.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/BELLSPROUT.png"
       },
       "species": "Flower Pokémon",
       "height": 0.7,
@@ -13235,7 +13684,10 @@
       "id": 70,
       "name": "Weepinbell",
       "speciesKey": "WEEPINBELL",
-      "types": ["Grass", "Poison"],
+      "types": [
+        "Grass",
+        "Poison"
+      ],
       "stats": {
         "hp": 65,
         "attack": 90,
@@ -13253,7 +13705,11 @@
         "cry": "Audio/Cries/WEEPINBELL.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/WEEPINBELL.png",
         "backShiny": "Graphics/Pokemon/Back shiny/WEEPINBELL.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/WEEPINBELL.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/WEEPINBELL.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/WEEPINBELL.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/WEEPINBELL.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/WEEPINBELL.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/WEEPINBELL.png"
       },
       "species": "Flycatcher Pokémon",
       "height": 1,
@@ -13437,7 +13893,10 @@
       "id": 71,
       "name": "Victreebel",
       "speciesKey": "VICTREEBEL",
-      "types": ["Grass", "Poison"],
+      "types": [
+        "Grass",
+        "Poison"
+      ],
       "stats": {
         "hp": 80,
         "attack": 105,
@@ -13455,7 +13914,11 @@
         "cry": "Audio/Cries/VICTREEBEL.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/VICTREEBEL.png",
         "backShiny": "Graphics/Pokemon/Back shiny/VICTREEBEL.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/VICTREEBEL.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/VICTREEBEL.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/VICTREEBEL.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/VICTREEBEL.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/VICTREEBEL.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/VICTREEBEL.png"
       },
       "species": "Flycatcher Pokémon",
       "height": 1.7,
@@ -13649,7 +14112,10 @@
       "id": 72,
       "name": "Tentacool",
       "speciesKey": "TENTACOOL",
-      "types": ["Water", "Poison"],
+      "types": [
+        "Water",
+        "Poison"
+      ],
       "stats": {
         "hp": 40,
         "attack": 40,
@@ -13667,7 +14133,11 @@
         "cry": "Audio/Cries/TENTACOOL.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/TENTACOOL.png",
         "backShiny": "Graphics/Pokemon/Back shiny/TENTACOOL.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/TENTACOOL.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/TENTACOOL.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/TENTACOOL.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/TENTACOOL.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/TENTACOOL.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/TENTACOOL.png"
       },
       "species": "Jellyfish Pokémon",
       "height": 0.9,
@@ -13851,7 +14321,10 @@
       "id": 73,
       "name": "Tentacruel",
       "speciesKey": "TENTACRUEL",
-      "types": ["Water", "Poison"],
+      "types": [
+        "Water",
+        "Poison"
+      ],
       "stats": {
         "hp": 80,
         "attack": 70,
@@ -13869,7 +14342,11 @@
         "cry": "Audio/Cries/TENTACRUEL.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/TENTACRUEL.png",
         "backShiny": "Graphics/Pokemon/Back shiny/TENTACRUEL.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/TENTACRUEL.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/TENTACRUEL.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/TENTACRUEL.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/TENTACRUEL.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/TENTACRUEL.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/TENTACRUEL.png"
       },
       "species": "Jellyfish Pokémon",
       "height": 1.6,
@@ -14065,7 +14542,10 @@
       "id": 74,
       "name": "Geodude",
       "speciesKey": "GEODUDE",
-      "types": ["Rock", "Ground"],
+      "types": [
+        "Rock",
+        "Ground"
+      ],
       "stats": {
         "hp": 40,
         "attack": 80,
@@ -14083,7 +14563,11 @@
         "cry": "Audio/Cries/GEODUDE.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/GEODUDE.png",
         "backShiny": "Graphics/Pokemon/Back shiny/GEODUDE.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/GEODUDE.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/GEODUDE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/GEODUDE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/GEODUDE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/GEODUDE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/GEODUDE.png"
       },
       "species": "Rock Pokémon",
       "height": 0.4,
@@ -14278,7 +14762,10 @@
       "id": 75,
       "name": "Graveler",
       "speciesKey": "GRAVELER",
-      "types": ["Rock", "Ground"],
+      "types": [
+        "Rock",
+        "Ground"
+      ],
       "stats": {
         "hp": 55,
         "attack": 95,
@@ -14296,7 +14783,11 @@
         "cry": "Audio/Cries/GRAVELER.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/GRAVELER.png",
         "backShiny": "Graphics/Pokemon/Back shiny/GRAVELER.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/GRAVELER.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/GRAVELER.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/GRAVELER.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/GRAVELER.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/GRAVELER.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/GRAVELER.png"
       },
       "species": "Rock Pokémon",
       "height": 1,
@@ -14496,7 +14987,10 @@
       "id": 76,
       "name": "Golem",
       "speciesKey": "GOLEM",
-      "types": ["Rock", "Ground"],
+      "types": [
+        "Rock",
+        "Ground"
+      ],
       "stats": {
         "hp": 80,
         "attack": 120,
@@ -14514,7 +15008,11 @@
         "cry": "Audio/Cries/GOLEM.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/GOLEM.png",
         "backShiny": "Graphics/Pokemon/Back shiny/GOLEM.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/GOLEM.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/GOLEM.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/GOLEM.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/GOLEM.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/GOLEM.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/GOLEM.png"
       },
       "species": "Megaton Pokémon",
       "height": 1.4,
@@ -14719,7 +15217,9 @@
       "id": 77,
       "name": "Ponyta",
       "speciesKey": "PONYTA",
-      "types": ["Fire"],
+      "types": [
+        "Fire"
+      ],
       "stats": {
         "hp": 50,
         "attack": 85,
@@ -14737,7 +15237,11 @@
         "cry": "Audio/Cries/PONYTA.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/PONYTA.png",
         "backShiny": "Graphics/Pokemon/Back shiny/PONYTA.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/PONYTA.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PONYTA.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/PONYTA.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/PONYTA.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/PONYTA.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/PONYTA.png"
       },
       "species": "Fire Horse Pokémon",
       "height": 1,
@@ -14849,7 +15353,9 @@
       "id": 78,
       "name": "Rapidash",
       "speciesKey": "RAPIDASH",
-      "types": ["Fire"],
+      "types": [
+        "Fire"
+      ],
       "stats": {
         "hp": 65,
         "attack": 100,
@@ -14867,7 +15373,11 @@
         "cry": "Audio/Cries/RAPIDASH.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/RAPIDASH.png",
         "backShiny": "Graphics/Pokemon/Back shiny/RAPIDASH.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/RAPIDASH.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/RAPIDASH.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/RAPIDASH.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/RAPIDASH.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/RAPIDASH.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/RAPIDASH.png"
       },
       "species": "Fire Horse Pokémon",
       "height": 1.7,
@@ -14985,7 +15495,10 @@
       "id": 79,
       "name": "Slowpoke",
       "speciesKey": "SLOWPOKE",
-      "types": ["Water", "Psychic"],
+      "types": [
+        "Water",
+        "Psychic"
+      ],
       "stats": {
         "hp": 90,
         "attack": 65,
@@ -15003,7 +15516,11 @@
         "cry": "Audio/Cries/SLOWPOKE.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/SLOWPOKE.png",
         "backShiny": "Graphics/Pokemon/Back shiny/SLOWPOKE.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/SLOWPOKE.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SLOWPOKE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SLOWPOKE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SLOWPOKE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SLOWPOKE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SLOWPOKE.png"
       },
       "species": "Dopey Pokémon",
       "height": 1.2,
@@ -15192,7 +15709,10 @@
       "id": 80,
       "name": "Slowbro",
       "speciesKey": "SLOWBRO",
-      "types": ["Water", "Psychic"],
+      "types": [
+        "Water",
+        "Psychic"
+      ],
       "stats": {
         "hp": 95,
         "attack": 75,
@@ -15210,7 +15730,11 @@
         "cry": "Audio/Cries/SLOWBRO.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/SLOWBRO.png",
         "backShiny": "Graphics/Pokemon/Back shiny/SLOWBRO.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/SLOWBRO.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SLOWBRO.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SLOWBRO.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SLOWBRO.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SLOWBRO.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SLOWBRO.png"
       },
       "species": "Hermit Crab Pokémon",
       "height": 1.6,
@@ -15443,7 +15967,10 @@
       "id": 81,
       "name": "Magnemite",
       "speciesKey": "MAGNEMITE",
-      "types": ["Electric", "Steel"],
+      "types": [
+        "Electric",
+        "Steel"
+      ],
       "stats": {
         "hp": 25,
         "attack": 35,
@@ -15461,7 +15988,11 @@
         "cry": "Audio/Cries/MAGNEMITE.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/MAGNEMITE.png",
         "backShiny": "Graphics/Pokemon/Back shiny/MAGNEMITE.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/MAGNEMITE.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MAGNEMITE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MAGNEMITE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MAGNEMITE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MAGNEMITE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MAGNEMITE.png"
       },
       "species": "Magnet Pokémon",
       "height": 0.3,
@@ -15642,7 +16173,10 @@
       "id": 82,
       "name": "Magneton",
       "speciesKey": "MAGNETON",
-      "types": ["Electric", "Steel"],
+      "types": [
+        "Electric",
+        "Steel"
+      ],
       "stats": {
         "hp": 50,
         "attack": 60,
@@ -15660,7 +16194,11 @@
         "cry": "Audio/Cries/MAGNETON.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/MAGNETON.png",
         "backShiny": "Graphics/Pokemon/Back shiny/MAGNETON.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/MAGNETON.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MAGNETON.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MAGNETON.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MAGNETON.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MAGNETON.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MAGNETON.png"
       },
       "species": "Magnet Pokémon",
       "height": 1,
@@ -15851,7 +16389,10 @@
       "id": 83,
       "name": "Farfetch'd",
       "speciesKey": "FARFETCHD",
-      "types": ["Normal", "Flying"],
+      "types": [
+        "Normal",
+        "Flying"
+      ],
       "stats": {
         "hp": 52,
         "attack": 90,
@@ -15869,7 +16410,11 @@
         "cry": "Audio/Cries/FARFETCHD.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/FARFETCHD.png",
         "backShiny": "Graphics/Pokemon/Back shiny/FARFETCHD.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/FARFETCHD.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/FARFETCHD.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/FARFETCHD.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/FARFETCHD.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/FARFETCHD.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/FARFETCHD.png"
       },
       "species": "Wild Duck Pokémon",
       "height": 0.8,
@@ -16071,7 +16616,10 @@
       "id": 84,
       "name": "Doduo",
       "speciesKey": "DODUO",
-      "types": ["Normal", "Flying"],
+      "types": [
+        "Normal",
+        "Flying"
+      ],
       "stats": {
         "hp": 35,
         "attack": 85,
@@ -16089,7 +16637,11 @@
         "cry": "Audio/Cries/DODUO.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/DODUO.png",
         "backShiny": "Graphics/Pokemon/Back shiny/DODUO.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/DODUO.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/DODUO.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/DODUO.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/DODUO.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/DODUO.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/DODUO.png"
       },
       "species": "Twin Bird Pokémon",
       "height": 1.4,
@@ -16254,7 +16806,10 @@
       "id": 85,
       "name": "Dodrio",
       "speciesKey": "DODRIO",
-      "types": ["Normal", "Flying"],
+      "types": [
+        "Normal",
+        "Flying"
+      ],
       "stats": {
         "hp": 60,
         "attack": 110,
@@ -16272,7 +16827,11 @@
         "cry": "Audio/Cries/DODRIO.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/DODRIO.png",
         "backShiny": "Graphics/Pokemon/Back shiny/DODRIO.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/DODRIO.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/DODRIO.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/DODRIO.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/DODRIO.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/DODRIO.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/DODRIO.png"
       },
       "species": "Triple Bird Pokémon",
       "height": 1.8,
@@ -16448,7 +17007,9 @@
       "id": 86,
       "name": "Seel",
       "speciesKey": "SEEL",
-      "types": ["Water"],
+      "types": [
+        "Water"
+      ],
       "stats": {
         "hp": 65,
         "attack": 45,
@@ -16466,7 +17027,11 @@
         "cry": "Audio/Cries/SEEL.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/SEEL.png",
         "backShiny": "Graphics/Pokemon/Back shiny/SEEL.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/SEEL.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SEEL.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SEEL.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SEEL.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SEEL.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SEEL.png"
       },
       "species": "Sea Lion Pokémon",
       "height": 1.1,
@@ -16668,7 +17233,10 @@
       "id": 87,
       "name": "Dewgong",
       "speciesKey": "DEWGONG",
-      "types": ["Water", "Ice"],
+      "types": [
+        "Water",
+        "Ice"
+      ],
       "stats": {
         "hp": 90,
         "attack": 70,
@@ -16686,7 +17254,11 @@
         "cry": "Audio/Cries/DEWGONG.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/DEWGONG.png",
         "backShiny": "Graphics/Pokemon/Back shiny/DEWGONG.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/DEWGONG.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/DEWGONG.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/DEWGONG.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/DEWGONG.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/DEWGONG.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/DEWGONG.png"
       },
       "species": "Sea Lion Pokémon",
       "height": 1.7,
@@ -16889,7 +17461,9 @@
       "id": 88,
       "name": "Grimer",
       "speciesKey": "GRIMER",
-      "types": ["Poison"],
+      "types": [
+        "Poison"
+      ],
       "stats": {
         "hp": 80,
         "attack": 80,
@@ -16907,7 +17481,11 @@
         "cry": "Audio/Cries/GRIMER.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/GRIMER.png",
         "backShiny": "Graphics/Pokemon/Back shiny/GRIMER.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/GRIMER.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/GRIMER.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/GRIMER.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/GRIMER.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/GRIMER.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/GRIMER.png"
       },
       "species": "Sludge Pokémon",
       "height": 0.9,
@@ -17126,7 +17704,9 @@
       "id": 89,
       "name": "Muk",
       "speciesKey": "MUK",
-      "types": ["Poison"],
+      "types": [
+        "Poison"
+      ],
       "stats": {
         "hp": 105,
         "attack": 105,
@@ -17144,7 +17724,11 @@
         "cry": "Audio/Cries/MUK.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/MUK.png",
         "backShiny": "Graphics/Pokemon/Back shiny/MUK.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/MUK.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MUK.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MUK.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MUK.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MUK.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MUK.png"
       },
       "species": "Sludge Pokémon",
       "height": 1.2,
@@ -17370,7 +17954,9 @@
       "id": 90,
       "name": "Shellder",
       "speciesKey": "SHELLDER",
-      "types": ["Water"],
+      "types": [
+        "Water"
+      ],
       "stats": {
         "hp": 30,
         "attack": 65,
@@ -17388,7 +17974,11 @@
         "cry": "Audio/Cries/SHELLDER.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/SHELLDER.png",
         "backShiny": "Graphics/Pokemon/Back shiny/SHELLDER.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/SHELLDER.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SHELLDER.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SHELLDER.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SHELLDER.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SHELLDER.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SHELLDER.png"
       },
       "species": "Bivalve Pokémon",
       "height": 0.3,
@@ -17562,7 +18152,10 @@
       "id": 91,
       "name": "Cloyster",
       "speciesKey": "CLOYSTER",
-      "types": ["Water", "Ice"],
+      "types": [
+        "Water",
+        "Ice"
+      ],
       "stats": {
         "hp": 50,
         "attack": 95,
@@ -17580,7 +18173,11 @@
         "cry": "Audio/Cries/CLOYSTER.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/CLOYSTER.png",
         "backShiny": "Graphics/Pokemon/Back shiny/CLOYSTER.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/CLOYSTER.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/CLOYSTER.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/CLOYSTER.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/CLOYSTER.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/CLOYSTER.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/CLOYSTER.png"
       },
       "species": "Bivalve Pokémon",
       "height": 1.5,
@@ -17786,7 +18383,10 @@
       "id": 92,
       "name": "Gastly",
       "speciesKey": "GASTLY",
-      "types": ["Ghost", "Poison"],
+      "types": [
+        "Ghost",
+        "Poison"
+      ],
       "stats": {
         "hp": 30,
         "attack": 35,
@@ -17804,7 +18404,11 @@
         "cry": "Audio/Cries/GASTLY.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/GASTLY.png",
         "backShiny": "Graphics/Pokemon/Back shiny/GASTLY.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/GASTLY.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/GASTLY.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Levitates/GASTLY.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/GASTLY.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Levitates/GASTLY.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/GASTLY.png"
       },
       "species": "Gas Pokémon",
       "height": 1.3,
@@ -17972,7 +18576,10 @@
       "id": 93,
       "name": "Haunter",
       "speciesKey": "HAUNTER",
-      "types": ["Ghost", "Poison"],
+      "types": [
+        "Ghost",
+        "Poison"
+      ],
       "stats": {
         "hp": 45,
         "attack": 50,
@@ -17990,7 +18597,11 @@
         "cry": "Audio/Cries/HAUNTER.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/HAUNTER.png",
         "backShiny": "Graphics/Pokemon/Back shiny/HAUNTER.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/HAUNTER.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/HAUNTER.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Levitates/HAUNTER.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/HAUNTER.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Levitates/HAUNTER.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/HAUNTER.png"
       },
       "species": "Gas Pokémon",
       "height": 1.6,
@@ -18187,7 +18798,10 @@
       "id": 94,
       "name": "Gengar",
       "speciesKey": "GENGAR",
-      "types": ["Ghost", "Poison"],
+      "types": [
+        "Ghost",
+        "Poison"
+      ],
       "stats": {
         "hp": 60,
         "attack": 65,
@@ -18205,7 +18819,11 @@
         "cry": "Audio/Cries/GENGAR.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/GENGAR.png",
         "backShiny": "Graphics/Pokemon/Back shiny/GENGAR.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/GENGAR.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/GENGAR.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/GENGAR.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/GENGAR.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/GENGAR.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/GENGAR.png"
       },
       "species": "Shadow Pokémon",
       "height": 1.5,
@@ -18416,7 +19034,10 @@
       "id": 95,
       "name": "Onix",
       "speciesKey": "ONIX",
-      "types": ["Rock", "Ground"],
+      "types": [
+        "Rock",
+        "Ground"
+      ],
       "stats": {
         "hp": 35,
         "attack": 45,
@@ -18434,7 +19055,11 @@
         "cry": "Audio/Cries/ONIX.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/ONIX.png",
         "backShiny": "Graphics/Pokemon/Back shiny/ONIX.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/ONIX.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/ONIX.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/ONIX.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/ONIX.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/ONIX.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/ONIX.png"
       },
       "species": "Rock Snake Pokémon",
       "height": 8.8,
@@ -18615,7 +19240,9 @@
       "id": 96,
       "name": "Drowzee",
       "speciesKey": "DROWZEE",
-      "types": ["Psychic"],
+      "types": [
+        "Psychic"
+      ],
       "stats": {
         "hp": 60,
         "attack": 48,
@@ -18633,7 +19260,11 @@
         "cry": "Audio/Cries/DROWZEE.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/DROWZEE.png",
         "backShiny": "Graphics/Pokemon/Back shiny/DROWZEE.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/DROWZEE.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/DROWZEE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/DROWZEE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/DROWZEE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/DROWZEE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/DROWZEE.png"
       },
       "species": "Hypnosis Pokémon",
       "height": 1,
@@ -18835,7 +19466,9 @@
       "id": 97,
       "name": "Hypno",
       "speciesKey": "HYPNO",
-      "types": ["Psychic"],
+      "types": [
+        "Psychic"
+      ],
       "stats": {
         "hp": 85,
         "attack": 73,
@@ -18853,7 +19486,11 @@
         "cry": "Audio/Cries/HYPNO.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/HYPNO.png",
         "backShiny": "Graphics/Pokemon/Back shiny/HYPNO.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/HYPNO.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/HYPNO.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/HYPNO.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/HYPNO.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/HYPNO.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/HYPNO.png"
       },
       "species": "Hypnosis Pokémon",
       "height": 1.6,
@@ -19069,7 +19706,9 @@
       "id": 98,
       "name": "Krabby",
       "speciesKey": "KRABBY",
-      "types": ["Water"],
+      "types": [
+        "Water"
+      ],
       "stats": {
         "hp": 30,
         "attack": 105,
@@ -19087,7 +19726,11 @@
         "cry": "Audio/Cries/KRABBY.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/KRABBY.png",
         "backShiny": "Graphics/Pokemon/Back shiny/KRABBY.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/KRABBY.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/KRABBY.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/KRABBY.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/KRABBY.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/KRABBY.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/KRABBY.png"
       },
       "species": "River Crab Pokémon",
       "height": 0.4,
@@ -19252,7 +19895,9 @@
       "id": 99,
       "name": "Kingler",
       "speciesKey": "KINGLER",
-      "types": ["Water"],
+      "types": [
+        "Water"
+      ],
       "stats": {
         "hp": 55,
         "attack": 130,
@@ -19270,7 +19915,11 @@
         "cry": "Audio/Cries/KINGLER.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/KINGLER.png",
         "backShiny": "Graphics/Pokemon/Back shiny/KINGLER.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/KINGLER.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/KINGLER.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/KINGLER.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/KINGLER.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/KINGLER.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/KINGLER.png"
       },
       "species": "Pincer Pokémon",
       "height": 1.3,
@@ -19452,7 +20101,9 @@
       "id": 100,
       "name": "Voltorb",
       "speciesKey": "VOLTORB",
-      "types": ["Electric"],
+      "types": [
+        "Electric"
+      ],
       "stats": {
         "hp": 40,
         "attack": 30,
@@ -19470,7 +20121,11 @@
         "cry": "Audio/Cries/VOLTORB.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/VOLTORB.png",
         "backShiny": "Graphics/Pokemon/Back shiny/VOLTORB.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/VOLTORB.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/VOLTORB.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/VOLTORB.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/VOLTORB.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/VOLTORB.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/VOLTORB.png"
       },
       "species": "Ball Pokémon",
       "height": 0.5,
@@ -19671,7 +20326,9 @@
       "id": 101,
       "name": "Electrode",
       "speciesKey": "ELECTRODE",
-      "types": ["Electric"],
+      "types": [
+        "Electric"
+      ],
       "stats": {
         "hp": 60,
         "attack": 50,
@@ -19689,7 +20346,11 @@
         "cry": "Audio/Cries/ELECTRODE.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/ELECTRODE.png",
         "backShiny": "Graphics/Pokemon/Back shiny/ELECTRODE.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/ELECTRODE.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/ELECTRODE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/ELECTRODE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/ELECTRODE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/ELECTRODE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/ELECTRODE.png"
       },
       "species": "Ball Pokémon",
       "height": 1.2,
@@ -19902,7 +20563,10 @@
       "id": 102,
       "name": "Exeggcute",
       "speciesKey": "EXEGGCUTE",
-      "types": ["Grass", "Psychic"],
+      "types": [
+        "Grass",
+        "Psychic"
+      ],
       "stats": {
         "hp": 60,
         "attack": 40,
@@ -19920,7 +20584,11 @@
         "cry": "Audio/Cries/EXEGGCUTE.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/EXEGGCUTE.png",
         "backShiny": "Graphics/Pokemon/Back shiny/EXEGGCUTE.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/EXEGGCUTE.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/EXEGGCUTE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/EXEGGCUTE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/EXEGGCUTE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/EXEGGCUTE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/EXEGGCUTE.png"
       },
       "species": "Egg Pokémon",
       "height": 0.4,
@@ -20093,7 +20761,10 @@
       "id": 103,
       "name": "Exeggutor",
       "speciesKey": "EXEGGUTOR",
-      "types": ["Grass", "Psychic"],
+      "types": [
+        "Grass",
+        "Psychic"
+      ],
       "stats": {
         "hp": 95,
         "attack": 95,
@@ -20111,7 +20782,11 @@
         "cry": "Audio/Cries/EXEGGUTOR.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/EXEGGUTOR.png",
         "backShiny": "Graphics/Pokemon/Back shiny/EXEGGUTOR.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/EXEGGUTOR.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/EXEGGUTOR.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/EXEGGUTOR.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/EXEGGUTOR.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/EXEGGUTOR.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/EXEGGUTOR.png"
       },
       "species": "Coconut Pokémon",
       "height": 2,
@@ -20341,7 +21016,9 @@
       "id": 104,
       "name": "Cubone",
       "speciesKey": "CUBONE",
-      "types": ["Ground"],
+      "types": [
+        "Ground"
+      ],
       "stats": {
         "hp": 50,
         "attack": 50,
@@ -20359,7 +21036,11 @@
         "cry": "Audio/Cries/CUBONE.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/CUBONE.png",
         "backShiny": "Graphics/Pokemon/Back shiny/CUBONE.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/CUBONE.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/CUBONE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/CUBONE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/CUBONE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/CUBONE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/CUBONE.png"
       },
       "species": "Lonely Pokémon",
       "height": 0.4,
@@ -20544,7 +21225,9 @@
       "id": 105,
       "name": "Marowak",
       "speciesKey": "MAROWAK",
-      "types": ["Ground"],
+      "types": [
+        "Ground"
+      ],
       "stats": {
         "hp": 60,
         "attack": 80,
@@ -20562,7 +21245,11 @@
         "cry": "Audio/Cries/MAROWAK.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/MAROWAK.png",
         "backShiny": "Graphics/Pokemon/Back shiny/MAROWAK.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/MAROWAK.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MAROWAK.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MAROWAK.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MAROWAK.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MAROWAK.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MAROWAK.png"
       },
       "species": "Bone Keeper Pokémon",
       "height": 1,
@@ -20764,7 +21451,9 @@
       "id": 106,
       "name": "Hitmonlee",
       "speciesKey": "HITMONLEE",
-      "types": ["Fighting"],
+      "types": [
+        "Fighting"
+      ],
       "stats": {
         "hp": 50,
         "attack": 120,
@@ -20782,7 +21471,11 @@
         "cry": "Audio/Cries/HITMONLEE.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/HITMONLEE.png",
         "backShiny": "Graphics/Pokemon/Back shiny/HITMONLEE.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/HITMONLEE.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/HITMONLEE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/HITMONLEE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/HITMONLEE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/HITMONLEE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/HITMONLEE.png"
       },
       "species": "Kicking Pokémon",
       "height": 1.5,
@@ -20992,7 +21685,9 @@
       "id": 107,
       "name": "Hitmonchan",
       "speciesKey": "HITMONCHAN",
-      "types": ["Fighting"],
+      "types": [
+        "Fighting"
+      ],
       "stats": {
         "hp": 50,
         "attack": 105,
@@ -21010,7 +21705,11 @@
         "cry": "Audio/Cries/HITMONCHAN.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/HITMONCHAN.png",
         "backShiny": "Graphics/Pokemon/Back shiny/HITMONCHAN.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/HITMONCHAN.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/HITMONCHAN.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/HITMONCHAN.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/HITMONCHAN.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/HITMONCHAN.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/HITMONCHAN.png"
       },
       "species": "Punching Pokémon",
       "height": 1.4,
@@ -21233,7 +21932,9 @@
       "id": 108,
       "name": "Lickitung",
       "speciesKey": "LICKITUNG",
-      "types": ["Normal"],
+      "types": [
+        "Normal"
+      ],
       "stats": {
         "hp": 90,
         "attack": 55,
@@ -21251,7 +21952,11 @@
         "cry": "Audio/Cries/LICKITUNG.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/LICKITUNG.png",
         "backShiny": "Graphics/Pokemon/Back shiny/LICKITUNG.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/LICKITUNG.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/LICKITUNG.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/LICKITUNG.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/LICKITUNG.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/LICKITUNG.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/LICKITUNG.png"
       },
       "species": "Licking Pokémon",
       "height": 1.2,
@@ -21383,7 +22088,9 @@
       "id": 109,
       "name": "Koffing",
       "speciesKey": "KOFFING",
-      "types": ["Poison"],
+      "types": [
+        "Poison"
+      ],
       "stats": {
         "hp": 40,
         "attack": 65,
@@ -21401,7 +22108,11 @@
         "cry": "Audio/Cries/KOFFING.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/KOFFING.png",
         "backShiny": "Graphics/Pokemon/Back shiny/KOFFING.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/KOFFING.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/KOFFING.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Levitates/KOFFING.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/KOFFING.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Levitates/KOFFING.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/KOFFING.png"
       },
       "species": "Poison Gas Pokémon",
       "height": 0.6,
@@ -21584,7 +22295,9 @@
       "id": 110,
       "name": "Weezing",
       "speciesKey": "WEEZING",
-      "types": ["Poison"],
+      "types": [
+        "Poison"
+      ],
       "stats": {
         "hp": 65,
         "attack": 90,
@@ -21602,7 +22315,11 @@
         "cry": "Audio/Cries/WEEZING.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/WEEZING.png",
         "backShiny": "Graphics/Pokemon/Back shiny/WEEZING.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/WEEZING.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/WEEZING.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Levitates/WEEZING.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/WEEZING.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Levitates/WEEZING.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/WEEZING.png"
       },
       "species": "Poison Gas Pokémon",
       "height": 1.2,
@@ -21801,7 +22518,10 @@
       "id": 111,
       "name": "Rhyhorn",
       "speciesKey": "RHYHORN",
-      "types": ["Ground", "Rock"],
+      "types": [
+        "Ground",
+        "Rock"
+      ],
       "stats": {
         "hp": 80,
         "attack": 85,
@@ -21819,7 +22539,11 @@
         "cry": "Audio/Cries/RHYHORN.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/RHYHORN.png",
         "backShiny": "Graphics/Pokemon/Back shiny/RHYHORN.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/RHYHORN.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/RHYHORN.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/RHYHORN.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/RHYHORN.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/RHYHORN.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/RHYHORN.png"
       },
       "species": "Spikes Pokémon",
       "height": 1,
@@ -22017,7 +22741,10 @@
       "id": 112,
       "name": "Rhydon",
       "speciesKey": "RHYDON",
-      "types": ["Ground", "Rock"],
+      "types": [
+        "Ground",
+        "Rock"
+      ],
       "stats": {
         "hp": 105,
         "attack": 130,
@@ -22035,7 +22762,11 @@
         "cry": "Audio/Cries/RHYDON.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/RHYDON.png",
         "backShiny": "Graphics/Pokemon/Back shiny/RHYDON.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/RHYDON.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/RHYDON.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/RHYDON.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/RHYDON.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/RHYDON.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/RHYDON.png"
       },
       "species": "Drill Pokémon",
       "height": 1.9,
@@ -22258,7 +22989,9 @@
       "id": 113,
       "name": "Chansey",
       "speciesKey": "CHANSEY",
-      "types": ["Normal"],
+      "types": [
+        "Normal"
+      ],
       "stats": {
         "hp": 250,
         "attack": 5,
@@ -22276,7 +23009,11 @@
         "cry": "Audio/Cries/CHANSEY.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/CHANSEY.png",
         "backShiny": "Graphics/Pokemon/Back shiny/CHANSEY.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/CHANSEY.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/CHANSEY.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/CHANSEY.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/CHANSEY.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/CHANSEY.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/CHANSEY.png"
       },
       "species": "Egg Pokémon",
       "height": 1.1,
@@ -22533,7 +23270,9 @@
       "id": 114,
       "name": "Tangela",
       "speciesKey": "TANGELA",
-      "types": ["Grass"],
+      "types": [
+        "Grass"
+      ],
       "stats": {
         "hp": 65,
         "attack": 55,
@@ -22551,7 +23290,11 @@
         "cry": "Audio/Cries/TANGELA.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/TANGELA.png",
         "backShiny": "Graphics/Pokemon/Back shiny/TANGELA.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/TANGELA.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/TANGELA.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/TANGELA.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/TANGELA.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/TANGELA.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/TANGELA.png"
       },
       "species": "Vine Pokémon",
       "height": 1,
@@ -22667,7 +23410,9 @@
       "id": 115,
       "name": "Kangaskhan",
       "speciesKey": "KANGASKHAN",
-      "types": ["Normal"],
+      "types": [
+        "Normal"
+      ],
       "stats": {
         "hp": 105,
         "attack": 95,
@@ -22685,7 +23430,11 @@
         "cry": "Audio/Cries/KANGASKHAN.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/KANGASKHAN.png",
         "backShiny": "Graphics/Pokemon/Back shiny/KANGASKHAN.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/KANGASKHAN.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/KANGASKHAN.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/KANGASKHAN.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/KANGASKHAN.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/KANGASKHAN.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/KANGASKHAN.png"
       },
       "species": "Parent Pokémon",
       "height": 2.2,
@@ -22864,7 +23613,9 @@
       "id": 116,
       "name": "Horsea",
       "speciesKey": "HORSEA",
-      "types": ["Water"],
+      "types": [
+        "Water"
+      ],
       "stats": {
         "hp": 30,
         "attack": 40,
@@ -22882,7 +23633,11 @@
         "cry": "Audio/Cries/HORSEA.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/HORSEA.png",
         "backShiny": "Graphics/Pokemon/Back shiny/HORSEA.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/HORSEA.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/HORSEA.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/HORSEA.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/HORSEA.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/HORSEA.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/HORSEA.png"
       },
       "species": "Dragon Pokémon",
       "height": 0.4,
@@ -23042,7 +23797,9 @@
       "id": 117,
       "name": "Seadra",
       "speciesKey": "SEADRA",
-      "types": ["Water"],
+      "types": [
+        "Water"
+      ],
       "stats": {
         "hp": 55,
         "attack": 65,
@@ -23060,7 +23817,11 @@
         "cry": "Audio/Cries/SEADRA.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/SEADRA.png",
         "backShiny": "Graphics/Pokemon/Back shiny/SEADRA.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/SEADRA.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SEADRA.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SEADRA.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SEADRA.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SEADRA.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SEADRA.png"
       },
       "species": "Dragon Pokémon",
       "height": 1.2,
@@ -23224,7 +23985,9 @@
       "id": 118,
       "name": "Goldeen",
       "speciesKey": "GOLDEEN",
-      "types": ["Water"],
+      "types": [
+        "Water"
+      ],
       "stats": {
         "hp": 45,
         "attack": 67,
@@ -23242,7 +24005,11 @@
         "cry": "Audio/Cries/GOLDEEN.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/GOLDEEN.png",
         "backShiny": "Graphics/Pokemon/Back shiny/GOLDEEN.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/GOLDEEN.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/GOLDEEN.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/GOLDEEN.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/GOLDEEN.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/GOLDEEN.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/GOLDEEN.png"
       },
       "species": "Goldfish Pokémon",
       "height": 0.6,
@@ -23384,7 +24151,9 @@
       "id": 119,
       "name": "Seaking",
       "speciesKey": "SEAKING",
-      "types": ["Water"],
+      "types": [
+        "Water"
+      ],
       "stats": {
         "hp": 80,
         "attack": 92,
@@ -23402,7 +24171,11 @@
         "cry": "Audio/Cries/SEAKING.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/SEAKING.png",
         "backShiny": "Graphics/Pokemon/Back shiny/SEAKING.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/SEAKING.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SEAKING.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SEAKING.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SEAKING.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SEAKING.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SEAKING.png"
       },
       "species": "Goldfish Pokémon",
       "height": 1.3,
@@ -23546,7 +24319,9 @@
       "id": 120,
       "name": "Staryu",
       "speciesKey": "STARYU",
-      "types": ["Water"],
+      "types": [
+        "Water"
+      ],
       "stats": {
         "hp": 30,
         "attack": 45,
@@ -23564,7 +24339,11 @@
         "cry": "Audio/Cries/STARYU.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/STARYU.png",
         "backShiny": "Graphics/Pokemon/Back shiny/STARYU.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/STARYU.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/STARYU.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/STARYU.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/STARYU.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/STARYU.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/STARYU.png"
       },
       "species": "Star Shape Pokémon",
       "height": 0.8,
@@ -23737,7 +24516,10 @@
       "id": 121,
       "name": "Starmie",
       "speciesKey": "STARMIE",
-      "types": ["Water", "Psychic"],
+      "types": [
+        "Water",
+        "Psychic"
+      ],
       "stats": {
         "hp": 60,
         "attack": 75,
@@ -23755,7 +24537,11 @@
         "cry": "Audio/Cries/STARMIE.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/STARMIE.png",
         "backShiny": "Graphics/Pokemon/Back shiny/STARMIE.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/STARMIE.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/STARMIE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/STARMIE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/STARMIE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/STARMIE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/STARMIE.png"
       },
       "species": "Mysterious Pokémon",
       "height": 1.1,
@@ -23962,7 +24748,10 @@
       "id": 122,
       "name": "Mr. Mime",
       "speciesKey": "MRMIME",
-      "types": ["Psychic", "Fairy"],
+      "types": [
+        "Psychic",
+        "Fairy"
+      ],
       "stats": {
         "hp": 40,
         "attack": 45,
@@ -23980,7 +24769,11 @@
         "cry": "Audio/Cries/MRMIME.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/MRMIME.png",
         "backShiny": "Graphics/Pokemon/Back shiny/MRMIME.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/MRMIME.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MRMIME.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MRMIME.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MRMIME.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MRMIME.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MRMIME.png"
       },
       "species": "Barrier Pokémon",
       "height": 1.3,
@@ -24206,7 +24999,10 @@
       "id": 123,
       "name": "Scyther",
       "speciesKey": "SCYTHER",
-      "types": ["Bug", "Flying"],
+      "types": [
+        "Bug",
+        "Flying"
+      ],
       "stats": {
         "hp": 70,
         "attack": 110,
@@ -24224,7 +25020,11 @@
         "cry": "Audio/Cries/SCYTHER.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/SCYTHER.png",
         "backShiny": "Graphics/Pokemon/Back shiny/SCYTHER.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/SCYTHER.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SCYTHER.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SCYTHER.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SCYTHER.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SCYTHER.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SCYTHER.png"
       },
       "species": "Mantis Pokémon",
       "height": 1.5,
@@ -24399,7 +25199,10 @@
       "id": 124,
       "name": "Jynx",
       "speciesKey": "JYNX",
-      "types": ["Ice", "Psychic"],
+      "types": [
+        "Ice",
+        "Psychic"
+      ],
       "stats": {
         "hp": 65,
         "attack": 50,
@@ -24417,7 +25220,11 @@
         "cry": "Audio/Cries/JYNX.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/JYNX.png",
         "backShiny": "Graphics/Pokemon/Back shiny/JYNX.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/JYNX.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/JYNX.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/JYNX.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/JYNX.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/JYNX.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/JYNX.png"
       },
       "species": "Human Shape Pokémon",
       "height": 1.4,
@@ -24606,7 +25413,9 @@
       "id": 125,
       "name": "Electabuzz",
       "speciesKey": "ELECTABUZZ",
-      "types": ["Electric"],
+      "types": [
+        "Electric"
+      ],
       "stats": {
         "hp": 65,
         "attack": 83,
@@ -24624,7 +25433,11 @@
         "cry": "Audio/Cries/ELECTABUZZ.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/ELECTABUZZ.png",
         "backShiny": "Graphics/Pokemon/Back shiny/ELECTABUZZ.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/ELECTABUZZ.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/ELECTABUZZ.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/ELECTABUZZ.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/ELECTABUZZ.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/ELECTABUZZ.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/ELECTABUZZ.png"
       },
       "species": "Electric Pokémon",
       "height": 1.1,
@@ -24820,7 +25633,9 @@
       "id": 126,
       "name": "Magmar",
       "speciesKey": "MAGMAR",
-      "types": ["Fire"],
+      "types": [
+        "Fire"
+      ],
       "stats": {
         "hp": 65,
         "attack": 95,
@@ -24838,7 +25653,11 @@
         "cry": "Audio/Cries/MAGMAR.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/MAGMAR.png",
         "backShiny": "Graphics/Pokemon/Back shiny/MAGMAR.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/MAGMAR.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MAGMAR.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MAGMAR.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MAGMAR.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MAGMAR.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MAGMAR.png"
       },
       "species": "Spitfire Pokémon",
       "height": 1.3,
@@ -25033,7 +25852,9 @@
       "id": 127,
       "name": "Pinsir",
       "speciesKey": "PINSIR",
-      "types": ["Bug"],
+      "types": [
+        "Bug"
+      ],
       "stats": {
         "hp": 65,
         "attack": 125,
@@ -25051,7 +25872,11 @@
         "cry": "Audio/Cries/PINSIR.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/PINSIR.png",
         "backShiny": "Graphics/Pokemon/Back shiny/PINSIR.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/PINSIR.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PINSIR.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/PINSIR.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/PINSIR.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/PINSIR.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/PINSIR.png"
       },
       "species": "Stag Beetle Pokémon",
       "height": 1.5,
@@ -25210,7 +26035,9 @@
       "id": 128,
       "name": "Tauros",
       "speciesKey": "TAUROS",
-      "types": ["Normal"],
+      "types": [
+        "Normal"
+      ],
       "stats": {
         "hp": 75,
         "attack": 100,
@@ -25228,7 +26055,11 @@
         "cry": "Audio/Cries/TAUROS.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/TAUROS.png",
         "backShiny": "Graphics/Pokemon/Back shiny/TAUROS.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/TAUROS.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/TAUROS.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/TAUROS.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/TAUROS.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/TAUROS.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/TAUROS.png"
       },
       "species": "Wild Bull Pokémon",
       "height": 1.4,
@@ -25419,7 +26250,9 @@
       "id": 129,
       "name": "Magikarp",
       "speciesKey": "MAGIKARP",
-      "types": ["Water"],
+      "types": [
+        "Water"
+      ],
       "stats": {
         "hp": 20,
         "attack": 10,
@@ -25437,7 +26270,11 @@
         "cry": "Audio/Cries/MAGIKARP.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/MAGIKARP.png",
         "backShiny": "Graphics/Pokemon/Back shiny/MAGIKARP.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/MAGIKARP.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MAGIKARP.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MAGIKARP.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MAGIKARP.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MAGIKARP.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MAGIKARP.png"
       },
       "species": "Fish Pokémon",
       "height": 0.9,
@@ -25465,7 +26302,10 @@
           "type": "Normal"
         }
       ],
-      "tmMoves": ["facade", "hydro_pump"],
+      "tmMoves": [
+        "facade",
+        "hydro_pump"
+      ],
       "abilities": {
         "primary": "swift-swim",
         "hidden": "rattled"
@@ -25476,7 +26316,10 @@
       "id": 130,
       "name": "Gyarados",
       "speciesKey": "GYARADOS",
-      "types": ["Water", "Flying"],
+      "types": [
+        "Water",
+        "Flying"
+      ],
       "stats": {
         "hp": 95,
         "attack": 125,
@@ -25494,7 +26337,11 @@
         "cry": "Audio/Cries/GYARADOS.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/GYARADOS.png",
         "backShiny": "Graphics/Pokemon/Back shiny/GYARADOS.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/GYARADOS.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/GYARADOS.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/GYARADOS.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/GYARADOS.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/GYARADOS.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/GYARADOS.png"
       },
       "species": "Atrocious Pokémon",
       "height": 6.5,
@@ -25680,7 +26527,10 @@
       "id": 131,
       "name": "Lapras",
       "speciesKey": "LAPRAS",
-      "types": ["Water", "Ice"],
+      "types": [
+        "Water",
+        "Ice"
+      ],
       "stats": {
         "hp": 130,
         "attack": 85,
@@ -25698,7 +26548,11 @@
         "cry": "Audio/Cries/LAPRAS.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/LAPRAS.png",
         "backShiny": "Graphics/Pokemon/Back shiny/LAPRAS.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/LAPRAS.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/LAPRAS.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/LAPRAS.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/LAPRAS.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/LAPRAS.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/LAPRAS.png"
       },
       "species": "Transport Pokémon",
       "height": 2.5,
@@ -25905,7 +26759,9 @@
       "id": 132,
       "name": "Ditto",
       "speciesKey": "DITTO",
-      "types": ["Normal"],
+      "types": [
+        "Normal"
+      ],
       "stats": {
         "hp": 48,
         "attack": 48,
@@ -25923,7 +26779,11 @@
         "cry": "Audio/Cries/DITTO.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/DITTO.png",
         "backShiny": "Graphics/Pokemon/Back shiny/DITTO.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/DITTO.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/DITTO.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/DITTO.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/DITTO.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/DITTO.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/DITTO.png"
       },
       "species": "Transform Pokémon",
       "height": 0.3,
@@ -25955,7 +26815,9 @@
       "id": 133,
       "name": "Eevee",
       "speciesKey": "EEVEE",
-      "types": ["Normal"],
+      "types": [
+        "Normal"
+      ],
       "stats": {
         "hp": 55,
         "attack": 55,
@@ -25973,7 +26835,11 @@
         "cry": "Audio/Cries/EEVEE.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/EEVEE.png",
         "backShiny": "Graphics/Pokemon/Back shiny/EEVEE.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/EEVEE.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/EEVEE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/EEVEE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/EEVEE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/EEVEE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/EEVEE.png"
       },
       "species": "Evolution Pokémon",
       "height": 0.3,
@@ -26123,7 +26989,9 @@
       "id": 134,
       "name": "Vaporeon",
       "speciesKey": "VAPOREON",
-      "types": ["Water"],
+      "types": [
+        "Water"
+      ],
       "stats": {
         "hp": 130,
         "attack": 65,
@@ -26141,7 +27009,11 @@
         "cry": "Audio/Cries/VAPOREON.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/VAPOREON.png",
         "backShiny": "Graphics/Pokemon/Back shiny/VAPOREON.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/VAPOREON.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/VAPOREON.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/VAPOREON.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/VAPOREON.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/VAPOREON.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/VAPOREON.png"
       },
       "species": "Bubble Jet Pokémon",
       "height": 1,
@@ -26326,7 +27198,9 @@
       "id": 135,
       "name": "Jolteon",
       "speciesKey": "JOLTEON",
-      "types": ["Electric"],
+      "types": [
+        "Electric"
+      ],
       "stats": {
         "hp": 65,
         "attack": 65,
@@ -26344,7 +27218,11 @@
         "cry": "Audio/Cries/JOLTEON.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/JOLTEON.png",
         "backShiny": "Graphics/Pokemon/Back shiny/JOLTEON.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/JOLTEON.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/JOLTEON.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/JOLTEON.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/JOLTEON.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/JOLTEON.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/JOLTEON.png"
       },
       "species": "Lightning Pokémon",
       "height": 0.8,
@@ -26530,7 +27408,9 @@
       "id": 136,
       "name": "Flareon",
       "speciesKey": "FLAREON",
-      "types": ["Fire"],
+      "types": [
+        "Fire"
+      ],
       "stats": {
         "hp": 65,
         "attack": 130,
@@ -26548,7 +27428,11 @@
         "cry": "Audio/Cries/FLAREON.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/FLAREON.png",
         "backShiny": "Graphics/Pokemon/Back shiny/FLAREON.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/FLAREON.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/FLAREON.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/FLAREON.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/FLAREON.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/FLAREON.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/FLAREON.png"
       },
       "species": "Flame Pokémon",
       "height": 0.9,
@@ -26727,7 +27611,9 @@
       "id": 137,
       "name": "Porygon",
       "speciesKey": "PORYGON",
-      "types": ["Normal"],
+      "types": [
+        "Normal"
+      ],
       "stats": {
         "hp": 65,
         "attack": 60,
@@ -26745,7 +27631,11 @@
         "cry": "Audio/Cries/PORYGON.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/PORYGON.png",
         "backShiny": "Graphics/Pokemon/Back shiny/PORYGON.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/PORYGON.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PORYGON.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/PORYGON.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/PORYGON.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/PORYGON.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/PORYGON.png"
       },
       "species": "Virtual Pokémon",
       "height": 0.8,
@@ -26931,7 +27821,10 @@
       "id": 138,
       "name": "Omanyte",
       "speciesKey": "OMANYTE",
-      "types": ["Rock", "Water"],
+      "types": [
+        "Rock",
+        "Water"
+      ],
       "stats": {
         "hp": 35,
         "attack": 40,
@@ -26949,7 +27842,11 @@
         "cry": "Audio/Cries/OMANYTE.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/OMANYTE.png",
         "backShiny": "Graphics/Pokemon/Back shiny/OMANYTE.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/OMANYTE.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/OMANYTE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/OMANYTE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/OMANYTE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/OMANYTE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/OMANYTE.png"
       },
       "species": "Spiral Pokémon",
       "height": 0.4,
@@ -27111,7 +28008,10 @@
       "id": 139,
       "name": "Omastar",
       "speciesKey": "OMASTAR",
-      "types": ["Rock", "Water"],
+      "types": [
+        "Rock",
+        "Water"
+      ],
       "stats": {
         "hp": 70,
         "attack": 60,
@@ -27129,7 +28029,11 @@
         "cry": "Audio/Cries/OMASTAR.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/OMASTAR.png",
         "backShiny": "Graphics/Pokemon/Back shiny/OMASTAR.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/OMASTAR.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/OMASTAR.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/OMASTAR.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/OMASTAR.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/OMASTAR.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/OMASTAR.png"
       },
       "species": "Spiral Pokémon",
       "height": 1,
@@ -27303,7 +28207,10 @@
       "id": 140,
       "name": "Kabuto",
       "speciesKey": "KABUTO",
-      "types": ["Rock", "Water"],
+      "types": [
+        "Rock",
+        "Water"
+      ],
       "stats": {
         "hp": 30,
         "attack": 80,
@@ -27321,7 +28228,11 @@
         "cry": "Audio/Cries/KABUTO.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/KABUTO.png",
         "backShiny": "Graphics/Pokemon/Back shiny/KABUTO.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/KABUTO.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/KABUTO.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/KABUTO.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/KABUTO.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/KABUTO.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/KABUTO.png"
       },
       "species": "Shellfish Pokémon",
       "height": 0.5,
@@ -27487,7 +28398,10 @@
       "id": 141,
       "name": "Kabutops",
       "speciesKey": "KABUTOPS",
-      "types": ["Rock", "Water"],
+      "types": [
+        "Rock",
+        "Water"
+      ],
       "stats": {
         "hp": 60,
         "attack": 115,
@@ -27505,7 +28419,11 @@
         "cry": "Audio/Cries/KABUTOPS.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/KABUTOPS.png",
         "backShiny": "Graphics/Pokemon/Back shiny/KABUTOPS.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/KABUTOPS.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/KABUTOPS.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/KABUTOPS.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/KABUTOPS.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/KABUTOPS.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/KABUTOPS.png"
       },
       "species": "Shellfish Pokémon",
       "height": 1.3,
@@ -27703,7 +28621,10 @@
       "id": 142,
       "name": "Aerodactyl",
       "speciesKey": "AERODACTYL",
-      "types": ["Rock", "Flying"],
+      "types": [
+        "Rock",
+        "Flying"
+      ],
       "stats": {
         "hp": 80,
         "attack": 105,
@@ -27721,7 +28642,11 @@
         "cry": "Audio/Cries/AERODACTYL.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/AERODACTYL.png",
         "backShiny": "Graphics/Pokemon/Back shiny/AERODACTYL.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/AERODACTYL.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/AERODACTYL.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Levitates/AERODACTYL.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/AERODACTYL.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Levitates/AERODACTYL.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/AERODACTYL.png"
       },
       "species": "Fossil Pokémon",
       "height": 1.8,
@@ -27908,7 +28833,9 @@
       "id": 143,
       "name": "Snorlax",
       "speciesKey": "SNORLAX",
-      "types": ["Normal"],
+      "types": [
+        "Normal"
+      ],
       "stats": {
         "hp": 160,
         "attack": 110,
@@ -27926,7 +28853,11 @@
         "cry": "Audio/Cries/SNORLAX.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/SNORLAX.png",
         "backShiny": "Graphics/Pokemon/Back shiny/SNORLAX.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/SNORLAX.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SNORLAX.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SNORLAX.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SNORLAX.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SNORLAX.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SNORLAX.png"
       },
       "species": "Sleeping Pokémon",
       "height": 2.1,
@@ -28228,7 +29159,10 @@
       "id": 144,
       "name": "Articuno",
       "speciesKey": "ARTICUNO",
-      "types": ["Ice", "Flying"],
+      "types": [
+        "Ice",
+        "Flying"
+      ],
       "stats": {
         "hp": 90,
         "attack": 85,
@@ -28246,7 +29180,11 @@
         "cry": "Audio/Cries/ARTICUNO.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/ARTICUNO.png",
         "backShiny": "Graphics/Pokemon/Back shiny/ARTICUNO.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/ARTICUNO.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/ARTICUNO.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Levitates/ARTICUNO.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/ARTICUNO.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Levitates/ARTICUNO.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/ARTICUNO.png"
       },
       "species": "Freeze Pokémon",
       "height": 1.7,
@@ -28457,7 +29395,10 @@
       "id": 145,
       "name": "Zapdos",
       "speciesKey": "ZAPDOS",
-      "types": ["Electric", "Flying"],
+      "types": [
+        "Electric",
+        "Flying"
+      ],
       "stats": {
         "hp": 90,
         "attack": 90,
@@ -28475,7 +29416,11 @@
         "cry": "Audio/Cries/ZAPDOS.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/ZAPDOS.png",
         "backShiny": "Graphics/Pokemon/Back shiny/ZAPDOS.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/ZAPDOS.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/ZAPDOS.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Levitates/ZAPDOS.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/ZAPDOS.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Levitates/ZAPDOS.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/ZAPDOS.png"
       },
       "species": "Electric Pokémon",
       "height": 1.6,
@@ -28686,7 +29631,10 @@
       "id": 146,
       "name": "Moltres",
       "speciesKey": "MOLTRES",
-      "types": ["Fire", "Flying"],
+      "types": [
+        "Fire",
+        "Flying"
+      ],
       "stats": {
         "hp": 90,
         "attack": 100,
@@ -28704,7 +29652,11 @@
         "cry": "Audio/Cries/MOLTRES.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/MOLTRES.png",
         "backShiny": "Graphics/Pokemon/Back shiny/MOLTRES.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/MOLTRES.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MOLTRES.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Levitates/MOLTRES.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/MOLTRES.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Levitates/MOLTRES.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/MOLTRES.png"
       },
       "species": "Flame Pokémon",
       "height": 2,
@@ -28914,7 +29866,9 @@
       "id": 147,
       "name": "Dratini",
       "speciesKey": "DRATINI",
-      "types": ["Dragon"],
+      "types": [
+        "Dragon"
+      ],
       "stats": {
         "hp": 41,
         "attack": 64,
@@ -28932,7 +29886,11 @@
         "cry": "Audio/Cries/DRATINI.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/DRATINI.png",
         "backShiny": "Graphics/Pokemon/Back shiny/DRATINI.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/DRATINI.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/DRATINI.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/DRATINI.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/DRATINI.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/DRATINI.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/DRATINI.png"
       },
       "species": "Dragon Pokémon",
       "height": 1.8,
@@ -29101,7 +30059,9 @@
       "id": 148,
       "name": "Dragonair",
       "speciesKey": "DRAGONAIR",
-      "types": ["Dragon"],
+      "types": [
+        "Dragon"
+      ],
       "stats": {
         "hp": 61,
         "attack": 84,
@@ -29119,7 +30079,11 @@
         "cry": "Audio/Cries/DRAGONAIR.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/DRAGONAIR.png",
         "backShiny": "Graphics/Pokemon/Back shiny/DRAGONAIR.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/DRAGONAIR.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/DRAGONAIR.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/DRAGONAIR.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/DRAGONAIR.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/DRAGONAIR.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/DRAGONAIR.png"
       },
       "species": "Dragon Pokémon",
       "height": 4,
@@ -29289,7 +30253,10 @@
       "id": 149,
       "name": "Dragonite",
       "speciesKey": "DRAGONITE",
-      "types": ["Dragon", "Flying"],
+      "types": [
+        "Dragon",
+        "Flying"
+      ],
       "stats": {
         "hp": 91,
         "attack": 134,
@@ -29307,7 +30274,11 @@
         "cry": "Audio/Cries/DRAGONITE.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/DRAGONITE.png",
         "backShiny": "Graphics/Pokemon/Back shiny/DRAGONITE.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/DRAGONITE.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/DRAGONITE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Levitates/DRAGONITE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/DRAGONITE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Levitates/DRAGONITE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/DRAGONITE.png"
       },
       "species": "Dragon Pokémon",
       "height": 2.2,
@@ -29529,7 +30500,9 @@
       "id": 150,
       "name": "Mewtwo",
       "speciesKey": "MEWTWO",
-      "types": ["Psychic"],
+      "types": [
+        "Psychic"
+      ],
       "stats": {
         "hp": 106,
         "attack": 110,
@@ -29547,7 +30520,11 @@
         "cry": "Audio/Cries/MEWTWO.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/MEWTWO.png",
         "backShiny": "Graphics/Pokemon/Back shiny/MEWTWO.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/MEWTWO.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MEWTWO.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MEWTWO.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MEWTWO.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MEWTWO.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MEWTWO.png"
       },
       "species": "Genetic Pokémon",
       "height": 2,
@@ -29783,7 +30760,9 @@
       "id": 151,
       "name": "Mew",
       "speciesKey": "MEW",
-      "types": ["Psychic"],
+      "types": [
+        "Psychic"
+      ],
       "stats": {
         "hp": 100,
         "attack": 100,
@@ -29801,7 +30780,11 @@
         "cry": "Audio/Cries/MEW.ogg",
         "frontShiny": "Graphics/Pokemon/Front shiny/MEW.png",
         "backShiny": "Graphics/Pokemon/Back shiny/MEW.png",
-        "iconShiny": "Graphics/Pokemon/Icons shiny/MEW.png"
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MEW.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MEW.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MEW.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MEW.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MEW.png"
       },
       "species": "New Species Pokémon",
       "height": 0.4,

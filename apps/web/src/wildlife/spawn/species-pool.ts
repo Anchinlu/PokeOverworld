@@ -1,7 +1,4 @@
-import {
-  speciesSpawnData,
-  type SpeciesSpawnDefinition,
-} from '../data/data-loader';
+import { speciesSpawnData, type SpeciesSpawnDefinition } from '../data/data-loader';
 import { calculateSpeciesTier, rollRarityTier, type RarityTier } from './rarity';
 import type { TimeBand, TileContext } from '../ports/world-query';
 
@@ -38,9 +35,7 @@ export function getSpeciesCandidatesForTier(
     if (speciesTier === null || speciesTier !== tier) continue;
 
     // Check habitat match
-    const habitat = def.habitats?.find(
-      (h) => h.biome === biome && h.context === context
-    );
+    const habitat = def.habitats?.find((h) => h.biome === biome && h.context === context);
     if (!habitat) continue;
 
     candidates.push({
@@ -85,9 +80,10 @@ export function getSpeciesWithTierFallback(
     }
   }
 
-  // 4. Fallback to meadow tall_grass as universal safety net if unexpected context
-  const fallback = getSpeciesCandidatesForTier('meadow', 'tall_grass', 0);
-  return { tier: 0, candidates: fallback };
+  // Do not cross biome/context boundaries. A beach, water edge, rock field,
+  // or ordinary ground must never receive a meadow tall-grass species merely
+  // because its local habitat pool is empty.
+  return { tier: 0, candidates: [] };
 }
 
 /**
@@ -113,14 +109,19 @@ export function selectSpeciesTwoStep(params: {
     return null;
   }
 
-  // Calculate weighted affinities considering time and weather
-  const weighted = candidates.map((c) => {
-    let weight = c.affinity;
+  // Time is an eligibility rule, not only a visual preference. If a habitat
+  // has no active species in the current band, the group does not spawn there.
+  const activeCandidates = candidates.filter(
+    (candidate) =>
+      !candidate.definition.activeTime || candidate.definition.activeTime.includes(timeBand)
+  );
+  if (activeCandidates.length === 0) {
+    return null;
+  }
 
-    // Time factor
-    if (c.definition.activeTime && !c.definition.activeTime.includes(timeBand)) {
-      weight *= 0.2; // Diminished if inactive time
-    }
+  // Calculate weighted affinities considering weather after time eligibility.
+  const weighted = activeCandidates.map((c) => {
+    let weight = c.affinity;
 
     // Weather factor
     if (c.definition.weather && c.definition.weather[weather] !== undefined) {

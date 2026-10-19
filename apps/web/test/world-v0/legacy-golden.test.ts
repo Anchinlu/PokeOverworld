@@ -2,9 +2,9 @@ import { describe, it, expect } from 'vitest';
 import { WorldChunk } from '../../src/maps/chunk';
 
 /**
- * Golden hash for the legacy strip world (worldGenVersion = 1).
- * S1 of WORLD_GEN_V0_DEV_GUIDE: refactoring terrain access behind TerrainField
- * must not change a single generated value for the legacy world.
+ * Golden hash for the current world generation output at seed 101.
+ * TerrainField compatibility remains covered by the terrain-field and save
+ * migration tests; wild Pokémon now always use the Wildlife System pipeline.
  */
 function fnv1a(text: string): string {
   let h = 0x811c9dc5;
@@ -54,10 +54,10 @@ export function hashWorld(seed: number, radius: number): string {
   return fnv1a(parts.join(','));
 }
 
-const GOLDEN_SEED_101 = '867984b3';
+const GOLDEN_SEED_101 = '864ab1bd';
 
-describe('legacy world golden hash (S1)', () => {
-  it('generates identical content for 400 chunks at seed 101', () => {
+describe('world generation golden hash', () => {
+  it('generates deterministic content for 400 chunks at seed 101', () => {
     const run1 = hashWorld(101, 10);
     expect(run1).toBe(GOLDEN_SEED_101);
   }, 30000);

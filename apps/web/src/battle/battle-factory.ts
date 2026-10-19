@@ -149,7 +149,8 @@ export function getBattleEnvironment(
   }
 
   switch (zone) {
-    case 'dense_forest': {
+    case 'dense_forest':
+    case 'light_forest': {
       return {
         preset: 'forest',
         background: 'Forest.png',

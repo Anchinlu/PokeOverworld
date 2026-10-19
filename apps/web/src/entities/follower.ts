@@ -28,6 +28,7 @@ export class Follower {
   public isShiny = false;
   public nickname = 'Pikachu';
   public visible = true;
+  public isSwimming = false;
 
   constructor(
     initialGX = 0,

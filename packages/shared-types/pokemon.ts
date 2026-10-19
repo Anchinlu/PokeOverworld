@@ -262,6 +262,10 @@ export interface PokemonSprites {
   backShiny?: string;
   iconShiny?: string;
   cry?: string;
+  swimming?: string;
+  swimmingShiny?: string;
+  followerWater?: string;
+  followerWaterShiny?: string;
 }
 
 export interface PokemonAbilities {

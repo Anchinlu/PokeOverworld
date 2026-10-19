@@ -1,4 +1,5 @@
 export type WildRole = 'solo' | 'member' | 'leader' | 'apex';
+export type WildRarityTier = 0 | 1 | 2 | 3 | 4;
 
 export type WildEmoteType = '!' | '?' | 'sweat' | 'dots';
 
@@ -21,6 +22,8 @@ export type WildState =
   | 'territorial'
   | 'chase'
   | 'return_home';
+
+export type WildTimeBand = 'dawn' | 'day' | 'dusk' | 'night';
 
 /**
  * Core entity model for all overworld wild creatures.
@@ -66,8 +69,14 @@ export interface WildEntity {
 
   // Wildlife System extensions (Section 4 & 5)
   role?: WildRole;
+  /** Rarity tier selected when this entity was generated. */
+  rarityTier?: WildRarityTier;
+  /** Time bands in which this species is awake and eligible to appear. */
+  activeTime?: WildTimeBand[];
   herdId?: string;
   gender?: 'M' | 'F' | 'genderless';
+  isSwimming?: boolean;
+  isWaterDweller?: boolean;
 }
 
 /** Legacy alias for backwards compatibility across older modules */

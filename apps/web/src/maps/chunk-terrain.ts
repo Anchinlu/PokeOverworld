@@ -3,6 +3,8 @@ import { CHUNK_SIZE, TERRAIN, TILE_IDS } from '@pokemon/game-data';
 import { createTerrainField, type TerrainField } from './terrain-field';
 import {
   getSandTileKey,
+  getDesertTileKey,
+  getDuneCliffTileKey,
   getRoadTileKey,
   getCliffTileKey,
   getWaterTileKey,
@@ -45,9 +47,16 @@ export function generateChunkTerrain(
       let terrain: TerrainId = TERRAIN.GRASS;
       let tileId = getGrassTileId(gx, gy, seed);
 
+      const isDesert = Boolean(field.isDesert && field.isDesert(gx, gy));
+
       if (field.isHill(gx, gy, hasHills, hasRoad, hasBeach)) {
         terrain = TERRAIN.HILL;
-        tileId = getCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId;
+        tileId = isDesert
+          ? getDuneCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId
+          : getCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId;
+      } else if (isDesert) {
+        terrain = TERRAIN.DESERT;
+        tileId = getDesertTileKey(gx, gy, field).tileId;
       } else if (field.isSand(gx, gy, hasBeach)) {
         terrain = TERRAIN.BEACH_SAND;
         tileId = getSandTileKey(gx, gy, field, hasBeach).tileId;

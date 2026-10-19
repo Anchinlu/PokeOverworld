@@ -18,17 +18,21 @@ export class ObjectRenderer {
     now: number,
     list: RenderItem[]
   ): void {
-    for (const chunk of chunkManager.activeChunks) {
+    for (const chunk of chunkManager.renderChunks) {
       for (const plant of chunk.plants) {
         const isLog = plant.type === 'nature_fallen_log';
         const isWhiteBush = plant.type === 'bush_flowering_white';
         const isStump = plant.type === 'nature_tree_stump';
+        const isCactusSmall = plant.type === 'cactus_small';
         const isTall =
           isWhiteBush ||
           plant.type === 'bush_cone_autumn' ||
           plant.type === 'bush_cone_forest' ||
-          plant.type === 'flower_purple_bell';
-        const isStaticNatural = isTall || isLog || isStump;
+          plant.type === 'flower_purple_bell' ||
+          plant.type === 'desert_dry_bush' ||
+          plant.type === 'desert_succulent' ||
+          plant.type === 'cactus_medium';
+        const isStaticNatural = isTall || isLog || isStump || isCactusSmall;
 
         const w = isWhiteBush || isLog ? 64 : 32;
         const h = isTall ? 64 : 32;
@@ -70,7 +74,7 @@ export class ObjectRenderer {
     now: number,
     list: RenderItem[]
   ): void {
-    for (const chunk of chunkManager.activeChunks) {
+    for (const chunk of chunkManager.renderChunks) {
       if (!chunk.waterFlora || chunk.waterFlora.length === 0) continue;
       for (const flora of chunk.waterFlora) {
         if (
@@ -106,7 +110,7 @@ export class ObjectRenderer {
     const cycleMs = berryCycleSeconds * 1000;
     const animTime = now;
 
-    for (const chunk of chunkManager.activeChunks) {
+    for (const chunk of chunkManager.renderChunks) {
       if (!chunk.berryBushes) continue;
       for (const bush of chunk.berryBushes) {
         if (
@@ -165,7 +169,7 @@ export class ObjectRenderer {
   ): void {
     const seenIds = new Set<string>();
 
-    for (const chunk of chunkManager.activeChunks) {
+    for (const chunk of chunkManager.renderChunks) {
       if (!chunk.buildings) continue;
       for (const b of chunk.buildings) {
         if (seenIds.has(b.id)) continue;
@@ -196,12 +200,22 @@ export class ObjectRenderer {
     chunkManager: ChunkManager,
     list: RenderItem[]
   ): void {
-    for (const chunk of chunkManager.activeChunks) {
+    for (const chunk of chunkManager.renderChunks) {
       for (const tree of chunk.trees) {
         const isPalm = tree.type === 'palm';
+        const isDead = tree.type === 'dead_1' || tree.type === 'dead_2';
+        const isCactusLarge = tree.type === 'cactus_large';
+        const isBoulder = tree.type === 'desert_boulder';
+
         const w = isPalm ? 128 : 64;
-        const h = isPalm ? 200 : 120;
-        const ySort = isPalm ? tree.y + 151 : tree.y + 112;
+        const h = isPalm ? 200 : isCactusLarge ? 96 : isDead || isBoulder ? 64 : 120;
+        const ySort = isPalm
+          ? tree.y + 151
+          : isCactusLarge
+          ? tree.y + 88
+          : isDead || isBoulder
+          ? tree.y + 58
+          : tree.y + 112;
 
         if (
           tree.x + w >= bounds.minX &&
@@ -209,7 +223,10 @@ export class ObjectRenderer {
           tree.y + h >= bounds.minY &&
           tree.y <= bounds.maxY
         ) {
-          const img = this.loader.getImage(`tree_${tree.type}`);
+          let imgKey = `tree_${tree.type}`;
+          if (isCactusLarge) imgKey = 'cactus_large';
+          else if (isBoulder) imgKey = 'rock_desert_boulder';
+          const img = this.loader.getImage(imgKey);
           if (img && img.complete) {
             list.push({
               ySort,
@@ -233,7 +250,21 @@ export class ObjectRenderer {
     const imgTG = this.loader.getImage('tall_grass_strip');
     if (!imgTG || !imgTG.complete) return;
 
-    for (const chunk of chunkManager.activeChunks) {
+    // Index wildlife occupancy once. The old implementation scanned every
+    // wild Pokémon for every tall-grass tile (O(grass * wildlife)).
+    const wildOccupants = new Map<number, boolean>();
+    const tileKey = (gx: number, gy: number): number => gx * 67108864 + gy;
+    for (const chunk of chunkManager.renderChunks) {
+      for (const wp of chunk.wildPokemon) {
+        const currentKey = tileKey(wp.gx, wp.gy);
+        wildOccupants.set(currentKey, (wildOccupants.get(currentKey) ?? false) || wp.isMoving);
+        if (wp.isMoving) {
+          wildOccupants.set(tileKey(wp.targetGX, wp.targetGY), true);
+        }
+      }
+    }
+
+    for (const chunk of chunkManager.renderChunks) {
       for (const tg of chunk.tallGrass) {
         const isRedHere =
           (player.gx === tg.gx && player.gy === tg.gy) ||
@@ -242,21 +273,9 @@ export class ObjectRenderer {
           (follower.gx === tg.gx && follower.gy === tg.gy) ||
           (follower.isMoving && follower.targetGX === tg.gx && follower.targetGY === tg.gy);
 
-        let isWildHere = false;
-        let isWildMoving = false;
-        for (const wChunk of chunkManager.activeChunks) {
-          for (const wp of wChunk.wildPokemon) {
-            if (
-              (wp.gx === tg.gx && wp.gy === tg.gy) ||
-              (wp.isMoving && wp.targetGX === tg.gx && wp.targetGY === tg.gy)
-            ) {
-              isWildHere = true;
-              if (wp.isMoving) isWildMoving = true;
-              break;
-            }
-          }
-          if (isWildHere) break;
-        }
+        const wildMoving = wildOccupants.get(tileKey(tg.gx, tg.gy));
+        const isWildHere = wildMoving !== undefined;
+        const isWildMoving = wildMoving === true;
 
         if (isRedHere || isPikaHere || isWildHere) {
           const tgY = tg.gy * 32 + 28;
@@ -280,26 +299,29 @@ export class ObjectRenderer {
 
               // Clip with natural serrated grass blade tips (tưa tưa lá cỏ)
               const bx = tg.x;
-              const by = tg.y;
+              const grassHeight = 32 * tg.heightScale;
+              // Keep the feet anchored to the tile while allowing natural
+              // height variation instead of stretching the whole field alike.
+              const by = tg.y + 32 - grassHeight;
 
               ctx.save();
               ctx.beginPath();
-              ctx.moveTo(bx, by + 17);
-              ctx.lineTo(bx + 3, by + 12);
-              ctx.lineTo(bx + 6, by + 16);
-              ctx.lineTo(bx + 10, by + 11);
-              ctx.lineTo(bx + 14, by + 16);
-              ctx.lineTo(bx + 17, by + 13);
-              ctx.lineTo(bx + 21, by + 17);
-              ctx.lineTo(bx + 25, by + 11);
-              ctx.lineTo(bx + 28, by + 15);
-              ctx.lineTo(bx + 32, by + 18);
-              ctx.lineTo(bx + 32, by + 32);
-              ctx.lineTo(bx, by + 32);
+              ctx.moveTo(bx, by + grassHeight * 0.53);
+              ctx.lineTo(bx + 3, by + grassHeight * 0.38);
+              ctx.lineTo(bx + 6, by + grassHeight * 0.5);
+              ctx.lineTo(bx + 10, by + grassHeight * 0.34);
+              ctx.lineTo(bx + 14, by + grassHeight * 0.5);
+              ctx.lineTo(bx + 17, by + grassHeight * 0.4);
+              ctx.lineTo(bx + 21, by + grassHeight * 0.53);
+              ctx.lineTo(bx + 25, by + grassHeight * 0.34);
+              ctx.lineTo(bx + 28, by + grassHeight * 0.47);
+              ctx.lineTo(bx + 32, by + grassHeight * 0.56);
+              ctx.lineTo(bx + 32, by + grassHeight);
+              ctx.lineTo(bx, by + grassHeight);
               ctx.closePath();
               ctx.clip();
 
-              ctx.drawImage(imgTG, fIdx * 32, 0, 32, 32, bx, by, 32, 32);
+              ctx.drawImage(imgTG, fIdx * 32, 0, 32, 32, bx, by, 32, grassHeight);
               ctx.restore();
             },
           });

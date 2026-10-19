@@ -21,11 +21,9 @@ import {
   getTreeTypeForEcology,
   getFlowerTypeForCluster,
   getNaturalShrubForZone,
-  calculateTallGrassDensity,
-  TREE_MIN_CANDIDATES,
-  TREE_MAX_CANDIDATES,
 } from './ecology';
-
+import { isTallGrassTile } from './ecology/tall-grass-field';
+import { getForestTreeCandidates } from './ecology/tree-field';
 
 function toField(seedOrField: number | TerrainField = 101): TerrainField {
   return typeof seedOrField === 'number' ? createTerrainField(1, seedOrField) : seedOrField;
@@ -54,6 +52,7 @@ export interface TallGrassEntity {
   x: number;
   y: number;
   phase: number;
+  heightScale: number;
 }
 
 export interface BerryBushEntity {
@@ -133,31 +132,14 @@ export function getChunkTreeLocations(
 
   const startGX = cx * CHUNK_SIZE;
   const startGY = cy * CHUNK_SIZE;
-  const centerGX = startGX + 8;
-  const centerGY = startGY + 8;
-  const chunkEcology = sampleEcology(centerGX, centerGY, field);
-  const numCandidates = Math.round(
-    TREE_MIN_CANDIDATES + chunkEcology.density * (TREE_MAX_CANDIDATES - TREE_MIN_CANDIDATES)
-  );
   const list: Array<{ x: number; y: number }> = [];
 
-  for (let i = 0; i < numCandidates; i++) {
-    const randX = seededHash(cx * 100 + i, cy * 100 + i, seed + 2);
-    const randY = seededHash(cx * 100 + i, cy * 100 + i, seed + 3);
-
-    const lx = Math.floor(randX * (CHUNK_SIZE - 2)) + 1;
-    const ly = Math.floor(randY * (CHUNK_SIZE - 2)) + 1;
-    const gx = startGX + lx;
-    const gy = startGY + ly;
-
-    const tx = gx * TILE_SIZE - 16;
-    const ty = gy * TILE_SIZE - 86;
-
-    if (field.isValidTreePos(tx, ty)) {
-      const overlaps = list.some((t) => isTreeOverlappingTree(tx, ty, t.x, t.y));
-      if (!overlaps) {
-        list.push({ x: tx, y: ty });
-      }
+  for (const candidate of getForestTreeCandidates(cx, cy, field)) {
+    const overlaps = list.some((tree) =>
+      isTreeOverlappingTree(candidate.x, candidate.y, tree.x, tree.y)
+    );
+    if (!overlaps) {
+      list.push({ x: candidate.x, y: candidate.y });
     }
   }
 
@@ -195,48 +177,48 @@ export function generateChunkTrees(
   const seed = field.seed;
   const startGX = cx * CHUNK_SIZE;
   const startGY = cy * CHUNK_SIZE;
-  const centerGX = startGX + 8;
-  const centerGY = startGY + 8;
-  const chunkEcology = sampleEcology(centerGX, centerGY, field);
-  const numCandidates = Math.round(
-    TREE_MIN_CANDIDATES + chunkEcology.density * (TREE_MAX_CANDIDATES - TREE_MIN_CANDIDATES)
-  );
   const trees: TreeEntity[] = [];
 
   // 1. Inland Forest, Meadow & Mountain Trees
-  for (let i = 0; i < numCandidates; i++) {
-    const randX = seededHash(cx * 100 + i, cy * 100 + i, seed + 2);
-    const randY = seededHash(cx * 100 + i, cy * 100 + i, seed + 3);
+  for (const candidate of getForestTreeCandidates(cx, cy, field)) {
+    const { gx, gy, x: tx, y: ty } = candidate;
+    // Prevent overlap with already placed trees in THIS chunk
+    const overlapsInChunk = trees.some((t) => isTreeOverlappingTree(tx, ty, t.x, t.y));
+    if (overlapsInChunk) continue;
 
-    const lx = Math.floor(randX * (CHUNK_SIZE - 2)) + 1;
-    const ly = Math.floor(randY * (CHUNK_SIZE - 2)) + 1;
-    const gx = startGX + lx;
-    const gy = startGY + ly;
-
-    const tx = gx * TILE_SIZE - 16;
-    const ty = gy * TILE_SIZE - 86;
-
-    if (field.isValidTreePos(tx, ty)) {
-      // Prevent overlap with already placed trees in THIS chunk
-      const overlapsInChunk = trees.some((t) => isTreeOverlappingTree(tx, ty, t.x, t.y));
-      if (overlapsInChunk) continue;
-
-      // Prevent overlap with trees in neighbor chunks
-      let overlapsNeighbor = false;
-      for (let dy = -1; dy <= 1; dy++) {
-        for (let dx = -1; dx <= 1; dx++) {
-          if (dx === 0 && dy === 0) continue;
-          if (dy > 0 || (dy === 0 && dx > 0)) continue;
-          const nTrees = getChunkTreeLocations(cx + dx, cy + dy, field);
-          if (nTrees.some((nt) => isTreeOverlappingTree(tx, ty, nt.x, nt.y))) {
-            overlapsNeighbor = true;
-            break;
-          }
+    // Prevent overlap with trees in neighbor chunks
+    let overlapsNeighbor = false;
+    for (let dy = -1; dy <= 1; dy++) {
+      for (let dx = -1; dx <= 1; dx++) {
+        if (dx === 0 && dy === 0) continue;
+        if (dy > 0 || (dy === 0 && dx > 0)) continue;
+        const nTrees = getChunkTreeLocations(cx + dx, cy + dy, field);
+        if (nTrees.some((nt) => isTreeOverlappingTree(tx, ty, nt.x, nt.y))) {
+          overlapsNeighbor = true;
+          break;
         }
-        if (overlapsNeighbor) break;
       }
-      if (overlapsNeighbor) continue;
+      if (overlapsNeighbor) break;
+    }
+    if (overlapsNeighbor) continue;
 
+    const isDesert = Boolean(field.isDesert && field.isDesert(gx, gy));
+    if (isDesert) {
+      const roll = seededHash(gx, gy, seed + 919);
+      if (roll < 0.35) {
+        trees.push({ gx, gy, x: tx, y: ty + 56, type: 'dead_1' });
+        colliders.push({ x: tx + 16, y: ty + 88, w: 32, h: 24, type: 'tree' });
+      } else if (roll < 0.65) {
+        trees.push({ gx, gy, x: tx, y: ty + 56, type: 'dead_2' });
+        colliders.push({ x: tx + 16, y: ty + 88, w: 32, h: 24, type: 'tree' });
+      } else if (roll < 0.85) {
+        trees.push({ gx, gy, x: tx, y: ty + 24, type: 'cactus_large' });
+        colliders.push({ x: tx + 16, y: ty + 84, w: 32, h: 24, type: 'tree' });
+      } else {
+        trees.push({ gx, gy, x: tx, y: ty + 56, type: 'desert_boulder' });
+        colliders.push({ x: tx + 8, y: ty + 84, w: 48, h: 26, type: 'tree' });
+      }
+    } else {
       const sample = sampleEcology(gx, gy, field);
       const zone = getEcologyZone(sample);
       const tType = getTreeTypeForEcology(sample, zone);
@@ -294,9 +276,10 @@ export function generateChunkBuildings(
   colliders: Collider[]
 ): BuildingEntity[] {
   const field = toField(seedOrField);
-  const buildings = field.version === 2
-    ? getV0VillageBuildingsForChunk(cx, cy, field)
-    : getVillageBuildingsForChunk(cx, cy, field.seed);
+  const buildings =
+    field.version >= 2
+      ? getV0VillageBuildingsForChunk(cx, cy, field)
+      : getVillageBuildingsForChunk(cx, cy, field.seed);
   const entities: BuildingEntity[] = [];
 
   const chunkStartGX = cx * CHUNK_SIZE;
@@ -381,9 +364,10 @@ export function generateChunkFoliage(
   const plants: PlantEntity[] = [];
 
   // 0. Curated Town Garden Landscaping
-  const townGardenPlants = field.version === 2
-    ? getV0VillageGardenPlantsForChunk(cx, cy, field)
-    : getVillageGardenPlantsForChunk(cx, cy, seed);
+  const townGardenPlants =
+    field.version >= 2
+      ? getV0VillageGardenPlantsForChunk(cx, cy, field)
+      : getVillageGardenPlantsForChunk(cx, cy, seed);
   for (const gp of townGardenPlants) {
     plants.push({
       gx: gp.gx,
@@ -478,7 +462,9 @@ export function generateChunkFoliage(
             const gy = startGY + ly;
 
             // STRICT: Must only spawn on the flat interior plateau, NEVER on the cliff edge/rim/wall!
-            if (field.isNearCliffEdge(gx, gy) || tileIdGrid[ly]?.[lx] !== TILE_IDS.cliff_pure) {
+            // Wildflowers only spawn on non-desert grassy cliff plateaus
+            const isDesertHill = Boolean(field.isDesert && field.isDesert(gx, gy));
+            if (isDesertHill || field.isNearCliffEdge(gx, gy) || tileIdGrid[ly]?.[lx] !== TILE_IDS.cliff_pure) {
               continue;
             }
 
@@ -534,9 +520,13 @@ export function generateChunkFoliage(
 
       const isGrass = terrainGrid[ly]?.[lx] === TERRAIN.GRASS;
       const isHillFlat =
-        terrainGrid[ly]?.[lx] === TERRAIN.HILL && tileIdGrid[ly]?.[lx] === TILE_IDS.cliff_pure;
+        terrainGrid[ly]?.[lx] === TERRAIN.HILL &&
+        (tileIdGrid[ly]?.[lx] === TILE_IDS.cliff_pure || tileIdGrid[ly]?.[lx] === TILE_IDS.dune_cliff_pure);
+      const isDesert =
+        terrainGrid[ly]?.[lx] === TERRAIN.DESERT ||
+        (terrainGrid[ly]?.[lx] === TERRAIN.HILL && Boolean(field.isDesert && field.isDesert(gx, gy)));
 
-      if (isGrass || isHillFlat) {
+      if (isGrass || isHillFlat || isDesert) {
         if (
           field.isNearCliffEdge(gx, gy) ||
           field.isNearWater(gx, gy, 1) ||
@@ -551,10 +541,24 @@ export function generateChunkFoliage(
         if (berryBushes.some((b) => Math.abs(b.gx - gx) <= 1 && Math.abs(b.gy - gy) <= 1)) continue;
         if (plants.some((p) => Math.abs(p.gx - gx) <= 1 && Math.abs(p.gy - gy) <= 1)) continue;
 
-        const sample = sampleEcology(gx, gy, field);
-        const zone = getEcologyZone(sample);
-        const shrubRoll = seededHash(gx, gy, seed + 1505);
-        let type = getNaturalShrubForZone(zone, shrubRoll);
+        let type: string;
+        if (isDesert) {
+          const desertShrubRoll = seededHash(gx, gy, seed + 1505);
+          if (desertShrubRoll < 0.3) {
+            type = 'desert_dry_bush';
+          } else if (desertShrubRoll < 0.6) {
+            type = 'desert_succulent';
+          } else if (desertShrubRoll < 0.8) {
+            type = 'cactus_medium';
+          } else {
+            type = 'cactus_small';
+          }
+        } else {
+          const sample = sampleEcology(gx, gy, field);
+          const zone = getEcologyZone(sample);
+          const shrubRoll = seededHash(gx, gy, seed + 1505);
+          type = getNaturalShrubForZone(zone, shrubRoll);
+        }
 
         const isLog = type === 'nature_fallen_log';
         if (isLog && lx + 1 >= CHUNK_SIZE) {
@@ -564,6 +568,7 @@ export function generateChunkFoliage(
         const isWhiteBush = type === 'bush_flowering_white';
         const isStump = type === 'nature_tree_stump';
         const isLogNow = type === 'nature_fallen_log';
+        const isCactusSmall = type === 'cactus_small';
 
         let px = gx * TILE_SIZE;
         let py = gy * TILE_SIZE - 32;
@@ -571,7 +576,7 @@ export function generateChunkFoliage(
         if (isWhiteBush) {
           px = gx * TILE_SIZE - 16;
           py = gy * TILE_SIZE - 32;
-        } else if (isStump || isLogNow) {
+        } else if (isStump || isLogNow || isCactusSmall) {
           px = gx * TILE_SIZE;
           py = gy * TILE_SIZE;
         }
@@ -594,6 +599,12 @@ export function generateChunkFoliage(
           colliders.push({ x: px + 4, y: py + 8, w: 24, h: 22, type: 'tree' });
         } else if (isLogNow) {
           colliders.push({ x: px + 4, y: py + 8, w: 56, h: 22, type: 'tree' });
+        } else if (isCactusSmall) {
+          colliders.push({ x: px + 6, y: py + 8, w: 20, h: 20, type: 'tree' });
+        } else if (type === 'cactus_medium') {
+          colliders.push({ x: px + 6, y: py + 40, w: 20, h: 20, type: 'tree' });
+        } else if (type === 'desert_dry_bush' || type === 'desert_succulent') {
+          colliders.push({ x: px + 4, y: py + 40, w: 24, h: 18, type: 'tree' });
         }
       }
     }
@@ -808,7 +819,9 @@ export function generateChunkTallGrass(
 
   // Helper to validate and place a single tall grass tile
   const tryAddGrassTile = (lx: number, ly: number, isCliff = false): boolean => {
-    if (lx < 1 || lx >= CHUNK_SIZE - 1 || ly < 1 || ly >= CHUNK_SIZE - 1) return false;
+    // Border tiles are valid world tiles. The previous one-tile exclusion was
+    // the direct cause of a visible empty seam between adjacent chunks.
+    if (lx < 0 || lx >= CHUNK_SIZE || ly < 0 || ly >= CHUNK_SIZE) return false;
     const gx = startGX + lx;
     const gy = startGY + ly;
 
@@ -844,6 +857,7 @@ export function generateChunkTallGrass(
       x: px,
       y: py,
       phase: seededHash(gx, gy, 777) * Math.PI * 2,
+      heightScale: 0.98 + seededHash(gx, gy, 778) * 0.22,
     });
 
     if (!isCliff) {
@@ -852,79 +866,15 @@ export function generateChunkTallGrass(
     return true;
   };
 
-  // 1. Lowland Meadow Tall Grass: Density-modulated organic patches per Section 8.1
-  const centerGX = startGX + 8;
-  const centerGY = startGY + 8;
-  const chunkEcology = sampleEcology(centerGX, centerGY, seed);
-  const tallGrassDensity = calculateTallGrassDensity(chunkEcology);
-
-  const qRoll = seededHash(cx, cy, seed + 909);
-  const effectiveDensity = tallGrassDensity * 0.7 + qRoll * 0.3;
-  let numPatches: number;
-  if (effectiveDensity < 0.25) {
-    numPatches = 0;
-  } else if (effectiveDensity < 0.55) {
-    numPatches = 1;
-  } else if (effectiveDensity < 0.8) {
-    numPatches = 2;
-  } else {
-    numPatches = 3;
-  }
-
-  for (let p = 0; p < numPatches; p++) {
-    const pSeed = seed + 1010 + p * 137;
-    const ax = 2 + Math.floor(seededHash(cx * 7 + p, cy * 7 + p, pSeed + 1) * 11);
-    const ay = 2 + Math.floor(seededHash(cx * 11 + p, cy * 11 + p, pSeed + 2) * 11);
-    const pw = 3 + Math.floor(seededHash(cx * 13 + p, cy * 13 + p, pSeed + 3) * 5); // 3..7
-    const ph = 2 + Math.floor(seededHash(cx * 17 + p, cy * 17 + p, pSeed + 4) * 4); // 2..5
-    const style = Math.floor(seededHash(cx * 19 + p, cy * 19 + p, pSeed + 5) * 4);
-
-    const rx = Math.max(1.0, pw / 2.0);
-    const ry = Math.max(1.0, ph / 2.0);
-    const minLX = Math.max(1, ax - Math.ceil(rx));
-    const maxLX = Math.min(CHUNK_SIZE - 2, ax + Math.ceil(rx));
-    const minLY = Math.max(1, ay - Math.ceil(ry));
-    const maxLY = Math.min(CHUNK_SIZE - 2, ay + Math.ceil(ry));
-
-    for (let ly = minLY; ly <= maxLY; ly++) {
-      for (let lx = minLX; lx <= maxLX; lx++) {
-        const gx = startGX + lx;
-        const gy = startGY + ly;
-
-        let include: boolean;
-        if (style === 0) {
-          // Style 0: Organic Blob with boundary noise modulation
-          const d = Math.pow((lx - ax) / rx, 2) + Math.pow((ly - ay) / ry, 2);
-          const noise = (seededHash(gx, gy, pSeed + 9) - 0.5) * 0.6;
-          include = d <= 1.0 + noise;
-        } else if (style === 1) {
-          // Style 1: Stepped GBA Route Field (irregular stepped corners)
-          const isEdge = lx === minLX || lx === maxLX || ly === minLY || ly === maxLY;
-          const isCorner = (lx === minLX || lx === maxLX) && (ly === minLY || ly === maxLY);
-          if (isCorner) {
-            include = seededHash(gx, gy, pSeed + 11) < 0.25;
-          } else if (isEdge) {
-            include = seededHash(gx, gy, pSeed + 11) < 0.75;
-          } else {
-            include = true;
-          }
-        } else if (style === 2) {
-          // Style 2: Elongated Trailside Strip
-          if (pw >= ph) {
-            include = Math.abs(ly - ay) <= 1;
-          } else {
-            include = Math.abs(lx - ax) <= 1;
-          }
-        } else {
-          // Style 3: Irregular L-Shaped / Stepped Elbow Meadow
-          const inH = lx >= minLX && lx <= maxLX && ly >= ay && ly <= maxLY;
-          const inV = lx >= minLX && lx <= ax && ly >= minLY && ly <= maxLY;
-          include = (inH || inV) && seededHash(gx, gy, pSeed + 13) < 0.85;
-        }
-
-        if (include) {
-          tryAddGrassTile(lx, ly, false);
-        }
+  // 1. Lowland Meadow Tall Grass: evaluate one global field for every tile.
+  // This is intentionally not chunk-local: a patch can continue through any
+  // of the four chunk boundaries without a special stitching pass.
+  for (let ly = 0; ly < CHUNK_SIZE; ly++) {
+    for (let lx = 0; lx < CHUNK_SIZE; lx++) {
+      const gx = startGX + lx;
+      const gy = startGY + ly;
+      if (isTallGrassTile(gx, gy, field)) {
+        tryAddGrassTile(lx, ly, false);
       }
     }
   }
@@ -935,8 +885,8 @@ export function generateChunkTallGrass(
     const cliffGrassRoll = seededHash(cx, cy, seed + 1414);
     if (cliffGrassRoll < 0.75) {
       const plateauCandidates: Array<{ lx: number; ly: number; gx: number; gy: number }> = [];
-      for (let ly = 1; ly < CHUNK_SIZE - 1; ly++) {
-        for (let lx = 1; lx < CHUNK_SIZE - 1; lx++) {
+      for (let ly = 0; ly < CHUNK_SIZE; ly++) {
+        for (let lx = 0; lx < CHUNK_SIZE; lx++) {
           if (
             terrainGrid[ly]?.[lx] === TERRAIN.HILL &&
             tileIdGrid[ly]?.[lx] === TILE_IDS.cliff_pure
@@ -960,10 +910,10 @@ export function generateChunkTallGrass(
           const rx = 1.5 + seededHash(cx * 3 + ap, cy * 3 + ap, seed + 1616) * 1.5;
           const ry = 1.2 + seededHash(cx * 5 + ap, cy * 5 + ap, seed + 1717) * 1.5;
 
-          const minLY = Math.max(1, center.ly - Math.ceil(ry));
-          const maxLY = Math.min(CHUNK_SIZE - 2, center.ly + Math.ceil(ry));
-          const minLX = Math.max(1, center.lx - Math.ceil(rx));
-          const maxLX = Math.min(CHUNK_SIZE - 2, center.lx + Math.ceil(rx));
+          const minLY = Math.max(0, center.ly - Math.ceil(ry));
+          const maxLY = Math.min(CHUNK_SIZE - 1, center.ly + Math.ceil(ry));
+          const minLX = Math.max(0, center.lx - Math.ceil(rx));
+          const maxLX = Math.min(CHUNK_SIZE - 1, center.lx + Math.ceil(rx));
 
           for (let ly = minLY; ly <= maxLY; ly++) {
             for (let lx = minLX; lx <= maxLX; lx++) {

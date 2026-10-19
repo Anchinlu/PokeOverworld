@@ -49,7 +49,11 @@
               "frontShiny": { "type": "string" },
               "backShiny": { "type": "string" },
               "iconShiny": { "type": "string" },
-              "cry": { "type": "string" }
+              "cry": { "type": "string" },
+              "swimming": { "type": "string" },
+              "swimmingShiny": { "type": "string" },
+              "followerWater": { "type": "string" },
+              "followerWaterShiny": { "type": "string" }
             },
             "additionalProperties": false
           },

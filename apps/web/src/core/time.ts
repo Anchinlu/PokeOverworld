@@ -18,6 +18,7 @@ export class GameTime {
   private fpsTimer = 0;
   private currentFps = 60;
   private isRunning = false;
+  private isPaused = false;
   private animationFrameId: number | null = null;
 
   private onUpdate: UpdateCallback;
@@ -40,10 +41,27 @@ export class GameTime {
 
   public stop(): void {
     this.isRunning = false;
+    this.isPaused = false;
     if (this.animationFrameId !== null) {
       cancelAnimationFrame(this.animationFrameId);
       this.animationFrameId = null;
     }
+  }
+
+  public pause(): void {
+    if (!this.isRunning || this.isPaused) return;
+    this.isPaused = true;
+    if (this.animationFrameId !== null) {
+      cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
+    }
+  }
+
+  public resume(): void {
+    if (!this.isRunning || !this.isPaused) return;
+    this.isPaused = false;
+    this.lastTime = performance.now();
+    this.animationFrameId = requestAnimationFrame(this.loop);
   }
 
   public getStats(): GameTimeStats {

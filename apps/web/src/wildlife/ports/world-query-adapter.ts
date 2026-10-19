@@ -1,3 +1,4 @@
+import { TILE_IDS } from '@pokemon/game-data';
 import type { TerrainField } from '../../maps/terrain-field';
 import type { Collider } from '@pokemon/shared-types';
 import type { TallGrassEntity } from '../../maps/chunk-objects';
@@ -10,7 +11,8 @@ import type { WorldQuery, TileContext, TimeBand } from './world-query';
 export function createWorldQueryAdapter(
   field: TerrainField,
   colliders: Collider[] = [],
-  tallGrass: TallGrassEntity[] = []
+  tallGrass: TallGrassEntity[] = [],
+  getTimeBand: () => TimeBand = () => 'day'
 ): WorldQuery {
   const tallGrassSet = new Set<string>();
   for (const tg of tallGrass) {
@@ -38,17 +40,24 @@ export function createWorldQueryAdapter(
       if (tallGrassSet.has(`${gx},${gy}`)) {
         return 'tall_grass';
       }
-      if (field.isOcean(gx, gy) || field.isWater(gx, gy)) {
+      if (field.isOcean(gx, gy)) {
+        const tid = field.getOceanTileId(gx, gy);
+        if (tid !== TILE_IDS.ocean_water) {
+          return 'shore';
+        }
         return 'water_surface';
       }
-      if (field.isSand(gx, gy)) {
+      if (field.isWater(gx, gy)) {
+        return 'water_surface';
+      }
+      if (field.isSand(gx, gy) || (field.isDesert && field.isDesert(gx, gy))) {
         return 'sand';
       }
       if (field.isHill(gx, gy)) {
         return 'rock';
       }
 
-      const sample = sampleEcology(gx, gy, field.seed);
+      const sample = sampleEcology(gx, gy, field);
       const zone = getEcologyZone(sample);
       if (zone === 'dense_forest') {
         return 'forest_floor';
@@ -58,7 +67,10 @@ export function createWorldQueryAdapter(
     },
 
     biomeAt(gx: number, gy: number): string {
-      const sample = sampleEcology(gx, gy, field.seed);
+      if (field.isDesert && field.isDesert(gx, gy)) {
+        return 'dryland';
+      }
+      const sample = sampleEcology(gx, gy, field);
       return getEcologyZone(sample);
     },
 
@@ -68,7 +80,7 @@ export function createWorldQueryAdapter(
     },
 
     timeBand(): TimeBand {
-      return 'day';
+      return getTimeBand();
     },
 
     weather(): string {

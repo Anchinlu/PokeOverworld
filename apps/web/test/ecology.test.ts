@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { sampleEcology, sampleEcologicalNoise } from '../src/maps/ecology/ecology-field';
 import { getEcologyZone } from '../src/maps/ecology/ecology-profile';
 import { ECOLOGY_MOISTURE_SALT } from '../src/maps/ecology/ecology-config';
+import { createTerrainField } from '../src/maps/terrain-field';
+import { isTallGrassTile } from '../src/maps/ecology/tall-grass-field';
 
 describe('Ecological Field & Regional Distribution (Step 1)', () => {
   it('produces identical EcologySample for the same global coordinates and seed', () => {
@@ -49,6 +51,7 @@ describe('Ecological Field & Regional Distribution (Step 1)', () => {
       'meadow',
       'dryland',
       'dense_forest',
+      'light_forest',
       'hill_edge',
     ]);
 
@@ -214,69 +217,15 @@ describe('Ecological Field & Regional Distribution (Step 1)', () => {
     expect(dLush).toBeGreaterThan(dDry);
   });
 
-  it('selects encounter roster based on EncounterContext', async () => {
-    const { getRosterForContext } = await import('../src/maps/chunk-encounters');
-
-    const forestRoster = getRosterForContext({
-      zone: 'dense_forest',
-      onTallGrass: true,
-      nearWater: false,
-      nearTree: true,
-      nearHill: false,
-      timeOfDay: 'day',
-    });
-    expect(forestRoster.some((r) => r.speciesKey === 'KAKUNA' || r.speciesKey === 'CATERPIE')).toBe(
-      true
+  it('keeps tall grass deterministic and allows patches to cross chunk boundaries', () => {
+    const field = createTerrainField(3, 20261019);
+    const samples = Array.from({ length: 256 }, (_, index) => index - 128);
+    const boundaryPairs = samples.filter(
+      (gy) => isTallGrassTile(15, gy, field) && isTallGrassTile(16, gy, field)
     );
 
-    const hillRoster = getRosterForContext({
-      zone: 'hill_edge',
-      onTallGrass: true,
-      nearWater: false,
-      nearTree: false,
-      nearHill: true,
-      timeOfDay: 'day',
-    });
-    expect(hillRoster.some((r) => r.speciesKey === 'SPEAROW' || r.speciesKey === 'RATTATA')).toBe(
-      true
-    );
-
-    const meadowRoster = getRosterForContext({
-      zone: 'meadow',
-      onTallGrass: true,
-      nearWater: false,
-      nearTree: false,
-      nearHill: false,
-      timeOfDay: 'day',
-    });
-    expect(meadowRoster.some((r) => r.speciesKey === 'PIDGEY')).toBe(true);
-  });
-
-  it('generates deterministic levels strictly within [minLevel, maxLevel]', async () => {
-    const { generateChunkWildPokemon } = await import('../src/maps/chunk-encounters');
-
-    const mockTallGrass = [
-      { gx: 10, gy: 10, x: 320, y: 320, phase: 0 },
-      { gx: 11, gy: 10, x: 352, y: 320, phase: 0 },
-      { gx: 10, gy: 11, x: 320, y: 352, phase: 0 },
-      { gx: 11, gy: 11, x: 352, y: 352, phase: 0 },
-    ];
-
-    const monsA = generateChunkWildPokemon(0, 0, 555, [], [], mockTallGrass, []);
-    const monsB = generateChunkWildPokemon(0, 0, 555, [], [], mockTallGrass, []);
-
-    // Deterministic repeatability
-    expect(monsA.length).toBe(monsB.length);
-    for (let i = 0; i < monsA.length; i++) {
-      expect(monsA[i].level).toBe(monsB[i].level);
-      expect(monsA[i].speciesKey).toBe(monsB[i].speciesKey);
-      // Route 1/22/Forest levels are all within [2, 7]
-      expect(monsA[i].level).toBeGreaterThanOrEqual(2);
-      expect(monsA[i].level).toBeLessThanOrEqual(7);
-    }
-
-    // Strictly no encounters when tall grass is absent
-    const emptyMons = generateChunkWildPokemon(0, 0, 555, [], [], [], []);
-    expect(emptyMons).toEqual([]);
+    expect(boundaryPairs.length).toBeGreaterThan(0);
+    expect(isTallGrassTile(15, 24, field)).toBe(isTallGrassTile(15, 24, field));
+    expect(isTallGrassTile(16, 24, field)).toBe(isTallGrassTile(16, 24, field));
   });
 });

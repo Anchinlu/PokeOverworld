@@ -1,4 +1,4 @@
-import { Camera, InputManager } from '../core';
+import { Camera, InputManager, WorldClock } from '../core';
 import { Player, Follower } from '../entities';
 import { ChunkManager, createTerrainField, type TerrainField } from '../maps';
 import { updateWildPokemon } from '../ai';
@@ -26,10 +26,18 @@ import {
   createPartyPokemon,
   pcStorageService,
   autosaveCoordinator,
+  getHighestOwnedPokemonLevel,
 } from '../domain';
 import { defaultRng } from '../core/rng';
-import type { Direction } from '@pokemon/shared-types';
+import type {
+  Direction,
+  AmbientLightProfile,
+  DayPhase,
+  WorldClockConfig,
+} from '@pokemon/shared-types';
+import { TERRAIN } from '@pokemon/game-data';
 import { handleHerdPostBattle } from '../wildlife/behavior/social/herd-controller';
+import { getDayPhase, getAmbientLightProfile } from '../world';
 
 export class GameSession {
   public seed: number;
@@ -39,15 +47,34 @@ export class GameSession {
   public chunkManager: ChunkManager;
   public player: Player;
   public follower: Follower;
+  public readonly worldClock: WorldClock;
   public isBattling = false;
   private lastBattleEndTime = 0;
+  private partyUnsubscribe?: () => void;
 
-  constructor(initialSeed = 101, version = 2) {
+  constructor(
+    initialSeed = 101,
+    version = 2,
+    clockOptions?: {
+      initialMinutes?: number;
+      initialDay?: number;
+      clockConfig?: Partial<WorldClockConfig>;
+    }
+  ) {
     this.seed = initialSeed;
     this.field = createTerrainField(version, this.seed);
     this.camera = new Camera(0, 0);
     this.input = new InputManager();
-    this.chunkManager = new ChunkManager(this.field);
+    this.worldClock = new WorldClock(
+      clockOptions?.initialMinutes,
+      clockOptions?.initialDay ?? 1,
+      clockOptions?.clockConfig
+    );
+    this.chunkManager = new ChunkManager(
+      this.field,
+      () => getHighestOwnedPokemonLevel(partyService.getParty(), pcStorageService.getBoxes()),
+      () => getDayPhase(this.worldClock.getMinutes())
+    );
 
     const savedPos = playerService.getProfile().position;
     const hasSavedPos = Boolean(savedPos && (savedPos.gx !== 0 || savedPos.gy !== 0));
@@ -62,7 +89,7 @@ export class GameSession {
 
     // Keep overworld follower synchronized with party state changes (e.g., evolution)
     this.syncFollowerFromParty();
-    partyService.subscribe(() => {
+    this.partyUnsubscribe = partyService.subscribe(() => {
       this.syncFollowerFromParty();
     });
 
@@ -71,17 +98,23 @@ export class GameSession {
     autosaveCoordinator.setWorldDataProvider(() => ({
       seed: this.seed,
       worldGenVersion: this.field.version,
+      worldTimeMinutes: this.worldClock.getMinutes(),
+      worldDay: this.worldClock.getDay(),
+      lastWorldTimestamp: Date.now(),
       position: {
         gx: this.player.gx,
         gy: this.player.gy,
         direction: this.player.direction,
       },
-      startTown: this.field.version === 2 ? {
-        name: 'Twinleaf Hamlet',
-        gx: 0,
-        gy: 0,
-        tier: 0,
-      } : undefined,
+      startTown:
+        this.field.version >= 2
+          ? {
+              name: 'Twinleaf Hamlet',
+              gx: 0,
+              gy: 0,
+              tier: 0,
+            }
+          : undefined,
     }));
   }
 
@@ -109,16 +142,24 @@ export class GameSession {
 
   public update(dtScale: number, collisionEnabled = true): { pChunkX: number; pChunkY: number } {
     if (this.isBattling) {
+      this.worldClock.pause('battle');
       return {
         pChunkX: Math.floor(this.player.gx / 16),
         pChunkY: Math.floor(this.player.gy / 16),
       };
     }
+    this.worldClock.resume('battle');
+
+    // 0. Advance world time (1 dtScale ~ 16.666ms at 60 FPS)
+    const dtMs = dtScale * (1000 / 60);
+    this.worldClock.advance(dtMs);
 
     const isRunning = this.input.isRunning();
 
     // 1. Update chunks around player
-    const { pChunkX, pChunkY } = this.chunkManager.update(this.player.x, this.player.y);
+    const { pChunkX, pChunkY } = this.chunkManager.update(this.player.x, this.player.y, {
+      progressive: true,
+    });
 
     // 2. Process movement if player is idle on grid
     if (!this.player.isMoving) {
@@ -158,6 +199,11 @@ export class GameSession {
     }
     if (stepCompleted) {
       this.follower.completeStep();
+      const fTile = this.chunkManager.getTileData(this.follower.gx, this.follower.gy);
+      const isOcean = fTile.terrain === TERRAIN.OCEAN_WATER;
+      const isShore = isOcean && fTile.tileId >= 731 && fTile.tileId <= 742;
+      this.follower.isSwimming =
+        (isOcean && !isShore) || (fTile.tileId >= 700 && fTile.tileId < 730);
       playerService.updatePosition(this.player.gx, this.player.gy, this.player.direction);
 
       // Check encounter collision when step completes
@@ -170,7 +216,7 @@ export class GameSession {
     this.camera.update(this.player, dtScale);
 
     // 5. Wild Pokémon AI
-    updateWildPokemon(this.chunkManager, this.player, this.follower, dtScale);
+    updateWildPokemon(this.chunkManager, this.player, this.follower, dtScale, this.getDayPhase());
 
     // 6. Overworld Shiny Pokémon Spatial Audio (3x3 chunk detection & distance scaling)
     overworldShinyAudio.update(
@@ -178,7 +224,7 @@ export class GameSession {
       this.player.gy,
       pChunkX,
       pChunkY,
-      this.chunkManager.activeChunks,
+      this.chunkManager.simulationChunks,
       this.isBattling
     );
 
@@ -189,6 +235,7 @@ export class GameSession {
     for (const chunk of this.chunkManager.activeChunks) {
       if (!chunk.wildPokemon) continue;
       for (const wp of chunk.wildPokemon) {
+        if (wp.state === 'rest_sleep') continue;
         if (wp.gx === this.player.gx && wp.gy === this.player.gy) {
           this.startWildBattle(wp, chunk);
           return;
@@ -206,6 +253,7 @@ export class GameSession {
   ): void {
     if (this.isBattling) return;
     this.isBattling = true;
+    this.worldClock.pause('battle');
     autosaveCoordinator.lockBattle();
 
     // Freeze player movement immediately
@@ -264,6 +312,7 @@ export class GameSession {
         new BattleScreen(playerBattler, wildBattler, env, (result) => {
           try {
             this.isBattling = false;
+            this.worldClock.resume('battle');
             this.lastBattleEndTime = Date.now();
 
             // Sync battle HP, PP, and EXP back into party
@@ -354,7 +403,9 @@ export class GameSession {
 
               // Section 6.4 & W7: Post-battle herd panic or dissolution
               if (wp.herdId) {
-                const activeWild = this.chunkManager.activeChunks.flatMap((c) => c.wildPokemon || []);
+                const activeWild = this.chunkManager.activeChunks.flatMap(
+                  (c) => c.wildPokemon || []
+                );
                 const entId = (wp as WildPokemonEntity).id ?? `${wp.gx},${wp.gy}`;
                 const entRole = (wp as WildPokemonEntity).role ?? 'solo';
                 handleHerdPostBattle(
@@ -368,6 +419,7 @@ export class GameSession {
           } catch (err) {
             console.error('[GameSession] Error finalizing wild battle outcome:', err);
           } finally {
+            this.worldClock.resume('battle');
             // Conclude battle: always unlock autosave and flush post-battle progress safely
             autosaveCoordinator.unlockBattle();
           }
@@ -415,6 +467,7 @@ export class GameSession {
   ): void {
     if (this.isBattling) return;
     this.isBattling = true;
+    this.worldClock.pause('battle');
     autosaveCoordinator.lockBattle();
 
     // Freeze player movement immediately
@@ -464,6 +517,7 @@ export class GameSession {
           (result) => {
             try {
               this.isBattling = false;
+              this.worldClock.resume('battle');
               this.lastBattleEndTime = Date.now();
 
               // Sync battle HP, PP, and EXP back into party
@@ -535,6 +589,7 @@ export class GameSession {
             } catch (err) {
               console.error('[GameSession] Error finalizing custom battle outcome:', err);
             } finally {
+              this.worldClock.resume('battle');
               // Conclude custom battle: always unlock autosave and flush post-battle progress safely
               autosaveCoordinator.unlockBattle();
             }
@@ -638,6 +693,21 @@ export class GameSession {
     this.follower.snapTo(spawn.gx, spawn.gy - 1);
     this.camera.snapTo(this.player);
     this.chunkManager.update(this.player.x, this.player.y);
+  }
+
+  /** Releases long-lived subscriptions when the overworld session is closed. */
+  public destroy(): void {
+    this.partyUnsubscribe?.();
+    this.partyUnsubscribe = undefined;
+    this.input.destroy();
+  }
+
+  public getAmbientLight(): AmbientLightProfile {
+    return getAmbientLightProfile(this.worldClock.getExactMinutes());
+  }
+
+  public getDayPhase(): DayPhase {
+    return getDayPhase(this.worldClock.getMinutes());
   }
 
   public interactAt(worldGX: number, worldGY: number, renderer: GameRenderer): void {

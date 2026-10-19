@@ -78,9 +78,11 @@ describe('Wildlife Herd Roles, Leaders & Apex Predators (Section 4 & 11.3)', () 
     const apexInStart = starterHerd.individuals.filter((ind) => ind.role === 'apex');
     expect(apexInStart).toHaveLength(0);
 
-    // Level cap in starter zone must not exceed 5
+    // Starter-zone encounters now scale from the strongest owned Pokémon.
+    // The default test owner level is 5, so common encounters start above 5.
     for (const ind of starterHerd.individuals) {
-      expect(ind.level).toBeLessThanOrEqual(5);
+      expect(ind.level).toBeGreaterThan(5);
+      expect(ind.level).toBeLessThanOrEqual(12);
     }
   });
 

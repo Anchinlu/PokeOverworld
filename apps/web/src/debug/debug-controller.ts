@@ -42,6 +42,11 @@ export class DebugOverlayController {
   private insBerryVal: HTMLElement | null = null;
   private lblFps: HTMLElement | null = null;
   private lblPartyCount: HTMLElement | null = null;
+  private lblWorldTimeBadge: HTMLElement | null = null;
+  private sliderWorldTime: HTMLInputElement | null = null;
+  private btnToggleTimePause: HTMLButtonElement | null = null;
+  private selectTimeSpeed: HTMLSelectElement | null = null;
+  private isSliderDragging = false;
 
   constructor(bridge: DebugBridge) {
     this.bridge = bridge;
@@ -80,6 +85,10 @@ export class DebugOverlayController {
     this.insBerryVal = this.overlayEl.querySelector('#insBerryVal');
     this.lblFps = this.overlayEl.querySelector('#lblFps');
     this.lblPartyCount = this.overlayEl.querySelector('#lblPartyCount');
+    this.lblWorldTimeBadge = this.overlayEl.querySelector('#lblWorldTimeBadge');
+    this.sliderWorldTime = this.overlayEl.querySelector('#sliderWorldTime');
+    this.btnToggleTimePause = this.overlayEl.querySelector('#btnToggleTimePause');
+    this.selectTimeSpeed = this.overlayEl.querySelector('#selectTimeSpeed');
   }
 
   private populateSelectors(): void {
@@ -300,6 +309,9 @@ export class DebugOverlayController {
 
     // Bag Controls
     this.bindBagControls();
+
+    // World Time Controls
+    this.bindTimeControls();
 
     // Subscribe to party changes
     if (this.bridge.subscribePartyChange) {
@@ -561,6 +573,107 @@ export class DebugOverlayController {
     }
     if (this.lblFps) {
       this.lblFps.innerText = `${info.fps} FPS`;
+    }
+    if (info.worldTimeStr) {
+      this.refreshWorldTimeDisplay();
+    }
+  }
+
+  private bindTimeControls(): void {
+    if (!this.overlayEl) return;
+
+    if (this.sliderWorldTime) {
+      this.sliderWorldTime.addEventListener('mousedown', () => {
+        this.isSliderDragging = true;
+      });
+      this.sliderWorldTime.addEventListener('touchstart', () => {
+        this.isSliderDragging = true;
+      });
+      this.sliderWorldTime.addEventListener('mouseup', () => {
+        this.isSliderDragging = false;
+      });
+      this.sliderWorldTime.addEventListener('touchend', () => {
+        this.isSliderDragging = false;
+      });
+      this.sliderWorldTime.addEventListener('input', () => {
+        const val = parseInt(this.sliderWorldTime?.value || '480', 10);
+        this.bridge.setWorldTime(val);
+        this.refreshWorldTimeDisplay();
+      });
+    }
+
+    const phaseButtons = this.overlayEl.querySelectorAll<HTMLButtonElement>('.btn-time-phase');
+    phaseButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const phase = btn.dataset.phase as 'dawn' | 'day' | 'dusk' | 'night';
+        if (phase) {
+          this.bridge.setWorldTimePhase(phase);
+          this.refreshWorldTimeDisplay();
+        }
+      });
+    });
+
+    const stepButtons = this.overlayEl.querySelectorAll<HTMLButtonElement>('.btn-time-step');
+    stepButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const delta = parseInt(btn.dataset.step || '0', 10);
+        const cur = this.bridge.getWorldTime();
+        this.bridge.setWorldTime(cur.minutes + delta);
+        this.refreshWorldTimeDisplay();
+      });
+    });
+
+    if (this.btnToggleTimePause) {
+      this.btnToggleTimePause.addEventListener('click', () => {
+        const isPaused = this.bridge.toggleTimePause();
+        if (this.btnToggleTimePause) {
+          this.btnToggleTimePause.innerText = isPaused ? '▶️ Chạy' : '⏸️ Dừng';
+          this.btnToggleTimePause.style.background = isPaused
+            ? 'rgba(34, 197, 94, 0.25)'
+            : 'rgba(239, 68, 68, 0.2)';
+          this.btnToggleTimePause.style.color = isPaused ? '#86efac' : '#fca5a5';
+        }
+        this.refreshWorldTimeDisplay();
+      });
+    }
+
+    if (this.selectTimeSpeed) {
+      this.selectTimeSpeed.addEventListener('change', () => {
+        const speed = parseFloat(this.selectTimeSpeed?.value || '1');
+        this.bridge.setTimeSpeed(speed);
+      });
+    }
+
+    this.refreshWorldTimeDisplay();
+  }
+
+  public refreshWorldTimeDisplay(): void {
+    const cur = this.bridge.getWorldTime?.() ?? {
+      minutes: 720,
+      day: 1,
+      phase: 'day' as const,
+      speedMultiplier: 1,
+      isPaused: false,
+    };
+    if (this.lblWorldTimeBadge) {
+      const phaseNames: Record<string, string> = {
+        dawn: '🌅 Bình minh',
+        day: '☀️ Ban ngày',
+        dusk: '🌇 Hoàng hôn',
+        night: '🌙 Ban đêm',
+      };
+      const hours = Math.floor(cur.minutes / 60)
+        .toString()
+        .padStart(2, '0');
+      const mins = Math.floor(cur.minutes % 60)
+        .toString()
+        .padStart(2, '0');
+      const phaseStr = phaseNames[cur.phase] || cur.phase;
+      const pauseStr = cur.isPaused ? ' [⏸️]' : '';
+      this.lblWorldTimeBadge.innerText = `${hours}:${mins} (${phaseStr}) · Ngày ${cur.day}${pauseStr}`;
+    }
+    if (this.sliderWorldTime && !this.isSliderDragging) {
+      this.sliderWorldTime.value = String(cur.minutes);
     }
   }
 

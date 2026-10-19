@@ -31,12 +31,16 @@
  */
 
 import { titleBgmPlayer } from '../audio/title-bgm';
+import { saveGameRepository, SaveGameRepository } from '../domain/save/save-repository';
 
 export type TitleScreenTheme = 'day' | 'sunset' | 'night';
 
 export interface TitleScreenOptions {
   onStart?: () => void;
+  onNewWorld?: (seed: number, slotId: string) => void;
+  onLoadWorld?: (slotId: string) => void;
   initialTheme?: TitleScreenTheme;
+  saveRepository?: SaveGameRepository;
 }
 
 export interface TitleScreenController {
@@ -273,6 +277,72 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
         </div>
       </div>
 
+      <!-- New World Modal (Tạo Thế Giới Mới) -->
+      <div class="title-pixel-modal-backdrop" id="titleNewWorldModal" style="display: none;">
+        <div class="title-pixel-modal new-world-modal" role="dialog" aria-modal="true" aria-labelledby="newWorldModalTitle">
+          <div class="title-pixel-modal-header">
+            <div class="title-pixel-modal-title" id="newWorldModalTitle">🌍 TẠO THẾ GIỚI MỚI</div>
+            <button class="title-pixel-modal-close-btn" id="btnNewWorldModalCloseX" title="Đóng">✕</button>
+          </div>
+          <div class="title-pixel-modal-body">
+            <div class="title-pixel-setting-row">
+              <label class="title-pixel-setting-label" for="inputWorldSeed">Mã Sinh Thế Giới (World Seed):</label>
+              <div class="title-pixel-seed-input-row">
+                <input type="number" class="title-pixel-text-input" id="inputWorldSeed" min="1" max="999999999" value="101" />
+                <button class="title-pixel-btn btn-seed-reroll" id="btnRerollSeed" type="button" title="Đổi ngẫu nhiên seed mới">
+                  <span class="btn-text">🎲 Đổi Seed</span>
+                </button>
+              </div>
+              <div class="title-pixel-hint">Mỗi Seed tạo ra một thế giới địa hình thung lũng, bờ biển và phân bố thị trấn khác biệt.</div>
+            </div>
+
+            <div class="title-pixel-setting-row">
+              <label class="title-pixel-setting-label" for="selectSaveSlot">Lưu Vào Vị Trí (Save Slot):</label>
+              <div class="title-pixel-slot-select-container">
+                <select class="title-pixel-select" id="selectSaveSlot">
+                  <option value="slot_1">Slot 1</option>
+                  <option value="slot_2">Slot 2</option>
+                  <option value="slot_3">Slot 3</option>
+                  <option value="slot_4">Slot 4</option>
+                </select>
+                <div class="title-pixel-slot-status" id="txtSlotStatus"></div>
+              </div>
+            </div>
+
+            <div class="title-pixel-version-banner">
+              <div class="version-banner-badge">World Gen v3</div>
+              <div class="version-banner-desc">Địa hình Thung Lũng Bất Đối Xứng, Hành Lang Tự Nhiên &amp; Bản Đồ Vùng (V3 Valley)</div>
+            </div>
+          </div>
+          <div class="title-pixel-modal-footer">
+            <button class="title-pixel-btn btn-modal-cancel" id="btnCancelCreateWorld" type="button">
+              <span class="btn-text">HỦY</span>
+            </button>
+            <button class="title-pixel-btn btn-modal-confirm" id="btnConfirmCreateWorld" type="button">
+              <span class="btn-text">✨ TẠO THẾ GIỚI</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Load World Modal (Tải Thế Giới Đã Lưu) -->
+      <div class="title-pixel-modal-backdrop" id="titleLoadWorldModal" style="display: none;">
+        <div class="title-pixel-modal load-world-modal" role="dialog" aria-modal="true" aria-labelledby="loadWorldModalTitle">
+          <div class="title-pixel-modal-header">
+            <div class="title-pixel-modal-title" id="loadWorldModalTitle">📂 TẢI THẾ GIỚI ĐÃ LƯU</div>
+            <button class="title-pixel-modal-close-btn" id="btnLoadWorldModalCloseX" title="Đóng">✕</button>
+          </div>
+          <div class="title-pixel-modal-body">
+            <div class="title-pixel-save-list" id="titleSavedWorldsList"></div>
+          </div>
+          <div class="title-pixel-modal-footer">
+            <button class="title-pixel-btn btn-modal-done" id="btnLoadModalClose" type="button">
+              <span class="btn-text">ĐÓNG</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Quick Test Dev Button -->
       <div class="title-dev-bar">
         <button class="btn-title-dev" id="btnTitleDevQuick" title="Bỏ qua màn hình chờ, khởi tạo và vào thẳng Overworld">
@@ -307,6 +377,32 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
   const sliderTitleBgm = overlay.querySelector('#sliderTitleBgm') as HTMLInputElement | null;
   const txtTitleBgmVol = overlay.querySelector('#txtTitleBgmVol') as HTMLSpanElement | null;
   const btnTitleBgmMute = overlay.querySelector('#btnTitleBgmMute') as HTMLButtonElement | null;
+
+  // New World modal elements
+  const newWorldModal = overlay.querySelector('#titleNewWorldModal') as HTMLDivElement | null;
+  const btnNewWorldModalCloseX = overlay.querySelector(
+    '#btnNewWorldModalCloseX'
+  ) as HTMLButtonElement | null;
+  const btnCancelCreateWorld = overlay.querySelector(
+    '#btnCancelCreateWorld'
+  ) as HTMLButtonElement | null;
+  const btnConfirmCreateWorld = overlay.querySelector(
+    '#btnConfirmCreateWorld'
+  ) as HTMLButtonElement | null;
+  const inputWorldSeed = overlay.querySelector('#inputWorldSeed') as HTMLInputElement | null;
+  const btnRerollSeed = overlay.querySelector('#btnRerollSeed') as HTMLButtonElement | null;
+  const selectSaveSlot = overlay.querySelector('#selectSaveSlot') as HTMLSelectElement | null;
+  const txtSlotStatus = overlay.querySelector('#txtSlotStatus') as HTMLDivElement | null;
+
+  // Load World modal elements
+  const loadWorldModal = overlay.querySelector('#titleLoadWorldModal') as HTMLDivElement | null;
+  const btnLoadWorldModalCloseX = overlay.querySelector(
+    '#btnLoadWorldModalCloseX'
+  ) as HTMLButtonElement | null;
+  const btnLoadModalClose = overlay.querySelector('#btnLoadModalClose') as HTMLButtonElement | null;
+  const savedWorldsList = overlay.querySelector('#titleSavedWorldsList') as HTMLDivElement | null;
+
+  const saveRepo = options?.saveRepository ?? saveGameRepository;
 
   // 4. State & Animation Parameters
   let isRunning = true;
@@ -1261,6 +1357,38 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
     }, 450);
   };
 
+  const triggerNewWorld = (seed: number, slotId: string) => {
+    if (hasTriggeredStart) return;
+    hasTriggeredStart = true;
+
+    overlay.classList.add('fade-out');
+
+    window.setTimeout(() => {
+      destroy();
+      if (options?.onNewWorld) {
+        options.onNewWorld(seed, slotId);
+      } else if (options?.onStart) {
+        options.onStart();
+      }
+    }, 450);
+  };
+
+  const triggerLoadWorld = (slotId: string) => {
+    if (hasTriggeredStart) return;
+    hasTriggeredStart = true;
+
+    overlay.classList.add('fade-out');
+
+    window.setTimeout(() => {
+      destroy();
+      if (options?.onLoadWorld) {
+        options.onLoadWorld(slotId);
+      } else if (options?.onStart) {
+        options.onStart();
+      }
+    }, 450);
+  };
+
   const showNotice = (msg: string) => {
     const prev = overlay.querySelector('#titlePixelNotice');
     if (prev) prev.remove();
@@ -1275,6 +1403,172 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
       notice.classList.add('fade-out');
       window.setTimeout(() => notice.remove(), 350);
     }, 2400);
+  };
+
+  const formatPlayTime = (seconds: number = 0): string => {
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = Math.floor(seconds % 60);
+    if (h > 0) return `${h}h ${m}m`;
+    if (m > 0) return `${m}m ${s}s`;
+    return `${s}s`;
+  };
+
+  const formatSaveDate = (timestamp: number): string => {
+    if (!timestamp) return 'Không rõ';
+    try {
+      const d = new Date(timestamp);
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const year = d.getFullYear();
+      const hours = String(d.getHours()).padStart(2, '0');
+      const mins = String(d.getMinutes()).padStart(2, '0');
+      return `${day}/${month}/${year} ${hours}:${mins}`;
+    } catch {
+      return 'Không rõ';
+    }
+  };
+
+  const generateRandomSeed = (): number => {
+    return Math.floor(Math.random() * 899999) + 100001;
+  };
+
+  const updateSlotStatus = () => {
+    if (!selectSaveSlot || !txtSlotStatus) return;
+    const chosenSlot = selectSaveSlot.value;
+    const saves = saveRepo.listSaves();
+    const existing = saves.find((s) => s.slotId === chosenSlot);
+    if (existing) {
+      txtSlotStatus.innerHTML = `<span class="status-warn">⚠️ Vị trí này đã có bản lưu (${existing.playerName || 'Red'} - Seed #${existing.worldSeed ?? 101}). Tạo mới sẽ ghi đè!</span>`;
+    } else {
+      txtSlotStatus.innerHTML = `<span class="status-ok">✅ Vị trí trống, sẵn sàng tạo mới!</span>`;
+    }
+  };
+
+  const openNewWorldModal = () => {
+    if (newWorldModal) {
+      if (inputWorldSeed) {
+        inputWorldSeed.value = String(generateRandomSeed());
+      }
+      if (selectSaveSlot) {
+        const saves = saveRepo.listSaves();
+        selectSaveSlot.innerHTML = '';
+        for (const sId of ['slot_1', 'slot_2', 'slot_3', 'slot_4']) {
+          const opt = document.createElement('option');
+          opt.value = sId;
+          const sNum = sId.replace('slot_', '');
+          const existing = saves.find((s) => s.slotId === sId);
+          if (existing) {
+            opt.textContent = `Slot ${sNum} (${existing.playerName || 'Red'} - Seed #${existing.worldSeed ?? 101})`;
+          } else {
+            opt.textContent = `Slot ${sNum} (Trống)`;
+          }
+          selectSaveSlot.appendChild(opt);
+        }
+        updateSlotStatus();
+      }
+      newWorldModal.style.display = 'flex';
+    }
+  };
+
+  const closeNewWorldModal = () => {
+    if (newWorldModal) {
+      newWorldModal.style.display = 'none';
+    }
+  };
+
+  const renderSavedWorldsList = () => {
+    if (!savedWorldsList) return;
+    savedWorldsList.innerHTML = '';
+    const saves = saveRepo.listSaves().sort((a, b) => (b.savedAt || 0) - (a.savedAt || 0));
+
+    if (saves.length === 0) {
+      savedWorldsList.innerHTML = `
+        <div class="title-pixel-empty-saves">
+          <div class="empty-icon">🗺️</div>
+          <div class="empty-title">Chưa có bản thế giới nào được lưu!</div>
+          <div class="empty-hint">Hãy chọn <b>"Thế Giới Mới"</b> để tạo thế giới phiêu lưu đầu tiên của bạn.</div>
+        </div>
+      `;
+      return;
+    }
+
+    for (const save of saves) {
+      const card = document.createElement('div');
+      card.className = 'title-pixel-save-card';
+      const slotNum = save.slotId.replace('slot_', '');
+      const seed = save.worldSeed ?? 101;
+      const versionBadge =
+        save.worldGenVersion === 3
+          ? '<span class="world-tag v3">🌲 V3 Thung Lũng</span>'
+          : save.worldGenVersion === 2
+            ? '<span class="world-tag v2">🏝️ V2 Đảo Làng</span>'
+            : '<span class="world-tag v1">📜 V1 Cổ Điển</span>';
+
+      card.innerHTML = `
+        <div class="save-card-header">
+          <div class="save-card-title">
+            <span class="slot-badge">Slot ${slotNum}</span>
+            <span class="seed-badge">Seed #${seed}</span>
+            ${versionBadge}
+          </div>
+          <div class="save-card-date">📅 ${formatSaveDate(save.savedAt)}</div>
+        </div>
+        <div class="save-card-body">
+          <div class="save-card-stat">👤 HLV: <b>${save.playerName || 'Red'}</b> (${save.badgesCount || 0} huy hiệu) | 💰 $${save.money || 0}</div>
+          <div class="save-card-stat">⚡ Đội trưởng: <b>${save.leaderName || 'Pikachu'}</b> (Lv.${save.leaderLevel || 5})</div>
+          <div class="save-card-stat">🎒 Đội hình: <b>${save.partyCount || 1}/6</b> | 📦 PC: <b>${save.pcCount || 0}</b> | ⏱️ <b>${formatPlayTime(save.playTimeSeconds)}</b></div>
+        </div>
+        <div class="save-card-actions">
+          <button class="title-pixel-btn btn-slot-play" data-slot="${save.slotId}" title="Vào thế giới này">
+            <span class="btn-text">▶️ Vào Thế Giới</span>
+          </button>
+          <button class="title-pixel-btn btn-slot-delete" data-slot="${save.slotId}" title="Xóa bản lưu này">
+            <span class="btn-text">🗑️ Xóa</span>
+          </button>
+        </div>
+      `;
+      savedWorldsList.appendChild(card);
+    }
+
+    const playButtons = savedWorldsList.querySelectorAll('.btn-slot-play');
+    playButtons.forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const slot = (btn as HTMLElement).dataset.slot || 'slot_1';
+        closeLoadWorldModal();
+        triggerLoadWorld(slot);
+      });
+    });
+
+    const deleteButtons = savedWorldsList.querySelectorAll('.btn-slot-delete');
+    deleteButtons.forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const slot = (btn as HTMLElement).dataset.slot || 'slot_1';
+        const slotNum = slot.replace('slot_', '');
+        if (typeof window !== 'undefined' && window.confirm) {
+          const ok = window.confirm(`Bạn có chắc chắn muốn xóa vĩnh viễn bản lưu Thế Giới Slot ${slotNum}?`);
+          if (!ok) return;
+        }
+        saveRepo.deleteSave(slot);
+        showNotice(`🗑️ Đã xóa bản lưu Slot ${slotNum}!`);
+        renderSavedWorldsList();
+      });
+    });
+  };
+
+  const openLoadWorldModal = () => {
+    if (loadWorldModal) {
+      renderSavedWorldsList();
+      loadWorldModal.style.display = 'flex';
+    }
+  };
+
+  const closeLoadWorldModal = () => {
+    if (loadWorldModal) {
+      loadWorldModal.style.display = 'none';
+    }
   };
 
   const openSettingsModal = () => {
@@ -1293,12 +1587,67 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
 
   btnNewWorld?.addEventListener('click', (e) => {
     e.stopPropagation();
-    triggerStart();
+    openNewWorldModal();
   });
 
   btnLoadWorld?.addEventListener('click', (e) => {
     e.stopPropagation();
-    triggerStart();
+    openLoadWorldModal();
+  });
+
+  btnRerollSeed?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (inputWorldSeed) {
+      inputWorldSeed.value = String(generateRandomSeed());
+      showNotice('🎲 Đã tạo Seed mới!');
+    }
+  });
+
+  selectSaveSlot?.addEventListener('change', () => {
+    updateSlotStatus();
+  });
+
+  btnNewWorldModalCloseX?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeNewWorldModal();
+  });
+
+  btnCancelCreateWorld?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeNewWorldModal();
+  });
+
+  btnConfirmCreateWorld?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    let seed = inputWorldSeed ? parseInt(inputWorldSeed.value, 10) : generateRandomSeed();
+    if (isNaN(seed) || seed <= 0) {
+      seed = generateRandomSeed();
+    }
+    const slotId = selectSaveSlot?.value || 'slot_1';
+    closeNewWorldModal();
+    triggerNewWorld(seed, slotId);
+  });
+
+  newWorldModal?.addEventListener('click', (e) => {
+    if (e.target === newWorldModal) {
+      closeNewWorldModal();
+    }
+  });
+
+  btnLoadWorldModalCloseX?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeLoadWorldModal();
+  });
+
+  btnLoadModalClose?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeLoadWorldModal();
+  });
+
+  loadWorldModal?.addEventListener('click', (e) => {
+    if (e.target === loadWorldModal) {
+      closeLoadWorldModal();
+    }
   });
 
   btnJoinWorld?.addEventListener('click', (e) => {
@@ -1349,8 +1698,14 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
   });
 
   const onKeyDown = (e: KeyboardEvent) => {
-    if (e.key === 'Escape' && settingsModal && settingsModal.style.display !== 'none') {
-      closeSettingsModal();
+    if (e.key === 'Escape') {
+      if (settingsModal && settingsModal.style.display !== 'none') {
+        closeSettingsModal();
+      } else if (newWorldModal && newWorldModal.style.display !== 'none') {
+        closeNewWorldModal();
+      } else if (loadWorldModal && loadWorldModal.style.display !== 'none') {
+        closeLoadWorldModal();
+      }
     }
   };
   if (typeof window !== 'undefined') {

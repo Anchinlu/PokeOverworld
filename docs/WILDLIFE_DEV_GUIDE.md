@@ -3,25 +3,25 @@
 Phạm vi: độ hiếm theo tỉ lệ bắt, vai trò sinh thái (lẻ, bầy, đầu đàn, apex), hiển thị cấp trên đầu, AI có tập tính, và cách gói tất cả thành **một mô-đun** `wildlife/`.
 
 - **Cơ sở:** mã nguồn tại commit `503fa631`
-- **Trạng thái:** đề xuất triển khai. Mọi con số tham số là **giá trị khởi điểm**, phải chỉnh bằng test thống kê và chơi thử
+- **Trạng thái:** W1..W8 đã triển khai. Mọi con số tham số vẫn là **giá trị cân bằng**, phải chỉnh bằng test thống kê và chơi thử
 - **Phạm vi nội dung:** chỉ Gen 1 (151 loài) ở giai đoạn này; thiết kế để mở rộng cho các vùng sau
 - **Không đổi:** asset, luật chiến đấu, công thức bắt, `encounters.json` (giữ cho điểm cốt truyện)
-- **Quyết định còn mở:** mục 13
+- **Không thuộc phạm vi:** săn mồi, chuỗi thức ăn và cạnh tranh tài nguyên giữa các loài
 
 ---
 
 ## 1. Hiện trạng đã xác minh trong repo
 
-| Hạng mục | Thực tế |
-|---|---|
-| Thực thể hoang dã | `WildPokemonEntity` định nghĩa trong `maps/chunk-encounters.ts`: có `level`, `behavior`, `state` (`idle`, `curious`, `fleeing`), `homeGX/GY`, `wanderRadius`, `emote`; **chưa có** vai trò, bầy, nhu cầu |
-| Shiny | `chunk-encounters.ts:151`: `seededHash(gx, gy, seed + 9999) < 0.05`, tức **5%** |
-| Bảng gặp | `packages/game-data/encounters.json`: `regions` (Viridian Forest, Route 22...), mỗi vùng có `roster[]` gồm `speciesKey, rate, behavior, minLevel, maxLevel` |
-| Hành vi | 5 kiểu gắn cứng theo roster: `slow_bug` (2 loài), `dormant_cocoon` (1), `skittish_bird` (3), `aggressive_bird` (2), `curious_rodent` (2) |
-| AI | `ai/wild-pokemon.ts` (376 dòng): chuỗi `if (wp.behavior === ...)` theo từng kiểu |
-| Hiển thị | `rendering/character-renderer.ts` chỉ vẽ bong bóng cảm xúc (`!`, `?`, `sweat`, `dots`); **không có** cấp trên đầu |
-| Dữ liệu loài | `pokemon-db.json` (151 loài) có `catchRate`, `evYield`, `baseFriendship`, `growthRate`, `genderRatio`, `eggGroups`, `types`, `stats`, `ability`; **không có** giai đoạn tiến hóa, môi trường sống, cờ huyền thoại |
-| Tiến hóa | Nằm trong `domain/pokemon/evolution-rules.ts` (mã TypeScript, không phải JSON) |
+| Hạng mục          | Thực tế                                                                                                                                                                                                           |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Thực thể hoang dã | `wildlife/model/wild-entity.ts`: có `level`, `behavior`, `state`, `homeGX/GY`, `wanderRadius`, `emote`, vai trò và bầy                                                                                            |
+| Shiny             | `wildlife/spawn/shiny.ts`: tỉ lệ cấu hình mặc định 1/4096, tất định theo seed                                                                                                                                     |
+| Bảng gặp          | `packages/game-data/encounters.json`: `regions` (Viridian Forest, Route 22...), mỗi vùng có `roster[]` gồm `speciesKey, rate, behavior, minLevel, maxLevel`                                                       |
+| Hành vi           | 5 kiểu gắn cứng theo roster: `slow_bug` (2 loài), `dormant_cocoon` (1), `skittish_bird` (3), `aggressive_bird` (2), `curious_rodent` (2)                                                                          |
+| AI                | `ai/wild-pokemon.ts` (376 dòng): chuỗi `if (wp.behavior === ...)` theo từng kiểu                                                                                                                                  |
+| Hiển thị          | `rendering/character-renderer.ts` chỉ vẽ bong bóng cảm xúc (`!`, `?`, `sweat`, `dots`); **không có** cấp trên đầu                                                                                                 |
+| Dữ liệu loài      | `pokemon-db.json` (151 loài) có `catchRate`, `evYield`, `baseFriendship`, `growthRate`, `genderRatio`, `eggGroups`, `types`, `stats`, `ability`; **không có** giai đoạn tiến hóa, môi trường sống, cờ huyền thoại |
+| Tiến hóa          | Nằm trong `domain/pokemon/evolution-rules.ts` (mã TypeScript, không phải JSON)                                                                                                                                    |
 
 ---
 
@@ -31,13 +31,13 @@ Phạm vi: độ hiếm theo tỉ lệ bắt, vai trò sinh thái (lẻ, bầy, 
 
 Phân bố `catchRate` của 151 loài (đo từ `pokemon-db.json`):
 
-| Tỉ lệ bắt | Số loài | Ví dụ |
-|---|---|---|
-| ≥ 190 | 42 | Caterpie, Weedle, Pidgey, Rattata, Pikachu (190) |
-| 120–189 | 14 | Metapod, Pidgeotto, Raticate, Clefairy, Machop |
-| 60–119 | 32 | Fearow, Arbok, Raichu, Arcanine |
-| 25–59 | **59** (trong đó 52 loài đúng bằng 45) | Bulbasaur, Eevee, Dratini, Aerodactyl, **Mew (45)**, Snorlax (25), Chansey (30), Ditto (35) |
-| < 25 | 4 | Articuno, Zapdos, Moltres, Mewtwo (3) |
+| Tỉ lệ bắt | Số loài                                | Ví dụ                                                                                       |
+| --------- | -------------------------------------- | ------------------------------------------------------------------------------------------- |
+| ≥ 190     | 42                                     | Caterpie, Weedle, Pidgey, Rattata, Pikachu (190)                                            |
+| 120–189   | 14                                     | Metapod, Pidgeotto, Raticate, Clefairy, Machop                                              |
+| 60–119    | 32                                     | Fearow, Arbok, Raichu, Arcanine                                                             |
+| 25–59     | **59** (trong đó 52 loài đúng bằng 45) | Bulbasaur, Eevee, Dratini, Aerodactyl, **Mew (45)**, Snorlax (25), Chansey (30), Ditto (35) |
+| < 25      | 4                                      | Articuno, Zapdos, Moltres, Mewtwo (3)                                                       |
 
 Hệ quả: Mew, Eevee, Bulbasaur và nhiều dạng tiến hóa cuối cùng đều là 45; Pikachu (190) ngang Pidgey trong khi mong muốn là loài ít gặp ở rừng. Vì vậy độ hiếm phải kết hợp thêm **giai đoạn tiến hóa**, **cờ đặc biệt** và **ghi đè thủ công**.
 
@@ -49,24 +49,24 @@ tierStage = tierBase + stagePenalty(stage)    // giai đoạn 1: +0, 2: +1, 3: +
 tier      = clamp(tierStage + overrideDelta, 0, 4)
 ```
 
-| Cấp | Tên | Tỉ lệ bắt gốc |
-|---|---|---|
-| 0 | Thường | ≥ 190 |
-| 1 | Ít gặp | 120–189 |
-| 2 | Hiếm | 60–119 |
-| 3 | Rất hiếm | 25–59 |
-| 4 | Cực hiếm | < 25, hoặc bị đẩy lên bởi giai đoạn hoặc ghi đè |
+| Cấp | Tên      | Tỉ lệ bắt gốc                                   |
+| --- | -------- | ----------------------------------------------- |
+| 0   | Thường   | ≥ 190                                           |
+| 1   | Ít gặp   | 120–189                                         |
+| 2   | Hiếm     | 60–119                                          |
+| 3   | Rất hiếm | 25–59                                           |
+| 4   | Cực hiếm | < 25, hoặc bị đẩy lên bởi giai đoạn hoặc ghi đè |
 
 **Cờ đặc biệt** (loại khỏi bảng gặp thường, không có cấp):
 
-| Cờ | Ý nghĩa | Cách xuất hiện |
-|---|---|---|
-| `legendary` | Articuno, Zapdos, Moltres, Mewtwo | Điểm cố định hoặc sự kiện cốt truyện |
-| `mythical` | Mew | Sự kiện, không sinh hoang dã |
-| `starter` | Bulbasaur, Charmander, Squirtle (và dòng tiến hóa) | Nhận ở cốt truyện, không hoang dã |
-| `fossil` | Kabuto, Omanyte, Aerodactyl... | Hóa thạch/khai quật |
-| `static` | Snorlax | Điểm cố định chặn đường |
-| `no_wild` | Dạng chỉ có qua tiến hóa đá hoặc trao đổi | Không sinh hoang dã |
+| Cờ          | Ý nghĩa                                            | Cách xuất hiện                       |
+| ----------- | -------------------------------------------------- | ------------------------------------ |
+| `legendary` | Articuno, Zapdos, Moltres, Mewtwo                  | Điểm cố định hoặc sự kiện cốt truyện |
+| `mythical`  | Mew                                                | Sự kiện, không sinh hoang dã         |
+| `starter`   | Bulbasaur, Charmander, Squirtle (và dòng tiến hóa) | Nhận ở cốt truyện, không hoang dã    |
+| `fossil`    | Kabuto, Omanyte, Aerodactyl...                     | Hóa thạch/khai quật                  |
+| `static`    | Snorlax                                            | Điểm cố định chặn đường              |
+| `no_wild`   | Dạng chỉ có qua tiến hóa đá hoặc trao đổi          | Không sinh hoang dã                  |
 
 **Ghi đè (`rarityDelta`)** dùng cho các ngoại lệ có chủ đích. Ví dụ đề xuất: Pikachu +1 (Thường → Ít gặp); Eevee +0 nhưng hạn chế môi trường (đồng bằng, ít gặp); dạng giai đoạn 3 như Pidgeot, Venusaur không sinh bằng bảng thường mà chỉ qua vai trò **apex** (mục 4).
 
@@ -76,13 +76,13 @@ tier      = clamp(tierStage + overrideDelta, 0, 4)
 
 1. **Chọn cấp** theo xác suất mục tiêu (`spawn-config.json`):
 
-| Cấp | Xác suất khởi điểm |
-|---|---|
-| Thường | 62% |
-| Ít gặp | 25% |
-| Hiếm | 10% |
-| Rất hiếm | 2,5% |
-| Cực hiếm | 0,5% |
+| Cấp      | Xác suất khởi điểm |
+| -------- | ------------------ |
+| Thường   | 62%                |
+| Ít gặp   | 25%                |
+| Hiếm     | 10%                |
+| Rất hiếm | 2,5%               |
+| Cực hiếm | 0,5%               |
 
 2. **Chọn loài trong cấp** theo trọng số: `ái lực(biome) × ái lực(bối cảnh ô) × hệ số giờ × hệ số thời tiết`.
 
@@ -91,7 +91,7 @@ Lý do làm hai bước: nếu cộng trọng số trực tiếp thì cảm giá
 ### 2.4 Shiny
 
 - Độc lập với độ hiếm của loài (như game gốc), mặc định **1/4096** (chuẩn Gen 7 đã chọn), cấu hình theo thế giới.
-- **Thay giá trị 5% hiện tại** (`chunk-encounters.ts:151`) bằng tham số trong `spawn-config.json`.
+- Tỉ lệ shiny được đọc từ `spawn-config.json`, không dùng tỉ lệ hardcode trong chunk generator.
 - Quyết định shiny tất định theo hash `(seed, chunk, slot)`; nhiều máy cùng thấy một con.
 
 ---
@@ -102,16 +102,16 @@ Mỗi loài khai báo **nhiều môi trường sống** với ái lực 0–1, t
 
 Gợi ý gán cho Gen 1 (bạn duyệt từng loài):
 
-| Nhóm | Ví dụ loài |
-|---|---|
+| Nhóm               | Ví dụ loài                                                                                                           |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------- |
 | **Rừng, rừng rậm** | Caterpie, Weedle, Kakuna, Metapod, **Pikachu**, Oddish, Paras, Venonat, Bellsprout, Exeggcute; hiếm: Scyther, Pinsir |
-| **Đồng bằng** | Pidgey, Rattata, Spearow, Nidoran♀/♂, Mankey, Meowth, Growlithe, Ponyta, Doduo; hiếm: Tauros, Kangaskhan, Eevee |
-| **Đồi, núi đá** | Geodude, Machop, Onix, Rhyhorn; Zubat (khi có hang) |
-| **Vùng khô** | Sandshrew, Ekans, Diglett, Cubone |
-| **Đầm lầy** | Poliwag, Psyduck, Slowpoke, Grimer, Koffing; hiếm: Tangela |
-| **Sông, hồ** | Magikarp, Goldeen, Psyduck, Poliwag |
-| **Biển, ven biển** | Tentacool, Shellder, Staryu, Krabby, Horsea, Seel; hiếm: Lapras |
-| **Điểm đặc biệt** | Snorlax, huyền thoại, Mew, Ditto, hóa thạch |
+| **Đồng bằng**      | Pidgey, Rattata, Spearow, Nidoran♀/♂, Mankey, Meowth, Growlithe, Ponyta, Doduo; hiếm: Tauros, Kangaskhan, Eevee      |
+| **Đồi, núi đá**    | Geodude, Machop, Onix, Rhyhorn; Zubat (khi có hang)                                                                  |
+| **Vùng khô**       | Sandshrew, Ekans, Diglett, Cubone                                                                                    |
+| **Đầm lầy**        | Poliwag, Psyduck, Slowpoke, Grimer, Koffing; hiếm: Tangela                                                           |
+| **Sông, hồ**       | Magikarp, Goldeen, Psyduck, Poliwag                                                                                  |
+| **Biển, ven biển** | Tentacool, Shellder, Staryu, Krabby, Horsea, Seel; hiếm: Lapras                                                      |
+| **Điểm đặc biệt**  | Snorlax, huyền thoại, Mew, Ditto, hóa thạch                                                                          |
 
 **Hệ số giờ và thời tiết** (khởi điểm): loài về đêm (Zubat, Oddish, Venonat, Meowth, Gastly) nhân 0,2 ban ngày và 2–3 ban đêm; loài nước nhân lên khi mưa; bọ giảm khi mưa.
 
@@ -119,12 +119,12 @@ Gợi ý gán cho Gen 1 (bạn duyệt từng loài):
 
 ## 4. Vai trò sinh thái
 
-| Vai trò | Mô tả | Cấp so với cấp cơ sở |
-|---|---|---|
-| `solo` | Cá thể lẻ | cấp cơ sở ± dao động nhỏ |
-| `member` | Thành viên bầy | cấp cơ sở ± dao động nhỏ |
-| `leader` | Đầu đàn, cùng loài với bầy | + 3 đến + 8 |
-| `apex` | Dạng tiến hóa cuối của dòng | + 10 đến + 20, không thấp hơn cấp tối thiểu của giai đoạn |
+| Vai trò  | Mô tả                       | Cấp so với cấp cơ sở                                      |
+| -------- | --------------------------- | --------------------------------------------------------- |
+| `solo`   | Cá thể lẻ                   | cấp cơ sở ± dao động nhỏ                                  |
+| `member` | Thành viên bầy              | cấp cơ sở ± dao động nhỏ                                  |
+| `leader` | Đầu đàn, cùng loài với bầy  | + 3 đến + 8                                               |
+| `apex`   | Dạng tiến hóa cuối của dòng | + 10 đến + 20, không thấp hơn cấp tối thiểu của giai đoạn |
 
 ### 4.1 Cấp cơ sở
 
@@ -136,12 +136,12 @@ baseLevel(d) = clamp(L0 + floor(d / STEP), LMIN, LMAX)
 
 ### 4.2 Kích thước nhóm theo tính xã hội của loài
 
-| `social` | Số cá thể | Ghi chú |
-|---|---|---|
-| `solitary` | 1 | Mặc định |
-| `pair` | 2 | |
-| `herd` | 3–6 | Có đầu đàn |
-| `flock` | 4–8 | Chim; có đầu đàn |
+| `social`   | Số cá thể | Ghi chú          |
+| ---------- | --------- | ---------------- |
+| `solitary` | 1         | Mặc định         |
+| `pair`     | 2         |                  |
+| `herd`     | 3–6       | Có đầu đàn       |
+| `flock`    | 4–8       | Chim; có đầu đàn |
 
 Loài cấp Thường dễ thành bầy hơn loài hiếm (hiếm chủ yếu lẻ).
 
@@ -174,13 +174,14 @@ Ngân sách khởi điểm: tối đa 8 thực thể mỗi chunk, 25 chunk hoạ
 
 Gọi `Lp` là **cấp tham chiếu của người chơi** (mục 13: Pokémon dẫn đầu đội hay mạnh nhất, mặc định đề xuất là Pokémon dẫn đầu còn khỏe).
 
-| Điều kiện | Hiển thị |
-|---|---|
-| Vai trò `leader` hoặc `apex` | `???` màu đỏ |
-| Vai trò thường và `level < Lp` | `Lv.X` |
-| Vai trò thường và `level ≥ Lp` | Không hiện |
+| Điều kiện                      | Hiển thị     |
+| ------------------------------ | ------------ |
+| Vai trò `leader` hoặc `apex`   | `???` màu đỏ |
+| Vai trò thường và `level < Lp` | `Lv.X`       |
+| Vai trò thường và `level ≥ Lp` | Không hiện   |
 
 Chi tiết:
+
 - Tùy chọn: nếu `leader` hoặc `apex` có `level ≤ Lp − 10` thì hiện `Lv.X` như thường (tránh `???` gây hiểu nhầm).
 - Chỉ vẽ trong bán kính khoảng 7 ô quanh người chơi.
 - Cấp thật vẫn nằm trong thực thể; chỉ giao diện che.
@@ -191,14 +192,14 @@ Chi tiết:
 ```ts
 // indicators/level-indicator.ts (thuần, test được không cần canvas)
 export type LevelIndicator =
-  | { kind: 'level'; text: string }       // "Lv.12"
+  | { kind: 'level'; text: string } // "Lv.12"
   | { kind: 'unknown_red'; text: '???' }
   | { kind: 'none' };
 
 export function getLevelIndicator(
   entity: { level: number; role: 'solo' | 'member' | 'leader' | 'apex' },
   playerRefLevel: number,
-  opts?: { showLowApexAsLevel?: boolean; lowApexGap?: number },
+  opts?: { showLowApexAsLevel?: boolean; lowApexGap?: number }
 ): LevelIndicator;
 ```
 
@@ -260,9 +261,9 @@ ngược lại → theo tính khí (tò mò, bỏ qua, nhút nhát)
 - Mưa: bọ trốn, loài nước nổi lên; hệ số theo `weather-response`.
 - Phụ thuộc cổng `clock` (giờ trong game) và cổng thời tiết; **không** dùng `Date.now()` trong luật hành vi.
 
-### 6.5b Quan hệ săn mồi (giai đoạn sau)
+### 6.5b Phạm vi không triển khai
 
-Bảng nhẹ `predator → prey` (ví dụ chim săn bọ). Chỉ làm khi các phần trước ổn định; không phải điều kiện của bản đầu.
+Không có quan hệ săn mồi, chuỗi thức ăn hoặc cạnh tranh tài nguyên giữa các loài trong Wildlife System hiện tại. Nếu sau này cần mở rộng, đó sẽ là một hệ thống gameplay riêng và chỉ triển khai theo yêu cầu.
 
 ---
 
@@ -313,23 +314,23 @@ scripts/wildlife/derive-species-spawn.mjs   sinh bản nháp species-spawn.json 
 
 ```ts
 export interface WildlifeSystem {
-  populateChunk(cx: number, cy: number): WildEntity[];       // tất định theo seed
-  update(dtMs: number): void;                                  // mô phỏng, có LOD và ngân sách
-  getOverlays(viewport: Rect): OverlayModel[];                 // cấp, ???, cảm xúc
+  populateChunk(cx: number, cy: number): WildEntity[]; // tất định theo seed
+  update(dtMs: number): void; // mô phỏng, có LOD và ngân sách
+  getOverlays(viewport: Rect): OverlayModel[]; // cấp, ???, cảm xúc
   onBattleResolved(entityId: string, outcome: BattleOutcome): void;
 }
 ```
 
 ### 8.3 Quy tắc phụ thuộc
 
-| Mô-đun | Được import | Không được import |
-|---|---|---|
-| `model` | `core` | mọi thứ khác trong `wildlife` |
-| `spawn` | `model`, `data`, `ports`, `core/rng` | `behavior`, `rendering`, `ui` |
-| `behavior` | `model`, `ports`, `core` | `spawn`, `rendering`, `ui` |
-| `indicators` | `model`, `ports/player-query` | `behavior`, `spawn`, `rendering` |
-| `encounter` | `model`, `battle` (qua cổng) | nội bộ `behavior` |
-| `rendering/wildlife` | `model`, `indicators` | `behavior`, `spawn` |
+| Mô-đun               | Được import                          | Không được import                |
+| -------------------- | ------------------------------------ | -------------------------------- |
+| `model`              | `core`                               | mọi thứ khác trong `wildlife`    |
+| `spawn`              | `model`, `data`, `ports`, `core/rng` | `behavior`, `rendering`, `ui`    |
+| `behavior`           | `model`, `ports`, `core`             | `spawn`, `rendering`, `ui`       |
+| `indicators`         | `model`, `ports/player-query`        | `behavior`, `spawn`, `rendering` |
+| `encounter`          | `model`, `battle` (qua cổng)         | nội bộ `behavior`                |
+| `rendering/wildlife` | `model`, `indicators`                | `behavior`, `spawn`              |
 
 Mô-đun **không import** `maps/terrain-rules` hay `ChunkManager`; mọi thứ về thế giới qua cổng `WorldQuery` (bản đầu là adapter bọc `ChunkManager`, `TerrainField` khi có, và `sampleEcology`).
 
@@ -338,9 +339,9 @@ Mô-đun **không import** `maps/terrain-rules` hay `ChunkManager`; mọi thứ 
 ```ts
 interface WorldQuery {
   isWalkable(gx: number, gy: number): boolean;
-  contextAt(gx: number, gy: number): TileContext;   // 'tall_grass' | 'forest_floor' | 'water_surface' | 'shore' | 'rock' ...
+  contextAt(gx: number, gy: number): TileContext; // 'tall_grass' | 'forest_floor' | 'water_surface' | 'shore' | 'rock' ...
   biomeAt(gx: number, gy: number): BiomeId;
-  difficultyAt(gx: number, gy: number): number;      // khoảng cách tới khởi đầu, sau này là trường độ khó
+  difficultyAt(gx: number, gy: number): number; // khoảng cách tới khởi đầu, sau này là trường độ khó
   timeBand(): 'dawn' | 'day' | 'dusk' | 'night';
   weather(): 'clear' | 'rain' | 'sand' | 'snow' | string;
 }
@@ -348,7 +349,7 @@ interface PlayerQuery {
   position(): { gx: number; gy: number };
   isRunning(): boolean;
   inTallGrass(): boolean;
-  referenceLevel(): number;                          // mục 13
+  referenceLevel(): number; // mục 13
 }
 ```
 
@@ -367,7 +368,7 @@ interface PlayerQuery {
     "social": "pair",
     "habitats": [
       { "biome": "dense_forest", "context": "forest_floor", "affinity": 1.0 },
-      { "biome": "light_forest", "context": "tall_grass",   "affinity": 0.6 }
+      { "biome": "light_forest", "context": "tall_grass", "affinity": 0.6 }
     ],
     "activeTime": ["day", "dusk"],
     "weather": { "rain": 0.7 }
@@ -377,9 +378,7 @@ interface PlayerQuery {
     "flags": [],
     "rarityDelta": 0,
     "social": "flock",
-    "habitats": [
-      { "biome": "meadow", "context": "tall_grass", "affinity": 1.0 }
-    ],
+    "habitats": [{ "biome": "meadow", "context": "tall_grass", "affinity": 1.0 }],
     "activeTime": ["dawn", "day", "dusk"],
     "apexSpecies": "PIDGEOT"
   }
@@ -392,17 +391,41 @@ interface PlayerQuery {
 
 ```json
 {
-  "tierProbability": [0.62, 0.25, 0.10, 0.025, 0.005],
+  "tierProbability": [0.62, 0.25, 0.1, 0.025, 0.005],
   "stagePenalty": [0, 1, 2],
+  "rarityLevelBonus": [
+    [1, 6],
+    [4, 10],
+    [8, 16],
+    [12, 22],
+    [18, 30]
+  ],
+  "rarityLevelCap": [40, 55, 70, 85, 100],
   "shinyOdds": 4096,
   "maxEntitiesPerChunk": 8,
-  "groupsPerChunk": { "meadow": [3, 5], "light_forest": [2, 4], "dense_forest": [2, 4], "dryland": [1, 3], "wetland": [2, 3], "coast": [1, 3] },
+  "groupsPerChunk": {
+    "meadow": [3, 5],
+    "light_forest": [2, 4],
+    "dense_forest": [2, 4],
+    "dryland": [1, 3],
+    "wetland": [2, 3],
+    "coast": [1, 3]
+  },
   "social": { "pair": [2, 2], "herd": [3, 6], "flock": [4, 8] },
   "leaderBonus": [3, 8],
-  "apex": { "p0": 0.03, "pMax": 0.10, "levelBonus": [10, 20], "minDifficulty": 0.35 },
-  "level": { "l0": 3, "step": 120, "min": 2, "max": 60, "startZoneCap": 5 }
+  "apex": { "p0": 0.03, "pMax": 0.1, "levelBonus": [10, 20], "minDifficulty": 0.35 },
+  "level": { "l0": 3, "step": 120, "min": 2, "max": 100, "startZoneCap": 5 }
 }
 ```
+
+`playerMaxOwnedLevel` là cấp cao nhất của toàn bộ Pokémon người chơi đã sở hữu,
+bao gồm cả Party và tất cả slot đang có Pokémon trong PC. Cấp Pokémon hoang dã
+được neo theo mốc này, cộng biên độ của bậc hiếm trong `rarityLevelBonus`, rồi
+cộng thêm vai trò đàn (`leader` hoặc `apex`). Cấp cuối cùng luôn bị giới hạn
+bởi `rarityLevelCap`: `[40, 55, 70, 85, 100]` tương ứng với Thường → Cực hiếm,
+đồng thời vẫn nằm trong khoảng 1–100.
+`startZoneCap` chỉ giới hạn cấp cơ sở theo khoảng cách của khu vực khởi đầu;
+không còn ép cấp cuối cùng của Pokémon hoang dã về 5.
 
 ### 9.3 Kiểm tra dữ liệu (`validate-wildlife.mjs`, chạy trong CI)
 
@@ -419,17 +442,17 @@ interface PlayerQuery {
 
 Mỗi bước kết thúc bằng một kết quả kiểm chứng được; không gộp nhiều bước vào một commit. Cỡ: S nhỏ, M vừa, L lớn.
 
-| Bước | Nội dung | DoD | Cỡ |
-|---|---|---|---|
-| **W1** | Tạo `wildlife/model` và chuyển `WildPokemonEntity` sang đó (re-export tạm ở `maps/chunk-encounters.ts`) | Toàn bộ test hiện có pass không sửa | S |
-| **W2** | `indicators/level-indicator` + `rendering/wildlife/wild-overlay` (vai trò tạm: tất cả `solo`) | Bảng chân trị 5.2 có test; thấy `Lv.X` trên đầu trong game | S |
-| **W3** | Script sinh `species-spawn.json` nháp + bạn duyệt + `validate-wildlife.mjs` | CI chạy kiểm tra dữ liệu | M |
-| **W4** | `spawn/` (độ hiếm hai bước, mô hình cấp, shiny, bầy, apex, `spawn-director`) thay `generateChunkWildPokemon`; thay 5% shiny | Test thống kê mục 11.1–11.4 pass | L |
-| **W5** | Chuyển 5 hành vi cũ thành 5 mẫu trong `behavior-archetypes.json`; tách `grid-mover` | Test mô phỏng so khớp hành vi cũ pass | M |
-| **W6** | Bộ não chấm điểm, nhu cầu, giác quan, nhịp ngày đêm | Test hành vi 11.5 pass | L |
-| **W7** | Hành vi bầy, báo động, xử lý sau trận | Test 11.6 pass | M |
-| **W8** | LOD, ngân sách, đo hiệu năng; xóa `ai/wild-pokemon.ts`; khóa phụ thuộc bằng `dependency-cruiser` | Ngân sách đạt; `deps:check` xanh | M |
-| **W9** | Quan hệ săn mồi (tùy chọn, sau) | | M |
+| Bước   | Nội dung                                                                                                 | DoD                                                        | Cỡ  |
+| ------ | -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | --- |
+| **W1** | Tạo `wildlife/model` và chuyển `WildPokemonEntity` sang đó                                               | Toàn bộ test hiện có pass                                  | S   |
+| **W2** | `indicators/level-indicator` + `rendering/wildlife/wild-overlay` (vai trò tạm: tất cả `solo`)            | Bảng chân trị 5.2 có test; thấy `Lv.X` trên đầu trong game | S   |
+| **W3** | Script sinh `species-spawn.json` nháp + bạn duyệt + `validate-wildlife.mjs`                              | CI chạy kiểm tra dữ liệu                                   | M   |
+| **W4** | `spawn/` (độ hiếm hai bước, mô hình cấp, shiny, bầy, apex, `spawn-director`) làm pipeline spawn duy nhất | Test thống kê mục 11.1–11.4 pass                           | L   |
+| **W5** | Chuyển 5 hành vi cũ thành 5 mẫu trong `behavior-archetypes.json`; tách `grid-mover`                      | Test mô phỏng so khớp hành vi cũ pass                      | M   |
+| **W6** | Bộ não chấm điểm, nhu cầu, giác quan, nhịp ngày đêm                                                      | Test hành vi 11.5 pass                                     | L   |
+| **W7** | Hành vi bầy, báo động, xử lý sau trận                                                                    | Test 11.6 pass                                             | M   |
+| **W8** | LOD, ngân sách, đo hiệu năng; xóa `ai/wild-pokemon.ts`; khóa phụ thuộc bằng `dependency-cruiser`         | Ngân sách đạt; `deps:check` xanh                           | M   |
+| **W9** | Không triển khai: săn mồi, chuỗi thức ăn hoặc cạnh tranh tài nguyên                                      | Không có module hoặc rule runtime cho phạm vi này          | —   |
 
 **Thứ tự:** W1 → W2 → W3 → W4 → W5 → W6 → W7 → W8. W1–W2 làm được ngay, không phụ thuộc địa hình v0.
 
@@ -438,24 +461,29 @@ Mỗi bước kết thúc bằng một kết quả kiểm chứng được; khô
 ## 11. Bộ test bắt buộc (`apps/web/test/wildlife/`)
 
 ### 11.1 Độ hiếm
+
 - Tính cấp cho cả 151 loài; so với bảng kỳ vọng đã duyệt (bắt buộc: Pikachu = Ít gặp; Pidgeot không sinh thường; Snorlax, huyền thoại và Mew không có trong bảng thường).
 - Không loài nào có cờ `legendary/mythical/starter/fossil/static/no_wild` xuất hiện trong mô phỏng spawn.
 
 ### 11.2 Phân bố
+
 - Mô phỏng 100.000 lần chọn mỗi (biome, bối cảnh): tỉ lệ từng cấp nằm trong sai số (ví dụ ±1% tuyệt đối với cấp Thường, ±0,3% với cấp Hiếm) so với `tierProbability`.
 - Pikachu chỉ xuất hiện ở biome rừng; loài nước không xuất hiện trong cỏ cao nội địa.
 - Cấp dự phòng hoạt động khi bối cảnh thiếu loài cấp được chọn (không bao giờ trả rỗng).
 
 ### 11.3 Vai trò và cấp
+
 - Mọi bầy có đúng một `leader`; `leader` cao hơn `member` 3–8 cấp.
 - `apex` luôn đạt cấp tối thiểu của giai đoạn, cao hơn cấp cơ sở 10–20, không xuất hiện trong bán kính vùng khởi đầu, và không quá một con mỗi bầy.
 - Cấp trong vùng khởi đầu không vượt cấp trần.
 
 ### 11.4 Shiny và tất định
+
 - Cùng seed, cùng chunk → danh sách thực thể (loài, cấp, vai trò, shiny, vị trí) giống hệt qua hai lần chạy và qua các thứ tự sinh chunk khác nhau.
 - Tỉ lệ shiny quan sát hội tụ về `1/shinyOdds` (kiểm trên số mẫu lớn).
 
 ### 11.5 Hành vi
+
 - Mô phỏng với RNG có seed và bước thời gian cố định:
   - loài đêm ngủ ban ngày và thức khi người chơi lại gần;
   - con yếu bỏ chạy khi ratio thấp, con mạnh cảnh báo;
@@ -464,25 +492,27 @@ Mỗi bước kết thúc bằng một kết quả kiểm chứng được; khô
   - mô phỏng 200 thực thể nằm trong ngân sách khung hình.
 
 ### 11.6 Bầy
+
 - Thành viên ở trong bán kính quanh đầu đàn phần lớn thời gian (ví dụ ≥ 90%).
 - Báo động lan đúng độ trễ theo khoảng cách.
 - Sau khi bắt hoặc hạ thành viên, phần còn lại bỏ chạy; hạ đầu đàn thì bầy tan.
 
 ### 11.7 Chỉ báo cấp
+
 - Bảng chân trị 5.1: 4 vai trò × 3 quan hệ cấp; kiểm cả tùy chọn `showLowApexAsLevel`.
 
 ---
 
 ## 12. Rủi ro
 
-| Rủi ro | Xử lý |
-|---|---|
-| Độ khó lệch (apex quá mạnh hoặc quá dễ gặp) | Tham số `apex` trong `spawn-config.json`; giới hạn ở vùng khởi đầu; chỉnh bằng test và chơi thử |
-| `???` đỏ gây hiểu nhầm | Tùy chọn hiện cấp khi chênh lệch quá lớn; tín hiệu bổ sung (cỡ sprite, âm thanh) |
-| AI tốn khung hình | LOD, bảng băm không gian, ngân sách; đo ở W8 |
-| Hành vi mới lệch hành vi cũ khi chuyển | W5 có test so khớp trước khi đổi sang bộ não mới |
-| Gán môi trường sai cho một số loài | Danh sách duyệt tay trong W3; script chỉ sinh bản nháp |
-| Đồng bộ giữa các máy (LAN) | Sprite hoang dã là hiệu ứng riêng mỗi client; cuộc gặp do host quyết định (theo thiết kế LAN); sinh nhóm vẫn tất định theo seed |
+| Rủi ro                                      | Xử lý                                                                                                                           |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Độ khó lệch (apex quá mạnh hoặc quá dễ gặp) | Tham số `apex` trong `spawn-config.json`; giới hạn ở vùng khởi đầu; chỉnh bằng test và chơi thử                                 |
+| `???` đỏ gây hiểu nhầm                      | Tùy chọn hiện cấp khi chênh lệch quá lớn; tín hiệu bổ sung (cỡ sprite, âm thanh)                                                |
+| AI tốn khung hình                           | LOD, bảng băm không gian, ngân sách; đo ở W8                                                                                    |
+| Hành vi mới lệch hành vi cũ khi chuyển      | W5 có test so khớp trước khi đổi sang bộ não mới                                                                                |
+| Gán môi trường sai cho một số loài          | Danh sách duyệt tay trong W3; script chỉ sinh bản nháp                                                                          |
+| Đồng bộ giữa các máy (LAN)                  | Sprite hoang dã là hiệu ứng riêng mỗi client; cuộc gặp do host quyết định (theo thiết kế LAN); sinh nhóm vẫn tất định theo seed |
 
 ---
 

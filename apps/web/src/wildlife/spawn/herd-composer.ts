@@ -1,6 +1,7 @@
 import { spawnConfigData, type SpeciesSpawnDefinition } from '../data/data-loader';
 import type { WildRole } from '../model';
 import { calculateEntityLevel } from './level-model';
+import type { RarityTier } from './rarity';
 
 export interface ComposedIndividual {
   speciesKey: string;
@@ -41,7 +42,7 @@ export function shouldSpawnApex(params: {
   if (difficulty < minDiff) return false;
 
   const p0 = spawnConfigData.apex.p0 ?? 0.03;
-  const pMax = spawnConfigData.apex.pMax ?? 0.10;
+  const pMax = spawnConfigData.apex.pMax ?? 0.1;
   // Scaled probability with difficulty above threshold
   const k = (pMax - p0) / Math.max(0.01, 1.0 - minDiff);
   const pApex = Math.min(pMax, Math.max(0, p0 + k * (difficulty - minDiff)));
@@ -58,6 +59,8 @@ export function composeHerd(params: {
   baseLevel: number;
   difficulty: number;
   distance: number;
+  rarityTier?: RarityTier;
+  playerMaxOwnedLevel?: number;
   sizeRoll01: number;
   apexRoll01: number;
   levelRolls: number[];
@@ -68,6 +71,8 @@ export function composeHerd(params: {
     baseLevel,
     difficulty,
     distance,
+    rarityTier = 0,
+    playerMaxOwnedLevel = 5,
     sizeRoll01,
     apexRoll01,
     levelRolls,
@@ -77,9 +82,10 @@ export function composeHerd(params: {
   const isStartZone = distance <= startRadius;
 
   const social = speciesDef.social || 'solitary';
-  const groupSize = isStartZone && social !== 'solitary'
-    ? Math.min(2, getGroupSize(social, sizeRoll01))
-    : getGroupSize(social, sizeRoll01);
+  const groupSize =
+    isStartZone && social !== 'solitary'
+      ? Math.min(2, getGroupSize(social, sizeRoll01))
+      : getGroupSize(social, sizeRoll01);
 
   const hasApex = shouldSpawnApex({
     speciesDef,
@@ -97,6 +103,8 @@ export function composeHerd(params: {
       role: 'solo',
       distance,
       stage: speciesDef.stage ?? 1,
+      rarityTier,
+      playerMaxOwnedLevel,
       roll01: roll,
     });
     individuals.push({ speciesKey, role, level });
@@ -117,6 +125,8 @@ export function composeHerd(params: {
           role: 'apex',
           distance,
           stage: 3, // Apex is final stage
+          rarityTier,
+          playerMaxOwnedLevel,
           roll01: roll,
         });
         individuals.push({
@@ -131,6 +141,8 @@ export function composeHerd(params: {
           role: 'leader',
           distance,
           stage: speciesDef.stage ?? 1,
+          rarityTier,
+          playerMaxOwnedLevel,
           roll01: roll,
         });
         individuals.push({ speciesKey, role, level });
@@ -143,6 +155,8 @@ export function composeHerd(params: {
         role: 'member',
         distance,
         stage: speciesDef.stage ?? 1,
+        rarityTier,
+        playerMaxOwnedLevel,
         roll01: roll,
       });
       individuals.push({ speciesKey, role, level });

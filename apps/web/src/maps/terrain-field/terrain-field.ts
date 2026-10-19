@@ -12,6 +12,7 @@ export interface TerrainField {
 
   isOcean(gx: number, gy: number, hasBeach?: boolean): boolean;
   isSand(gx: number, gy: number, hasBeach?: boolean): boolean;
+  isDesert?(gx: number, gy: number): boolean;
   isHill(
     gx: number,
     gy: number,
@@ -57,6 +58,11 @@ export interface TerrainField {
 
 import { LegacyStripField } from './legacy-field';
 import { V0Field } from './v0-field';
+import { V3Field } from './v3-field';
+
+export { LegacyStripField } from './legacy-field';
+export { V0Field } from './v0-field';
+export { V3Field } from './v3-field';
 
 export function createTerrainField(version: number, seed: number): TerrainField {
   if (version === 1) {
@@ -65,5 +71,9 @@ export function createTerrainField(version: number, seed: number): TerrainField 
   if (version === 2) {
     return new V0Field(seed);
   }
+  if (version === 3) {
+    return new V3Field(seed);
+  }
   throw new Error(`Unsupported worldGenVersion: ${version}`);
 }
+

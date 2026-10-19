@@ -6,6 +6,7 @@ export const TERRAIN = {
   OCEAN_WATER: 4,
   // Kept at 5 for compatibility with the current Python generator and viewer.
   HILL: 5,
+  DESERT: 6,
 } as const;
 
 export const TILE_IDS = {
@@ -40,6 +41,21 @@ export const TILE_IDS = {
   sand_in_tr: 310,
   sand_in_bl: 311,
   sand_in_br: 312,
+  desert_pure: 350,
+  desert_top: 351,
+  desert_bot: 352,
+  desert_left: 353,
+  desert_right: 354,
+  desert_tl: 355,
+  desert_tr: 356,
+  desert_bl: 357,
+  desert_br: 358,
+  desert_in_tl: 359,
+  desert_in_tr: 360,
+  desert_in_bl: 361,
+  desert_in_br: 362,
+  desert_pure_var1: 363,
+  desert_pure_var2: 364,
   cliff_pure: 400,
   cliff_top: 401,
   cliff_bot: 402,
@@ -53,6 +69,19 @@ export const TILE_IDS = {
   cliff_in_tr: 410,
   cliff_in_bl: 411,
   cliff_in_br: 412,
+  dune_cliff_pure: 420,
+  dune_cliff_top: 421,
+  dune_cliff_bot: 422,
+  dune_cliff_left: 423,
+  dune_cliff_right: 424,
+  dune_cliff_tl: 425,
+  dune_cliff_tr: 426,
+  dune_cliff_bl: 427,
+  dune_cliff_br: 428,
+  dune_cliff_in_tl: 429,
+  dune_cliff_in_tr: 430,
+  dune_cliff_in_bl: 431,
+  dune_cliff_in_br: 432,
   tree_autumn: 501,
   tree_vibrant: 502,
   tree_coastal: 503,
@@ -87,7 +116,24 @@ export const TILE_IDS = {
   shore_h: 736,
   shore_h_top: 737,
   shore_v_right: 738,
+  shore_corner_in_es: 739,
+  shore_corner_in_en: 740,
+  shore_corner_out_se: 741,
+  shore_corner_out_ne: 742,
 } as const;
+
+export function isShoreTile(tileId: number): boolean {
+  return tileId >= 731 && tileId <= 742;
+}
+
+export function isWaterTile(tileId: number): boolean {
+  return (tileId >= 700 && tileId <= 712) || (tileId >= 730 && tileId <= 742);
+}
+
+export function isDesertTile(tileId: number): boolean {
+  return (tileId >= 350 && tileId <= 364) || (tileId >= 420 && tileId <= 432);
+}
 
 export const CHUNK_SIZE = 16 as const;
 export const TILE_SIZE = 32 as const;
+

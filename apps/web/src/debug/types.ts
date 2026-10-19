@@ -17,6 +17,10 @@ export interface DebugMonitorUpdate {
   chunkY: number;
   activeChunksCount: number;
   fps: number;
+  worldTimeStr?: string;
+  dayPhase?: string;
+  worldDay?: number;
+  isTimePaused?: boolean;
 }
 
 /**
@@ -25,6 +29,13 @@ export interface DebugMonitorUpdate {
  * without hard-coupling or bloating main game core modules.
  */
 export interface DebugBridge {
+  // World Time Controls
+  getWorldTime(): { minutes: number; day: number; isPaused: boolean; phase: string };
+  setWorldTime(minutes: number): void;
+  setWorldTimePhase(phase: 'dawn' | 'day' | 'dusk' | 'night'): void;
+  toggleTimePause(): boolean;
+  setTimeSpeed(multiplier: number): void;
+
   // Battle & Custom Bot Spawner
   startTestBattle(overlay?: string, isShiny?: boolean, weather?: string, envPreset?: string): void;
   startCustomBotBattle(config: CustomBotConfig): void;

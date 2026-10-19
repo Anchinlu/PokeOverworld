@@ -11,7 +11,7 @@ export class DebugRenderer {
     chunkManager: ChunkManager
   ): void {
     ctx.save();
-    for (const chunk of chunkManager.activeChunks) {
+    for (const chunk of chunkManager.renderChunks) {
       for (let ly = 0; ly < 16; ly++) {
         for (let lx = 0; lx < 16; lx++) {
           const x = (chunk.cx * 16 + lx) * TILE_SIZE;
@@ -39,7 +39,7 @@ export class DebugRenderer {
     chunkManager: ChunkManager
   ): void {
     ctx.save();
-    for (const chunk of chunkManager.activeChunks) {
+    for (const chunk of chunkManager.renderChunks) {
       for (let ly = 0; ly < 16; ly++) {
         for (let lx = 0; lx < 16; lx++) {
           const gx = chunk.cx * 16 + lx;
@@ -69,7 +69,7 @@ export class DebugRenderer {
     chunkManager: ChunkManager
   ): void {
     ctx.save();
-    for (const chunk of chunkManager.activeChunks) {
+    for (const chunk of chunkManager.renderChunks) {
       for (let ly = 0; ly < 16; ly++) {
         for (let lx = 0; lx < 16; lx++) {
           const gx = chunk.cx * 16 + lx;
@@ -99,7 +99,7 @@ export class DebugRenderer {
     chunkManager: ChunkManager
   ): void {
     ctx.save();
-    for (const chunk of chunkManager.activeChunks) {
+    for (const chunk of chunkManager.renderChunks) {
       for (let ly = 0; ly < 16; ly++) {
         for (let lx = 0; lx < 16; lx++) {
           const gx = chunk.cx * 16 + lx;
@@ -129,7 +129,7 @@ export class DebugRenderer {
     chunkManager: ChunkManager
   ): void {
     ctx.save();
-    for (const chunk of chunkManager.activeChunks) {
+    for (const chunk of chunkManager.renderChunks) {
       for (let ly = 0; ly < 16; ly++) {
         for (let lx = 0; lx < 16; lx++) {
           const gx = chunk.cx * 16 + lx;
@@ -147,6 +147,7 @@ export class DebugRenderer {
           else if (zone === 'meadow') ctx.fillStyle = 'rgba(34, 197, 94, 0.5)';
           else if (zone === 'dryland') ctx.fillStyle = 'rgba(217, 119, 6, 0.55)';
           else if (zone === 'dense_forest') ctx.fillStyle = 'rgba(21, 128, 61, 0.65)';
+          else if (zone === 'light_forest') ctx.fillStyle = 'rgba(74, 222, 128, 0.55)';
           else if (zone === 'hill_edge') ctx.fillStyle = 'rgba(100, 116, 139, 0.6)';
 
           ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
@@ -190,7 +191,7 @@ export class DebugRenderer {
     ctx.strokeStyle = '#ef4444';
     ctx.lineWidth = 1;
 
-    for (const chunk of chunkManager.activeChunks) {
+    for (const chunk of chunkManager.renderChunks) {
       for (const c of chunk.colliders) {
         if (
           c.x + c.w >= bounds.minX &&
@@ -220,7 +221,7 @@ export class DebugRenderer {
     const chunkSizePx = 16 * TILE_SIZE;
 
     ctx.save();
-    for (const chunk of chunkManager.activeChunks) {
+    for (const chunk of chunkManager.renderChunks) {
       const cPxX = chunk.cx * chunkSizePx;
       const cPxY = chunk.cy * chunkSizePx;
 

@@ -30,6 +30,12 @@
       "hasBeach": false,
       "hasRoad": true,
       "defaultTree": "deep"
+    },
+    "desert": {
+      "name": "Arid Desert Dunes",
+      "hasBeach": false,
+      "hasRoad": true,
+      "defaultTree": "dead_1"
     }
   }
 }

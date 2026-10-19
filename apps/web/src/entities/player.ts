@@ -44,7 +44,16 @@ export class Player {
 
   public speedMode: SpeedMode = 'classic';
 
+  // Idle Animation State (4-Frame Idle from char_red_idle.png)
+  public isIdling = false;
+  private idleTimer = 0; // Accumulated time standing still (seconds)
+  private nextIdleDelay = 3.5; // Randomized delay before next idle chance (seconds)
+  private idleAnimTimer = 0; // Elapsed time in current idle animation (seconds)
+  private readonly idleFrameDuration = 0.16; // Duration per idle frame (seconds)
+  private readonly totalIdleFrames = 4; // Frames 0, 1, 2, 3
+
   constructor(initialGX = 0, initialGY = 0, initialDir: Direction = 0) {
+    this.nextIdleDelay = 3.0 + Math.random() * 3.5;
     this.snapTo(initialGX, initialGY, initialDir);
   }
 
@@ -52,6 +61,7 @@ export class Player {
    * Instantly snaps the player to grid coordinate.
    */
   public snapTo(gx: number, gy: number, dir?: Direction): void {
+    this.cancelIdle();
     this.gx = gx;
     this.gy = gy;
     this.x = gx * TILE_SIZE - 16;
@@ -76,6 +86,7 @@ export class Player {
    * Begins stepping into the target tile.
    */
   public startStep(targetGX: number, targetGY: number, dir: Direction): void {
+    this.cancelIdle();
     this.direction = dir;
     this.stepCount++;
     this.isMoving = true;
@@ -98,6 +109,7 @@ export class Player {
    * Sets player in blocked/bumping state facing direction.
    */
   public setBlocked(dir: Direction): void {
+    this.cancelIdle();
     this.direction = dir;
     this.isBlocked = true;
     this.frame = 0;
@@ -108,7 +120,60 @@ export class Player {
    */
   public setIdle(): void {
     this.isBlocked = false;
+    if (!this.isIdling) {
+      this.frame = 0;
+    }
+  }
+
+  /**
+   * Triggers the special idle animation (cycling through frames 0, 1, 2, 3 of char_red_idle).
+   */
+  public triggerIdleAnimation(): void {
+    this.isIdling = true;
+    this.idleAnimTimer = 0;
     this.frame = 0;
+  }
+
+  /**
+   * Cancels any active idle animation and resets posture.
+   */
+  public cancelIdle(): void {
+    this.isIdling = false;
+    this.idleTimer = 0;
+    this.idleAnimTimer = 0;
+    this.frame = 0;
+    this.nextIdleDelay = 3.0 + Math.random() * 4.0;
+  }
+
+  /**
+   * Ticks idle timer and cycles through idle animation frames when stationary.
+   */
+  private updateIdle(dtScale: number): void {
+    const dtSeconds = (1 / 60) * dtScale;
+
+    if (!this.isIdling) {
+      this.idleTimer += dtSeconds;
+      if (this.idleTimer >= this.nextIdleDelay) {
+        this.idleTimer = 0;
+        // Probability check (50% chance to trigger idle animation, otherwise defer)
+        if (Math.random() < 0.5) {
+          this.triggerIdleAnimation();
+        } else {
+          this.nextIdleDelay = 2.5 + Math.random() * 3.5;
+        }
+      }
+    } else {
+      this.idleAnimTimer += dtSeconds;
+      const totalDuration = this.idleFrameDuration * this.totalIdleFrames;
+
+      if (this.idleAnimTimer < totalDuration) {
+        const frameIndex = Math.floor(this.idleAnimTimer / this.idleFrameDuration);
+        this.frame = Math.min(this.totalIdleFrames - 1, Math.max(0, frameIndex));
+      } else {
+        // Idle cycle completed, return to standing neutral
+        this.cancelIdle();
+      }
+    }
   }
 
   /**
@@ -117,7 +182,12 @@ export class Player {
    */
   public update(dtScale = 1.0, isRunning = false): boolean {
     if (!this.isMoving) {
+      this.updateIdle(dtScale);
       return false;
+    }
+
+    if (this.isIdling) {
+      this.cancelIdle();
     }
 
     // Base speed in pixels per 60FPS frame:

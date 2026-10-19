@@ -106,7 +106,9 @@ describe('V0Field Infinite 2D Procedural Terrain (worldGenVersion = 2)', () => {
             !field.isSand(gx, gy - 1) &&
             !field.isSand(gx, gy + 1) &&
             !field.isSand(gx - 1, gy - 1) &&
-            !field.isSand(gx - 1, gy + 1)
+            !field.isSand(gx - 1, gy + 1) &&
+            !field.isSand(gx + 1, gy - 1) &&
+            !field.isSand(gx + 1, gy + 1)
           ) {
             foundDeepOcean = true;
             expect(field.getOceanTileId(gx, gy)).toBe(TILE_IDS.ocean_water);

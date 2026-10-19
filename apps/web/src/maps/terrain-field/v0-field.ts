@@ -112,45 +112,29 @@ export class V0Field implements TerrainField {
     const s = isS(gx, gy + 1);
 
     // 1. Dual cardinal sand contact (concave inner corners)
-    if (w && s) {
-      // Sand to the West and South (ocean to North-East)
-      return TILE_IDS.shore_corner_in_flip;
-    }
-    if (w && n) {
-      // Sand to the West and North (ocean to South-East)
-      return TILE_IDS.shore_corner_in;
-    }
+    if (w && s) return TILE_IDS.shore_corner_in_flip;
+    if (w && n) return TILE_IDS.shore_corner_in;
+    if (e && s) return TILE_IDS.shore_corner_in_es;
+    if (e && n) return TILE_IDS.shore_corner_in_en;
 
     // 2. Single cardinal sand contact (straight shore edges)
-    if (w) {
-      // Sand on West, Ocean on East
-      return TILE_IDS.shore_v;
-    }
-    if (s) {
-      // Sand on South, Ocean on North -> rotated -90° (sand at bottom, ocean at top)
-      return TILE_IDS.shore_h;
-    }
-    if (n) {
-      // Sand on North, Ocean on South -> rotated 90° (sand at top, ocean at bottom)
-      return TILE_IDS.shore_h_top;
-    }
-    if (e) {
-      // Sand on East, Ocean on West -> rotated 180°
-      return TILE_IDS.shore_v_right;
-    }
+    if (w) return TILE_IDS.shore_v;
+    if (s) return TILE_IDS.shore_h;
+    if (n) return TILE_IDS.shore_h_top;
+    if (e) return TILE_IDS.shore_v_right;
 
     // 3. Diagonal-only sand contact (convex outer corners, NO cardinal sand)
     const sw = isS(gx - 1, gy + 1);
-    if (sw) {
-      // Convex corner pointing into water towards North-East (sand tip at South-West)
-      return TILE_IDS.shore_corner_out_flip;
-    }
+    if (sw) return TILE_IDS.shore_corner_out_flip;
 
     const nw = isS(gx - 1, gy - 1);
-    if (nw) {
-      // Convex corner pointing into water towards South-East (sand tip at North-West)
-      return TILE_IDS.shore_corner_out;
-    }
+    if (nw) return TILE_IDS.shore_corner_out;
+
+    const se = isS(gx + 1, gy + 1);
+    if (se) return TILE_IDS.shore_corner_out_se;
+
+    const ne = isS(gx + 1, gy - 1);
+    if (ne) return TILE_IDS.shore_corner_out_ne;
 
     return TILE_IDS.ocean_water;
   }

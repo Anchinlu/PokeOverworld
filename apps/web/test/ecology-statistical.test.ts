@@ -2,7 +2,6 @@ import { describe, it, expect } from 'vitest';
 import { sampleEcology } from '../src/maps/ecology/ecology-field';
 import { getEcologyZone, getFlowerTypeForCluster } from '../src/maps/ecology/ecology-profile';
 import { pickBerryForEcology } from '../src/maps/berry-data';
-import { getRosterForContext } from '../src/maps/chunk-encounters';
 import { TREE_MIN_CANDIDATES, TREE_MAX_CANDIDATES } from '../src/maps/ecology/ecology-config';
 
 describe('Ecological Statistical Distribution Verification (Section 11)', () => {
@@ -111,42 +110,5 @@ describe('Ecological Statistical Distribution Verification (Section 11)', () => 
     expect(commonCount / total).toBeGreaterThan(0.5);
     // Ratio of common to rare should be at least 8:1
     expect(commonCount / rareCount).toBeGreaterThan(8);
-  });
-
-  it('wild pokemon rosters differ according to ecological zone context', () => {
-    const forestRoster = getRosterForContext({
-      zone: 'dense_forest',
-      onTallGrass: true,
-      nearWater: false,
-      nearTree: true,
-      nearHill: false,
-      timeOfDay: 'day',
-    });
-    const meadowRoster = getRosterForContext({
-      zone: 'meadow',
-      onTallGrass: true,
-      nearWater: false,
-      nearTree: false,
-      nearHill: false,
-      timeOfDay: 'day',
-    });
-    const hillRoster = getRosterForContext({
-      zone: 'hill_edge',
-      onTallGrass: true,
-      nearWater: false,
-      nearTree: false,
-      nearHill: true,
-      timeOfDay: 'day',
-    });
-
-    const forestKeys = new Set(forestRoster.map((r) => r.speciesKey));
-    const meadowKeys = new Set(meadowRoster.map((r) => r.speciesKey));
-    const hillKeys = new Set(hillRoster.map((r) => r.speciesKey));
-
-    expect(forestKeys.has('KAKUNA')).toBe(true);
-    expect(meadowKeys.has('KAKUNA')).toBe(false);
-
-    expect(hillKeys.has('SPEAROW')).toBe(true);
-    expect(meadowKeys.has('SPEAROW')).toBe(false);
   });
 });

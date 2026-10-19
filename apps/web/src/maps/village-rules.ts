@@ -586,7 +586,7 @@ export function isVillageBuildingTile(
 ): boolean {
   if (isResolvingVillage) return false;
   const field = typeof seedOrField === 'number' ? createTerrainField(1, seedOrField) : seedOrField;
-  const villages = field.version === 2
+  const villages = field.version >= 2
     ? getNearbySettlements(gx, gy, field)
     : [
         getVillagePlacement(Math.round(gy / VILLAGE_CYCLE_HEIGHT) - 1, field.seed),
@@ -621,7 +621,7 @@ export function isBuildingRoofOrFootprint(
 ): boolean {
   if (isResolvingVillage) return false;
   const field = typeof seedOrField === 'number' ? createTerrainField(1, seedOrField) : seedOrField;
-  const villages = field.version === 2
+  const villages = field.version >= 2
     ? getNearbySettlements(gx, gy, field)
     : [
         getVillagePlacement(Math.round(gy / VILLAGE_CYCLE_HEIGHT) - 1, field.seed),
@@ -663,7 +663,7 @@ export function isTreeClippingBuilding(
   const centerGY = Math.floor((ty + 60) / 32);
   const field = typeof seedOrField === 'number' ? createTerrainField(1, seedOrField) : seedOrField;
 
-  const villages = field.version === 2
+  const villages = field.version >= 2
     ? getNearbySettlements(Math.floor((tx + 32) / 32), centerGY, field)
     : [
         getVillagePlacement(Math.round(centerGY / VILLAGE_CYCLE_HEIGHT) - 1, field.seed),
@@ -704,7 +704,7 @@ export function isVillageArea(
 ): boolean {
   if (isResolvingVillage) return false;
   const field = typeof seedOrField === 'number' ? createTerrainField(1, seedOrField) : seedOrField;
-  if (field.version === 2) {
+  if (field.version >= 2) {
     return isV0VillageArea(gx, gy, field, buffer);
   }
   const seed = field.seed;

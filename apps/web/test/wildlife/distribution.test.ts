@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { rollRarityTier } from '../../src/wildlife/spawn/rarity';
-import { selectSpeciesTwoStep, getSpeciesWithTierFallback } from '../../src/wildlife/spawn/species-pool';
+import {
+  selectSpeciesTwoStep,
+  getSpeciesWithTierFallback,
+} from '../../src/wildlife/spawn/species-pool';
 import { spawnConfigData } from '../../src/wildlife/data/data-loader';
 
 describe('Wildlife Distribution & Statistical Validity (Section 2.3 & 11.2)', () => {
@@ -45,7 +48,7 @@ describe('Wildlife Distribution & Statistical Validity (Section 2.3 & 11.2)', ()
       const meadowSpecies = selectSpeciesTwoStep({
         biome: 'meadow',
         context: 'tall_grass',
-        tierRoll01: 0.70, // Tier 1 (Uncommon)
+        tierRoll01: 0.7, // Tier 1 (Uncommon)
         speciesRoll01: roll01,
       });
       expect(meadowSpecies?.speciesKey).not.toBe('PIKACHU');
@@ -54,7 +57,7 @@ describe('Wildlife Distribution & Statistical Validity (Section 2.3 & 11.2)', ()
       const drylandSpecies = selectSpeciesTwoStep({
         biome: 'dryland',
         context: 'walkable_ground',
-        tierRoll01: 0.70,
+        tierRoll01: 0.7,
         speciesRoll01: roll01,
       });
       expect(drylandSpecies?.speciesKey).not.toBe('PIKACHU');
@@ -64,7 +67,7 @@ describe('Wildlife Distribution & Statistical Validity (Section 2.3 & 11.2)', ()
     const forestSpecies = selectSpeciesTwoStep({
       biome: 'dense_forest',
       context: 'forest_floor',
-      tierRoll01: 0.70, // Tier 1 (Pikachu is Tier 1)
+      tierRoll01: 0.7, // Tier 1 (Pikachu is Tier 1)
       speciesRoll01: 0.5,
     });
     expect(forestSpecies).not.toBeNull();
@@ -89,5 +92,18 @@ describe('Wildlife Distribution & Statistical Validity (Section 2.3 & 11.2)', ()
     // If we request Ultra Rare (tier 4) in dense_forest forest_floor
     const result = getSpeciesWithTierFallback('dense_forest', 'forest_floor', 4);
     expect(result.candidates.length).toBeGreaterThan(0);
+  });
+
+  it('does not fall back across habitat contexts', () => {
+    const beachResult = getSpeciesWithTierFallback('coast', 'sand', 0);
+    const beachSpecies = new Set(beachResult.candidates.map((candidate) => candidate.speciesKey));
+
+    expect(beachResult.candidates.length).toBeGreaterThan(0);
+    expect(
+      [...beachSpecies].every((speciesKey) => ['KRABBY', 'SHELLDER'].includes(speciesKey))
+    ).toBe(true);
+
+    const invalidContext = getSpeciesWithTierFallback('meadow', 'sand', 0);
+    expect(invalidContext.candidates).toEqual([]);
   });
 });

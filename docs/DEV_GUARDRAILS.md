@@ -34,17 +34,17 @@ Không để một file đồng thời:
 - Gọi database/API.
 - Chứa cấu hình cân bằng.
 
-| Trách nhiệm | Vị trí đề xuất |
-|---|---|
-| Ecology noise và sample vùng | apps/web/src/maps/ecology/ |
-| Sinh cây/hoa/Berry/cỏ | apps/web/src/maps/chunk-objects.ts |
-| Chọn encounter | apps/web/src/maps/chunk-encounters.ts |
-| Cập nhật hành vi Pokémon | apps/web/src/ai/wild-pokemon.ts |
-| Render entity | apps/web/src/rendering/ |
-| UI state | apps/web/src/ui/ |
-| Dữ liệu Pokémon | packages/game-data/ và PokemonCatalog |
-| Battle rules | apps/web/src/battle/ |
-| Backend authoritative | apps/server/ khi được khởi tạo |
+| Trách nhiệm                  | Vị trí đề xuất                                               |
+| ---------------------------- | ------------------------------------------------------------ |
+| Ecology noise và sample vùng | apps/web/src/maps/ecology/                                   |
+| Sinh cây/hoa/Berry/cỏ        | apps/web/src/maps/chunk-objects.ts                           |
+| Chọn encounter               | apps/web/src/wildlife/spawn/ và packages/game-data/wildlife/ |
+| Cập nhật hành vi Pokémon     | apps/web/src/ai/wild-pokemon.ts                              |
+| Render entity                | apps/web/src/rendering/                                      |
+| UI state                     | apps/web/src/ui/                                             |
+| Dữ liệu Pokémon              | packages/game-data/ và PokemonCatalog                        |
+| Battle rules                 | apps/web/src/battle/                                         |
+| Backend authoritative        | apps/server/ khi được khởi tạo                               |
 
 Nếu file vượt khoảng 300–400 dòng hoặc có hơn một nhóm trách nhiệm lớn, phải xem xét tách module trước khi thêm feature.
 
@@ -398,7 +398,7 @@ Một thay đổi chỉ hoàn tất khi:
 - Thêm asset bằng đường dẫn /Graphics/... trực tiếp.
 - Dùng Math.random() trong battle nếu muốn authoritative runtime.
 - Bỏ qua Prettier rồi vẫn ghi CI đã đạt.
-- Thêm roster Pokémon trong chunk-encounters.ts thay vì data file.
+- Thêm roster Pokémon trực tiếp vào generator thay vì data file. Roster/habitat phải nằm trong packages/game-data/wildlife/.
 - Sửa ecology ở một phía mà không chạy Python parity.
 - Sửa collider/placement mà không kiểm tra 9 chunk lân cận.
 - Gộp feature mới với thay đổi format không liên quan.
@@ -415,4 +415,3 @@ Một thay đổi chỉ hoàn tất khi:
 - plans/10-testing-and-quality.md
 - plans/BIOME_DISTRIBUTION_DEV_SPEC.md
 - PROGRESS.md
-
