@@ -159,6 +159,13 @@ try {
       'tree_autumn',
       'tree_coastal',
       'tree_deep',
+      'desert_pure',
+      'dune_cliff_pure',
+      'cactus_large',
+      'dark_ground_pure',
+      'dark_cliff_pure',
+      'dark_sprout',
+      'tree_dark_forest',
       'berry_ORANBERRY',
       'berry_CHERIBERRY',
       'berry_SITRUSBERRY',
@@ -190,7 +197,60 @@ try {
     }
     if (missingKeys === 0) {
       logPass(
-        `All critical game sprites, berry trees, Pokédex, Moves, and Battle UI are defined in manifest`
+        `All critical game sprites, biome assets, berry trees, Pokédex, Moves, and Battle UI are defined in manifest`
+      );
+    }
+
+    // Verify structured biome directories and categorized path parity
+    const requiredDirs = [
+      'apps/web/public/assets/biomes/desert',
+      'apps/web/public/assets/biomes/dark-land',
+      'apps/web/public/assets/biomes/coastal',
+      'apps/web/public/assets/biomes/forest',
+      'apps/web/public/assets/biomes/autumn',
+      'apps/web/public/assets/biomes/meadow',
+      'apps/web/public/assets/biomes/shared',
+      'apps/web/public/assets/terrain',
+      'apps/web/public/assets/pokemon',
+    ];
+    let missingDirs = 0;
+    for (const rd of requiredDirs) {
+      if (!fs.existsSync(path.join(ROOT, rd))) {
+        logFail(`Required asset directory '${rd}' does not exist on disk`);
+        missingDirs++;
+      }
+    }
+    if (missingDirs === 0) {
+      logPass(
+        `All ${requiredDirs.length} modular biome and asset category subdirectories exist on disk`
+      );
+    }
+
+    // Verify mandatory biome key prefixes in manifest
+    const biomePrefixChecks = [
+      ['desert_pure', '/assets/biomes/desert/'],
+      ['dune_cliff_pure', '/assets/biomes/desert/'],
+      ['dark_ground_pure', '/assets/biomes/dark-land/'],
+      ['dark_cliff_pure', '/assets/biomes/dark-land/'],
+      ['dark_sprout', '/assets/biomes/dark-land/'],
+      ['tree_autumn', '/assets/biomes/autumn/'],
+      ['tree_coastal', '/assets/biomes/coastal/'],
+      ['tree_deep', '/assets/biomes/forest/'],
+      ['tree_vibrant', '/assets/biomes/meadow/'],
+      ['tall_grass', '/assets/biomes/shared/'],
+      ['cliff_pure', '/assets/terrain/'],
+      ['char_red_sheet', '/assets/pokemon/'],
+    ];
+    let prefixErrors = 0;
+    for (const [k, expectedPrefix] of biomePrefixChecks) {
+      if (!manifest[k] || !manifest[k].startsWith(expectedPrefix)) {
+        logFail(`Asset '${k}' expected path prefix '${expectedPrefix}', got '${manifest[k]}'`);
+        prefixErrors++;
+      }
+    }
+    if (prefixErrors === 0) {
+      logPass(
+        `All biome assets correctly resolve to their modular subdirectories in manifest.json`
       );
     }
   }
