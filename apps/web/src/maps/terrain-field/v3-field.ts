@@ -67,13 +67,13 @@ export class V3Field implements TerrainField {
     return this.getCell(gx, gy).isSand;
   }
 
-  public isDesert(gx: number, gy: number): boolean {
+  public isDesert = (gx: number, gy: number): boolean => {
     return this.getCell(gx, gy).isDesert;
-  }
+  };
 
-  public isDarkLand(gx: number, gy: number): boolean {
+  public isDarkLand = (gx: number, gy: number): boolean => {
     return this.getCell(gx, gy).isDarkLand;
-  }
+  };
 
   public isHill(gx: number, gy: number): boolean {
     return this.getCell(gx, gy).isHill;

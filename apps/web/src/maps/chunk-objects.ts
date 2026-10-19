@@ -362,7 +362,7 @@ export function generateChunkBuildings(
 
   // 2. Procedural Landmarks in Dark Land (Graveyard & Gothic Ruins)
   if (entities.length === 0 && field.isDarkLand) {
-    const isDark = field.isDarkLand;
+    const isDark = (gx: number, gy: number) => Boolean(field.isDarkLand && field.isDarkLand(gx, gy));
     const centerGX = chunkStartGX + 8;
     const centerGY = chunkStartGY + 8;
     if (
