@@ -118,6 +118,40 @@ export class GroundRenderer {
             }
           }
 
+          // Coastal shore corner overlays: round outer sand corners touching ocean
+          if (isSand && options.showBeach && options.showWater) {
+            const isO = (x: number, y: number) => chunk.field.isOcean(x, y);
+            const n = isO(gx, gy - 1);
+            const s = isO(gx, gy + 1);
+            const w = isO(gx - 1, gy);
+            const e = isO(gx + 1, gy);
+
+            if (n && e) {
+              const trImg = this.loader.getImage('shore_corner_overlay_tr');
+              if (trImg && trImg.complete) {
+                gCtx.drawImage(trImg, px, py, TILE_SIZE, TILE_SIZE);
+              }
+            }
+            if (n && w) {
+              const tlImg = this.loader.getImage('shore_corner_overlay_tl');
+              if (tlImg && tlImg.complete) {
+                gCtx.drawImage(tlImg, px, py, TILE_SIZE, TILE_SIZE);
+              }
+            }
+            if (s && e) {
+              const brImg = this.loader.getImage('shore_corner_overlay_br');
+              if (brImg && brImg.complete) {
+                gCtx.drawImage(brImg, px, py, TILE_SIZE, TILE_SIZE);
+              }
+            }
+            if (s && w) {
+              const blImg = this.loader.getImage('shore_corner_overlay_bl');
+              if (blImg && blImg.complete) {
+                gCtx.drawImage(blImg, px, py, TILE_SIZE, TILE_SIZE);
+              }
+            }
+          }
+
           // Optional natural beach decorations on sand
           if (tileId === TILE_IDS.sand_pure && seededHash(gx, gy, chunk.seed + 13) < 0.06) {
             const sandDecos = ['sand_grass', 'sand_mound', 'sand_shell'];

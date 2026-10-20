@@ -135,4 +135,26 @@ describe('Shore Autotiling & Wildlife Water Boundary Rules', () => {
     expect(canWildEntityEnter(6, 5, mockWorld, undefined, false)).toBe(false); // shore
     expect(canWildEntityEnter(10, 5, mockWorld, undefined, false)).toBe(false); // open water
   });
+
+  it('validates coastal shore corner overlays in manifest and assets on disk', async () => {
+    const fs = await import('fs');
+    const path = await import('path');
+    const manifestPath = path.resolve(__dirname, '../public/assets/manifest.json');
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
+
+    const cornerKeys = [
+      'shore_corner_overlay_tl',
+      'shore_corner_overlay_tr',
+      'shore_corner_overlay_bl',
+      'shore_corner_overlay_br',
+    ];
+
+    for (const key of cornerKeys) {
+      expect(manifest).toHaveProperty(key);
+      expect(manifest[key]).toBe(`/assets/biomes/coastal/${key}.png`);
+      const fullPath = path.resolve(__dirname, `../public${manifest[key]}`);
+      expect(fs.existsSync(fullPath)).toBe(true);
+    }
+  });
 });
+

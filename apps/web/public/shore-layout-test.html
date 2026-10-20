@@ -159,7 +159,7 @@
 <script>
 const T = 32; // tile size
 const SCALE = 2; // display scale
-const ASSET_BASE = '/assets/';
+const ASSET_BASE = '/assets/biomes/coastal/';
 
 // Shore tile definitions
 const SHORE_TILES = [
@@ -173,6 +173,10 @@ const SHORE_TILES = [
 const EXTRA_ASSETS = {
   ocean: 'ocean_anim_strip.png',
   sand_pure: 'sand_pure.png',
+  shore_corner_overlay_tl: 'shore_corner_overlay_tl.png',
+  shore_corner_overlay_tr: 'shore_corner_overlay_tr.png',
+  shore_corner_overlay_bl: 'shore_corner_overlay_bl.png',
+  shore_corner_overlay_br: 'shore_corner_overlay_br.png',
 };
 
 // Load images
@@ -283,6 +287,32 @@ function createGridCanvas(grid, parentEl, title) {
         if (bgColor) {
           ctx.fillStyle = bgColor;
           ctx.fillRect(px, py, sz, sz);
+        }
+        if (tile === SAND && images.sand_pure && images.sand_pure.complete) {
+          ctx.drawImage(images.sand_pure, 0, 0, T, T, px, py, sz, sz);
+
+          const isWater = (row, col) => {
+            if (row < 0 || row >= rows || col < 0 || col >= cols) return false;
+            const t = grid[row][col];
+            return t === OCEAN || t === SHORE_V || t === SHORE_H || t === CORNER_IN || t === CORNER_OUT || t === CORNER_IN_FLIP || t === CORNER_OUT_FLIP;
+          };
+          const n = isWater(r - 1, c);
+          const s = isWater(r + 1, c);
+          const w = isWater(r, c - 1);
+          const e = isWater(r, c + 1);
+
+          if (n && e && images.shore_corner_overlay_tr && images.shore_corner_overlay_tr.complete) {
+            ctx.drawImage(images.shore_corner_overlay_tr, 0, 0, T, T, px, py, sz, sz);
+          }
+          if (n && w && images.shore_corner_overlay_tl && images.shore_corner_overlay_tl.complete) {
+            ctx.drawImage(images.shore_corner_overlay_tl, 0, 0, T, T, px, py, sz, sz);
+          }
+          if (s && e && images.shore_corner_overlay_br && images.shore_corner_overlay_br.complete) {
+            ctx.drawImage(images.shore_corner_overlay_br, 0, 0, T, T, px, py, sz, sz);
+          }
+          if (s && w && images.shore_corner_overlay_bl && images.shore_corner_overlay_bl.complete) {
+            ctx.drawImage(images.shore_corner_overlay_bl, 0, 0, T, T, px, py, sz, sz);
+          }
         }
 
         // Animated shore/ocean tiles
