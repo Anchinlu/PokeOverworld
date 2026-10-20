@@ -803,7 +803,7 @@ export function generateChunkFoliage(
         let px = gx * TILE_SIZE;
         let py = gy * TILE_SIZE - 32;
 
-        if (isWhiteBush) {
+        if (isWhiteBush || isDarkBush) {
           px = gx * TILE_SIZE - 16;
           py = gy * TILE_SIZE - 32;
         } else if (isRockSpires || isDarkSprout) {
@@ -812,13 +812,10 @@ export function generateChunkFoliage(
         } else if (isStump || isLogNow || isCactusSmall) {
           px = gx * TILE_SIZE;
           py = gy * TILE_SIZE;
-        } else if (isDarkBush) {
-          px = gx * TILE_SIZE;
-          py = gy * TILE_SIZE - 32;
         }
 
         // Check collision clearance with trees or other solids
-        const checkW = isLogNow ? 60 : isWhiteBush || isRockSpires ? 40 : 24;
+        const checkW = isLogNow ? 60 : isWhiteBush || isDarkBush || isRockSpires ? 40 : 24;
         const blocked = colliders.some(
           (c) => px + checkW > c.x && px + 4 < c.x + c.w && py + 28 > c.y && py + 4 < c.y + c.h
         );
@@ -846,7 +843,7 @@ export function generateChunkFoliage(
         } else if (isDarkSprout) {
           colliders.push({ x: px + 6, y: py + 68, w: 20, h: 24, type: 'tree' });
         } else if (isDarkBush) {
-          colliders.push({ x: px + 4, y: py + 36, w: 24, h: 20, type: 'tree' });
+          colliders.push({ x: px + 18, y: py + 40, w: 28, h: 20, type: 'tree' });
         }
       }
     }

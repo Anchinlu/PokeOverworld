@@ -39,7 +39,7 @@ export class ObjectRenderer {
         const isVeryTall = isRockSpires || isDarkSprout;
         const isStaticNatural = isTall || isVeryTall || isLog || isStump || isCactusSmall;
 
-        const w = isRockSpires ? 64 : isWhiteBush || isLog ? 64 : 32;
+        const w = isRockSpires ? 64 : isWhiteBush || isDarkBush || isLog ? 64 : 32;
         const h = isVeryTall ? 96 : isTall ? 64 : 32;
 
         if (
@@ -53,7 +53,7 @@ export class ObjectRenderer {
             if (isStaticNatural) {
               const ySort = isVeryTall
                 ? plant.y + 90
-                : isWhiteBush
+                : isWhiteBush || isDarkBush
                 ? plant.y + 56
                 : isTall
                 ? plant.y + 58

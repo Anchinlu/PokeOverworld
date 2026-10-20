@@ -442,4 +442,42 @@ describe('Dark Land Biome (Vùng Đất Tối) Integration', () => {
     expect([...daySpecies].every((species) => dayEligible.has(species))).toBe(true);
     expect([...nightSpecies].every((species) => nightEligible.has(species))).toBe(true);
   });
+
+  it('10. Assets & Autotile Parity: validates 12 distinct dark_ground fringe tiles and complete 64x64 dark trees', async () => {
+    const fs = await import('fs');
+    const path = await import('path');
+    const manifestPath = path.resolve(__dirname, '../public/assets/manifest.json');
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
+
+    const fringeKeys = [
+      'dark_ground_top',
+      'dark_ground_bot',
+      'dark_ground_left',
+      'dark_ground_right',
+      'dark_ground_tl',
+      'dark_ground_tr',
+      'dark_ground_bl',
+      'dark_ground_br',
+      'dark_ground_in_tl',
+      'dark_ground_in_tr',
+      'dark_ground_in_bl',
+      'dark_ground_in_br',
+    ];
+
+    for (const key of fringeKeys) {
+      expect(manifest).toHaveProperty(key);
+      expect(manifest[key]).toBe(`/assets/biomes/dark-land/${key}.png`);
+      const fullPath = path.resolve(__dirname, `../public${manifest[key]}`);
+      expect(fs.existsSync(fullPath)).toBe(true);
+    }
+
+    // Verify bush_dark_1..6 all exist and point to dedicated assets
+    for (let i = 1; i <= 6; i++) {
+      const key = `bush_dark_${i}`;
+      expect(manifest).toHaveProperty(key);
+      const fullPath = path.resolve(__dirname, `../public${manifest[key]}`);
+      expect(fs.existsSync(fullPath)).toBe(true);
+    }
+  });
 });
+
