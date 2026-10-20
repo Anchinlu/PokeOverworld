@@ -177,6 +177,10 @@ const EXTRA_ASSETS = {
   shore_corner_overlay_tr: 'shore_corner_overlay_tr.png',
   shore_corner_overlay_bl: 'shore_corner_overlay_bl.png',
   shore_corner_overlay_br: 'shore_corner_overlay_br.png',
+  shore_inner_sand_tl: 'shore_inner_sand_tl.png',
+  shore_inner_sand_tr: 'shore_inner_sand_tr.png',
+  shore_inner_sand_bl: 'shore_inner_sand_bl.png',
+  shore_inner_sand_br: 'shore_inner_sand_br.png',
 };
 
 // Load images
@@ -323,6 +327,12 @@ function createGridCanvas(grid, parentEl, title) {
             ctx.drawImage(images.ocean, sx, 0, T, T, px, py, sz, sz);
           }
           ctx.drawImage(images[imgKey], sx, 0, T, T, px, py, sz, sz);
+
+          if (tile === CORNER_IN_FLIP && images.shore_inner_sand_bl && images.shore_inner_sand_bl.complete) {
+            ctx.drawImage(images.shore_inner_sand_bl, 0, 0, T, T, px, py, sz, sz);
+          } else if (tile === CORNER_IN && images.shore_inner_sand_tl && images.shore_inner_sand_tl.complete) {
+            ctx.drawImage(images.shore_inner_sand_tl, 0, 0, T, T, px, py, sz, sz);
+          }
         } else if (tile === SHORE_H) {
           if (images.ocean && images.ocean.complete && images.ocean.naturalWidth > 0) {
             ctx.drawImage(images.ocean, sx, 0, T, T, px, py, sz, sz);

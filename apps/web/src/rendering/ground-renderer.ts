@@ -505,6 +505,21 @@ export class GroundRenderer {
           } else {
             ctx.drawImage(shoreImg, sx, 0, TILE_SIZE, TILE_SIZE, px, py, TILE_SIZE, TILE_SIZE);
           }
+
+          // Coastal shore inner corner overlays: smooth concave water corners touching sand
+          if (tileId === TILE_IDS.shore_corner_in_flip) {
+            const bl = this.loader.getImage('shore_inner_sand_bl');
+            if (bl && bl.complete) ctx.drawImage(bl, px, py, TILE_SIZE, TILE_SIZE);
+          } else if (tileId === TILE_IDS.shore_corner_in) {
+            const tl = this.loader.getImage('shore_inner_sand_tl');
+            if (tl && tl.complete) ctx.drawImage(tl, px, py, TILE_SIZE, TILE_SIZE);
+          } else if (tileId === TILE_IDS.shore_corner_in_es) {
+            const br = this.loader.getImage('shore_inner_sand_br');
+            if (br && br.complete) ctx.drawImage(br, px, py, TILE_SIZE, TILE_SIZE);
+          } else if (tileId === TILE_IDS.shore_corner_in_en) {
+            const tr = this.loader.getImage('shore_inner_sand_tr');
+            if (tr && tr.complete) ctx.drawImage(tr, px, py, TILE_SIZE, TILE_SIZE);
+          }
         }
       }
     }

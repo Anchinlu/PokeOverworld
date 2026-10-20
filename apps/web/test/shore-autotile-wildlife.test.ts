@@ -147,6 +147,10 @@ describe('Shore Autotiling & Wildlife Water Boundary Rules', () => {
       'shore_corner_overlay_tr',
       'shore_corner_overlay_bl',
       'shore_corner_overlay_br',
+      'shore_inner_sand_tl',
+      'shore_inner_sand_tr',
+      'shore_inner_sand_bl',
+      'shore_inner_sand_br',
     ];
 
     for (const key of cornerKeys) {
