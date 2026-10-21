@@ -56,17 +56,28 @@ export function getSpeciesCandidatesForTier(
 export function getSpeciesWithTierFallback(
   biome: string,
   context: TileContext | string,
-  targetTier: RarityTier
+  targetTier: RarityTier,
+  timeBand?: TimeBand
 ): { tier: RarityTier; candidates: SpawnCandidate[] } {
-  // 1. Try target tier
-  const primary = getSpeciesCandidatesForTier(biome, context, targetTier);
+  const eligibleCandidates = (tier: RarityTier): SpawnCandidate[] => {
+    const candidates = getSpeciesCandidatesForTier(biome, context, tier);
+    if (!timeBand) return candidates;
+    return candidates.filter(
+      (candidate) =>
+        !candidate.definition.activeTime || candidate.definition.activeTime.includes(timeBand)
+    );
+  };
+
+  // 1. Try target tier. If it has no active species, continue to the same
+  // fallback order instead of dropping the entire spawn group.
+  const primary = eligibleCandidates(targetTier);
   if (primary.length > 0) {
     return { tier: targetTier, candidates: primary };
   }
 
   // 2. Fallback: try progressively more common tiers (downwards to 0)
   for (let t = targetTier - 1; t >= 0; t--) {
-    const down = getSpeciesCandidatesForTier(biome, context, t as RarityTier);
+    const down = eligibleCandidates(t as RarityTier);
     if (down.length > 0) {
       return { tier: t as RarityTier, candidates: down };
     }
@@ -74,7 +85,7 @@ export function getSpeciesWithTierFallback(
 
   // 3. Fallback: try rarer tiers (upwards to 4)
   for (let t = targetTier + 1; t <= 4; t++) {
-    const up = getSpeciesCandidatesForTier(biome, context, t as RarityTier);
+    const up = eligibleCandidates(t as RarityTier);
     if (up.length > 0) {
       return { tier: t as RarityTier, candidates: up };
     }
@@ -104,7 +115,7 @@ export function selectSpeciesTwoStep(params: {
   const initialTier = rollRarityTier(tierRoll01);
 
   // Step 2: Query candidates with fallback
-  const { tier, candidates } = getSpeciesWithTierFallback(biome, context, initialTier);
+  const { tier, candidates } = getSpeciesWithTierFallback(biome, context, initialTier, timeBand);
   if (!candidates || candidates.length === 0) {
     return null;
   }

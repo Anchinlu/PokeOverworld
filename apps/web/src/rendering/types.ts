@@ -159,6 +159,7 @@ export const TILE_KEY_BY_ID: Record<number, string> = {
   [TILE_IDS.dark_cliff_in_br]: 'dark_cliff_in_br',
   // Tall Grass
   [TILE_IDS.tall_grass]: 'tall_grass',
+  [TILE_IDS.tall_grass_dark]: 'tall_grass_dark',
   // Water autotile & bridges
   [TILE_IDS.water_pure]: 'water_pure',
   [TILE_IDS.water_top]: 'water_top',

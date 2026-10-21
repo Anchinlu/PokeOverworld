@@ -122,6 +122,7 @@ export const TILE_IDS = {
   flower_white: 604,
   plant_sprout: 605,
   tall_grass: 610,
+  tall_grass_dark: 611,
   water_pure: 700,
   water_top: 701,
   water_bot: 702,
@@ -165,7 +166,11 @@ export function isDesertTile(tileId: number): boolean {
 }
 
 export function isDarkLandTile(tileId: number): boolean {
-  return (tileId >= 440 && tileId <= 455) || (tileId >= 460 && tileId <= 472);
+  return (
+    (tileId >= 440 && tileId <= 455) ||
+    (tileId >= 460 && tileId <= 472) ||
+    tileId === TILE_IDS.tall_grass_dark
+  );
 }
 
 export const CHUNK_SIZE = 16 as const;

@@ -9,6 +9,9 @@ import {
   getLakePlacement,
 } from '../src/maps/terrain-rules';
 import { isInteriorFreshwater } from '../src/maps/chunk-objects';
+import { resolveWorldBiome } from '../src/maps/ecology';
+import { createWorldQueryAdapter } from '../src/wildlife/ports/world-query-adapter';
+import { createTerrainField } from '../src/maps/terrain-field';
 
 describe('Water Terrain, River, Lake & Bridge Systems', () => {
   it('generates water and bridge tiles deterministically', () => {
@@ -215,5 +218,37 @@ describe('Water Terrain, River, Lake & Bridge Systems', () => {
       }
       expect(lakeFloraFound).toBeGreaterThanOrEqual(1);
     }
+  });
+
+  it('correctly classifies freshwater lake and river coordinates into the wetland biome', () => {
+    const seed = 12345;
+    const field = createTerrainField(1, seed);
+    const worldQuery = createWorldQueryAdapter(field);
+
+    // Scan for river and lake coordinates
+    let riverWaterFound = false;
+    let lakeWaterFound = false;
+
+    for (let gy = 0; gy <= 80; gy++) {
+      for (let gx = -15; gx <= 15; gx++) {
+        if (field.isWater(gx, gy) && !field.isOcean(gx, gy)) {
+          if (isRiverTile(gx, gy, seed)) {
+            riverWaterFound = true;
+          }
+          if (field.isLake(gx, gy)) {
+            lakeWaterFound = true;
+          }
+
+          // Freshwater lake & river must resolve to 'wetland' biome
+          expect(resolveWorldBiome(field, gx, gy)).toBe('wetland');
+          expect(worldQuery.biomeAt(gx, gy)).toBe('wetland');
+          expect(worldQuery.contextAt(gx, gy)).toBe('water_surface');
+          expect(worldQuery.isWalkable(gx, gy)).toBe(false);
+        }
+      }
+    }
+
+    expect(riverWaterFound).toBe(true);
+    expect(lakeWaterFound).toBe(true);
   });
 });

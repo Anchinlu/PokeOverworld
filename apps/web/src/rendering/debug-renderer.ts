@@ -2,7 +2,9 @@ import { TILE_SIZE, TERRAIN } from '@pokemon/game-data';
 import type { ViewportBounds } from '../core/camera';
 import type { Player } from '../entities/player';
 import type { ChunkManager } from '../maps/chunk-manager';
-import { sampleEcology, getEcologyZone } from '../maps/ecology';
+import { sampleEcology, resolveWorldBiome } from '../maps/ecology';
+import { getWildSpriteAabb } from '../wildlife/behavior/movement/wild-hitbox';
+import { WILDLIFE_FREEZE_DISTANCE_TILES } from '../wildlife/behavior/wildlife-simulator';
 
 export class DebugRenderer {
   public renderHeatmap(
@@ -139,8 +141,7 @@ export class DebugRenderer {
           if (x + 32 < bounds.minX || x > bounds.maxX || y + 32 < bounds.minY || y > bounds.maxY)
             continue;
 
-          const sample = sampleEcology(gx, gy, chunkManager.currentSeed);
-          const zone = getEcologyZone(sample);
+          const zone = resolveWorldBiome(chunkManager.field, gx, gy);
 
           if (zone === 'coast') ctx.fillStyle = 'rgba(245, 158, 11, 0.55)';
           else if (zone === 'wetland') ctx.fillStyle = 'rgba(6, 182, 212, 0.55)';
@@ -149,6 +150,7 @@ export class DebugRenderer {
           else if (zone === 'dense_forest') ctx.fillStyle = 'rgba(21, 128, 61, 0.65)';
           else if (zone === 'light_forest') ctx.fillStyle = 'rgba(74, 222, 128, 0.55)';
           else if (zone === 'hill_edge') ctx.fillStyle = 'rgba(100, 116, 139, 0.6)';
+          else if (zone === 'dark_land') ctx.fillStyle = 'rgba(71, 36, 92, 0.7)';
 
           ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
         }
@@ -202,6 +204,58 @@ export class DebugRenderer {
           ctx.fillRect(c.x, c.y, c.w, c.h);
           ctx.strokeRect(c.x, c.y, c.w, c.h);
         }
+      }
+    }
+
+    // Wild Pokémon interaction bounds follow the actual rendered 64px sprite.
+    for (const chunk of chunkManager.renderChunks) {
+      for (const wild of chunk.wildPokemon) {
+        const aabb = getWildSpriteAabb(wild);
+        const left = aabb.left * TILE_SIZE;
+        const top = aabb.top * TILE_SIZE;
+        const width = (aabb.right - aabb.left) * TILE_SIZE;
+        const height = (aabb.bottom - aabb.top) * TILE_SIZE;
+        if (
+          left + width < bounds.minX ||
+          left > bounds.maxX ||
+          top + height < bounds.minY ||
+          top > bounds.maxY
+        ) {
+          continue;
+        }
+
+        const distance = Math.hypot(wild.gx - player.gx, wild.gy - player.gy);
+        const color =
+          distance > WILDLIFE_FREEZE_DISTANCE_TILES
+            ? '#ef4444'
+            : distance > 16
+              ? '#facc15'
+              : '#22c55e';
+        ctx.fillStyle = `${color}33`;
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1.5;
+        ctx.fillRect(left, top, width, height);
+        ctx.strokeRect(left, top, width, height);
+
+        if (wild.isMoving) {
+          ctx.save();
+          ctx.setLineDash([3, 3]);
+          ctx.beginPath();
+          ctx.moveTo((wild.gx + 0.5) * TILE_SIZE, (wild.gy + 0.5) * TILE_SIZE);
+          ctx.lineTo((wild.targetGX + 0.5) * TILE_SIZE, (wild.targetGY + 0.5) * TILE_SIZE);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        ctx.fillStyle = color;
+        ctx.font = '9px ui-monospace, monospace';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(
+          `${wild.speciesKey} · ${wild.state}${distance > WILDLIFE_FREEZE_DISTANCE_TILES ? ' · FROZEN' : ''}`,
+          left,
+          top - 2
+        );
       }
     }
 

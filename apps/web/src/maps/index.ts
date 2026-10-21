@@ -7,3 +7,4 @@ export * from './berry-data';
 export * from './ecology';
 export * from './village-rules';
 export * from './terrain-field';
+export * from '../continent';

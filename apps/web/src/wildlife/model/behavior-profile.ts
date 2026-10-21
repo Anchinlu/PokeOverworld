@@ -1,12 +1,7 @@
 import type { SocialType } from './herd';
 
 export type Temperament =
-  | 'skittish'
-  | 'aggressive'
-  | 'curious'
-  | 'passive'
-  | 'territorial'
-  | 'dormant';
+  'skittish' | 'aggressive' | 'curious' | 'passive' | 'territorial' | 'dormant';
 
 export type ActivityRhythm = 'diurnal' | 'nocturnal' | 'crepuscular' | 'all_day';
 
@@ -45,4 +40,8 @@ export interface BehaviorProfile {
   anchors: string[];
   threat: ThreatProfile;
   weights: StateWeights;
+  /** Data-driven tags used by weather and habitat modifiers. */
+  tags?: readonly string[];
+  /** Optional spawn/AI affinity multipliers by normalized weather key. */
+  weather?: Readonly<Record<string, number>>;
 }

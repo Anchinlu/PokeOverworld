@@ -22,6 +22,7 @@ import {
   updateWorldTimeWidget,
 } from './ui';
 import { initDesktopShell } from './shell/desktop';
+import { installBrowserGuards } from './shell/browser-guards';
 import type { Direction } from '@pokemon/shared-types';
 import {
   partyService,
@@ -54,6 +55,8 @@ declare global {
 }
 
 export async function bootstrap(): Promise<void> {
+  installBrowserGuards();
+
   const app = document.querySelector<HTMLDivElement>('#app');
   if (!app) {
     throw new Error('Application root element was not found.');
@@ -134,7 +137,7 @@ export async function bootstrap(): Promise<void> {
     }
 
     let currentSeed = seedOverride ?? 101;
-    let currentVersion = 3; // Default for new worlds is World Gen v3 (asymmetric valley & organic corridors)
+    let currentVersion = 4; // Default for new worlds is World Gen v4 (macro continents & archipelagos)
     let savedPosition: { gx: number; gy: number; direction?: number } | null = null;
     let savedTimeMinutes: number | undefined;
     let savedDay: number | undefined;
@@ -146,7 +149,7 @@ export async function bootstrap(): Promise<void> {
       inventoryService.reset();
       pcStorageService.reset();
       currentSeed = seedOverride ?? Math.floor(Math.random() * 899999) + 100001;
-      currentVersion = 3;
+      currentVersion = 4;
     } else {
       // 2. Load or continue existing world save
       const hasSave = saveGameRepository.hasSave(activeSaveSlot);
@@ -154,7 +157,7 @@ export async function bootstrap(): Promise<void> {
         const loadedData = saveGameRepository.load(activeSaveSlot);
         if (loadedData) {
           currentSeed = seedOverride ?? loadedData.world?.seed ?? 101;
-          currentVersion = loadedData.world?.worldGenVersion ?? 3;
+          currentVersion = loadedData.world?.worldGenVersion ?? 4;
           if (loadedData.world?.position) {
             savedPosition = loadedData.world.position;
           }
@@ -480,8 +483,11 @@ export async function bootstrap(): Promise<void> {
       isCollisionEnabled: () => debugController?.isCollisionEnabled() ?? true,
     };
 
-    debugController = new DebugOverlayController(debugBridge);
-    debugController.mount(app);
+    const debugEnabled = import.meta.env.DEV || import.meta.env.VITE_ENABLE_DEBUG === 'true';
+    if (debugEnabled) {
+      debugController = new DebugOverlayController(debugBridge);
+      debugController.mount(app);
+    }
     setOverworldUiVisible(true);
 
     // Initial sync for on-screen world time widget
@@ -947,10 +953,12 @@ export async function bootstrap(): Promise<void> {
             chunkY: pChunkY,
             activeChunksCount: session.chunkManager.activeChunks.length,
             fps: loop.getFps(),
+            performance: renderer.getPerformanceStats(),
             worldTimeStr: session.worldClock.formatTime(),
             dayPhase: session.getDayPhase(),
             worldDay: session.worldClock.getDay(),
             isTimePaused: session.worldClock.isPaused(),
+            wildlifeStats: session.getWildlifeDebugStats(),
           });
         }
         updateWorldTimeWidget(

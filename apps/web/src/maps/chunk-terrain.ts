@@ -27,10 +27,7 @@ export function generateChunkTerrain(
   hasHills = true,
   hasWater = true
 ): ChunkTerrainResult {
-  const field =
-    typeof seedOrField === 'number'
-      ? createTerrainField(1, seedOrField)
-      : seedOrField;
+  const field = typeof seedOrField === 'number' ? createTerrainField(1, seedOrField) : seedOrField;
   const seed = field.seed;
   const startGX = cx * CHUNK_SIZE;
   const startGY = cy * CHUNK_SIZE;
@@ -51,14 +48,27 @@ export function generateChunkTerrain(
 
       const isDesert = Boolean(field.isDesert && field.isDesert(gx, gy));
       const isDarkLand = Boolean(field.isDarkLand && field.isDarkLand(gx, gy));
+      const isRoad = hasRoad && field.isRoad(gx, gy, hasRoad, hasBeach);
 
-      if (field.isHill(gx, gy, hasHills, hasRoad, hasBeach)) {
+      // V4 roads are rasterized from the continent graph. Let them cross
+      // detailed hill/desert patches, but never overwrite ocean, beach sand,
+      // or water. This keeps the route graph visible without creating bridges.
+      if (
+        isRoad &&
+        !field.isOcean(gx, gy, hasBeach) &&
+        !field.isSand(gx, gy, hasBeach) &&
+        !field.isHill(gx, gy, hasHills, hasRoad, hasBeach) &&
+        !field.isWater(gx, gy, hasWater, hasRoad, hasBeach, hasHills)
+      ) {
+        terrain = TERRAIN.ROAD;
+        tileId = getRoadTileKey(gx, gy, field, hasRoad, hasBeach).tileId;
+      } else if (field.isHill(gx, gy, hasHills, hasRoad, hasBeach)) {
         terrain = TERRAIN.HILL;
         tileId = isDesert
           ? getDuneCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId
           : isDarkLand
-          ? getDarkCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId
-          : getCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId;
+            ? getDarkCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId
+            : getCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId;
       } else if (isDesert) {
         terrain = TERRAIN.DESERT;
         tileId = getDesertTileKey(gx, gy, field).tileId;
@@ -74,7 +84,7 @@ export function generateChunkTerrain(
       } else if (field.isBridge(gx, gy, hasRoad)) {
         terrain = TERRAIN.ROAD;
         tileId = TILE_IDS.bridge_wood_v;
-      } else if (field.isRoad(gx, gy, hasRoad, hasBeach)) {
+      } else if (isRoad) {
         terrain = TERRAIN.ROAD;
         tileId = getRoadTileKey(gx, gy, field, hasRoad, hasBeach).tileId;
       } else if (field.isWater(gx, gy, hasWater, hasRoad, hasBeach, hasHills)) {

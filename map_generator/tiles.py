@@ -120,6 +120,7 @@ TILE_IDS = {
     "flower_white": 604,
     "plant_sprout": 605,
     "tall_grass": 610,
+    "tall_grass_dark": 611,
     "water_pure": 700,
     "water_top": 701,
     "water_bot": 702,

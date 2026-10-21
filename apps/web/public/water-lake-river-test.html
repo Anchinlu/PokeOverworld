@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PokeOverworld - Hồ & Sông (spritesheet 4 frame)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0b0f19; color: #e2e8f0; font-family: 'Segoe UI', system-ui, sans-serif; padding: 24px; }
+  h1 { color: #38bdf8; font-size: 22px; margin-bottom: 6px; }
+  .sub { color: #94a3b8; font-size: 13px; margin-bottom: 18px; }
+  .bar { background: #162032; border: 1px solid #1e293b; border-radius: 8px; padding: 10px 16px; margin-bottom: 20px; display: flex; gap: 18px; align-items: center; font-size: 13px; flex-wrap: wrap; }
+  .btn { background: #0284c7; color: #fff; border: 0; padding: 7px 14px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+  select { background: #0f172a; color: #f1f5f9; border: 1px solid #334155; padding: 3px 6px; border-radius: 4px; }
+  .section { background: #131d2e; border: 1px solid #1e293b; border-radius: 10px; padding: 18px; margin-bottom: 20px; }
+  .title { color: #7dd3fc; font-weight: 700; margin-bottom: 10px; }
+  .grid { display: flex; gap: 14px; flex-wrap: wrap; }
+  .item { background: #0b1220; border: 1px solid #1e293b; border-radius: 6px; padding: 8px; text-align: center; font: 11px monospace; color: #cbd5e1; }
+  canvas { image-rendering: pixelated; display: block; margin: 0 auto 6px; }
+  .demo { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+  .box { background: #0b1220; border: 1px solid #1e293b; border-radius: 8px; padding: 12px; text-align: center; font-size: 13px; }
+</style>
+</head>
+<body>
+<h1>🌊 Hồ & Sông — tài nguyên đang dùng trong game (ô 32×32, 4 frame)</h1>
+<p class="sub">Mỗi ô của hồ 3×3 được cắt riêng theo từng frame → strip 128×32 (4 frame). Nền cỏ + vách đất đã nằm sẵn trong ô.</p>
+
+<div class="bar">
+  <button id="btnPlay" class="btn">⏸️ Tạm dừng</button>
+  <label>Tốc độ: <select id="speed">
+    <option value="200">200ms</option><option value="280" selected>280ms</option><option value="400">400ms</option><option value="600">600ms</option>
+  </select></label>
+  <label>Zoom: <select id="zoom"><option value="1">1x</option><option value="2" selected>2x</option><option value="3">3x</option></select></label>
+  <span id="fc">Frame 0 / 3</span>
+</div>
+
+<div class="section">
+  <div class="title">📦 Danh mục tài nguyên (assets/terrain/water)</div>
+  <div class="grid" id="catalog"></div>
+</div>
+
+<div class="section">
+  <div class="title">✨ Hồ mẫu</div>
+  <div class="demo">
+    <div class="box"><canvas id="c1"></canvas>Hồ 3×3 (nguyên bản)</div>
+    <div class="box"><canvas id="c2"></canvas>Hồ 6×5 (lặp top/side/pure)</div>
+    <div class="box"><canvas id="c3"></canvas>Hồ 5×3 + ô cong sông ở trên</div>
+    <div class="box"><canvas id="c4"></canvas>Ô cong sông: sáng (anim) vs đậm (tĩnh)</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="title">🗺️ Hồ + đảo + sông uốn khúc (hình dạng đặc biệt)</div>
+  <div class="box" style="display:inline-block"><canvas id="c5"></canvas><span id="c5info"></span></div>
+</div>
+
+<script>
+const T = 32, FRAMES = 4;
+let zoom = 2, speed = 280, playing = true, frame = 0, acc = 0, last = performance.now();
+const NAMES = ['tl','top','tr','left','pure','right','bl','bot','br','in_tl','in_tr','in_bl','in_br'].map(n => 'water_' + n)
+  .concat(['river_curve', 'river_curve_deep', 'grass_a', 'grass_b']);
+const img = {};
+
+function load(cb) {
+  let n = 0;
+  NAMES.forEach(name => {
+    const i = new Image();
+    i.onload = () => { img[name] = i; if (++n === NAMES.length) cb(); };
+    i.src = `/assets/terrain/water/${name}.png?v=${Date.now()}`;
+  });
+}
+
+// Chọn ô theo vùng nước dạng hình chữ nhật (mask 1 = nước)
+function pick(mask, r, c) {
+  const g = (rr, cc) => (mask[rr] && mask[rr][cc]) ? 1 : 0;
+  const N = g(r-1, c), S = g(r+1, c), W = g(r, c-1), E = g(r, c+1);
+  const v = !N ? 't' : !S ? 'b' : '';
+  const h = !W ? 'l' : !E ? 'r' : '';
+  const key = { tl:'tl', t:'top', tr:'tr', l:'left', '':'pure', r:'right', bl:'bl', b:'bot', br:'br' };
+  let k;
+  if (v === 't') k = h === 'l' ? 'tl' : h === 'r' ? 'tr' : 'top';
+  else if (v === 'b') k = h === 'l' ? 'bl' : h === 'r' ? 'br' : 'bot';
+  else k = h === 'l' ? 'left' : h === 'r' ? 'right' : 'pure';
+  return 'water_' + k;
+}
+
+const rect = (rows, cols) => Array.from({ length: rows }, () => Array(cols).fill(1));
+
+function drawStrip(ctx, name, dx, dy) {
+  ctx.drawImage(img[name], frame * T, 0, T, T, dx, dy, T * zoom, T * zoom);
+}
+
+function drawLake(id, mask, extraTop) {
+  const rows = mask.length + (extraTop ? 1 : 0), cols = mask[0].length;
+  const cvs = document.getElementById(id);
+  cvs.width = cols * T * zoom; cvs.height = rows * T * zoom;
+  const ctx = cvs.getContext('2d'); ctx.imageSmoothingEnabled = false;
+  const off = extraTop ? 1 : 0;
+  if (extraTop) {
+    // nền cỏ phía trên: lấy ô cỏ góc trên-trái của hồ làm nền
+    for (let c = 0; c < cols; c++) drawStrip(ctx, 'water_tl', c * T * zoom, 0);
+    ctx.fillStyle = '#a6d683'; ctx.fillRect(0, 0, cols * T * zoom, T * zoom);
+    drawStrip(ctx, 'river_curve', Math.floor(cols / 2) * T * zoom, 0);
+  }
+  for (let r = 0; r < mask.length; r++)
+    for (let c = 0; c < cols; c++)
+      if (mask[r][c]) drawStrip(ctx, pick(mask, r, c), c * T * zoom, (r + off) * T * zoom);
+}
+
+function drawCurves() {
+  const cvs = document.getElementById('c4');
+  cvs.width = 2 * T * zoom; cvs.height = T * zoom;
+  const ctx = cvs.getContext('2d'); ctx.imageSmoothingEnabled = false;
+  drawStrip(ctx, 'river_curve', 0, 0);
+  ctx.drawImage(img['river_curve_deep'], 0, 0, T, T, T * zoom, 0, T * zoom, T * zoom);
+}
+
+function catalog() {
+  const box = document.getElementById('catalog'); box.innerHTML = '';
+  NAMES.forEach(name => {
+    const i = img[name];
+    const cvs = document.createElement('canvas');
+    cvs.width = i.width * 1.5; cvs.height = i.height * 1.5;
+    const ctx = cvs.getContext('2d'); ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(i, 0, 0, cvs.width, cvs.height);
+    const d = document.createElement('div'); d.className = 'item';
+    d.appendChild(cvs); d.appendChild(document.createTextNode(name));
+    box.appendChild(d);
+  });
+}
+
+function render() {
+  drawLake('c1', rect(3, 3));
+  drawLake('c2', rect(5, 6));
+  drawLake('c3', rect(3, 5), true);
+  drawCurves();
+  drawSpecial();
+}
+
+// ---- Hình dạng đặc biệt: lưới nước, autotile theo 8 ô lân cận ----
+const SW = 20, SH = 15;
+const special = Array.from({ length: SH }, () => Array(SW).fill(0));
+const fill = (r0, r1, c0, c1) => { for (let r = r0; r <= r1; r++) for (let c = c0; c <= c1; c++) special[r][c] = 1; };
+fill(1, 2, 10, 13);   // ao đầu nguồn
+fill(3, 4, 10, 11);   // sông chảy xuống
+fill(5, 5, 5, 12);    // hồ chính (thu hẹp dần)
+fill(6, 6, 3, 13);
+fill(7, 8, 3, 14);
+fill(9, 9, 4, 13);
+fill(10, 10, 5, 12);
+fill(11, 11, 8, 11);  // cửa ra
+fill(12, 12, 9, 10);
+fill(13, 14, 9, 17);  // sông rẽ phải
+special[7][7] = special[7][8] = special[8][7] = special[8][8] = 0; // đảo 2x2
+
+function pickSpecial(r, c) {
+  const w = (rr, cc) => (special[rr] && special[rr][cc]) ? 1 : 0;
+  const N = w(r-1,c), S = w(r+1,c), W = w(r,c-1), E = w(r,c+1);
+  const miss = (!N) + (!S) + (!W) + (!E);
+  if (miss === 0) {
+    const d = [['tl', w(r-1,c-1)], ['tr', w(r-1,c+1)], ['bl', w(r+1,c-1)], ['br', w(r+1,c+1)]].filter(x => !x[1]);
+    if (d.length === 0) return 'water_pure';
+    return { name: 'water_in_' + d[0][0], bad: d.length > 1 };
+  }
+  if (miss === 1) return 'water_' + (!N ? 'top' : !S ? 'bot' : !W ? 'left' : 'right');
+  if (miss === 2 && (N !== S) && (W !== E))
+    return 'water_' + (!N ? 't' : 'b') + (!W ? 'l' : 'r');
+  return { name: 'water_pure', bad: true };
+}
+
+function drawSpecial() {
+  const cvs = document.getElementById('c5'), z = zoom, s = T * z;
+  cvs.width = SW * s; cvs.height = SH * s;
+  const ctx = cvs.getContext('2d'); ctx.imageSmoothingEnabled = false;
+  let bad = 0;
+  for (let r = 0; r < SH; r++) for (let c = 0; c < SW; c++) {
+    if (!special[r][c]) {
+      ctx.drawImage(img[(r * 7 + c * 3) % 5 === 0 ? 'grass_b' : 'grass_a'], 0, 0, T, T, c * s, r * s, s, s);
+      continue;
+    }
+    let p = pickSpecial(r, c);
+    if (typeof p === 'object') { if (p.bad) bad++; p = p.name; }
+    drawStrip(ctx, p, c * s, r * s);
+  }
+  document.getElementById('c5info').textContent = `Ô lỗi cấu hình: ${bad}`;
+}
+
+function tick(now) {
+  const dt = now - last; last = now;
+  if (playing) {
+    acc += dt;
+    if (acc >= speed) { acc %= speed; frame = (frame + 1) % FRAMES; document.getElementById('fc').textContent = `Frame ${frame} / 3`; }
+  }
+  render();
+  requestAnimationFrame(tick);
+}
+
+document.getElementById('btnPlay').onclick = e => { playing = !playing; e.target.textContent = playing ? '⏸️ Tạm dừng' : '▶️ Tiếp tục'; };
+document.getElementById('speed').onchange = e => speed = +e.target.value;
+document.getElementById('zoom').onchange = e => zoom = +e.target.value;
+load(() => { catalog(); requestAnimationFrame(tick); });
+</script>
+</body>
+</html>

@@ -1,4 +1,5 @@
 import { spawnConfigData } from '../data/data-loader';
+import { TILE_SIZE } from '@pokemon/game-data';
 import type { WildEntity } from '../model';
 import type { WorldQuery } from '../ports/world-query';
 import { calculateBaseLevel } from './level-model';
@@ -6,6 +7,7 @@ import { selectSpeciesTwoStep } from './species-pool';
 import { composeHerd } from './herd-composer';
 import { findGroupAnchors, placeHerdMembers } from './placement';
 import { hashWildlife, isEntityShiny } from './shiny';
+import { getSpeciesBehaviorDefinition } from '../behavior/profiles/profile-registry';
 
 export interface SpawnDirectorOptions {
   seed: number;
@@ -14,25 +16,25 @@ export interface SpawnDirectorOptions {
   playerMaxOwnedLevel?: number;
 }
 
+/**
+ * Legacy runtime key retained for serialized chunk compatibility. The
+ * simulator resolves the richer species profile from speciesKey at runtime.
+ */
 function getDefaultBehaviorForSpecies(speciesKey: string): string {
-  if (speciesKey === 'METAPOD' || speciesKey === 'KAKUNA') {
-    return 'dormant_cocoon';
-  }
-  if (speciesKey === 'CATERPIE' || speciesKey === 'WEEDLE') {
-    return 'slow_bug';
-  }
-  if (speciesKey === 'SPEAROW' || speciesKey === 'FEAROW') {
-    return 'aggressive_bird';
-  }
-  if (
-    speciesKey === 'PIDGEY' ||
-    speciesKey === 'PIDGEOTTO' ||
-    speciesKey === 'PIDGEOT' ||
-    speciesKey === 'DODUO'
-  ) {
+  if (speciesKey === 'METAPOD' || speciesKey === 'KAKUNA') return 'dormant_cocoon';
+  if (speciesKey === 'CATERPIE' || speciesKey === 'WEEDLE') return 'slow_bug';
+  if (speciesKey === 'SPEAROW' || speciesKey === 'FEAROW') return 'aggressive_bird';
+  if (['PIDGEY', 'PIDGEOTTO', 'PIDGEOT', 'DODUO'].includes(speciesKey)) {
     return 'skittish_bird';
   }
   return 'curious_rodent';
+}
+
+const HILL_JUMP_TAGS = new Set(['flying', 'mountain', 'fighter']);
+
+function canSpeciesJumpHills(speciesKey: string): boolean {
+  const tags = getSpeciesBehaviorDefinition(speciesKey)?.tags ?? [];
+  return tags.some((tag) => HILL_JUMP_TAGS.has(tag));
 }
 
 /**
@@ -155,8 +157,8 @@ export function populateChunkWildlife(
         id: entityId,
         gx: pos.gx,
         gy: pos.gy,
-        x: pos.gx * 32,
-        y: pos.gy * 32,
+        x: pos.gx * TILE_SIZE - 16,
+        y: pos.gy * TILE_SIZE - 32,
         speciesKey: ind.speciesKey,
         name: ind.speciesKey,
         level: ind.level,
@@ -168,18 +170,19 @@ export function populateChunkWildlife(
         isWaterDweller: isWaterSurface,
         isSwimming: isWaterSurface && world.contextAt(pos.gx, pos.gy) === 'water_surface',
         behavior,
+        canJumpHills: canSpeciesJumpHills(ind.speciesKey),
         dir,
         homeGX: anchor.gx,
         homeGY: anchor.gy,
         wanderRadius: ind.role === 'leader' || ind.role === 'apex' ? 5 : 3,
         state: 'idle',
         isMoving: false,
-        fromX: pos.gx * 32,
-        fromY: pos.gy * 32,
+        fromX: pos.gx * TILE_SIZE - 16,
+        fromY: pos.gy * TILE_SIZE - 32,
         targetGX: pos.gx,
         targetGY: pos.gy,
-        targetX: pos.gx * 32,
-        targetY: pos.gy * 32,
+        targetX: pos.gx * TILE_SIZE - 16,
+        targetY: pos.gy * TILE_SIZE - 32,
         stepProgress: 0,
         moveSpeed: 0.8,
         stepsRemaining: 0,

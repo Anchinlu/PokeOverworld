@@ -5,6 +5,7 @@ import { evaluatePlayerPerception } from '../senses/perception';
 import { assessThreat } from '../senses/threat-assessment';
 import { isCreatureNaturallySleeping, isStartledAwake } from '../schedule/daily-rhythm';
 import { calculateHerdCohesion } from '../social/herd-controller';
+import { getWeatherBehaviorModifiers } from '../schedule/weather-response';
 
 export interface UtilityScores {
   idle: number;
@@ -38,9 +39,14 @@ export function calculateUtilityScores(
     idle: 0.15,
     wander: profile.weights.wander ?? 0.25,
     forage: profile.weights.forage ?? 0.25,
-    rest_sleep: profile.weights.rest ?? 0.1,
+    // Rest/sleep is event-driven. The daily rhythm or severe weather can
+    // raise it explicitly; it must not beat ordinary patrol/forage scores
+    // during a clear active period.
+    rest_sleep: profile.temperament === 'dormant' ? (profile.weights.rest ?? 0.1) : 0.0,
     groom_play: 0.05,
-    alert: profile.weights.alert ?? 0.05,
+    // Alert is event-driven. A high alert weight must not make territorial
+    // species freeze permanently when no threat is actually perceived.
+    alert: 0.0,
     curious: profile.weights.curious ?? 0.1,
     flee: 0.0,
     territorial: 0.0,
@@ -65,8 +71,19 @@ export function calculateUtilityScores(
     }
   }
 
+  // Weather changes motivation rather than forcing a hard-coded state.
+  const weather = getWeatherBehaviorModifiers(entity.speciesKey, world.weather());
+  scores.wander *= weather.activityMultiplier;
+  scores.forage *= weather.activityMultiplier;
+  scores.curious *= weather.activityMultiplier;
+  if (weather.prefersShelter) {
+    scores.return_home = Math.max(scores.return_home, 0.65);
+    scores.rest_sleep = Math.max(scores.rest_sleep, 0.3);
+  }
+
   // 3. Player detection and threat reaction
   if (perception.isDetected) {
+    scores.alert = profile.weights.alert ?? 0.05;
     const { reaction } = assessThreat(entity, pRefLevel, profile);
 
     if (reaction === 'flee') {
@@ -88,7 +105,7 @@ export function calculateUtilityScores(
   // 4. Herd Cohesion (Return home / follow leader)
   if (leader && leader.id !== entity.id && entity.role === 'member') {
     const cohesion = calculateHerdCohesion(entity, leader);
-    if (cohesion.shouldPull) {
+    if (cohesion.shouldPull || cohesion.shouldPush) {
       scores.return_home = 0.8;
     }
   }

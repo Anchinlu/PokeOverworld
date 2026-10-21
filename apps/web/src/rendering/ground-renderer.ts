@@ -9,6 +9,7 @@ import { seededHash } from '../maps/noise';
 import { TILE_KEY_BY_ID, type RenderOptions } from './types';
 
 export class GroundRenderer {
+  private static readonly CHUNK_CANVAS_CACHE_LIMIT = 96;
   private loader: AssetLoader;
   private chunkCanvasCache = new Map<string, HTMLCanvasElement>();
 
@@ -26,7 +27,13 @@ export class GroundRenderer {
   ): HTMLCanvasElement {
     const cacheKey = `${chunk.cx},${chunk.cy},${chunk.seed},${options.showHills},${options.showRoad},${options.showBeach},${options.showWater}`;
     const cached = this.chunkCanvasCache.get(cacheKey);
-    if (cached) return cached;
+    if (cached) {
+      // Map insertion order is used as a small LRU: recently visible chunks
+      // stay cached while long-distance exploration cannot grow RAM forever.
+      this.chunkCanvasCache.delete(cacheKey);
+      this.chunkCanvasCache.set(cacheKey, cached);
+      return cached;
+    }
 
     const offscreen = document.createElement('canvas');
     offscreen.width = 16 * TILE_SIZE; // 512px
@@ -82,16 +89,20 @@ export class GroundRenderer {
 
         const isSand = tileId >= 300 && tileId < 350;
         const isDesert = tileId >= 350 && tileId < 400;
-        const isDarkLand = (tileId >= 440 && tileId < 460) || (tileId >= 460 && tileId < 475);
+        const isDarkGround =
+          (tileId >= 440 && tileId < 460) || tileId === TILE_IDS.tall_grass_dark;
+        const isDarkCliff = tileId >= 460 && tileId < 475;
+        const isDarkLand = isDarkGround || isDarkCliff;
         const isRoad = tileId >= 200 && tileId < 300;
-        const isCliff = tileId >= 400 && tileId < 500;
+        const isCliff = (tileId >= 400 && tileId < 435) || isDarkCliff;
         const isWaterOrBridge = tileId >= 700 && tileId < 730;
         const isOceanOrShore = tileId >= 730 && tileId <= 742;
 
         if (isWaterOrBridge && options.showWater) {
-          // Clear ground grass so live animated caustic water waves ripple underneath
+          // Clear ground grass: lake/river tiles (bank + water) are drawn animated underneath
           gCtx.clearRect(px, py, TILE_SIZE, TILE_SIZE);
-          if (tileId !== TILE_IDS.water_pure) {
+          if (tileId >= TILE_IDS.bridge_wood_h) {
+            // Bridges stay a static overlay above the animated water
             const assetKey = TILE_KEY_BY_ID[tileId];
             if (assetKey) {
               const ovImg = this.loader.getImage(assetKey);
@@ -110,7 +121,9 @@ export class GroundRenderer {
           (isRoad && options.showRoad) ||
           (isCliff && options.showHills)
         ) {
-          const assetKey = TILE_KEY_BY_ID[tileId];
+          const assetKey =
+            tileId === TILE_IDS.tall_grass_dark ? 'dark_ground_pure' : TILE_KEY_BY_ID[tileId];
+
           if (assetKey) {
             const ovImg = this.loader.getImage(assetKey);
             if (ovImg && ovImg.complete) {
@@ -119,7 +132,7 @@ export class GroundRenderer {
           }
 
           // Coastal shore corner overlays: round outer sand corners touching ocean
-          if (isSand && options.showBeach && options.showWater) {
+          if ((isSand || isDesert) && options.showBeach && options.showWater) {
             const isO = (x: number, y: number) => chunk.field.isOcean(x, y);
             const n = isO(gx, gy - 1);
             const s = isO(gx, gy + 1);
@@ -181,7 +194,19 @@ export class GroundRenderer {
     }
 
     this.chunkCanvasCache.set(cacheKey, offscreen);
+    while (this.chunkCanvasCache.size > GroundRenderer.CHUNK_CANVAS_CACHE_LIMIT) {
+      const oldestKey = this.chunkCanvasCache.keys().next().value as string | undefined;
+      if (oldestKey === undefined) break;
+      this.chunkCanvasCache.delete(oldestKey);
+    }
     return offscreen;
+  }
+
+  public getCacheStats(): { size: number; limit: number } {
+    return {
+      size: this.chunkCanvasCache.size,
+      limit: GroundRenderer.CHUNK_CANVAS_CACHE_LIMIT,
+    };
   }
 
   /**
@@ -204,22 +229,20 @@ export class GroundRenderer {
         const isCactusLarge = tree.type === 'cactus_large';
         const isBoulder = tree.type === 'desert_boulder';
         const isDarkLarge =
-          tree.type === 'dark_large_1' ||
-          tree.type === 'dark_large_2' ||
-          tree.type === 'dark_dead';
+          tree.type === 'dark_large_1' || tree.type === 'dark_large_2' || tree.type === 'dark_dead';
         const isDarkForest = tree.type === 'dark_forest';
         const w = isPalm || isDarkLarge ? 128 : isDarkForest ? 96 : 64;
         const h = isPalm
           ? 200
           : isDarkLarge
-          ? 128
-          : isDarkForest
-          ? 96
-          : isCactusLarge
-          ? 96
-          : isDead || isBoulder
-          ? 64
-          : 120;
+            ? 128
+            : isDarkForest
+              ? 96
+              : isCactusLarge
+                ? 96
+                : isDead || isBoulder
+                  ? 64
+                  : 120;
 
         if (
           tree.x + w < bounds.minX ||
@@ -295,6 +318,8 @@ export class GroundRenderer {
     now: number
   ): void {
     const imgTG = this.loader.getImage('tall_grass_strip');
+    const imgTGDark =
+      this.loader.getImage('tall_grass_dark_strip') ?? this.loader.getImage('tall_grass_dark');
     if (!imgTG || !imgTG.complete) return;
 
     // H2 Optimization: Pre-compute active moving entity tiles (O(1) lookup per patch)
@@ -345,7 +370,10 @@ export class GroundRenderer {
           }
         }
 
-        ctx.drawImage(imgTG, fIdx * 32, 0, 32, 32, tg.x, grassY, 32, grassHeight);
+        const img = (tg.isDark ? imgTGDark : imgTG) ?? imgTG;
+        if (!img || !img.complete) continue;
+
+        ctx.drawImage(img, fIdx * 32, 0, 32, 32, tg.x, grassY, 32, grassHeight);
       }
     }
   }
@@ -359,8 +387,6 @@ export class GroundRenderer {
   ): void {
     if (!options.showWater) return;
 
-    const imgRiver = this.loader.getImage('river_anim_strip');
-    const imgLake = this.loader.getImage('lake_anim_strip');
     const imgOcean = this.loader.getImage('ocean_anim_strip');
     const imgShoreV = this.loader.getImage('shore_anim_vertical');
     const imgShoreCin = this.loader.getImage('shore_anim_corner_in');
@@ -371,6 +397,8 @@ export class GroundRenderer {
     // 8-frame animated caustic water & shore wave cycle (280ms per frame)
     const fIdx = Math.floor((now / 280) % 8);
     const sx = fIdx * TILE_SIZE;
+    // Freshwater (lake/river) strips are 4 frames at the same 280ms cadence
+    const sxFresh = Math.floor((now / 280) % 4) * TILE_SIZE;
     const CHUNK_PX = 16 * TILE_SIZE;
 
     for (const chunk of chunkManager.renderChunks) {
@@ -391,9 +419,11 @@ export class GroundRenderer {
       for (const waterTile of chunk.waterTiles) {
         const { gx, gy, tileId } = waterTile;
 
-        // 1. Inland river / lake water (700..729)
+        // 1. Inland river / lake water (700..729): per-tile 4-frame strips (bank + water)
         if (tileId >= 700 && tileId < 730) {
-          const imgToUse = waterTile.isLake && imgLake && imgLake.complete ? imgLake : imgRiver;
+          // Bridges (720/721) sit above plain animated water
+          const key = tileId >= TILE_IDS.bridge_wood_h ? 'water_pure' : TILE_KEY_BY_ID[tileId];
+          const imgToUse = key ? this.loader.getImage(key) : undefined;
           if (!imgToUse || !imgToUse.complete) continue;
           const px = gx * TILE_SIZE;
           const py = gy * TILE_SIZE;
@@ -407,7 +437,7 @@ export class GroundRenderer {
             continue;
           }
 
-          ctx.drawImage(imgToUse, sx, 0, TILE_SIZE, TILE_SIZE, px, py, TILE_SIZE, TILE_SIZE);
+          ctx.drawImage(imgToUse, sxFresh, 0, TILE_SIZE, TILE_SIZE, px, py, TILE_SIZE, TILE_SIZE);
         }
         // 2. Open ocean water (730)
         else if (tileId === TILE_IDS.ocean_water && options.showBeach) {
@@ -525,3 +555,4 @@ export class GroundRenderer {
     }
   }
 }
+

@@ -21,17 +21,25 @@ export function getSandTileKey(
   hasBeach = true
 ): AutotileResult {
   const field = toField(seedOrField);
-  const isSandOrOcean = (x: number, y: number) =>
-    field.isSand(x, y, hasBeach) || field.isOcean(x, y, hasBeach);
+  // A neighbor tile is considered connected (does NOT require meadow grass fringe)
+  // if it is Beach Sand, Ocean, Water, Desert, or Dark Land.
+  const isConnected = (x: number, y: number) => {
+    if (field.isSand(x, y, hasBeach) || field.isOcean(x, y, hasBeach)) return true;
+    if (field.isWater && field.isWater(x, y)) return true;
+    if (field.isWaterOrBridge && field.isWaterOrBridge(x, y)) return true;
+    if (field.isDesert && field.isDesert(x, y)) return true;
+    if (field.isDarkLand && field.isDarkLand(x, y)) return true;
+    return false;
+  };
 
-  const n = isSandOrOcean(gx, gy - 1);
-  const s = isSandOrOcean(gx, gy + 1);
-  const w = isSandOrOcean(gx - 1, gy);
-  const e = isSandOrOcean(gx + 1, gy);
-  const nw = isSandOrOcean(gx - 1, gy - 1);
-  const ne = isSandOrOcean(gx + 1, gy - 1);
-  const sw = isSandOrOcean(gx - 1, gy + 1);
-  const se = isSandOrOcean(gx + 1, gy + 1);
+  const n = isConnected(gx, gy - 1);
+  const s = isConnected(gx, gy + 1);
+  const w = isConnected(gx - 1, gy);
+  const e = isConnected(gx + 1, gy);
+  const nw = isConnected(gx - 1, gy - 1);
+  const ne = isConnected(gx + 1, gy - 1);
+  const sw = isConnected(gx - 1, gy + 1);
+  const se = isConnected(gx + 1, gy + 1);
 
   let key = 'pure';
   let tileId: number = TILE_IDS.sand_pure;
@@ -85,7 +93,8 @@ export function getSandTileKey(
 /**
  * Resolves autotile connectivity for Flat Desert Ground (350 series).
  * Ground is pure, smooth sand. When bordering grass, it creates a soft,
- * seamless flat transition (using smooth sand autotile) without vertical rock walls.
+ * seamless flat transition without borrowing coastal sand tiles.
+ * When bordering Ocean, Beach Sand, or Dark Land, it does NOT borrow grass boundaries.
  */
 export function getDesertTileKey(
   gx: number,
@@ -93,60 +102,74 @@ export function getDesertTileKey(
   seedOrField: number | TerrainField = 101
 ): AutotileResult {
   const field = toField(seedOrField);
-  const isD = (x: number, y: number) => Boolean(field.isDesert && field.isDesert(x, y));
 
-  const n = isD(gx, gy - 1);
-  const s = isD(gx, gy + 1);
-  const w = isD(gx - 1, gy);
-  const e = isD(gx + 1, gy);
-  const nw = isD(gx - 1, gy - 1);
-  const ne = isD(gx + 1, gy - 1);
-  const sw = isD(gx - 1, gy + 1);
-  const se = isD(gx + 1, gy + 1);
+  // A neighbor tile is considered connected (does NOT require meadow grass fringe)
+  // if it is Desert, or if it is Ocean, Water, Beach Sand, or Dark Land.
+  const isConnected = (x: number, y: number) => {
+    if (field.isDesert && field.isDesert(x, y)) return true;
+    if (field.isOcean && field.isOcean(x, y)) return true;
+    if (field.isWater && field.isWater(x, y)) return true;
+    if (field.isWaterOrBridge && field.isWaterOrBridge(x, y)) return true;
+    if (field.isSand && field.isSand(x, y)) return true;
+    if (field.isDarkLand && field.isDarkLand(x, y)) return true;
+    return false;
+  };
+
+  const n = isConnected(gx, gy - 1);
+  const s = isConnected(gx, gy + 1);
+  const w = isConnected(gx - 1, gy);
+  const e = isConnected(gx + 1, gy);
+  const nw = isConnected(gx - 1, gy - 1);
+  const ne = isConnected(gx + 1, gy - 1);
+  const sw = isConnected(gx - 1, gy + 1);
+  const se = isConnected(gx + 1, gy + 1);
 
   let key = 'pure';
   let tileId: number = TILE_IDS.desert_pure;
 
   if (!n && !w) {
     key = 'tl';
-    tileId = TILE_IDS.sand_tl;
+    tileId = TILE_IDS.desert_tl;
   } else if (!n && !e) {
     key = 'tr';
-    tileId = TILE_IDS.sand_tr;
+    tileId = TILE_IDS.desert_tr;
   } else if (!s && !w) {
     key = 'bl';
-    tileId = TILE_IDS.sand_bl;
+    tileId = TILE_IDS.desert_bl;
   } else if (!s && !e) {
     key = 'br';
-    tileId = TILE_IDS.sand_br;
+    tileId = TILE_IDS.desert_br;
   } else if (!n) {
     key = 'top';
-    tileId = TILE_IDS.sand_top;
+    tileId = TILE_IDS.desert_top;
   } else if (!s) {
     key = 'bot';
-    tileId = TILE_IDS.sand_bot;
+    tileId = TILE_IDS.desert_bot;
   } else if (!w) {
     key = 'left';
-    tileId = TILE_IDS.sand_left;
+    tileId = TILE_IDS.desert_left;
   } else if (!e) {
     key = 'right';
-    tileId = TILE_IDS.sand_right;
+    tileId = TILE_IDS.desert_right;
   } else if (n && s && w && e) {
     if (!nw) {
       key = 'in_tl';
-      tileId = TILE_IDS.sand_in_tl;
+      tileId = TILE_IDS.desert_in_tl;
     } else if (!ne) {
       key = 'in_tr';
-      tileId = TILE_IDS.sand_in_tr;
+      tileId = TILE_IDS.desert_in_tr;
     } else if (!sw) {
       key = 'in_bl';
-      tileId = TILE_IDS.sand_in_bl;
+      tileId = TILE_IDS.desert_in_bl;
     } else if (!se) {
       key = 'in_br';
-      tileId = TILE_IDS.sand_in_br;
+      tileId = TILE_IDS.desert_in_br;
     } else {
       key = 'pure';
-      tileId = TILE_IDS.desert_pure;
+      const r = seededHash(gx, gy, field.seed + 555);
+      if (r < 0.12) tileId = TILE_IDS.desert_pure_var1;
+      else if (r < 0.24) tileId = TILE_IDS.desert_pure_var2;
+      else tileId = TILE_IDS.desert_pure;
     }
   }
 
@@ -230,6 +253,7 @@ export function getDuneCliffTileKey(
 
 /**
  * Resolves 3x3 autotile connectivity for Cursed Dark Ground (440 series).
+ * When bordering Ocean, Beach Sand, or Desert, it does NOT borrow grass boundaries.
  */
 export function getDarkGroundTileKey(
   gx: number,
@@ -237,16 +261,27 @@ export function getDarkGroundTileKey(
   seedOrField: number | TerrainField = 101
 ): AutotileResult {
   const field = toField(seedOrField);
-  const isDark = (x: number, y: number) => Boolean(field.isDarkLand && field.isDarkLand(x, y));
 
-  const n = isDark(gx, gy - 1);
-  const s = isDark(gx, gy + 1);
-  const w = isDark(gx - 1, gy);
-  const e = isDark(gx + 1, gy);
-  const nw = isDark(gx - 1, gy - 1);
-  const ne = isDark(gx + 1, gy - 1);
-  const sw = isDark(gx - 1, gy + 1);
-  const se = isDark(gx + 1, gy + 1);
+  // A neighbor tile is considered connected (does NOT require meadow grass fringe)
+  // if it is Dark Land, or if it is Ocean, Water, Beach Sand, or Desert.
+  const isConnected = (x: number, y: number) => {
+    if (field.isDarkLand && field.isDarkLand(x, y)) return true;
+    if (field.isOcean && field.isOcean(x, y)) return true;
+    if (field.isWater && field.isWater(x, y)) return true;
+    if (field.isWaterOrBridge && field.isWaterOrBridge(x, y)) return true;
+    if (field.isSand && field.isSand(x, y)) return true;
+    if (field.isDesert && field.isDesert(x, y)) return true;
+    return false;
+  };
+
+  const n = isConnected(gx, gy - 1);
+  const s = isConnected(gx, gy + 1);
+  const w = isConnected(gx - 1, gy);
+  const e = isConnected(gx + 1, gy);
+  const nw = isConnected(gx - 1, gy - 1);
+  const ne = isConnected(gx + 1, gy - 1);
+  const sw = isConnected(gx - 1, gy + 1);
+  const se = isConnected(gx + 1, gy + 1);
 
   let key = 'pure';
   let tileId: number = TILE_IDS.dark_ground_pure;

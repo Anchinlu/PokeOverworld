@@ -10,6 +10,9 @@ export interface ChunkTerrainPlan {
   readonly isOcean: Uint8Array;
   readonly isSand: Uint8Array;
   readonly isHill: Uint8Array;
+  /** Freshwater masks are optional for legacy plans and populated by V4. */
+  readonly isRiver?: Uint8Array;
+  readonly isLake?: Uint8Array;
   readonly isDesert?: Uint8Array;
   readonly isDarkLand?: Uint8Array;
 }

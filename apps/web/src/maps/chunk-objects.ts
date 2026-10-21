@@ -22,7 +22,7 @@ import {
   getFlowerTypeForCluster,
   getNaturalShrubForZone,
 } from './ecology';
-import { isTallGrassTile } from './ecology/tall-grass-field';
+import { isHighlandTallGrassTile, isTallGrassTile } from './ecology/tall-grass-field';
 import { getForestTreeCandidates } from './ecology/tree-field';
 
 function toField(seedOrField: number | TerrainField = 101): TerrainField {
@@ -53,6 +53,7 @@ export interface TallGrassEntity {
   y: number;
   phase: number;
   heightScale: number;
+  isDark?: boolean;
 }
 
 export interface BerryBushEntity {
@@ -221,7 +222,7 @@ export function generateChunkTrees(
       }
     } else if (isDark) {
       const roll = seededHash(gx, gy, seed + 919);
-      if (roll < 0.30) {
+      if (roll < 0.3) {
         trees.push({ gx, gy, x: tx - 32, y: ty, type: 'dark_large_1' });
         colliders.push({ x: tx, y: ty + 88, w: 64, h: 26, type: 'tree' });
       } else if (roll < 0.55) {
@@ -362,7 +363,8 @@ export function generateChunkBuildings(
 
   // 2. Procedural Landmarks in Dark Land (Graveyard & Gothic Ruins)
   if (entities.length === 0 && field.isDarkLand) {
-    const isDark = (gx: number, gy: number) => Boolean(field.isDarkLand && field.isDarkLand(gx, gy));
+    const isDark = (gx: number, gy: number) =>
+      Boolean(field.isDarkLand && field.isDarkLand(gx, gy));
     const centerGX = chunkStartGX + 8;
     const centerGY = chunkStartGY + 8;
     if (
@@ -390,11 +392,41 @@ export function generateChunkBuildings(
             doorGX: anchorGX + 1,
             doorGY: anchorGY + 2,
           });
-          colliders.push({ x: anchorGX * TILE_SIZE, y: anchorGY * TILE_SIZE, w: 96, h: 20, type: 'building' });
-          colliders.push({ x: anchorGX * TILE_SIZE, y: anchorGY * TILE_SIZE, w: 16, h: 96, type: 'building' });
-          colliders.push({ x: (anchorGX + 2) * TILE_SIZE + 16, y: anchorGY * TILE_SIZE, w: 16, h: 96, type: 'building' });
-          colliders.push({ x: anchorGX * TILE_SIZE, y: (anchorGY + 2) * TILE_SIZE + 12, w: 32, h: 20, type: 'building' });
-          colliders.push({ x: (anchorGX + 2) * TILE_SIZE, y: (anchorGY + 2) * TILE_SIZE + 12, w: 32, h: 20, type: 'building' });
+          colliders.push({
+            x: anchorGX * TILE_SIZE,
+            y: anchorGY * TILE_SIZE,
+            w: 96,
+            h: 20,
+            type: 'building',
+          });
+          colliders.push({
+            x: anchorGX * TILE_SIZE,
+            y: anchorGY * TILE_SIZE,
+            w: 16,
+            h: 96,
+            type: 'building',
+          });
+          colliders.push({
+            x: (anchorGX + 2) * TILE_SIZE + 16,
+            y: anchorGY * TILE_SIZE,
+            w: 16,
+            h: 96,
+            type: 'building',
+          });
+          colliders.push({
+            x: anchorGX * TILE_SIZE,
+            y: (anchorGY + 2) * TILE_SIZE + 12,
+            w: 32,
+            h: 20,
+            type: 'building',
+          });
+          colliders.push({
+            x: (anchorGX + 2) * TILE_SIZE,
+            y: (anchorGY + 2) * TILE_SIZE + 12,
+            w: 32,
+            h: 20,
+            type: 'building',
+          });
 
           const scGX = anchorGX + 7;
           const scGY = anchorGY + 1;
@@ -411,7 +443,13 @@ export function generateChunkBuildings(
             doorGX: scGX,
             doorGY: scGY,
           });
-          colliders.push({ x: scGX * TILE_SIZE + 36, y: scGY * TILE_SIZE + 64, w: 24, h: 20, type: 'building' });
+          colliders.push({
+            x: scGX * TILE_SIZE + 36,
+            y: scGY * TILE_SIZE + 64,
+            w: 24,
+            h: 20,
+            type: 'building',
+          });
 
           const t1GX = anchorGX + 1;
           const t1GY = anchorGY + 1;
@@ -428,7 +466,13 @@ export function generateChunkBuildings(
             doorGX: t1GX,
             doorGY: t1GY,
           });
-          colliders.push({ x: t1GX * TILE_SIZE + 4, y: t1GY * TILE_SIZE + 36, w: 24, h: 20, type: 'building' });
+          colliders.push({
+            x: t1GX * TILE_SIZE + 4,
+            y: t1GY * TILE_SIZE + 36,
+            w: 24,
+            h: 20,
+            type: 'building',
+          });
 
           const t2GX = anchorGX + 4;
           const t2GY = anchorGY + 5;
@@ -445,7 +489,13 @@ export function generateChunkBuildings(
             doorGX: t2GX,
             doorGY: t2GY,
           });
-          colliders.push({ x: t2GX * TILE_SIZE + 4, y: t2GY * TILE_SIZE + 36, w: 24, h: 20, type: 'building' });
+          colliders.push({
+            x: t2GX * TILE_SIZE + 4,
+            y: t2GY * TILE_SIZE + 36,
+            w: 24,
+            h: 20,
+            type: 'building',
+          });
 
           const t3GX = anchorGX + 7;
           const t3GY = anchorGY + 6;
@@ -462,7 +512,13 @@ export function generateChunkBuildings(
             doorGX: t3GX,
             doorGY: t3GY,
           });
-          colliders.push({ x: t3GX * TILE_SIZE + 4, y: t3GY * TILE_SIZE + 36, w: 24, h: 20, type: 'building' });
+          colliders.push({
+            x: t3GX * TILE_SIZE + 4,
+            y: t3GY * TILE_SIZE + 36,
+            w: 24,
+            h: 20,
+            type: 'building',
+          });
         } else {
           // 2. Ruined Gothic Shrine
           const shrineGX = chunkStartGX + 5;
@@ -481,7 +537,13 @@ export function generateChunkBuildings(
             doorGY: shrineGY + 3,
             doorWidthTiles: 2,
           });
-          colliders.push({ x: shrineGX * TILE_SIZE + 8, y: shrineGY * TILE_SIZE + 64, w: 112, h: 56, type: 'building' });
+          colliders.push({
+            x: shrineGX * TILE_SIZE + 8,
+            y: shrineGY * TILE_SIZE + 64,
+            w: 112,
+            h: 56,
+            type: 'building',
+          });
 
           const archGX = shrineGX;
           const archGY = shrineGY + 5;
@@ -498,8 +560,20 @@ export function generateChunkBuildings(
             doorGX: archGX + 1,
             doorGY: archGY + 2,
           });
-          colliders.push({ x: archGX * TILE_SIZE + 16, y: archGY * TILE_SIZE + 48, w: 24, h: 36, type: 'building' });
-          colliders.push({ x: archGX * TILE_SIZE + 88, y: archGY * TILE_SIZE + 48, w: 24, h: 36, type: 'building' });
+          colliders.push({
+            x: archGX * TILE_SIZE + 16,
+            y: archGY * TILE_SIZE + 48,
+            w: 24,
+            h: 36,
+            type: 'building',
+          });
+          colliders.push({
+            x: archGX * TILE_SIZE + 88,
+            y: archGY * TILE_SIZE + 48,
+            w: 24,
+            h: 36,
+            type: 'building',
+          });
 
           const pil1GX = shrineGX - 3;
           const pil1GY = shrineGY + 3;
@@ -516,7 +590,13 @@ export function generateChunkBuildings(
             doorGX: pil1GX,
             doorGY: pil1GY,
           });
-          colliders.push({ x: pil1GX * TILE_SIZE + 4, y: pil1GY * TILE_SIZE + 96, w: 24, h: 24, type: 'building' });
+          colliders.push({
+            x: pil1GX * TILE_SIZE + 4,
+            y: pil1GY * TILE_SIZE + 96,
+            w: 24,
+            h: 24,
+            type: 'building',
+          });
 
           const pil2GX = shrineGX + 6;
           const pil2GY = shrineGY + 4;
@@ -533,7 +613,13 @@ export function generateChunkBuildings(
             doorGX: pil2GX,
             doorGY: pil2GY,
           });
-          colliders.push({ x: pil2GX * TILE_SIZE + 4, y: pil2GY * TILE_SIZE + 68, w: 24, h: 20, type: 'building' });
+          colliders.push({
+            x: pil2GX * TILE_SIZE + 4,
+            y: pil2GY * TILE_SIZE + 68,
+            w: 24,
+            h: 20,
+            type: 'building',
+          });
 
           const wallGX = shrineGX - 3;
           const wallGY = shrineGY + 8;
@@ -550,7 +636,13 @@ export function generateChunkBuildings(
             doorGX: wallGX,
             doorGY: wallGY,
           });
-          colliders.push({ x: wallGX * TILE_SIZE + 8, y: wallGY * TILE_SIZE + 92, w: 80, h: 28, type: 'building' });
+          colliders.push({
+            x: wallGX * TILE_SIZE + 8,
+            y: wallGY * TILE_SIZE + 92,
+            w: 80,
+            h: 28,
+            type: 'building',
+          });
         }
       }
     }
@@ -617,6 +709,7 @@ export function generateChunkFoliage(
           // STRICT: Cannot spawn on tall grass encounter tiles
           if (
             tileIdGrid[ly]?.[lx] === TILE_IDS.tall_grass ||
+            tileIdGrid[ly]?.[lx] === TILE_IDS.tall_grass_dark ||
             tallGrass.some((tg) => tg.gx === gx && tg.gy === gy)
           ) {
             continue;
@@ -676,7 +769,11 @@ export function generateChunkFoliage(
             // STRICT: Must only spawn on the flat interior plateau, NEVER on the cliff edge/rim/wall!
             // Wildflowers only spawn on non-desert grassy cliff plateaus
             const isDesertHill = Boolean(field.isDesert && field.isDesert(gx, gy));
-            if (isDesertHill || field.isNearCliffEdge(gx, gy) || tileIdGrid[ly]?.[lx] !== TILE_IDS.cliff_pure) {
+            if (
+              isDesertHill ||
+              field.isNearCliffEdge(gx, gy) ||
+              tileIdGrid[ly]?.[lx] !== TILE_IDS.cliff_pure
+            ) {
               continue;
             }
 
@@ -738,10 +835,12 @@ export function generateChunkFoliage(
           tileIdGrid[ly]?.[lx] === TILE_IDS.dark_cliff_pure);
       const isDesert =
         terrainGrid[ly]?.[lx] === TERRAIN.DESERT ||
-        (terrainGrid[ly]?.[lx] === TERRAIN.HILL && Boolean(field.isDesert && field.isDesert(gx, gy)));
+        (terrainGrid[ly]?.[lx] === TERRAIN.HILL &&
+          Boolean(field.isDesert && field.isDesert(gx, gy)));
       const isDark =
         terrainGrid[ly]?.[lx] === TERRAIN.DARK_LAND ||
-        (terrainGrid[ly]?.[lx] === TERRAIN.HILL && Boolean(field.isDarkLand && field.isDarkLand(gx, gy)));
+        (terrainGrid[ly]?.[lx] === TERRAIN.HILL &&
+          Boolean(field.isDarkLand && field.isDarkLand(gx, gy)));
 
       if (isGrass || isHillFlat || isDesert || isDark) {
         if (
@@ -1051,7 +1150,6 @@ export function generateChunkTallGrass(
   colliders: Collider[]
 ): TallGrassEntity[] {
   const field = toField(seedOrField);
-  const seed = field.seed;
   const startGX = cx * CHUNK_SIZE;
   const startGY = cy * CHUNK_SIZE;
   const tallGrass: TallGrassEntity[] = [];
@@ -1066,13 +1164,25 @@ export function generateChunkTallGrass(
 
     if (tallGrass.some((tg) => tg.gx === gx && tg.gy === gy)) return false;
 
+    const isDark = Boolean(field.isDarkLand && field.isDarkLand(gx, gy));
+
     if (isCliff) {
-      if (terrainGrid[ly]?.[lx] !== TERRAIN.HILL || tileIdGrid[ly]?.[lx] !== TILE_IDS.cliff_pure) {
-        return false;
+      if (isDark) {
+        if (terrainGrid[ly]?.[lx] !== TERRAIN.HILL || tileIdGrid[ly]?.[lx] !== TILE_IDS.dark_cliff_pure) {
+          return false;
+        }
+      } else {
+        if (terrainGrid[ly]?.[lx] !== TERRAIN.HILL || tileIdGrid[ly]?.[lx] !== TILE_IDS.cliff_pure) {
+          return false;
+        }
       }
       if (field.isNearCliffEdge(gx, gy)) return false;
     } else {
-      if (terrainGrid[ly]?.[lx] !== TERRAIN.GRASS) return false;
+      if (isDark) {
+        if (terrainGrid[ly]?.[lx] !== TERRAIN.DARK_LAND) return false;
+      } else {
+        if (terrainGrid[ly]?.[lx] !== TERRAIN.GRASS) return false;
+      }
       if (
         field.isNearCliffEdge(gx, gy) ||
         field.isNearWater(gx, gy, 1) ||
@@ -1097,10 +1207,11 @@ export function generateChunkTallGrass(
       y: py,
       phase: seededHash(gx, gy, 777) * Math.PI * 2,
       heightScale: 0.98 + seededHash(gx, gy, 778) * 0.22,
+      isDark,
     });
 
     if (!isCliff) {
-      tileIdGrid[ly][lx] = TILE_IDS.tall_grass;
+      tileIdGrid[ly][lx] = isDark ? TILE_IDS.tall_grass_dark : TILE_IDS.tall_grass;
     }
     return true;
   };
@@ -1118,52 +1229,14 @@ export function generateChunkTallGrass(
     }
   }
 
-  // 2. Cliff & Mountain Plateau Tall Grass Patches (Alpine wild grass on flat cliff plateau)
-  const hasHills = terrainGrid.some((row) => row.includes(TERRAIN.HILL));
-  if (hasHills) {
-    const cliffGrassRoll = seededHash(cx, cy, seed + 1414);
-    if (cliffGrassRoll < 0.75) {
-      const plateauCandidates: Array<{ lx: number; ly: number; gx: number; gy: number }> = [];
-      for (let ly = 0; ly < CHUNK_SIZE; ly++) {
-        for (let lx = 0; lx < CHUNK_SIZE; lx++) {
-          if (
-            terrainGrid[ly]?.[lx] === TERRAIN.HILL &&
-            tileIdGrid[ly]?.[lx] === TILE_IDS.cliff_pure
-          ) {
-            const gx = startGX + lx;
-            const gy = startGY + ly;
-            if (!field.isNearCliffEdge(gx, gy)) {
-              plateauCandidates.push({ lx, ly, gx, gy });
-            }
-          }
-        }
-      }
-
-      if (plateauCandidates.length >= 4) {
-        const numAlpinePatches = cliffGrassRoll < 0.35 ? 2 : 1;
-        for (let ap = 0; ap < numAlpinePatches; ap++) {
-          const cIdx = Math.floor(
-            seededHash(cx * 9 + ap, cy * 9 + ap, seed + 1515 + ap * 43) * plateauCandidates.length
-          );
-          const center = plateauCandidates[cIdx];
-          const rx = 1.5 + seededHash(cx * 3 + ap, cy * 3 + ap, seed + 1616) * 1.5;
-          const ry = 1.2 + seededHash(cx * 5 + ap, cy * 5 + ap, seed + 1717) * 1.5;
-
-          const minLY = Math.max(0, center.ly - Math.ceil(ry));
-          const maxLY = Math.min(CHUNK_SIZE - 1, center.ly + Math.ceil(ry));
-          const minLX = Math.max(0, center.lx - Math.ceil(rx));
-          const maxLX = Math.min(CHUNK_SIZE - 1, center.lx + Math.ceil(rx));
-
-          for (let ly = minLY; ly <= maxLY; ly++) {
-            for (let lx = minLX; lx <= maxLX; lx++) {
-              const d = Math.pow((lx - center.lx) / rx, 2) + Math.pow((ly - center.ly) / ry, 2);
-              const noise = (seededHash(startGX + lx, startGY + ly, seed + 1818) - 0.5) * 0.5;
-              if (d <= 1.0 + noise) {
-                tryAddGrassTile(lx, ly, true);
-              }
-            }
-          }
-        }
+  // 2. Highland Plateau Tall Grass: evaluate the same global patch field in
+  // every chunk, so a patch continues naturally across chunk boundaries.
+  for (let ly = 0; ly < CHUNK_SIZE; ly++) {
+    for (let lx = 0; lx < CHUNK_SIZE; lx++) {
+      const gx = startGX + lx;
+      const gy = startGY + ly;
+      if (isHighlandTallGrassTile(gx, gy, field)) {
+        tryAddGrassTile(lx, ly, true);
       }
     }
   }
@@ -1261,7 +1334,9 @@ export function generateChunkBerryBushes(
         // STRICT: Berry bush cannot overlap tall grass (neither base nor canopy tile)
         if (
           tileIdGrid[bLY]?.[bLX] === TILE_IDS.tall_grass ||
+          tileIdGrid[bLY]?.[bLX] === TILE_IDS.tall_grass_dark ||
           tileIdGrid[bLY - 1]?.[bLX] === TILE_IDS.tall_grass ||
+          tileIdGrid[bLY - 1]?.[bLX] === TILE_IDS.tall_grass_dark ||
           tallGrass.some((tg) => tg.gx === bgx && (tg.gy === bgy || tg.gy === bgy - 1))
         ) {
           continue;

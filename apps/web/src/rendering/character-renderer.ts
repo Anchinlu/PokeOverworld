@@ -22,7 +22,7 @@ export class CharacterRenderer {
         draw: (ctx) => {
           const fJumpH = Math.max(0, -(follower.jumpY || 0));
           const fShadowScale = Math.max(0.55, 1 - fJumpH / 32);
-          const fAlpha = (0.30 * Math.max(0.45, 1 - fJumpH / 36)).toFixed(2);
+          const fAlpha = (0.3 * Math.max(0.45, 1 - fJumpH / 36)).toFixed(2);
           ctx.fillStyle = `rgba(0, 0, 0, ${fAlpha})`;
           ctx.beginPath();
           ctx.ellipse(
@@ -205,7 +205,9 @@ export class CharacterRenderer {
             this.loader.getImage(`wild_${wp.speciesKey}`);
 
           if (img && img.complete) {
-            const drawY = wp.y + (wp.bobY || 0);
+            const drawY = wp.y + (wp.jumpY ?? wp.bobY ?? 0);
+            const jumpHeight = Math.max(0, -(wp.jumpY ?? 0));
+            const shadowScale = Math.max(0.55, 1 - jumpHeight / 44);
 
             // Shadow (+ Shiny Golden Glow Aura)
             list.push({
@@ -213,7 +215,15 @@ export class CharacterRenderer {
               draw: (ctx) => {
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.30)';
                 ctx.beginPath();
-                ctx.ellipse(wp.x + 32, wp.y + 58, 10, 5, 0, 0, Math.PI * 2);
+                ctx.ellipse(
+                  wp.x + 32,
+                  wp.y + 58,
+                  10 * shadowScale,
+                  5 * shadowScale,
+                  0,
+                  0,
+                  Math.PI * 2
+                );
                 ctx.fill();
 
                 if (wp.isShiny) {

@@ -22,6 +22,9 @@
         "resizable": true,
         "fullscreen": false,
         "decorations": true,
+        "devtools": false,
+        "browserExtensionsEnabled": false,
+        "zoomHotkeysEnabled": false,
         "visible": true,
         "center": true,
         "focus": true

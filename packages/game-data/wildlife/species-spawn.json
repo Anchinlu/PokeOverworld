@@ -770,6 +770,11 @@
         "biome": "dark_land",
         "context": "walkable_ground",
         "affinity": 0.7
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
+        "affinity": 0.7
       }
     ],
     "activeTime": [
@@ -792,6 +797,11 @@
       {
         "biome": "dark_land",
         "context": "walkable_ground",
+        "affinity": 0.5
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
         "affinity": 0.5
       }
     ],
@@ -1216,6 +1226,11 @@
         "biome": "dark_land",
         "context": "walkable_ground",
         "affinity": 0.85
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
+        "affinity": 0.85
       }
     ],
     "activeTime": [
@@ -1238,6 +1253,11 @@
       {
         "biome": "dark_land",
         "context": "walkable_ground",
+        "affinity": 0.6
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
         "affinity": 0.6
       }
     ],
@@ -1799,6 +1819,11 @@
         "biome": "dark_land",
         "context": "walkable_ground",
         "affinity": 0.95
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
+        "affinity": 0.95
       }
     ],
     "activeTime": [
@@ -1821,6 +1846,11 @@
       {
         "biome": "dark_land",
         "context": "walkable_ground",
+        "affinity": 0.75
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
         "affinity": 0.75
       }
     ],
@@ -1882,6 +1912,11 @@
         "biome": "dark_land",
         "context": "walkable_ground",
         "affinity": 0.9
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
+        "affinity": 0.9
       }
     ],
     "activeTime": [
@@ -1903,6 +1938,11 @@
       {
         "biome": "dark_land",
         "context": "walkable_ground",
+        "affinity": 0.7
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
         "affinity": 0.7
       }
     ],
@@ -2040,6 +2080,11 @@
         "biome": "dark_land",
         "context": "walkable_ground",
         "affinity": 0.8
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
+        "affinity": 0.8
       }
     ],
     "activeTime": [
@@ -2062,6 +2107,11 @@
       {
         "biome": "dark_land",
         "context": "walkable_ground",
+        "affinity": 0.6
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
         "affinity": 0.6
       }
     ],
@@ -2387,6 +2437,11 @@
       {
         "biome": "dark_land",
         "context": "walkable_ground",
+        "affinity": 0.85
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
         "affinity": 0.85
       }
     ],

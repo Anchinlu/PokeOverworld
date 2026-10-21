@@ -10,10 +10,12 @@ const rootDir = path.resolve(__dirname, '../');
 const pokemonDbPath = path.join(rootDir, 'packages/game-data/pokemon-db.json');
 const speciesSpawnPath = path.join(rootDir, 'packages/game-data/wildlife/species-spawn.json');
 const spawnConfigPath = path.join(rootDir, 'packages/game-data/wildlife/spawn-config.json');
+const speciesBehaviorPath = path.join(rootDir, 'packages/game-data/wildlife/species-behavior.json');
 
 const pokemonDb = JSON.parse(fs.readFileSync(pokemonDbPath, 'utf8'));
 const speciesSpawn = JSON.parse(fs.readFileSync(speciesSpawnPath, 'utf8'));
 const spawnConfig = JSON.parse(fs.readFileSync(spawnConfigPath, 'utf8'));
+const speciesBehavior = JSON.parse(fs.readFileSync(speciesBehaviorPath, 'utf8'));
 
 const errors = [];
 
@@ -24,8 +26,25 @@ if (Math.abs(sumProb - 1.0) > 0.0001) {
 }
 
 // 2. Validate valid biomes and contexts
-const VALID_BIOMES = new Set(['dense_forest', 'light_forest', 'meadow', 'dryland', 'wetland', 'coast', 'hill_edge', 'dark_land']);
-const VALID_CONTEXTS = new Set(['tall_grass', 'forest_floor', 'water_surface', 'shore', 'rock', 'sand', 'walkable_ground']);
+const VALID_BIOMES = new Set([
+  'dense_forest',
+  'light_forest',
+  'meadow',
+  'dryland',
+  'wetland',
+  'coast',
+  'hill_edge',
+  'dark_land',
+]);
+const VALID_CONTEXTS = new Set([
+  'tall_grass',
+  'forest_floor',
+  'water_surface',
+  'shore',
+  'rock',
+  'sand',
+  'walkable_ground',
+]);
 const VALID_FLAGS = new Set(['legendary', 'mythical', 'starter', 'fossil', 'static', 'no_wild']);
 
 // 3. Check every Gen 1 species exists
@@ -94,6 +113,31 @@ for (const biome of VALID_BIOMES) {
   }
 }
 
+// 5. Every database species must have exactly one behavior group.
+const behaviorOwners = new Map();
+for (const group of speciesBehavior.groups ?? []) {
+  if (!group.id || !group.profile || !Array.isArray(group.species)) {
+    errors.push('species-behavior.json contains an incomplete behavior group');
+    continue;
+  }
+  for (const speciesKey of group.species) {
+    if (behaviorOwners.has(speciesKey)) {
+      errors.push(`Species ${speciesKey} appears in multiple behavior groups`);
+    }
+    behaviorOwners.set(speciesKey, group.id);
+  }
+}
+for (const speciesKey of allSpeciesKeys) {
+  if (!behaviorOwners.has(speciesKey)) {
+    errors.push(`Species ${speciesKey} missing from species-behavior.json`);
+  }
+}
+for (const speciesKey of behaviorOwners.keys()) {
+  if (!allSpeciesKeys.has(speciesKey)) {
+    errors.push(`species-behavior.json references unknown species ${speciesKey}`);
+  }
+}
+
 if (errors.length > 0) {
   console.error(`❌ Wildlife validation failed with ${errors.length} errors:`);
   for (const err of errors) {
@@ -101,5 +145,7 @@ if (errors.length > 0) {
   }
   process.exit(1);
 } else {
-  console.log(`✅ Wildlife data validation passed cleanly! 151 Gen 1 species verified against ecology rules.`);
+  console.log(
+    `✅ Wildlife data validation passed cleanly! 151 Gen 1 species verified against ecology rules.`
+  );
 }

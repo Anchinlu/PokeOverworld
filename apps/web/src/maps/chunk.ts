@@ -17,7 +17,7 @@ import {
 import { populateChunkWildlife } from '../wildlife/spawn';
 import type { WildPokemonEntity } from '../wildlife/model';
 import { createWorldQueryAdapter } from '../wildlife/ports/world-query-adapter';
-import type { TimeBand } from '../wildlife/ports/world-query';
+import type { TimeBand, WeatherType } from '../wildlife/ports/world-query';
 
 import { createTerrainField, type TerrainField } from './terrain-field';
 
@@ -41,6 +41,7 @@ export class WorldChunk implements MapChunk {
   public readonly seed: number;
   public readonly field: TerrainField;
   private readonly getTimeBand: () => TimeBand;
+  private readonly getWeather: () => WeatherType;
 
   public terrainGrid: TerrainId[][] = [];
   public tileIdGrid: number[][] = [];
@@ -69,7 +70,8 @@ export class WorldChunk implements MapChunk {
     hasTrees = true,
     hasWater = true,
     playerMaxOwnedLevel = 5,
-    getTimeBand: () => TimeBand = () => 'day'
+    getTimeBand: () => TimeBand = () => 'day',
+    getWeather: () => WeatherType = () => 'clear'
   ) {
     this.cx = cx;
     this.cy = cy;
@@ -82,6 +84,7 @@ export class WorldChunk implements MapChunk {
     }
     this.version = this.field.version;
     this.getTimeBand = getTimeBand;
+    this.getWeather = getWeather;
 
     // 1. Generate Terrain
     const { terrainGrid, tileIdGrid } = generateChunkTerrain(
@@ -150,7 +153,8 @@ export class WorldChunk implements MapChunk {
       this.field,
       this.colliders,
       this.tallGrass,
-      this.getTimeBand
+      this.getTimeBand,
+      this.getWeather
     );
     this.wildPokemon = populateChunkWildlife(cx, cy, worldQuery, {
       seed: this.field.seed,
@@ -203,16 +207,28 @@ export class WorldChunk implements MapChunk {
   }
 
   /** Rebuilds only transient wildlife while preserving terrain and objects. */
-  public refreshWildlife(playerMaxOwnedLevel = 5): void {
+  public refreshWildlife(
+    playerMaxOwnedLevel = 5,
+    excludedWildlifeIds: ReadonlySet<string> = new Set()
+  ): void {
     const worldQuery = createWorldQueryAdapter(
       this.field,
       this.colliders,
       this.tallGrass,
-      this.getTimeBand
+      this.getTimeBand,
+      this.getWeather
     );
     this.wildPokemon = populateChunkWildlife(this.cx, this.cy, worldQuery, {
       seed: this.field.seed,
       playerMaxOwnedLevel,
-    });
+    }).filter((entity) => !excludedWildlifeIds.has(entity.id ?? ''));
+  }
+
+  /** Removes wildlife resolved by the player before a chunk is reused. */
+  public removeWildlifeByIds(excludedWildlifeIds: ReadonlySet<string>): void {
+    if (excludedWildlifeIds.size === 0) return;
+    this.wildPokemon = this.wildPokemon.filter(
+      (entity) => !excludedWildlifeIds.has(entity.id ?? '')
+    );
   }
 }

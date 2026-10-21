@@ -9,7 +9,7 @@ import { defaultRng } from '../core/rng';
 import type { ChunkManager, BerryBushEntity } from '../maps';
 import type { GameRenderer } from '../rendering';
 import { TERRAIN } from '@pokemon/game-data';
-import { sampleEcology, getEcologyZone } from '../maps/ecology';
+import { sampleEcology, resolveWorldBiome } from '../maps/ecology';
 import { BERRY_STAGES } from '../maps/berry-data';
 import { AnimationGallery } from '../battle/animation';
 
@@ -32,6 +32,7 @@ export class DebugOverlayController {
   private lblPlayerPos: HTMLElement | null = null;
   private lblChunkPos: HTMLElement | null = null;
   private lblActiveChunks: HTMLElement | null = null;
+  private lblWildlifeStats: HTMLElement | null = null;
   private insCoords: HTMLElement | null = null;
   private insTerrain: HTMLElement | null = null;
   private insTileId: HTMLElement | null = null;
@@ -41,6 +42,8 @@ export class DebugOverlayController {
   private rowBerryInfo: HTMLElement | null = null;
   private insBerryVal: HTMLElement | null = null;
   private lblFps: HTMLElement | null = null;
+  private lblRenderStats: HTMLElement | null = null;
+  private lblTerrainCache: HTMLElement | null = null;
   private lblPartyCount: HTMLElement | null = null;
   private lblWorldTimeBadge: HTMLElement | null = null;
   private sliderWorldTime: HTMLInputElement | null = null;
@@ -75,6 +78,7 @@ export class DebugOverlayController {
     this.lblPlayerPos = this.overlayEl.querySelector('#lblPlayerPos');
     this.lblChunkPos = this.overlayEl.querySelector('#lblChunkPos');
     this.lblActiveChunks = this.overlayEl.querySelector('#lblActiveChunks');
+    this.lblWildlifeStats = this.overlayEl.querySelector('#lblWildlifeStats');
     this.insCoords = this.overlayEl.querySelector('#insCoords');
     this.insTerrain = this.overlayEl.querySelector('#insTerrain');
     this.insTileId = this.overlayEl.querySelector('#insTileId');
@@ -84,6 +88,8 @@ export class DebugOverlayController {
     this.rowBerryInfo = this.overlayEl.querySelector('#rowBerryInfo');
     this.insBerryVal = this.overlayEl.querySelector('#insBerryVal');
     this.lblFps = this.overlayEl.querySelector('#lblFps');
+    this.lblRenderStats = this.overlayEl.querySelector('#lblRenderStats');
+    this.lblTerrainCache = this.overlayEl.querySelector('#lblTerrainCache');
     this.lblPartyCount = this.overlayEl.querySelector('#lblPartyCount');
     this.lblWorldTimeBadge = this.overlayEl.querySelector('#lblWorldTimeBadge');
     this.sliderWorldTime = this.overlayEl.querySelector('#sliderWorldTime');
@@ -574,6 +580,22 @@ export class DebugOverlayController {
     if (this.lblFps) {
       this.lblFps.innerText = `${info.fps} FPS`;
     }
+    if (info.performance) {
+      const perf = info.performance;
+      this.lblRenderStats?.replaceChildren(
+        document.createTextNode(
+          `${perf.renderMs.toFixed(1)}ms · ${perf.renderItems} items · ${perf.visibleChunks} chunks`
+        )
+      );
+      this.lblTerrainCache?.replaceChildren(
+        document.createTextNode(`${perf.groundCacheSize}/${perf.groundCacheLimit}`)
+      );
+    }
+    if (this.lblWildlifeStats && info.wildlifeStats) {
+      const stats = info.wildlifeStats;
+      this.lblWildlifeStats.innerText = `${stats.total} tổng · ${stats.active} A · ${stats.sparse} S · ${stats.frozen} F · ${stats.moving} đi`;
+      this.lblWildlifeStats.title = `Trùng ô: ${stats.overlappingTiles}`;
+    }
     if (info.worldTimeStr) {
       this.refreshWorldTimeDisplay();
     }
@@ -694,7 +716,7 @@ export class DebugOverlayController {
     if (this.insTileId) this.insTileId.innerText = `#${tile.tileId}`;
 
     const sample = sampleEcology(gx, gy, chunkManager.currentSeed);
-    const zone = getEcologyZone(sample);
+    const zone = resolveWorldBiome(chunkManager.field, gx, gy);
     if (this.insEcologyZone) this.insEcologyZone.innerText = zone;
     if (this.insEcologyMFD) {
       this.insEcologyMFD.innerText = `M: ${sample.moisture.toFixed(2)} | F: ${sample.fertility.toFixed(2)} | D: ${sample.density.toFixed(2)}`;

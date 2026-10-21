@@ -9,6 +9,17 @@ export interface WildEmote {
   maxTime: number;
 }
 
+/**
+ * Logical footprint used by overworld collision and local avoidance.
+ * Values are expressed in tile units around the entity's tile centre.
+ */
+export interface WildHitbox {
+  radiusX: number;
+  radiusY: number;
+  offsetX?: number;
+  offsetY?: number;
+}
+
 export type WildState =
   | 'idle'
   | 'wander'
@@ -54,6 +65,8 @@ export interface WildEntity {
   targetY: number;
   stepProgress: number;
   moveSpeed: number;
+  /** Unmodified speed used when weather applies a temporary multiplier. */
+  baseMoveSpeed?: number;
   stepsRemaining: number;
   currentDir: number;
   lastMoveTime: number;
@@ -61,6 +74,11 @@ export interface WildEntity {
   isPecking?: boolean;
   peckStartTime?: number;
   bobY?: number;
+  /** Whether this species can traverse a flat-to-hill elevation step. */
+  canJumpHills?: boolean;
+  isJumping?: boolean;
+  jumpType?: 'jump_up' | 'drop_down' | null;
+  jumpY?: number;
   frame: number;
   idleAnimTimer?: number;
   emote?: WildEmote | null;
@@ -78,6 +96,8 @@ export interface WildEntity {
   gender?: 'M' | 'F' | 'genderless';
   isSwimming?: boolean;
   isWaterDweller?: boolean;
+  /** Optional species-specific footprint; runtime falls back to a safe default. */
+  hitbox?: WildHitbox;
 }
 
 /** Legacy alias for backwards compatibility across older modules */

@@ -17,12 +17,9 @@ export function createDebugOverlayHtml(): string {
       <div class="control-row">
         <input type="number" id="inputSeed" value="101" title="Seed bản đồ">
         <button class="btn-icon" id="btnRandomSeed" title="Đổi seed ngẫu nhiên">🎲 Đổi</button>
-        <select id="selectBiome" title="Hệ sinh thái">
-          <option value="mixed" selected>🌟 Hỗn hợp</option>
-          <option value="route">🌲 Nội địa</option>
-          <option value="coastal">🏖️ Bờ biển</option>
-          <option value="autumn">🍂 Lá thu</option>
-        </select>
+        <span class="biome-auto-label" title="Biome được xác định tự động từ địa hình, độ ẩm và mật độ thực vật">
+          🌍 Biome tự động theo địa hình
+        </span>
       </div>
 
       <!-- Testing Layer Checkboxes -->
@@ -174,6 +171,18 @@ export function createDebugOverlayHtml(): string {
         <div class="info-line">
           <span>Tốc độ:</span>
           <span id="lblFps">60 FPS</span>
+        </div>
+        <div class="info-line">
+          <span>Render:</span>
+          <span id="lblRenderStats">--</span>
+        </div>
+        <div class="info-line">
+          <span>Terrain cache:</span>
+          <span id="lblTerrainCache">--</span>
+        </div>
+        <div class="info-line">
+          <span>Wildlife AI:</span>
+          <span id="lblWildlifeStats">--</span>
         </div>
       </div>
 

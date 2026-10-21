@@ -3,13 +3,15 @@ import {
   calculateHerdCohesion,
   handleHerdPostBattle,
 } from '../../src/wildlife/behavior/social/herd-controller';
-import {
-  AlarmNetwork,
-  calculateAlarmLatency,
-} from '../../src/wildlife/behavior/social/alarm';
+import { AlarmNetwork, calculateAlarmLatency } from '../../src/wildlife/behavior/social/alarm';
 import type { WildEntity } from '../../src/wildlife/model';
 
-function createHerdMember(id: string, gx: number, gy: number, role: 'member' | 'leader' | 'apex'): WildEntity {
+function createHerdMember(
+  id: string,
+  gx: number,
+  gy: number,
+  role: 'member' | 'leader' | 'apex'
+): WildEntity {
   return {
     id,
     gx,
@@ -63,11 +65,14 @@ describe('Wildlife Herd & Alarm Social Network (Section 6.4 & 11.6)', () => {
 
     it('pushes member away if overlapping with leader (< 1 tile)', () => {
       const leader = createHerdMember('lead', 10, 10, 'leader');
-      // Member is on tile (10, 10.5) - too close
+      // Member overlaps the leader and should be pushed onto a deterministic
+      // neighboring tile.
       const crowdedMember = createHerdMember('m1', 10, 10, 'member');
 
       const cohesion = calculateHerdCohesion(crowdedMember, leader);
       expect(cohesion.shouldPull).toBe(false);
+      expect(cohesion.shouldPush).toBe(true);
+      expect(Math.abs(cohesion.targetGX - 10) + Math.abs(cohesion.targetGY - 10)).toBe(1);
     });
 
     it('remains comfortable when within 1 to R_COHESION tiles', () => {
@@ -92,7 +97,7 @@ describe('Wildlife Herd & Alarm Social Network (Section 6.4 & 11.6)', () => {
       const sender = { gx: 10, gy: 10 };
       const members = [
         { id: 'near_friend', gx: 11, gy: 10 }, // 1 tile -> delay 3 ticks
-        { id: 'far_friend', gx: 14, gy: 10 },  // 4 tiles -> delay 6 ticks
+        { id: 'far_friend', gx: 14, gy: 10 }, // 4 tiles -> delay 6 ticks
       ];
 
       network.broadcastAlarm('sender_id', sender, members);

@@ -1499,11 +1499,13 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
       const slotNum = save.slotId.replace('slot_', '');
       const seed = save.worldSeed ?? 101;
       const versionBadge =
-        save.worldGenVersion === 3
-          ? '<span class="world-tag v3">🌲 V3 Thung Lũng</span>'
-          : save.worldGenVersion === 2
-            ? '<span class="world-tag v2">🏝️ V2 Đảo Làng</span>'
-            : '<span class="world-tag v1">📜 V1 Cổ Điển</span>';
+        save.worldGenVersion === 4
+          ? '<span class="world-tag v4">🌍 V4 Lục Địa &amp; Quần Đảo</span>'
+          : save.worldGenVersion === 3
+            ? '<span class="world-tag v3">🌲 V3 Thung Lũng</span>'
+            : save.worldGenVersion === 2
+              ? '<span class="world-tag v2">🏝️ V2 Đảo Làng</span>'
+              : '<span class="world-tag v1">📜 V1 Cổ Điển</span>';
 
       card.innerHTML = `
         <div class="save-card-header">
@@ -1548,7 +1550,9 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
         const slot = (btn as HTMLElement).dataset.slot || 'slot_1';
         const slotNum = slot.replace('slot_', '');
         if (typeof window !== 'undefined' && window.confirm) {
-          const ok = window.confirm(`Bạn có chắc chắn muốn xóa vĩnh viễn bản lưu Thế Giới Slot ${slotNum}?`);
+          const ok = window.confirm(
+            `Bạn có chắc chắn muốn xóa vĩnh viễn bản lưu Thế Giới Slot ${slotNum}?`
+          );
           if (!ok) return;
         }
         saveRepo.deleteSave(slot);

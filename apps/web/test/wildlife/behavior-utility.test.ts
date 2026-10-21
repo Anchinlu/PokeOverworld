@@ -90,7 +90,11 @@ describe('Wildlife AI Behavior & Utility Brain (Section 6.2, 6.5 & 11.5)', () =>
     const bruteProfile = getBehaviorProfile('territorial_brute');
 
     // Weak level 3 Pidgey vs level 15 player
-    const weakBird = createMockCreature({ speciesKey: 'PIDGEY', level: 3, behavior: 'skittish_bird' });
+    const weakBird = createMockCreature({
+      speciesKey: 'PIDGEY',
+      level: 3,
+      behavior: 'skittish_bird',
+    });
     const strongPlayer: PlayerQuery = {
       position: () => ({ gx: 12, gy: 10 }), // 2 tiles away
       isRunning: () => false,
@@ -103,8 +107,18 @@ describe('Wildlife AI Behavior & Utility Brain (Section 6.2, 6.5 & 11.5)', () =>
     expect(weakDecision.triggerEmote).toBe('sweat');
 
     // Strong level 25 territorial brute vs level 15 player
-    const strongBrute = createMockCreature({ speciesKey: 'PIDGEOT', level: 25, behavior: 'territorial_brute' });
-    const strongDecision = decideNextAction(strongBrute, bruteProfile, mockWorld, strongPlayer, 1000);
+    const strongBrute = createMockCreature({
+      speciesKey: 'PIDGEOT',
+      level: 25,
+      behavior: 'territorial_brute',
+    });
+    const strongDecision = decideNextAction(
+      strongBrute,
+      bruteProfile,
+      mockWorld,
+      strongPlayer,
+      1000
+    );
     expect(['alert', 'territorial', 'chase']).toContain(strongDecision.nextState);
     expect(strongDecision.triggerEmote).toBe('!');
   });
@@ -128,6 +142,57 @@ describe('Wildlife AI Behavior & Utility Brain (Section 6.2, 6.5 & 11.5)', () =>
       expect(creature.gx === 10 && creature.gy === 11).toBe(false);
       expect(creature.targetGX === 10 && creature.targetGY === 11).toBe(false);
     }
+  });
+
+  it('moves creatures when forage is the selected utility state', () => {
+    const sim = new WildlifeSimulator();
+    const creature = createMockCreature({
+      state: 'idle',
+      idleTimer: 0,
+      behavior: 'herd_grazer',
+      speciesKey: 'BULBASAUR',
+    });
+    sim.setEntities([creature]);
+
+    const player: PlayerQuery = {
+      position: () => ({ gx: 20, gy: 20 }),
+      isRunning: () => false,
+      inTallGrass: () => false,
+      referenceLevel: () => 10,
+    };
+
+    for (let tick = 0; tick < 45; tick++) {
+      sim.update(16.6, mockWorld, player);
+      if (creature.isMoving) break;
+    }
+    expect(['forage', 'wander', 'groom_play', 'curious']).toContain(creature.state);
+    expect(creature.isMoving).toBe(true);
+  });
+
+  it('lets territorial species patrol when no player threat is perceived', () => {
+    const sim = new WildlifeSimulator();
+    const creature = createMockCreature({
+      state: 'idle',
+      idleTimer: 0,
+      behavior: 'territorial_brute',
+      speciesKey: 'CHARMANDER',
+    });
+    sim.setEntities([creature]);
+
+    const distantPlayer: PlayerQuery = {
+      position: () => ({ gx: 20, gy: 20 }),
+      isRunning: () => false,
+      inTallGrass: () => false,
+      referenceLevel: () => 10,
+    };
+
+    for (let tick = 0; tick < 45; tick++) {
+      sim.update(16.6, mockWorld, distantPlayer);
+      if (creature.isMoving) break;
+    }
+
+    expect(['forage', 'wander', 'curious']).toContain(creature.state);
+    expect(creature.isMoving).toBe(true);
   });
 
   it('avoids rapid state oscillation through inertia and hysteresis margin', () => {

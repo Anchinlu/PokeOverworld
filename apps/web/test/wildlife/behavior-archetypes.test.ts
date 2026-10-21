@@ -101,16 +101,16 @@ describe('Wildlife Behavior Archetypes & Grid Movement (Section 6.1 & W5)', () =
       expect(entity.isMoving).toBe(true);
       expect(entity.targetGX).toBe(5);
       expect(entity.targetGY).toBe(6);
-      expect(entity.targetX).toBe(160);
-      expect(entity.targetY).toBe(192);
+      expect(entity.targetX).toBe(5 * 32 - 16);
+      expect(entity.targetY).toBe(6 * 32 - 32);
 
       // Simulate partial steps (dtScale = 16 => 16px of 32px progress, half way)
       entity.moveSpeed = 16.0;
       const resHalf = updateGridMovement(entity, 1.0);
       expect(resHalf.reachedTarget).toBe(false);
       expect(entity.isMoving).toBe(true);
-      expect(entity.x).toBe(160);
-      expect(entity.y).toBe(176); // Halfway between 160 and 192
+      expect(entity.x).toBe(5 * 32 - 16);
+      expect(entity.y).toBe(5 * 32 - 32 + 16); // Halfway between 128 and 160
       expect(entity.bobY).toBeLessThan(0); // Subtle step bounce
 
       // Advance second half (reaches 32px)
@@ -119,8 +119,8 @@ describe('Wildlife Behavior Archetypes & Grid Movement (Section 6.1 & W5)', () =
       expect(entity.isMoving).toBe(false);
       expect(entity.gx).toBe(5);
       expect(entity.gy).toBe(6);
-      expect(entity.x).toBe(160);
-      expect(entity.y).toBe(192);
+      expect(entity.x).toBe(5 * 32 - 16);
+      expect(entity.y).toBe(6 * 32 - 32);
       expect(entity.bobY).toBe(0);
       expect(entity.frame).toBe(0);
     });

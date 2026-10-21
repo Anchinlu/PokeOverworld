@@ -21,6 +21,21 @@ export interface DebugMonitorUpdate {
   dayPhase?: string;
   worldDay?: number;
   isTimePaused?: boolean;
+  performance?: {
+    renderMs: number;
+    renderItems: number;
+    visibleChunks: number;
+    groundCacheSize: number;
+    groundCacheLimit: number;
+  };
+  wildlifeStats?: {
+    total: number;
+    active: number;
+    sparse: number;
+    frozen: number;
+    moving: number;
+    overlappingTiles: number;
+  };
 }
 
 /**

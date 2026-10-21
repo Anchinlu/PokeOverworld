@@ -14,7 +14,12 @@ export const HYSTERESIS_MARGIN = 0.15;
 export const MIN_STATE_DURATION_MS = 600;
 
 // Direction helpers: 0: Down (y+1), 1: Left (x-1), 2: Right (x+1), 3: Up (y-1)
-export function getDirectionTowards(fromGX: number, fromGY: number, toGX: number, toGY: number): number {
+export function getDirectionTowards(
+  fromGX: number,
+  fromGY: number,
+  toGX: number,
+  toGY: number
+): number {
   const dx = toGX - fromGX;
   const dy = toGY - fromGY;
   if (Math.abs(dx) > Math.abs(dy)) {
@@ -23,7 +28,12 @@ export function getDirectionTowards(fromGX: number, fromGY: number, toGX: number
   return dy > 0 ? 0 : 3;
 }
 
-export function getDirectionAway(fromGX: number, fromGY: number, awayGX: number, awayGY: number): number {
+export function getDirectionAway(
+  fromGX: number,
+  fromGY: number,
+  awayGX: number,
+  awayGY: number
+): number {
   const dx = fromGX - awayGX;
   const dy = fromGY - awayGY;
   if (Math.abs(dx) > Math.abs(dy)) {
@@ -66,7 +76,7 @@ export function decideNextAction(
 
   if (!isUrgent && elapsedInCurrentStateMs < MIN_STATE_DURATION_MS) {
     bestState = currentState;
-  } else if (!isUrgent && bestScore < currentScore + HYSTERESIS_MARGIN) {
+  } else if (!isUrgent && currentState !== 'idle' && bestScore < currentScore + HYSTERESIS_MARGIN) {
     bestState = currentState;
   }
 
@@ -96,7 +106,12 @@ export function decideNextAction(
     case 'return_home':
       if (leader && entity.role === 'member') {
         const cohesion = calculateHerdCohesion(entity, leader);
-        suggestedDir = getDirectionTowards(entity.gx, entity.gy, cohesion.targetGX, cohesion.targetGY);
+        suggestedDir = getDirectionTowards(
+          entity.gx,
+          entity.gy,
+          cohesion.targetGX,
+          cohesion.targetGY
+        );
       } else {
         suggestedDir = getDirectionTowards(entity.gx, entity.gy, entity.homeGX, entity.homeGY);
       }

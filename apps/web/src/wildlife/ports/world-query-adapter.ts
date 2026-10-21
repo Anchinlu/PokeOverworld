@@ -2,7 +2,7 @@ import { TILE_IDS } from '@pokemon/game-data';
 import type { TerrainField } from '../../maps/terrain-field';
 import type { Collider } from '@pokemon/shared-types';
 import type { TallGrassEntity } from '../../maps/chunk-objects';
-import { sampleEcology, getEcologyZone } from '../../maps/ecology';
+import { sampleEcology, getEcologyZone, resolveWorldBiome } from '../../maps/ecology';
 import type { WorldQuery, TileContext, TimeBand } from './world-query';
 
 /**
@@ -12,7 +12,8 @@ export function createWorldQueryAdapter(
   field: TerrainField,
   colliders: Collider[] = [],
   tallGrass: TallGrassEntity[] = [],
-  getTimeBand: () => TimeBand = () => 'day'
+  getTimeBand: () => TimeBand = () => 'day',
+  getWeather: () => string = () => 'clear'
 ): WorldQuery {
   const tallGrassSet = new Set<string>();
   for (const tg of tallGrass) {
@@ -27,13 +28,36 @@ export function createWorldQueryAdapter(
   }
 
   return {
-    isWalkable(gx: number, gy: number): boolean {
+    isWalkable(
+      gx: number,
+      gy: number,
+      fromGX?: number,
+      fromGY?: number,
+      canJumpHills = false
+    ): boolean {
       if (colliderSet.has(`${gx},${gy}`)) return false;
-      // Impassable terrain: ocean, deep water lakes, and hills
-      if (field.isOcean(gx, gy) || field.isWater(gx, gy) || field.isHill(gx, gy)) {
+      // Impassable terrain: ocean and deep water lakes. Elevated plateaus
+      // are valid wildlife habitat; elevation must not be confused with a
+      // rocky ecology zone.
+      if (field.isOcean(gx, gy) || field.isWater(gx, gy) || field.isLake?.(gx, gy)) {
+        return false;
+      }
+      if (
+        fromGX !== undefined &&
+        fromGY !== undefined &&
+        !field.isHill(fromGX, fromGY) &&
+        field.isHill(gx, gy) &&
+        !canJumpHills
+      ) {
+        // Wildlife has no jump animation yet. It may descend from a plateau,
+        // but cannot climb from flat ground onto an elevated tile.
         return false;
       }
       return true;
+    },
+
+    isElevated(gx: number, gy: number): boolean {
+      return field.isHill(gx, gy);
     },
 
     contextAt(gx: number, gy: number): TileContext {
@@ -47,16 +71,12 @@ export function createWorldQueryAdapter(
         }
         return 'water_surface';
       }
-      if (field.isWater(gx, gy)) {
+      if (field.isWater(gx, gy) || field.isLake?.(gx, gy)) {
         return 'water_surface';
       }
       if (field.isSand(gx, gy) || (field.isDesert && field.isDesert(gx, gy))) {
         return 'sand';
       }
-      if (field.isHill(gx, gy)) {
-        return 'rock';
-      }
-
       // Dark Land has its own biome pool. Keep walkable dark ground distinct
       // from the regular ecology sample so dark-land species can resolve the
       // `dark_land + walkable_ground` habitat pair deterministically.
@@ -74,14 +94,7 @@ export function createWorldQueryAdapter(
     },
 
     biomeAt(gx: number, gy: number): string {
-      if (field.isDarkLand && field.isDarkLand(gx, gy)) {
-        return 'dark_land';
-      }
-      if (field.isDesert && field.isDesert(gx, gy)) {
-        return 'dryland';
-      }
-      const sample = sampleEcology(gx, gy, field);
-      return getEcologyZone(sample);
+      return resolveWorldBiome(field, gx, gy);
     },
 
     difficultyAt(gx: number, gy: number): number {
@@ -94,7 +107,7 @@ export function createWorldQueryAdapter(
     },
 
     weather(): string {
-      return 'clear';
+      return getWeather();
     },
   };
 }

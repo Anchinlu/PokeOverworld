@@ -60,10 +60,14 @@ export interface TerrainField {
 import { LegacyStripField } from './legacy-field';
 import { V0Field } from './v0-field';
 import { V3Field } from './v3-field';
+import { V4Field } from './v4-field';
 
 export { LegacyStripField } from './legacy-field';
 export { V0Field } from './v0-field';
 export { V3Field } from './v3-field';
+export { V4Field } from './v4-field';
+export { V4_CONFIG } from './v4-config';
+export { V4MacroPlan } from './v4-macro-plan';
 
 export function createTerrainField(version: number, seed: number): TerrainField {
   if (version === 1) {
@@ -75,6 +79,8 @@ export function createTerrainField(version: number, seed: number): TerrainField 
   if (version === 3) {
     return new V3Field(seed);
   }
+  if (version === 4) {
+    return new V4Field(seed);
+  }
   throw new Error(`Unsupported worldGenVersion: ${version}`);
 }
-

@@ -1,5 +1,8 @@
 import type { WildPokemonEntity } from '../../wildlife/model';
-import { getLevelIndicator, type LevelIndicatorOptions } from '../../wildlife/indicators/level-indicator';
+import {
+  getLevelIndicator,
+  type LevelIndicatorOptions,
+} from '../../wildlife/indicators/level-indicator';
 
 export interface OverlayOptions extends LevelIndicatorOptions {
   maxTileDistance?: number; // default: 7 tiles
@@ -28,7 +31,7 @@ export function drawWildOverheadIndicator(
     return;
   }
 
-  const drawY = wp.y + (wp.bobY || 0);
+  const drawY = wp.y + (wp.jumpY ?? wp.bobY ?? 0);
   const cx = Math.round(wp.x + 32);
 
   // Position badge above sprite head; raise slightly if an emote bubble is active

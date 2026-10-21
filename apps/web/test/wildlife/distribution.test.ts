@@ -106,4 +106,31 @@ describe('Wildlife Distribution & Statistical Validity (Section 2.3 & 11.2)', ()
     const invalidContext = getSpeciesWithTierFallback('meadow', 'sand', 0);
     expect(invalidContext.candidates).toEqual([]);
   });
+
+  it('skips inactive target tiers before applying the rarity fallback', () => {
+    const timeBands = ['dawn', 'day', 'dusk', 'night'] as const;
+    let checkedFallback = false;
+
+    for (const timeBand of timeBands) {
+      for (const targetTier of [0, 1, 2, 3, 4] as const) {
+        const result = getSpeciesWithTierFallback(
+          'dark_land',
+          'walkable_ground',
+          targetTier,
+          timeBand
+        );
+        if (result.candidates.length === 0) continue;
+
+        expect(
+          result.candidates.every(
+            (candidate) =>
+              !candidate.definition.activeTime || candidate.definition.activeTime.includes(timeBand)
+          )
+        ).toBe(true);
+        checkedFallback = true;
+      }
+    }
+
+    expect(checkedFallback).toBe(true);
+  });
 });

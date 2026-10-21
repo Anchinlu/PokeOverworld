@@ -126,7 +126,8 @@ export class V3Field implements TerrainField {
   public getOceanTileId(gx: number, gy: number, hasBeach = true): number {
     if (!hasBeach) return TILE_IDS.ocean_water;
 
-    const isS = (x: number, y: number) => this.isSand(x, y);
+    const isS = (x: number, y: number) =>
+      this.isSand(x, y) || Boolean(this.isDesert && this.isDesert(x, y));
 
     const w = isS(gx - 1, gy);
     const e = isS(gx + 1, gy);

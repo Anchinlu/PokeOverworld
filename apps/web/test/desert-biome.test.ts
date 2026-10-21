@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { TERRAIN, TILE_IDS, isDesertTile } from '@pokemon/game-data';
 import biomesData from '@pokemon/game-data/biomes.json';
-import { getDesertTileKey, getDuneCliffTileKey } from '../src/maps/autotile';
+import { getDesertTileKey, getDuneCliffTileKey, getSandTileKey } from '../src/maps/autotile';
 import { V3Field } from '../src/maps/terrain-field/v3-field';
 import { generateChunkTerrain } from '../src/maps/chunk-terrain';
 import { generateChunkTrees, generateChunkFoliage } from '../src/maps/chunk-objects';
@@ -89,15 +89,15 @@ describe('Desert Biome (Sa Mạc) Integration', () => {
     // Flat ground: center is pure smooth sand without cliff marks
     expect(getDesertTileKey(5, 5, blockField)).toEqual({ key: 'pure', tileId: TILE_IDS.desert_pure });
 
-    // Flat ground borders: smooth flat transition to grass (sand_* tiles) without cliff drops
-    expect(getDesertTileKey(4, 4, blockField)).toEqual({ key: 'tl', tileId: TILE_IDS.sand_tl });
-    expect(getDesertTileKey(6, 4, blockField)).toEqual({ key: 'tr', tileId: TILE_IDS.sand_tr });
-    expect(getDesertTileKey(4, 6, blockField)).toEqual({ key: 'bl', tileId: TILE_IDS.sand_bl });
-    expect(getDesertTileKey(6, 6, blockField)).toEqual({ key: 'br', tileId: TILE_IDS.sand_br });
-    expect(getDesertTileKey(5, 4, blockField)).toEqual({ key: 'top', tileId: TILE_IDS.sand_top });
-    expect(getDesertTileKey(5, 6, blockField)).toEqual({ key: 'bot', tileId: TILE_IDS.sand_bot });
-    expect(getDesertTileKey(4, 5, blockField)).toEqual({ key: 'left', tileId: TILE_IDS.sand_left });
-    expect(getDesertTileKey(6, 5, blockField)).toEqual({ key: 'right', tileId: TILE_IDS.sand_right });
+    // Flat ground borders: dedicated desert fringe transition to grass (desert_* tiles)
+    expect(getDesertTileKey(4, 4, blockField)).toEqual({ key: 'tl', tileId: TILE_IDS.desert_tl });
+    expect(getDesertTileKey(6, 4, blockField)).toEqual({ key: 'tr', tileId: TILE_IDS.desert_tr });
+    expect(getDesertTileKey(4, 6, blockField)).toEqual({ key: 'bl', tileId: TILE_IDS.desert_bl });
+    expect(getDesertTileKey(6, 6, blockField)).toEqual({ key: 'br', tileId: TILE_IDS.desert_br });
+    expect(getDesertTileKey(5, 4, blockField)).toEqual({ key: 'top', tileId: TILE_IDS.desert_top });
+    expect(getDesertTileKey(5, 6, blockField)).toEqual({ key: 'bot', tileId: TILE_IDS.desert_bot });
+    expect(getDesertTileKey(4, 5, blockField)).toEqual({ key: 'left', tileId: TILE_IDS.desert_left });
+    expect(getDesertTileKey(6, 5, blockField)).toEqual({ key: 'right', tileId: TILE_IDS.desert_right });
 
     // Elevated sand dunes (đồi cát cao với vách đá): 3x3 hill plateau in desert
     const duneField = makeMockField(blockCoords, blockCoords);
@@ -126,8 +126,8 @@ describe('Desert Biome (Sa Mạc) Integration', () => {
         '4,6', '5,6', '6,6',
       ]) // all 3x3 are hills
     );
-    // At (5,5), N (5,4) and W (4,5) are grass hills, so top-left boundary grass fringe is applied
-    expect(getDuneCliffTileKey(5, 5, plateauGrassDesertBorder)).toEqual({ key: 'tl', tileId: TILE_IDS.sand_tl });
+    // At (5,5), N (5,4) and W (4,5) are grass hills, so top-left boundary desert fringe is applied
+    expect(getDuneCliffTileKey(5, 5, plateauGrassDesertBorder)).toEqual({ key: 'tl', tileId: TILE_IDS.desert_tl });
   });
 
   it('4. World Gen V3: strictly protects safe starter core from desert dunes', () => {
@@ -212,4 +212,43 @@ describe('Desert Biome (Sa Mạc) Integration', () => {
     expect(adapter.contextAt(100, 100)).toBe('sand');
     expect(adapter.biomeAt(100, 100)).toBe('dryland');
   });
+
+  it('7. Multi-biome connectivity: Beach sand and Desert bordering each other or Ocean do not generate grass fringe borders', () => {
+    // Left half (x <= 4) is Beach Sand, Right half (x >= 5) is Desert
+    const sandCoords = new Set(['3,5', '4,5']);
+    const desertCoords = new Set(['5,5', '6,5']);
+    const oceanCoords = new Set(['2,5']);
+
+    const borderField: TerrainField = {
+      version: 3,
+      seed: 101,
+      isOcean: (gx: number, gy: number) => oceanCoords.has(`${gx},${gy}`),
+      isSand: (gx: number, gy: number) => sandCoords.has(`${gx},${gy}`),
+      isHill: () => false,
+      isRoad: () => false,
+      isBridge: () => false,
+      isWater: () => false,
+      isLake: () => false,
+      isWaterOrBridge: () => false,
+      isNearWater: () => false,
+      isNearCliffEdge: () => false,
+      getOceanTileId: () => 730,
+      getSpawn: () => ({ gx: 0, gy: 0 }),
+      getRoadCenterX: () => 0,
+      isValidTreePos: () => true,
+      isValidPalmTreePos: () => false,
+      isDesert: (gx: number, gy: number) => desertCoords.has(`${gx},${gy}`),
+    };
+
+    // Beach Sand at (4, 5) touching Desert at (5, 5) to the East
+    // Must recognize Desert as connected sand without placing meadow grass teeth on East edge
+    const sandRes = getSandTileKey(4, 5, borderField, true);
+    expect(sandRes.tileId).not.toBe(TILE_IDS.sand_right);
+
+    // Desert at (5, 5) touching Beach Sand at (4, 5) to the West
+    // Must recognize Beach Sand as connected sand without placing meadow grass teeth on West edge
+    const desertRes = getDesertTileKey(5, 5, borderField);
+    expect(desertRes.tileId).not.toBe(TILE_IDS.desert_left);
+  });
 });
+

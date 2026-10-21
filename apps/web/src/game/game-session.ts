@@ -1,7 +1,7 @@
 import { Camera, InputManager, WorldClock } from '../core';
 import { Player, Follower } from '../entities';
 import { ChunkManager, createTerrainField, type TerrainField } from '../maps';
-import { updateWildPokemon } from '../ai';
+import { resolveUnifiedWildlifeBattle, updateUnifiedWildlife } from '../wildlife/unified-runtime';
 import type { GameRenderer } from '../rendering';
 import type { BerryBushEntity, WildPokemonEntity, WorldChunk } from '../maps/chunk';
 import { interactWithBerryBush } from '../ui/berry-panel';
@@ -35,9 +35,10 @@ import type {
   DayPhase,
   WorldClockConfig,
 } from '@pokemon/shared-types';
-import { TERRAIN } from '@pokemon/game-data';
-import { handleHerdPostBattle } from '../wildlife/behavior/social/herd-controller';
-import { getDayPhase, getAmbientLightProfile } from '../world';
+import { TILE_SIZE, TERRAIN } from '@pokemon/game-data';
+import { getDayPhase, getAmbientLightProfile, getOverworldWeather } from '../world';
+import { checkAABB, getCharacterHitbox } from '../systems/collision';
+import { getWildSpriteAabb } from '../wildlife/behavior/movement/wild-hitbox';
 
 export class GameSession {
   public seed: number;
@@ -51,6 +52,50 @@ export class GameSession {
   public isBattling = false;
   private lastBattleEndTime = 0;
   private partyUnsubscribe?: () => void;
+
+  public getWildlifeDebugStats(): {
+    total: number;
+    active: number;
+    sparse: number;
+    frozen: number;
+    moving: number;
+    overlappingTiles: number;
+  } {
+    const entities = this.chunkManager.simulationChunks.flatMap((chunk) => chunk.wildPokemon);
+    const seen = new Set<string>();
+    const tileCounts = new Map<string, number>();
+    let active = 0;
+    let sparse = 0;
+    let frozen = 0;
+    let moving = 0;
+    for (const entity of entities) {
+      const entityKey =
+        entity.id ?? `${entity.chunkCx}:${entity.chunkCy}:${entity.gx}:${entity.gy}`;
+      if (seen.has(entityKey)) continue;
+      seen.add(entityKey);
+
+      const distance = Math.hypot(entity.gx - this.player.gx, entity.gy - this.player.gy);
+      if (distance > 35) frozen++;
+      else if (distance > 16) sparse++;
+      else active++;
+      if (entity.isMoving) moving++;
+
+      const tileKey = `${entity.gx},${entity.gy}`;
+      tileCounts.set(tileKey, (tileCounts.get(tileKey) ?? 0) + 1);
+    }
+    let overlappingTiles = 0;
+    for (const count of tileCounts.values()) {
+      if (count > 1) overlappingTiles += count - 1;
+    }
+    return {
+      total: seen.size,
+      active,
+      sparse,
+      frozen,
+      moving,
+      overlappingTiles,
+    };
+  }
 
   constructor(
     initialSeed = 101,
@@ -73,7 +118,8 @@ export class GameSession {
     this.chunkManager = new ChunkManager(
       this.field,
       () => getHighestOwnedPokemonLevel(partyService.getParty(), pcStorageService.getBoxes()),
-      () => getDayPhase(this.worldClock.getMinutes())
+      () => getDayPhase(this.worldClock.getMinutes()),
+      () => getOverworldWeather(this.seed, this.worldClock.getDay(), this.worldClock.getMinutes())
     );
 
     const savedPos = playerService.getProfile().position;
@@ -182,12 +228,22 @@ export class GameSession {
 
         if (!isCurrentHill && isTargetHill) {
           // Jumping UP onto cliff ledge
-          if (jumpRequested && (!collisionEnabled || this.chunkManager.canJumpOntoCliff(nextGX, nextGY))) {
+          if (
+            jumpRequested &&
+            (!collisionEnabled || this.chunkManager.canJumpOntoCliff(nextGX, nextGY))
+          ) {
             this.player.startJump(nextGX, nextGY, requestedDir, 'jump_up');
             battleSePlayer.playSound('Audio/SE/Battle jump to ball.ogg', 0.85);
 
-            const fFromHill = this.chunkManager.getTileData(this.follower.gx, this.follower.gy).terrain === TERRAIN.HILL;
-            const followerJump = !fFromHill && isCurrentHill ? 'jump_up' : fFromHill && !isCurrentHill ? 'drop_down' : null;
+            const fFromHill =
+              this.chunkManager.getTileData(this.follower.gx, this.follower.gy).terrain ===
+              TERRAIN.HILL;
+            const followerJump =
+              !fFromHill && isCurrentHill
+                ? 'jump_up'
+                : fFromHill && !isCurrentHill
+                  ? 'drop_down'
+                  : null;
             this.follower.startFollow(
               this.player.fromGX,
               this.player.fromGY,
@@ -201,13 +257,22 @@ export class GameSession {
           }
         } else if (isCurrentHill && !isTargetHill) {
           // Stepping / dropping DOWN off cliff
-          const canDrop = !collisionEnabled || this.chunkManager.isWalkable(nextGX, nextGY, this.player.gx, this.player.gy);
+          const canDrop =
+            !collisionEnabled ||
+            this.chunkManager.isWalkable(nextGX, nextGY, this.player.gx, this.player.gy);
           if (canDrop) {
             this.player.startJump(nextGX, nextGY, requestedDir, 'drop_down');
             battleSePlayer.playSound('Audio/SE/Battle jump to ball.ogg', 0.75);
 
-            const fFromHill = this.chunkManager.getTileData(this.follower.gx, this.follower.gy).terrain === TERRAIN.HILL;
-            const followerJump = !fFromHill && isCurrentHill ? 'jump_up' : fFromHill && !isCurrentHill ? 'drop_down' : null;
+            const fFromHill =
+              this.chunkManager.getTileData(this.follower.gx, this.follower.gy).terrain ===
+              TERRAIN.HILL;
+            const followerJump =
+              !fFromHill && isCurrentHill
+                ? 'jump_up'
+                : fFromHill && !isCurrentHill
+                  ? 'drop_down'
+                  : null;
             this.follower.startFollow(
               this.player.fromGX,
               this.player.fromGY,
@@ -221,12 +286,21 @@ export class GameSession {
           }
         } else {
           // Standard walking (flat-to-flat or plateau-to-plateau)
-          const canMove = !collisionEnabled || this.chunkManager.isWalkable(nextGX, nextGY, this.player.gx, this.player.gy);
+          const canMove =
+            !collisionEnabled ||
+            this.chunkManager.isWalkable(nextGX, nextGY, this.player.gx, this.player.gy);
           if (canMove) {
             this.player.startStep(nextGX, nextGY, requestedDir);
 
-            const fFromHill = this.chunkManager.getTileData(this.follower.gx, this.follower.gy).terrain === TERRAIN.HILL;
-            const followerJump = !fFromHill && isCurrentHill ? 'jump_up' : fFromHill && !isCurrentHill ? 'drop_down' : null;
+            const fFromHill =
+              this.chunkManager.getTileData(this.follower.gx, this.follower.gy).terrain ===
+              TERRAIN.HILL;
+            const followerJump =
+              !fFromHill && isCurrentHill
+                ? 'jump_up'
+                : fFromHill && !isCurrentHill
+                  ? 'drop_down'
+                  : null;
             this.follower.startFollow(
               this.player.fromGX,
               this.player.fromGY,
@@ -259,8 +333,15 @@ export class GameSession {
             this.player.startJump(frontGX, frontGY, facingDir, 'jump_up');
             battleSePlayer.playSound('Audio/SE/Battle jump to ball.ogg', 0.85);
 
-            const fFromHill = this.chunkManager.getTileData(this.follower.gx, this.follower.gy).terrain === TERRAIN.HILL;
-            const followerJump = !fFromHill && isCurrentHill ? 'jump_up' : fFromHill && !isCurrentHill ? 'drop_down' : null;
+            const fFromHill =
+              this.chunkManager.getTileData(this.follower.gx, this.follower.gy).terrain ===
+              TERRAIN.HILL;
+            const followerJump =
+              !fFromHill && isCurrentHill
+                ? 'jump_up'
+                : fFromHill && !isCurrentHill
+                  ? 'drop_down'
+                  : null;
             this.follower.startFollow(
               this.player.fromGX,
               this.player.fromGY,
@@ -271,12 +352,22 @@ export class GameSession {
             );
           }
         } else if (isCurrentHill && !isFrontHill) {
-          if (!collisionEnabled || this.chunkManager.isWalkable(frontGX, frontGY, this.player.gx, this.player.gy)) {
+          if (
+            !collisionEnabled ||
+            this.chunkManager.isWalkable(frontGX, frontGY, this.player.gx, this.player.gy)
+          ) {
             this.player.startJump(frontGX, frontGY, facingDir, 'drop_down');
             battleSePlayer.playSound('Audio/SE/Battle jump to ball.ogg', 0.75);
 
-            const fFromHill = this.chunkManager.getTileData(this.follower.gx, this.follower.gy).terrain === TERRAIN.HILL;
-            const followerJump = !fFromHill && isCurrentHill ? 'jump_up' : fFromHill && !isCurrentHill ? 'drop_down' : null;
+            const fFromHill =
+              this.chunkManager.getTileData(this.follower.gx, this.follower.gy).terrain ===
+              TERRAIN.HILL;
+            const followerJump =
+              !fFromHill && isCurrentHill
+                ? 'jump_up'
+                : fFromHill && !isCurrentHill
+                  ? 'drop_down'
+                  : null;
             this.follower.startFollow(
               this.player.fromGX,
               this.player.fromGY,
@@ -322,7 +413,14 @@ export class GameSession {
     this.camera.update(this.player, dtScale);
 
     // 5. Wild Pokémon AI
-    updateWildPokemon(this.chunkManager, this.player, this.follower, dtScale, this.getDayPhase());
+    updateUnifiedWildlife(
+      this.chunkManager,
+      this.player,
+      dtScale,
+      this.getDayPhase(),
+      getOverworldWeather(this.seed, this.worldClock.getDay(), this.worldClock.getMinutes()),
+      getHighestOwnedPokemonLevel(partyService.getParty(), pcStorageService.getBoxes())
+    );
 
     // 6. Overworld Shiny Pokémon Spatial Audio (3x3 chunk detection & distance scaling)
     overworldShinyAudio.update(
@@ -338,16 +436,39 @@ export class GameSession {
   }
 
   private checkWildPokemonCollision(): void {
-    for (const chunk of this.chunkManager.activeChunks) {
+    for (const chunk of this.getEncounterChunks()) {
       if (!chunk.wildPokemon) continue;
       for (const wp of chunk.wildPokemon) {
-        if (wp.state === 'rest_sleep') continue;
-        if (wp.gx === this.player.gx && wp.gy === this.player.gy) {
+        if (this.isPlayerTouchingWild(wp)) {
           this.startWildBattle(wp, chunk);
           return;
         }
       }
     }
+  }
+
+  /** Returns loaded wildlife chunks without duplicating active/simulation chunks. */
+  private getEncounterChunks(): WorldChunk[] {
+    const chunks = new Map<string, WorldChunk>();
+    for (const chunk of [
+      ...this.chunkManager.activeChunks,
+      ...this.chunkManager.simulationChunks,
+    ]) {
+      chunks.set(`${chunk.cx},${chunk.cy}`, chunk);
+    }
+    return [...chunks.values()];
+  }
+
+  /** Uses the rendered sprite footprint for contact detection. */
+  private isPlayerTouchingWild(wp: WildPokemonEntity): boolean {
+    const playerBox = getCharacterHitbox(this.player.x, this.player.y);
+    const wildAabb = getWildSpriteAabb(wp);
+    return checkAABB(playerBox, {
+      x: wildAabb.left * TILE_SIZE,
+      y: wildAabb.top * TILE_SIZE,
+      w: (wildAabb.right - wildAabb.left) * TILE_SIZE,
+      h: (wildAabb.bottom - wildAabb.top) * TILE_SIZE,
+    });
   }
 
   public startWildBattle(
@@ -496,6 +617,13 @@ export class GameSession {
             }
 
             if (result.outcome === 'caught' || result.outcome === 'victory') {
+              const entId = (wp as WildPokemonEntity).id ?? `${wp.gx},${wp.gy}`;
+              resolveUnifiedWildlifeBattle(
+                this.chunkManager,
+                entId,
+                result.outcome === 'caught' ? 'caught' : 'defeated'
+              );
+
               if (chunk && chunk.wildPokemon) {
                 const idx = chunk.wildPokemon.findIndex(
                   (p) =>
@@ -505,21 +633,6 @@ export class GameSession {
                 if (idx !== -1) {
                   chunk.wildPokemon.splice(idx, 1);
                 }
-              }
-
-              // Section 6.4 & W7: Post-battle herd panic or dissolution
-              if (wp.herdId) {
-                const activeWild = this.chunkManager.activeChunks.flatMap(
-                  (c) => c.wildPokemon || []
-                );
-                const entId = (wp as WildPokemonEntity).id ?? `${wp.gx},${wp.gy}`;
-                const entRole = (wp as WildPokemonEntity).role ?? 'solo';
-                handleHerdPostBattle(
-                  entId,
-                  entRole,
-                  activeWild,
-                  result.outcome === 'caught' ? 'caught' : 'defeated'
-                );
               }
             }
           } catch (err) {
@@ -820,7 +933,7 @@ export class GameSession {
     if (this.isBattling) return;
 
     // 1. Check Wild Pokémon click
-    for (const chunk of this.chunkManager.activeChunks) {
+    for (const chunk of this.getEncounterChunks()) {
       if (!chunk.wildPokemon) continue;
       for (const wp of chunk.wildPokemon) {
         if (Math.abs(wp.gx - worldGX) <= 1 && Math.abs(wp.gy - worldGY) <= 1) {
@@ -831,7 +944,7 @@ export class GameSession {
     }
 
     // 2. Check Berry Bushes
-    for (const chunk of this.chunkManager.activeChunks) {
+    for (const chunk of this.getEncounterChunks()) {
       if (!chunk.berryBushes) continue;
       for (const b of chunk.berryBushes) {
         if ((b.gx === worldGX && b.gy === worldGY) || (b.gx === worldGX && b.gy - 1 === worldGY)) {
@@ -853,7 +966,7 @@ export class GameSession {
     else if (this.player.direction === 3) targetGY -= 1;
 
     // 1. Check Wild Pokémon in front
-    for (const chunk of this.chunkManager.activeChunks) {
+    for (const chunk of this.getEncounterChunks()) {
       if (!chunk.wildPokemon) continue;
       for (const wp of chunk.wildPokemon) {
         if (

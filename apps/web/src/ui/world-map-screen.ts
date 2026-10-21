@@ -14,9 +14,9 @@ import { getStartVillagePlacement } from '../maps/terrain-field/start-village';
 import type { VillagePlacement } from '../maps/village-rules';
 import { V0_CONFIG } from '../maps/terrain-field/v0-config';
 import { V3_CONFIG } from '../maps/terrain-field/v3-config';
-import { AssetLoader } from '../rendering/asset-loader';
 import { WORLD_MAP_PALETTE } from './world-map/world-map-palette';
 import { WorldMapRenderer } from './world-map/world-map-renderer';
+import { resolveWorldBiome } from '../maps/ecology';
 
 // ---------------------------------------------------------------------------
 // Constants & Configuration
@@ -30,6 +30,7 @@ export interface MapHoverInfo {
   gx: number;
   gy: number;
   terrainName: string;
+  biomeName?: string;
   villageName?: string;
   safetyLevel?: number;
   corridorInfluence?: number;
@@ -51,6 +52,9 @@ export class WorldMapScreen {
   private staticLayerKey: string | null = null;
   private eventAbortController: AbortController | null = null;
   private visibilityListener?: (isOpen: boolean) => void;
+  /** Stores only discovered coordinates; visual pixels are rebuilt on demand. */
+  private readonly discoveredChunks = new Set<string>();
+  private discoveredSeed: number | null = null;
 
   // Viewport camera (in world tile units)
   private centerX = 0;
@@ -71,7 +75,7 @@ export class WorldMapScreen {
 
   // Chunk-sized pixel-art cache. The renderer only generates terrain tiles;
   // it never creates gameplay entities or mutates ChunkManager.cache.
-  private readonly mapRenderer = new WorldMapRenderer(AssetLoader.getDefault());
+  private readonly mapRenderer = new WorldMapRenderer();
 
   // DOM Elements for dynamic HUD
   private coordsDisplayEl: HTMLElement | null = null;
@@ -111,7 +115,11 @@ export class WorldMapScreen {
     this.centerY = session.player.gy;
     this.zoom = DEFAULT_ZOOM;
 
-    this.mapRenderer.clear();
+    if (this.discoveredSeed !== session.seed) {
+      this.discoveredChunks.clear();
+      this.mapRenderer.clear();
+      this.discoveredSeed = session.seed;
+    }
 
     this.mountDOM();
     this.staticLayerKey = null;
@@ -363,24 +371,40 @@ export class WorldMapScreen {
 
     const loadedChunks = this.session?.chunkManager.cache;
     if (loadedChunks) {
-      for (let cy = minCY; cy <= maxCY; cy++) {
-        for (let cx = minCX; cx <= maxCX; cx++) {
-          const chunk = loadedChunks.get(`${cx},${cy}`);
-          if (!chunk) continue;
-
-          const chunkCanvas = this.mapRenderer.getOrCreateLoadedChunkCanvas(chunk);
-          const screenX = Math.round((cx * CHUNK_SIZE - this.centerX) * scale + halfW);
-          const screenY = Math.round((cy * CHUNK_SIZE - this.centerY) * scale + halfH);
-
-          ctx.drawImage(
-            chunkCanvas,
-            screenX,
-            screenY,
-            Math.ceil(chunkDrawSize),
-            Math.ceil(chunkDrawSize)
-          );
-        }
+      // Register every gameplay chunk currently loaded, not just chunks in
+      // the visible map window. This lets the player revisit the map later
+      // even after the gameplay cache evicts distant chunks.
+      for (const chunk of loadedChunks.values()) {
+        const key = `${chunk.cx},${chunk.cy}`;
+        this.mapRenderer.getOrCreateLoadedChunkCanvas(chunk);
+        this.discoveredChunks.add(key);
       }
+    }
+
+    // Draw remembered terrain, leaving never-discovered areas as the dark
+    // background painted above.
+    for (const key of this.discoveredChunks) {
+      const [cxText, cyText] = key.split(',');
+      const cx = Number(cxText);
+      const cy = Number(cyText);
+      if (cx < minCX || cx > maxCX || cy < minCY || cy > maxCY) {
+        continue;
+      }
+
+      const loadedChunk = loadedChunks?.get(key);
+      const chunkCanvas = loadedChunk
+        ? this.mapRenderer.getOrCreateLoadedChunkCanvas(loadedChunk)
+        : this.mapRenderer.getOrCreateDiscoveredChunkCanvas(cx, cy, this.session!.field);
+      const screenX = Math.round((cx * CHUNK_SIZE - this.centerX) * scale + halfW);
+      const screenY = Math.round((cy * CHUNK_SIZE - this.centerY) * scale + halfH);
+
+      ctx.drawImage(
+        chunkCanvas,
+        screenX,
+        screenY,
+        Math.ceil(chunkDrawSize),
+        Math.ceil(chunkDrawSize)
+      );
     }
 
     // Subtle region grid (only when zoomed in enough >= 1.2x).
@@ -936,6 +960,7 @@ export class WorldMapScreen {
             <div class="legend-grid">
               <div class="legend-item"><span class="legend-color ocean-deep"></span> Đại dương</div>
               <div class="legend-item"><span class="legend-color ocean-shallow"></span> Vùng nước nông</div>
+              <div class="legend-item"><span class="legend-color wetland"></span> Hồ & Sông nước ngọt</div>
               <div class="legend-item"><span class="legend-color sand"></span> Bãi cát vàng</div>
               <div class="legend-item"><span class="legend-color grass"></span> Đồng cỏ xanh</div>
               <div class="legend-item"><span class="legend-color hill"></span> Đồi đá / Vách núi</div>
@@ -1014,8 +1039,8 @@ export class WorldMapScreen {
       } else {
         const info = this.inspectTile(this.hoverGX, this.hoverGY, this.session.field);
         let text = `X: ${info.gx}, Y: ${info.gy} • ${info.terrainName}${
-          info.villageName ? ` (${info.villageName})` : ''
-        }`;
+          info.biomeName ? ` [${info.biomeName}]` : ''
+        }${info.villageName ? ` (${info.villageName})` : ''}`;
         if (this.showV3Debug && info.safetyLevel !== undefined) {
           const sPct = Math.round(info.safetyLevel * 100);
           const cPct = Math.round((info.corridorInfluence ?? 0) * 100);
@@ -1040,7 +1065,7 @@ export class WorldMapScreen {
     } else if (field.isOcean(gx, gy)) {
       terrainName = field.isNearWater(gx, gy, 2) ? 'Vùng nước ven bờ' : 'Đại dương sâu';
     } else if (field.isWater(gx, gy) || field.isLake(gx, gy)) {
-      terrainName = 'Hồ nước';
+      terrainName = field.isLake(gx, gy) ? 'Hồ nước ngọt' : 'Lòng sông nước ngọt';
     } else if (field.isSand(gx, gy)) {
       terrainName = 'Bờ cát vàng';
     } else if (field.isDesert && field.isDesert(gx, gy)) {
@@ -1052,6 +1077,20 @@ export class WorldMapScreen {
     } else if (field.isRoad(gx, gy)) {
       terrainName = 'Đường mòn đất nện';
     }
+
+    const biomeKey = resolveWorldBiome(field, gx, gy);
+    const biomeNames: Record<string, string> = {
+      wetland: 'Hồ & Sông nước ngọt (Wetland)',
+      coast: 'Vùng duyên hải (Coast)',
+      dark_land: 'Vùng đất bóng tối (Dark Land)',
+      dryland: 'Vùng cằn cỗi (Dryland)',
+      desert: 'Sa mạc (Desert)',
+      dense_forest: 'Rừng rậm (Dense Forest)',
+      light_forest: 'Rừng thưa (Light Forest)',
+      meadow: 'Đồng cỏ (Meadow)',
+      hill_edge: 'Chân đồi / Vách đá (Hill Edge)',
+    };
+    const biomeName = biomeNames[biomeKey] ?? biomeKey;
 
     // Check if inside any known village
     const regionSize = V0_CONFIG.REGION_TILES;
@@ -1099,6 +1138,7 @@ export class WorldMapScreen {
       gx,
       gy,
       terrainName,
+      biomeName,
       villageName,
       safetyLevel,
       corridorInfluence,

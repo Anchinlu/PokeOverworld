@@ -30,6 +30,9 @@ export class GameRenderer {
   private characterRenderer: CharacterRenderer;
   private debugRenderer: DebugRenderer;
   private ambientOverlayRenderer: AmbientOverlayRenderer;
+  private lastRenderMs = 0;
+  private lastRenderItems = 0;
+  private lastVisibleChunks = 0;
 
   private berryCycleSeconds = 60;
   private berryStageOverride: number | null = null;
@@ -74,6 +77,23 @@ export class GameRenderer {
     this.groundRenderer.clearCache();
   }
 
+  public getPerformanceStats(): {
+    renderMs: number;
+    renderItems: number;
+    visibleChunks: number;
+    groundCacheSize: number;
+    groundCacheLimit: number;
+  } {
+    const groundCache = this.groundRenderer.getCacheStats();
+    return {
+      renderMs: this.lastRenderMs,
+      renderItems: this.lastRenderItems,
+      visibleChunks: this.lastVisibleChunks,
+      groundCacheSize: groundCache.size,
+      groundCacheLimit: groundCache.limit,
+    };
+  }
+
   public render(
     camera: Camera,
     player: Player,
@@ -84,7 +104,8 @@ export class GameRenderer {
   ): void {
     const ctx = this.ctx;
     const canvas = this.canvas;
-    const now = performance.now();
+    const renderStart = performance.now();
+    const now = renderStart;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -94,6 +115,7 @@ export class GameRenderer {
 
     const bounds = camera.getVisibleBounds(canvas.width, canvas.height);
     chunkManager.refreshRenderChunks(bounds);
+    this.lastVisibleChunks = chunkManager.renderChunks.length;
 
     // 0. Render Live Animated Water Waves (Layer -0.1)
     if (this.options.showWater) {
@@ -207,6 +229,7 @@ export class GameRenderer {
     for (const item of renderList) {
       item.draw(ctx);
     }
+    this.lastRenderItems = renderList.length;
 
     // 6. Hitboxes if enabled
     if (this.options.showHitbox) {
@@ -224,5 +247,6 @@ export class GameRenderer {
     if (ambientLight) {
       this.ambientOverlayRenderer.render(ctx, canvas.width, canvas.height, ambientLight);
     }
+    this.lastRenderMs = performance.now() - renderStart;
   }
 }

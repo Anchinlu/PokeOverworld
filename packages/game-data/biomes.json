@@ -42,6 +42,12 @@
       "hasBeach": false,
       "hasRoad": false,
       "defaultTree": "dark_forest"
+    },
+    "wetland": {
+      "name": "Freshwater Lake & River Basin",
+      "hasBeach": false,
+      "hasRoad": true,
+      "defaultTree": "vibrant"
     }
   }
 }

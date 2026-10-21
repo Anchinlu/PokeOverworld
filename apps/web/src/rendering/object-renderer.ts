@@ -278,6 +278,8 @@ export class ObjectRenderer {
     list: RenderItem[]
   ): void {
     const imgTG = this.loader.getImage('tall_grass_strip');
+    const imgTGDark =
+      this.loader.getImage('tall_grass_dark_strip') ?? this.loader.getImage('tall_grass_dark');
     if (!imgTG || !imgTG.complete) return;
 
     // Index wildlife occupancy once. The old implementation scanned every
@@ -351,7 +353,10 @@ export class ObjectRenderer {
               ctx.closePath();
               ctx.clip();
 
-              ctx.drawImage(imgTG, fIdx * 32, 0, 32, 32, bx, by, 32, grassHeight);
+              const img = (tg.isDark ? imgTGDark : imgTG) ?? imgTG;
+              if (img && img.complete) {
+                ctx.drawImage(img, fIdx * 32, 0, 32, 32, bx, by, 32, grassHeight);
+              }
               ctx.restore();
             },
           });

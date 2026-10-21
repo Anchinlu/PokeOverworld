@@ -16,10 +16,7 @@ export interface HerdSteeringVector {
  * - Đẩy ra nếu sát hơn 1 ô
  * - Chọn hướng cùng với đầu đàn
  */
-export function calculateHerdCohesion(
-  member: WildEntity,
-  leader: WildEntity
-): HerdSteeringVector {
+export function calculateHerdCohesion(member: WildEntity, leader: WildEntity): HerdSteeringVector {
   const dx = leader.gx - member.gx;
   const dy = leader.gy - member.gy;
   const dist = Math.hypot(dx, dy);
@@ -34,11 +31,15 @@ export function calculateHerdCohesion(
     };
   }
 
-  if (dist < 1.0 && (dx !== 0 || dy !== 0)) {
-    // Push away from leader
+  if (dist <= 1.0 && member.id !== leader.id) {
+    // Push away from leader. Same-tile overlaps need a deterministic axis
+    // because dx/dy are both zero in that case.
+    const idHash = [...(member.id ?? 'member')].reduce((sum, char) => sum + char.charCodeAt(0), 0);
+    const pushX = dx === 0 && dy === 0 ? (idHash % 2 === 0 ? 1 : -1) : -Math.sign(dx);
+    const pushY = dx === 0 && dy === 0 ? 0 : -Math.sign(dy);
     return {
-      targetGX: member.gx - Math.sign(dx),
-      targetGY: member.gy - Math.sign(dy),
+      targetGX: member.gx + pushX,
+      targetGY: member.gy + pushY,
       shouldPull: false,
       shouldPush: true,
     };

@@ -32,4 +32,13 @@ describe('Progressive chunk loading', () => {
     expect(manager.activeChunks.some((chunk) => chunk.cx === 2 && chunk.cy === 0)).toBe(true);
     expect(manager.activeChunks.some((chunk) => chunk.cx === 0 && chunk.cy === 0)).toBe(true);
   });
+
+  it('simulates wildlife across the full loaded desktop neighborhood', () => {
+    const manager = new ChunkManager(101);
+
+    manager.update(0, 0);
+
+    expect(manager.activeChunks).toHaveLength(25);
+    expect(manager.simulationChunks).toHaveLength(25);
+  });
 });

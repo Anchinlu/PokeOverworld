@@ -9,6 +9,7 @@ import {
   generateChunkBuildings,
   generateChunkTrees,
   generateChunkFoliage,
+  generateChunkTallGrass,
 } from '../src/maps/chunk-objects';
 import { createWorldQueryAdapter } from '../src/wildlife/ports/world-query-adapter';
 import { populateChunkWildlife } from '../src/wildlife/spawn/spawn-director';
@@ -478,6 +479,88 @@ describe('Dark Land Biome (Vùng Đất Tối) Integration', () => {
       const fullPath = path.resolve(__dirname, `../public${manifest[key]}`);
       expect(fs.existsSync(fullPath)).toBe(true);
     }
+  });
+
+  it('11. Dark Land Tall Grass (Cỏ Vùng Tối): validates assets, entity placement, tile ID 611, and wildlife context', async () => {
+    const fs = await import('fs');
+    const path = await import('path');
+    const manifestPath = path.resolve(__dirname, '../public/assets/manifest.json');
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
+
+    // 1. Asset Manifest check
+    expect(manifest).toHaveProperty('tall_grass_dark');
+    expect(manifest).toHaveProperty('tall_grass_dark_strip');
+    expect(manifest.tall_grass_dark).toBe('/assets/biomes/dark-land/tall_grass_dark.png');
+    expect(manifest.tall_grass_dark_strip).toBe('/assets/biomes/dark-land/tall_grass_dark_strip.png');
+
+    const fullPath = path.resolve(__dirname, `../public${manifest.tall_grass_dark}`);
+    expect(fs.existsSync(fullPath)).toBe(true);
+
+    // 2. Constants & Tile ID check
+    expect(TILE_IDS.tall_grass_dark).toBe(611);
+    expect(isDarkLandTile(TILE_IDS.tall_grass_dark)).toBe(true);
+    expect(isDarkLandTile(TILE_IDS.tall_grass)).toBe(false);
+
+    // 3. Procedural Placement in Dark Land
+    const darkField: TerrainField = {
+      version: 3,
+      seed: 101,
+      isOcean: () => false,
+      isSand: () => false,
+      isHill: () => false,
+      isRoad: () => false,
+      isBridge: () => false,
+      isWater: () => false,
+      isLake: () => false,
+      isWaterOrBridge: () => false,
+      isNearWater: () => false,
+      isNearCliffEdge: () => false,
+      getOceanTileId: () => 730,
+      getSpawn: () => ({ gx: 0, gy: 0 }),
+      getRoadCenterX: () => 0,
+      isValidTreePos: () => true,
+      isValidPalmTreePos: () => false,
+      isDarkLand: () => true,
+    };
+
+    // Find a chunk that has active tall grass patches on dark land
+    let foundDarkTallGrass = false;
+    for (let cx = 10; cx <= 25; cx++) {
+      for (let cy = 10; cy <= 25; cy++) {
+        const terrain = generateChunkTerrain(cx, cy, darkField);
+        const colliders: any[] = [];
+        const tallGrass = generateChunkTallGrass(
+          cx,
+          cy,
+          darkField,
+          terrain.terrainGrid,
+          terrain.tileIdGrid,
+          colliders
+        );
+
+        if (tallGrass.length > 0) {
+          foundDarkTallGrass = true;
+          // All generated tall grass in dark land must have isDark === true
+          for (const tg of tallGrass) {
+            expect(tg.isDark).toBe(true);
+            const lx = tg.gx - cx * 16;
+            const ly = tg.gy - cy * 16;
+            expect(terrain.tileIdGrid[ly][lx]).toBe(TILE_IDS.tall_grass_dark);
+          }
+          break;
+        }
+      }
+      if (foundDarkTallGrass) break;
+    }
+    expect(foundDarkTallGrass).toBe(true);
+
+    // 4. Wildlife encounter in dark land tall grass context
+    const { getSpeciesCandidatesForTier } = await import('../src/wildlife/spawn/species-pool');
+    const candidates = getSpeciesCandidatesForTier('dark_land', 'tall_grass', 0);
+    expect(candidates.length).toBeGreaterThan(0);
+    const candidateSpecies = candidates.map((c) => c.speciesKey);
+    // Common dark land species like Zubat, Gastly, Abra, Drowzee should be candidates
+    expect(candidateSpecies.some((s) => ['ZUBAT', 'GASTLY', 'ABRA', 'DROWZEE'].includes(s))).toBe(true);
   });
 });
 

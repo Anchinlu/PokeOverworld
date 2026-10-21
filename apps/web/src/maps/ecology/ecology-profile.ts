@@ -1,4 +1,4 @@
-import biomesData from '@pokemon/game-data/biomes.json';
+import { getBiomeConfig } from './biome-registry';
 import { seededHash } from '../noise';
 import type { EcologySample } from './ecology-field';
 import {
@@ -9,11 +9,13 @@ import {
 } from './ecology-config';
 
 export const BIOME_DEFAULT_TREES = {
-  coastal: biomesData.biomes.coastal.defaultTree,
-  forest: biomesData.biomes.forest.defaultTree,
-  autumn: biomesData.biomes.autumn.defaultTree,
-  neutral: biomesData.biomes.route.defaultTree,
-  desert: biomesData.biomes.desert.defaultTree,
+  coastal: getBiomeConfig('coastal')?.defaultTree ?? 'coastal',
+  forest: getBiomeConfig('forest')?.defaultTree ?? 'deep',
+  autumn: getBiomeConfig('autumn')?.defaultTree ?? 'autumn',
+  neutral: getBiomeConfig('route')?.defaultTree ?? 'vibrant',
+  desert: getBiomeConfig('desert')?.defaultTree ?? 'dead_1',
+  dark: getBiomeConfig('dark_land')?.defaultTree ?? 'dark_forest',
+  wetland: getBiomeConfig('wetland')?.defaultTree ?? 'vibrant',
 };
 
 export type EcologyZone =
@@ -24,17 +26,23 @@ export type EcologyZone =
   | 'dense_forest'
   | 'light_forest'
   | 'hill_edge'
-  | 'desert';
+  | 'desert'
+  | 'dark_land';
 
 /**
  * Classifies an ecology sample into an ecological zone.
  * Order:
  * 1. Coast (near sand) / Wetland (near water)
- * 2. Hill Edge (near cliffs/hills)
- * 3. Dense Forest (density >= 0.68)
- * 4. Light Forest (density >= 0.42)
- * 5. Dryland (moisture <= threshold or fertility <= threshold)
- * 6. Meadow (neutral default)
+ * 2. Dense Forest (density >= 0.68)
+ * 3. Light Forest (density >= 0.42)
+ * 4. Dryland (moisture <= threshold or fertility <= threshold)
+ * 5. Meadow (neutral default)
+ *
+ * Elevation is deliberately not an ecology override. A highland plateau is
+ * still a meadow, wetland, forest, or dryland according to its local
+ * moisture/fertility/density sample. `nearHill` remains part of the sample
+ * for object placement and future cliff-edge rules, but it must not turn an
+ * entire elevated region into a rocky habitat.
  */
 export function getEcologyZone(sample: EcologySample): EcologyZone {
   if (sample.nearSand) {
@@ -42,9 +50,6 @@ export function getEcologyZone(sample: EcologySample): EcologyZone {
   }
   if (sample.nearWater) {
     return 'wetland';
-  }
-  if (sample.nearHill) {
-    return 'hill_edge';
   }
   if (sample.density >= DENSE_FOREST_DENSITY_THRESHOLD) {
     return 'dense_forest';
@@ -71,6 +76,9 @@ export function getEcologyZone(sample: EcologySample): EcologyZone {
  * - Neutral meadow -> 'vibrant'
  */
 export function getTreeTypeForEcology(sample: EcologySample, zone: EcologyZone): string {
+  if (zone === 'dark_land') {
+    return BIOME_DEFAULT_TREES.dark;
+  }
   if (sample.nearSand || sample.nearWater || zone === 'coast') {
     return BIOME_DEFAULT_TREES.coastal;
   }
@@ -131,6 +139,10 @@ export const ZONE_FLOWER_PALETTES: Record<EcologyZone, FlowerClusterPalette> = {
     primary: ['flower_red'],
     secondary: ['plant_sprout'],
   },
+  dark_land: {
+    primary: ['plant_sprout'],
+    secondary: [],
+  },
 };
 
 /**
@@ -178,6 +190,7 @@ export const ZONE_NATURAL_SHRUBS: Record<EcologyZone, string[]> = {
   hill_edge: ['bush_cone_autumn', 'nature_tree_stump', 'bush_flowering_white'],
   coast: ['flower_purple_bell', 'nature_fallen_log'],
   desert: ['desert_dry_bush', 'desert_succulent', 'cactus_medium', 'cactus_small'],
+  dark_land: ['bush_dark_1', 'bush_dark_2', 'dark_sprout', 'rock_dark_spires'],
 };
 
 export function getNaturalShrubForZone(zone: EcologyZone, roll: number): string {

@@ -1,4 +1,5 @@
 import type { WeatherType } from '../../ports/world-query';
+import { getSpeciesBehaviorDefinition } from '../profiles/profile-registry';
 
 export interface WeatherBehaviorModifiers {
   moveSpeedMultiplier: number;
@@ -15,46 +16,38 @@ export function getWeatherBehaviorModifiers(
   speciesKey: string,
   weather: WeatherType
 ): WeatherBehaviorModifiers {
-  if (weather === 'rain') {
-    // Water species thrive in rain
-    const isWaterSpecies = ['MAGIKARP', 'POLIWAG', 'PSYDUCK', 'GOLDEEN', 'TENTACOOL', 'SQUIRTLE', 'SLOWPOKE'].includes(speciesKey);
-    if (isWaterSpecies) {
-      return {
-        moveSpeedMultiplier: 1.25,
-        activityMultiplier: 1.5,
-        prefersShelter: false,
-      };
-    }
+  const normalized = normalizeWeather(weather);
+  const definition = getSpeciesBehaviorDefinition(speciesKey);
+  const tags = new Set(definition?.tags ?? []);
+  const affinity = definition?.weather?.[normalized] ?? 1;
+  const isWater = tags.has('water') || tags.has('water_dweller');
+  const isShelterSensitive = tags.has('shelter_sensitive');
+  const isNative =
+    (normalized === 'rain' && (isWater || tags.has('moisture_affinity'))) ||
+    (normalized === 'sun' && tags.has('sun_affinity')) ||
+    (normalized === 'sand' && tags.has('sand_native')) ||
+    (normalized === 'snow' && tags.has('cold_affinity')) ||
+    (normalized === 'fog' && tags.has('fog_affinity')) ||
+    (normalized === 'thunderstorm' && tags.has('storm_affinity'));
 
-    // Bug species seek shelter and slow down
-    const isBugSpecies = ['CATERPIE', 'METAPOD', 'BUTTERFREE', 'WEEDLE', 'KAKUNA', 'BEEDRILL', 'PARAS', 'VENONAT'].includes(speciesKey);
-    if (isBugSpecies) {
-      return {
-        moveSpeedMultiplier: 0.6,
-        activityMultiplier: 0.4,
-        prefersShelter: true,
-      };
-    }
+  const prefersShelter =
+    ((normalized === 'rain' || normalized === 'heavy_rain') &&
+      !isWater &&
+      (isShelterSensitive || affinity < 0.75)) ||
+    (normalized === 'sand' && !tags.has('sand_native') && affinity < 0.8) ||
+    (normalized === 'snow' && !tags.has('cold_affinity') && affinity < 0.8);
 
-    return {
-      moveSpeedMultiplier: 0.9,
-      activityMultiplier: 0.85,
-      prefersShelter: false,
-    };
-  }
-
-  if (weather === 'sand') {
-    return {
-      moveSpeedMultiplier: 0.8,
-      activityMultiplier: 0.7,
-      prefersShelter: true,
-    };
-  }
-
-  // Clear or other standard weather
   return {
-    moveSpeedMultiplier: 1.0,
-    activityMultiplier: 1.0,
-    prefersShelter: false,
+    moveSpeedMultiplier: prefersShelter ? 0.7 : isNative ? 1.15 : 0.95,
+    activityMultiplier: Math.max(0.35, Math.min(1.6, affinity * (isNative ? 1.15 : 1))),
+    prefersShelter,
   };
+}
+
+function normalizeWeather(weather: WeatherType): string {
+  const value = weather.toLowerCase().replace(/[\s-]/g, '_');
+  if (value === 'sandstorm') return 'sand';
+  if (value === 'hail' || value === 'blizzard') return 'snow';
+  if (value === 'storm') return 'thunderstorm';
+  return value;
 }

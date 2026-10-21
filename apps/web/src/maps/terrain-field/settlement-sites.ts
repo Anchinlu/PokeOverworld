@@ -8,12 +8,57 @@ import type { TerrainField } from './terrain-field';
 import { V0_CONFIG } from './v0-config';
 import { hash2 } from './noise';
 import { getStartVillagePlacement } from './start-village';
+import type { ContinentPlan } from '../../continent';
 
-const HAMLET_NAMES = ['Oakhaven Hamlet', 'Riverside Hamlet', 'Breeze Hamlet', 'Sunlit Hamlet', 'Pine Hamlet'];
-const TOWN_NAMES = ['Verdant Town', 'Amber Town', 'Mistveil Town', 'Starlight Town', 'Goldenrod Town'];
-const CITY_NAMES = ['Floaroma City', 'Celadon City', 'Rustboro City', 'Lumiose City', 'Jubilife City'];
+const HAMLET_NAMES = [
+  'Oakhaven Hamlet',
+  'Riverside Hamlet',
+  'Breeze Hamlet',
+  'Sunlit Hamlet',
+  'Pine Hamlet',
+];
+const TOWN_NAMES = [
+  'Verdant Town',
+  'Amber Town',
+  'Mistveil Town',
+  'Starlight Town',
+  'Goldenrod Town',
+];
+const CITY_NAMES = [
+  'Floaroma City',
+  'Celadon City',
+  'Rustboro City',
+  'Lumiose City',
+  'Jubilife City',
+];
 
 const settlementCache = new Map<string, VillagePlacement | null>();
+const v4SettlementCache = new Map<number, VillagePlacement[]>();
+
+type V4Field = TerrainField & { readonly continentPlan?: ContinentPlan };
+
+function getV4VillagePlacements(field: TerrainField): VillagePlacement[] {
+  const plan = (field as V4Field).continentPlan;
+  if (!plan) return [];
+  const cached = v4SettlementCache.get(field.seed);
+  if (cached) return cached;
+
+  const placements = plan.settlements
+    .filter((settlement) => Math.hypot(settlement.gx, settlement.gy) >= 160)
+    .map((settlement) =>
+      constructVillage(
+        settlement.gx,
+        settlement.gy,
+        settlement.tier,
+        settlement.id,
+        field.seed,
+        settlement.name,
+        'v4'
+      )
+    );
+  v4SettlementCache.set(field.seed, placements);
+  return placements;
+}
 
 /**
  * Deterministically computes or retrieves the settlement for region (rx, ry) if valid.
@@ -134,11 +179,14 @@ function constructVillage(
   anchorGY: number,
   tier: 0 | 1 | 2,
   kId: number,
-  seed: number
+  seed: number,
+  nameOverride?: string,
+  idPrefix = 'v0'
 ): VillagePlacement {
   const nameList = tier === 2 ? CITY_NAMES : tier === 1 ? TOWN_NAMES : HAMLET_NAMES;
-  const nameIdx = Math.floor(hash2(anchorGX, anchorGY, seed, 444) * nameList.length) % nameList.length;
-  const name = nameList[nameIdx];
+  const nameIdx =
+    Math.floor(hash2(anchorGX, anchorGY, seed, 444) * nameList.length) % nameList.length;
+  const name = nameOverride ?? nameList[nameIdx];
 
   const buildings: BuildingPlacement[] = [];
   const pathKeys = new Set<string>();
@@ -164,20 +212,55 @@ function constructVillage(
   };
 
   // Standard town building layout
-  const bMart = createBuildingPlacement(`v0_${kId}_mart`, 'pokemart', anchorGX - 10, anchorGY + 2);
-  const bSign = createBuildingPlacement(`v0_${kId}_sign`, 'signpost', anchorGX - 5, anchorGY + 3);
-  const bCen = createBuildingPlacement(`v0_${kId}_cen`, 'pokecenter', anchorGX - 2, anchorGY + 1);
-  const bRed = createBuildingPlacement(`v0_${kId}_red`, 'house_red', anchorGX - 10, anchorGY - 8);
-  const bCot = createBuildingPlacement(`v0_${kId}_cot`, 'house_cottage', anchorGX - 1, anchorGY - 7);
+  const bMart = createBuildingPlacement(
+    `${idPrefix}_${kId}_mart`,
+    'pokemart',
+    anchorGX - 10,
+    anchorGY + 2
+  );
+  const bSign = createBuildingPlacement(
+    `${idPrefix}_${kId}_sign`,
+    'signpost',
+    anchorGX - 5,
+    anchorGY + 3
+  );
+  const bCen = createBuildingPlacement(
+    `${idPrefix}_${kId}_cen`,
+    'pokecenter',
+    anchorGX - 2,
+    anchorGY + 1
+  );
+  const bRed = createBuildingPlacement(
+    `${idPrefix}_${kId}_red`,
+    'house_red',
+    anchorGX - 10,
+    anchorGY - 8
+  );
+  const bCot = createBuildingPlacement(
+    `${idPrefix}_${kId}_cot`,
+    'house_cottage',
+    anchorGX - 1,
+    anchorGY - 7
+  );
 
   buildings.push(bMart, bSign, bCen, bRed, bCot);
 
   if (tier >= 1) {
-    const bFlow = createBuildingPlacement(`v0_${kId}_flow`, 'house_flowers', anchorGX + 7, anchorGY - 7);
+    const bFlow = createBuildingPlacement(
+      `${idPrefix}_${kId}_flow`,
+      'house_flowers',
+      anchorGX + 7,
+      anchorGY - 7
+    );
     buildings.push(bFlow);
   }
   if (tier >= 2) {
-    const bCot2 = createBuildingPlacement(`v0_${kId}_cot2`, 'house_cottage', anchorGX + 7, anchorGY + 2);
+    const bCot2 = createBuildingPlacement(
+      `${idPrefix}_${kId}_cot2`,
+      'house_cottage',
+      anchorGX + 7,
+      anchorGY + 2
+    );
     buildings.push(bCot2);
   }
 
@@ -268,6 +351,14 @@ export function getNearbySettlements(
   gy: number,
   field: TerrainField
 ): VillagePlacement[] {
+  if (field.version === 4) {
+    const results = getV4VillagePlacements(field).filter(
+      (v) => Math.abs(v.centerGX - gx) <= 640 && Math.abs(v.centerGY - gy) <= 640
+    );
+    if (Math.hypot(gx, gy) <= 160) results.push(getStartVillagePlacement(field.seed));
+    return results;
+  }
+
   const regionSize = V0_CONFIG.REGION_TILES;
   const rx = Math.floor(gx / regionSize);
   const ry = Math.floor(gy / regionSize);
@@ -294,6 +385,25 @@ export function getNearbySettlements(
  * Checks if (gx, gy) is a walkable internal village path.
  */
 export function isV0RoadTile(gx: number, gy: number, field: TerrainField): boolean {
+  if (field.version === 4) {
+    const plan = (field as V4Field).continentPlan;
+    if (plan) {
+      const localX = gx - plan.bounds.gx0 * plan.cellSize;
+      const localY = gy - plan.bounds.gy0 * plan.cellSize;
+      const width = plan.bounds.cols * plan.cellSize;
+      const height = plan.bounds.rows * plan.cellSize;
+      if (
+        localX >= 0 &&
+        localY >= 0 &&
+        localX < width &&
+        localY < height &&
+        plan.roadMask[localY * width + localX] === 1
+      ) {
+        return true;
+      }
+    }
+  }
+
   const settlements = getNearbySettlements(gx, gy, field);
   const key = `${gx},${gy}`;
   for (const v of settlements) {
@@ -376,12 +486,7 @@ export function getV0VillageGardenPlantsForChunk(
 /**
  * Checks if (gx, gy) is within the bounds of any settlement in World Gen v0.
  */
-export function isV0VillageArea(
-  gx: number,
-  gy: number,
-  field: TerrainField,
-  buffer = 0
-): boolean {
+export function isV0VillageArea(gx: number, gy: number, field: TerrainField, buffer = 0): boolean {
   const settlements = getNearbySettlements(gx, gy, field);
   for (const v of settlements) {
     if (

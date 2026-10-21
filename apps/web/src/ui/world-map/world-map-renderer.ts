@@ -1,12 +1,11 @@
-import { CHUNK_SIZE, isDarkLandTile, TILE_IDS, TILE_SIZE } from '@pokemon/game-data';
+import { CHUNK_SIZE, isDarkLandTile, TERRAIN, TILE_IDS, TILE_SIZE } from '@pokemon/game-data';
 import { seededHash } from '../../maps/noise';
 import type { WorldChunk } from '../../maps/chunk';
-import { AssetLoader } from '../../rendering/asset-loader';
-import { TILE_KEY_BY_ID } from '../../rendering/types';
+import { generateChunkTerrain } from '../../maps/chunk-terrain';
+import type { TerrainField } from '../../maps/terrain-field';
 import { WORLD_MAP_PALETTE, type WorldMapTerrainClass } from './world-map-palette';
 
 const CACHE_LIMIT = 96;
-const DETAIL_KEYS = ['grass_tuft_single', 'grass_white_dots', 'sand_shell', 'sand_mound'];
 
 /**
  * Renders a compact, pixel-art representation of one already-loaded terrain chunk.
@@ -19,14 +18,51 @@ const DETAIL_KEYS = ['grass_tuft_single', 'grass_white_dots', 'sand_shell', 'san
 export class WorldMapRenderer {
   private readonly cache = new Map<string, HTMLCanvasElement>();
 
-  public constructor(private readonly loader: AssetLoader) {}
-
   public clear(): void {
     this.cache.clear();
   }
 
   public getOrCreateLoadedChunkCanvas(chunk: WorldChunk): HTMLCanvasElement {
-    const key = `${chunk.cx},${chunk.cy},${chunk.seed},${chunk.version}`;
+    return this.getOrCreateTerrainCanvas(
+      chunk.cx,
+      chunk.cy,
+      chunk.seed,
+      chunk.version,
+      chunk.terrainGrid,
+      chunk.tileIdGrid
+    );
+  }
+
+  /**
+   * Rebuilds only the visual terrain for a chunk the player has already
+   * discovered. It does not create a WorldChunk and therefore does not spawn
+   * wildlife, plants, colliders, or other gameplay state.
+   */
+  public getOrCreateDiscoveredChunkCanvas(
+    cx: number,
+    cy: number,
+    field: TerrainField
+  ): HTMLCanvasElement {
+    const terrain = generateChunkTerrain(cx, cy, field, true, true, true, true);
+    return this.getOrCreateTerrainCanvas(
+      cx,
+      cy,
+      field.seed,
+      field.version,
+      terrain.terrainGrid,
+      terrain.tileIdGrid
+    );
+  }
+
+  private getOrCreateTerrainCanvas(
+    cx: number,
+    cy: number,
+    seed: number,
+    version: number,
+    terrainGrid: number[][],
+    tileIdGrid: number[][]
+  ): HTMLCanvasElement {
+    const key = `${cx},${cy},${seed},${version}`;
     const cached = this.cache.get(key);
     if (cached) {
       this.cache.delete(key);
@@ -43,28 +79,19 @@ export class WorldMapRenderer {
     ctx.imageSmoothingEnabled = false;
     for (let ly = 0; ly < CHUNK_SIZE; ly++) {
       for (let lx = 0; lx < CHUNK_SIZE; lx++) {
-        const gx = chunk.cx * CHUNK_SIZE + lx;
-        const gy = chunk.cy * CHUNK_SIZE + ly;
+        const gx = cx * CHUNK_SIZE + lx;
+        const gy = cy * CHUNK_SIZE + ly;
         const px = lx * TILE_SIZE;
         const py = ly * TILE_SIZE;
-        const tileId = chunk.tileIdGrid[ly]?.[lx] ?? TILE_IDS.grass_01;
-        const terrainClass = this.getTerrainClass(tileId);
+        const tileId = tileIdGrid[ly]?.[lx] ?? TILE_IDS.grass_01;
+        const terrainClass = this.getTerrainClass(tileId, terrainGrid[ly]?.[lx]);
 
-        this.drawFallbackTile(ctx, terrainClass, px, py);
-
-        const assetKey = TILE_KEY_BY_ID[tileId];
-        // Animated ocean/shore strips are intentionally represented by a
-        // stable palette on the overview map; playing full strips per tile
-        // would make the map noisy and expensive.
-        if (assetKey && !this.isAnimatedWaterAsset(assetKey)) {
-          const image = this.loader.getImage(assetKey);
-          if (image && image.complete && image.naturalWidth > 0) {
-            ctx.drawImage(image, px, py, TILE_SIZE, TILE_SIZE);
-          }
-        }
-
+        // The overview map intentionally uses a tiny pixel-colour language,
+        // not the full gameplay tile sprites. This keeps it readable and
+        // avoids decoding/drawing hundreds of source images while panning.
+        this.drawPixelTile(ctx, terrainClass, gx, gy, seed, px, py);
         this.drawTileDepth(ctx, terrainClass, tileId, px, py);
-        this.drawNaturalDetail(ctx, terrainClass, gx, gy, chunk.seed, px, py);
+        this.drawNaturalDetail(ctx, terrainClass, gx, gy, seed, px, py);
       }
     }
 
@@ -77,7 +104,28 @@ export class WorldMapRenderer {
     return canvas;
   }
 
-  private getTerrainClass(tileId: number): WorldMapTerrainClass {
+  private getTerrainClass(tileId: number, terrainId?: number): WorldMapTerrainClass {
+    // The terrain grid is authoritative. Tile-ID ranges also contain special
+    // transition/decorative tiles, so classifying by range alone can turn a
+    // colourful map into a mostly grey hill map.
+    switch (terrainId) {
+      case TERRAIN.OCEAN_WATER:
+        return 'water';
+      case TERRAIN.BEACH_SAND:
+      case TERRAIN.DESERT:
+        return 'sand';
+      case TERRAIN.HILL:
+        return isDarkLandTile(tileId) ? 'dark_land' : 'hill';
+      case TERRAIN.ROAD:
+        return 'road';
+      case TERRAIN.DARK_LAND:
+        return 'dark_land';
+      case TERRAIN.GRASS:
+        return 'grass';
+      default:
+        break;
+    }
+
     if (isDarkLandTile(tileId)) return 'dark_land';
     if (tileId >= 700 && tileId <= 742) return 'water';
     if (tileId >= 400 && tileId < 500) return 'hill';
@@ -86,22 +134,57 @@ export class WorldMapRenderer {
     return 'grass';
   }
 
-  private drawFallbackTile(
+  private drawPixelTile(
     ctx: CanvasRenderingContext2D,
     terrainClass: WorldMapTerrainClass,
+    gx: number,
+    gy: number,
+    seed: number,
     x: number,
     y: number
   ): void {
-    const colours: Record<WorldMapTerrainClass, string> = {
-      grass: WORLD_MAP_PALETTE.grassFallback,
-      sand: WORLD_MAP_PALETTE.sandFallback,
-      water: WORLD_MAP_PALETTE.waterDeep,
-      hill: WORLD_MAP_PALETTE.hillFallback,
-      road: WORLD_MAP_PALETTE.roadFallback,
-      dark_land: WORLD_MAP_PALETTE.darkFallback,
+    const colours: Record<WorldMapTerrainClass, readonly string[]> = {
+      grass: WORLD_MAP_PALETTE.grassPixels,
+      sand: WORLD_MAP_PALETTE.sandPixels,
+      water: WORLD_MAP_PALETTE.waterPixels,
+      hill: WORLD_MAP_PALETTE.hillPixels,
+      road: WORLD_MAP_PALETTE.roadPixels,
+      dark_land: WORLD_MAP_PALETTE.darkPixels,
     };
-    ctx.fillStyle = colours[terrainClass];
+    const palette = colours[terrainClass];
+    // Use coarse 3x3 world cells for colour variation. Per-tile noise makes
+    // the overview map look like static when zoomed in.
+    const colourCellX = Math.floor(gx / 3);
+    const colourCellY = Math.floor(gy / 3);
+    const baseRoll = seededHash(colourCellX, colourCellY, seed + 101);
+    const base = palette[Math.floor(baseRoll * palette.length)];
+    ctx.fillStyle = base;
     ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+
+    const pixelRoll = seededHash(colourCellX, colourCellY, seed + 102);
+    const accent = palette[(Math.floor(pixelRoll * palette.length) + 1) % palette.length];
+    if (terrainClass === 'water') {
+      if (pixelRoll > 0.52) {
+        ctx.fillStyle = accent;
+        ctx.fillRect(x + 5, y + 9, 10, 2);
+        if (pixelRoll > 0.76) ctx.fillRect(x + 16, y + 18, 7, 2);
+      }
+    } else if (terrainClass === 'hill') {
+      if (pixelRoll > 0.62) {
+        ctx.fillStyle = accent;
+        ctx.fillRect(x + 4, y + 4, 3, 3);
+      }
+    } else if (terrainClass === 'sand') {
+      if (pixelRoll > 0.62) {
+        ctx.fillStyle = accent;
+        ctx.fillRect(x + 6, y + 21, 3, 2);
+      }
+    } else if (terrainClass === 'road') {
+      if (pixelRoll > 0.45) {
+        ctx.fillStyle = accent;
+        ctx.fillRect(x + 3, y + 15, 5, 2);
+      }
+    }
   }
 
   private drawTileDepth(
@@ -154,7 +237,7 @@ export class WorldMapRenderer {
   ): void {
     const roll = seededHash(gx, gy, seed + 401);
     if (terrainClass === 'water') {
-      if (roll < 0.18) {
+      if (roll < 0.1) {
         ctx.fillStyle = WORLD_MAP_PALETTE.detailLight;
         ctx.fillRect(x + 5, y + 9, 12, 1);
         ctx.fillRect(x + 9, y + 14, 8, 1);
@@ -162,32 +245,17 @@ export class WorldMapRenderer {
       return;
     }
 
-    if (terrainClass === 'grass' && roll < 0.075) {
-      const key = DETAIL_KEYS[Math.floor(seededHash(gx, gy, seed + 402) * 2)];
-      const image = this.loader.getImage(key);
-      if (image && image.complete && image.naturalWidth > 0) {
-        ctx.globalAlpha = 0.62;
-        ctx.drawImage(image, x, y, TILE_SIZE, TILE_SIZE);
-        ctx.globalAlpha = 1;
-      } else {
-        ctx.fillStyle = WORLD_MAP_PALETTE.grassShadow;
-        ctx.fillRect(x + 7, y + 19, 2, 2);
-        ctx.fillRect(x + 19, y + 10, 1, 2);
-      }
+    if (terrainClass === 'grass' && roll < 0.045) {
+      ctx.fillStyle = WORLD_MAP_PALETTE.grassDetail;
+      ctx.fillRect(x + 7, y + 18, 2, 5);
+      ctx.fillRect(x + 10, y + 20, 2, 3);
+      ctx.fillRect(x + 19, y + 10, 2, 4);
     }
 
-    if (terrainClass === 'sand' && roll < 0.045) {
-      const key = DETAIL_KEYS[2 + Math.floor(seededHash(gx, gy, seed + 403) * 2)];
-      const image = this.loader.getImage(key);
-      if (image && image.complete && image.naturalWidth > 0) {
-        ctx.globalAlpha = 0.55;
-        ctx.drawImage(image, x, y, TILE_SIZE, TILE_SIZE);
-        ctx.globalAlpha = 1;
-      }
+    if (terrainClass === 'sand' && roll < 0.035) {
+      ctx.fillStyle = WORLD_MAP_PALETTE.sandDetail;
+      ctx.fillRect(x + 11, y + 12, 5, 2);
+      ctx.fillRect(x + 16, y + 14, 3, 2);
     }
-  }
-
-  private isAnimatedWaterAsset(assetKey: string): boolean {
-    return assetKey === 'ocean_anim_strip' || assetKey.startsWith('shore_anim_');
   }
 }
