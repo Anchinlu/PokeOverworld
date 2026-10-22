@@ -1,0 +1,780 @@
+[
+  {
+    "key": "ground_snow_pure",
+    "kind": "ground",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Nền Tuyết Trắng Nguyên Bản (Tâm Đồi Cao)"
+  },
+  {
+    "key": "cliff_snow_pure",
+    "kind": "cliff",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Mặt Đỉnh Vách Núi Tuyết"
+  },
+  {
+    "key": "cliff_snow_top",
+    "kind": "cliff",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Rìa Đỉnh Vách Núi Tuyết (Hướng Bắc)"
+  },
+  {
+    "key": "cliff_snow_bot",
+    "kind": "cliff",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Chân Vách Núi Tuyết (Hướng Nam)"
+  },
+  {
+    "key": "cliff_snow_left",
+    "kind": "cliff",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Vách Núi Tuyết Sườn Tây"
+  },
+  {
+    "key": "cliff_snow_right",
+    "kind": "cliff",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Vách Núi Tuyết Sườn Đông"
+  },
+  {
+    "key": "cliff_snow_tl",
+    "kind": "cliff",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Góc Ngoài Vách Núi Tuyết Tây Bắc"
+  },
+  {
+    "key": "cliff_snow_tr",
+    "kind": "cliff",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Góc Ngoài Vách Núi Tuyết Đông Bắc"
+  },
+  {
+    "key": "cliff_snow_bl",
+    "kind": "cliff",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Góc Ngoài Vách Núi Tuyết Tây Nam"
+  },
+  {
+    "key": "cliff_snow_br",
+    "kind": "cliff",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Góc Ngoài Vách Núi Tuyết Đông Nam"
+  },
+  {
+    "key": "cliff_snow_in_tl",
+    "kind": "cliff",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Góc Trong Vách Núi Tuyết Tây Bắc"
+  },
+  {
+    "key": "cliff_snow_in_tr",
+    "kind": "cliff",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Góc Trong Vách Núi Tuyết Đông Bắc"
+  },
+  {
+    "key": "cliff_snow_in_bl",
+    "kind": "cliff",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Góc Trong Vách Núi Tuyết Tây Nam"
+  },
+  {
+    "key": "cliff_snow_in_br",
+    "kind": "cliff",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Góc Trong Vách Núi Tuyết Đông Nam"
+  },
+  {
+    "key": "ground_snow_top",
+    "kind": "fringe",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Viền Cỏ Tuyết Ranh Giới (Hướng Bắc)"
+  },
+  {
+    "key": "ground_snow_bot",
+    "kind": "fringe",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Viền Cỏ Tuyết Ranh Giới (Hướng Nam)"
+  },
+  {
+    "key": "ground_snow_left",
+    "kind": "fringe",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Viền Cỏ Tuyết Ranh Giới (Hướng Tây)"
+  },
+  {
+    "key": "ground_snow_right",
+    "kind": "fringe",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Viền Cỏ Tuyết Ranh Giới (Hướng Đông)"
+  },
+  {
+    "key": "ground_snow_tl",
+    "kind": "fringe",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Viền Tuyết Bo Góc Ngoài Tây Bắc"
+  },
+  {
+    "key": "ground_snow_tr",
+    "kind": "fringe",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Viền Tuyết Bo Góc Ngoài Đông Bắc"
+  },
+  {
+    "key": "ground_snow_bl",
+    "kind": "fringe",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Viền Tuyết Bo Góc Ngoài Tây Nam"
+  },
+  {
+    "key": "ground_snow_br",
+    "kind": "fringe",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Viền Tuyết Bo Góc Ngoài Đông Nam"
+  },
+  {
+    "key": "ground_snow_in_tl",
+    "kind": "fringe",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Viền Tuyết Góc Khuyết Trong Tây Bắc"
+  },
+  {
+    "key": "ground_snow_in_tr",
+    "kind": "fringe",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Viền Tuyết Góc Khuyết Trong Đông Bắc"
+  },
+  {
+    "key": "ground_snow_in_bl",
+    "kind": "fringe",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Viền Tuyết Góc Khuyết Trong Tây Nam"
+  },
+  {
+    "key": "ground_snow_in_br",
+    "kind": "fringe",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Viền Tuyết Góc Khuyết Trong Đông Nam"
+  },
+  {
+    "key": "ice_snow_pure",
+    "kind": "ice",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Mặt Băng Hồ Đóng Băng"
+  },
+  {
+    "key": "ice_snow_top",
+    "kind": "ice",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Bờ Hồ Băng Phía Bắc"
+  },
+  {
+    "key": "ice_snow_bot",
+    "kind": "ice",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Bờ Hồ Băng Phía Nam"
+  },
+  {
+    "key": "ice_snow_left",
+    "kind": "ice",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Bờ Hồ Băng Phía Tây"
+  },
+  {
+    "key": "ice_snow_right",
+    "kind": "ice",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Bờ Hồ Băng Phía Đông"
+  },
+  {
+    "key": "ice_snow_tl",
+    "kind": "ice",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Góc Ngoài Hồ Băng Tây Bắc"
+  },
+  {
+    "key": "ice_snow_tr",
+    "kind": "ice",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Góc Ngoài Hồ Băng Đông Bắc"
+  },
+  {
+    "key": "ice_snow_bl",
+    "kind": "ice",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Góc Ngoài Hồ Băng Tây Nam"
+  },
+  {
+    "key": "ice_snow_br",
+    "kind": "ice",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Góc Ngoài Hồ Băng Đông Nam"
+  },
+  {
+    "key": "ice_snow_in_tl",
+    "kind": "ice",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Góc Trong Hồ Băng Tây Bắc"
+  },
+  {
+    "key": "ice_snow_in_tr",
+    "kind": "ice",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Góc Trong Hồ Băng Đông Bắc"
+  },
+  {
+    "key": "ice_snow_in_bl",
+    "kind": "ice",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Góc Trong Hồ Băng Tây Nam"
+  },
+  {
+    "key": "ice_snow_in_br",
+    "kind": "ice",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Góc Trong Hồ Băng Đông Nam"
+  },
+  {
+    "key": "ice_snow_patch_medium",
+    "kind": "ice",
+    "w": 64,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Mảng Băng Nổi Mặt Tuyết Vừa (64×32)"
+  },
+  {
+    "key": "ice_snow_patch_small",
+    "kind": "ice",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Đốm Băng Đóng Băng Nhỏ (32×32)"
+  },
+  {
+    "key": "tree_snow_pine_1",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Thông Tuyết Cổ Thụ 1 (Tán kim nhọn, gốc tuyết mỏng)"
+  },
+  {
+    "key": "tree_snow_pine_2",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Thông Tuyết Cổ Thụ 2 (Tán kim nhọn, gốc đọng tuyết)"
+  },
+  {
+    "key": "tree_snow_pine_3",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Thông Tuyết Cổ Thụ 3 (Tán dày phủ tuyết trắng)"
+  },
+  {
+    "key": "tree_snow_pine_4",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Thông Tuyết Cổ Thụ 4 (Tán dày gốc vát tuyết)"
+  },
+  {
+    "key": "tree_snow_spruce_1",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Bách Tuyết Tùng 1 (Tán tròn sương giá)"
+  },
+  {
+    "key": "tree_snow_spruce_2",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Bách Tuyết Tùng 2 (Tán phân tầng tuyết)"
+  },
+  {
+    "key": "tree_snow_spruce_3",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Bách Tuyết Tùng 3 (Thân cao tuyết phủ ngọn)"
+  },
+  {
+    "key": "tree_snow_spruce_4",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Bách Tuyết Tùng 4 (Tán sum suê đỉnh đồi)"
+  },
+  {
+    "key": "tree_snow_cone_1",
+    "kind": "bush",
+    "w": 32,
+    "h": 64,
+    "anchor": "bottom",
+    "vn": "Cây Nón Kim Tuyết 1 (Dáng nhọn nhỏ)"
+  },
+  {
+    "key": "tree_snow_cone_2",
+    "kind": "bush",
+    "w": 32,
+    "h": 64,
+    "anchor": "bottom",
+    "vn": "Cây Nón Kim Tuyết 2 (Tuyết phủ dày ngọn)"
+  },
+  {
+    "key": "tree_snow_cone_3",
+    "kind": "bush",
+    "w": 32,
+    "h": 64,
+    "anchor": "bottom",
+    "vn": "Cây Nón Kim Tuyết 3 (Phân nhánh tuyết)"
+  },
+  {
+    "key": "tree_snow_cone_4",
+    "kind": "bush",
+    "w": 32,
+    "h": 64,
+    "anchor": "bottom",
+    "vn": "Cây Nón Kim Tuyết 4 (Dáng đứng thon)"
+  },
+  {
+    "key": "bush_snow_fluffy",
+    "kind": "bush",
+    "w": 64,
+    "h": 64,
+    "anchor": "bottom",
+    "vn": "Bụi Tuyết Bông Xù Lớn (64×64)"
+  },
+  {
+    "key": "bush_snow_wide",
+    "kind": "bush",
+    "w": 64,
+    "h": 64,
+    "anchor": "bottom",
+    "vn": "Bụi Cây Tán Rộng Đóng Băng (64×64)"
+  },
+  {
+    "key": "bush_snow_round",
+    "kind": "bush",
+    "w": 64,
+    "h": 64,
+    "anchor": "bottom",
+    "vn": "Bụi Tròn Tuyết Trắng (64×64)"
+  },
+  {
+    "key": "bush_snow_diamond",
+    "kind": "bush",
+    "w": 64,
+    "h": 64,
+    "anchor": "bottom",
+    "vn": "Bụi Hình Thoi Tinh Thể Tuyết (64×64)"
+  },
+  {
+    "key": "crystal_snow_fern",
+    "kind": "crystal",
+    "w": 32,
+    "h": 64,
+    "anchor": "bottom",
+    "vn": "Tinh Thể Băng Dương Xỉ (32×64)"
+  },
+  {
+    "key": "crystal_snow_spire",
+    "kind": "crystal",
+    "w": 32,
+    "h": 64,
+    "anchor": "bottom",
+    "vn": "Trụ Tinh Thể Băng Nhọn (32×64)"
+  },
+  {
+    "key": "tall_grass_snow",
+    "kind": "grass",
+    "w": 160,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Khóm Cỏ Cao Phủ Tuyết (Strip 5 frame)"
+  },
+  {
+    "key": "tall_grass_snow_strip",
+    "kind": "grass",
+    "w": 160,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Dải Hoạt Họa Cỏ Cao Tuyết Đung Đưa (160×32)"
+  },
+  {
+    "key": "log_snow_fallen",
+    "kind": "wood",
+    "w": 64,
+    "h": 32,
+    "anchor": "bottom",
+    "vn": "Khúc Gỗ Mục Phủ Tuyết (64×32)"
+  },
+  {
+    "key": "stump_snow",
+    "kind": "wood",
+    "w": 32,
+    "h": 32,
+    "anchor": "bottom",
+    "vn": "Gốc Cây Cưa Đọng Tuyết (32×32)"
+  },
+  {
+    "key": "rock_snow_boulder",
+    "kind": "rock",
+    "w": 64,
+    "h": 32,
+    "anchor": "bottom",
+    "vn": "Tảng Đá Băng Lớn (64×32)"
+  },
+  {
+    "key": "rock_snow_pointed",
+    "kind": "rock",
+    "w": 32,
+    "h": 32,
+    "anchor": "bottom",
+    "vn": "Mỏm Đá Nhọn Băng Giá (32×32)"
+  },
+  {
+    "key": "rock_snow_pebbles",
+    "kind": "rock",
+    "w": 32,
+    "h": 32,
+    "anchor": "bottom",
+    "vn": "Cụm Sỏi Đá Tuyết (32×32)"
+  },
+  {
+    "key": "decor_snow_drift",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Vệt Tuyết Trôi Đùn (32×32)"
+  },
+  {
+    "key": "decor_snow_sparkle",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Đốm Tinh Thể Tuyết Lấp Lánh (32×32)"
+  },
+  {
+    "key": "decor_snow_crack",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Vết Nứt Băng Giá (32×32)"
+  },
+  {
+    "key": "decor_snow_flower",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Mầm Hoa Dại Nở Trong Tuyết (32×32)"
+  },
+  {
+    "key": "decor_snow_mound",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Mô Tuyết Đắp Nổi (32×32)"
+  },
+  {
+    "key": "decor_snow_frost_grass",
+    "kind": "decal",
+    "w": 64,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Mảng Băng Tuyết Phủ Rộng (64×32)"
+  },
+  {
+    "key": "decor_snow_grass_1",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Khóm Cỏ Sương Giá Dáng Đứng (32×32)"
+  },
+  {
+    "key": "decor_snow_grass_2",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Khóm Cỏ Sương Giá Dáng Xòe (32×32)"
+  },
+  {
+    "key": "blizzard_1",
+    "kind": "weather",
+    "w": 16,
+    "h": 16,
+    "anchor": "center",
+    "vn": "Bông Tuyết Lớn / Cụm Băng Giá (16×16)"
+  },
+  {
+    "key": "blizzard_2",
+    "kind": "weather",
+    "w": 16,
+    "h": 16,
+    "anchor": "center",
+    "vn": "Hoa Tuyết Vừa Băng Giá (16×16)"
+  },
+  {
+    "key": "blizzard_3",
+    "kind": "weather",
+    "w": 16,
+    "h": 16,
+    "anchor": "center",
+    "vn": "Hạt Bụi Tuyết Li Ti (16×16)"
+  },
+  {
+    "key": "blizzard_4",
+    "kind": "weather",
+    "w": 16,
+    "h": 16,
+    "anchor": "center",
+    "vn": "Mảnh Vụn Gió Lốc Bão Tuyết (16×16)"
+  },
+  {
+    "key": "water_snow_pure",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Nước Hồ Băng Tuyết Thuần (Pure Glacial Water 4 Frames)"
+  },
+  {
+    "key": "water_snow_top",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Bờ Hồ Băng Tuyết Bắc (Top Bank 4 Frames)"
+  },
+  {
+    "key": "water_snow_bot",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Bờ Hồ Băng Tuyết Nam (Bottom Bank 4 Frames)"
+  },
+  {
+    "key": "water_snow_left",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Bờ Hồ Băng Tuyết Tây (Left Bank 4 Frames)"
+  },
+  {
+    "key": "water_snow_right",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Bờ Hồ Băng Tuyết Đông (Right Bank 4 Frames)"
+  },
+  {
+    "key": "water_snow_tl",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Góc Bờ Hồ Băng Tuyết Tây-Bắc (Top-Left 4 Frames)"
+  },
+  {
+    "key": "water_snow_tr",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Góc Bờ Hồ Băng Tuyết Đông-Bắc (Top-Right 4 Frames)"
+  },
+  {
+    "key": "water_snow_bl",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Góc Bờ Hồ Băng Tuyết Tây-Nam (Bottom-Left 4 Frames)"
+  },
+  {
+    "key": "water_snow_br",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Góc Bờ Hồ Băng Tuyết Đông-Nam (Bottom-Right 4 Frames)"
+  },
+  {
+    "key": "water_snow_in_tl",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Góc Khuyết Hồ Băng Tuyết Tây-Bắc (Inner Top-Left 4 Frames)"
+  },
+  {
+    "key": "water_snow_in_tr",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Góc Khuyết Hồ Băng Tuyết Đông-Bắc (Inner Top-Right 4 Frames)"
+  },
+  {
+    "key": "water_snow_in_bl",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Góc Khuyết Hồ Băng Tuyết Tây-Nam (Inner Bottom-Left 4 Frames)"
+  },
+  {
+    "key": "water_snow_in_br",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Góc Khuyết Hồ Băng Tuyết Đông-Nam (Inner Bottom-Right 4 Frames)"
+  },
+  {
+    "key": "water_snow_curve",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Khúc Uốn Lượn Sông / Ngã Rẽ Nước Tuyết (River Curve 4 Frames)"
+  }
+]

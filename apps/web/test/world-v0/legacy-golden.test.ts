@@ -54,7 +54,7 @@ export function hashWorld(seed: number, radius: number): string {
   return fnv1a(parts.join(','));
 }
 
-const GOLDEN_SEED_101 = '7c5f333c';
+const GOLDEN_SEED_101 = '7625558f';
 
 describe('world generation golden hash', () => {
   it('generates deterministic content for 400 chunks at seed 101', () => {

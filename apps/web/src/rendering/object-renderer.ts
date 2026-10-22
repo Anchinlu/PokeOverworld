@@ -27,9 +27,40 @@ export class ObjectRenderer {
         const isRockSpires = plant.type === 'rock_dark_spires';
         const isDarkBush = plant.type.startsWith('bush_dark_');
         const isDarkSprout = plant.type === 'dark_sprout' || plant.type.startsWith('dark_sprout_');
+        // Ground decals and leaf piles belong to ground layer (Layer 0), never entity layer unless solid
+        if (
+          plant.type === 'leaf_pile_red_big' ||
+          (plant.type.startsWith('decor_') &&
+            plant.type !== 'decor_stump_autumn' &&
+            !plant.type.startsWith('decor_snow_rock_') &&
+            !plant.type.startsWith('decor_snow_stump_') &&
+            plant.type !== 'decor_snow_log')
+        ) {
+          continue;
+        }
+
+        const isAutumnBushBig = plant.type.startsWith('bush_spiky_big_');
+        const isAutumnBush = plant.type.startsWith('bush_spiky_');
+        const isAutumnDecal =
+          plant.type.startsWith('flower_vine_') || plant.type.startsWith('rocks_');
+        const isSnowBushBig = plant.type.startsWith('bush_snow_');
+        const isSnowTall =
+          plant.type.startsWith('tree_snow_cone_') ||
+          plant.type.startsWith('crystal_snow_');
+        const isSnowLog = plant.type === 'log_snow_fallen' || plant.type === 'rock_snow_boulder';
+        const isSnowDecal =
+          plant.type.startsWith('decor_snow_') ||
+          plant.type === 'rock_snow_pointed' ||
+          plant.type === 'rock_snow_pebbles' ||
+          plant.type === 'stump_snow';
+
         const isTall =
           isWhiteBush ||
           isDarkBush ||
+          isAutumnBush ||
+          isAutumnBushBig ||
+          isSnowBushBig ||
+          isSnowTall ||
           plant.type === 'bush_cone_autumn' ||
           plant.type === 'bush_cone_forest' ||
           plant.type === 'flower_purple_bell' ||
@@ -37,9 +68,22 @@ export class ObjectRenderer {
           plant.type === 'desert_succulent' ||
           plant.type === 'cactus_medium';
         const isVeryTall = isRockSpires || isDarkSprout;
-        const isStaticNatural = isTall || isVeryTall || isLog || isStump || isCactusSmall;
+        const isStaticNatural =
+          isTall ||
+          isVeryTall ||
+          isLog ||
+          isStump ||
+          isCactusSmall ||
+          isAutumnDecal ||
+          isSnowDecal ||
+          isSnowLog;
 
-        const w = isRockSpires ? 64 : isWhiteBush || isDarkBush || isLog ? 64 : 32;
+        const w =
+          isRockSpires || isAutumnBushBig || isSnowBushBig || isSnowLog
+            ? 64
+            : isWhiteBush || isDarkBush || isLog
+            ? 64
+            : 32;
         const h = isVeryTall ? 96 : isTall ? 64 : 32;
 
         if (
@@ -53,7 +97,7 @@ export class ObjectRenderer {
             if (isStaticNatural) {
               const ySort = isVeryTall
                 ? plant.y + 90
-                : isWhiteBush || isDarkBush
+                : isWhiteBush || isDarkBush || isAutumnBush || isAutumnBushBig || isSnowBushBig
                 ? plant.y + 56
                 : isTall
                 ? plant.y + 58
@@ -88,20 +132,23 @@ export class ObjectRenderer {
     for (const chunk of chunkManager.renderChunks) {
       if (!chunk.waterFlora || chunk.waterFlora.length === 0) continue;
       for (const flora of chunk.waterFlora) {
+        const isCrystal = flora.type.startsWith('crystal_');
+        const h = isCrystal ? 64 : 32;
         if (
           flora.x + 32 >= bounds.minX &&
           flora.x <= bounds.maxX &&
-          flora.y + 32 >= bounds.minY &&
+          flora.y + h >= bounds.minY &&
           flora.y <= bounds.maxY
         ) {
           const img = this.loader.getImage(flora.type);
           if (img && img.complete) {
-            // Crisp discrete aquatic bobbing on freshwater lake & river surfaces (integer pixels only, no subpixel blur)
-            const bobY = Math.round(Math.sin(now / 550 + flora.phase) * 1.2);
+            // Crisp discrete aquatic bobbing on freshwater lake & river surfaces (ice crystals remain anchored)
+            const bobY = isCrystal ? 0 : Math.round(Math.sin(now / 550 + flora.phase) * 1.2);
+            const renderY = isCrystal ? flora.y - 32 : flora.y + bobY;
             list.push({
-              ySort: flora.y + 12,
+              ySort: isCrystal ? flora.y + 28 : flora.y + 12,
               draw: (ctx) => {
-                ctx.drawImage(img, flora.x, flora.y + bobY);
+                ctx.drawImage(img, flora.x, renderY);
               },
             });
           }
@@ -222,6 +269,13 @@ export class ObjectRenderer {
           tree.type === 'dark_large_2' ||
           tree.type === 'dark_dead';
         const isDarkForest = tree.type === 'dark_forest';
+        const isAutumnTree =
+          tree.type.startsWith('maple_') ||
+          tree.type.startsWith('larch_') ||
+          tree.type.startsWith('tree_maple_') ||
+          tree.type.startsWith('tree_larch_');
+        const isSnowTree =
+          tree.type.startsWith('snow_pine_') || tree.type.startsWith('tree_snow_');
 
         const w = isPalm || isDarkLarge ? 128 : isDarkForest ? 96 : 64;
         const h = isPalm
@@ -234,6 +288,8 @@ export class ObjectRenderer {
           ? 96
           : isDead || isBoulder
           ? 64
+          : isAutumnTree || isSnowTree
+          ? 128
           : 120;
         const ySort = isPalm
           ? tree.y + 151
@@ -245,6 +301,8 @@ export class ObjectRenderer {
           ? tree.y + 88
           : isDead || isBoulder
           ? tree.y + 58
+          : isAutumnTree || isSnowTree
+          ? tree.y + 120
           : tree.y + 112;
 
         if (
@@ -253,7 +311,7 @@ export class ObjectRenderer {
           tree.y + h >= bounds.minY &&
           tree.y <= bounds.maxY
         ) {
-          let imgKey = `tree_${tree.type}`;
+          let imgKey = tree.type.startsWith('tree_') ? tree.type : `tree_${tree.type}`;
           if (isCactusLarge) imgKey = 'cactus_large';
           else if (isBoulder) imgKey = 'rock_desert_boulder';
           const img = this.loader.getImage(imgKey);
@@ -280,7 +338,11 @@ export class ObjectRenderer {
     const imgTG = this.loader.getImage('tall_grass_strip');
     const imgTGDark =
       this.loader.getImage('tall_grass_dark_strip') ?? this.loader.getImage('tall_grass_dark');
-    if (!imgTG || !imgTG.complete) return;
+    const imgTGAutumn =
+      this.loader.getImage('tall_grass_autumn_strip') ?? this.loader.getImage('tall_grass_autumn');
+    const imgTGSnow =
+      this.loader.getImage('tall_grass_snow_strip') ?? this.loader.getImage('tall_grass_snow');
+    if (!imgTG?.complete && !imgTGDark?.complete && !imgTGAutumn?.complete && !imgTGSnow?.complete) return;
 
     // Index wildlife occupancy once. The old implementation scanned every
     // wild Pokémon for every tall-grass tile (O(grass * wildlife)).
@@ -353,7 +415,8 @@ export class ObjectRenderer {
               ctx.closePath();
               ctx.clip();
 
-              const img = (tg.isDark ? imgTGDark : imgTG) ?? imgTG;
+              const img =
+                (tg.isSnow ? imgTGSnow : tg.isAutumn ? imgTGAutumn : tg.isDark ? imgTGDark : imgTG) ?? imgTG;
               if (img && img.complete) {
                 ctx.drawImage(img, fIdx * 32, 0, 32, 32, bx, by, 32, grassHeight);
               }

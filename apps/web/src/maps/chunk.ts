@@ -172,7 +172,12 @@ export class WorldChunk implements MapChunk {
         const tileId = this.tileIdGrid[ly]?.[lx];
         if (
           tileId === undefined ||
-          !((tileId >= 700 && tileId < 730) || (tileId >= 730 && tileId <= 742))
+          !(
+            (tileId >= 700 && tileId < 730) ||
+            (tileId >= 730 && tileId <= 742) ||
+            (tileId >= 750 && tileId <= 763) ||
+            (tileId >= 770 && tileId <= 783)
+          )
         ) {
           continue;
         }

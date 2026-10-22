@@ -20,6 +20,7 @@ import {
   initEvolutionNotification,
   worldMapScreen,
   updateWorldTimeWidget,
+  MinimapController,
 } from './ui';
 import { initDesktopShell } from './shell/desktop';
 import { installBrowserGuards } from './shell/browser-guards';
@@ -62,10 +63,9 @@ export async function bootstrap(): Promise<void> {
     throw new Error('Application root element was not found.');
   }
 
-  // 1. Scaffold UI & Initialize Autosave Coordinator
+  // 1. Scaffold UI
   app.innerHTML = createOverlayTemplate();
   initDesktopShell();
-  autosaveCoordinator.init();
 
   const canvas = document.querySelector<HTMLCanvasElement>('#gameCanvas')!;
   const loadingOverlay = document.querySelector<HTMLDivElement>('#loadingOverlay');
@@ -109,6 +109,7 @@ export async function bootstrap(): Promise<void> {
   // 4. Overworld State Manager & Decoupled Launcher
   let isWorldLaunched = false;
   let debugController: DebugOverlayController | null = null;
+  let minimapController: MinimapController | null = null;
   let activeSaveSlot = 'slot_1';
 
   function setOverworldUiVisible(visible: boolean): void {
@@ -119,6 +120,7 @@ export async function bootstrap(): Promise<void> {
     const timeWidget = document.querySelector<HTMLElement>('#worldTimeWidget');
     if (timeWidget) timeWidget.style.display = visible ? '' : 'none';
     if (debugController) debugController.setVisible(visible);
+    if (minimapController) minimapController.setModalHidden(!visible);
   }
 
   function launchGameWorld(
@@ -136,8 +138,13 @@ export async function bootstrap(): Promise<void> {
       activeSaveSlot = slotIdOverride;
     }
 
+    // Bind autosave only after the title screen has resolved the selected
+    // slot. Initializing here prevents background saves from falling back to
+    // slot_1 while the player is actually using another slot.
+    autosaveCoordinator.init(activeSaveSlot);
+
     let currentSeed = seedOverride ?? 101;
-    let currentVersion = 4; // Default for new worlds is World Gen v4 (macro continents & archipelagos)
+    let currentVersion = 5; // Test worlds use the natural-landmass profile by default.
     let savedPosition: { gx: number; gy: number; direction?: number } | null = null;
     let savedTimeMinutes: number | undefined;
     let savedDay: number | undefined;
@@ -149,7 +156,7 @@ export async function bootstrap(): Promise<void> {
       inventoryService.reset();
       pcStorageService.reset();
       currentSeed = seedOverride ?? Math.floor(Math.random() * 899999) + 100001;
-      currentVersion = 4;
+      currentVersion = 5;
     } else {
       // 2. Load or continue existing world save
       const hasSave = saveGameRepository.hasSave(activeSaveSlot);
@@ -157,7 +164,7 @@ export async function bootstrap(): Promise<void> {
         const loadedData = saveGameRepository.load(activeSaveSlot);
         if (loadedData) {
           currentSeed = seedOverride ?? loadedData.world?.seed ?? 101;
-          currentVersion = loadedData.world?.worldGenVersion ?? 4;
+          currentVersion = loadedData.world?.worldGenVersion ?? 5;
           if (loadedData.world?.position) {
             savedPosition = loadedData.world.position;
           }
@@ -178,6 +185,8 @@ export async function bootstrap(): Promise<void> {
       initialDay: savedDay,
     });
     const renderer = new GameRenderer(canvas, assetLoader);
+    (window as unknown as { gameRenderer: unknown; gameSession: unknown }).gameRenderer = renderer;
+    (window as unknown as { gameRenderer: unknown; gameSession: unknown }).gameSession = session;
 
     // If loaded existing save position, restore it
     if (savedPosition) {
@@ -278,6 +287,31 @@ export async function bootstrap(): Promise<void> {
       setTimeSpeed: (multiplier: number) => {
         session.worldClock.setSpeedMultiplier(multiplier);
         showBerryToast(`⚡ Tốc độ thời gian: ${multiplier}x`, '#a855f7');
+      },
+      setWeather: (weather: string) => {
+        const w = (weather === 'auto' ? null : weather) as
+          import('./world/overworld-weather').OverworldWeather | null;
+        session.setWeatherOverride(w);
+        const activeWeather = w ?? session.getWeather();
+        renderer.setWeather(activeWeather);
+
+        if (
+          activeWeather === 'rain' ||
+          activeWeather === 'heavy_rain' ||
+          activeWeather === 'thunderstorm'
+        ) {
+          renderer.setOptions({ showRain: true });
+          const chkRain = document.querySelector<HTMLInputElement>('#chkRain');
+          if (chkRain) chkRain.checked = true;
+        }
+
+        const weatherNames: Record<string, string> = {
+          clear: '☀️ Trời quang mây tạnh',
+          rain: '🌧️ Mưa rào',
+          heavy_rain: '🌧️ Mưa to xối xả',
+          thunderstorm: '⛈️ Bão sấm chớp',
+        };
+        showBerryToast(`🌦️ Thời tiết: ${weatherNames[weather] ?? weather}`, '#38bdf8');
       },
       startTestBattle: (overlay, isShiny, weather, envPreset) => {
         session.startTestBattle(overlay, isShiny, weather, envPreset);
@@ -473,6 +507,14 @@ export async function bootstrap(): Promise<void> {
       },
       setRenderOption: (key, value) => {
         renderer.setOptions({ [key]: value } as Parameters<typeof renderer.setOptions>[0]);
+        if (key === 'showRain' && value) {
+          const curWeather = session.getWeather();
+          if (curWeather === 'clear' || curWeather === 'sun') {
+            session.setWeatherOverride('rain');
+            renderer.setWeather('rain');
+            showBerryToast('🌧️ Đã kích hoạt thời tiết mưa rào!', '#38bdf8');
+          }
+        }
       },
       setBerryCycle: (seconds) => {
         renderer.setBerryCycle(seconds);
@@ -488,6 +530,25 @@ export async function bootstrap(): Promise<void> {
       debugController = new DebugOverlayController(debugBridge);
       debugController.mount(app);
     }
+
+    // Initialize Overworld Mini-map HUD (top-right)
+    minimapController = new MinimapController({
+      onOpenWorldMap: () => {
+        if (
+          !session.isBattling &&
+          !isPokedexOpen() &&
+          !isPartyScreenOpen() &&
+          !isBagScreenOpen() &&
+          !storageScreen.isVisible()
+        ) {
+          worldMapScreen.toggle(session);
+        }
+      },
+    });
+    minimapController.mount(app ?? document.body);
+    minimapController.setSession(session);
+    minimapController.updatePlayer(session.player.gx, session.player.gy, session.player.direction);
+
     setOverworldUiVisible(true);
 
     // Initial sync for on-screen world time widget
@@ -622,6 +683,7 @@ export async function bootstrap(): Promise<void> {
           const dir = (data.world.position.direction ?? 0) as Direction;
           session.player.snapTo(data.world.position.gx, data.world.position.gy, dir);
           session.follower.snapTo(data.world.position.gx, data.world.position.gy - 1, dir);
+          minimapController?.forceRefresh();
         }
         if (typeof data.world?.worldTimeMinutes === 'number') {
           session.worldClock.setMinutes(data.world.worldTimeMinutes);
@@ -708,13 +770,21 @@ export async function bootstrap(): Promise<void> {
       // 3. Stop the game loop
       loop.stop();
       session.worldClock.pause('quit');
+
+      // Release the autosave coordinator so the next world launch can bind
+      // to the newly selected save slot instead of keeping the old slot.
+      autosaveCoordinator.dispose();
       session.destroy();
 
-      // 4. Clean up overworld event listeners & debug controller
+      // 4. Clean up overworld event listeners & debug / minimap controllers
       worldAbortController.abort();
       if (debugController) {
         debugController.destroy();
         debugController = null;
+      }
+      if (minimapController) {
+        minimapController.destroy();
+        minimapController = null;
       }
 
       // 5. Hide Overworld HUD & reset world launched state
@@ -899,6 +969,22 @@ export async function bootstrap(): Promise<void> {
           return;
         }
 
+        if (e.code === 'KeyN') {
+          if (
+            session.isBattling ||
+            isPokedexOpen() ||
+            isPartyScreenOpen() ||
+            isBagScreenOpen() ||
+            storageScreen.isVisible() ||
+            worldMapScreen.isOpen()
+          ) {
+            return;
+          }
+          minimapController?.toggle();
+          e.preventDefault();
+          return;
+        }
+
         if (e.code === 'KeyM') {
           if (
             !session.isBattling &&
@@ -938,8 +1024,26 @@ export async function bootstrap(): Promise<void> {
         return;
       }
 
+      // Synchronize overworld weather with WeatherCloudController
+      renderer.getCloudController().setWeather(session.getWeather());
+      renderer.getCloudController().setPaused(session.isBattling || document.hidden);
+
       const collisionEnabled = debugController?.isCollisionEnabled() ?? true;
       const { pChunkX, pChunkY } = session.update(dtScale, collisionEnabled);
+
+      minimapController?.setModalHidden(
+        session.isBattling ||
+          isPokedexOpen() ||
+          isPartyScreenOpen() ||
+          isBagScreenOpen() ||
+          storageScreen.isVisible() ||
+          worldMapScreen.isOpen()
+      );
+      minimapController?.updatePlayer(
+        session.player.gx,
+        session.player.gy,
+        session.player.direction
+      );
 
       hudTick++;
       if (hudTick % 6 === 0) {
@@ -984,14 +1088,24 @@ export async function bootstrap(): Promise<void> {
       );
     }
 
+    // Auto-pause WeatherCloudController when tab is hidden to conserve GPU/CPU resources
+    const onVisibilityChange = (): void => {
+      renderer.getCloudController().setPaused(document.hidden || session.isBattling);
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange, { signal });
+
     const loop = new GameLoop(onUpdate, onRender);
     worldMapScreen.setVisibilityListener((isOpen) => {
       if (isOpen) {
         loop.pause();
         session.worldClock.pause('world_map');
+        renderer.getCloudController().setPaused(true);
+        minimapController?.setModalHidden(true);
       } else {
         loop.resume();
         session.worldClock.resume('world_map');
+        renderer.getCloudController().setPaused(false);
+        minimapController?.setModalHidden(false);
       }
     });
     loop.start();

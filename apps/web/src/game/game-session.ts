@@ -36,7 +36,7 @@ import type {
   WorldClockConfig,
 } from '@pokemon/shared-types';
 import { TILE_SIZE, TERRAIN } from '@pokemon/game-data';
-import { getDayPhase, getAmbientLightProfile, getOverworldWeather } from '../world';
+import { getDayPhase, getAmbientLightProfile, getOverworldWeather, type OverworldWeather } from '../world';
 import { checkAABB, getCharacterHitbox } from '../systems/collision';
 import { getWildSpriteAabb } from '../wildlife/behavior/movement/wild-hitbox';
 
@@ -922,11 +922,31 @@ export class GameSession {
   }
 
   public getAmbientLight(): AmbientLightProfile {
-    return getAmbientLightProfile(this.worldClock.getExactMinutes());
+    const isDesert = Boolean(this.chunkManager.field?.isDesert?.(this.player.gx, this.player.gy));
+    const weather = this.getWeather();
+    // In desert, rain/thunderstorm weather does not apply cold rain gloom to ambient light
+    const effectiveWeather =
+      isDesert && (weather === 'rain' || weather === 'heavy_rain' || weather === 'thunderstorm')
+        ? 'clear'
+        : weather;
+    return getAmbientLightProfile(this.worldClock.getExactMinutes(), effectiveWeather);
   }
 
   public getDayPhase(): DayPhase {
     return getDayPhase(this.worldClock.getMinutes());
+  }
+
+  private weatherOverride: OverworldWeather | null = null;
+
+  public setWeatherOverride(weather: OverworldWeather | null): void {
+    this.weatherOverride = weather;
+  }
+
+  public getWeather(): OverworldWeather {
+    if (this.weatherOverride) {
+      return this.weatherOverride;
+    }
+    return getOverworldWeather(this.seed, this.worldClock.getDay(), this.worldClock.getMinutes());
   }
 
   public interactAt(worldGX: number, worldGY: number, renderer: GameRenderer): void {

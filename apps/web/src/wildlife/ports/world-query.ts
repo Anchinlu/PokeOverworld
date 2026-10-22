@@ -1,3 +1,5 @@
+import type { RuntimeBiomeId } from '../../maps/ecology';
+
 export type TileContext =
   'tall_grass' | 'forest_floor' | 'water_surface' | 'shore' | 'rock' | 'sand' | 'walkable_ground';
 
@@ -15,7 +17,7 @@ export interface WorldQuery {
   ): boolean;
   isElevated?(gx: number, gy: number): boolean;
   contextAt(gx: number, gy: number): TileContext;
-  biomeAt(gx: number, gy: number): string;
+  biomeAt(gx: number, gy: number): RuntimeBiomeId;
   difficultyAt(gx: number, gy: number): number;
   timeBand(): TimeBand;
   weather(): WeatherType;

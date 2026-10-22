@@ -6,22 +6,25 @@ import { ContinentService, type ContinentPlan } from '../../continent';
 import { isV0RoadTile } from './settlement-sites';
 import { getStartSpawn } from './start-village';
 import { isTreeClippingBuilding } from '../village-rules';
-import { V4_CONFIG } from './v4-config';
+import { V4_CONFIG, type V4LandmassProfile } from './v4-config';
 
-/** World Gen v4: macro continent selection plus natural islands and coasts. */
+/** World Gen v4 classic / v5 natural-landmass field. */
 export class V4Field implements TerrainField {
-  public readonly version = 4;
+  public readonly version: number;
+  public readonly profile: V4LandmassProfile;
   public readonly seed: number;
   public readonly macroPlan: V4MacroPlan;
   public readonly continentPlan: ContinentPlan;
   private readonly planCache: V4TerrainPlanCache;
   private readonly settlementRoadNeighborhood = new Set<string>();
 
-  public constructor(seed: number) {
+  public constructor(seed: number, profile: V4LandmassProfile = 'classic') {
+    this.profile = profile;
+    this.version = profile === 'natural-landmass' ? 5 : 4;
     this.seed = seed;
     this.continentPlan = new ContinentService(seed).getPlan();
     this.macroPlan = this.continentPlan.macroPlan;
-    this.planCache = new V4TerrainPlanCache(seed, this.macroPlan);
+    this.planCache = new V4TerrainPlanCache(seed, this.macroPlan, profile);
     for (const settlement of this.continentPlan.settlements) {
       const mx = Math.floor(settlement.gx / this.continentPlan.cellSize);
       const my = Math.floor(settlement.gy / this.continentPlan.cellSize);
@@ -48,6 +51,8 @@ export class V4Field implements TerrainField {
     isLake: boolean;
     isDesert: boolean;
     isDarkLand: boolean;
+    isAutumn: boolean;
+    isSnow: boolean;
   } {
     const cx = Math.floor(gx / 16);
     const cy = Math.floor(gy / 16);
@@ -63,6 +68,8 @@ export class V4Field implements TerrainField {
       isLake: plan.isLake?.[index] === 1,
       isDesert: plan.isDesert?.[index] === 1,
       isDarkLand: plan.isDarkLand?.[index] === 1,
+      isAutumn: plan.isAutumn?.[index] === 1,
+      isSnow: plan.isSnow?.[index] === 1,
     };
   }
 
@@ -82,9 +89,13 @@ export class V4Field implements TerrainField {
 
   public isDarkLand = (gx: number, gy: number): boolean => this.getCell(gx, gy).isDarkLand;
 
+  public isAutumn = (gx: number, gy: number): boolean => this.getCell(gx, gy).isAutumn;
+
+  public isSnow = (gx: number, gy: number): boolean => this.getCell(gx, gy).isSnow;
+
   public isRoad(gx: number, gy: number): boolean {
     // Roads are local village paths only and never occupy elevated terrain.
-    if (this.isHill(gx, gy)) return false;
+    if (this.isHill(gx, gy) || this.isSnow(gx, gy)) return false;
     if (this.isContinentRoadTile(gx, gy)) return true;
 
     // Village paths are relevant only near a settlement. Avoid scanning every
@@ -170,7 +181,35 @@ export class V4Field implements TerrainField {
   }
 
   public getSpawn(): { gx: number; gy: number } {
-    return getStartSpawn();
+    const preferred = getStartSpawn();
+    if (this.isStartPlain(preferred.gx, preferred.gy)) return preferred;
+
+    // The village door is normally inside the forced starter core. Keep a
+    // deterministic nearby fallback for unusual seeds or custom village
+    // layouts so a new world can never start on a special biome or water.
+    for (let radius = 1; radius <= V4_CONFIG.START_CORE_RADIUS; radius++) {
+      for (let gy = -radius; gy <= radius; gy++) {
+        for (let gx = -radius; gx <= radius; gx++) {
+          if (Math.max(Math.abs(gx), Math.abs(gy)) !== radius) continue;
+          if (this.isStartPlain(gx, gy)) return { gx, gy };
+        }
+      }
+    }
+
+    return { gx: 0, gy: 0 };
+  }
+
+  private isStartPlain(gx: number, gy: number): boolean {
+    return (
+      !this.isOcean(gx, gy) &&
+      !this.isSand(gx, gy) &&
+      !this.isWater(gx, gy) &&
+      !this.isHill(gx, gy) &&
+      !this.isDesert(gx, gy) &&
+      !this.isDarkLand(gx, gy) &&
+      !this.isAutumn(gx, gy) &&
+      !this.isSnow(gx, gy)
+    );
   }
 
   public getRoadCenterX(_gy: number): number {
@@ -186,7 +225,7 @@ export class V4Field implements TerrainField {
     let firstHill: boolean | null = null;
     for (let r = rStart; r <= rEnd; r++) {
       for (let c = cStart; c <= cEnd; c++) {
-        if (this.isSand(c, r) || this.isOcean(c, r) || this.isRoad(c, r)) return false;
+        if (this.isSand(c, r) || this.isWater(c, r) || this.isRoad(c, r)) return false;
         const hill = this.isHill(c, r);
         if (firstHill === null) firstHill = hill;
         else if (hill !== firstHill) return false;
@@ -197,7 +236,7 @@ export class V4Field implements TerrainField {
     const rootC1 = Math.floor((tx + 18) / ts);
     const rootC2 = Math.floor((tx + 46) / ts);
     if (this.isSand(rootC1, rootR) || this.isSand(rootC2, rootR)) return false;
-    if (this.isOcean(rootC1, rootR) || this.isOcean(rootC2, rootR)) return false;
+    if (this.isWater(rootC1, rootR) || this.isWater(rootC2, rootR)) return false;
     return !isTreeClippingBuilding(tx, ty, this);
   }
 

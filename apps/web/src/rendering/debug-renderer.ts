@@ -51,7 +51,7 @@ export class DebugRenderer {
           if (x + 32 < bounds.minX || x > bounds.maxX || y + 32 < bounds.minY || y > bounds.maxY)
             continue;
 
-          const sample = sampleEcology(gx, gy, chunkManager.currentSeed);
+          const sample = sampleEcology(gx, gy, chunkManager.field);
           const m = sample.moisture;
           // Interpolate from dry yellow (234, 179, 8) to wet blue (6, 182, 212)
           const r = Math.round(234 * (1 - m) + 6 * m);
@@ -81,7 +81,7 @@ export class DebugRenderer {
           if (x + 32 < bounds.minX || x > bounds.maxX || y + 32 < bounds.minY || y > bounds.maxY)
             continue;
 
-          const sample = sampleEcology(gx, gy, chunkManager.currentSeed);
+          const sample = sampleEcology(gx, gy, chunkManager.field);
           const f = sample.fertility;
           // Interpolate from low fertility ochre (217, 119, 6) to lush green (34, 197, 94)
           const r = Math.round(217 * (1 - f) + 34 * f);
@@ -111,7 +111,7 @@ export class DebugRenderer {
           if (x + 32 < bounds.minX || x > bounds.maxX || y + 32 < bounds.minY || y > bounds.maxY)
             continue;
 
-          const sample = sampleEcology(gx, gy, chunkManager.currentSeed);
+          const sample = sampleEcology(gx, gy, chunkManager.field);
           const d = sample.density;
           // Interpolate from sparse pale green (187, 247, 208) to deep pine green (20, 83, 45)
           const r = Math.round(187 * (1 - d) + 20 * d);
@@ -149,7 +149,6 @@ export class DebugRenderer {
           else if (zone === 'dryland') ctx.fillStyle = 'rgba(217, 119, 6, 0.55)';
           else if (zone === 'dense_forest') ctx.fillStyle = 'rgba(21, 128, 61, 0.65)';
           else if (zone === 'light_forest') ctx.fillStyle = 'rgba(74, 222, 128, 0.55)';
-          else if (zone === 'hill_edge') ctx.fillStyle = 'rgba(100, 116, 139, 0.6)';
           else if (zone === 'dark_land') ctx.fillStyle = 'rgba(71, 36, 92, 0.7)';
 
           ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);

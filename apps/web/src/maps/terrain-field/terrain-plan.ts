@@ -15,6 +15,8 @@ export interface ChunkTerrainPlan {
   readonly isLake?: Uint8Array;
   readonly isDesert?: Uint8Array;
   readonly isDarkLand?: Uint8Array;
+  readonly isAutumn?: Uint8Array;
+  readonly isSnow?: Uint8Array;
 }
 
 export class TerrainPlanCache {

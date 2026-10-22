@@ -1,4 +1,11 @@
-import { isV4SourceLand, V4_CONFIG, type V4SourceOffset } from './v4-config';
+import { fbm2 } from './noise';
+import { isV4LakeTile, isV4RiverTile } from './v4-water';
+import {
+  isV4SourceLand,
+  sampleV4ContinentalValue,
+  V4_CONFIG,
+  type V4SourceOffset,
+} from './v4-config';
 
 export interface V4HomeContinentStats {
   readonly sourceMinMX: number;
@@ -7,6 +14,12 @@ export interface V4HomeContinentStats {
   readonly sourceMaxMY: number;
   readonly areaCells: number;
   readonly originSourceCell: { mx: number; my: number };
+}
+
+export interface V4StartLocation {
+  readonly sourceMX: number;
+  readonly sourceMY: number;
+  readonly clearance: number;
 }
 
 interface MacroComponent {
@@ -27,11 +40,13 @@ export class V4MacroPlan {
   public readonly seed: number;
   public readonly sourceOffset: V4SourceOffset;
   public readonly homeContinent: V4HomeContinentStats;
+  public readonly startLocation: V4StartLocation;
 
   private readonly cols = V4_CONFIG.HOME_SCAN_MAX_MX - V4_CONFIG.HOME_SCAN_MIN_MX + 1;
   private readonly rows = V4_CONFIG.HOME_SCAN_MAX_MY - V4_CONFIG.HOME_SCAN_MIN_MY + 1;
   private readonly sourceLand: Uint8Array;
   private readonly selectedComponent: Set<number>;
+  private readonly islandComponents: Set<number>;
 
   public constructor(seed: number) {
     this.seed = seed;
@@ -39,8 +54,23 @@ export class V4MacroPlan {
     const components = this.findComponents();
     const selected = this.selectHomeComponent(components);
     this.selectedComponent = new Set(selected.cells);
+    this.islandComponents = new Set(
+      components
+        .filter(
+          (component) =>
+            component !== selected &&
+            component.area >= V4_CONFIG.ISLAND_MIN_CELLS &&
+            component.area <= V4_CONFIG.ISLAND_MAX_CELLS
+        )
+        .flatMap((component) => component.cells)
+    );
 
-    const origin = this.findDeepestCell(selected);
+    const origin = this.findStartLocation(selected);
+    this.startLocation = {
+      sourceMX: origin.mx,
+      sourceMY: origin.my,
+      clearance: origin.clearance,
+    };
     this.sourceOffset = {
       gx: origin.mx * V4_CONFIG.CELL_SIZE + V4_CONFIG.CELL_SIZE / 2,
       gy: origin.my * V4_CONFIG.CELL_SIZE + V4_CONFIG.CELL_SIZE / 2,
@@ -51,19 +81,33 @@ export class V4MacroPlan {
       sourceMinMY: Math.min(...selected.cells.map((index) => this.indexToMY(index))),
       sourceMaxMY: Math.max(...selected.cells.map((index) => this.indexToMY(index))),
       areaCells: selected.area,
-      originSourceCell: origin,
+      originSourceCell: { mx: origin.mx, my: origin.my },
     };
   }
 
   public isHomeContinentCell(worldMX: number, worldMY: number): boolean {
-    const sourceMX = Math.floor(
-      (worldMX * V4_CONFIG.CELL_SIZE + this.sourceOffset.gx) / V4_CONFIG.CELL_SIZE
-    );
-    const sourceMY = Math.floor(
-      (worldMY * V4_CONFIG.CELL_SIZE + this.sourceOffset.gy) / V4_CONFIG.CELL_SIZE
-    );
-    const index = this.toIndex(sourceMX, sourceMY);
+    const index = this.toSourceIndex(worldMX, worldMY);
     return index >= 0 ? this.selectedComponent.has(index) : false;
+  }
+
+  /** Returns true for the selected home continent or an intentionally small island. */
+  public isNaturalLandCell(worldMX: number, worldMY: number): boolean {
+    const index = this.toSourceIndex(worldMX, worldMY);
+    return index >= 0 && (this.selectedComponent.has(index) || this.islandComponents.has(index));
+  }
+
+  /**
+   * Keeps one macro-cell of continuous-field transition around landmasses.
+   * Without this buffer, component clipping would create axis-aligned coast
+   * edges at 32-tile macro-cell boundaries.
+   */
+  public isNearNaturalLandCell(worldMX: number, worldMY: number, radius = 1): boolean {
+    for (let dy = -radius; dy <= radius; dy++) {
+      for (let dx = -radius; dx <= radius; dx++) {
+        if (this.isNaturalLandCell(worldMX + dx, worldMY + dy)) return true;
+      }
+    }
+    return false;
   }
 
   public isMacroLandAtWorld(gx: number, gy: number): boolean {
@@ -80,6 +124,16 @@ export class V4MacroPlan {
 
   public getSourceCoordinates(gx: number, gy: number): { gx: number; gy: number } {
     return { gx: gx + this.sourceOffset.gx, gy: gy + this.sourceOffset.gy };
+  }
+
+  private toSourceIndex(worldMX: number, worldMY: number): number {
+    const sourceMX = Math.floor(
+      (worldMX * V4_CONFIG.CELL_SIZE + this.sourceOffset.gx) / V4_CONFIG.CELL_SIZE
+    );
+    const sourceMY = Math.floor(
+      (worldMY * V4_CONFIG.CELL_SIZE + this.sourceOffset.gy) / V4_CONFIG.CELL_SIZE
+    );
+    return this.toIndex(sourceMX, sourceMY);
   }
 
   private buildSourceLandMask(): Uint8Array {
@@ -179,6 +233,103 @@ export class V4MacroPlan {
       }
     }
     return best;
+  }
+
+  /**
+   * Finds a deterministic flat start area inside the selected continent.
+   *
+   * The village is still placed at world coordinate (0, 0); only the source
+   * offset changes. This preserves the existing village/save API while making
+   * each seed choose a genuinely suitable plain instead of relying on a large
+   * artificial safe circle around the origin.
+   */
+  private findStartLocation(component: MacroComponent): {
+    mx: number;
+    my: number;
+    clearance: number;
+  } {
+    const componentSet = new Set(component.cells);
+    let best:
+      { mx: number; my: number; clearance: number; score: number; index: number } | undefined;
+
+    for (const index of component.cells) {
+      const mx = this.indexToMX(index);
+      const my = this.indexToMY(index);
+      const clearance = this.measureClearance(mx, my, componentSet);
+      if (clearance < 8) continue;
+
+      const sourceGX = mx * V4_CONFIG.CELL_SIZE + V4_CONFIG.CELL_SIZE / 2;
+      const sourceGY = my * V4_CONFIG.CELL_SIZE + V4_CONFIG.CELL_SIZE / 2;
+      // Reject obviously unsuitable macro cells before the more expensive
+      // footprint scan below.
+      if (this.isStartSpecialBiome(sourceGX, sourceGY) || this.isStartHill(sourceGX, sourceGY)) {
+        continue;
+      }
+      if (!this.isSuitableStartArea(sourceGX, sourceGY)) continue;
+
+      const distanceFromCenter = mx * mx + my * my;
+      const score = clearance * 10_000 - distanceFromCenter;
+      if (!best || score > best.score || (score === best.score && index < best.index)) {
+        best = { mx, my, clearance, score, index };
+      }
+    }
+
+    if (best) return best;
+    const fallback = this.findDeepestCell(component);
+    return {
+      ...fallback,
+      clearance: this.measureClearance(fallback.mx, fallback.my, componentSet),
+    };
+  }
+
+  private isSuitableStartArea(sourceGX: number, sourceGY: number): boolean {
+    const radius = V4_CONFIG.START_SEARCH_RADIUS;
+    const sampleStep = 8;
+    for (let dy = -radius; dy <= radius; dy += sampleStep) {
+      for (let dx = -radius; dx <= radius; dx += sampleStep) {
+        if (dx * dx + dy * dy > radius * radius) continue;
+        const gx = sourceGX + dx;
+        const gy = sourceGY + dy;
+        if (sampleV4ContinentalValue(gx, gy, this.seed) < V4_CONFIG.START_LAND_THRESHOLD) {
+          return false;
+        }
+        if (this.isStartSpecialBiome(gx, gy) || this.isStartHill(gx, gy)) return false;
+        if (isV4RiverTile(gx, gy, this.seed) || isV4LakeTile(gx, gy, this.seed)) return false;
+      }
+    }
+    return true;
+  }
+
+  private isStartHill(sourceGX: number, sourceGY: number): boolean {
+    return (
+      fbm2(
+        sourceGX / V4_CONFIG.HILL_SCALE,
+        sourceGY / V4_CONFIG.HILL_SCALE,
+        this.seed,
+        V4_CONFIG.HILL_SALT,
+        3
+      ) >= V4_CONFIG.START_HILL_THRESHOLD
+    );
+  }
+
+  private isStartSpecialBiome(sourceGX: number, sourceGY: number): boolean {
+    const samples = [
+      [V4_CONFIG.DESERT_SCALE, V4_CONFIG.DESERT_SALT, V4_CONFIG.DESERT_THRESHOLD],
+      [V4_CONFIG.DARK_SCALE, V4_CONFIG.DARK_SALT, V4_CONFIG.DARK_THRESHOLD],
+      [V4_CONFIG.AUTUMN_SCALE, V4_CONFIG.AUTUMN_SALT, V4_CONFIG.AUTUMN_THRESHOLD],
+      [V4_CONFIG.SNOW_SCALE, V4_CONFIG.SNOW_SALT, V4_CONFIG.SNOW_THRESHOLD],
+    ] as const;
+    return samples.some(([scale, salt, threshold]) => {
+      const region = fbm2(sourceGX / scale, sourceGY / scale, this.seed, salt, 3);
+      const detail = fbm2(
+        sourceGX / (scale * 0.48),
+        sourceGY / (scale * 0.48),
+        this.seed,
+        salt + 17,
+        2
+      );
+      return region * 0.9 + detail * 0.1 >= threshold - 0.02;
+    });
   }
 
   private measureClearance(mx: number, my: number, component: Set<number>): number {

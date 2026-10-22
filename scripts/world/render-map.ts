@@ -127,6 +127,10 @@ async function main() {
   let sandTiles = 0;
   let hillTiles = 0;
   let roadTiles = 0;
+  let desertTiles = 0;
+  let darkLandTiles = 0;
+  let autumnTiles = 0;
+  let freshwaterTiles = 0;
   let grassTiles = 0;
 
   // Color Palette [R, G, B, A]
@@ -134,6 +138,10 @@ async function main() {
   const C_SAND = [250, 204, 21, 255]; // Warm Gold
   const C_HILL = [120, 113, 108, 255]; // Stone Gray
   const C_ROAD = [180, 83, 9, 255]; // Earthy Clay Path
+  const C_DESERT = [224, 166, 72, 255]; // Dryland Amber
+  const C_DARK_LAND = [72, 46, 82, 255]; // Dark Land Plum
+  const C_AUTUMN = [217, 119, 6, 255]; // Autumn Ochre Orange
+  const C_FRESHWATER = [42, 160, 210, 255]; // River/Lake Blue
   const C_GRASS = [132, 204, 22, 255]; // Meadow Green
   const C_SPAWN = [255, 255, 255, 255]; // Pure White Marker
 
@@ -147,6 +155,15 @@ async function main() {
       if (field.isHill(gx, gy)) {
         col = C_HILL;
         hillTiles++;
+      } else if (field.isDesert?.(gx, gy)) {
+        col = C_DESERT;
+        desertTiles++;
+      } else if (field.isDarkLand?.(gx, gy)) {
+        col = C_DARK_LAND;
+        darkLandTiles++;
+      } else if (field.isAutumn?.(gx, gy)) {
+        col = C_AUTUMN;
+        autumnTiles++;
       } else if (field.isSand(gx, gy)) {
         col = C_SAND;
         sandTiles++;
@@ -157,8 +174,8 @@ async function main() {
         col = C_ROAD;
         roadTiles++;
       } else if (field.isWater(gx, gy)) {
-        col = C_OCEAN;
-        oceanTiles++;
+        col = C_FRESHWATER;
+        freshwaterTiles++;
       } else {
         grassTiles++;
       }
@@ -201,7 +218,11 @@ async function main() {
   console.log(`  Land Tiles : ${landTiles.toLocaleString()} (${landPct}%)`);
   console.log(`  Ocean Tiles: ${oceanTiles.toLocaleString()} (${oceanPct}%)`);
   console.log(`  Hill Tiles : ${hillTiles.toLocaleString()} (${hillOfLandPct}% of land)`);
+  console.log(`  Desert Tiles: ${desertTiles.toLocaleString()}`);
+  console.log(`  Dark Land  : ${darkLandTiles.toLocaleString()}`);
+  console.log(`  Autumn Forest: ${autumnTiles.toLocaleString()}`);
   console.log(`  Sand Tiles : ${sandTiles.toLocaleString()} (${sandPct}%)`);
+  console.log(`  Freshwater : ${freshwaterTiles.toLocaleString()}`);
   console.log(`  Road Tiles : ${roadTiles.toLocaleString()}`);
   console.log(`  Grass Tiles: ${grassTiles.toLocaleString()}`);
   console.log(`  Spawn Point: (${spawn.gx}, ${spawn.gy}) marked in white`);

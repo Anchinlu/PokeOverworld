@@ -1,12 +1,13 @@
-import { TERRAIN, TILE_IDS } from '@pokemon/game-data';
+import { TERRAIN } from '@pokemon/game-data';
 import type { ChunkManager } from '../maps/chunk-manager';
 import type { Player } from '../entities/player';
 import type { BattleOutcome, WildPokemonEntity } from './model';
 import { createWildlifeSystem, type WildlifeSystem } from './index';
 import type { WorldChunk } from '../maps/chunk';
 import type { PlayerQuery } from './ports/player-query';
-import type { TileContext, TimeBand, WeatherType, WorldQuery } from './ports/world-query';
-import { getEcologyZone, sampleEcology, resolveWorldBiome } from '../maps/ecology';
+import type { TimeBand, WeatherType, WorldQuery } from './ports/world-query';
+import { resolveWorldBiome } from '../maps/ecology';
+import { resolveWorldTileContext } from './ports/world-context';
 
 interface RuntimeState {
   system: WildlifeSystem;
@@ -141,27 +142,20 @@ function getEntitySnapshot(chunkManager: ChunkManager, runtime: RuntimeState): W
   return runtime.entitySnapshot;
 }
 
-function getContextAt(chunkManager: ChunkManager, gx: number, gy: number): TileContext {
-  if (typeof chunkManager.getLoadedTileData !== 'function') return 'tall_grass';
+function getContextAt(
+  chunkManager: ChunkManager,
+  gx: number,
+  gy: number
+): ReturnType<WorldQuery['contextAt']> {
+  if (typeof chunkManager.getLoadedTileData !== 'function') return 'walkable_ground';
 
   const tile = chunkManager.getLoadedTileData(gx, gy);
   if (!tile) return 'walkable_ground';
-  if (tile.tallGrass) return 'tall_grass';
-  if (chunkManager.field.isOcean(gx, gy)) {
-    return chunkManager.field.getOceanTileId(gx, gy) === TILE_IDS.ocean_water
-      ? 'water_surface'
-      : 'shore';
-  }
-  if (chunkManager.field.isWater(gx, gy) || chunkManager.field.isLake?.(gx, gy)) {
-    return 'water_surface';
-  }
-  if (chunkManager.field.isSand(gx, gy) || chunkManager.field.isDesert?.(gx, gy)) return 'sand';
-  if (chunkManager.field.isDarkLand?.(gx, gy)) return 'walkable_ground';
-
-  const zone = getEcologyZone(sampleEcology(gx, gy, chunkManager.field));
-  return zone === 'dense_forest' ? 'forest_floor' : 'walkable_ground';
+  return resolveWorldTileContext(chunkManager.field, gx, gy, {
+    isTallGrass: () => Boolean(tile.tallGrass),
+  });
 }
 
-function getBiomeAt(chunkManager: ChunkManager, gx: number, gy: number): string {
+function getBiomeAt(chunkManager: ChunkManager, gx: number, gy: number) {
   return resolveWorldBiome(chunkManager.field, gx, gy);
 }

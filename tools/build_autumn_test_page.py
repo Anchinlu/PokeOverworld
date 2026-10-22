@@ -1,0 +1,1121 @@
+"""Build the comprehensive Autumn Forest Showcase & Test Page with all 84 assets."""
+import json
+import os
+
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+CATALOG_PATH = os.path.join(ROOT, "tools", "sources", "autumn", "catalog_annotated.json")
+OUTPUT_HTML = os.path.join(ROOT, "apps", "web", "public", "autumn-forest-test.html")
+
+with open(CATALOG_PATH, encoding="utf-8") as f:
+    catalog = json.load(f)
+
+# Sort catalog into categories for the catalog view
+categories = {
+    "boundary_fringe": {
+        "title": "🌾 Cỏ Ranh Giới Biome Mùa Thu (12 Autotile ground_autumn_*)",
+        "desc": "Bộ viền cỏ răng cưa vàng kết nối đất mùa thu mượt mà với cỏ đồng bằng meadow xung quanh, triệt tiêu góc vuông 90 độ",
+        "keys": [
+            "ground_autumn_top", "ground_autumn_bot", "ground_autumn_left", "ground_autumn_right",
+            "ground_autumn_tl", "ground_autumn_tr", "ground_autumn_bl", "ground_autumn_br",
+            "ground_autumn_in_tl", "ground_autumn_in_tr", "ground_autumn_in_bl", "ground_autumn_in_br"
+        ],
+    },
+    "tall_grass": {
+        "title": "🌿 Cỏ Cao Mùa Thu (Autumn Tall Grass & Animation Strip)",
+        "desc": "Khóm cỏ cao màu vàng cam mùa thu, dải hoạt họa 160×32 (5 frames: 1 idle + 4 sway) đung đưa khi nhân vật đi qua",
+        "keys": ["tall_grass_autumn", "tall_grass_autumn_strip"],
+    },
+    "autumn_water": {
+        "title": "🌊 Sông & Hồ Nước Mùa Thu (14 Dải Hoạt Họa 4-Frame water_autumn_*)",
+        "desc": "Bộ autotile mặt nước và bờ hồ sông với đất vàng mùa thu, dải hoạt ảnh 128×32 4 frame lấp lánh khớp hoàn hảo với đồng cỏ thu",
+        "keys": [
+            "water_autumn_pure", "water_autumn_top", "water_autumn_bot", "water_autumn_left", "water_autumn_right",
+            "water_autumn_tl", "water_autumn_tr", "water_autumn_bl", "water_autumn_br",
+            "water_autumn_in_tl", "water_autumn_in_tr", "water_autumn_in_bl", "water_autumn_in_br",
+            "water_autumn_curve"
+        ],
+    },
+    "ground_hills": {
+        "title": "🏞️ Địa Hình & Khối Đồi Cao",
+        "desc": "Nền đất trích xuất từ tâm đồi cao (plateau interior) và 2 khối đồi cao nguyên 3×4, rãnh vực 2×4",
+        "keys": ["ground_autumn_pure", "hill_autumn_mesa", "hill_autumn_pit_block"],
+    },
+    "giant_tree": {
+        "title": "👑 Cây Đại Thụ Mùa Thu (Landmark Cổ Thụ)",
+        "desc": "Cây phong cổ thụ khổng lồ 128×160 đứng sừng sững tại trung tâm thung lũng",
+        "keys": ["tree_autumn_giant"],
+    },
+    "plain_trees": {
+        "title": "🌲 Cây Thân Cao & Thân Vừa (8 Cây Cơ Bản)",
+        "desc": "4 sắc thái lá (Phong đỏ, Hổ phách, Vàng kim, Xanh ô-liu) × 2 kích cỡ (Thân cao 64×120, Thân vừa 60×96)",
+        "keys": [
+            "tree_maple_red_tall", "tree_maple_red_small",
+            "tree_maple_amber_tall", "tree_maple_amber_small",
+            "tree_larch_gold_tall", "tree_larch_gold_small",
+            "tree_larch_olive_tall", "tree_larch_olive_small"
+        ],
+    },
+    "tree_variants": {
+        "title": "🍄 Biến Thể Gốc Cây Cổ Thụ (32 Cây Độc Đáo)",
+        "desc": "Ghép nửa thân trên cây với 4 kiểu trang trí gốc: Nấm nhỏ, Nấm lớn rừng, Quả mọng đỏ, Dây leo hoàng hôn",
+        "keys": [c["key"] for c in catalog if c["key"].startswith("tree_") and any(v in c["key"] for v in ["mushroom_s", "mushroom_l", "berry", "ivy"])],
+    },
+    "bushes": {
+        "title": "🌾 Bụi Cây Gai Mùa Thu (6 Bụi Cây Độc Quyền)",
+        "desc": "Bụi gai nhọn đứng (32×64) 4 màu và bụi gai xòe lớn (64×64) 2 màu, không phải cỏ cao",
+        "keys": [c["key"] for c in catalog if c["key"].startswith("bush_spiky_")],
+    },
+    "decals_rocks_leaves": {
+        "title": "🪨 Dây Hoa Leo, Cụm Đá & Đống Lá Phong Rụng",
+        "desc": "4 màu dây hoa leo bờ đồi, 2 cụm sỏi đá dải nền, 1 đống lá phong rụng lớn 64×64",
+        "keys": [
+            "flower_vine_pink", "flower_vine_red", "flower_vine_white", "flower_vine_blue",
+            "rocks_grey_cluster", "rocks_brown_cluster", "leaf_pile_red_big"
+        ],
+    },
+    "water_lilies": {
+        "title": "🪷 Hoa Sen & Lá Súng Hồ Thu (6 Chi Tiết Mặt Nước)",
+        "desc": "Các cụm hoa sen nở và lá súng kích thước lớn, vừa, nhỏ nổi bồng bềnh trên mặt nước hồ",
+        "keys": [c["key"] for c in catalog if c["key"].startswith("lily_")],
+    },
+    "floor_decor": {
+        "title": "🍂 Chi Tiết Trang Trí Mặt Đất (21 Decal Rừng Thu)",
+        "desc": "Nấm rừng các loại, gốc cây mục, khóm hoa dại, bụi cỏ đỏ, rễ cây trồi, thảm hoa lá rụng",
+        "keys": [c["key"] for c in catalog if c["key"].startswith("decor_")],
+    },
+}
+
+html_content = f"""<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PokeOverworld — Thung Lũng Rừng Phong (Autumn Forest Test Area)</title>
+<style>
+  * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+  body {{
+    background: #0b0f19;
+    color: #f1f5f9;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    padding: 24px;
+    line-height: 1.6;
+  }}
+  header {{
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid rgba(249, 115, 22, 0.25);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 14px;
+  }}
+  h1 {{
+    color: #f97316;
+    font-size: 26px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }}
+  .subtitle {{
+    color: #94a3b8;
+    font-size: 14px;
+    margin-top: 6px;
+  }}
+  .badges {{
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }}
+  .tag {{
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 700;
+    background: rgba(249, 115, 22, 0.15);
+    color: #fb923c;
+    border: 1px solid rgba(249, 115, 22, 0.35);
+  }}
+  .tag-green {{
+    background: rgba(34, 197, 94, 0.15);
+    color: #4ade80;
+    border-color: rgba(34, 197, 94, 0.35);
+  }}
+
+  /* Navigation Tabs */
+  .nav-tabs {{
+    display: flex;
+    gap: 10px;
+    margin-bottom: 22px;
+  }}
+  .tab-btn {{
+    background: #131b2e;
+    color: #94a3b8;
+    border: 1px solid #1e293b;
+    padding: 11px 20px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }}
+  .tab-btn:hover {{
+    color: #f8fafc;
+    border-color: #f97316;
+    transform: translateY(-1px);
+  }}
+  .tab-btn.active {{
+    background: linear-gradient(135deg, rgba(234, 88, 12, 0.3), rgba(249, 115, 22, 0.15));
+    color: #ffedd5;
+    border-color: #f97316;
+    box-shadow: 0 4px 16px rgba(249, 115, 22, 0.25);
+  }}
+
+  /* Control Bar */
+  .control-bar {{
+    background: #111827;
+    border: 1px solid rgba(249, 115, 22, 0.25);
+    border-radius: 14px;
+    padding: 14px 20px;
+    margin-bottom: 22px;
+    display: flex;
+    gap: 22px;
+    align-items: center;
+    flex-wrap: wrap;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  }}
+  .control-group {{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+  }}
+  .control-label {{
+    color: #94a3b8;
+    font-weight: 600;
+  }}
+  .btn-pill {{
+    background: #1f2937;
+    color: #cbd5e1;
+    border: 1px solid #374151;
+    padding: 6px 13px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }}
+  .btn-pill:hover {{
+    background: #374151;
+    color: #fff;
+  }}
+  .btn-pill.active {{
+    background: #ea580c;
+    color: #fff;
+    border-color: #f97316;
+    box-shadow: 0 0 10px rgba(234, 88, 12, 0.4);
+  }}
+  .btn-action {{
+    background: linear-gradient(135deg, #ea580c, #c2410c);
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35);
+    transition: all 0.2s;
+    margin-left: auto;
+  }}
+  .btn-action:hover {{
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(234, 88, 12, 0.5);
+  }}
+
+  /* Interactive Canvas Area */
+  .canvas-container {{
+    background: #070a12;
+    border: 2px solid rgba(249, 115, 22, 0.3);
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    position: relative;
+  }}
+  canvas {{
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }}
+
+  /* Catalog Grid Styles */
+  .catalog-section {{
+    margin-bottom: 32px;
+  }}
+  .section-header {{
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid #1f2937;
+    padding-bottom: 8px;
+  }}
+  .section-title {{
+    color: #fb923c;
+    font-size: 17px;
+    font-weight: 700;
+  }}
+  .section-desc {{
+    color: #94a3b8;
+    font-size: 13px;
+  }}
+  .asset-grid {{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 14px;
+  }}
+  .asset-card {{
+    background: #111827;
+    border: 1px solid #1f2937;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.2s;
+  }}
+  .asset-card:hover {{
+    border-color: #f97316;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+  }}
+  .asset-thumb {{
+    width: 100%;
+    height: 120px;
+    background: #1a2234;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 8px 8px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 8px;
+    overflow: hidden;
+  }}
+  .asset-thumb img {{
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }}
+  .asset-title {{
+    font-size: 12px;
+    font-weight: 600;
+    color: #e2e8f0;
+    text-align: center;
+    line-height: 1.3;
+    margin-bottom: 4px;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }}
+  .asset-meta {{
+    display: flex;
+    gap: 6px;
+    font-size: 11px;
+    color: #94a3b8;
+  }}
+  .badge-dim {{
+    background: #1f2937;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid #374151;
+    font-family: monospace;
+  }}
+
+  /* Lore Tab Styles */
+  .lore-box {{
+    background: #111827;
+    border: 1px solid rgba(249, 115, 22, 0.25);
+    border-radius: 14px;
+    padding: 26px 30px;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.4);
+  }}
+  .lore-h2 {{
+    color: #f97316;
+    font-size: 19px;
+    margin: 22px 0 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }}
+  .lore-h2:first-of-type {{ margin-top: 0; }}
+  .lore-p {{
+    color: #cbd5e1;
+    margin-bottom: 14px;
+    font-size: 14px;
+    line-height: 1.7;
+  }}
+  .lore-table {{
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13.5px;
+  }}
+  .lore-table th, .lore-table td {{
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid #1f2937;
+  }}
+  .lore-table th {{
+    background: #162032;
+    color: #fb923c;
+    font-weight: 700;
+  }}
+  .lore-table tr:hover td {{
+    background: rgba(249, 115, 22, 0.05);
+  }}
+  .hidden {{ display: none !important; }}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🍁 Thung Lũng Rừng Phong (Autumn Forest Test Area)</h1>
+    <div class="subtitle">Đã chuẩn hóa toàn bộ 84 vật thể từ 14 spritesheet nguồn • Nền đất lấy trực tiếp từ tâm đồi cao</div>
+  </div>
+  <div class="badges">
+    <span class="tag tag-green">✓ 84 Assets Chuẩn Hóa</span>
+    <span class="tag tag-green">✓ Nền Đất Từ Đỉnh Đồi</span>
+    <span class="tag">Milestone 2.26</span>
+  </div>
+</header>
+
+<div class="nav-tabs">
+  <button class="tab-btn active" data-tab="tab-map">🗺️ Bản Đồ Thử Nghiệm (Interactive Map)</button>
+  <button class="tab-btn" data-tab="tab-catalog">📦 Kho Tài Nguyên Đã Cắt (84 Assets Catalog)</button>
+  <button class="tab-btn" data-tab="tab-lore">📜 Kịch Bản & Thiết Kế Biome (Lore & Ecology)</button>
+</div>
+
+<!-- TAB 1: INTERACTIVE MAP -->
+<div id="tab-map" class="tab-content">
+  <div class="control-bar">
+    <div class="control-group">
+      <span class="control-label">Thu Phóng:</span>
+      <button class="btn-pill" data-zoom="1">1×</button>
+      <button class="btn-pill active" data-zoom="2">2×</button>
+      <button class="btn-pill" data-zoom="3">3×</button>
+    </div>
+
+    <div class="control-group">
+      <span class="control-label">Thời Gian:</span>
+      <button class="btn-pill active" data-time="day">🌅 Ban Ngày</button>
+      <button class="btn-pill" data-time="dusk">🌇 Hoàng Hôn</button>
+      <button class="btn-pill" data-time="night">🌙 Ban Đêm</button>
+    </div>
+
+    <div class="control-group">
+      <span class="control-label">Thời Tiết:</span>
+      <button class="btn-pill active" data-weather="leaves">🍂 Gió Lá Phong</button>
+      <button class="btn-pill" data-weather="rain">🌧️ Mưa Thu</button>
+      <button class="btn-pill" data-weather="clear">☀️ Tạnh Ráo</button>
+    </div>
+
+    <div class="control-group">
+      <span class="control-label">Lưới Tọa Độ:</span>
+      <button class="btn-pill" id="toggleGrid">Bật / Tắt</button>
+    </div>
+
+    <button id="btnReroll" class="btn-action">🎲 Xáo Đổi Cảnh Ngẫu Nhiên</button>
+  </div>
+
+  <div class="canvas-container">
+    <canvas id="autumnCanvas"></canvas>
+  </div>
+</div>
+
+<!-- TAB 2: CATALOG -->
+<div id="tab-catalog" class="tab-content hidden">
+  <div class="control-bar">
+    <span class="control-label">Thư Mục Nguồn:</span>
+    <span style="font-size: 13px; color: #cbd5e1;"><code>apps/web/public/assets/biomes/autumn/</code> (Tổng cộng 84 tệp PNG chuẩn)</span>
+  </div>
+  <div id="catalogContent"></div>
+</div>
+
+<!-- TAB 3: LORE & DESIGN -->
+<div id="tab-lore" class="tab-content hidden">
+  <div class="lore-box">
+    <h2 class="lore-h2">🍁 1. Bối Cảnh Địa Lý: Thung Lũng Rừng Phong (Maple Ochre Valley)</h2>
+    <p class="lore-p">
+      Nằm ẩn mình giữa những rặng cao nguyên đồi sa thạch phía đông đại lục Kanto, <strong>Thung Lũng Rừng Phong</strong> là vùng đất nơi sắc thu vĩnh hằng bao phủ. Không khí nơi đây mang vị ngọt của mật phong, hương thơm khô ráo của vỏ thông và sự mát lành của hồ nước tĩnh lặng.
+    </p>
+
+    <h2 class="lore-h2">🏞️ 2. Quy Chuẩn Nền Đất & Địa Hình (Đã Sửa Theo Yêu Cầu)</h2>
+    <p class="lore-p">
+      <strong>Quy tắc nền đất:</strong> Tương tự như biome tối (Dark biome lấy <code>dark_ground_pure</code> từ chính giữa khối vách <code>dark_cliff_pure</code>), nền đất mùa thu <code>ground_autumn_pure.png</code> (32×32) được trích xuất chính xác từ <strong>phần ở giữa đỉnh đồi cao</strong> (plateau interior) của khối <code>hill_autumn_mesa.png</code>.
+      Bề mặt nền gồm 3 mã màu chuẩn <code>(225,170,85)</code>, <code>(234,185,91)</code>, <code>(219,159,83)</code> lặp lại liền mạch (seamless tiling 100%), loại bỏ hoàn toàn việc dùng màu đổ đơn sắc hay cắt bậy.
+    </p>
+
+    <h2 class="lore-h2">🌲 3. Phân Loại Chính Xác 84 Vật Thể (Không Cắt Bậy)</h2>
+    <p class="lore-p">
+      Sau khi phân tích trực quan và số học từng pixel của 14 spritesheet nguồn, toàn bộ 84 vật thể đã được xác định danh tính thực sự và cắt chuẩn xác:
+    </p>
+    <table class="lore-table">
+      <thead>
+        <tr>
+          <th>Nhóm Vật Thể</th>
+          <th>Số Lượng</th>
+          <th>Bản Chất Thật & Quy Cách</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>🏞️ Địa hình đồi & Nền</strong></td>
+          <td>3</td>
+          <td><code>ground_autumn_pure</code> (32×32 lấy từ tâm đồi), <code>hill_autumn_mesa</code> (96×128 khối đồi cao nguyên có góc trong suốt), <code>hill_autumn_pit_block</code> (64×128 rãnh vực/lối âm).</td>
+        </tr>
+        <tr>
+          <td><strong>👑 Đại thụ mùa thu</strong></td>
+          <td>1</td>
+          <td><code>tree_autumn_giant</code> (128×160) cây đại thụ phong đỏ nguyên khối, điểm nhấn trung tâm thung lũng.</td>
+        </tr>
+        <tr>
+          <td><strong>🌲 Cây thân cao & vừa cơ bản</strong></td>
+          <td>8</td>
+          <td>4 sắc màu (Phong đỏ, Hổ phách, Vàng kim, Ô-liu) × 2 độ cao (Thân cao 64×120, Thân vừa 60×96), đặt trên khung 64×128 với chân gốc nằm tại y≈120.</td>
+        </tr>
+        <tr>
+          <td><strong>🍄 Cây biến thể gốc cổ thụ</strong></td>
+          <td>32</td>
+          <td>8 cây cơ bản kết hợp 4 kiểu gốc trang trí: Nấm nhỏ (mushroom_s), Nấm lớn rừng (mushroom_l), Quả mọng đỏ (berry), Dây leo hoàng hôn (ivy).</td>
+        </tr>
+        <tr>
+          <td><strong>🌾 Bụi cây gai mùa thu</strong></td>
+          <td>6</td>
+          <td>Bụi gai nhọn đứng 32×64 (4 màu) và bụi gai xòe lớn 64×64 (2 màu). Đây là cây bụi (bush), không phải thảm cỏ cao.</td>
+        </tr>
+        <tr>
+          <td><strong>🪨 Dây hoa leo & Sỏi đá</strong></td>
+          <td>7</td>
+          <td>4 màu dây hoa leo bờ đất/vách (hồng, đỏ, trắng, xanh), 2 cụm sỏi đá dải nền (xám, nâu), 1 đống lá phong rụng lớn 64×64.</td>
+        </tr>
+        <tr>
+          <td><strong>🪷 Hoa sen & Lá súng hồ thu</strong></td>
+          <td>6</td>
+          <td>Cắt theo vùng liên thông độc lập (connected components): 1 hoa sen nở cùng lá, 1 lá súng lớn, 1 lá súng vừa, 3 lá súng nhỏ rời rạc.</td>
+        </tr>
+        <tr>
+          <td><strong>🍂 Hoa cỏ & Chi tiết nền đất</strong></td>
+          <td>21</td>
+          <td>21 decal 32×32: nấm đơn/đôi/cụm, gốc cây mục, khóm hoa dại cam/đỏ/trắng, rễ cây trồi mặt đất, thảm lá phong vụn.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 class="lore-h2">🐾 4. Quần Thể Sinh Vật & Tập Tính Pokémon Theo Khung Giờ</h2>
+    <table class="lore-table">
+      <thead>
+        <tr>
+          <th>Thời Điểm</th>
+          <th>Pokémon Dã Ngoại</th>
+          <th>Tập Tính Sinh Thái</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>🌅 Ban Ngày (06:00 - 17:00)</strong></td>
+          <td>Pidgey, Bellsprout, Paras, Eevee, Scyther, Doduo</td>
+          <td>Kiếm hạt phong rụng quanh gốc đại thụ, Scyther rèn luyện lưỡi kiếm trên các thân cây phong già.</td>
+        </tr>
+        <tr>
+          <td><strong>🌇 Hoàng Hôn (17:00 - 19:30)</strong></td>
+          <td>Vulpix, Growlithe, Farfetch'd, Mankey</td>
+          <td>Vulpix và Growlithe đi tuần tra dọc các vách đồi cao sa thạch, Farfetch'd cắp cọng hành tìm suối nước thu.</td>
+        </tr>
+        <tr>
+          <td><strong>🌙 Ban Đêm (19:30 - 06:00)</strong></td>
+          <td>Parasect, Venonat, Venomoth, Drowzee, Hypno, Gastly</td>
+          <td>Nấm Parasect phát sáng mờ ảo dưới ánh trăng, Venonat hút nhựa phong ngọt ngào từ các gốc cây dây leo.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 class="lore-h2">🍃 5. Khí Quyển & Hiệu Ứng Thời Tiết</h2>
+    <p class="lore-p">
+      - <strong>Gió Lá Phong Rơi:</strong> Hệ thống hạt lá phong đỏ và vàng chao lượn hình sin nhịp nhàng theo chiều gió đông bắc.<br>
+      - <strong>Chặn Triệt Để Sương Mù Sa Mạc & Sấm Chớp:</strong> Rừng mùa thu giữ bầu không khí thanh bình trong trẻo, không bị ảnh hưởng bởi bão cát hay sấm chớp sa mạc.
+    </p>
+  </div>
+</div>
+
+<script>
+// --- ASSET CONFIG & CATALOG DATA ---
+const ASSETS_BASE = '/assets/biomes/autumn/';
+const RAW_CATALOG = {json.dumps(catalog, ensure_ascii=False)};
+const CATEGORIES = {json.dumps(categories, ensure_ascii=False)};
+
+// Populate Catalog Tab
+const catalogContent = document.getElementById('catalogContent');
+for (const [catId, catInfo] of Object.entries(CATEGORIES)) {{
+  const sec = document.createElement('div');
+  sec.className = 'catalog-section';
+  sec.innerHTML = `
+    <div class="section-header">
+      <div>
+        <div class="section-title">${{catInfo.title}} (${{catInfo.keys.length}})</div>
+        <div class="section-desc">${{catInfo.desc}}</div>
+      </div>
+    </div>
+    <div class="asset-grid" id="grid_${{catId}}"></div>
+  `;
+  catalogContent.appendChild(sec);
+
+  const grid = sec.querySelector(`#grid_${{catId}}`);
+  catInfo.keys.forEach(k => {{
+    const item = RAW_CATALOG.find(c => c.key === k);
+    if (!item) return;
+    const card = document.createElement('div');
+    card.className = 'asset-card';
+    card.innerHTML = `
+      <div class="asset-thumb">
+        <img src="${{ASSETS_BASE + item.key + '.png'}}" alt="${{item.key}}" loading="lazy">
+      </div>
+      <div class="asset-title">${{item.vn || item.key}}</div>
+      <div class="asset-meta">
+        <span class="badge-dim">${{item.w}}×${{item.h}}</span>
+        <span style="color:#64748b;">${{item.kind}}</span>
+      </div>
+    `;
+    grid.appendChild(card);
+  }});
+}}
+
+// Tab Switching
+document.querySelectorAll('.tab-btn').forEach(btn => {{
+  btn.addEventListener('click', () => {{
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+    btn.classList.add('active');
+    document.getElementById(btn.getAttribute('data-tab')).classList.remove('hidden');
+  }});
+}});
+
+// --- INTERACTIVE MAP ENGINE ---
+const MAP_COLS = 26;
+const MAP_ROWS = 18;
+const TILE_SIZE = 32;
+
+const canvas = document.getElementById('autumnCanvas');
+const ctx = canvas.getContext('2d');
+ctx.imageSmoothingEnabled = false;
+
+let currentZoom = 2;
+let showGrid = false;
+let currentTime = 'day';
+let currentWeather = 'leaves';
+
+function resizeCanvas() {{
+  canvas.width = MAP_COLS * TILE_SIZE * currentZoom;
+  canvas.height = MAP_ROWS * TILE_SIZE * currentZoom;
+}}
+resizeCanvas();
+
+// Image Cache
+const images = {{}};
+function loadImg(k, filename) {{
+  const img = new Image();
+  img.src = ASSETS_BASE + filename;
+  images[k] = img;
+  return img;
+}}
+
+// Load all catalog images
+RAW_CATALOG.forEach(c => loadImg(c.key, c.key + '.png'));
+// Player sprite
+const redPlayer = new Image();
+redPlayer.src = '/Graphics/Characters/trainer_POKEMONTRAINER_Red.png';
+
+// Controls
+document.querySelectorAll('[data-zoom]').forEach(b => {{
+  b.addEventListener('click', () => {{
+    document.querySelectorAll('[data-zoom]').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    currentZoom = parseInt(b.getAttribute('data-zoom'));
+    resizeCanvas();
+  }});
+}});
+
+document.querySelectorAll('[data-time]').forEach(b => {{
+  b.addEventListener('click', () => {{
+    document.querySelectorAll('[data-time]').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    currentTime = b.getAttribute('data-time');
+  }});
+}});
+
+document.querySelectorAll('[data-weather]').forEach(b => {{
+  b.addEventListener('click', () => {{
+    document.querySelectorAll('[data-weather]').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    currentWeather = b.getAttribute('data-weather');
+  }});
+}});
+
+document.getElementById('toggleGrid').addEventListener('click', function() {{
+  showGrid = !showGrid;
+  this.classList.toggle('active', showGrid);
+}});
+
+document.getElementById('btnReroll').addEventListener('click', () => {{
+  generateScene();
+}});
+
+// Scene Entities
+let sceneObjects = [];
+
+function generateScene() {{
+  sceneObjects = [];
+
+  // 1. Landmark Giant Tree (Center)
+  sceneObjects.push({{
+    key: 'tree_autumn_giant',
+    x: 11 * TILE_SIZE - 48,
+    y: 3 * TILE_SIZE - 80,
+    w: 128,
+    h: 160,
+    ySort: 3 * TILE_SIZE + 64,
+  }});
+
+  // 2. Hill formations (3x4 mesa at col 1 & col 21, pit at col 22 row 9)
+  sceneObjects.push({{
+    key: 'hill_autumn_mesa',
+    x: 1 * TILE_SIZE,
+    y: 2 * TILE_SIZE,
+    w: 96,
+    h: 128,
+    ySort: 2 * TILE_SIZE + 120,
+    isHill: true,
+  }});
+  sceneObjects.push({{
+    key: 'hill_autumn_mesa',
+    x: 21 * TILE_SIZE,
+    y: 2 * TILE_SIZE,
+    w: 96,
+    h: 128,
+    ySort: 2 * TILE_SIZE + 120,
+    isHill: true,
+  }});
+  sceneObjects.push({{
+    key: 'hill_autumn_pit_block',
+    x: 22 * TILE_SIZE,
+    y: 9 * TILE_SIZE,
+    w: 64,
+    h: 128,
+    ySort: 9 * TILE_SIZE + 120,
+    isHill: true,
+  }});
+
+  // 3. Autumn Trees with diverse base decorations
+  const treeConfigs = [
+    {{ gx: 5, gy: 2, key: 'tree_maple_red_tall_ivy' }},
+    {{ gx: 8, gy: 1, key: 'tree_maple_amber_tall_mushroom_l' }},
+    {{ gx: 15, gy: 1, key: 'tree_larch_gold_tall_berry' }},
+    {{ gx: 18, gy: 2, key: 'tree_larch_olive_tall_mushroom_s' }},
+    {{ gx: 5, gy: 8, key: 'tree_maple_red_small_mushroom_s' }},
+    {{ gx: 8, gy: 9, key: 'tree_maple_amber_small_berry' }},
+    {{ gx: 17, gy: 9, key: 'tree_larch_gold_small_ivy' }},
+    {{ gx: 20, gy: 8, key: 'tree_larch_olive_small' }},
+    {{ gx: 2, gy: 8, key: 'tree_maple_red_tall_berry' }},
+    {{ gx: 2, gy: 13, key: 'tree_larch_gold_tall_mushroom_l' }},
+    {{ gx: 22, gy: 14, key: 'tree_maple_amber_tall_ivy' }},
+  ];
+
+  treeConfigs.forEach(t => {{
+    sceneObjects.push({{
+      key: t.key,
+      x: t.gx * TILE_SIZE - 16,
+      y: t.gy * TILE_SIZE - 64,
+      w: 64,
+      h: 128,
+      ySort: t.gy * TILE_SIZE + 56,
+    }});
+  }});
+
+  // 4. Spiky Bushes along tree lines and cliff bases
+  const bushConfigs = [
+    {{ gx: 4, gy: 3.5, key: 'bush_spiky_red', w: 32, h: 64 }},
+    {{ gx: 7, gy: 2.5, key: 'bush_spiky_amber', w: 32, h: 64 }},
+    {{ gx: 16, gy: 2.5, key: 'bush_spiky_tan', w: 32, h: 64 }},
+    {{ gx: 19, gy: 3.5, key: 'bush_spiky_olive', w: 32, h: 64 }},
+    {{ gx: 4.5, gy: 9.5, key: 'bush_spiky_big_red', w: 64, h: 64 }},
+    {{ gx: 19.5, gy: 9.5, key: 'bush_spiky_big_amber', w: 64, h: 64 }},
+    {{ gx: 1, gy: 7, key: 'bush_spiky_tan', w: 32, h: 64 }},
+    {{ gx: 24, gy: 7, key: 'bush_spiky_olive', w: 32, h: 64 }},
+  ];
+  bushConfigs.forEach(b => {{
+    sceneObjects.push({{
+      key: b.key,
+      x: b.gx * TILE_SIZE,
+      y: b.gy * TILE_SIZE,
+      w: b.w,
+      h: b.h,
+      ySort: b.gy * TILE_SIZE + b.h - 8,
+    }});
+  }});
+
+  // 5. Flower vines, rock clusters & leaf piles
+  sceneObjects.push({{
+    key: 'flower_vine_pink',
+    x: 4 * TILE_SIZE,
+    y: 4 * TILE_SIZE,
+    w: 32,
+    h: 32,
+    ySort: 4 * TILE_SIZE + 16,
+    isDecal: true,
+  }});
+  sceneObjects.push({{
+    key: 'flower_vine_red',
+    x: 21 * TILE_SIZE,
+    y: 4 * TILE_SIZE,
+    w: 32,
+    h: 32,
+    ySort: 4 * TILE_SIZE + 16,
+    isDecal: true,
+  }});
+  sceneObjects.push({{
+    key: 'rocks_grey_cluster',
+    x: 3.5 * TILE_SIZE,
+    y: 6 * TILE_SIZE,
+    w: 32,
+    h: 32,
+    ySort: 6 * TILE_SIZE + 16,
+    isDecal: true,
+  }});
+  sceneObjects.push({{
+    key: 'rocks_brown_cluster',
+    x: 21.5 * TILE_SIZE,
+    y: 6 * TILE_SIZE,
+    w: 32,
+    h: 32,
+    ySort: 6 * TILE_SIZE + 16,
+    isDecal: true,
+  }});
+  sceneObjects.push({{
+    key: 'leaf_pile_red_big',
+    x: 10 * TILE_SIZE,
+    y: 5.5 * TILE_SIZE,
+    w: 64,
+    h: 64,
+    ySort: 6 * TILE_SIZE,
+    isDecal: true,
+  }});
+
+  // 6. Floor decor decals (stump, mushrooms, tufts, flowerbeds, roots)
+  const floorDecals = [
+    {{ gx: 10, gy: 7, key: 'decor_stump_autumn' }},
+    {{ gx: 14, gy: 7, key: 'decor_mushroom_red_cluster' }},
+    {{ gx: 11, gy: 8, key: 'decor_flowerbed_red' }},
+    {{ gx: 13, gy: 8.5, key: 'decor_grass_red_tuft' }},
+    {{ gx: 9, gy: 9, key: 'decor_roots_curved_1' }},
+    {{ gx: 15, gy: 9, key: 'decor_roots_curved_2' }},
+    {{ gx: 7, gy: 11, key: 'decor_mushroom_tan' }},
+    {{ gx: 17, gy: 11, key: 'decor_flowerbed_red_white' }},
+    {{ gx: 6, gy: 12, key: 'decor_grass_red_blue' }},
+    {{ gx: 18, gy: 12, key: 'decor_grass_red_white' }},
+    {{ gx: 8, gy: 12.5, key: 'decor_rock_mossy_pile' }},
+  ];
+  floorDecals.forEach(d => {{
+    sceneObjects.push({{
+      key: d.key,
+      x: d.gx * TILE_SIZE,
+      y: d.gy * TILE_SIZE,
+      w: 32,
+      h: 32,
+      ySort: d.gy * TILE_SIZE + 16,
+      isDecal: true,
+    }});
+  }});
+
+  // 7. Pond water lilies (gx: 9..16, gy: 14..16)
+  const lilies = [
+    {{ gx: 9.5, gy: 14.5, key: 'lily_lotus', w: 32, h: 32 }},
+    {{ gx: 11.5, gy: 14.2, key: 'lily_pad_big', w: 30, h: 30 }},
+    {{ gx: 13.5, gy: 15.0, key: 'lily_pad_medium', w: 22, h: 16 }},
+    {{ gx: 15.0, gy: 14.4, key: 'lily_pad_small_1', w: 10, h: 10 }},
+    {{ gx: 10.5, gy: 15.6, key: 'lily_pad_small_2', w: 10, h: 6 }},
+    {{ gx: 14.5, gy: 15.8, key: 'lily_pad_small_3', w: 8, h: 6 }},
+  ];
+  lilies.forEach(l => {{
+    sceneObjects.push({{
+      key: l.key,
+      x: l.gx * TILE_SIZE,
+      y: l.gy * TILE_SIZE,
+      w: l.w,
+      h: l.h,
+      ySort: 14 * TILE_SIZE, // water surface
+      isWater: true,
+    }});
+  }});
+
+  // 8. Player Red
+  sceneObjects.push({{
+    isPlayer: true,
+    x: 12 * TILE_SIZE,
+    y: 10 * TILE_SIZE - 16,
+    w: 32,
+    h: 48,
+    ySort: 10 * TILE_SIZE + 24,
+  }});
+}}
+
+generateScene();
+
+// --- WIND LEAF PARTICLES ---
+const leafParticles = [];
+for (let i = 0; i < 40; i++) {{
+  leafParticles.push({{
+    x: Math.random() * (MAP_COLS * TILE_SIZE + 120) - 60,
+    y: Math.random() * (MAP_ROWS * TILE_SIZE + 120) - 60,
+    vx: 45 + Math.random() * 40,
+    vy: 20 + Math.random() * 25,
+    swayFreq: 2 + Math.random() * 3,
+    swayPhase: Math.random() * Math.PI * 2,
+    swayAmp: 10 + Math.random() * 12,
+    rot: Math.random() * Math.PI * 2,
+    rotSpeed: (Math.random() - 0.5) * 5,
+    size: 4 + Math.random() * 4,
+    color: Math.random() < 0.6 ? '#dc2626' : (Math.random() < 0.5 ? '#f59e0b' : '#b45309'),
+  }});
+}}
+
+// Rain particles
+const rainParticles = [];
+for (let i = 0; i < 60; i++) {{
+  rainParticles.push({{
+    x: Math.random() * (MAP_COLS * TILE_SIZE + 80),
+    y: Math.random() * (MAP_ROWS * TILE_SIZE + 80),
+    vy: 280 + Math.random() * 80,
+    vx: -40,
+    len: 10 + Math.random() * 8,
+  }});
+}}
+
+// Render Loop
+let lastTime = performance.now();
+
+function render() {{
+  const now = performance.now();
+  const dt = Math.min((now - lastTime) / 1000, 0.1);
+  lastTime = now;
+
+  ctx.save();
+  ctx.scale(currentZoom, currentZoom);
+  ctx.clearRect(0, 0, MAP_COLS * TILE_SIZE, MAP_ROWS * TILE_SIZE);
+
+  // 1. PURE GROUND TILES (Seamlessly tiled from hill mesa plateau)
+  const groundImg = images['ground_autumn_pure'];
+  if (groundImg && groundImg.complete) {{
+    for (let r = 0; r < MAP_ROWS; r++) {{
+      for (let c = 0; c < MAP_COLS; c++) {{
+        ctx.drawImage(groundImg, c * TILE_SIZE, r * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+      }}
+    }}
+  }} else {{
+    ctx.fillStyle = '#e1aa55';
+    ctx.fillRect(0, 0, MAP_COLS * TILE_SIZE, MAP_ROWS * TILE_SIZE);
+  }}
+
+  // 2. LAKE POND (gx: 8..17, gy: 13.5..16.8)
+  const pondX = 8.5 * TILE_SIZE;
+  const pondY = 13.5 * TILE_SIZE;
+  const pondW = 9 * TILE_SIZE;
+  const pondH = 3.5 * TILE_SIZE;
+
+  // Pond outer shoreline edge
+  ctx.fillStyle = '#b5853b';
+  ctx.beginPath();
+  ctx.roundRect(pondX - 4, pondY - 4, pondW + 8, pondH + 8, 18);
+  ctx.fill();
+
+  // Water body
+  ctx.fillStyle = '#2278b8';
+  ctx.beginPath();
+  ctx.roundRect(pondX, pondY, pondW, pondH, 14);
+  ctx.fill();
+
+  // Deep water center
+  ctx.fillStyle = '#165588';
+  ctx.beginPath();
+  ctx.roundRect(pondX + 16, pondY + 12, pondW - 32, pondH - 24, 10);
+  ctx.fill();
+
+  // Water gentle wave ripples
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+  ctx.lineWidth = 1.2;
+  for (let i = 0; i < 4; i++) {{
+    const rx = pondX + 24 + ((i * 64 + now * 0.02) % (pondW - 60));
+    const ry = pondY + 18 + (i % 2) * 28;
+    ctx.beginPath();
+    ctx.arc(rx, ry, 6, Math.PI * 0.2, Math.PI * 0.8);
+    ctx.stroke();
+  }}
+
+  // 3. SEPARATE DECALS ON GROUND (under standing objects)
+  const groundDecals = sceneObjects.filter(o => o.isDecal || o.isWater);
+  groundDecals.forEach(d => {{
+    const img = images[d.key];
+    if (img && img.complete) {{
+      ctx.drawImage(img, d.x, d.y, d.w, d.h);
+    }}
+  }});
+
+  // 4. SORTED STANDING OBJECTS (Depth sorting by ySort)
+  const standingObjects = sceneObjects.filter(o => !o.isDecal && !o.isWater);
+  standingObjects.sort((a, b) => a.ySort - b.ySort);
+
+  standingObjects.forEach(obj => {{
+    if (obj.isPlayer) {{
+      // Draw Red trainer
+      if (redPlayer.complete && redPlayer.naturalWidth > 0) {{
+        // Soft character drop shadow
+        ctx.fillStyle = 'rgba(48, 28, 12, 0.4)';
+        ctx.beginPath();
+        ctx.ellipse(obj.x + 16, obj.y + 44, 10, 4, 0, 0, Math.PI * 2);
+        ctx.fill();
+        // Frame: facing down (col 0, row 0 of 4x4 sheet)
+        const fw = redPlayer.naturalWidth / 4;
+        const fh = redPlayer.naturalHeight / 4;
+        ctx.drawImage(redPlayer, 0, 0, fw, fh, obj.x, obj.y, 32, 48);
+      }} else {{
+        ctx.fillStyle = '#ef4444';
+        ctx.fillRect(obj.x + 8, obj.y + 16, 16, 32);
+      }}
+      return;
+    }}
+
+    const img = images[obj.key];
+    if (img && img.complete) {{
+      ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
+    }}
+  }});
+
+  // 5. WEATHER & ATMOSPHERIC PARTICLES
+  if (currentWeather === 'leaves') {{
+    leafParticles.forEach(p => {{
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      p.rot += p.rotSpeed * dt;
+      if (p.x > MAP_COLS * TILE_SIZE + 20) p.x = -20;
+      if (p.y > MAP_ROWS * TILE_SIZE + 20) p.y = -20;
+
+      const swayX = Math.sin(now * 0.003 * p.swayFreq + p.swayPhase) * p.swayAmp;
+      ctx.save();
+      ctx.translate(p.x + swayX, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, p.size, p.size * 0.5, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }});
+  }} else if (currentWeather === 'rain') {{
+    ctx.strokeStyle = 'rgba(200, 220, 255, 0.6)';
+    ctx.lineWidth = 1.2;
+    rainParticles.forEach(p => {{
+      p.y += p.vy * dt;
+      p.x += p.vx * dt;
+      if (p.y > MAP_ROWS * TILE_SIZE) {{
+        p.y = -10;
+        p.x = Math.random() * (MAP_COLS * TILE_SIZE + 80);
+      }}
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y);
+      ctx.lineTo(p.x - 4, p.y + p.len);
+      ctx.stroke();
+    }});
+  }}
+
+  // 6. TIME-OF-DAY AMBIENT LIGHTING OVERLAY
+  if (currentTime === 'dusk') {{
+    // Deep orange/magenta autumn sunset
+    ctx.fillStyle = 'rgba(217, 85, 20, 0.24)';
+    ctx.fillRect(0, 0, MAP_COLS * TILE_SIZE, MAP_ROWS * TILE_SIZE);
+    // Vignette
+    const vig = ctx.createRadialGradient(
+      (MAP_COLS * TILE_SIZE) / 2, (MAP_ROWS * TILE_SIZE) / 2, 100,
+      (MAP_COLS * TILE_SIZE) / 2, (MAP_ROWS * TILE_SIZE) / 2, 450
+    );
+    vig.addColorStop(0, 'rgba(0,0,0,0)');
+    vig.addColorStop(1, 'rgba(50, 10, 30, 0.35)');
+    ctx.fillStyle = vig;
+    ctx.fillRect(0, 0, MAP_COLS * TILE_SIZE, MAP_ROWS * TILE_SIZE);
+  }} else if (currentTime === 'night') {{
+    // Mystic cool indigo moonlight with warm contrast
+    ctx.fillStyle = 'rgba(15, 23, 62, 0.58)';
+    ctx.fillRect(0, 0, MAP_COLS * TILE_SIZE, MAP_ROWS * TILE_SIZE);
+    // Campfire glow near center tree
+    const glow = ctx.createRadialGradient(
+      12 * TILE_SIZE, 9 * TILE_SIZE, 10,
+      12 * TILE_SIZE, 9 * TILE_SIZE, 120
+    );
+    glow.addColorStop(0, 'rgba(251, 146, 60, 0.35)');
+    glow.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = glow;
+    ctx.fillRect(0, 0, MAP_COLS * TILE_SIZE, MAP_ROWS * TILE_SIZE);
+  }} else {{
+    // Day: Gentle golden warmth
+    ctx.fillStyle = 'rgba(255, 215, 0, 0.04)';
+    ctx.fillRect(0, 0, MAP_COLS * TILE_SIZE, MAP_ROWS * TILE_SIZE);
+  }}
+
+  // 7. GRID OVERLAY
+  if (showGrid) {{
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+    ctx.lineWidth = 0.5;
+    for (let c = 0; c <= MAP_COLS; c++) {{
+      ctx.beginPath();
+      ctx.moveTo(c * TILE_SIZE, 0);
+      ctx.lineTo(c * TILE_SIZE, MAP_ROWS * TILE_SIZE);
+      ctx.stroke();
+    }}
+    for (let r = 0; r <= MAP_ROWS; r++) {{
+      ctx.beginPath();
+      ctx.moveTo(0, r * TILE_SIZE);
+      ctx.lineTo(MAP_COLS * TILE_SIZE, r * TILE_SIZE);
+      ctx.stroke();
+    }}
+  }}
+
+  ctx.restore();
+  requestAnimationFrame(render);
+}}
+
+requestAnimationFrame(render);
+</script>
+
+</body>
+</html>
+"""
+
+with open(OUTPUT_HTML, "w", encoding="utf-8") as f:
+    f.write(html_content)
+
+print(f"Successfully generated {OUTPUT_HTML} ({len(html_content)} bytes)")

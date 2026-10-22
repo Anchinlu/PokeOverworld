@@ -6,9 +6,12 @@ import {
   getDesertTileKey,
   getDuneCliffTileKey,
   getDarkGroundTileKey,
+  getAutumnGroundTileKey,
   getDarkCliffTileKey,
   getRoadTileKey,
   getCliffTileKey,
+  getSnowGroundTileKey,
+  getSnowCliffTileKey,
   getWaterTileKey,
   getGrassTileId,
 } from './autotile';
@@ -48,6 +51,8 @@ export function generateChunkTerrain(
 
       const isDesert = Boolean(field.isDesert && field.isDesert(gx, gy));
       const isDarkLand = Boolean(field.isDarkLand && field.isDarkLand(gx, gy));
+      const isAutumn = Boolean(field.isAutumn && field.isAutumn(gx, gy));
+      const isSnow = Boolean(field.isSnow && field.isSnow(gx, gy));
       const isRoad = hasRoad && field.isRoad(gx, gy, hasRoad, hasBeach);
 
       // V4 roads are rasterized from the continent graph. Let them cross
@@ -64,32 +69,40 @@ export function generateChunkTerrain(
         tileId = getRoadTileKey(gx, gy, field, hasRoad, hasBeach).tileId;
       } else if (field.isHill(gx, gy, hasHills, hasRoad, hasBeach)) {
         terrain = TERRAIN.HILL;
-        tileId = isDesert
-          ? getDuneCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId
-          : isDarkLand
-            ? getDarkCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId
-            : getCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId;
+        tileId = isSnow
+          ? getSnowCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId
+          : isDesert
+            ? getDuneCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId
+            : isDarkLand
+              ? getDarkCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId
+              : getCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId;
       } else if (isDesert) {
         terrain = TERRAIN.DESERT;
         tileId = getDesertTileKey(gx, gy, field).tileId;
       } else if (isDarkLand) {
         terrain = TERRAIN.DARK_LAND;
         tileId = getDarkGroundTileKey(gx, gy, field).tileId;
-      } else if (field.isSand(gx, gy, hasBeach)) {
-        terrain = TERRAIN.BEACH_SAND;
-        tileId = getSandTileKey(gx, gy, field, hasBeach).tileId;
-      } else if (field.isOcean(gx, gy, hasBeach)) {
-        terrain = TERRAIN.OCEAN_WATER;
-        tileId = field.getOceanTileId(gx, gy, hasBeach);
       } else if (field.isBridge(gx, gy, hasRoad)) {
         terrain = TERRAIN.ROAD;
         tileId = TILE_IDS.bridge_wood_v;
-      } else if (isRoad) {
-        terrain = TERRAIN.ROAD;
-        tileId = getRoadTileKey(gx, gy, field, hasRoad, hasBeach).tileId;
+      } else if (field.isOcean(gx, gy, hasBeach)) {
+        terrain = TERRAIN.OCEAN_WATER;
+        tileId = field.getOceanTileId(gx, gy, hasBeach);
       } else if (field.isWater(gx, gy, hasWater, hasRoad, hasBeach, hasHills)) {
         terrain = TERRAIN.OCEAN_WATER;
         tileId = getWaterTileKey(gx, gy, field, hasWater, hasRoad, hasBeach, hasHills).tileId;
+      } else if (isSnow) {
+        terrain = TERRAIN.SNOW;
+        tileId = getSnowGroundTileKey(gx, gy, field).tileId;
+      } else if (isAutumn) {
+        terrain = TERRAIN.AUTUMN;
+        tileId = getAutumnGroundTileKey(gx, gy, field).tileId;
+      } else if (field.isSand(gx, gy, hasBeach)) {
+        terrain = TERRAIN.BEACH_SAND;
+        tileId = getSandTileKey(gx, gy, field, hasBeach).tileId;
+      } else if (isRoad) {
+        terrain = TERRAIN.ROAD;
+        tileId = getRoadTileKey(gx, gy, field, hasRoad, hasBeach).tileId;
       }
 
       rowTerrain.push(terrain);

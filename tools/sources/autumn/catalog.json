@@ -1,0 +1,590 @@
+[
+ {
+  "key": "ground_autumn_pure",
+  "kind": "ground",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "hill_autumn_mesa",
+  "kind": "hill",
+  "w": 96,
+  "h": 128,
+  "anchor": "tile"
+ },
+ {
+  "key": "hill_autumn_pit_block",
+  "kind": "hill",
+  "w": 64,
+  "h": 128,
+  "anchor": "tile"
+ },
+ {
+  "key": "tree_maple_red_tall",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_maple_red_tall_mushroom_s",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_maple_red_tall_mushroom_l",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_maple_red_tall_berry",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_maple_red_tall_ivy",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_maple_red_small",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_maple_red_small_mushroom_s",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_maple_red_small_mushroom_l",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_maple_red_small_berry",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_maple_red_small_ivy",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_maple_amber_tall",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_maple_amber_tall_mushroom_s",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_maple_amber_tall_mushroom_l",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_maple_amber_tall_berry",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_maple_amber_tall_ivy",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_maple_amber_small",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_maple_amber_small_mushroom_s",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_maple_amber_small_mushroom_l",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_maple_amber_small_berry",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_maple_amber_small_ivy",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_larch_gold_tall",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_larch_gold_tall_mushroom_s",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_larch_gold_tall_mushroom_l",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_larch_gold_tall_berry",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_larch_gold_tall_ivy",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_larch_gold_small",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_larch_gold_small_mushroom_s",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_larch_gold_small_mushroom_l",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_larch_gold_small_berry",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_larch_gold_small_ivy",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_larch_olive_tall",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_larch_olive_tall_mushroom_s",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_larch_olive_tall_mushroom_l",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_larch_olive_tall_berry",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_larch_olive_tall_ivy",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_larch_olive_small",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_larch_olive_small_mushroom_s",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_larch_olive_small_mushroom_l",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_larch_olive_small_berry",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_larch_olive_small_ivy",
+  "kind": "tree",
+  "w": 64,
+  "h": 128,
+  "anchor": "bottom"
+ },
+ {
+  "key": "tree_autumn_giant",
+  "kind": "tree",
+  "w": 128,
+  "h": 160,
+  "anchor": "bottom"
+ },
+ {
+  "key": "bush_spiky_red",
+  "kind": "bush",
+  "w": 32,
+  "h": 64,
+  "anchor": "bottom"
+ },
+ {
+  "key": "bush_spiky_amber",
+  "kind": "bush",
+  "w": 32,
+  "h": 64,
+  "anchor": "bottom"
+ },
+ {
+  "key": "bush_spiky_tan",
+  "kind": "bush",
+  "w": 32,
+  "h": 64,
+  "anchor": "bottom"
+ },
+ {
+  "key": "bush_spiky_olive",
+  "kind": "bush",
+  "w": 32,
+  "h": 64,
+  "anchor": "bottom"
+ },
+ {
+  "key": "bush_spiky_big_red",
+  "kind": "bush",
+  "w": 64,
+  "h": 64,
+  "anchor": "bottom"
+ },
+ {
+  "key": "bush_spiky_big_amber",
+  "kind": "bush",
+  "w": 64,
+  "h": 64,
+  "anchor": "bottom"
+ },
+ {
+  "key": "flower_vine_pink",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "flower_vine_red",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "flower_vine_white",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "flower_vine_blue",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "rocks_grey_cluster",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "rocks_brown_cluster",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "leaf_pile_red_big",
+  "kind": "decal",
+  "w": 64,
+  "h": 64,
+  "anchor": "tile"
+ },
+ {
+  "key": "lily_lotus",
+  "kind": "water",
+  "w": 32,
+  "h": 32,
+  "anchor": "center"
+ },
+ {
+  "key": "lily_pad_big",
+  "kind": "water",
+  "w": 29,
+  "h": 31,
+  "anchor": "center"
+ },
+ {
+  "key": "lily_pad_medium",
+  "kind": "water",
+  "w": 21,
+  "h": 16,
+  "anchor": "center"
+ },
+ {
+  "key": "lily_pad_small_1",
+  "kind": "water",
+  "w": 10,
+  "h": 10,
+  "anchor": "center"
+ },
+ {
+  "key": "lily_pad_small_2",
+  "kind": "water",
+  "w": 10,
+  "h": 6,
+  "anchor": "center"
+ },
+ {
+  "key": "lily_pad_small_3",
+  "kind": "water",
+  "w": 8,
+  "h": 6,
+  "anchor": "center"
+ },
+ {
+  "key": "decor_mushroom_tan",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "decor_mushroom_red_cluster",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "decor_grass_red_tuft",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "decor_grass_dry",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "decor_flower_white_cluster",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "decor_flowerbed_red",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "decor_flowerbed_red_white",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "decor_stump_autumn",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "decor_mushroom_red_pair",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "decor_mushroom_red_single",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "decor_flower_orange_patch",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "decor_flowerbed_red_pink",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "decor_flowerbed_red_lilac",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "decor_roots_curved_1",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "decor_roots_curved_2",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "decor_grass_red_blue",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "decor_grass_red_white",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "decor_rock_mossy_pile",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "decor_leaf_fragments_red",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "decor_rock_brown",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ },
+ {
+  "key": "decor_leaf_pile_red",
+  "kind": "decal",
+  "w": 32,
+  "h": 32,
+  "anchor": "tile"
+ }
+]

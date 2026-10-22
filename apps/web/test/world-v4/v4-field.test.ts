@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createTerrainField, V4Field, V4_CONFIG } from '../../src/maps/terrain-field';
+import { getV4LakePlacement } from '../../src/maps/terrain-field/v4-water';
 
 describe('World Gen v4 - macro continents and archipelagos', () => {
   it('creates V4Field through the terrain factory', () => {
@@ -9,6 +10,44 @@ describe('World Gen v4 - macro continents and archipelagos', () => {
     expect(field.version).toBe(4);
     expect(field.seed).toBe(101);
     expect(field.getSpawn()).toEqual({ gx: -7, gy: -5 });
+  });
+
+  it('supports the opt-in natural-landmass profile without changing classic V4', () => {
+    const classic = createTerrainField(4, 101);
+    const natural = createTerrainField(5, 101);
+
+    expect(natural).toBeInstanceOf(V4Field);
+    expect(natural.version).toBe(5);
+    expect((natural as V4Field).profile).toBe('natural-landmass');
+    expect(classic.version).toBe(4);
+    expect((classic as V4Field).profile).toBe('classic');
+  });
+
+  it('selects a deterministic flat start area for multiple seeds', () => {
+    for (const seed of [101, 202, 777, 999, 2026]) {
+      const first = new V4Field(seed, 'natural-landmass');
+      const second = new V4Field(seed, 'natural-landmass');
+
+      expect(first.macroPlan.startLocation).toEqual(second.macroPlan.startLocation);
+      expect(first.macroPlan.startLocation.clearance).toBeGreaterThanOrEqual(2);
+      const spawn = first.getSpawn();
+      expect(first.isOcean(spawn.gx, spawn.gy)).toBe(false);
+      expect(first.isSand(spawn.gx, spawn.gy)).toBe(false);
+      expect(first.isWater(spawn.gx, spawn.gy)).toBe(false);
+      expect(first.isHill(spawn.gx, spawn.gy)).toBe(false);
+      expect(first.isDesert(spawn.gx, spawn.gy)).toBe(false);
+      expect(first.isDarkLand(spawn.gx, spawn.gy)).toBe(false);
+      expect(first.isAutumn(spawn.gx, spawn.gy)).toBe(false);
+      expect(first.isSnow(spawn.gx, spawn.gy)).toBe(false);
+    }
+  }, 60000);
+
+  it('exposes a connected home continent with bounded island components', () => {
+    const field = new V4Field(101, 'natural-landmass');
+
+    expect(field.macroPlan.isNaturalLandCell(0, 0)).toBe(true);
+    expect(field.macroPlan.isNearNaturalLandCell(0, 0)).toBe(true);
+    expect(field.macroPlan.isNearNaturalLandCell(10_000, 10_000)).toBe(false);
   });
 
   it('keeps the starter core walkable without imposing a global radial land mask', () => {
@@ -98,6 +137,19 @@ describe('World Gen v4 - macro continents and archipelagos', () => {
     expect(lakeTiles).toBeGreaterThan(0);
   }, 20000);
 
+  it('keeps lake generation multi-scale instead of using one fixed pond size', () => {
+    const radii: number[] = [];
+    for (let cy = -3; cy <= 3; cy++) {
+      for (let cx = -3; cx <= 3; cx++) {
+        const lake = getV4LakePlacement(cx, cy, 101);
+        if (lake) radii.push(lake.radiusX);
+      }
+    }
+
+    expect(radii.length).toBeGreaterThan(5);
+    expect(Math.min(...radii)).toBeLessThan(Math.max(...radii) * 0.75);
+  });
+
   it('keeps freshwater out of desert and Dark Land terrain', () => {
     const field = new V4Field(101);
     let restrictedTerrainTiles = 0;
@@ -110,9 +162,33 @@ describe('World Gen v4 - macro continents and archipelagos', () => {
         if (!freshwater) continue;
         expect(field.isDesert(gx, gy)).toBe(false);
         expect(field.isDarkLand(gx, gy)).toBe(false);
+        expect(field.isValidTreePos(gx * 32 - 16, gy * 32 - 86)).toBe(false);
       }
     }
 
     expect(restrictedTerrainTiles).toBeGreaterThan(0);
+  }, 20000);
+
+  it('keeps raised plain hills out of special biome regions', () => {
+    const field = new V4Field(101);
+    let hillTiles = 0;
+    let specialTiles = 0;
+
+    for (let gy = -256; gy <= 256; gy += 64) {
+      for (let gx = -256; gx <= 256; gx += 64) {
+        const special =
+          field.isDesert(gx, gy) || field.isDarkLand(gx, gy) || field.isAutumn(gx, gy);
+        if (special) specialTiles++;
+        if (!field.isHill(gx, gy)) continue;
+
+        hillTiles++;
+        expect(field.isDesert(gx, gy)).toBe(false);
+        expect(field.isDarkLand(gx, gy)).toBe(false);
+        expect(field.isAutumn(gx, gy)).toBe(false);
+      }
+    }
+
+    expect(hillTiles).toBeGreaterThan(0);
+    expect(specialTiles).toBeGreaterThan(0);
   }, 20000);
 });

@@ -46,22 +46,6 @@ export function createOverlayTemplate(): string {
     </div>
   </header>
 
-  <!-- Top Center/Left Quick World Time HUD Widget -->
-  <aside id="worldTimeWidget" class="world-time-widget" aria-label="Đồng hồ thế giới">
-    <div class="world-time-pill" id="worldTimePill" title="Nhấp để xoay vòng qua các pha thời gian">
-      <span class="world-time-icon" id="worldTimeIcon">☀️</span>
-      <span class="world-time-text" id="worldTimeText">08:00</span>
-      <span class="world-time-phase" id="worldTimePhase">Ban ngày</span>
-      <span class="world-time-day" id="worldTimeDay">Ngày 1</span>
-    </div>
-    <div class="world-time-quick-actions" id="worldTimeQuickActions">
-      <button class="btn-time-quick" data-time="360" title="06:00 Bình minh (Hồng cam)">🌅 Sáng</button>
-      <button class="btn-time-quick" data-time="720" title="12:00 Ban ngày (Trong suốt)">☀️ Trưa</button>
-      <button class="btn-time-quick" data-time="1080" title="18:00 Hoàng hôn (Tím chiều)">🌇 Chiều</button>
-      <button class="btn-time-quick" data-time="0" title="00:00 Ban đêm (Xanh thẫm)">🌙 Đêm</button>
-    </div>
-  </aside>
-
   <!-- Fullscreen Loading Screen -->
   <div id="loadingOverlay" class="loading-overlay">
     <div class="loading-spinner"></div>

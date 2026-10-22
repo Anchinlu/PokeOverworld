@@ -25,6 +25,10 @@ export const WORLD_MAP_PALETTE = {
   bridgeFallback: '#8b684e',
   darkPixels: ['#3a2d49', '#443453', '#30263d'],
   darkFallback: '#2d2538',
+  autumnPixels: ['#d97706', '#ea580c', '#b45309'],
+  autumnFallback: '#c2410c',
+  snowPixels: ['#edf8f9', '#d3effa', '#a0d5e8'],
+  snowFallback: '#e2f4f8',
   edgeShadow: 'rgba(25, 42, 42, 0.18)',
   detailLight: 'rgba(255, 255, 255, 0.08)',
   detailDark: 'rgba(25, 42, 42, 0.12)',
@@ -32,4 +36,4 @@ export const WORLD_MAP_PALETTE = {
   fogEdge: 'rgba(148, 163, 184, 0.08)',
 } as const;
 
-export type WorldMapTerrainClass = 'grass' | 'sand' | 'water' | 'hill' | 'road' | 'dark_land';
+export type WorldMapTerrainClass = 'grass' | 'sand' | 'water' | 'hill' | 'road' | 'dark_land' | 'autumn' | 'snow';

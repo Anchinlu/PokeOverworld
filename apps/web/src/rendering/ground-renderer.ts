@@ -93,15 +93,25 @@ export class GroundRenderer {
           (tileId >= 440 && tileId < 460) || tileId === TILE_IDS.tall_grass_dark;
         const isDarkCliff = tileId >= 460 && tileId < 475;
         const isDarkLand = isDarkGround || isDarkCliff;
+        const isAutumn =
+          (tileId >= 480 && tileId <= 492) || tileId === TILE_IDS.tall_grass_autumn;
+        const isSnowGround =
+          (tileId >= 510 && tileId <= 522) || tileId === TILE_IDS.tall_grass_snow;
+        const isSnowCliff = tileId >= 530 && tileId <= 542;
+        const isSnowIce = tileId >= 550 && tileId <= 558;
+        const isSnow = isSnowGround || isSnowCliff || isSnowIce;
         const isRoad = tileId >= 200 && tileId < 300;
-        const isCliff = (tileId >= 400 && tileId < 435) || isDarkCliff;
-        const isWaterOrBridge = tileId >= 700 && tileId < 730;
+        const isCliff = (tileId >= 400 && tileId < 435) || isDarkCliff || isSnowCliff;
+        const isWaterOrBridge =
+          (tileId >= 700 && tileId < 730) ||
+          (tileId >= 750 && tileId <= 763) ||
+          (tileId >= 770 && tileId <= 783);
         const isOceanOrShore = tileId >= 730 && tileId <= 742;
 
         if (isWaterOrBridge && options.showWater) {
           // Clear ground grass: lake/river tiles (bank + water) are drawn animated underneath
           gCtx.clearRect(px, py, TILE_SIZE, TILE_SIZE);
-          if (tileId >= TILE_IDS.bridge_wood_h) {
+          if (tileId >= TILE_IDS.bridge_wood_h && tileId < 730) {
             // Bridges stay a static overlay above the animated water
             const assetKey = TILE_KEY_BY_ID[tileId];
             if (assetKey) {
@@ -118,11 +128,19 @@ export class GroundRenderer {
           (isSand && options.showBeach) ||
           isDesert ||
           isDarkLand ||
+          isAutumn ||
+          isSnow ||
           (isRoad && options.showRoad) ||
           (isCliff && options.showHills)
         ) {
           const assetKey =
-            tileId === TILE_IDS.tall_grass_dark ? 'dark_ground_pure' : TILE_KEY_BY_ID[tileId];
+            tileId === TILE_IDS.tall_grass_dark
+              ? 'dark_ground_pure'
+              : tileId === TILE_IDS.tall_grass_autumn
+              ? 'ground_autumn_pure'
+              : tileId === TILE_IDS.tall_grass_snow
+              ? 'ground_snow_pure'
+              : TILE_KEY_BY_ID[tileId];
 
           if (assetKey) {
             const ovImg = this.loader.getImage(assetKey);
@@ -187,6 +205,107 @@ export class GroundRenderer {
             const decoImg = this.loader.getImage(desertDecos[decoIdx]);
             if (decoImg && decoImg.complete) {
               gCtx.drawImage(decoImg, px, py, TILE_SIZE, TILE_SIZE);
+            }
+          }
+
+          // Optional natural autumn ground decorations on autumn ground tiles (Layer 0 - ground layer)
+          const isAutumnGround = (tileId >= 480 && tileId <= 492) || tileId === TILE_IDS.tall_grass_autumn;
+          if (isAutumnGround) {
+            const decorRoll = seededHash(gx, gy, chunk.seed + 31);
+            if (decorRoll < 0.035) {
+              // Big fallen leaf pile (64x64) as ground decoration (Layer 0, zero hitbox)
+              const bigLeafImg = this.loader.getImage('leaf_pile_red_big');
+              if (bigLeafImg && bigLeafImg.complete) {
+                gCtx.drawImage(bigLeafImg, px - 16, py - 16, 64, 64);
+              }
+            } else if (decorRoll < 0.15) {
+              const autumnDecos = [
+                'decor_mushroom_tan',
+                'decor_mushroom_red_cluster',
+                'decor_grass_red_tuft',
+                'decor_grass_dry',
+                'decor_flower_white_cluster',
+                'decor_flowerbed_red',
+                'decor_flowerbed_red_white',
+                'decor_mushroom_red_pair',
+                'decor_mushroom_red_single',
+                'decor_flower_orange_patch',
+                'decor_flowerbed_red_pink',
+                'decor_flowerbed_red_lilac',
+                'decor_grass_red_blue',
+                'decor_grass_red_white',
+                'decor_rock_mossy_pile',
+                'decor_leaf_fragments_red',
+                'decor_rock_brown',
+                'decor_leaf_pile_red',
+                'decor_roots_curved_1',
+                'decor_roots_curved_2',
+              ];
+              const decoIdx = Math.floor(seededHash(gx, gy, chunk.seed + 67) * autumnDecos.length);
+              const decoImg = this.loader.getImage(autumnDecos[decoIdx]);
+              if (decoImg && decoImg.complete) {
+                gCtx.drawImage(decoImg, px, py, TILE_SIZE, TILE_SIZE);
+              }
+            }
+          }
+
+          // Natural snow ground decorations must ONLY be placed inside pure interior snow ground (never on boundary fringe 511-522)
+          const isSnowGround = tileId === TILE_IDS.ground_snow_pure;
+          if (isSnowGround) {
+            const snowDecorRoll = seededHash(gx, gy, chunk.seed + 41);
+            if (snowDecorRoll < 0.03) {
+              // Medium ice patch / frozen mound (64x32) as ground decoration (Layer 0, zero hitbox)
+              const patchImg = this.loader.getImage('ice_snow_patch_medium');
+              if (patchImg && patchImg.complete) {
+                gCtx.drawImage(patchImg, px - 16, py, 64, 32);
+              }
+            } else if (snowDecorRoll < 0.16) {
+              const snowDecos = [
+                'decor_snow_drift',
+                'decor_snow_sparkle',
+                'decor_snow_crack',
+                'decor_snow_flower',
+                'decor_snow_mound',
+                'decor_snow_grass_1',
+                'decor_snow_grass_2',
+                'ice_snow_patch_small',
+              ];
+              const decoIdx = Math.floor(seededHash(gx, gy, chunk.seed + 83) * snowDecos.length);
+              const decoImg = this.loader.getImage(snowDecos[decoIdx]);
+              if (decoImg && decoImg.complete) {
+                gCtx.drawImage(decoImg, px, py, TILE_SIZE, TILE_SIZE);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Bake any ground-level decals/leaf piles directly onto the ground canvas (Layer 0)
+    if (chunk.plants && chunk.plants.length > 0) {
+      for (const plant of chunk.plants) {
+        if (
+          plant.type === 'leaf_pile_red_big' ||
+          plant.type === 'ice_snow_patch_medium' ||
+          plant.type === 'decor_snow_frost_grass' ||
+          (plant.type.startsWith('decor_') &&
+            plant.type !== 'decor_stump_autumn' &&
+            plant.type !== 'stump_snow' &&
+            plant.type !== 'log_snow_fallen' &&
+            !plant.type.startsWith('rock_snow_'))
+        ) {
+          const pImg = this.loader.getImage(plant.type);
+          if (pImg && pImg.complete) {
+            const lx = plant.gx - chunk.cx * 16;
+            const ly = plant.gy - chunk.cy * 16;
+            const px = lx * TILE_SIZE;
+            const py = ly * TILE_SIZE;
+            if (plant.type === 'leaf_pile_red_big') {
+              gCtx.drawImage(pImg, px - 16, py - 16, 64, 64);
+            } else if (plant.type === 'ice_snow_patch_medium' || plant.type === 'decor_snow_frost_grass') {
+              gCtx.drawImage(pImg, px, py, 64, 32);
+            } else {
+              gCtx.drawImage(pImg, px, py, TILE_SIZE, TILE_SIZE);
             }
           }
         }
@@ -320,6 +439,10 @@ export class GroundRenderer {
     const imgTG = this.loader.getImage('tall_grass_strip');
     const imgTGDark =
       this.loader.getImage('tall_grass_dark_strip') ?? this.loader.getImage('tall_grass_dark');
+    const imgTGAutumn =
+      this.loader.getImage('tall_grass_autumn_strip') ?? this.loader.getImage('tall_grass_autumn');
+    const imgTGSnow =
+      this.loader.getImage('tall_grass_snow_strip') ?? this.loader.getImage('tall_grass_snow');
     if (!imgTG || !imgTG.complete) return;
 
     // H2 Optimization: Pre-compute active moving entity tiles (O(1) lookup per patch)
@@ -370,7 +493,7 @@ export class GroundRenderer {
           }
         }
 
-        const img = (tg.isDark ? imgTGDark : imgTG) ?? imgTG;
+        const img = (tg.isSnow ? imgTGSnow : tg.isAutumn ? imgTGAutumn : tg.isDark ? imgTGDark : imgTG) ?? imgTG;
         if (!img || !img.complete) continue;
 
         ctx.drawImage(img, fIdx * 32, 0, 32, 32, tg.x, grassY, 32, grassHeight);
@@ -419,10 +542,17 @@ export class GroundRenderer {
       for (const waterTile of chunk.waterTiles) {
         const { gx, gy, tileId } = waterTile;
 
-        // 1. Inland river / lake water (700..729): per-tile 4-frame strips (bank + water)
-        if (tileId >= 700 && tileId < 730) {
+        // 1. Inland river / lake water (700..729, 750..763, 770..783): per-tile 4-frame strips (bank + water)
+        if (
+          (tileId >= 700 && tileId < 730) ||
+          (tileId >= 750 && tileId <= 763) ||
+          (tileId >= 770 && tileId <= 783)
+        ) {
           // Bridges (720/721) sit above plain animated water
-          const key = tileId >= TILE_IDS.bridge_wood_h ? 'water_pure' : TILE_KEY_BY_ID[tileId];
+          const key =
+            tileId >= TILE_IDS.bridge_wood_h && tileId < 730
+              ? 'water_pure'
+              : TILE_KEY_BY_ID[tileId];
           const imgToUse = key ? this.loader.getImage(key) : undefined;
           if (!imgToUse || !imgToUse.complete) continue;
           const px = gx * TILE_SIZE;

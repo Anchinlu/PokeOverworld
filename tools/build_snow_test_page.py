@@ -1,0 +1,1294 @@
+"""Build the comprehensive Frostfall Snow Peak Showcase & Test Page with all 76 clean assets."""
+import json
+import os
+
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+CATALOG_PATH = os.path.join(ROOT, "tools", "sources", "snow", "catalog_annotated.json")
+OUTPUT_HTML = os.path.join(ROOT, "apps", "web", "public", "snow-biome-test.html")
+
+with open(CATALOG_PATH, encoding="utf-8") as f:
+    catalog = json.load(f)
+
+categories = {
+    "boundary_fringe": {
+        "title": "❄️ Cỏ Ranh Giới Biome Băng Tuyết (12 Autotile ground_snow_*)",
+        "desc": "Bộ viền tuyết răng cưa tự nhiên kết nối nền tuyết trắng mượt mà với đồng cỏ meadow xung quanh, giữ nguyên độ trong suốt (alpha transparency)",
+        "keys": [
+            "ground_snow_top", "ground_snow_bot", "ground_snow_left", "ground_snow_right",
+            "ground_snow_tl", "ground_snow_tr", "ground_snow_bl", "ground_snow_br",
+            "ground_snow_in_tl", "ground_snow_in_tr", "ground_snow_in_bl", "ground_snow_in_br"
+        ],
+    },
+    "tall_grass": {
+        "title": "🌿 Cỏ Cao Băng Tuyết (Snow Tall Grass & Animation Strip)",
+        "desc": "Khóm cỏ cao phủ băng tuyết trắng xanh, dải hoạt họa 160×32 (5 frames: 1 idle + 4 sway) đung đưa khi người chơi đi qua",
+        "keys": ["tall_grass_snow", "tall_grass_snow_strip"],
+    },
+    "frozen_water": {
+        "title": "🧊 Tài Nguyên Băng & Mặt Nước Đóng Băng (15 Autotile ice_snow_*)",
+        "desc": "Bộ autotile mặt băng và đốm băng đóng băng (mặt nước hồ trong game duy trì nước chưa đóng băng thực sự theo thiết kế)",
+        "keys": [
+            "ice_snow_pure", "ice_snow_top", "ice_snow_bot", "ice_snow_left", "ice_snow_right",
+            "ice_snow_tl", "ice_snow_tr", "ice_snow_bl", "ice_snow_br",
+            "ice_snow_in_tl", "ice_snow_in_tr", "ice_snow_in_bl", "ice_snow_in_br",
+            "ice_snow_patch_medium", "ice_snow_patch_small"
+        ],
+    },
+    "ground_hills": {
+        "title": "🏔️ Địa Hình Đồi Cao & Vách Núi Tuyết (15 Autotile cliff_snow_*)",
+        "desc": "Nền tuyết nguyên bản lấy từ tâm đồi cao (center plateau interior), cùng bộ 3×3 vách núi tuyết và 4 góc khuyết lõm trong",
+        "keys": [
+            "ground_snow_pure",
+            "cliff_snow_pure", "cliff_snow_top", "cliff_snow_bot", "cliff_snow_left", "cliff_snow_right",
+            "cliff_snow_tl", "cliff_snow_tr", "cliff_snow_bl", "cliff_snow_br",
+            "cliff_snow_in_tl", "cliff_snow_in_tr", "cliff_snow_in_bl", "cliff_snow_in_br"
+        ],
+    },
+
+    "plain_trees": {
+        "title": "🌲 Rừng Thông Tuyết & Bách Tùng Cổ Thụ (8 Cây 64×128)",
+        "desc": "4 biến thể Thông Tuyết Cổ Thụ dáng kim nhọn + 4 biến thể Bách Tuyết Tùng tán sum suê phủ dầy tuyết trắng, thân cây đã tách nền trong suốt tuyệt đối",
+        "keys": [
+            "tree_snow_pine_1", "tree_snow_pine_2", "tree_snow_pine_3", "tree_snow_pine_4",
+            "tree_snow_spruce_1", "tree_snow_spruce_2", "tree_snow_spruce_3", "tree_snow_spruce_4"
+        ],
+    },
+    "bushes_and_crystals": {
+        "title": "💎 Bụi Cây Băng, Cây Nón & Tinh Thể Phát Quang (10 Vật Thể)",
+        "desc": "4 cây nón kim tuyết (32×64), 4 loại bụi cây phủ tuyết (64×64 bông xù, tán rộng, tròn, hình thoi) và 2 tinh thể băng nhọn/dương xỉ",
+        "keys": [
+            "tree_snow_cone_1", "tree_snow_cone_2", "tree_snow_cone_3", "tree_snow_cone_4",
+            "bush_snow_fluffy", "bush_snow_wide", "bush_snow_round", "bush_snow_diamond",
+            "crystal_snow_fern", "crystal_snow_spire"
+        ],
+    },
+    "decals_rocks_wood": {
+        "title": "🪵 Gỗ Mục, Gốc Cưa & Khối Đá Băng Tuyết",
+        "desc": "Khúc gỗ mục phủ tuyết dài 64×32 (không bị cắt đôi), gốc cưa đọng tuyết 32×32, tảng đá lớn 64×32, mỏm đá nhọn và cụm sỏi tuyết",
+        "keys": [
+            "log_snow_fallen", "stump_snow",
+            "rock_snow_boulder", "rock_snow_pointed", "rock_snow_pebbles"
+        ],
+    },
+    "floor_decor": {
+        "title": "❄️ Chi Tiết Trang Trí Mặt Tuyết (8 Decals Tuyết & Băng)",
+        "desc": "Đốm tuyết lấp lánh, vệt tuyết trôi đùn, vết nứt băng, mầm hoa dại tuyết nở, mô tuyết đắp nổi, mảng băng mỏng và 2 cụm cỏ sương giá",
+        "keys": [
+            "decor_snow_drift", "decor_snow_sparkle", "decor_snow_crack", "decor_snow_flower",
+            "decor_snow_mound", "decor_snow_frost_grass", "decor_snow_grass_1", "decor_snow_grass_2"
+        ],
+    },
+    "blizzard_weather": {
+        "title": "🌪️ Hạt Tuyết & Bão Tuyết Đa Mức Độ (4 Sprites 16×16)",
+        "desc": "Bộ 4 hạt tuyết pixel chuẩn mực (blizzard_1..4.png): Bông tuyết lớn, hoa tuyết vừa, hạt bụi tuyết nhỏ, và mảnh vụn gió lốc bay theo 3 cấp độ (bình thường, bão tuyết, bão tuyết cuồng nộ)",
+        "keys": ["blizzard_1", "blizzard_2", "blizzard_3", "blizzard_4"],
+    },
+    "snow_water": {
+        "title": "🌊 Mặt Nước Hồ & Sông Tuyết (14 Autotile Animated Strips)",
+        "desc": "Mặt nước hồ và sông chuyên biệt vùng băng tuyết (4 khung hình hoạt họa 128×32): Nước hồ thuần, viền bờ đất tuyết 4 hướng, 4 góc lồi, 4 góc lõm và khúc cua uốn lượn",
+        "keys": [
+            "water_snow_pure", "water_snow_top", "water_snow_bot", "water_snow_left", "water_snow_right",
+            "water_snow_tl", "water_snow_tr", "water_snow_bl", "water_snow_br",
+            "water_snow_in_tl", "water_snow_in_tr", "water_snow_in_bl", "water_snow_in_br",
+            "water_snow_curve"
+        ],
+    },
+}
+
+html_content = f"""<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PokeOverworld — Đỉnh Núi Băng Tuyết (Frostfall Snow Peak Showcase)</title>
+<style>
+  * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+  body {{
+    background: #090e17;
+    color: #f1f5f9;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    padding: 24px;
+    line-height: 1.6;
+  }}
+  header {{
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid rgba(56, 189, 248, 0.25);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 14px;
+  }}
+  h1 {{
+    color: #38bdf8;
+    font-size: 26px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }}
+  .subtitle {{
+    color: #94a3b8;
+    font-size: 14px;
+    margin-top: 6px;
+  }}
+  .badges {{
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }}
+  .tag {{
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 700;
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.35);
+  }}
+  .tag-green {{
+    background: rgba(34, 197, 94, 0.15);
+    color: #4ade80;
+    border-color: rgba(34, 197, 94, 0.35);
+  }}
+  .tag-blue {{
+    background: rgba(99, 102, 241, 0.15);
+    color: #a5b4fc;
+    border-color: rgba(99, 102, 241, 0.35);
+  }}
+
+  /* Tabs */
+  .tabs {{
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #1e293b;
+    padding-bottom: 10px;
+  }}
+  .tab-btn {{
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 14.5px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }}
+  .tab-btn:hover {{
+    color: #e2e8f0;
+    background: rgba(255, 255, 255, 0.05);
+  }}
+  .tab-btn.active {{
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.12);
+  }}
+
+  /* Controls Toolbar */
+  .toolbar {{
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 12px;
+    padding: 12px 18px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }}
+  .ctrl-group {{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }}
+  .ctrl-label {{
+    font-size: 12px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }}
+  .btn-chip {{
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #cbd5e1;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }}
+  .btn-chip:hover {{
+    background: #334155;
+    color: #fff;
+  }}
+  .btn-chip.active {{
+    background: #0284c7;
+    border-color: #38bdf8;
+    color: #fff;
+  }}
+  .btn-action {{
+    background: linear-gradient(135deg, #0284c7, #0369a1);
+    border: none;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-left: auto;
+  }}
+  .btn-action:hover {{
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(2, 132, 199, 0.5);
+  }}
+
+  /* Interactive Canvas Area */
+  .canvas-container {{
+    background: #050811;
+    border: 2px solid rgba(56, 189, 248, 0.3);
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    position: relative;
+  }}
+  canvas {{
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }}
+
+  /* Catalog Grid Styles */
+  .catalog-section {{
+    margin-bottom: 32px;
+  }}
+  .section-header {{
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid #1f2937;
+    padding-bottom: 8px;
+  }}
+  .section-title {{
+    color: #38bdf8;
+    font-size: 17px;
+    font-weight: 700;
+  }}
+  .section-desc {{
+    color: #94a3b8;
+    font-size: 13px;
+  }}
+  .asset-grid {{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 14px;
+  }}
+  .asset-card {{
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.2s;
+  }}
+  .asset-card:hover {{
+    border-color: #38bdf8;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+  }}
+  .asset-thumb {{
+    width: 100%;
+    height: 120px;
+    background: #1e293b;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 8px 8px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 8px;
+    overflow: hidden;
+  }}
+  .asset-thumb img {{
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }}
+  .asset-title {{
+    font-size: 12px;
+    font-weight: 600;
+    color: #e2e8f0;
+    text-align: center;
+    line-height: 1.3;
+    margin-bottom: 4px;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }}
+  .asset-meta {{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 11px;
+    color: #64748b;
+    padding: 4px 6px 0 6px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }}
+  .badge-dim {{
+    background: rgba(255,255,255,0.08);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-family: monospace;
+    color: #cbd5e1;
+  }}
+  .hidden {{ display: none; }}
+
+  /* Inspector Popup */
+  .inspector {{
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    backdrop-filter: blur(10px);
+    padding: 14px 18px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    font-size: 12.5px;
+    min-width: 260px;
+    z-index: 100;
+  }}
+  .inspector h4 {{
+    color: #38bdf8;
+    margin-bottom: 6px;
+    font-size: 13.5px;
+  }}
+  .inspector-row {{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    color: #94a3b8;
+  }}
+  .inspector-val {{
+    font-weight: 600;
+    color: #f1f5f9;
+    font-family: monospace;
+  }}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>❄️ PokeOverworld — Đỉnh Núi Băng Tuyết (Frostfall Snow Peak)</h1>
+    <div class="subtitle">Khu vực kiểm thử & trình diễn toàn diện 90 tài nguyên Biome Băng Tuyết chuẩn mực (kèm 14 dải nước hồ/sông hoạt họa)</div>
+  </div>
+  <div class="badges">
+    <span class="tag tag-blue">Vùng Băng Giá Tinh Khiết</span>
+    <span class="tag tag-green">90/90 Sprites Chuẩn Hóa</span>
+    <span class="tag">Mô Phỏng Nước Động & Bão Tuyết 60 FPS</span>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" data-tab="tabLive">🎮 Khu Vực Trải Nghiệm Thực Tế (Live Simulator)</button>
+  <button class="tab-btn" data-tab="tabCatalog">📚 Danh Mục Tài Nguyên (90 Assets Catalog)</button>
+</div>
+
+<!-- TAB 1: LIVE SIMULATOR -->
+<div id="tabLive" class="tab-content">
+  <div class="toolbar">
+    <div class="ctrl-group">
+      <span class="ctrl-label">Thu Phóng:</span>
+      <button class="btn-chip" data-zoom="1">1×</button>
+      <button class="btn-chip active" data-zoom="2">2×</button>
+      <button class="btn-chip" data-zoom="3">3×</button>
+    </div>
+    <div class="ctrl-group">
+      <span class="ctrl-label">Thời Khắc:</span>
+      <button class="btn-chip active" data-time="day">☀️ Ban Ngày</button>
+      <button class="btn-chip" data-time="sunset">🌅 Hoàng Hôn</button>
+      <button class="btn-chip" data-time="night">🌌 Đêm Cực Quang</button>
+    </div>
+    <div class="ctrl-group">
+      <span class="ctrl-label">Thời Tiết Biome:</span>
+      <button class="btn-chip active" data-weather="normal">🌨️ Tuyết Rơi Bình Thường (Mức 1)</button>
+      <button class="btn-chip" data-weather="blizzard">🌪️ Bão Tuyết Gió Lốc (Mức 2)</button>
+      <button class="btn-chip" data-weather="severe_blizzard">❄️ Bão Tuyết Cuồng Nộ (Mức 3)</button>
+      <button class="btn-chip" data-weather="calm">⏹️ Tĩnh Lặng</button>
+    </div>
+    <div class="ctrl-group">
+      <button class="btn-chip" id="toggleGrid">Lưới Ô Cờ (Grid)</button>
+    </div>
+    <button class="btn-action" id="btnReroll">🎲 Ngẫu Nhiên Hóa Vị Trí (Re-roll Scene)</button>
+  </div>
+
+  <div class="canvas-container">
+    <canvas id="snowCanvas"></canvas>
+  </div>
+</div>
+
+<!-- TAB 2: CATALOG -->
+<div id="tabCatalog" class="tab-content hidden">
+  <div id="catalogContent"></div>
+</div>
+
+<!-- INSPECTOR -->
+<div class="inspector" id="inspectorBox">
+  <h4>🔍 Thám Tử Ô Đất (Tile Inspector)</h4>
+  <div class="inspector-row"><span>Tọa độ ô:</span><span class="inspector-val" id="insCoord">X: 0, Y: 0</span></div>
+  <div class="inspector-row"><span>Loại lớp đất:</span><span class="inspector-val" id="insTile">ground_snow_pure</span></div>
+  <div class="inspector-row"><span>Biome:</span><span class="inspector-val" id="insBiome" style="color:#38bdf8;">Băng Tuyết (Snow)</span></div>
+  <div class="inspector-row"><span>Vật thể tại ô:</span><span class="inspector-val" id="insEntity">Không có</span></div>
+  <div class="inspector-row"><span>Trạng thái:</span><span class="inspector-val" id="insSolid" style="color:#4ade80;">Có thể đi qua</span></div>
+</div>
+
+<script>
+const RAW_CATALOG = {json.dumps(catalog, ensure_ascii=False)};
+const CATEGORIES = {json.dumps(categories, ensure_ascii=False)};
+const ASSETS_BASE = '/assets/biomes/snow/';
+
+// Render Catalog Grid
+const catalogContent = document.getElementById('catalogContent');
+for (const [catId, catInfo] of Object.entries(CATEGORIES)) {{
+  const sec = document.createElement('div');
+  sec.className = 'catalog-section';
+  sec.innerHTML = `
+    <div class="section-header">
+      <div class="section-title">${{catInfo.title}}</div>
+      <div class="section-desc">${{catInfo.desc}}</div>
+    </div>
+    <div class="asset-grid" id="grid_${{catId}}"></div>
+  `;
+  catalogContent.appendChild(sec);
+
+  const grid = sec.querySelector(`#grid_${{catId}}`);
+  catInfo.keys.forEach(k => {{
+    const item = RAW_CATALOG.find(c => c.key === k);
+    if (!item) return;
+    const card = document.createElement('div');
+    card.className = 'asset-card';
+    card.innerHTML = `
+      <div class="asset-thumb">
+        <img src="${{ASSETS_BASE + item.key + '.png'}}" alt="${{item.key}}" loading="lazy">
+      </div>
+      <div class="asset-title">${{item.vn || item.key}}</div>
+      <div class="asset-meta">
+        <span class="badge-dim">${{item.w}}×${{item.h}}</span>
+        <span style="color:#64748b;">${{item.kind}}</span>
+      </div>
+    `;
+    grid.appendChild(card);
+  }});
+}}
+
+// Tab Switching
+document.querySelectorAll('.tab-btn').forEach(btn => {{
+  btn.addEventListener('click', () => {{
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+    btn.classList.add('active');
+    document.getElementById(btn.getAttribute('data-tab')).classList.remove('hidden');
+  }});
+}});
+
+// --- INTERACTIVE MAP ENGINE ---
+const MAP_COLS = 26;
+const MAP_ROWS = 18;
+const TILE_SIZE = 32;
+
+const canvas = document.getElementById('snowCanvas');
+const ctx = canvas.getContext('2d');
+ctx.imageSmoothingEnabled = false;
+
+let currentZoom = 2;
+let showGrid = false;
+let currentTime = 'day';
+let currentWeather = 'normal';
+
+function resizeCanvas() {{
+  canvas.width = MAP_COLS * TILE_SIZE * currentZoom;
+  canvas.height = MAP_ROWS * TILE_SIZE * currentZoom;
+}}
+resizeCanvas();
+
+// Image Cache
+const images = {{}};
+function loadImg(k, filename) {{
+  const img = new Image();
+  img.src = ASSETS_BASE + filename;
+  images[k] = img;
+  return img;
+}}
+
+RAW_CATALOG.forEach(c => loadImg(c.key, c.key + '.png'));
+// Also load grass_01 for background meadow
+const grassImg = new Image();
+grassImg.src = '/assets/terrain/grass_01.png';
+images['grass_01'] = grassImg;
+
+// Player sprite
+const redPlayer = new Image();
+redPlayer.src = '/Graphics/Characters/trainer_POKEMONTRAINER_Red.png';
+
+// Controls
+document.querySelectorAll('[data-zoom]').forEach(b => {{
+  b.addEventListener('click', () => {{
+    document.querySelectorAll('[data-zoom]').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    currentZoom = parseInt(b.getAttribute('data-zoom'));
+    resizeCanvas();
+  }});
+}});
+
+document.querySelectorAll('[data-time]').forEach(b => {{
+  b.addEventListener('click', () => {{
+    document.querySelectorAll('[data-time]').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    currentTime = b.getAttribute('data-time');
+  }});
+}});
+
+document.querySelectorAll('[data-weather]').forEach(b => {{
+  b.addEventListener('click', () => {{
+    document.querySelectorAll('[data-weather]').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    currentWeather = b.getAttribute('data-weather');
+  }});
+}});
+
+document.getElementById('toggleGrid').addEventListener('click', function() {{
+  showGrid = !showGrid;
+  this.classList.toggle('active', showGrid);
+}});
+
+document.getElementById('btnReroll').addEventListener('click', () => {{
+  generateScene();
+}});
+
+// Scene Entities & Layout
+let sceneObjects = [];
+let terrainGrid = [];
+let grassTiles = [];
+
+function generateScene() {{
+  sceneObjects = [];
+  terrainGrid = [];
+  grassTiles = [];
+
+  // Initialize terrain: meadow grass (0) vs snow (1) vs cliff (2) vs frozen ice (3)
+  for (let r = 0; r < MAP_ROWS; r++) {{
+    const row = [];
+    for (let c = 0; c < MAP_COLS; c++) {{
+      // Snow biome spans columns 1 to 24, rows 1 to 16
+      if (c >= 1 && c <= 24 && r >= 1 && r <= 16) {{
+        // Unfrozen Glacial Lake: cols 10..15, rows 9..12
+        if (c >= 10 && c <= 15 && r >= 9 && r <= 12) {{
+          row.push('water');
+        }} else if (c >= 18 && c <= 21 && r >= 9 && r <= 11) {{
+          // Frozen Ice Pond: cols 18..21, rows 9..11
+          row.push('ice');
+        }} else if ((c >= 3 && c <= 5 && r >= 2 && r <= 4) || (c >= 19 && c <= 21 && r >= 2 && r <= 4)) {{
+          row.push('cliff');
+        }} else {{
+          row.push('snow');
+        }}
+      }} else {{
+        row.push('meadow');
+      }}
+    }}
+    terrainGrid.push(row);
+  }}
+
+
+
+  // 2. Large Snow Trees (Pine & Spruce)
+  const treePositions = [
+    {{ c: 3, r: 6, key: 'tree_snow_pine_1' }},
+    {{ c: 5, r: 8, key: 'tree_snow_pine_2' }},
+    {{ c: 3, r: 12, key: 'tree_snow_pine_3' }},
+    {{ c: 6, r: 14, key: 'tree_snow_pine_4' }},
+    {{ c: 17, r: 6, key: 'tree_snow_spruce_1' }},
+    {{ c: 18, r: 12, key: 'tree_snow_spruce_2' }},
+    {{ c: 16, r: 14, key: 'tree_snow_spruce_3' }},
+    {{ c: 8, r: 4, key: 'tree_snow_spruce_4' }},
+  ];
+  treePositions.forEach(tp => {{
+    sceneObjects.push({{
+      key: tp.key,
+      x: tp.c * TILE_SIZE - 16,
+      y: tp.r * TILE_SIZE - 96,
+      w: 64,
+      h: 128,
+      ySort: tp.r * TILE_SIZE + 24,
+      isSolid: true,
+    }});
+  }});
+
+  // 3. Flora, Bushes & Crystals
+  const shrubPlacements = [
+    {{ c: 7, r: 7, key: 'bush_snow_fluffy', w: 64, h: 64 }},
+    {{ c: 8, r: 13, key: 'bush_snow_wide', w: 64, h: 64 }},
+    {{ c: 17, r: 9, key: 'bush_snow_round', w: 64, h: 64 }},
+    {{ c: 19, r: 14, key: 'bush_snow_diamond', w: 64, h: 64 }},
+    {{ c: 4, r: 10, key: 'tree_snow_cone_1', w: 32, h: 64 }},
+    {{ c: 9, r: 5, key: 'tree_snow_cone_2', w: 32, h: 64 }},
+    {{ c: 16, r: 4, key: 'tree_snow_cone_3', w: 32, h: 64 }},
+    {{ c: 19, r: 6, key: 'crystal_snow_fern', w: 32, h: 64 }},
+    {{ c: 12, r: 11, key: 'crystal_snow_spire', w: 32, h: 64 }},
+  ];
+  shrubPlacements.forEach(sp => {{
+    sceneObjects.push({{
+      key: sp.key,
+      x: sp.c * TILE_SIZE,
+      y: sp.r * TILE_SIZE - (sp.h - 32),
+      w: sp.w,
+      h: sp.h,
+      ySort: sp.r * TILE_SIZE + 20,
+    }});
+  }});
+
+  // 4. Logs & Rocks
+  sceneObjects.push({{
+    key: 'log_snow_fallen',
+    x: 6 * TILE_SIZE,
+    y: 11 * TILE_SIZE,
+    w: 64,
+    h: 32,
+    ySort: 11 * TILE_SIZE + 24,
+    isSolid: true,
+  }});
+  sceneObjects.push({{
+    key: 'stump_snow',
+    x: 8 * TILE_SIZE,
+    y: 11 * TILE_SIZE,
+    w: 32,
+    h: 32,
+    ySort: 11 * TILE_SIZE + 24,
+    isSolid: true,
+  }});
+  sceneObjects.push({{
+    key: 'rock_snow_boulder',
+    x: 18 * TILE_SIZE,
+    y: 4 * TILE_SIZE,
+    w: 64,
+    h: 32,
+    ySort: 4 * TILE_SIZE + 24,
+    isSolid: true,
+  }});
+  sceneObjects.push({{
+    key: 'rock_snow_pointed',
+    x: 9 * TILE_SIZE,
+    y: 14 * TILE_SIZE,
+    w: 32,
+    h: 32,
+    ySort: 14 * TILE_SIZE + 24,
+  }});
+  sceneObjects.push({{
+    key: 'rock_snow_pebbles',
+    x: 15 * TILE_SIZE,
+    y: 13 * TILE_SIZE,
+    w: 32,
+    h: 32,
+    ySort: 13 * TILE_SIZE + 24,
+  }});
+
+  // 5. Tall grass patches with animation
+  const grassTiles = [
+    {{ c: 5, r: 9 }}, {{ c: 5, r: 10 }}, {{ c: 6, r: 9 }}, {{ c: 6, r: 10 }},
+    {{ c: 14, r: 13 }}, {{ c: 14, r: 14 }}, {{ c: 15, r: 13 }}, {{ c: 15, r: 14 }}
+  ];
+  grassTiles.forEach(gt => {{
+    sceneObjects.push({{
+      key: 'tall_grass_snow',
+      x: gt.c * TILE_SIZE,
+      y: gt.r * TILE_SIZE,
+      w: 32,
+      h: 32,
+      ySort: gt.r * TILE_SIZE + 16,
+      isTallGrass: true,
+    }});
+  }});
+
+  // 6. Ground Decals (Placed strictly on pure interior snow, NEVER on boundary fringes)
+  const groundDecals = [
+    {{ c: 7, r: 5, key: 'decor_snow_drift' }},
+    {{ c: 12, r: 5, key: 'decor_snow_sparkle' }},
+    {{ c: 8, r: 7, key: 'decor_snow_crack' }},
+    {{ c: 13, r: 7, key: 'ice_snow_patch_small' }},
+    {{ c: 9, r: 8, key: 'decor_snow_flower' }},
+    {{ c: 17, r: 8, key: 'decor_snow_mound' }},
+    {{ c: 7, r: 13, key: 'decor_snow_grass_1' }},
+    {{ c: 16, r: 13, key: 'decor_snow_grass_2' }},
+  ];
+  groundDecals.forEach(gd => {{
+    // Explicit safety check: only spawn if strictly on pure snow ground (never on boundary fringe)
+    if (getSnowGroundTile(gd.c, gd.r) === 'ground_snow_pure') {{
+      sceneObjects.push({{
+        key: gd.key,
+        x: gd.c * TILE_SIZE,
+        y: gd.r * TILE_SIZE,
+        w: 32,
+        h: 32,
+        ySort: 0,
+        isDecal: true,
+      }});
+    }}
+  }});
+}}
+
+generateScene();
+
+// Multi-Tier Snowflakes & Blizzard Particle System using authentic blizzard_1..4 sprites
+const MAX_SNOW_COUNT = 240;
+const snowflakes = [];
+
+for (let i = 0; i < MAX_SNOW_COUNT; i++) {{
+  const roll = Math.random();
+  let type = 'blizzard_3';
+  let scale = 0.8;
+  if (roll < 0.15) {{
+    type = 'blizzard_1'; // Large cluster
+    scale = 0.85 + Math.random() * 0.35;
+  }} else if (roll < 0.40) {{
+    type = 'blizzard_2'; // Medium flake
+    scale = 0.75 + Math.random() * 0.30;
+  }} else if (roll < 0.75) {{
+    type = 'blizzard_3'; // Tiny speck
+    scale = 0.65 + Math.random() * 0.35;
+  }} else {{
+    type = 'blizzard_4'; // Needle flurry
+    scale = 0.70 + Math.random() * 0.30;
+  }}
+
+  snowflakes.push({{
+    x: Math.random() * (MAP_COLS * TILE_SIZE + 200),
+    y: Math.random() * (MAP_ROWS * TILE_SIZE),
+    vx: -1.0 + Math.random() * 0.4,
+    vy: 1.1 + Math.random() * 1.5,
+    type,
+    scale,
+    angle: Math.random() * Math.PI * 2,
+    rotSpeed: (Math.random() - 0.5) * 0.08,
+    alpha: 0.55 + Math.random() * 0.4,
+    sway: Math.random() * Math.PI * 2,
+    swaySpeed: 0.02 + Math.random() * 0.03,
+  }});
+}}
+
+// Player State
+const player = {{
+  x: 12 * TILE_SIZE,
+  y: 7 * TILE_SIZE,
+  dir: 0, // 0: down, 1: left, 2: right, 3: up
+  animFrame: 0,
+  stepTimer: 0,
+  speed: 2.2,
+}};
+
+const keys = {{}};
+window.addEventListener('keydown', e => {{
+  keys[e.key] = true;
+  if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {{
+    e.preventDefault();
+  }}
+}});
+window.addEventListener('keyup', e => {{
+  keys[e.key] = false;
+}});
+
+// Autotile Helper for Ground / Cliff / Ice
+function getSnowGroundTile(c, r) {{
+  const isS = (col, row) => {{
+    if (col < 0 || col >= MAP_COLS || row < 0 || row >= MAP_ROWS) return false;
+    return terrainGrid[row][col] !== 'meadow';
+  }};
+
+  const n = isS(c, r - 1);
+  const s = isS(c, r + 1);
+  const w = isS(c - 1, r);
+  const e = isS(c + 1, r);
+  const nw = isS(c - 1, r - 1);
+  const ne = isS(c + 1, r - 1);
+  const sw = isS(c - 1, r + 1);
+  const se = isS(c + 1, r + 1);
+
+  if (!n && !w) return 'ground_snow_tl';
+  if (!n && !e) return 'ground_snow_tr';
+  if (!s && !w) return 'ground_snow_bl';
+  if (!s && !e) return 'ground_snow_br';
+  if (!n) return 'ground_snow_top';
+  if (!s) return 'ground_snow_bot';
+  if (!w) return 'ground_snow_left';
+  if (!e) return 'ground_snow_right';
+
+  if (n && s && w && e) {{
+    if (!nw) return 'ground_snow_in_tl';
+    if (!ne) return 'ground_snow_in_tr';
+    if (!sw) return 'ground_snow_in_bl';
+    if (!se) return 'ground_snow_in_br';
+  }}
+  return 'ground_snow_pure';
+}}
+
+function getSnowWaterTile(c, r) {{
+  const isW = (col, row) => {{
+    if (col < 0 || col >= MAP_COLS || row < 0 || row >= MAP_ROWS) return false;
+    return terrainGrid[row][col] === 'water';
+  }};
+
+  const n = isW(c, r - 1);
+  const s = isW(c, r + 1);
+  const w = isW(c - 1, r);
+  const e = isW(c + 1, r);
+  const nw = isW(c - 1, r - 1);
+  const ne = isW(c + 1, r - 1);
+  const sw = isW(c - 1, r + 1);
+  const se = isW(c + 1, r + 1);
+
+  if (!n && !w) return 'water_snow_tl';
+  if (!n && !e) return 'water_snow_tr';
+  if (!s && !w) return 'water_snow_bl';
+  if (!s && !e) return 'water_snow_br';
+  if (!n) return 'water_snow_top';
+  if (!s) return 'water_snow_bot';
+  if (!w) return 'water_snow_left';
+  if (!e) return 'water_snow_right';
+
+  if (n && s && w && e) {{
+    if (!nw) return 'water_snow_in_tl';
+    if (!ne) return 'water_snow_in_tr';
+    if (!sw) return 'water_snow_in_bl';
+    if (!se) return 'water_snow_in_br';
+  }}
+  return 'water_snow_pure';
+}}
+
+function getIceTile(c, r) {{
+  const isI = (col, row) => {{
+    if (col < 0 || col >= MAP_COLS || row < 0 || row >= MAP_ROWS) return false;
+    return terrainGrid[row][col] === 'ice';
+  }};
+
+  const n = isI(c, r - 1);
+  const s = isI(c, r + 1);
+  const w = isI(c - 1, r);
+  const e = isI(c + 1, r);
+  const nw = isI(c - 1, r - 1);
+  const ne = isI(c + 1, r - 1);
+  const sw = isI(c - 1, r + 1);
+  const se = isI(c + 1, r + 1);
+
+  if (!n && !w) return 'ice_snow_tl';
+  if (!n && !e) return 'ice_snow_tr';
+  if (!s && !w) return 'ice_snow_bl';
+  if (!s && !e) return 'ice_snow_br';
+  if (!n) return 'ice_snow_top';
+  if (!s) return 'ice_snow_bot';
+  if (!w) return 'ice_snow_left';
+  if (!e) return 'ice_snow_right';
+
+  if (n && s && w && e) {{
+    if (!nw) return 'ice_snow_in_tl';
+    if (!ne) return 'ice_snow_in_tr';
+    if (!sw) return 'ice_snow_in_bl';
+    if (!se) return 'ice_snow_in_br';
+  }}
+  return 'ice_snow_pure';
+}}
+
+function getCliffTile(c, r) {{
+  const isC = (col, row) => {{
+    if (col < 0 || col >= MAP_COLS || row < 0 || row >= MAP_ROWS) return false;
+    return terrainGrid[row][col] === 'cliff';
+  }};
+
+  const n = isC(c, r - 1);
+  const s = isC(c, r + 1);
+  const w = isC(c - 1, r);
+  const e = isC(c + 1, r);
+  const nw = isC(c - 1, r - 1);
+  const ne = isC(c + 1, r - 1);
+  const sw = isC(c - 1, r + 1);
+  const se = isC(c + 1, r + 1);
+
+  if (!n && !w) return 'cliff_snow_tl';
+  if (!n && !e) return 'cliff_snow_tr';
+  if (!s && !w) return 'cliff_snow_bl';
+  if (!s && !e) return 'cliff_snow_br';
+  if (!n) return 'cliff_snow_top';
+  if (!s) return 'cliff_snow_bot';
+  if (!w) return 'cliff_snow_left';
+  if (!e) return 'cliff_snow_right';
+
+  if (n && s && w && e) {{
+    if (!nw) return 'cliff_snow_in_bl';
+    if (!ne) return 'cliff_snow_in_br';
+    if (!sw) return 'cliff_snow_in_tr';
+    if (!se) return 'cliff_snow_in_tl';
+  }}
+  return 'cliff_snow_pure';
+}}
+
+// Main Render Loop
+let lastTime = performance.now();
+
+function update(dt, now = performance.now()) {{
+  // Player Movement
+  let moving = false;
+  let dx = 0;
+  let dy = 0;
+
+  if (keys['ArrowUp'] || keys['w'] || keys['W']) {{ dy -= 1; player.dir = 3; moving = true; }}
+  if (keys['ArrowDown'] || keys['s'] || keys['S']) {{ dy += 1; player.dir = 0; moving = true; }}
+  if (keys['ArrowLeft'] || keys['a'] || keys['A']) {{ dx -= 1; player.dir = 1; moving = true; }}
+  if (keys['ArrowRight'] || keys['d'] || keys['D']) {{ dx += 1; player.dir = 2; moving = true; }}
+
+  if (moving) {{
+    const len = Math.hypot(dx, dy);
+    player.x += (dx / len) * player.speed;
+    player.y += (dy / len) * player.speed;
+    player.stepTimer += dt;
+    if (player.stepTimer > 150) {{
+      player.animFrame = (player.animFrame + 1) % 4;
+      player.stepTimer = 0;
+    }}
+  }} else {{
+    player.animFrame = 0;
+  }}
+
+  // Constrain inside map
+  player.x = Math.max(32, Math.min((MAP_COLS - 2) * TILE_SIZE, player.x));
+  player.y = Math.max(32, Math.min((MAP_ROWS - 2) * TILE_SIZE, player.y));
+
+  // Update Snowflakes & Blizzard Particles
+  if (currentWeather !== 'calm') {{
+    let activeLimit = 65; // Mức 1: Bình thường (always falling gently)
+    let speedMult = 1.0;
+    let windVx = -1.2;
+    let gustBonus = 0;
+
+    if (currentWeather === 'blizzard') {{
+      activeLimit = 150; // Mức 2: Bão tuyết (increased count + faster)
+      speedMult = 2.4;
+      windVx = -4.2;
+      gustBonus = Math.sin(now / 400) * 1.2;
+    }} else if (currentWeather === 'severe_blizzard') {{
+      activeLimit = 240; // Mức 3: Bão tuyết cuồng nộ (max flurry)
+      speedMult = 3.8;
+      windVx = -7.2;
+      gustBonus = Math.sin(now / 250) * 2.2;
+    }}
+
+    for (let i = 0; i < activeLimit; i++) {{
+      const flake = snowflakes[i];
+      flake.sway += flake.swaySpeed;
+      flake.angle += flake.rotSpeed * speedMult;
+      flake.x += (windVx + gustBonus + Math.sin(flake.sway) * 0.8) * speedMult;
+      flake.y += flake.vy * speedMult;
+
+      if (flake.y > MAP_ROWS * TILE_SIZE + 16) {{
+        flake.y = -16;
+        flake.x = Math.random() * (MAP_COLS * TILE_SIZE + 300);
+      }}
+      if (flake.x < -32) {{
+        flake.x = MAP_COLS * TILE_SIZE + 100;
+        flake.y = Math.random() * (MAP_ROWS * TILE_SIZE);
+      }}
+    }}
+  }}
+}}
+
+function render(now) {{
+  ctx.save();
+  ctx.scale(currentZoom, currentZoom);
+
+  // 1. Base Meadow Grass
+  const grass = images['grass_01'];
+  for (let r = 0; r < MAP_ROWS; r++) {{
+    for (let c = 0; c < MAP_COLS; c++) {{
+      if (grass && grass.complete) {{
+        ctx.drawImage(grass, c * TILE_SIZE, r * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+      }} else {{
+        ctx.fillStyle = '#4c8c4a';
+        ctx.fillRect(c * TILE_SIZE, r * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+      }}
+    }}
+  }}
+
+  // 2. Snow Ground & Autotile Fringes (Layer 0)
+  for (let r = 0; r < MAP_ROWS; r++) {{
+    for (let c = 0; c < MAP_COLS; c++) {{
+      const type = terrainGrid[r][c];
+      if (type === 'snow' || type === 'ice' || type === 'cliff' || type === 'water') {{
+        const key = getSnowGroundTile(c, r);
+        const img = images[key];
+        if (img && img.complete) {{
+          ctx.drawImage(img, c * TILE_SIZE, r * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        }}
+      }}
+    }}
+  }}
+
+  // 3. Glacial Lake / River Water (Layer 0.4 - Live 4-Frame Animation)
+  const waterFrame = Math.floor((now / 220) % 4);
+  const sxWater = waterFrame * 32;
+  for (let r = 0; r < MAP_ROWS; r++) {{
+    for (let c = 0; c < MAP_COLS; c++) {{
+      if (terrainGrid[r][c] === 'water') {{
+        const key = getSnowWaterTile(c, r);
+        const img = images[key];
+        if (img && img.complete) {{
+          ctx.drawImage(img, sxWater, 0, 32, 32, c * TILE_SIZE, r * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        }}
+      }}
+    }}
+  }}
+
+  // 3.5. Frozen Lake Autotile (Layer 0.5)
+  for (let r = 0; r < MAP_ROWS; r++) {{
+    for (let c = 0; c < MAP_COLS; c++) {{
+      if (terrainGrid[r][c] === 'ice') {{
+        const key = getIceTile(c, r);
+        const img = images[key];
+        if (img && img.complete) {{
+          ctx.drawImage(img, c * TILE_SIZE, r * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        }}
+        // Subdued crystalline shimmer
+        const shimmer = Math.sin(now / 800 + c * 1.5 + r * 2.0);
+        if (shimmer > 0.75) {{
+          ctx.fillStyle = `rgba(255, 255, 255, ${{0.15 * (shimmer - 0.75) * 4}})`;
+          ctx.fillRect(c * TILE_SIZE, r * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        }}
+      }}
+    }}
+  }}
+
+  // 4. Cliffs (Layer 0.8)
+  for (let r = 0; r < MAP_ROWS; r++) {{
+    for (let c = 0; c < MAP_COLS; c++) {{
+      if (terrainGrid[r][c] === 'cliff') {{
+        const key = getCliffTile(c, r);
+        const img = images[key];
+        if (img && img.complete) {{
+          ctx.drawImage(img, c * TILE_SIZE, r * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        }}
+      }}
+    }}
+  }}
+
+  // 5. Ground Decals (Baked onto Layer 0)
+  sceneObjects.filter(o => o.isDecal).forEach(d => {{
+    const img = images[d.key];
+    if (img && img.complete) {{
+      ctx.drawImage(img, d.x, d.y, d.w, d.h);
+    }}
+  }});
+
+  // 6. Y-Sorted Entities (Player, Trees, Bushes, Tall grass, Rocks, Landmarks)
+  const renderList = [];
+
+  // Add scene objects
+  sceneObjects.filter(o => !o.isDecal).forEach(obj => {{
+    renderList.push({{
+      ySort: obj.ySort,
+      draw: () => {{
+        const img = images[obj.key];
+        if (obj.isTallGrass && img && img.complete) {{
+          // Animate swaying tall grass (5 frames in 160x32 strip)
+          const frame = Math.floor((now / 220 + obj.x) % 5);
+          ctx.drawImage(img, frame * 32, 0, 32, 32, obj.x, obj.y, 32, 32);
+        }} else if (img && img.complete) {{
+          ctx.drawImage(img, obj.x, obj.y, obj.w, obj.h);
+        }}
+      }}
+    }});
+  }});
+
+  // Add Player to render list
+  renderList.push({{
+    ySort: player.y + 30,
+    draw: () => {{
+      if (redPlayer.complete && redPlayer.naturalWidth > 0) {{
+        // Red 4x4 walking sheet (64x64 per frame or 128x128 total)
+        const frameW = redPlayer.width / 4;
+        const frameH = redPlayer.height / 4;
+        ctx.drawImage(
+          redPlayer,
+          player.animFrame * frameW, player.dir * frameH, frameW, frameH,
+          player.x - 8, player.y - 16, 32, 32
+        );
+      }} else {{
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.arc(player.x + 8, player.y + 8, 10, 0, Math.PI * 2);
+        ctx.fill();
+      }}
+
+      // Snow tall grass foot wading overlay (strictly using tall_grass_snow_strip)
+      const pGX = Math.floor((player.x + 8) / TILE_SIZE);
+      const pGY = Math.floor((player.y + 12) / TILE_SIZE);
+      const isPlayerInTallGrass = grassTiles.some(gt => gt.c === pGX && gt.r === pGY);
+      if (isPlayerInTallGrass) {{
+        const tgImg = images['tall_grass_snow_strip'] || images['tall_grass_snow'];
+        if (tgImg && tgImg.complete) {{
+          const fIdx = (player.animFrame % 4) + 1;
+          const bx = pGX * TILE_SIZE;
+          const by = pGY * TILE_SIZE;
+          ctx.save();
+          ctx.beginPath();
+          ctx.rect(bx, by + 16, 32, 16);
+          ctx.clip();
+          ctx.drawImage(tgImg, fIdx * 32, 0, 32, 32, bx, by, 32, 32);
+          ctx.restore();
+        }}
+      }}
+    }}
+  }});
+
+  renderList.sort((a, b) => a.ySort - b.ySort);
+  renderList.forEach(item => item.draw());
+
+  // 7. Grid overlay
+  if (showGrid) {{
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.2)';
+    ctx.lineWidth = 1;
+    for (let x = 0; x <= MAP_COLS * TILE_SIZE; x += TILE_SIZE) {{
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, MAP_ROWS * TILE_SIZE); ctx.stroke();
+    }}
+    for (let y = 0; y <= MAP_ROWS * TILE_SIZE; y += TILE_SIZE) {{
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(MAP_COLS * TILE_SIZE, y); ctx.stroke();
+    }}
+  }}
+
+  // 8. Overhead Falling Snowflakes & Blizzard System (Layer 1.68)
+  if (currentWeather !== 'calm') {{
+    let activeLimit = 65;
+    if (currentWeather === 'blizzard') activeLimit = 150;
+    else if (currentWeather === 'severe_blizzard') activeLimit = 240;
+
+    for (let i = 0; i < activeLimit; i++) {{
+      const flake = snowflakes[i];
+      const img = images[flake.type];
+      ctx.globalAlpha = flake.alpha;
+      if (img && img.complete && img.naturalWidth > 0) {{
+        ctx.save();
+        ctx.translate(flake.x, flake.y);
+        ctx.rotate(flake.angle);
+        ctx.scale(flake.scale, flake.scale);
+        ctx.drawImage(img, -8, -8, 16, 16);
+        ctx.restore();
+      }} else {{
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(flake.x, flake.y, 2, 2);
+      }}
+    }}
+    ctx.globalAlpha = 1.0;
+
+    // Severe Blizzard Frost Flurry Overlay
+    if (currentWeather === 'severe_blizzard') {{
+      ctx.fillStyle = 'rgba(224, 242, 254, 0.12)';
+      ctx.fillRect(0, 0, MAP_COLS * TILE_SIZE, MAP_ROWS * TILE_SIZE);
+    }}
+  }}
+
+  // 9. Time-of-Day Lighting Overlay
+  if (currentTime === 'sunset') {{
+    ctx.fillStyle = 'rgba(251, 146, 60, 0.16)';
+    ctx.fillRect(0, 0, MAP_COLS * TILE_SIZE, MAP_ROWS * TILE_SIZE);
+  }} else if (currentTime === 'night') {{
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.42)';
+    ctx.fillRect(0, 0, MAP_COLS * TILE_SIZE, MAP_ROWS * TILE_SIZE);
+    // Subtle aurora borealis tint
+    const aurora = Math.sin(now / 2000) * 0.08 + 0.08;
+    ctx.fillStyle = `rgba(56, 189, 248, ${{aurora}})`;
+    ctx.fillRect(0, 0, MAP_COLS * TILE_SIZE, MAP_ROWS * TILE_SIZE);
+  }}
+
+  ctx.restore();
+}}
+
+function loop(t) {{
+  const dt = t - lastTime;
+  lastTime = t;
+  update(dt, t);
+  render(t);
+  requestAnimationFrame(loop);
+}}
+requestAnimationFrame(loop);
+
+// Inspector Mouse Handler
+canvas.addEventListener('mousemove', e => {{
+  const rect = canvas.getBoundingClientRect();
+  const mx = (e.clientX - rect.left) / currentZoom;
+  const my = (e.clientY - rect.top) / currentZoom;
+  const col = Math.floor(mx / TILE_SIZE);
+  const row = Math.floor(my / TILE_SIZE);
+
+  if (col < 0 || col >= MAP_COLS || row < 0 || row >= MAP_ROWS) return;
+
+  document.getElementById('insCoord').textContent = `X: ${{col}}, Y: ${{row}}`;
+  const tType = terrainGrid[row][col];
+  let tileKey = 'ground_meadow';
+  if (tType === 'snow') tileKey = getSnowGroundTile(col, row);
+  else if (tType === 'water') tileKey = getSnowWaterTile(col, row);
+  else if (tType === 'ice') tileKey = getIceTile(col, row);
+  else if (tType === 'cliff') tileKey = getCliffTile(col, row);
+
+  document.getElementById('insTile').textContent = tileKey;
+  document.getElementById('insBiome').textContent = tType === 'meadow' ? 'Đồng Cỏ (Meadow)' : 'Băng Tuyết (Snow)';
+
+  // Find entity at cell
+  const found = sceneObjects.find(o => {{
+    const oc = Math.floor(o.x / TILE_SIZE);
+    const or = Math.floor(o.y / TILE_SIZE);
+    const ow = Math.ceil(o.w / TILE_SIZE);
+    const oh = Math.ceil(o.h / TILE_SIZE);
+    return col >= oc && col < oc + ow && row >= or && row < or + oh;
+  }});
+
+  if (found) {{
+    document.getElementById('insEntity').textContent = found.key;
+    if (found.isSolid) {{
+      document.getElementById('insSolid').textContent = 'Vật cản (Solid Collider)';
+      document.getElementById('insSolid').style.color = '#ef4444';
+    }} else {{
+      document.getElementById('insSolid').textContent = 'Có thể đi qua (Passable)';
+      document.getElementById('insSolid').style.color = '#4ade80';
+    }}
+  }} else {{
+    document.getElementById('insEntity').textContent = 'Không có';
+    document.getElementById('insSolid').textContent = 'Có thể đi qua (Passable)';
+    document.getElementById('insSolid').style.color = '#4ade80';
+  }}
+}});
+</script>
+
+</body>
+</html>
+"""
+
+with open(OUTPUT_HTML, "w", encoding="utf-8") as f:
+    f.write(html_content)
+
+print(f"Generated comprehensive showcase test page: {OUTPUT_HTML}")

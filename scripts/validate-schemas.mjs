@@ -187,6 +187,9 @@ try {
       'battle_databox_player',
       'battle_databox_enemy',
       'menu_icon_pokedex',
+      'ground_snow_pure',
+      'cliff_snow_pure',
+      'tall_grass_snow',
     ];
     let missingKeys = 0;
     for (const rk of requiredKeys) {
@@ -208,6 +211,7 @@ try {
       'apps/web/public/assets/biomes/coastal',
       'apps/web/public/assets/biomes/forest',
       'apps/web/public/assets/biomes/autumn',
+      'apps/web/public/assets/biomes/snow',
       'apps/web/public/assets/biomes/meadow',
       'apps/web/public/assets/biomes/shared',
       'apps/web/public/assets/terrain',
@@ -240,6 +244,9 @@ try {
       ['tall_grass', '/assets/biomes/shared/'],
       ['cliff_pure', '/assets/terrain/'],
       ['char_red_sheet', '/assets/pokemon/'],
+      ['ground_snow_pure', '/assets/biomes/snow/'],
+      ['cliff_snow_pure', '/assets/biomes/snow/'],
+      ['tall_grass_snow', '/assets/biomes/snow/'],
     ];
     let prefixErrors = 0;
     for (const [k, expectedPrefix] of biomePrefixChecks) {

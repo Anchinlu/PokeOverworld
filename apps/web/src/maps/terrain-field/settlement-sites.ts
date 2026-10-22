@@ -33,18 +33,22 @@ const CITY_NAMES = [
 ];
 
 const settlementCache = new Map<string, VillagePlacement | null>();
-const v4SettlementCache = new Map<number, VillagePlacement[]>();
+const v4SettlementCache = new Map<string, VillagePlacement[]>();
 
 type V4Field = TerrainField & { readonly continentPlan?: ContinentPlan };
 
 function getV4VillagePlacements(field: TerrainField): VillagePlacement[] {
   const plan = (field as V4Field).continentPlan;
   if (!plan) return [];
-  const cached = v4SettlementCache.get(field.seed);
+  const cacheKey = `${field.version}:${field.seed}`;
+  const cached = v4SettlementCache.get(cacheKey);
   if (cached) return cached;
 
   const placements = plan.settlements
     .filter((settlement) => Math.hypot(settlement.gx, settlement.gy) >= 160)
+    .filter(
+      (settlement) => !isSnowSettlementArea(field, settlement.gx, settlement.gy, settlement.tier)
+    )
     .map((settlement) =>
       constructVillage(
         settlement.gx,
@@ -56,8 +60,23 @@ function getV4VillagePlacements(field: TerrainField): VillagePlacement[] {
         'v4'
       )
     );
-  v4SettlementCache.set(field.seed, placements);
+  v4SettlementCache.set(cacheKey, placements);
   return placements;
+}
+
+function isSnowSettlementArea(
+  field: TerrainField,
+  centerGX: number,
+  centerGY: number,
+  tier: 0 | 1 | 2
+): boolean {
+  const halfWidth = tier === 2 ? 18 : tier === 1 ? 16 : 14;
+  for (let gy = centerGY - 12; gy <= centerGY + 12; gy++) {
+    for (let gx = centerGX - halfWidth; gx <= centerGX + halfWidth; gx++) {
+      if (field.isSnow?.(gx, gy)) return true;
+    }
+  }
+  return false;
 }
 
 /**
@@ -351,7 +370,7 @@ export function getNearbySettlements(
   gy: number,
   field: TerrainField
 ): VillagePlacement[] {
-  if (field.version === 4) {
+  if (field.version >= 4) {
     const results = getV4VillagePlacements(field).filter(
       (v) => Math.abs(v.centerGX - gx) <= 640 && Math.abs(v.centerGY - gy) <= 640
     );
@@ -385,7 +404,7 @@ export function getNearbySettlements(
  * Checks if (gx, gy) is a walkable internal village path.
  */
 export function isV0RoadTile(gx: number, gy: number, field: TerrainField): boolean {
-  if (field.version === 4) {
+  if (field.version >= 4) {
     const plan = (field as V4Field).continentPlan;
     if (plan) {
       const localX = gx - plan.bounds.gx0 * plan.cellSize;

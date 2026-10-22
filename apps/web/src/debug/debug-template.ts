@@ -58,6 +58,21 @@ export function createDebugOverlayHtml(): string {
           <input type="checkbox" id="chkBerries" checked> 🫐 Bụi Berry Dại (Chu kỳ lớn)
         </label>
         <label class="checkbox-item" style="grid-column: span 2;">
+          <input type="checkbox" id="chkClouds" checked> ☁️ Bóng mây trôi tự nhiên (CloudShadow)
+        </label>
+        <label class="checkbox-item" style="grid-column: span 2;">
+          <input type="checkbox" id="chkLeaves" checked> 🍃 Lá bay theo gió & thời gian (WindLeaves)
+        </label>
+        <label class="checkbox-item" style="grid-column: span 2;">
+          <input type="checkbox" id="chkRain" checked> 🌧️ Mưa tự nhiên & Splash (RainParticles)
+        </label>
+        <label class="checkbox-item" style="grid-column: span 2;">
+          <input type="checkbox" id="chkDarkFog" checked> 🔮 Sương mù tím đen Vùng Tối (DarkFog)
+        </label>
+        <label class="checkbox-item" style="grid-column: span 2;">
+          <input type="checkbox" id="chkSandstorm" checked> 🏜️ Bão cát & Cát bay Sa mạc (Sandstorm)
+        </label>
+        <label class="checkbox-item" style="grid-column: span 2;">
           <input type="checkbox" id="chkHeatmap"> 🗺️ Bản đồ Heatmap ID
         </label>
         <label class="checkbox-item">
@@ -98,6 +113,14 @@ export function createDebugOverlayHtml(): string {
           <button class="btn-time-phase" data-phase="day" title="12:00 - Ban ngày (Trong suốt)" style="padding: 4px 2px; font-size: 10px; font-weight: 600; border-radius: 5px; background: #0369a1; color: #bae6fd; border: 1px solid #38bdf8; cursor: pointer;">☀️ Trưa</button>
           <button class="btn-time-phase" data-phase="dusk" title="18:00 - Hoàng hôn (Tím chiều)" style="padding: 4px 2px; font-size: 10px; font-weight: 600; border-radius: 5px; background: #7e22ce; color: #f3e8ff; border: 1px solid #c084fc; cursor: pointer;">🌇 Chiều</button>
           <button class="btn-time-phase" data-phase="night" title="00:00 - Ban đêm (Xanh thẫm)" style="padding: 4px 2px; font-size: 10px; font-weight: 600; border-radius: 5px; background: #1e1b4b; color: #bfdbfe; border: 1px solid #6366f1; cursor: pointer;">🌙 Đêm</button>
+        </div>
+
+        <!-- 4 Fast Weather Presets -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 6px;">
+          <button class="btn-weather-preset" data-weather="clear" title="Trời quang mây tạnh" style="padding: 3px 2px; font-size: 9px; font-weight: 600; border-radius: 4px; background: rgba(30, 41, 59, 0.85); color: #cbd5e1; border: 1px solid rgba(255,255,255,0.15); cursor: pointer;">☀️ Tạnh</button>
+          <button class="btn-weather-preset" data-weather="rain" title="Mưa vừa" style="padding: 3px 2px; font-size: 9px; font-weight: 600; border-radius: 4px; background: rgba(14, 116, 144, 0.45); color: #bae6fd; border: 1px solid #38bdf8; cursor: pointer;">🌧️ Mưa</button>
+          <button class="btn-weather-preset" data-weather="heavy_rain" title="Mưa to xối xả" style="padding: 3px 2px; font-size: 9px; font-weight: 600; border-radius: 4px; background: rgba(3, 105, 161, 0.55); color: #e0f2fe; border: 1px solid #0284c7; cursor: pointer;">🌧️ Mưa to</button>
+          <button class="btn-weather-preset" data-weather="thunderstorm" title="Bão sấm chớp" style="padding: 3px 2px; font-size: 9px; font-weight: 600; border-radius: 4px; background: rgba(126, 34, 206, 0.45); color: #f3e8ff; border: 1px solid #a855f7; cursor: pointer;">⛈️ Bão</button>
         </div>
 
         <!-- Step adjustments and Pause/Resume & Speed -->

@@ -1,6 +1,6 @@
 /** Shared API and runtime contracts. Planning foundation; not wired to an API yet. */
 
-export type TerrainId = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+export type TerrainId = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 export type Direction = 0 | 1 | 2 | 3;
 
 export interface Point {

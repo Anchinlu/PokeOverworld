@@ -2,7 +2,7 @@ import { TERRAIN } from '@pokemon/game-data';
 import type { GameRenderer } from '../rendering';
 import type { ChunkManager, BerryBushEntity } from '../maps';
 import { BERRY_STAGES } from '../maps/berry-data';
-import { sampleEcology, getEcologyZone } from '../maps/ecology';
+import { sampleEcology, resolveWorldBiome } from '../maps/ecology';
 
 export interface DebugPanelBindings {
   chkHills: HTMLInputElement;
@@ -21,6 +21,11 @@ export interface DebugPanelBindings {
   chkEcologyFertility: HTMLInputElement;
   chkEcologyDensity: HTMLInputElement;
   chkEcologyZone: HTMLInputElement;
+  chkClouds?: HTMLInputElement | null;
+  chkLeaves?: HTMLInputElement | null;
+  chkRain?: HTMLInputElement | null;
+  chkDarkFog?: HTMLInputElement | null;
+  chkSandstorm?: HTMLInputElement | null;
   inputSeed: HTMLInputElement;
   btnRandomSeed: HTMLButtonElement;
   btnRegenerate: HTMLButtonElement;
@@ -57,6 +62,11 @@ export function getDebugPanelBindings(): DebugPanelBindings {
     chkEcologyFertility: document.querySelector<HTMLInputElement>('#chkEcologyFertility')!,
     chkEcologyDensity: document.querySelector<HTMLInputElement>('#chkEcologyDensity')!,
     chkEcologyZone: document.querySelector<HTMLInputElement>('#chkEcologyZone')!,
+    chkClouds: document.querySelector<HTMLInputElement>('#chkClouds'),
+    chkLeaves: document.querySelector<HTMLInputElement>('#chkLeaves'),
+    chkRain: document.querySelector<HTMLInputElement>('#chkRain'),
+    chkDarkFog: document.querySelector<HTMLInputElement>('#chkDarkFog'),
+    chkSandstorm: document.querySelector<HTMLInputElement>('#chkSandstorm'),
     inputSeed: document.querySelector<HTMLInputElement>('#inputSeed')!,
     btnRandomSeed: document.querySelector<HTMLButtonElement>('#btnRandomSeed')!,
     btnRegenerate: document.querySelector<HTMLButtonElement>('#btnRegenerate')!,
@@ -95,6 +105,11 @@ export function bindRenderOptions(renderer: GameRenderer, bindings: DebugPanelBi
       showEcologyFertility: bindings.chkEcologyFertility.checked,
       showEcologyDensity: bindings.chkEcologyDensity.checked,
       showEcologyZone: bindings.chkEcologyZone.checked,
+      showClouds: bindings.chkClouds ? bindings.chkClouds.checked : true,
+      showLeaves: bindings.chkLeaves ? bindings.chkLeaves.checked : true,
+      showRain: bindings.chkRain ? bindings.chkRain.checked : true,
+      showDarkFog: bindings.chkDarkFog ? bindings.chkDarkFog.checked : true,
+      showSandstorm: bindings.chkSandstorm ? bindings.chkSandstorm.checked : true,
     });
   }
 
@@ -115,6 +130,11 @@ export function bindRenderOptions(renderer: GameRenderer, bindings: DebugPanelBi
     bindings.chkEcologyFertility,
     bindings.chkEcologyDensity,
     bindings.chkEcologyZone,
+    bindings.chkClouds,
+    bindings.chkLeaves,
+    bindings.chkRain,
+    bindings.chkDarkFog,
+    bindings.chkSandstorm,
   ].forEach((chk) => chk?.addEventListener('change', sync));
 }
 
@@ -140,8 +160,8 @@ export function updateMouseInspector(
     : TERRAIN_NAMES[tile.terrain] || 'Chưa rõ';
   bindings.insTileId.innerText = `#${tile.tileId}`;
 
-  const sample = sampleEcology(gx, gy, chunkManager.currentSeed);
-  const zone = getEcologyZone(sample);
+  const sample = sampleEcology(gx, gy, chunkManager.field);
+  const zone = resolveWorldBiome(chunkManager.field, gx, gy);
   bindings.insEcologyZone.innerText = zone;
   bindings.insEcologyMFD.innerText = `M: ${sample.moisture.toFixed(2)} | F: ${sample.fertility.toFixed(2)} | D: ${sample.density.toFixed(2)}`;
 

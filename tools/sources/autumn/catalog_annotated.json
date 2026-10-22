@@ -1,0 +1,982 @@
+[
+  {
+    "key": "ground_autumn_pure",
+    "kind": "ground",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Nền Đất Mùa Thu Chuẩn (Lấy Từ Đỉnh Đồi)"
+  },
+  {
+    "key": "hill_autumn_mesa",
+    "kind": "hill",
+    "w": 96,
+    "h": 128,
+    "anchor": "tile",
+    "vn": "Khối Đồi Cao Nguyên Mùa Thu (3×4 tiles)"
+  },
+  {
+    "key": "hill_autumn_pit_block",
+    "kind": "hill",
+    "w": 64,
+    "h": 128,
+    "anchor": "tile",
+    "vn": "Khối Rãnh Vực / Lối Vào Âm Đất (2×4 tiles)"
+  },
+  {
+    "key": "tree_maple_red_tall",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Phong đỏ Cao (Gốc thường)"
+  },
+  {
+    "key": "tree_maple_red_tall_mushroom_s",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Phong đỏ Cao • Gốc Nấm nhỏ"
+  },
+  {
+    "key": "tree_maple_red_tall_mushroom_l",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Phong đỏ Cao • Gốc Nấm lớn"
+  },
+  {
+    "key": "tree_maple_red_tall_berry",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Phong đỏ Cao • Gốc Quả mọng"
+  },
+  {
+    "key": "tree_maple_red_tall_ivy",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Phong đỏ Cao • Gốc Dây leo"
+  },
+  {
+    "key": "tree_maple_red_small",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Phong đỏ Vừa (Gốc thường)"
+  },
+  {
+    "key": "tree_maple_red_small_mushroom_s",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Phong đỏ Vừa • Gốc Nấm nhỏ"
+  },
+  {
+    "key": "tree_maple_red_small_mushroom_l",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Phong đỏ Vừa • Gốc Nấm lớn"
+  },
+  {
+    "key": "tree_maple_red_small_berry",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Phong đỏ Vừa • Gốc Quả mọng"
+  },
+  {
+    "key": "tree_maple_red_small_ivy",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Phong đỏ Vừa • Gốc Dây leo"
+  },
+  {
+    "key": "tree_maple_amber_tall",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Hổ phách Cao (Gốc thường)"
+  },
+  {
+    "key": "tree_maple_amber_tall_mushroom_s",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Hổ phách Cao • Gốc Nấm nhỏ"
+  },
+  {
+    "key": "tree_maple_amber_tall_mushroom_l",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Hổ phách Cao • Gốc Nấm lớn"
+  },
+  {
+    "key": "tree_maple_amber_tall_berry",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Hổ phách Cao • Gốc Quả mọng"
+  },
+  {
+    "key": "tree_maple_amber_tall_ivy",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Hổ phách Cao • Gốc Dây leo"
+  },
+  {
+    "key": "tree_maple_amber_small",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Hổ phách Vừa (Gốc thường)"
+  },
+  {
+    "key": "tree_maple_amber_small_mushroom_s",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Hổ phách Vừa • Gốc Nấm nhỏ"
+  },
+  {
+    "key": "tree_maple_amber_small_mushroom_l",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Hổ phách Vừa • Gốc Nấm lớn"
+  },
+  {
+    "key": "tree_maple_amber_small_berry",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Hổ phách Vừa • Gốc Quả mọng"
+  },
+  {
+    "key": "tree_maple_amber_small_ivy",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Hổ phách Vừa • Gốc Dây leo"
+  },
+  {
+    "key": "tree_larch_gold_tall",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Vàng kim Cao (Gốc thường)"
+  },
+  {
+    "key": "tree_larch_gold_tall_mushroom_s",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Vàng kim Cao • Gốc Nấm nhỏ"
+  },
+  {
+    "key": "tree_larch_gold_tall_mushroom_l",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Vàng kim Cao • Gốc Nấm lớn"
+  },
+  {
+    "key": "tree_larch_gold_tall_berry",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Vàng kim Cao • Gốc Quả mọng"
+  },
+  {
+    "key": "tree_larch_gold_tall_ivy",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Vàng kim Cao • Gốc Dây leo"
+  },
+  {
+    "key": "tree_larch_gold_small",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Vàng kim Vừa (Gốc thường)"
+  },
+  {
+    "key": "tree_larch_gold_small_mushroom_s",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Vàng kim Vừa • Gốc Nấm nhỏ"
+  },
+  {
+    "key": "tree_larch_gold_small_mushroom_l",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Vàng kim Vừa • Gốc Nấm lớn"
+  },
+  {
+    "key": "tree_larch_gold_small_berry",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Vàng kim Vừa • Gốc Quả mọng"
+  },
+  {
+    "key": "tree_larch_gold_small_ivy",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Vàng kim Vừa • Gốc Dây leo"
+  },
+  {
+    "key": "tree_larch_olive_tall",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Ô-liu Cao (Gốc thường)"
+  },
+  {
+    "key": "tree_larch_olive_tall_mushroom_s",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Ô-liu Cao • Gốc Nấm nhỏ"
+  },
+  {
+    "key": "tree_larch_olive_tall_mushroom_l",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Ô-liu Cao • Gốc Nấm lớn"
+  },
+  {
+    "key": "tree_larch_olive_tall_berry",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Ô-liu Cao • Gốc Quả mọng"
+  },
+  {
+    "key": "tree_larch_olive_tall_ivy",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Ô-liu Cao • Gốc Dây leo"
+  },
+  {
+    "key": "tree_larch_olive_small",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Ô-liu Vừa (Gốc thường)"
+  },
+  {
+    "key": "tree_larch_olive_small_mushroom_s",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Ô-liu Vừa • Gốc Nấm nhỏ"
+  },
+  {
+    "key": "tree_larch_olive_small_mushroom_l",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Ô-liu Vừa • Gốc Nấm lớn"
+  },
+  {
+    "key": "tree_larch_olive_small_berry",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Ô-liu Vừa • Gốc Quả mọng"
+  },
+  {
+    "key": "tree_larch_olive_small_ivy",
+    "kind": "tree",
+    "w": 64,
+    "h": 128,
+    "anchor": "bottom",
+    "vn": "Cây Ô-liu Vừa • Gốc Dây leo"
+  },
+  {
+    "key": "tree_autumn_giant",
+    "kind": "tree",
+    "w": 128,
+    "h": 160,
+    "anchor": "bottom",
+    "vn": "Đại Thụ Mùa Thu Cổ Thụ (128×160)"
+  },
+  {
+    "key": "bush_spiky_red",
+    "kind": "bush",
+    "w": 32,
+    "h": 64,
+    "anchor": "bottom",
+    "vn": "Bụi gai đứng mùa thu (Đỏ)"
+  },
+  {
+    "key": "bush_spiky_amber",
+    "kind": "bush",
+    "w": 32,
+    "h": 64,
+    "anchor": "bottom",
+    "vn": "Bụi gai đứng mùa thu (Hổ phách)"
+  },
+  {
+    "key": "bush_spiky_tan",
+    "kind": "bush",
+    "w": 32,
+    "h": 64,
+    "anchor": "bottom",
+    "vn": "Bụi gai đứng mùa thu (Vàng cát)"
+  },
+  {
+    "key": "bush_spiky_olive",
+    "kind": "bush",
+    "w": 32,
+    "h": 64,
+    "anchor": "bottom",
+    "vn": "Bụi gai đứng mùa thu (Ô-liu)"
+  },
+  {
+    "key": "bush_spiky_big_red",
+    "kind": "bush",
+    "w": 64,
+    "h": 64,
+    "anchor": "bottom",
+    "vn": "Bụi gai lớn mùa thu (Đỏ)"
+  },
+  {
+    "key": "bush_spiky_big_amber",
+    "kind": "bush",
+    "w": 64,
+    "h": 64,
+    "anchor": "bottom",
+    "vn": "Bụi gai lớn mùa thu (Hổ phách)"
+  },
+  {
+    "key": "flower_vine_pink",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Dây hoa leo vách/đất (Hồng)"
+  },
+  {
+    "key": "flower_vine_red",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Dây hoa leo vách/đất (Đỏ)"
+  },
+  {
+    "key": "flower_vine_white",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Dây hoa leo vách/đất (Trắng)"
+  },
+  {
+    "key": "flower_vine_blue",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Dây hoa leo vách/đất (Xanh)"
+  },
+  {
+    "key": "rocks_grey_cluster",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Cụm sỏi đá dải nền (Xám)"
+  },
+  {
+    "key": "rocks_brown_cluster",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Cụm sỏi đá dải nền (Nâu)"
+  },
+  {
+    "key": "leaf_pile_red_big",
+    "kind": "decal",
+    "w": 64,
+    "h": 64,
+    "anchor": "tile",
+    "vn": "Đống lá phong rụng lớn (64×64)"
+  },
+  {
+    "key": "lily_lotus",
+    "kind": "water",
+    "w": 32,
+    "h": 32,
+    "anchor": "center",
+    "vn": "Hoa sen/súng nở mặt hồ thu"
+  },
+  {
+    "key": "lily_pad_big",
+    "kind": "water",
+    "w": 29,
+    "h": 31,
+    "anchor": "center",
+    "vn": "Lá súng lớn mặt hồ thu"
+  },
+  {
+    "key": "lily_pad_medium",
+    "kind": "water",
+    "w": 21,
+    "h": 16,
+    "anchor": "center",
+    "vn": "Lá súng vừa mặt hồ thu"
+  },
+  {
+    "key": "lily_pad_small_1",
+    "kind": "water",
+    "w": 10,
+    "h": 10,
+    "anchor": "center",
+    "vn": "Lá súng nhỏ mặt hồ thu"
+  },
+  {
+    "key": "lily_pad_small_2",
+    "kind": "water",
+    "w": 10,
+    "h": 6,
+    "anchor": "center",
+    "vn": "Lá súng nhỏ mặt hồ thu"
+  },
+  {
+    "key": "lily_pad_small_3",
+    "kind": "water",
+    "w": 8,
+    "h": 6,
+    "anchor": "center",
+    "vn": "Lá súng nhỏ mặt hồ thu"
+  },
+  {
+    "key": "decor_mushroom_tan",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Nấm nâu vàng đơn"
+  },
+  {
+    "key": "decor_mushroom_red_cluster",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Cụm nấm đỏ rừng"
+  },
+  {
+    "key": "decor_grass_red_tuft",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Bụi cỏ đỏ thu"
+  },
+  {
+    "key": "decor_grass_dry",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Bụi cỏ khô vàng"
+  },
+  {
+    "key": "decor_flower_white_cluster",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Cụm hoa trắng nhỏ"
+  },
+  {
+    "key": "decor_flowerbed_red",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Thảm hoa phong đỏ"
+  },
+  {
+    "key": "decor_flowerbed_red_white",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Thảm hoa phong đỏ-trắng"
+  },
+  {
+    "key": "decor_stump_autumn",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Gốc cây mục rữa mùa thu"
+  },
+  {
+    "key": "decor_mushroom_red_pair",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Cặp nấm đỏ đôi"
+  },
+  {
+    "key": "decor_mushroom_red_single",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Nấm đỏ nón đơn"
+  },
+  {
+    "key": "decor_flower_orange_patch",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Khóm hoa cam nền đất"
+  },
+  {
+    "key": "decor_flowerbed_red_pink",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Thảm hoa phong đỏ-hồng"
+  },
+  {
+    "key": "decor_flowerbed_red_lilac",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Thảm hoa phong đỏ-tím nhạt"
+  },
+  {
+    "key": "decor_roots_curved_1",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Rễ cây trồi mặt đất (kiểu 1)"
+  },
+  {
+    "key": "decor_roots_curved_2",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Rễ cây trồi mặt đất (kiểu 2)"
+  },
+  {
+    "key": "decor_grass_red_blue",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Cỏ đỏ ngọn xanh phấn"
+  },
+  {
+    "key": "decor_grass_red_white",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Cỏ đỏ ngọn trắng tuyết"
+  },
+  {
+    "key": "decor_rock_mossy_pile",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Đống đá rêu mùa thu"
+  },
+  {
+    "key": "decor_leaf_fragments_red",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Mảnh lá đỏ rải rác"
+  },
+  {
+    "key": "decor_rock_brown",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Tảng đá nâu khối"
+  },
+  {
+    "key": "decor_leaf_pile_red",
+    "kind": "decal",
+    "w": 32,
+    "h": 32,
+    "anchor": "tile",
+    "vn": "Vạt lá đỏ phủ đất"
+  },
+  {
+    "key": "ground_autumn_top",
+    "kind": "ground",
+    "w": 32,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Cỏ Ranh Giới Bắc (Top Fringe)"
+  },
+  {
+    "key": "ground_autumn_bot",
+    "kind": "ground",
+    "w": 32,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Cỏ Ranh Giới Nam (Bottom Fringe)"
+  },
+  {
+    "key": "ground_autumn_left",
+    "kind": "ground",
+    "w": 32,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Cỏ Ranh Giới Tây (Left Fringe)"
+  },
+  {
+    "key": "ground_autumn_right",
+    "kind": "ground",
+    "w": 32,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Cỏ Ranh Giới Đông (Right Fringe)"
+  },
+  {
+    "key": "ground_autumn_tl",
+    "kind": "ground",
+    "w": 32,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Cỏ Ranh Giới Góc Ngoài Tây-Bắc (TL Outer)"
+  },
+  {
+    "key": "ground_autumn_tr",
+    "kind": "ground",
+    "w": 32,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Cỏ Ranh Giới Góc Ngoài Đông-Bắc (TR Outer)"
+  },
+  {
+    "key": "ground_autumn_bl",
+    "kind": "ground",
+    "w": 32,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Cỏ Ranh Giới Góc Ngoài Tây-Nam (BL Outer)"
+  },
+  {
+    "key": "ground_autumn_br",
+    "kind": "ground",
+    "w": 32,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Cỏ Ranh Giới Góc Ngoài Đông-Nam (BR Outer)"
+  },
+  {
+    "key": "ground_autumn_in_tl",
+    "kind": "ground",
+    "w": 32,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Cỏ Ranh Giới Góc Trong Tây-Bắc (TL Inner)"
+  },
+  {
+    "key": "ground_autumn_in_tr",
+    "kind": "ground",
+    "w": 32,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Cỏ Ranh Giới Góc Trong Đông-Bắc (TR Inner)"
+  },
+  {
+    "key": "ground_autumn_in_bl",
+    "kind": "ground",
+    "w": 32,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Cỏ Ranh Giới Góc Trong Tây-Nam (BL Inner)"
+  },
+  {
+    "key": "ground_autumn_in_br",
+    "kind": "ground",
+    "w": 32,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Cỏ Ranh Giới Góc Trong Đông-Nam (BR Inner)"
+  },
+  {
+    "key": "tall_grass_autumn",
+    "kind": "plant",
+    "w": 32,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Cỏ Cao Mùa Thu (Tall Grass Single Frame)"
+  },
+  {
+    "key": "tall_grass_autumn_strip",
+    "kind": "plant",
+    "w": 160,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Dải Hoạt Họa Cỏ Cao Mùa Thu (5-Frame Sway Strip)"
+  },
+  {
+    "key": "water_autumn_pure",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Nước Hồ Mùa Thu Thuần (Pure Water 4 Frames)"
+  },
+  {
+    "key": "water_autumn_top",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Bờ Hồ Mùa Thu Bắc (Top Bank 4 Frames)"
+  },
+  {
+    "key": "water_autumn_bot",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Bờ Hồ Mùa Thu Nam (Bottom Bank 4 Frames)"
+  },
+  {
+    "key": "water_autumn_left",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Bờ Hồ Mùa Thu Tây (Left Bank 4 Frames)"
+  },
+  {
+    "key": "water_autumn_right",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Bờ Hồ Mùa Thu Đông (Right Bank 4 Frames)"
+  },
+  {
+    "key": "water_autumn_tl",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Bờ Hồ Mùa Thu Góc Tây-Bắc (TL Outer Bank 4 Frames)"
+  },
+  {
+    "key": "water_autumn_tr",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Bờ Hồ Mùa Thu Góc Đông-Bắc (TR Outer Bank 4 Frames)"
+  },
+  {
+    "key": "water_autumn_bl",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Bờ Hồ Mùa Thu Góc Tây-Nam (BL Outer Bank 4 Frames)"
+  },
+  {
+    "key": "water_autumn_br",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Bờ Hồ Mùa Thu Góc Đông-Nam (BR Outer Bank 4 Frames)"
+  },
+  {
+    "key": "water_autumn_in_tl",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Bờ Hồ Mùa Thu Góc Trong Tây-Bắc (TL Inner Bank 4 Frames)"
+  },
+  {
+    "key": "water_autumn_in_tr",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Bờ Hồ Mùa Thu Góc Trong Đông-Bắc (TR Inner Bank 4 Frames)"
+  },
+  {
+    "key": "water_autumn_in_bl",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Bờ Hồ Mùa Thu Góc Trong Tây-Nam (BL Inner Bank 4 Frames)"
+  },
+  {
+    "key": "water_autumn_in_br",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Bờ Hồ Mùa Thu Góc Trong Đông-Nam (BR Inner Bank 4 Frames)"
+  },
+  {
+    "key": "water_autumn_curve",
+    "kind": "water",
+    "w": 128,
+    "h": 32,
+    "anchor": [
+      16,
+      32
+    ],
+    "vn": "Khúc Cua / Ngã Rẽ Sông Mùa Thu (River Curve 4 Frames)"
+  }
+]

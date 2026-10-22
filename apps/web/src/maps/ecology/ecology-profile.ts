@@ -16,6 +16,7 @@ export const BIOME_DEFAULT_TREES = {
   desert: getBiomeConfig('desert')?.defaultTree ?? 'dead_1',
   dark: getBiomeConfig('dark_land')?.defaultTree ?? 'dark_forest',
   wetland: getBiomeConfig('wetland')?.defaultTree ?? 'vibrant',
+  snow: getBiomeConfig('snow')?.defaultTree ?? 'tree_snow_pine_1',
 };
 
 export type EcologyZone =

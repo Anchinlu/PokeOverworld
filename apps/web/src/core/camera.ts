@@ -98,4 +98,24 @@ export class Camera {
       worldY: cameraTop + screenY / this.zoom,
     };
   }
+
+  /**
+   * Converts a world pixel coordinate into screen pixel coordinates.
+   */
+  public worldToScreen(
+    worldX: number,
+    worldY: number,
+    canvasWidth: number,
+    canvasHeight: number
+  ): { screenX: number; screenY: number } {
+    const viewW = canvasWidth / this.zoom;
+    const viewH = canvasHeight / this.zoom;
+    const cameraLeft = Math.round(this.x - viewW / 2);
+    const cameraTop = Math.round(this.y - viewH / 2);
+
+    return {
+      screenX: (worldX - cameraLeft) * this.zoom,
+      screenY: (worldY - cameraTop) * this.zoom,
+    };
+  }
 }

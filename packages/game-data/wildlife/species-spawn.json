@@ -282,6 +282,11 @@
         "biome": "light_forest",
         "context": "tall_grass",
         "affinity": 0.8
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.95
       }
     ],
     "activeTime": [
@@ -306,6 +311,11 @@
         "biome": "light_forest",
         "context": "tall_grass",
         "affinity": 0.6
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.85
       }
     ],
     "activeTime": [
@@ -661,6 +671,11 @@
         "biome": "hill_edge",
         "context": "walkable_ground",
         "affinity": 0.7
+      },
+      {
+        "biome": "snow",
+        "context": "walkable_ground",
+        "affinity": 0.6
       }
     ],
     "activeTime": [
@@ -692,6 +707,11 @@
         "biome": "meadow",
         "context": "tall_grass",
         "affinity": 0.7
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 1.0
       }
     ],
     "activeTime": [
@@ -707,7 +727,13 @@
     ],
     "rarityDelta": 0,
     "social": "solitary",
-    "habitats": [],
+    "habitats": [
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.85
+      }
+    ],
     "activeTime": [
       "dawn",
       "day",
@@ -885,6 +911,11 @@
         "biome": "light_forest",
         "context": "forest_floor",
         "affinity": 0.7
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 1.0
       }
     ],
     "activeTime": [
@@ -903,6 +934,11 @@
         "biome": "dense_forest",
         "context": "forest_floor",
         "affinity": 0.8
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.9
       }
     ],
     "activeTime": [
@@ -926,6 +962,11 @@
         "biome": "light_forest",
         "context": "tall_grass",
         "affinity": 0.7
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.9
       }
     ],
     "activeTime": [
@@ -944,6 +985,11 @@
         "biome": "dense_forest",
         "context": "forest_floor",
         "affinity": 0.6
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.8
       }
     ],
     "activeTime": [
@@ -1088,6 +1134,11 @@
         "biome": "hill_edge",
         "context": "walkable_ground",
         "affinity": 0.7
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.85
       }
     ],
     "activeTime": [
@@ -1129,6 +1180,11 @@
         "biome": "meadow",
         "context": "tall_grass",
         "affinity": 0.8
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.9
       }
     ],
     "activeTime": [
@@ -1296,6 +1352,11 @@
         "biome": "hill_edge",
         "context": "rock",
         "affinity": 0.7
+      },
+      {
+        "biome": "snow",
+        "context": "walkable_ground",
+        "affinity": 0.7
       }
     ],
     "activeTime": [
@@ -1352,6 +1413,11 @@
         "biome": "meadow",
         "context": "tall_grass",
         "affinity": 0.8
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.95
       }
     ],
     "activeTime": [
@@ -1370,6 +1436,11 @@
         "biome": "dense_forest",
         "context": "tall_grass",
         "affinity": 0.7
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.85
       }
     ],
     "activeTime": [
@@ -1447,6 +1518,11 @@
       {
         "biome": "hill_edge",
         "context": "walkable_ground",
+        "affinity": 0.8
+      },
+      {
+        "biome": "snow",
+        "context": "rock",
         "affinity": 0.8
       }
     ],
@@ -1634,6 +1710,11 @@
         "biome": "meadow",
         "context": "tall_grass",
         "affinity": 0.6
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.95
       }
     ],
     "activeTime": [
@@ -1657,6 +1738,11 @@
         "biome": "dryland",
         "context": "walkable_ground",
         "affinity": 0.6
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.9
       }
     ],
     "activeTime": [
@@ -1699,6 +1785,16 @@
         "biome": "coast",
         "context": "water_surface",
         "affinity": 0.8
+      },
+      {
+        "biome": "snow",
+        "context": "shore",
+        "affinity": 0.8
+      },
+      {
+        "biome": "snow",
+        "context": "water_surface",
+        "affinity": 0.8
       }
     ],
     "activeTime": [
@@ -1717,6 +1813,11 @@
         "biome": "coast",
         "context": "water_surface",
         "affinity": 0.5
+      },
+      {
+        "biome": "snow",
+        "context": "water_surface",
+        "affinity": 0.7
       }
     ],
     "activeTime": [
@@ -1777,6 +1878,11 @@
         "biome": "coast",
         "context": "sand",
         "affinity": 0.8
+      },
+      {
+        "biome": "snow",
+        "context": "shore",
+        "affinity": 0.8
       }
     ],
     "activeTime": [
@@ -1824,6 +1930,11 @@
         "biome": "dark_land",
         "context": "tall_grass",
         "affinity": 0.95
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.85
       }
     ],
     "activeTime": [
@@ -1917,6 +2028,11 @@
         "biome": "dark_land",
         "context": "tall_grass",
         "affinity": 0.9
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.85
       }
     ],
     "activeTime": [
@@ -2466,6 +2582,11 @@
         "biome": "light_forest",
         "context": "tall_grass",
         "affinity": 0.5
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.85
       }
     ],
     "activeTime": [
@@ -2484,6 +2605,16 @@
         "biome": "hill_edge",
         "context": "walkable_ground",
         "affinity": 0.5
+      },
+      {
+        "biome": "snow",
+        "context": "walkable_ground",
+        "affinity": 0.8
+      },
+      {
+        "biome": "snow",
+        "context": "forest_floor",
+        "affinity": 0.8
       }
     ],
     "activeTime": [
@@ -2626,6 +2757,11 @@
         "biome": "coast",
         "context": "water_surface",
         "affinity": 0.4
+      },
+      {
+        "biome": "snow",
+        "context": "water_surface",
+        "affinity": 0.6
       }
     ],
     "activeTime": [
@@ -2662,6 +2798,11 @@
         "biome": "meadow",
         "context": "tall_grass",
         "affinity": 0.6
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.9
       }
     ],
     "activeTime": [

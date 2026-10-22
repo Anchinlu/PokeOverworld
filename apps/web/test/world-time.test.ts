@@ -174,8 +174,8 @@ describe('Ambient Light & Interpolation Profile (Giai đoạn 2)', () => {
 
   it('returns deep blue night profile at midnight', () => {
     const profile = getAmbientLightProfile(0); // 00:00
-    expect(profile.alpha).toBeCloseTo(0.38, 2);
-    expect(profile.color).toContain('24, 35, 90');
+    expect(profile.alpha).toBeCloseTo(0.72, 2);
+    expect(profile.color).toContain('8, 14, 48');
   });
 
   it('returns warm peach dawn profile near 06:00', () => {
@@ -187,9 +187,8 @@ describe('Ambient Light & Interpolation Profile (Giai đoạn 2)', () => {
 
   it('returns moody purple dusk profile near 18:00', () => {
     const profile = getAmbientLightProfile(1080); // 18:00
-    expect(profile.alpha).toBeGreaterThan(0.1);
-    expect(profile.alpha).toBeLessThanOrEqual(0.2);
-    expect(profile.color).toContain('170, 90, 190');
+    expect(profile.alpha).toBeCloseTo(0.38, 2);
+    expect(profile.color).toContain('200, 75, 150');
   });
 
   it('guarantees alpha is strictly bounded within [0, 1] across all 1440 minutes', () => {

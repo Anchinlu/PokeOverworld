@@ -14,3 +14,5 @@ export * from './title-screen';
 export * from './evolution-screen';
 export * from './evolution-notification';
 export * from './world-map-screen';
+export * from './shell';
+export * from './overworld/minimap';

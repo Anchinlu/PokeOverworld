@@ -14,6 +14,8 @@ export interface TerrainField {
   isSand(gx: number, gy: number, hasBeach?: boolean): boolean;
   isDesert?(gx: number, gy: number): boolean;
   isDarkLand?(gx: number, gy: number): boolean;
+  isAutumn?(gx: number, gy: number): boolean;
+  isSnow?(gx: number, gy: number): boolean;
   isHill(
     gx: number,
     gy: number,
@@ -68,6 +70,11 @@ export { V3Field } from './v3-field';
 export { V4Field } from './v4-field';
 export { V4_CONFIG } from './v4-config';
 export { V4MacroPlan } from './v4-macro-plan';
+export type { V4LandmassProfile } from './v4-config';
+
+export function createNaturalLandmassField(seed: number): TerrainField {
+  return new V4Field(seed, 'natural-landmass');
+}
 
 export function createTerrainField(version: number, seed: number): TerrainField {
   if (version === 1) {
@@ -81,6 +88,9 @@ export function createTerrainField(version: number, seed: number): TerrainField 
   }
   if (version === 4) {
     return new V4Field(seed);
+  }
+  if (version === 5) {
+    return new V4Field(seed, 'natural-landmass');
   }
   throw new Error(`Unsupported worldGenVersion: ${version}`);
 }

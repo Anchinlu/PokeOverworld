@@ -1,9 +1,10 @@
-import { TILE_IDS } from '@pokemon/game-data';
 import type { TerrainField } from '../../maps/terrain-field';
 import type { Collider } from '@pokemon/shared-types';
 import type { TallGrassEntity } from '../../maps/chunk-objects';
-import { sampleEcology, getEcologyZone, resolveWorldBiome } from '../../maps/ecology';
+import { resolveWorldBiome } from '../../maps/ecology';
+import type { RuntimeBiomeId } from '../../maps/ecology';
 import type { WorldQuery, TileContext, TimeBand } from './world-query';
+import { resolveWorldTileContext } from './world-context';
 
 /**
  * Creates a WorldQuery port adapter wrapping a TerrainField and local chunk entities.
@@ -61,39 +62,12 @@ export function createWorldQueryAdapter(
     },
 
     contextAt(gx: number, gy: number): TileContext {
-      if (tallGrassSet.has(`${gx},${gy}`)) {
-        return 'tall_grass';
-      }
-      if (field.isOcean(gx, gy)) {
-        const tid = field.getOceanTileId(gx, gy);
-        if (tid !== TILE_IDS.ocean_water) {
-          return 'shore';
-        }
-        return 'water_surface';
-      }
-      if (field.isWater(gx, gy) || field.isLake?.(gx, gy)) {
-        return 'water_surface';
-      }
-      if (field.isSand(gx, gy) || (field.isDesert && field.isDesert(gx, gy))) {
-        return 'sand';
-      }
-      // Dark Land has its own biome pool. Keep walkable dark ground distinct
-      // from the regular ecology sample so dark-land species can resolve the
-      // `dark_land + walkable_ground` habitat pair deterministically.
-      if (field.isDarkLand && field.isDarkLand(gx, gy)) {
-        return 'walkable_ground';
-      }
-
-      const sample = sampleEcology(gx, gy, field);
-      const zone = getEcologyZone(sample);
-      if (zone === 'dense_forest') {
-        return 'forest_floor';
-      }
-
-      return 'walkable_ground';
+      return resolveWorldTileContext(field, gx, gy, {
+        isTallGrass: (x, y) => tallGrassSet.has(`${x},${y}`),
+      });
     },
 
-    biomeAt(gx: number, gy: number): string {
+    biomeAt(gx: number, gy: number): RuntimeBiomeId {
       return resolveWorldBiome(field, gx, gy);
     },
 

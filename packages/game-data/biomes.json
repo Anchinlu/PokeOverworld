@@ -48,6 +48,12 @@
       "hasBeach": false,
       "hasRoad": true,
       "defaultTree": "vibrant"
+    },
+    "snow": {
+      "name": "Frostfall Snow Peak",
+      "hasBeach": false,
+      "hasRoad": false,
+      "defaultTree": "snow_pine"
     }
   }
 }

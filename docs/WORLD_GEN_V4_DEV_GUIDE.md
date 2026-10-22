@@ -5,7 +5,8 @@
 Đã triển khai C0–C5 nền tảng:
 
 - World Gen v3 vẫn được giữ nguyên cho các save cũ.
-- Thế giới mới mặc định dùng `worldGenVersion = 4`.
+- World Gen v4 classic vẫn được giữ để kiểm thử hồi quy; thế giới mới hiện mặc
+  định dùng `worldGenVersion = 5` với profile `natural-landmass`.
 - Địa hình v4 không dùng valley radial quanh `(0, 0)` để tạo toàn bộ lục địa.
 - Continental field nhiều tầng gồm macro noise, domain warp và detail noise.
 - Macro plan quét các mảng đất liên thông theo seed.
@@ -42,7 +43,8 @@ apps/web/src/maps/terrain-field/
 | V1 | Giữ nguyên thế giới cổ điển |
 | V2 | Giữ nguyên V0 |
 | V3 | Giữ nguyên valley và corridor cũ |
-| V4 | Thế giới mới: lục địa, biển, đảo và bờ tự nhiên |
+| V4 | Profile classic: lục địa, biển, đảo và bờ tự nhiên cơ bản |
+| V5 | Profile natural-landmass: coastline bất đối xứng và landmask component |
 
 Không được đổi thuật toán v3 khi sửa v4. Save cũ phải tiếp tục đọc đúng
 `worldGenVersion` đã lưu.

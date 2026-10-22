@@ -1499,13 +1499,15 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
       const slotNum = save.slotId.replace('slot_', '');
       const seed = save.worldSeed ?? 101;
       const versionBadge =
-        save.worldGenVersion === 4
-          ? '<span class="world-tag v4">🌍 V4 Lục Địa &amp; Quần Đảo</span>'
-          : save.worldGenVersion === 3
-            ? '<span class="world-tag v3">🌲 V3 Thung Lũng</span>'
-            : save.worldGenVersion === 2
-              ? '<span class="world-tag v2">🏝️ V2 Đảo Làng</span>'
-              : '<span class="world-tag v1">📜 V1 Cổ Điển</span>';
+        save.worldGenVersion === 5
+          ? '<span class="world-tag v5">🌍 V5 Lục Địa Tự Nhiên</span>'
+          : save.worldGenVersion === 4
+            ? '<span class="world-tag v4">🌍 V4 Lục Địa &amp; Quần Đảo</span>'
+            : save.worldGenVersion === 3
+              ? '<span class="world-tag v3">🌲 V3 Thung Lũng</span>'
+              : save.worldGenVersion === 2
+                ? '<span class="world-tag v2">🏝️ V2 Đảo Làng</span>'
+                : '<span class="world-tag v1">📜 V1 Cổ Điển</span>';
 
       card.innerHTML = `
         <div class="save-card-header">

@@ -8,6 +8,8 @@ export const TERRAIN = {
   HILL: 5,
   DESERT: 6,
   DARK_LAND: 7,
+  AUTUMN: 8,
+  SNOW: 9,
 } as const;
 
 export const TILE_IDS = {
@@ -112,6 +114,58 @@ export const TILE_IDS = {
   dark_cliff_in_tr: 470,
   dark_cliff_in_bl: 471,
   dark_cliff_in_br: 472,
+  ground_autumn_pure: 480,
+  ground_autumn_top: 481,
+  ground_autumn_bot: 482,
+  ground_autumn_left: 483,
+  ground_autumn_right: 484,
+  ground_autumn_tl: 485,
+  ground_autumn_tr: 486,
+  ground_autumn_bl: 487,
+  ground_autumn_br: 488,
+  ground_autumn_in_tl: 489,
+  ground_autumn_in_tr: 490,
+  ground_autumn_in_bl: 491,
+  ground_autumn_in_br: 492,
+  ground_snow_pure: 510,
+  ground_snow_top: 511,
+  ground_snow_bot: 512,
+  ground_snow_left: 513,
+  ground_snow_right: 514,
+  ground_snow_tl: 515,
+  ground_snow_tr: 516,
+  ground_snow_bl: 517,
+  ground_snow_br: 518,
+  ground_snow_in_tl: 519,
+  ground_snow_in_tr: 520,
+  ground_snow_in_bl: 521,
+  ground_snow_in_br: 522,
+  cliff_snow_pure: 530,
+  cliff_snow_top: 531,
+  cliff_snow_bot: 532,
+  cliff_snow_left: 533,
+  cliff_snow_right: 534,
+  cliff_snow_tl: 535,
+  cliff_snow_tr: 536,
+  cliff_snow_bl: 537,
+  cliff_snow_br: 538,
+  cliff_snow_in_tl: 539,
+  cliff_snow_in_tr: 540,
+  cliff_snow_in_bl: 541,
+  cliff_snow_in_br: 542,
+  ice_snow_pure: 550,
+  ice_snow_top: 551,
+  ice_snow_bot: 552,
+  ice_snow_left: 553,
+  ice_snow_right: 554,
+  ice_snow_tl: 555,
+  ice_snow_tr: 556,
+  ice_snow_bl: 557,
+  ice_snow_br: 558,
+  ice_snow_in_tl: 559,
+  ice_snow_in_tr: 560,
+  ice_snow_in_bl: 561,
+  ice_snow_in_br: 562,
   tree_autumn: 501,
   tree_vibrant: 502,
   tree_coastal: 503,
@@ -123,6 +177,8 @@ export const TILE_IDS = {
   plant_sprout: 605,
   tall_grass: 610,
   tall_grass_dark: 611,
+  tall_grass_autumn: 612,
+  tall_grass_snow: 613,
   water_pure: 700,
   water_top: 701,
   water_bot: 702,
@@ -151,6 +207,34 @@ export const TILE_IDS = {
   shore_corner_in_en: 740,
   shore_corner_out_se: 741,
   shore_corner_out_ne: 742,
+  water_autumn_pure: 750,
+  water_autumn_top: 751,
+  water_autumn_bot: 752,
+  water_autumn_left: 753,
+  water_autumn_right: 754,
+  water_autumn_tl: 755,
+  water_autumn_tr: 756,
+  water_autumn_bl: 757,
+  water_autumn_br: 758,
+  water_autumn_in_tl: 759,
+  water_autumn_in_tr: 760,
+  water_autumn_in_bl: 761,
+  water_autumn_in_br: 762,
+  water_autumn_curve: 763,
+  water_snow_pure: 770,
+  water_snow_top: 771,
+  water_snow_bot: 772,
+  water_snow_left: 773,
+  water_snow_right: 774,
+  water_snow_tl: 775,
+  water_snow_tr: 776,
+  water_snow_bl: 777,
+  water_snow_br: 778,
+  water_snow_in_tl: 779,
+  water_snow_in_tr: 780,
+  water_snow_in_bl: 781,
+  water_snow_in_br: 782,
+  water_snow_curve: 783,
 } as const;
 
 export function isShoreTile(tileId: number): boolean {
@@ -158,7 +242,12 @@ export function isShoreTile(tileId: number): boolean {
 }
 
 export function isWaterTile(tileId: number): boolean {
-  return (tileId >= 700 && tileId <= 712) || (tileId >= 730 && tileId <= 742);
+  return (
+    (tileId >= 700 && tileId <= 712) ||
+    (tileId >= 730 && tileId <= 742) ||
+    (tileId >= 750 && tileId <= 763) ||
+    (tileId >= 770 && tileId <= 783)
+  );
 }
 
 export function isDesertTile(tileId: number): boolean {
@@ -170,6 +259,24 @@ export function isDarkLandTile(tileId: number): boolean {
     (tileId >= 440 && tileId <= 455) ||
     (tileId >= 460 && tileId <= 472) ||
     tileId === TILE_IDS.tall_grass_dark
+  );
+}
+
+export function isAutumnTile(tileId: number): boolean {
+  return (
+    (tileId >= 480 && tileId <= 492) ||
+    tileId === TILE_IDS.tall_grass_autumn ||
+    (tileId >= 750 && tileId <= 763)
+  );
+}
+
+export function isSnowTile(tileId: number): boolean {
+  return (
+    (tileId >= 510 && tileId <= 522) ||
+    (tileId >= 530 && tileId <= 542) ||
+    (tileId >= 550 && tileId <= 562) ||
+    tileId === TILE_IDS.tall_grass_snow ||
+    (tileId >= 770 && tileId <= 783)
   );
 }
 

@@ -9,8 +9,18 @@ import { ObjectRenderer } from './object-renderer';
 import { CharacterRenderer } from './character-renderer';
 import { DebugRenderer } from './debug-renderer';
 import { AmbientOverlayRenderer } from './ambient-overlay-renderer';
+import {
+  WeatherCloudController,
+  CloudShadowLayer,
+  LeafParticleSystem,
+  RainParticleSystem,
+  DarkFogLayer,
+  SandstormSystem,
+  SnowParticleSystem,
+} from './weather';
 import type { AmbientLightProfile } from '@pokemon/shared-types';
 import type { TimeBand } from '../wildlife/ports/world-query';
+import type { OverworldWeather } from '../world/overworld-weather';
 import { partyService } from '../domain/party/party-service';
 
 export * from './types';
@@ -19,6 +29,7 @@ export * from './object-renderer';
 export * from './character-renderer';
 export * from './debug-renderer';
 export * from './ambient-overlay-renderer';
+export * from './weather';
 
 export class GameRenderer {
   private canvas: HTMLCanvasElement;
@@ -30,6 +41,13 @@ export class GameRenderer {
   private characterRenderer: CharacterRenderer;
   private debugRenderer: DebugRenderer;
   private ambientOverlayRenderer: AmbientOverlayRenderer;
+  private cloudController: WeatherCloudController;
+  private cloudShadowLayer: CloudShadowLayer;
+  private leafParticleSystem: LeafParticleSystem;
+  private rainParticleSystem: RainParticleSystem;
+  private darkFogLayer: DarkFogLayer;
+  private sandstormSystem: SandstormSystem;
+  private snowParticleSystem: SnowParticleSystem;
   private lastRenderMs = 0;
   private lastRenderItems = 0;
   private lastVisibleChunks = 0;
@@ -46,6 +64,41 @@ export class GameRenderer {
     this.characterRenderer = new CharacterRenderer(loader);
     this.debugRenderer = new DebugRenderer();
     this.ambientOverlayRenderer = new AmbientOverlayRenderer();
+    this.cloudController = new WeatherCloudController();
+    this.cloudShadowLayer = new CloudShadowLayer(loader);
+    this.leafParticleSystem = new LeafParticleSystem(loader);
+    this.rainParticleSystem = new RainParticleSystem(loader);
+    this.darkFogLayer = new DarkFogLayer();
+    this.sandstormSystem = new SandstormSystem(loader);
+    this.snowParticleSystem = new SnowParticleSystem(loader);
+  }
+
+  public getSnowParticleSystem(): SnowParticleSystem {
+    return this.snowParticleSystem;
+  }
+
+  public getSandstormSystem(): SandstormSystem {
+    return this.sandstormSystem;
+  }
+
+  public getDarkFogLayer(): DarkFogLayer {
+    return this.darkFogLayer;
+  }
+
+  public getLeafParticleSystem(): LeafParticleSystem {
+    return this.leafParticleSystem;
+  }
+
+  public getRainParticleSystem(): RainParticleSystem {
+    return this.rainParticleSystem;
+  }
+
+  public getCloudController(): WeatherCloudController {
+    return this.cloudController;
+  }
+
+  public setWeather(weather: OverworldWeather): void {
+    this.cloudController.setWeather(weather);
   }
 
   public setOptions(opts: Partial<RenderOptions>): void {
@@ -117,6 +170,35 @@ export class GameRenderer {
     chunkManager.refreshRenderChunks(bounds);
     this.lastVisibleChunks = chunkManager.renderChunks.length;
 
+    // Update dynamic drifting clouds (shadow + sky layers)
+    this.cloudController.update(now);
+
+    // Update dynamic drifting wind leaves
+    if (this.options.showLeaves) {
+      const windMult = this.cloudController.getProfile().shadowSpeedX / 18;
+      this.leafParticleSystem.update(now, bounds, timeBand, windMult);
+    }
+
+    // Update dynamic rain particles (excluded from desert terrain)
+    if (this.options.showRain) {
+      const weather = this.cloudController.getWeather();
+      this.rainParticleSystem.update(now, bounds, weather, false, false, chunkManager.field, player);
+    }
+
+    // Update dynamic dark purple-black fog for Dark Land biome
+    if (this.options.showDarkFog) {
+      this.darkFogLayer.update(now, player, chunkManager.field, bounds, canvas.width, canvas.height);
+    }
+
+    // Update dynamic desert sand particles / sandstorm
+    if (this.options.showSandstorm) {
+      const weather = this.cloudController.getWeather();
+      this.sandstormSystem.update(now, player, chunkManager.field, bounds, weather);
+    }
+
+    // Update dynamic snowfall & blizzard in snow biome
+    this.snowParticleSystem.update(now, bounds, chunkManager.field, this.cloudController.getWeather());
+
     // 0. Render Live Animated Water Waves (Layer -0.1)
     if (this.options.showWater) {
       this.groundRenderer.renderWaterTiles(ctx, bounds, chunkManager, now, this.options);
@@ -155,6 +237,16 @@ export class GameRenderer {
     // 4. Render 32px Grid if enabled
     if (this.options.showGrid) {
       this.debugRenderer.renderTileGrid(ctx, bounds);
+    }
+
+    // 4.5. Render Cloud Shadows across terrain (Layer 0.9, beneath all entities)
+    if (this.options.showClouds) {
+      this.cloudShadowLayer.render(ctx, bounds, this.cloudController);
+    }
+
+    // 4.6. Render Rain Ground Splashes on map terrain (Layer 0.95, beneath entities, on ground)
+    if (this.options.showRain) {
+      this.rainParticleSystem.renderSplashes(ctx, bounds, chunkManager.field);
     }
 
     // 5. Collect 2.5D Entities for Y-Sorting (Layer 1)
@@ -231,6 +323,42 @@ export class GameRenderer {
     }
     this.lastRenderItems = renderList.length;
 
+    // 5.5. Render Wind-Drifting Falling Leaves (Layer 1.5 - Overhead Air)
+    if (this.options.showLeaves) {
+      this.leafParticleSystem.render(ctx, bounds, now, chunkManager.field);
+    }
+
+    // 5.6. Render Falling Raindrops & Thunderstorm Lightning (Layer 1.6 - In-Air Precipitation)
+    if (this.options.showRain) {
+      this.rainParticleSystem.renderDrops(
+        ctx,
+        bounds,
+        canvas.width,
+        canvas.height,
+        this.cloudController.getWeather(),
+        chunkManager.field,
+        player
+      );
+    }
+
+    // 5.65. Render Desert Drifting Sand Particles & Sandstorm Flurries (Layer 1.65 - Overhead Air)
+    if (this.options.showSandstorm) {
+      this.sandstormSystem.renderWorld(
+        ctx,
+        bounds,
+        chunkManager.field,
+        this.cloudController.getWeather()
+      );
+    }
+
+    // 5.68. Render Falling Snowflakes & Blizzard Flurries (Layer 1.68 - Overhead Snow)
+    this.snowParticleSystem.render(ctx, bounds, now, chunkManager.field);
+
+    // 5.7. Render World-Space Dark Fog Wisps (Layer 1.7 - Ethereal Ground/Overhead Mist in Dark Land)
+    if (this.options.showDarkFog) {
+      this.darkFogLayer.renderWorld(ctx, bounds, chunkManager.field);
+    }
+
     // 6. Hitboxes if enabled
     if (this.options.showHitbox) {
       this.debugRenderer.renderHitboxes(ctx, bounds, chunkManager, player);
@@ -242,6 +370,23 @@ export class GameRenderer {
     }
 
     ctx.restore();
+
+    // 7.5. Screen-Space Dark Land Atmospheric Fog & Exploration Vignette
+    if (this.options.showDarkFog) {
+      this.darkFogLayer.renderScreen(ctx, canvas.width, canvas.height, camera, player);
+    }
+
+    // 7.6. Screen-Space Desert Sandstorm & Atmospheric Heat/Dust Haze
+    if (this.options.showSandstorm) {
+      this.sandstormSystem.renderScreen(
+        ctx,
+        canvas.width,
+        canvas.height,
+        camera,
+        player,
+        this.cloudController.getWeather()
+      );
+    }
 
     // 8. Screen-Space Ambient Light Overlay
     if (ambientLight) {

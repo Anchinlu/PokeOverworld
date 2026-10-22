@@ -53,13 +53,13 @@ export class Player {
   // Idle Animation State (4-Frame Idle from char_red_idle.png)
   public isIdling = false;
   private idleTimer = 0; // Accumulated time standing still (seconds)
-  private nextIdleDelay = 3.5; // Randomized delay before next idle chance (seconds)
+  private nextIdleDelay = 1.5; // Randomized delay before next idle chance (seconds)
   private idleAnimTimer = 0; // Elapsed time in current idle animation (seconds)
   private readonly idleFrameDuration = 0.16; // Duration per idle frame (seconds)
   private readonly totalIdleFrames = 4; // Frames 0, 1, 2, 3
 
   constructor(initialGX = 0, initialGY = 0, initialDir: Direction = 0) {
-    this.nextIdleDelay = 3.0 + Math.random() * 3.5;
+    this.nextIdleDelay = 1.2 + Math.random() * 0.8;
     this.snapTo(initialGX, initialGY, initialDir);
   }
 
@@ -171,7 +171,7 @@ export class Player {
     this.idleTimer = 0;
     this.idleAnimTimer = 0;
     this.frame = 0;
-    this.nextIdleDelay = 3.0 + Math.random() * 4.0;
+    this.nextIdleDelay = 1.2 + Math.random() * 0.8;
   }
 
   /**
@@ -184,12 +184,7 @@ export class Player {
       this.idleTimer += dtSeconds;
       if (this.idleTimer >= this.nextIdleDelay) {
         this.idleTimer = 0;
-        // Probability check (50% chance to trigger idle animation, otherwise defer)
-        if (Math.random() < 0.5) {
-          this.triggerIdleAnimation();
-        } else {
-          this.nextIdleDelay = 2.5 + Math.random() * 3.5;
-        }
+        this.triggerIdleAnimation();
       }
     } else {
       this.idleAnimTimer += dtSeconds;
@@ -199,8 +194,12 @@ export class Player {
         const frameIndex = Math.floor(this.idleAnimTimer / this.idleFrameDuration);
         this.frame = Math.min(this.totalIdleFrames - 1, Math.max(0, frameIndex));
       } else {
-        // Idle cycle completed, return to standing neutral
-        this.cancelIdle();
+        // Idle cycle completed, return to standing neutral and schedule next frequent idle cycle
+        this.isIdling = false;
+        this.idleTimer = 0;
+        this.idleAnimTimer = 0;
+        this.frame = 0;
+        this.nextIdleDelay = 1.5 + Math.random() * 1.2;
       }
     }
   }

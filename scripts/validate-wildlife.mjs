@@ -35,7 +35,23 @@ const VALID_BIOMES = new Set([
   'coast',
   'hill_edge',
   'dark_land',
+  'autumn',
+  'snow',
 ]);
+// These are the only biome IDs returned by the V4 runtime resolver. The
+// legacy hill_edge habitat remains accepted for old data, but hills are now a
+// terrain feature layered over the underlying ecology rather than a biome.
+const RUNTIME_BIOMES = [
+  'meadow',
+  'light_forest',
+  'dense_forest',
+  'dryland',
+  'wetland',
+  'coast',
+  'dark_land',
+  'autumn',
+  'snow',
+];
 const VALID_CONTEXTS = new Set([
   'tall_grass',
   'forest_floor',
@@ -110,6 +126,21 @@ for (const biome of VALID_BIOMES) {
   const covered = habitatCoverage.get(biome);
   if (!covered || covered.size === 0) {
     errors.push(`Biome '${biome}' has 0 wild species assigned!`);
+  }
+}
+
+// Every biome that can be returned at runtime must have an explicit density
+// budget. Silent [2, 4] fallbacks make newly added biomes appear to work while
+// quietly producing the wrong population size.
+for (const biome of RUNTIME_BIOMES) {
+  const bounds = spawnConfig.groupsPerChunk?.[biome];
+  if (
+    !Array.isArray(bounds) ||
+    bounds.length !== 2 ||
+    !bounds.every((value) => Number.isInteger(value) && value >= 0) ||
+    bounds[0] > bounds[1]
+  ) {
+    errors.push(`Runtime biome '${biome}' is missing a valid groupsPerChunk range`);
   }
 }
 

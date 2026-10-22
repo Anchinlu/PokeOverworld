@@ -1,4 +1,4 @@
-import { CHUNK_SIZE, isDarkLandTile, TERRAIN, TILE_IDS, TILE_SIZE } from '@pokemon/game-data';
+import { CHUNK_SIZE, isAutumnTile, isDarkLandTile, isSnowTile, TERRAIN, TILE_IDS, TILE_SIZE } from '@pokemon/game-data';
 import { seededHash } from '../../maps/noise';
 import type { WorldChunk } from '../../maps/chunk';
 import { generateChunkTerrain } from '../../maps/chunk-terrain';
@@ -115,17 +115,23 @@ export class WorldMapRenderer {
       case TERRAIN.DESERT:
         return 'sand';
       case TERRAIN.HILL:
-        return isDarkLandTile(tileId) ? 'dark_land' : 'hill';
+        return isSnowTile(tileId) ? 'snow' : isDarkLandTile(tileId) ? 'dark_land' : 'hill';
       case TERRAIN.ROAD:
         return 'road';
       case TERRAIN.DARK_LAND:
         return 'dark_land';
+      case TERRAIN.AUTUMN:
+        return 'autumn';
+      case TERRAIN.SNOW:
+        return 'snow';
       case TERRAIN.GRASS:
         return 'grass';
       default:
         break;
     }
 
+    if (isSnowTile(tileId)) return 'snow';
+    if (isAutumnTile(tileId)) return 'autumn';
     if (isDarkLandTile(tileId)) return 'dark_land';
     if (tileId >= 700 && tileId <= 742) return 'water';
     if (tileId >= 400 && tileId < 500) return 'hill';
@@ -150,6 +156,8 @@ export class WorldMapRenderer {
       hill: WORLD_MAP_PALETTE.hillPixels,
       road: WORLD_MAP_PALETTE.roadPixels,
       dark_land: WORLD_MAP_PALETTE.darkPixels,
+      autumn: WORLD_MAP_PALETTE.autumnPixels,
+      snow: WORLD_MAP_PALETTE.snowPixels,
     };
     const palette = colours[terrainClass];
     // Use coarse 3x3 world cells for colour variation. Per-tile noise makes
@@ -184,6 +192,11 @@ export class WorldMapRenderer {
         ctx.fillStyle = accent;
         ctx.fillRect(x + 3, y + 15, 5, 2);
       }
+    } else if (terrainClass === 'autumn') {
+      if (pixelRoll > 0.48) {
+        ctx.fillStyle = accent;
+        ctx.fillRect(x + 5, y + 12, 4, 3);
+      }
     }
   }
 
@@ -213,6 +226,13 @@ export class WorldMapRenderer {
 
     if (terrainClass === 'dark_land' && tileId === TILE_IDS.dark_cliff_pure) {
       ctx.fillStyle = '#5c4873';
+      ctx.globalAlpha = 0.2;
+      ctx.fillRect(x + 3, y + 3, TILE_SIZE - 6, 3);
+      ctx.globalAlpha = 1;
+    }
+
+    if (terrainClass === 'snow' && tileId === TILE_IDS.cliff_snow_pure) {
+      ctx.fillStyle = '#a0d5e8';
       ctx.globalAlpha = 0.2;
       ctx.fillRect(x + 3, y + 3, TILE_SIZE - 6, 3);
       ctx.globalAlpha = 1;

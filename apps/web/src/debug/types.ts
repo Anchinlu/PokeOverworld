@@ -50,6 +50,7 @@ export interface DebugBridge {
   setWorldTimePhase(phase: 'dawn' | 'day' | 'dusk' | 'night'): void;
   toggleTimePause(): boolean;
   setTimeSpeed(multiplier: number): void;
+  setWeather?(weather: string): void;
 
   // Battle & Custom Bot Spawner
   startTestBattle(overlay?: string, isShiny?: boolean, weather?: string, envPreset?: string): void;

@@ -17,6 +17,7 @@ import { V3_CONFIG } from '../maps/terrain-field/v3-config';
 import { WORLD_MAP_PALETTE } from './world-map/world-map-palette';
 import { WorldMapRenderer } from './world-map/world-map-renderer';
 import { resolveWorldBiome } from '../maps/ecology';
+import { MAP_ASSETS } from '../assets';
 
 // ---------------------------------------------------------------------------
 // Constants & Configuration
@@ -45,6 +46,15 @@ export class WorldMapScreen {
   private session: GameSession | null = null;
   private animationFrameId: number | null = null;
   private lastRenderTimestamp = -Infinity;
+
+  private playerHeadImg: HTMLImageElement | null =
+    typeof Image !== 'undefined'
+      ? (() => {
+          const img = new Image();
+          img.src = MAP_ASSETS.playerHead;
+          return img;
+        })()
+      : null;
 
   // Static terrain/grid/settlement layer. Dynamic markers are rendered on top.
   private staticLayerCanvas: HTMLCanvasElement | null = null;
@@ -744,40 +754,47 @@ export class WorldMapScreen {
     ctx.arc(sx, sy, pulseRadius2, 0, Math.PI * 2);
     ctx.stroke();
 
-    // 2. Player Marker Circle (Authentic Red & White Trainer Badge)
-    ctx.shadowColor = 'rgba(239, 68, 68, 0.9)';
-    ctx.shadowBlur = 12;
+    // 2. Player Marker (Red Head Icon)
+    if (this.playerHeadImg && this.playerHeadImg.complete && this.playerHeadImg.naturalWidth > 0) {
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
+      ctx.shadowBlur = 6;
+      ctx.drawImage(this.playerHeadImg, sx - 16, sy - 16, 32, 32);
+    } else {
+      // Fallback: Red & White Trainer Badge while loading
+      ctx.shadowColor = 'rgba(239, 68, 68, 0.9)';
+      ctx.shadowBlur = 12;
 
-    // Red upper half
-    ctx.fillStyle = '#ef4444';
-    ctx.beginPath();
-    ctx.arc(sx, sy, 9, Math.PI, 0, false);
-    ctx.fill();
+      // Red upper half
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath();
+      ctx.arc(sx, sy, 9, Math.PI, 0, false);
+      ctx.fill();
 
-    // White lower half
-    ctx.fillStyle = '#f8fafc';
-    ctx.beginPath();
-    ctx.arc(sx, sy, 9, 0, Math.PI, false);
-    ctx.fill();
+      // White lower half
+      ctx.fillStyle = '#f8fafc';
+      ctx.beginPath();
+      ctx.arc(sx, sy, 9, 0, Math.PI, false);
+      ctx.fill();
 
-    // Outer border
-    ctx.strokeStyle = '#1e293b';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.arc(sx, sy, 9, 0, Math.PI * 2);
-    ctx.stroke();
+      // Outer border
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(sx, sy, 9, 0, Math.PI * 2);
+      ctx.stroke();
 
-    // Center divider & core
-    ctx.fillStyle = '#1e293b';
-    ctx.fillRect(sx - 9, sy - 1, 18, 2);
+      // Center divider & core
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(sx - 9, sy - 1, 18, 2);
 
-    ctx.fillStyle = '#ffffff';
-    ctx.beginPath();
-    ctx.arc(sx, sy, 3, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = '#1e293b';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(sx, sy, 3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
 
     // 3. Direction Chevron Pointer (0: Down, 1: Left, 2: Right, 3: Up)
     ctx.shadowBlur = 0;
@@ -798,10 +815,10 @@ export class WorldMapScreen {
     ctx.translate(sx, sy);
     ctx.rotate(rot);
     ctx.beginPath();
-    ctx.moveTo(14, 0);
-    ctx.lineTo(8, -5);
-    ctx.lineTo(10, 0);
-    ctx.lineTo(8, 5);
+    ctx.moveTo(15, 0);
+    ctx.lineTo(9, -5);
+    ctx.lineTo(11, 0);
+    ctx.lineTo(9, 5);
     ctx.closePath();
     ctx.fill();
     ctx.stroke();
@@ -1059,19 +1076,31 @@ export class WorldMapScreen {
         terrainName = field.isNearCliffEdge(gx, gy) ? 'Vách núi tối' : 'Đồi đất tối';
       } else if (field.isDesert && field.isDesert(gx, gy)) {
         terrainName = field.isNearCliffEdge(gx, gy) ? 'Vách cồn cát' : 'Cồn cát cao';
+      } else if (field.isAutumn && field.isAutumn(gx, gy)) {
+        terrainName = field.isNearCliffEdge(gx, gy) ? 'Vách đồi phong đỏ' : 'Đồi cao thu vàng';
+      } else if (field.isSnow && field.isSnow(gx, gy)) {
+        terrainName = field.isNearCliffEdge(gx, gy) ? 'Vách núi tuyết' : 'Đồi tuyết trắng';
       } else {
         terrainName = field.isNearCliffEdge(gx, gy) ? 'Vách núi đá' : 'Đồi núi';
       }
     } else if (field.isOcean(gx, gy)) {
       terrainName = field.isNearWater(gx, gy, 2) ? 'Vùng nước ven bờ' : 'Đại dương sâu';
     } else if (field.isWater(gx, gy) || field.isLake(gx, gy)) {
-      terrainName = field.isLake(gx, gy) ? 'Hồ nước ngọt' : 'Lòng sông nước ngọt';
+      if (field.isSnow && field.isSnow(gx, gy)) {
+        terrainName = 'Hồ băng đóng băng (Frozen Lake)';
+      } else {
+        terrainName = field.isLake(gx, gy) ? 'Hồ nước ngọt' : 'Lòng sông nước ngọt';
+      }
     } else if (field.isSand(gx, gy)) {
       terrainName = 'Bờ cát vàng';
     } else if (field.isDesert && field.isDesert(gx, gy)) {
       terrainName = 'Sa mạc cằn cỗi';
     } else if (field.isDarkLand && field.isDarkLand(gx, gy)) {
       terrainName = 'Vùng đất tối hoang tàn';
+    } else if (field.isAutumn && field.isAutumn(gx, gy)) {
+      terrainName = 'Thung lũng rừng phong (Autumn Forest)';
+    } else if (field.isSnow && field.isSnow(gx, gy)) {
+      terrainName = 'Vùng băng tuyết giá lạnh (Snow Biome)';
     } else if (field.isBridge(gx, gy)) {
       terrainName = 'Cầu gỗ qua sông';
     } else if (field.isRoad(gx, gy)) {
@@ -1080,6 +1109,8 @@ export class WorldMapScreen {
 
     const biomeKey = resolveWorldBiome(field, gx, gy);
     const biomeNames: Record<string, string> = {
+      autumn: 'Thung Lũng Rừng Phong (Autumn Ochre Valley)',
+      snow: 'Vùng Băng Tuyết (Snow & Ice Biome)',
       wetland: 'Hồ & Sông nước ngọt (Wetland)',
       coast: 'Vùng duyên hải (Coast)',
       dark_land: 'Vùng đất bóng tối (Dark Land)',

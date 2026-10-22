@@ -98,11 +98,12 @@ body {
   image-rendering: crisp-edges;
 }
 
-/* Top Right Navigation Bar (Using Graphics/Icons/Blank.png) */
+/* Navigation Bar (Using Graphics/Icons/Blank.png) - Centered */
 .top-right-bar {
   position: absolute;
   top: 0;
-  right: 16px;
+  left: 50%;
+  transform: translateX(-50%);
   width: 410px;
   height: 60px;
   z-index: 100;
@@ -115,132 +116,9 @@ body {
   filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.85));
 }
 
-/* Quick World Time HUD Widget */
+/* World Time HUD Widget (Hidden) */
 .world-time-widget {
-  position: absolute;
-  top: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 105;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  user-select: none;
-  font-family: ui-monospace, 'JetBrains Mono', 'Outfit', sans-serif;
-  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.55));
-}
-
-.world-time-pill {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(15, 23, 42, 0.88);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(56, 189, 248, 0.35);
-  border-radius: 20px;
-  padding: 5px 12px;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
-  transition: all 0.2s ease;
-}
-
-.world-time-pill:hover {
-  background: rgba(30, 41, 59, 0.95);
-  border-color: #38bdf8;
-  transform: translateY(-1px);
-}
-
-.world-time-icon {
-  font-size: 14px;
-}
-
-.world-time-text {
-  font-size: 12px;
-  font-weight: 700;
-  color: #f8fafc;
-  letter-spacing: 0.5px;
-}
-
-.world-time-phase {
-  font-size: 11px;
-  font-weight: 600;
-  color: #facc15;
-}
-
-.world-time-day {
-  font-size: 10px;
-  font-weight: 600;
-  color: #94a3b8;
-  padding-left: 4px;
-  border-left: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.world-time-quick-actions {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 20px;
-  padding: 3px 6px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
-}
-
-.btn-time-quick {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 12px;
-  padding: 3px 8px;
-  font-size: 11px;
-  font-weight: 600;
-  color: #e2e8f0;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  display: flex;
-  align-items: center;
-  gap: 2px;
-}
-
-.btn-time-quick:hover {
-  background: #38bdf8;
-  color: #0f172a;
-  border-color: #38bdf8;
-  transform: scale(1.05);
-}
-
-.btn-time-quick[data-time="360"]:hover {
-  background: #ea580c;
-  color: #fff;
-  border-color: #f97316;
-}
-
-.btn-time-quick[data-time="720"]:hover {
-  background: #0284c7;
-  color: #fff;
-  border-color: #38bdf8;
-}
-
-.btn-time-quick[data-time="1080"]:hover {
-  background: #9333ea;
-  color: #fff;
-  border-color: #c084fc;
-}
-
-.btn-time-quick[data-time="0"]:hover {
-  background: #1e1b4b;
-  color: #93c5fd;
-  border-color: #6366f1;
-}
-
-@media (max-width: 960px) {
-  .world-time-widget {
-    left: 16px;
-    top: 70px;
-    transform: none;
-  }
+  display: none !important;
 }
 
 .menu-bar-blank {
@@ -6886,7 +6764,7 @@ body {
    ========================================================================== */
 .party-map-hud {
   position: fixed;
-  top: 168px;
+  top: 228px;
   right: -8px;
   z-index: 90;
   display: flex;
@@ -9147,4 +9025,149 @@ body {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
   pointer-events: none;
   z-index: 5;
+}
+
+/* ==========================================================================
+   Overworld Mini-map HUD (Top-Right 1-Pixel Art Style)
+   ========================================================================== */
+.overworld-minimap {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 85;
+  background: #111827;
+  /* Authentic 1-pixel stepped retro RPG / GBA frame */
+  border: 2px solid #000000;
+  border-radius: 0;
+  box-shadow:
+    0 0 0 2px #334155,
+    0 0 0 4px #000000,
+    inset 1px 1px 0 rgba(255, 255, 255, 0.25),
+    inset -1px -1px 0 rgba(0, 0, 0, 0.8),
+    4px 4px 0 4px rgba(0, 0, 0, 0.75);
+  overflow: hidden;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  pointer-events: auto;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.overworld-minimap:hover {
+  box-shadow:
+    0 0 0 2px #38bdf8,
+    0 0 0 4px #000000,
+    inset 1px 1px 0 rgba(255, 255, 255, 0.35),
+    inset -1px -1px 0 rgba(0, 0, 0, 0.8),
+    5px 5px 0 4px rgba(0, 0, 0, 0.85);
+}
+
+.minimap-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 6px;
+  background: #1e293b;
+  border-bottom: 2px solid #000000;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.minimap-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.minimap-biome {
+  font-family: 'VT323', 'Tiny5', monospace;
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 700;
+  color: #38bdf8;
+  letter-spacing: 0.5px;
+  text-shadow: 1px 1px 0 #000000;
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.minimap-coords {
+  font-family: 'VT323', 'Tiny5', monospace;
+  font-size: 13px;
+  line-height: 1;
+  color: #94a3b8;
+  letter-spacing: 0.5px;
+  background: #090e17;
+  border: 1px solid #000000;
+  border-radius: 0;
+  padding: 1px 4px;
+  box-shadow: inset 1px 1px 0 #000000;
+  text-shadow: 1px 1px 0 #000000;
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+  white-space: nowrap;
+}
+
+.minimap-expand-btn {
+  background: #253349;
+  border: 1px solid #000000;
+  border-radius: 0;
+  color: #f8fafc;
+  cursor: pointer;
+  padding: 1px 5px;
+  font-size: 11px;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    inset 1px 1px 0 #475569,
+    inset -1px -1px 0 #0f172a,
+    1px 1px 0 #000000;
+  transition: background 0.1s ease;
+}
+
+.minimap-expand-btn:hover {
+  background: #0284c7;
+  border-color: #000000;
+  box-shadow:
+    inset 1px 1px 0 #38bdf8,
+    inset -1px -1px 0 #0369a1,
+    1px 1px 0 #000000;
+  transform: none;
+}
+
+.minimap-expand-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow:
+    inset -1px -1px 0 #38bdf8,
+    inset 1px 1px 0 #0369a1;
+}
+
+.minimap-canvas-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3px;
+  background: #050811;
+  border: 1px solid #000000;
+  box-shadow:
+    inset 2px 2px 0 #000000,
+    inset -1px -1px 0 #1e293b;
+}
+
+.minimap-canvas {
+  width: 160px;
+  height: 160px;
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  cursor: pointer;
+  border-radius: 0;
+  border: 1px solid #000000;
 }

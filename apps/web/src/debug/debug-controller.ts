@@ -255,6 +255,11 @@ export class DebugOverlayController {
       { id: '#chkTallGrass', key: 'showTallGrass' },
       { id: '#chkPlants', key: 'showPlants' },
       { id: '#chkBerries', key: 'showBerries' },
+      { id: '#chkClouds', key: 'showClouds' },
+      { id: '#chkLeaves', key: 'showLeaves' },
+      { id: '#chkRain', key: 'showRain' },
+      { id: '#chkDarkFog', key: 'showDarkFog' },
+      { id: '#chkSandstorm', key: 'showSandstorm' },
       { id: '#chkHeatmap', key: 'showHeatmap' },
       { id: '#chkEcologyMoisture', key: 'showEcologyMoisture' },
       { id: '#chkEcologyFertility', key: 'showEcologyFertility' },
@@ -631,6 +636,24 @@ export class DebugOverlayController {
         if (phase) {
           this.bridge.setWorldTimePhase(phase);
           this.refreshWorldTimeDisplay();
+        }
+      });
+    });
+
+    const weatherButtons = this.overlayEl.querySelectorAll<HTMLButtonElement>('.btn-weather-preset');
+    weatherButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const weather = btn.dataset.weather;
+        if (weather && this.bridge.setWeather) {
+          weatherButtons.forEach((b) => {
+            b.style.boxShadow = 'none';
+            b.style.outline = 'none';
+            b.style.filter = 'brightness(0.9)';
+          });
+          btn.style.boxShadow = '0 0 10px rgba(56, 189, 248, 0.8)';
+          btn.style.outline = '2px solid #38bdf8';
+          btn.style.filter = 'brightness(1.2)';
+          this.bridge.setWeather(weather);
         }
       });
     });

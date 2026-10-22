@@ -39,6 +39,7 @@ export type ManifestAssetKey =
   | 'menu_icon_quit'
   | 'pokemon_shiny_icon'
   | 'party_databox_normal'
+  | 'map_player_head'
   | (string & {});
 
 /**
@@ -444,3 +445,10 @@ export const BAG_ASSETS = {
     return resolveAsset('bag_panel_rect_desel', '/Graphics/Bag/ptpanel_rect_desel.png');
   },
 } as const;
+
+export const MAP_ASSETS = {
+  get playerHead(): string {
+    return resolveAsset('map_player_head', '/assets/ui/map_player_head.png');
+  },
+} as const;
+
