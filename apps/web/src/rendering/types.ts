@@ -29,6 +29,7 @@ export interface RenderOptions {
   showEcologyFertility: boolean;
   showEcologyDensity: boolean;
   showEcologyZone: boolean;
+  showClimateTemperature: boolean;
 }
 
 export const DEFAULT_RENDER_OPTIONS: RenderOptions = {
@@ -55,6 +56,7 @@ export const DEFAULT_RENDER_OPTIONS: RenderOptions = {
   showEcologyFertility: false,
   showEcologyDensity: false,
   showEcologyZone: false,
+  showClimateTemperature: false,
 };
 
 export const TILE_KEY_BY_ID: Record<number, string> = {
@@ -288,4 +290,3 @@ export const TILE_KEY_BY_ID: Record<number, string> = {
   [TILE_IDS.shore_corner_out_se]: 'shore_anim_corner_out',
   [TILE_IDS.shore_corner_out_ne]: 'shore_anim_corner_out',
 };
-

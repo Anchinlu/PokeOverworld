@@ -182,12 +182,27 @@ export class GameRenderer {
     // Update dynamic rain particles (excluded from desert terrain)
     if (this.options.showRain) {
       const weather = this.cloudController.getWeather();
-      this.rainParticleSystem.update(now, bounds, weather, false, false, chunkManager.field, player);
+      this.rainParticleSystem.update(
+        now,
+        bounds,
+        weather,
+        false,
+        false,
+        chunkManager.field,
+        player
+      );
     }
 
     // Update dynamic dark purple-black fog for Dark Land biome
     if (this.options.showDarkFog) {
-      this.darkFogLayer.update(now, player, chunkManager.field, bounds, canvas.width, canvas.height);
+      this.darkFogLayer.update(
+        now,
+        player,
+        chunkManager.field,
+        bounds,
+        canvas.width,
+        canvas.height
+      );
     }
 
     // Update dynamic desert sand particles / sandstorm
@@ -197,7 +212,12 @@ export class GameRenderer {
     }
 
     // Update dynamic snowfall & blizzard in snow biome
-    this.snowParticleSystem.update(now, bounds, chunkManager.field, this.cloudController.getWeather());
+    this.snowParticleSystem.update(
+      now,
+      bounds,
+      chunkManager.field,
+      this.cloudController.getWeather()
+    );
 
     // 0. Render Live Animated Water Waves (Layer -0.1)
     if (this.options.showWater) {
@@ -227,6 +247,9 @@ export class GameRenderer {
     }
     if (this.options.showEcologyZone) {
       this.debugRenderer.renderEcologyZone(ctx, bounds, chunkManager);
+    }
+    if (this.options.showClimateTemperature) {
+      this.debugRenderer.renderClimateTemperature(ctx, bounds, chunkManager);
     }
 
     // 3. Render Tall Grass Patches (Layer 0.5)

@@ -67,3 +67,9 @@ requires updating all of the following together:
 4. `species-spawn.json`
 5. relevant assets and renderer metadata
 6. biome integration tests
+
+## Comprehensive Step-by-Step Implementation Guide
+
+For the full end-to-end tutorial covering asset slicing, 3x3 autotiling, water animation, weather particles, and showcase creation, see:
+- [BIOME_CREATION_GUIDE.md](../BIOME_CREATION_GUIDE.md)
+

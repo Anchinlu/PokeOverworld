@@ -265,6 +265,7 @@ export class DebugOverlayController {
       { id: '#chkEcologyFertility', key: 'showEcologyFertility' },
       { id: '#chkEcologyDensity', key: 'showEcologyDensity' },
       { id: '#chkEcologyZone', key: 'showEcologyZone' },
+      { id: '#chkClimateTemperature', key: 'showClimateTemperature' },
     ];
     for (const item of layerCheckboxes) {
       const chk = this.overlayEl.querySelector<HTMLInputElement>(item.id);
@@ -640,7 +641,8 @@ export class DebugOverlayController {
       });
     });
 
-    const weatherButtons = this.overlayEl.querySelectorAll<HTMLButtonElement>('.btn-weather-preset');
+    const weatherButtons =
+      this.overlayEl.querySelectorAll<HTMLButtonElement>('.btn-weather-preset');
     weatherButtons.forEach((btn) => {
       btn.addEventListener('click', () => {
         const weather = btn.dataset.weather;

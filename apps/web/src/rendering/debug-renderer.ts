@@ -3,6 +3,7 @@ import type { ViewportBounds } from '../core/camera';
 import type { Player } from '../entities/player';
 import type { ChunkManager } from '../maps/chunk-manager';
 import { sampleEcology, resolveWorldBiome } from '../maps/ecology';
+import { sampleClimate } from '../maps/climate';
 import { getWildSpriteAabb } from '../wildlife/behavior/movement/wild-hitbox';
 import { WILDLIFE_FREEZE_DISTANCE_TILES } from '../wildlife/behavior/wildlife-simulator';
 
@@ -151,6 +152,39 @@ export class DebugRenderer {
           else if (zone === 'light_forest') ctx.fillStyle = 'rgba(74, 222, 128, 0.55)';
           else if (zone === 'dark_land') ctx.fillStyle = 'rgba(71, 36, 92, 0.7)';
 
+          ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
+        }
+      }
+    }
+    ctx.restore();
+  }
+
+  public renderClimateTemperature(
+    ctx: CanvasRenderingContext2D,
+    bounds: ViewportBounds,
+    chunkManager: ChunkManager
+  ): void {
+    ctx.save();
+    for (const chunk of chunkManager.renderChunks) {
+      for (let ly = 0; ly < 16; ly++) {
+        for (let lx = 0; lx < 16; lx++) {
+          const gx = chunk.cx * 16 + lx;
+          const gy = chunk.cy * 16 + ly;
+          const x = gx * TILE_SIZE;
+          const y = gy * TILE_SIZE;
+          if (
+            x + TILE_SIZE < bounds.minX ||
+            x > bounds.maxX ||
+            y + TILE_SIZE < bounds.minY ||
+            y > bounds.maxY
+          ) {
+            continue;
+          }
+
+          const elevation = chunk.field.isHill(gx, gy) ? 1 : 0;
+          const temperature = sampleClimate(gx, gy, chunk.field.seed, elevation).temperature;
+          const hue = 220 - temperature * 220;
+          ctx.fillStyle = `hsla(${hue}, 85%, 55%, 0.42)`;
           ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
         }
       }

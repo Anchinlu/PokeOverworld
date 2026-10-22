@@ -87,6 +87,9 @@ export function createDebugOverlayHtml(): string {
         <label class="checkbox-item">
           <input type="checkbox" id="chkEcologyZone"> 🗺️ Sinh thái: Vùng
         </label>
+        <label class="checkbox-item" style="grid-column: span 2;">
+          <input type="checkbox" id="chkClimateTemperature"> 🌡️ Climate: Nhiệt độ nền
+        </label>
       </div>
 
       <!-- World Time & Day/Night Controls -->
