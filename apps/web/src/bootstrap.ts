@@ -16,12 +16,18 @@ import {
   storageScreen,
   initPartyMapHud,
   playGameIntro,
+  playWorldIntro,
   showTitleScreen,
   initEvolutionNotification,
   worldMapScreen,
   updateWorldTimeWidget,
   MinimapController,
+  openTrainerCard,
+  radialMenuController,
+  questTrackerController,
+  type PlayerSetupOptions,
 } from './ui';
+import { getStartVillageBuildings } from './maps/terrain-field/start-village';
 import { initDesktopShell } from './shell/desktop';
 import { installBrowserGuards } from './shell/browser-guards';
 import type { Direction } from '@pokemon/shared-types';
@@ -33,6 +39,7 @@ import {
   saveGameRepository,
   autosaveCoordinator,
   createPartyPokemon,
+  createDefaultPlayerProfile,
   type SaveGameData,
 } from './domain';
 import { pokemonCatalog } from './data';
@@ -41,6 +48,14 @@ import { createBattler } from './battle/battle-factory';
 import type { BattleMove, BattlerPokemon } from './battle/types';
 import { battleSePlayer } from './audio/battle-se';
 import { DebugOverlayController, type DebugBridge, type CustomBotConfig } from './debug';
+import { InteriorManager } from './interior';
+import { palletPrologueEventManager } from './npc';
+import { storyManager } from './story';
+
+interface WorldLaunchOptions {
+  deferInitialPrologue?: boolean;
+  onReady?: (session: GameSession) => void;
+}
 
 declare global {
   interface Window {
@@ -49,8 +64,16 @@ declare global {
     saveGame: () => SaveGameData;
     loadGame: () => SaveGameData | null;
     replayIntro: () => void;
+    playWorldIntro: (onComplete?: () => void) => void;
     showTitleScreen: () => void;
-    launchGameWorld: (seed?: number, slotId?: string, isNewWorld?: boolean) => void;
+    launchGameWorld: (
+      seed?: number,
+      slotId?: string,
+      isNewWorld?: boolean,
+      playerSetup?: PlayerSetupOptions
+    ) => void;
+    triggerPalletPrologue?: () => void;
+    triggerPalletMomFarewell?: () => void;
     quitToTitleScreen?: () => void;
   }
 }
@@ -82,12 +105,16 @@ export async function bootstrap(): Promise<void> {
   // 3. Preload Assets
   const assetLoader = AssetLoader.getDefault();
   try {
-    await assetLoader.loadFromManifest('/assets/manifest.json', (loaded, total) => {
-      const pct = Math.round((loaded / total) * 100);
-      if (loadingText) {
-        loadingText.innerText = `Đang nạp dữ liệu đồ họa Pokémon... (${pct}%)`;
-      }
-    });
+    await assetLoader.loadFromManifest(
+      '/assets/manifest.json',
+      (loaded, total) => {
+        const pct = Math.round((loaded / total) * 100);
+        if (loadingText) {
+          loadingText.innerText = `Đang nạp dữ liệu đồ họa Pokémon... (${pct}%)`;
+        }
+      },
+      { deferBackgroundBiomes: true }
+    );
 
     try {
       await Promise.all([
@@ -106,6 +133,15 @@ export async function bootstrap(): Promise<void> {
     loadingOverlay.style.display = 'none';
   }
 
+  const showWorldGenerationLoading = (message: string): void => {
+    if (loadingText) loadingText.innerText = message;
+    if (loadingOverlay) loadingOverlay.style.display = 'flex';
+  };
+
+  const hideWorldGenerationLoading = (): void => {
+    if (loadingOverlay) loadingOverlay.style.display = 'none';
+  };
+
   // 4. Overworld State Manager & Decoupled Launcher
   let isWorldLaunched = false;
   let debugController: DebugOverlayController | null = null;
@@ -114,19 +150,22 @@ export async function bootstrap(): Promise<void> {
 
   function setOverworldUiVisible(visible: boolean): void {
     const bar = document.querySelector<HTMLElement>('#topRightBar');
-    if (bar) bar.style.display = visible ? '' : 'none';
+    if (bar) bar.style.display = 'none'; // Replaced by Radial Wheel Menu
     const hud = document.querySelector<HTMLElement>('#partyMapHud');
     if (hud) hud.style.display = visible ? '' : 'none';
     const timeWidget = document.querySelector<HTMLElement>('#worldTimeWidget');
     if (timeWidget) timeWidget.style.display = visible ? '' : 'none';
     if (debugController) debugController.setVisible(visible);
     if (minimapController) minimapController.setModalHidden(!visible);
+    questTrackerController.setVisible(visible);
   }
 
   function launchGameWorld(
     seedOverride?: number,
     slotIdOverride?: string,
-    isNewWorld?: boolean
+    isNewWorld?: boolean,
+    playerSetup?: PlayerSetupOptions,
+    launchOptions: WorldLaunchOptions = {}
   ): void {
     if (isWorldLaunched) return;
     isWorldLaunched = true;
@@ -142,21 +181,54 @@ export async function bootstrap(): Promise<void> {
     // slot. Initializing here prevents background saves from falling back to
     // slot_1 while the player is actually using another slot.
     autosaveCoordinator.init(activeSaveSlot);
+    storyManager.reset();
+    palletPrologueEventManager.reset();
 
     let currentSeed = seedOverride ?? 101;
     let currentVersion = 5; // Test worlds use the natural-landmass profile by default.
     let savedPosition: { gx: number; gy: number; direction?: number } | null = null;
+    let savedInterior: any = null;
     let savedTimeMinutes: number | undefined;
     let savedDay: number | undefined;
 
     if (isNewWorld) {
-      // 1. Reset domain services for clean new world state
-      playerService.reset();
-      partyService.reset();
-      inventoryService.reset();
+      // 1. Reset domain services for clean new world state with authentic player setup
+      const trainerName = playerSetup?.name?.trim() || 'Red';
+      const trainerGender = playerSetup?.gender || 'male';
+
+      playerService.reset({
+        ...createDefaultPlayerProfile(trainerName, trainerGender),
+        inventory: {}, // Clean starting inventory (no cheats)
+        pokedexSeenCount: 0,
+        pokedexCaughtCount: 0,
+        pokedexSeenSpecies: [],
+        pokedexCaughtSpecies: [],
+      });
+
+      inventoryService.clear();
+
+      // In authentic story progression, player starts without any Pokémon.
+      // Starter Pokémon is received later through story events (e.g. Professor Oak lab).
+      partyService.reset([]);
       pcStorageService.reset();
       currentSeed = seedOverride ?? Math.floor(Math.random() * 899999) + 100001;
       currentVersion = 5;
+
+      // Authentic Story Start: Continuing directly from Manga Page 6 where Ash
+      // frantically runs in his green pajamas to Professor Oak's Lab:
+      const villageBuildings = getStartVillageBuildings(currentSeed);
+      const lab = villageBuildings.find((b) => b.type === 'lab_okido' || b.id === 'start_lab');
+      const labDoorX = lab?.doorGX ?? 12;
+      const labDoorY = lab?.doorGY ?? 10;
+
+      savedInterior = null;
+      savedPosition = {
+        gx: labDoorX,
+        gy: labDoorY + 7, // Facing North down the approach road leading to Oak's Lab
+        direction: 3, // Facing North towards the Lab stairs
+      };
+      savedTimeMinutes = 390; // 06:30 AM Early Morning Dawn (Sáng sớm bình minh)
+      savedDay = 1;
     } else {
       // 2. Load or continue existing world save
       const hasSave = saveGameRepository.hasSave(activeSaveSlot);
@@ -167,6 +239,9 @@ export async function bootstrap(): Promise<void> {
           currentVersion = loadedData.world?.worldGenVersion ?? 5;
           if (loadedData.world?.position) {
             savedPosition = loadedData.world.position;
+          }
+          if (loadedData.world?.interior) {
+            savedInterior = loadedData.world.interior;
           }
           if (typeof loadedData.world?.worldTimeMinutes === 'number') {
             savedTimeMinutes = loadedData.world.worldTimeMinutes;
@@ -184,6 +259,9 @@ export async function bootstrap(): Promise<void> {
       initialMinutes: savedTimeMinutes,
       initialDay: savedDay,
     });
+    if (isNewWorld) {
+      session.setWeatherOverride('clear'); // Sáng sớm trời trong xanh nắng đẹp
+    }
     const renderer = new GameRenderer(canvas, assetLoader);
     (window as unknown as { gameRenderer: unknown; gameSession: unknown }).gameRenderer = renderer;
     (window as unknown as { gameRenderer: unknown; gameSession: unknown }).gameSession = session;
@@ -195,8 +273,25 @@ export async function bootstrap(): Promise<void> {
       session.follower.snapTo(savedPosition.gx, savedPosition.gy - 1, dir);
     }
 
+    // If loaded existing interior state (e.g. inside bedroom or Oak lab), resume inside room
+    if (savedInterior) {
+      if (isNewWorld) {
+        InteriorManager.getInstance().playerSpriteKey = 'char_ash_pajamas';
+      }
+      InteriorManager.getInstance().restoreSaveState(savedInterior, session.follower);
+    } else if (InteriorManager.getInstance().isInInterior()) {
+      // A previous session may have been closed while indoors. New worlds and
+      // outdoor saves must never inherit that stale singleton interior state.
+      InteriorManager.getInstance().exitCurrentRoom();
+    }
+
+    // The saved-position snap happens after GameSession construction, so the
+    // constructor's initial camera center may still point at the old spawn.
+    session.camera.snapTo(session.player);
+
     // Auto-save fresh world initial state
     if (isNewWorld) {
+      session.player.spriteKey = 'char_ash_pajamas';
       playerService.updatePosition(session.player.gx, session.player.gy, session.player.direction);
       saveGameRepository.save(activeSaveSlot, {
         saveMain: true,
@@ -221,6 +316,86 @@ export async function bootstrap(): Promise<void> {
         },
       });
     }
+
+    // If starting fresh world, automatically begin Pallet Lab Gate cutscene after screen mounts
+    if (isNewWorld && !launchOptions.deferInitialPrologue) {
+      setTimeout(() => {
+        if (!palletPrologueEventManager.isActive()) {
+          palletPrologueEventManager.trigger(session);
+        }
+      }, 600);
+    }
+
+    // Quick Trigger Action Button for testing & dev (disappears once event is completed)
+    const setupPrologueQuickTrigger = () => {
+      let btn = document.getElementById('btnQuickPrologueCutscene') as HTMLButtonElement | null;
+      if (!playerService.hasFlag('pallet_lab_gate_event_done')) {
+        if (!btn) {
+          btn = document.createElement('button');
+          btn.id = 'btnQuickPrologueCutscene';
+          btn.className = 'quick-prologue-btn';
+          btn.innerHTML = '🎬 Sự Kiện Cổng Lab (Cảnh 1-4)';
+          btn.style.cssText = `
+            position: fixed;
+            top: 58px;
+            right: 18px;
+            z-index: 999;
+            background: linear-gradient(180deg, #0284c7 0%, #0369a1 100%);
+            border: 2px solid #38bdf8;
+            color: #ffffff;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.6);
+            transition: transform 0.15s ease;
+          `;
+          btn.addEventListener('mouseenter', () => { if (btn) btn.style.transform = 'scale(1.05)'; });
+          btn.addEventListener('mouseleave', () => { if (btn) btn.style.transform = 'scale(1)'; });
+          btn.addEventListener('click', () => {
+            const lab = palletPrologueEventManager.findOakLab(session);
+            const labDoorX = lab?.doorGX ?? 12;
+            const labDoorY = lab?.doorGY ?? 10;
+            InteriorManager.getInstance().exitCurrentRoom();
+            session.player.snapTo(labDoorX, labDoorY + 7, 3);
+            session.player.spriteKey = 'char_ash_pajamas';
+            session.camera.snapTo(session.player);
+            playerService.setFlag('pallet_lab_gate_event_done', false);
+            palletPrologueEventManager.reset();
+            palletPrologueEventManager.trigger(session);
+          });
+          document.body.appendChild(btn);
+        }
+      } else if (btn) {
+        btn.remove();
+      }
+    };
+    setupPrologueQuickTrigger();
+    playerService.subscribe(() => {
+      setupPrologueQuickTrigger();
+    });
+
+    window.triggerPalletPrologue = () => {
+      const lab = palletPrologueEventManager.findOakLab(session);
+      const labDoorX = lab?.doorGX ?? 12;
+      const labDoorY = lab?.doorGY ?? 10;
+      InteriorManager.getInstance().exitCurrentRoom();
+      session.player.snapTo(labDoorX, labDoorY + 7, 3);
+      session.player.spriteKey = 'char_ash_pajamas';
+      session.camera.snapTo(session.player);
+      playerService.setFlag('pallet_lab_gate_event_done', false);
+      palletPrologueEventManager.reset();
+      palletPrologueEventManager.trigger(session);
+    };
+
+    window.triggerPalletMomFarewell = () => {
+      InteriorManager.getInstance().exitCurrentRoom();
+      playerService.setFlag('pallet_lab_pokedex_received', true);
+      playerService.setFlag('pallet_crowd_mom_farewell_done', false);
+      palletPrologueEventManager.runScene8_MomFarewellAndCrowd(session);
+    };
 
     // Wire Debug Overlay via decoupled Remote Action Bridge
     const debugBridge: DebugBridge = {
@@ -548,6 +723,9 @@ export async function bootstrap(): Promise<void> {
     minimapController.mount(app ?? document.body);
     minimapController.setSession(session);
     minimapController.updatePlayer(session.player.gx, session.player.gy, session.player.direction);
+    if (!playerService.hasFlag('has_town_map')) {
+      minimapController.setModalHidden(true);
+    }
 
     setOverworldUiVisible(true);
 
@@ -659,13 +837,13 @@ export async function bootstrap(): Promise<void> {
                   tier: 0,
                 }
               : undefined,
+          interior: InteriorManager.getInstance().getSaveState() ?? undefined,
         },
       });
-      const slotNum = activeSaveSlot.replace('slot_', '');
       if (res.success) {
-        showBerryToast(`💾 Đã lưu tiến trình thế giới (Slot ${slotNum})!`, '#22c55e');
+        battleSePlayer.playSound('Audio/SE/GUI save choice.ogg', 0.8);
       } else {
-        showBerryToast(`⚠️ Lưu game thất bại! Bộ nhớ lưu trữ có thể đã đầy.`, '#ef4444');
+        battleSePlayer.playSound('Audio/SE/GUI sel buzzer.ogg', 0.8);
       }
       return res;
     };
@@ -684,6 +862,11 @@ export async function bootstrap(): Promise<void> {
           session.player.snapTo(data.world.position.gx, data.world.position.gy, dir);
           session.follower.snapTo(data.world.position.gx, data.world.position.gy - 1, dir);
           minimapController?.forceRefresh();
+        }
+        if (data.world?.interior) {
+          InteriorManager.getInstance().restoreSaveState(data.world.interior, session.follower);
+        } else {
+          InteriorManager.getInstance().exitCurrentRoom();
         }
         if (typeof data.world?.worldTimeMinutes === 'number') {
           session.worldClock.setMinutes(data.world.worldTimeMinutes);
@@ -766,6 +949,8 @@ export async function bootstrap(): Promise<void> {
       if (isBagScreenOpen()) toggleBagScreen();
       if (storageScreen.isVisible()) storageScreen.close();
       if (worldMapScreen.isOpen()) worldMapScreen.close();
+      if (radialMenuController.isOpen()) radialMenuController.close();
+      document.getElementById('btnQuickPrologueCutscene')?.remove();
 
       // 3. Stop the game loop
       loop.stop();
@@ -774,6 +959,7 @@ export async function bootstrap(): Promise<void> {
       // Release the autosave coordinator so the next world launch can bind
       // to the newly selected save slot instead of keeping the old slot.
       autosaveCoordinator.dispose();
+      storyManager.dispose();
       session.destroy();
 
       // 4. Clean up overworld event listeners & debug / minimap controllers
@@ -800,11 +986,11 @@ export async function bootstrap(): Promise<void> {
       // 7. Mount and display Title Screen
       showTitleScreen({
         onStart: () => launchGameWorld(),
-        onNewWorld: (seed, slotId) => launchGameWorld(seed, slotId, true),
+        onNewWorld: (seed, slotId, playerSetup) => {
+          startNewWorldWithIntro(seed, slotId, playerSetup);
+        },
         onLoadWorld: (slotId) => launchGameWorld(undefined, slotId, false),
       });
-
-      showBerryToast('🚪 Đã lưu tiến trình và quay về màn hình chờ!', '#f59e0b');
     };
 
     window.quitToTitleScreen = () => quitToTitleScreen();
@@ -818,9 +1004,81 @@ export async function bootstrap(): Promise<void> {
     const btnMenuOptions = document.querySelector<HTMLButtonElement>('#btnMenuOptions');
     const btnMenuQuit = document.querySelector<HTMLButtonElement>('#btnMenuQuit');
 
+    // Đồng bộ hiển thị các nút chức năng trên thanh menu cố định dựa theo tiến trình người chơi
+    const syncMenuVisibility = () => {
+      const hasPokedex = playerService.hasFlag('has_pokedex');
+      const hasTownMap = playerService.hasFlag('has_town_map');
+
+      if (btnMenuPokedex) {
+        btnMenuPokedex.style.display = hasPokedex ? '' : 'none';
+      }
+      if (btnMenuMap) {
+        btnMenuMap.style.display = hasTownMap ? '' : 'none';
+      }
+    };
+
+    syncMenuVisibility();
+    const unsubPlayerService = playerService.subscribe(() => {
+      syncMenuVisibility();
+    });
+    signal.addEventListener('abort', () => unsubPlayerService());
+
+    // Thiết lập các mục cho Menu Bánh Xe Tròn (Radial Wheel Menu)
+    radialMenuController.setupDefaultItems({
+      onParty: () => togglePartyScreen(),
+      onBag: () => toggleBagScreen(),
+      onPokedex: () => {
+        if (!playerService.hasFlag('has_pokedex')) {
+          battleSePlayer.playSound('Audio/SE/GUI sel buzzer.ogg', 0.6);
+          return;
+        }
+        togglePokedex();
+      },
+      onMap: () => {
+        if (!playerService.hasFlag('has_town_map')) {
+          battleSePlayer.playSound('Audio/SE/GUI sel buzzer.ogg', 0.6);
+          return;
+        }
+        worldMapScreen.toggle(session);
+      },
+      onTrainer: () => openTrainerCard(),
+      onPC: () => storageScreen.toggle(),
+      onOptions: () => {
+        debugController?.toggleCollapse();
+      },
+      onQuit: () => quitToTitleScreen(),
+    });
+
+    radialMenuController.setOnToggle((isOpen) => {
+      session.isInputLocked = isOpen;
+    });
+
+    questTrackerController.init(session);
+
+    // Bật/tắt Radial Menu bằng Nút Giữa Chuột (Middle Mouse Click)
+    const handleMiddleClick = (e: MouseEvent) => {
+      if (e.button === 1) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (session.isBattling || storyManager.isRunning()) {
+          return;
+        }
+
+        radialMenuController.toggle();
+      }
+    };
+
+    window.addEventListener('mousedown', handleMiddleClick, { signal });
+    window.addEventListener('auxclick', handleMiddleClick, { signal });
+
     btnMenuPokedex?.addEventListener(
       'click',
       () => {
+        if (!playerService.hasFlag('has_pokedex')) {
+          showBerryToast('📘 Bạn chưa nhận được Pokémon Zukan (Pokédex)!', '#ef4444');
+          return;
+        }
         togglePokedex();
       },
       { signal }
@@ -853,6 +1111,10 @@ export async function bootstrap(): Promise<void> {
     btnMenuMap?.addEventListener(
       'click',
       () => {
+        if (!playerService.hasFlag('has_town_map')) {
+          showBerryToast('🗺️ Bạn chưa nhận được Bản Đồ Thị Trấn (Town Map)!', '#ef4444');
+          return;
+        }
         if (
           !session.isBattling &&
           !isPokedexOpen() &&
@@ -869,12 +1131,7 @@ export async function bootstrap(): Promise<void> {
     btnMenuTrainer?.addEventListener(
       'click',
       () => {
-        const profile = playerService.getProfile();
-        const leader = partyService.getLeader();
-        showBerryToast(
-          `👤 HLV: ${profile.name} | Tiền: $${profile.money} | Đội hình: ${partyService.getPartySize()}/6 (${leader?.name ?? 'Trống'})`,
-          '#38bdf8'
-        );
+        openTrainerCard();
       },
       { signal }
     );
@@ -883,7 +1140,6 @@ export async function bootstrap(): Promise<void> {
       'click',
       () => {
         debugController?.toggleCollapse();
-        showBerryToast('⚙️ Tùy chọn cài đặt & tham số thế giới Pokémon', '#a855f7');
       },
       { signal }
     );
@@ -945,8 +1201,57 @@ export async function bootstrap(): Promise<void> {
           return;
         }
 
+        // ESC key: Closes radial menu if open, closes any open sub-screens, or opens radial menu
+        if (e.code === 'Escape') {
+          e.preventDefault();
+
+          if (radialMenuController.isOpen()) {
+            radialMenuController.close();
+            return;
+          }
+
+          if (isPokedexOpen()) {
+            togglePokedex();
+            return;
+          }
+          if (isPartyScreenOpen()) {
+            togglePartyScreen();
+            return;
+          }
+          if (isBagScreenOpen()) {
+            toggleBagScreen();
+            return;
+          }
+          if (storageScreen.isVisible()) {
+            storageScreen.close();
+            return;
+          }
+          if (worldMapScreen.isOpen()) {
+            worldMapScreen.close();
+            return;
+          }
+
+          if (session.isBattling || storyManager.isRunning()) {
+            return;
+          }
+
+          radialMenuController.open();
+          return;
+        }
+
         if (e.code === 'KeyQ') {
+          if (!playerService.hasFlag('has_pokedex')) {
+            battleSePlayer.playSound('Audio/SE/GUI sel buzzer.ogg', 0.6);
+            e.preventDefault();
+            return;
+          }
           togglePokedex();
+          e.preventDefault();
+          return;
+        }
+
+        if (e.code === 'KeyJ') {
+          questTrackerController.toggleCollapse();
           e.preventDefault();
           return;
         }
@@ -970,6 +1275,11 @@ export async function bootstrap(): Promise<void> {
         }
 
         if (e.code === 'KeyN') {
+          if (!playerService.hasFlag('has_town_map')) {
+            battleSePlayer.playSound('Audio/SE/GUI sel buzzer.ogg', 0.6);
+            e.preventDefault();
+            return;
+          }
           if (
             session.isBattling ||
             isPokedexOpen() ||
@@ -986,6 +1296,11 @@ export async function bootstrap(): Promise<void> {
         }
 
         if (e.code === 'KeyM') {
+          if (!playerService.hasFlag('has_town_map')) {
+            battleSePlayer.playSound('Audio/SE/GUI sel buzzer.ogg', 0.6);
+            e.preventDefault();
+            return;
+          }
           if (
             !session.isBattling &&
             !isPokedexOpen() &&
@@ -1025,25 +1340,32 @@ export async function bootstrap(): Promise<void> {
       }
 
       // Synchronize overworld weather with WeatherCloudController
+      const isInside = InteriorManager.getInstance().isInInterior();
       renderer.getCloudController().setWeather(session.getWeather());
-      renderer.getCloudController().setPaused(session.isBattling || document.hidden);
+      renderer.getCloudController().setPaused(session.isBattling || isInside || document.hidden);
 
       const collisionEnabled = debugController?.isCollisionEnabled() ?? true;
       const { pChunkX, pChunkY } = session.update(dtScale, collisionEnabled);
 
+      const hasTownMap = playerService.hasFlag('has_town_map');
       minimapController?.setModalHidden(
-        session.isBattling ||
+        !hasTownMap ||
+          session.isBattling ||
+          isInside ||
           isPokedexOpen() ||
           isPartyScreenOpen() ||
           isBagScreenOpen() ||
           storageScreen.isVisible() ||
-          worldMapScreen.isOpen()
+          worldMapScreen.isOpen() ||
+          radialMenuController.isOpen()
       );
       minimapController?.updatePlayer(
         session.player.gx,
         session.player.gy,
         session.player.direction
       );
+
+      questTrackerController.updateTick(session);
 
       hudTick++;
       if (hudTick % 6 === 0) {
@@ -1108,19 +1430,73 @@ export async function bootstrap(): Promise<void> {
         minimapController?.setModalHidden(false);
       }
     });
+
+    // Prime the first outdoor frame before removing the intro overlay. The
+    // initial progressive update generates the critical 3x3 chunk neighborhood
+    // and the synchronous render guarantees the player never sees a blank map.
+    if (!InteriorManager.getInstance().isInInterior()) {
+      session.chunkManager.update(session.player.x, session.player.y, { progressive: true });
+    }
+    renderer.render(
+      session.camera,
+      session.player,
+      session.follower,
+      session.chunkManager,
+      session.getAmbientLight(),
+      session.getDayPhase()
+    );
     loop.start();
+    launchOptions.onReady?.(session);
   }
 
+  const startNewWorldWithIntro = (
+    seed: number,
+    slotId: string,
+    playerSetup?: PlayerSetupOptions
+  ): void => {
+    // Reuse the existing lightweight loading page while terrain/climate
+    // generation and the initial chunk neighborhood are prepared.
+    showWorldGenerationLoading('Đang khởi tạo thế giới...');
+
+    // Yield once so the loading page paints before synchronous world setup.
+    window.setTimeout(() => {
+      showWorldGenerationLoading('Đang phân tích địa hình và tìm vùng khởi đầu...');
+      launchGameWorld(seed, slotId, true, playerSetup, {
+        deferInitialPrologue: true,
+        onReady: (session) => {
+          hideWorldGenerationLoading();
+          playWorldIntro({
+            onComplete: () => {
+              void palletPrologueEventManager.trigger(session);
+            },
+            onSkip: () => {
+              void palletPrologueEventManager.trigger(session);
+            },
+          });
+        },
+      });
+    }, 40);
+  };
+
   // 10. Global Diagnostic Hooks
-  window.launchGameWorld = (seed?: number, slotId?: string, isNewWorld?: boolean) =>
-    launchGameWorld(seed, slotId, isNewWorld);
+  window.launchGameWorld = (
+    seed?: number,
+    slotId?: string,
+    isNewWorld?: boolean,
+    playerSetup?: PlayerSetupOptions
+  ) => launchGameWorld(seed, slotId, isNewWorld, playerSetup);
   window.replayIntro = () => {
     playGameIntro();
+  };
+  window.playWorldIntro = (onComplete?: () => void) => {
+    playWorldIntro({ onComplete: onComplete ?? (() => {}) });
   };
   window.showTitleScreen = () => {
     showTitleScreen({
       onStart: () => launchGameWorld(),
-      onNewWorld: (seed, slotId) => launchGameWorld(seed, slotId, true),
+      onNewWorld: (seed, slotId, playerSetup) => {
+        startNewWorldWithIntro(seed, slotId, playerSetup);
+      },
       onLoadWorld: (slotId) => launchGameWorld(undefined, slotId, false),
     });
   };
@@ -1140,8 +1516,8 @@ export async function bootstrap(): Promise<void> {
       onStart: () => {
         launchGameWorld();
       },
-      onNewWorld: (seed, slotId) => {
-        launchGameWorld(seed, slotId, true);
+      onNewWorld: (seed, slotId, playerSetup) => {
+        startNewWorldWithIntro(seed, slotId, playerSetup);
       },
       onLoadWorld: (slotId) => {
         launchGameWorld(undefined, slotId, false);

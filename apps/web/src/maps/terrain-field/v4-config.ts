@@ -84,9 +84,9 @@ export const V4_CONFIG = {
   ISLAND_MAX_CELLS: 360,
 
   // The start location is selected from a genuinely flat area during macro
-  // planning. Keep only a small local guard for the village footprint.
-  START_CORE_RADIUS: 16,
-  START_SEARCH_RADIUS: 20,
+  // planning. Expand to 30 tiles radius for spacious procedural starter village safe basin.
+  START_CORE_RADIUS: 30,
+  START_SEARCH_RADIUS: 36,
   START_LAND_THRESHOLD: 0.64,
   START_HILL_THRESHOLD: 0.58,
 
@@ -110,7 +110,54 @@ export const V4_CONFIG = {
   // Snow should be discoverable on the default/test seeds while remaining a
   // broad regional biome rather than isolated noise pixels.
   SNOW_THRESHOLD: 0.58,
+  ROCKY_SCALE: 180,
+  ROCKY_SALT: 4206,
+  ROCKY_THRESHOLD: 0.66,
+  HIGH_CLIFF_SCALE: 56,
+  HIGH_CLIFF_SALT: 4207,
+  HIGH_CLIFF_THRESHOLD: 0.58,
+
+  // Apricorn Plain is a rare sub-biome of ordinary meadow. Keep its field
+  // higher-threshold and regional scale so it forms rare, prized groves.
+  APRICORN_SCALE: 220,
+  APRICORN_SALT: 9421,
+  APRICORN_THRESHOLD: 0.66,
+  APRICORN_MIN_COMPONENT_TILES: 48,
 } as const;
+
+/**
+ * Natural-landmass special biomes use broader regional fields than classic
+ * V4. The larger scale and lower detail weight prevent Desert/Dark Land from
+ * fragmenting into texture-like islands, while Snow still requires its own
+ * regional signal in addition to the permanent climate gate.
+ */
+export const V5_BIOME_CONFIG = {
+  regionScale: 260,
+  detailScaleFactor: 0.48,
+  detailWeight: 0.06,
+  edgeWeight: 0.045,
+  // Core climate thresholds: used when a tile is inside the Whittaker core zone.
+  desertCoreThreshold: 0.42,
+  darkCoreThreshold: 0.56,
+  autumnCoreThreshold: 0.5,
+  snowCoreThreshold: 0.34,
+  rockyCoreThreshold: 0.44,
+  // Transition climate thresholds: higher regional score required to extend
+  // organic peninsulas into the climate transition band.
+  desertThreshold: 0.64,
+  darkThreshold: 0.68,
+  autumnThreshold: 0.66,
+  snowThreshold: 0.52,
+  rockyThreshold: 0.62,
+  highCliffThreshold: 0.58,
+  // Minimum connected tiles inside a local plan window to prevent tiny
+  // isolated "mini biomes".
+  minBiomeComponentTiles: 20,
+  // Interior margin (in tiles) keeping elevated hills strictly inside a
+  // single biome's territory away from the boundary grass fringe.
+  hillBiomeInteriorMargin: 2,
+} as const;
+
 
 export interface V4SourceOffset {
   readonly gx: number;

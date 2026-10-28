@@ -10,6 +10,7 @@ export const TERRAIN = {
   DARK_LAND: 7,
   AUTUMN: 8,
   SNOW: 9,
+  ROCKY_HIGHLAND: 10,
 } as const;
 
 export const TILE_IDS = {
@@ -166,6 +167,32 @@ export const TILE_IDS = {
   ice_snow_in_tr: 560,
   ice_snow_in_bl: 561,
   ice_snow_in_br: 562,
+  ground_rock_pure: 570,
+  ground_rock_top: 571,
+  ground_rock_bot: 572,
+  ground_rock_left: 573,
+  ground_rock_right: 574,
+  ground_rock_tl: 575,
+  ground_rock_tr: 576,
+  ground_rock_bl: 577,
+  ground_rock_br: 578,
+  ground_rock_in_tl: 579,
+  ground_rock_in_tr: 580,
+  ground_rock_in_bl: 581,
+  ground_rock_in_br: 582,
+  cliff_rock_pure: 585,
+  cliff_rock_top: 586,
+  cliff_rock_bot: 587,
+  cliff_rock_left: 588,
+  cliff_rock_right: 589,
+  cliff_rock_tl: 590,
+  cliff_rock_tr: 591,
+  cliff_rock_bl: 592,
+  cliff_rock_br: 593,
+  cliff_rock_in_tl: 594,
+  cliff_rock_in_tr: 595,
+  cliff_rock_in_bl: 596,
+  cliff_rock_in_br: 597,
   tree_autumn: 501,
   tree_vibrant: 502,
   tree_coastal: 503,
@@ -179,6 +206,24 @@ export const TILE_IDS = {
   tall_grass_dark: 611,
   tall_grass_autumn: 612,
   tall_grass_snow: 613,
+  high_cliff_rock_pure: 620,
+  high_cliff_rock_top: 621,
+  high_cliff_rock_bot: 622,
+  high_cliff_rock_left: 623,
+  high_cliff_rock_right: 624,
+  high_cliff_rock_tl: 625,
+  high_cliff_rock_tr: 626,
+  high_cliff_rock_bl: 627,
+  high_cliff_rock_br: 628,
+  high_cliff_rock_bot_upper: 629,
+  high_cliff_rock_bl_upper: 630,
+  high_cliff_rock_br_upper: 631,
+  high_cliff_rock_in_tl: 632,
+  high_cliff_rock_in_tr: 633,
+  high_cliff_rock_in_bl: 634,
+  high_cliff_rock_in_br: 635,
+  high_cliff_rock_in_bl_upper: 636,
+  high_cliff_rock_in_br_upper: 637,
   water_pure: 700,
   water_top: 701,
   water_bot: 702,
@@ -235,19 +280,49 @@ export const TILE_IDS = {
   water_snow_in_bl: 781,
   water_snow_in_br: 782,
   water_snow_curve: 783,
+  water_rock_pure: 785,
+  water_rock_top: 786,
+  water_rock_bot: 787,
+  water_rock_left: 788,
+  water_rock_right: 789,
+  water_rock_tl: 790,
+  water_rock_tr: 791,
+  water_rock_bl: 792,
+  water_rock_br: 793,
+  water_rock_in_tl: 794,
+  water_rock_in_tr: 795,
+  water_rock_in_bl: 796,
+  water_rock_in_br: 797,
+  water_rock_curve: 798,
 } as const;
 
 export function isShoreTile(tileId: number): boolean {
   return tileId >= 731 && tileId <= 742;
 }
 
-export function isWaterTile(tileId: number): boolean {
+export function isOceanOrShoreTile(tileId: number): boolean {
+  return tileId >= 730 && tileId <= 742;
+}
+
+export function isBridgeTile(tileId: number): boolean {
+  return tileId === TILE_IDS.bridge_wood_h || tileId === TILE_IDS.bridge_wood_v;
+}
+
+export function isFreshwaterTile(tileId: number): boolean {
   return (
     (tileId >= 700 && tileId <= 712) ||
-    (tileId >= 730 && tileId <= 742) ||
     (tileId >= 750 && tileId <= 763) ||
-    (tileId >= 770 && tileId <= 783)
+    (tileId >= 770 && tileId <= 783) ||
+    (tileId >= 785 && tileId <= 798)
   );
+}
+
+export function isAnimatedWaterOrShoreTile(tileId: number): boolean {
+  return isFreshwaterTile(tileId) || isBridgeTile(tileId) || isOceanOrShoreTile(tileId);
+}
+
+export function isWaterTile(tileId: number): boolean {
+  return isFreshwaterTile(tileId) || isOceanOrShoreTile(tileId);
 }
 
 export function isDesertTile(tileId: number): boolean {
@@ -277,6 +352,23 @@ export function isSnowTile(tileId: number): boolean {
     (tileId >= 550 && tileId <= 562) ||
     tileId === TILE_IDS.tall_grass_snow ||
     (tileId >= 770 && tileId <= 783)
+  );
+}
+
+export function isRockyCliffTile(tileId: number): boolean {
+  return tileId >= 585 && tileId <= 597;
+}
+
+export function isHighCliffTile(tileId: number): boolean {
+  return tileId >= 620 && tileId <= 637;
+}
+
+export function isRockyHighlandTile(tileId: number): boolean {
+  return (
+    (tileId >= 570 && tileId <= 582) ||
+    isRockyCliffTile(tileId) ||
+    isHighCliffTile(tileId) ||
+    (tileId >= 785 && tileId <= 798)
   );
 }
 

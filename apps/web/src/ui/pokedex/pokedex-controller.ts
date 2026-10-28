@@ -10,6 +10,7 @@ import { PokemonSpriteAnimator } from './pokedex-sprite';
 import { PokedexState, type PokedexInfoSubTab, type PokedexTab } from './pokedex-state';
 import { PokedexView } from './pokedex-view';
 import { pokemonCryPlayer } from './pokemon-cry';
+import { playerService } from '../../domain/player/player-service';
 
 export class PokedexController {
   public readonly state = new PokedexState();
@@ -436,7 +437,12 @@ export class PokedexController {
 
   private renderPokemonPreview(): void {
     const current = this.filteredPokemon[this.state.selectedIndex];
-    this.view.renderPokemonPreview(current, this.allPokemon.length);
+    const profile = playerService.getProfile();
+    this.view.renderPokemonPreview(
+      current,
+      profile.pokedexSeenCount,
+      profile.pokedexCaughtCount
+    );
 
     if (current && current.sprites.front) {
       this.listAnimator?.load(`/${current.sprites.front}`);
@@ -466,7 +472,8 @@ export class PokedexController {
         }
         this.state.viewMode = 'info';
         this.render();
-      }
+      },
+      (speciesKey) => playerService.hasCaughtSpecies(speciesKey)
     );
   }
 

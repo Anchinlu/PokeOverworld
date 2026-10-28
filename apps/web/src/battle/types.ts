@@ -143,6 +143,7 @@ export interface BattlerPokemon {
   exp: number;
   maxExp: number;
   pokeball?: string;
+  isUncatchable?: boolean;
   heldItem?: string | null;
   lastConsumedItem?: string | null;
   weight?: number;
@@ -272,4 +273,29 @@ export interface BattleWishState {
   turnsLeft: number;
   healAmount: number;
   cureStatus: boolean;
+}
+
+export interface LevelUpStatBoost {
+  pokemonName: string;
+  pokemonSpeciesKey: string;
+  oldLevel: number;
+  newLevel: number;
+  oldStats: {
+    hp: number;
+    attack: number;
+    defense: number;
+    spAtk: number;
+    spDef: number;
+    speed: number;
+  };
+  newStats: {
+    hp: number;
+    attack: number;
+    defense: number;
+    spAtk: number;
+    spDef: number;
+    speed: number;
+  };
+  hpGained: number;
+  onConfirm?: () => void;
 }

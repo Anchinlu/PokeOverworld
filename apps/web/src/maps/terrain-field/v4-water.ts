@@ -21,7 +21,20 @@ export interface V4LakePlacement {
   readonly phase: number;
 }
 
+const LAKE_PLACEMENT_CACHE_LIMIT = 1024;
 const lakePlacementCache = new Map<string, V4LakePlacement | null>();
+
+function cacheLakePlacement(
+  key: string,
+  value: V4LakePlacement | null
+): V4LakePlacement | null {
+  if (lakePlacementCache.size >= LAKE_PLACEMENT_CACHE_LIMIT) {
+    const oldestKey = lakePlacementCache.keys().next().value;
+    if (oldestKey !== undefined) lakePlacementCache.delete(oldestKey);
+  }
+  lakePlacementCache.set(key, value);
+  return value;
+}
 
 function getRiverCenterY(gx: number, band: number, seed: number): number {
   const bandBase =
@@ -123,8 +136,7 @@ export function getV4LakePlacement(
   const isHomeLake = cellX === 0 && cellY === 0;
   const spawnRoll = seededHash(cellX, cellY, seed + LAKE_PLACEMENT_SALT);
   if (!isHomeLake && spawnRoll >= 0.5) {
-    lakePlacementCache.set(key, null);
-    return null;
+    return cacheLakePlacement(key, null);
   }
 
   const jitterX = (seededHash(cellX + 11, cellY - 7, seed + LAKE_PLACEMENT_SALT) - 0.5) * 82;
@@ -142,8 +154,7 @@ export function getV4LakePlacement(
     radiusY,
     phase: seededHash(cellX + 43, cellY - 19, seed + LAKE_SHAPE_SALT) * 1.7,
   };
-  lakePlacementCache.set(key, placement);
-  return placement;
+  return cacheLakePlacement(key, placement);
 }
 
 function isV4LakeShapeTile(gx: number, gy: number, lake: V4LakePlacement): boolean {

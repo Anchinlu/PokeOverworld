@@ -222,5 +222,33 @@
       "curious": 0.05,
       "alert": 0.05
     }
+  },
+  "aggressive_bug": {
+    "id": "aggressive_bug",
+    "temperament": "aggressive",
+    "social": "herd",
+    "activity": "all_day",
+    "senses": {
+      "detectRadius": 6,
+      "runNoiseMult": 1.6,
+      "grassStealthMult": 0.85
+    },
+    "needs": {
+      "hungerRate": 0.002,
+      "energyRate": 0.001
+    },
+    "anchors": ["tree", "tall_grass"],
+    "threat": {
+      "fleeBelowRatio": 0.0,
+      "warnAboveRatio": 0.0
+    },
+    "moveSpeed": 1.2,
+    "weights": {
+      "wander": 0.1,
+      "forage": 0.1,
+      "rest": 0.05,
+      "curious": 0.05,
+      "alert": 0.7
+    }
   }
 }

@@ -13,7 +13,7 @@ describe('Species behavior registry and overworld weather', () => {
     const databaseKeys = Object.values(database.pokemon).map((entry) => entry.speciesKey);
     const coveredKeys = getSpeciesBehaviorCoverage();
 
-    expect(new Set(coveredKeys).size).toBe(151);
+    expect(new Set(coveredKeys).size).toBe(databaseKeys.length);
     expect(new Set(coveredKeys)).toEqual(new Set(databaseKeys));
   });
 

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Thử Nghiệm Sự Kiện Cổng Viện Okido (Pallet Town Prologue: Scenes 1-4)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/src/style.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #020617;
+      color: #f8fafc;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+    header {
+      background: #0f172a;
+      border-bottom: 2px solid #38bdf8;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 10;
+    }
+    h1 {
+      margin: 0;
+      font-size: 18px;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .badge {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: #0284c7;
+      color: #ffffff;
+      font-weight: bold;
+    }
+    .controls-bar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .btn-action {
+      background: #1e293b;
+      border: 1px solid #38bdf8;
+      color: #f8fafc;
+      padding: 6px 14px;
+      border-radius: 4px;
+      font-size: 13px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+    .btn-action:hover {
+      background: #0284c7;
+      color: #ffffff;
+    }
+    .btn-action.primary {
+      background: linear-gradient(180deg, #0284c7 0%, #0369a1 100%);
+      border-color: #67e8f9;
+      color: #ffffff;
+    }
+    .btn-action.primary:hover {
+      background: linear-gradient(180deg, #0369a1 0%, #075985 100%);
+    }
+    .canvas-container {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #030712;
+    }
+    canvas {
+      display: block;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+    .info-hud {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid #38bdf8;
+      border-radius: 6px;
+      padding: 12px 16px;
+      font-size: 13px;
+      line-height: 1.6;
+      max-width: 320px;
+      pointer-events: none;
+    }
+    .info-hud h3 {
+      margin: 0 0 6px 0;
+      color: #facc15;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>
+      Sự Kiện Cổng & Bên Trong Viện Nghiên Cứu Okido
+      <span class="badge">Phân Cảnh 1 - 5</span>
+    </h1>
+    <div class="controls-bar">
+      <button class="btn-action primary" id="btnRunAll">▶ Chạy Toàn Bộ Cảnh 1 - 5</button>
+      <button class="btn-action" id="btnScene1">Cảnh 1: Va Chạm</button>
+      <button class="btn-action" id="btnScene2">Cảnh 2: Gary Chế Giễu</button>
+      <button class="btn-action" id="btnScene3">Cảnh 3: Gary & Dân Làng Rời Đi</button>
+      <button class="btn-action" id="btnScene4">Cảnh 4: Giáo Sư Okido</button>
+      <button class="btn-action" id="btnScene5">Cảnh 5: Bệ Máy Lab, Pikachu & Điện Giật</button>
+      <button class="btn-action" id="btnReset">Đặt Lại</button>
+    </div>
+  </header>
+
+  <div class="canvas-container">
+    <canvas id="stageCanvas" width="800" height="600"></canvas>
+    <div class="info-hud">
+      <h3>Trạng Thái Phân Cảnh:</h3>
+      <div id="hudSceneDesc">Bấm nút để kích hoạt phân cảnh mở đầu.</div>
+      <div id="hudActorsDesc" style="color: #94a3b8; font-size: 12px; margin-top: 6px;"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { AssetLoader } from '/src/rendering/asset-loader.ts';
+    import { Player } from '/src/entities/player.ts';
+    import { Follower } from '/src/entities/follower.ts';
+    import { Camera } from '/src/core/camera.ts';
+    import { WorldClock } from '/src/core/world-clock.ts';
+    import { getAmbientLightProfile } from '/src/world/ambient-light.ts';
+    import { PalletPrologueEventManager } from '/src/npc/pallet-prologue-event.ts';
+    import { drawNPCEmoteBubble } from '/src/npc/npc-behavior-controller.ts';
+    import { playerService } from '/src/domain/index.ts';
+    import { InteriorManager } from '/src/interior/index.ts';
+
+    const canvas = document.getElementById('stageCanvas');
+    const ctx = canvas.getContext('2d');
+    const hudScene = document.getElementById('hudSceneDesc');
+    const hudActors = document.getElementById('hudActorsDesc');
+
+    const loader = AssetLoader.getDefault();
+    const eventManager = PalletPrologueEventManager.getInstance();
+    const interior = InteriorManager.getInstance();
+
+    // Setup Mock Session with WorldClock (06:30 AM Early Morning Dawn) & Clear Weather
+    const player = new Player(12, 13, 3);
+    player.spriteKey = 'char_ash_pajamas';
+
+    const follower = new Follower('PIKACHU', player);
+    follower.visible = false;
+
+    const worldClock = new WorldClock(390, 1);
+    let weatherOverride = 'clear';
+
+    const mockSession = {
+      player,
+      follower,
+      worldClock,
+      setWeatherOverride: (w) => {
+        weatherOverride = w;
+      },
+      getWeather: () => weatherOverride || 'clear',
+      getAmbientLight: () => getAmbientLightProfile(worldClock.getExactMinutes(), weatherOverride || 'clear'),
+      chunkManager: {
+        activeChunks: [
+          {
+            buildings: [
+              {
+                id: 'start_lab',
+                type: 'lab_okido',
+                gx: 9,
+                gy: 7,
+                doorGX: 12,
+                doorGY: 10,
+                doorWidthTiles: 2,
+              }
+            ]
+          }
+        ]
+      }
+    };
+
+    const camera = new Camera();
+    camera.zoom = 2.0;
+
+    let isLoaded = false;
+    const keysPressed = new Set();
+    window.addEventListener('keydown', (e) => {
+      keysPressed.add(e.code);
+      if (e.code === 'Space' && interior.isInInterior() && !eventManager.isActive()) {
+        interior.handleInteract(follower);
+      }
+    });
+    window.addEventListener('keyup', (e) => {
+      keysPressed.delete(e.code);
+    });
+
+    async function init() {
+      await loader.loadFromManifest('/assets/manifest.json');
+      isLoaded = true;
+      hudScene.textContent = 'Đã tải xong tài nguyên! Sẵn sàng diễn hoạt cảnh 1-5.';
+      requestAnimationFrame(renderLoop);
+    }
+
+    function renderLoop() {
+      if (!isLoaded) return;
+
+      // Update player and event actors
+      player.update(1.0);
+      eventManager.update(1.0);
+
+      // Nếu đang trong phòng lab nội thất (thế giới thật)
+      if (interior.isInInterior()) {
+        let dx = 0, dy = 0, isMoving = false;
+        if (!eventManager.isActive()) {
+          if (keysPressed.has('ArrowUp') || keysPressed.has('KeyW')) { dy = -1; isMoving = true; }
+          else if (keysPressed.has('ArrowDown') || keysPressed.has('KeyS')) { dy = 1; isMoving = true; }
+          else if (keysPressed.has('ArrowLeft') || keysPressed.has('KeyA')) { dx = -1; isMoving = true; }
+          else if (keysPressed.has('ArrowRight') || keysPressed.has('KeyD')) { dx = 1; isMoving = true; }
+        }
+        interior.update({ dx, dy, isMoving }, 1.0, keysPressed.has('ShiftLeft') || keysPressed.has('ShiftRight'), follower);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.save();
+        camera.applyTransform(ctx, canvas.width, canvas.height);
+        ctx.imageSmoothingEnabled = false;
+        interior.render(ctx, camera, player, follower, loader, canvas.width, canvas.height);
+        ctx.restore();
+        hudActors.textContent = 'Bối cảnh: Phòng Nghiên Cứu Giáo Sư Okido (Thế Giới Thật) | Nhận Pikachu | Dùng phím mũi tên di chuyển, Space tương tác';
+        requestAnimationFrame(renderLoop);
+        return;
+      }
+
+      // Camera center around lab entrance
+      camera.x = 12 * 32;
+      camera.y = 12 * 32;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.save();
+      camera.applyTransform(ctx, canvas.width, canvas.height);
+      ctx.imageSmoothingEnabled = false;
+
+      // 1. Draw grass ground
+      const grassImg = loader.getImage('lab_floor_inner') || loader.getImage('grass_1');
+      for (let y = 6; y <= 20; y++) {
+        for (let x = 6; x <= 18; x++) {
+          if (grassImg) {
+            ctx.drawImage(grassImg, x * 32, y * 32, 32, 32);
+          }
+        }
+      }
+
+      // 2. Draw Lab facade at gx: 9, gy: 7
+      const labImg = loader.getImage('building_okido') || loader.getImage('nhà tiến sĩ okido');
+      if (labImg) {
+        ctx.drawImage(labImg, 9 * 32 - 16, 7 * 32 - 32, 224, 128);
+      }
+
+      // 3. Collect render items for Y-sorting
+      const renderList = [];
+
+      // Add Player
+      const pImg = loader.getImage(player.spriteKey || 'char_ash_pajamas') || loader.getImage('char_red_sheet');
+      renderList.push({
+        ySort: player.y + 58,
+        draw: (c) => {
+          // Shadow
+          c.fillStyle = 'rgba(0, 0, 0, 0.3)';
+          c.beginPath();
+          c.ellipse(player.x + 32, player.y + 58, 12, 6, 0, 0, Math.PI * 2);
+          c.fill();
+
+          if (pImg) {
+            const fw = pImg.naturalWidth / 4;
+            const fh = pImg.naturalHeight / 4;
+            c.drawImage(pImg, player.frame * fw, player.direction * fh, fw, fh, player.x, player.y, 64, 64);
+          }
+
+          if (player.activeEmote && player.emoteTimerMs > 0) {
+            drawNPCEmoteBubble(c, player.x + 32, player.y + 8, player.activeEmote, player.emoteTimerMs);
+          }
+        }
+      });
+
+      // Add Cutscene Actors
+      for (const actor of eventManager.getActors()) {
+        if (!actor.visible) continue;
+        const aImg = loader.getImage(actor.spriteKey);
+        const drawY = actor.y + (actor.hopY || 0);
+
+        renderList.push({
+          ySort: actor.y + 58,
+          draw: (c) => {
+            // Shadow
+            c.fillStyle = 'rgba(0, 0, 0, 0.3)';
+            c.beginPath();
+            c.ellipse(actor.x + 32, actor.y + 58, 12, 6, 0, 0, Math.PI * 2);
+            c.fill();
+
+            if (aImg) {
+              const fw = aImg.naturalWidth / 4;
+              const fh = aImg.naturalHeight / 4;
+              c.drawImage(aImg, actor.frame * fw, actor.direction * fh, fw, fh, actor.x, drawY, 64, 64);
+            }
+
+            if (actor.activeEmote && actor.emoteTimerMs > 0) {
+              drawNPCEmoteBubble(c, actor.x + 32, drawY + 8, actor.activeEmote, actor.emoteTimerMs);
+            }
+          }
+        });
+      }
+
+      // Sort and draw
+      renderList.sort((a, b) => a.ySort - b.ySort);
+      for (const item of renderList) {
+        item.draw(ctx);
+      }
+
+      ctx.restore();
+
+      // Screen-Space Ambient Light Overlay (Early morning dawn golden sunlight)
+      const ambient = mockSession.getAmbientLight();
+      if (ambient && ambient.alpha > 0.001) {
+        ctx.save();
+        ctx.fillStyle = ambient.color;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.restore();
+      }
+
+      // Update HUD
+      const actors = eventManager.getActors().filter(a => a.visible).map(a => a.name).join(', ');
+      hudActors.textContent = 'Diễn viên: ' + (actors || 'Chỉ có Satoshi') + ' | Thời tiết: Trong xanh nắng đẹp (clear) | 06:30 AM Sáng sớm';
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    // Button Bindings
+    document.getElementById('btnRunAll').addEventListener('click', async () => {
+      hudScene.textContent = 'Đang diễn hoạt toàn bộ Phân Cảnh 1 đến 5 (Bên ngoài cổng & Bên trong Lab)...';
+      follower.visible = false;
+      playerService.setFlag('pallet_lab_gate_event_done', false);
+      playerService.setFlag('pallet_lab_starters_checked', false);
+      await eventManager.trigger(mockSession, { doorGX: 12, doorGY: 10, skipDelays: false });
+      hudScene.textContent = 'Hoàn thành Phân Cảnh 1 - 5! Đã xem xong 3 quả Pokéball rỗng trong Lab.';
+    });
+
+    document.getElementById('btnScene1').addEventListener('click', async () => {
+      hudScene.textContent = 'Đang diễn hoạt Cảnh 1: Cú Va Chạm & Giật Lùi...';
+      await eventManager['setupStage'](mockSession, 12, 10);
+      await eventManager.runScene1_Collision(mockSession, 12, 10, false);
+      hudScene.textContent = 'Cảnh 1 hoàn thành! Chấm than (!) trên đầu Gary & Ash.';
+    });
+
+    document.getElementById('btnScene2').addEventListener('click', async () => {
+      hudScene.textContent = 'Đang diễn hoạt Cảnh 2: Gary Chế Giễu Đồ Ngủ & Đội Cổ Vũ...';
+      await eventManager.runScene2_GaryTaunt(mockSession, false);
+      hudScene.textContent = 'Cảnh 2 hoàn thành!';
+    });
+
+    document.getElementById('btnScene3').addEventListener('click', async () => {
+      hudScene.textContent = 'Đang diễn hoạt Cảnh 3: Gary & Đội cổ vũ rời đi, dân làng giải tán...';
+      await eventManager.runScene3_Departure(mockSession, 12, 10, false);
+      hudScene.textContent = 'Cảnh 3 hoàn thành! Bà con giải tán, Satoshi đứng trơ trọi thở dài (...)';
+    });
+
+    document.getElementById('btnScene4').addEventListener('click', async () => {
+      hudScene.textContent = 'Đang diễn hoạt Cảnh 4: Giáo Sư Okido mở cửa và cùng Satoshi vào Lab...';
+      await eventManager.runScene4_OakAppears(mockSession, 12, 10, false);
+      hudScene.textContent = 'Cảnh 4 hoàn thành! Cả hai đã bước vào trong phòng nghiên cứu.';
+    });
+
+    document.getElementById('btnScene5').addEventListener('click', async () => {
+      hudScene.textContent = 'Đang kích hoạt Cảnh 5: Bệ máy chọn bóng trong Lab, 3 quả cầu rỗng, Pikachu xuất hiện và giật điện Satoshi...';
+      follower.visible = false;
+      await eventManager.runScene5_InsideLab(mockSession, 12, 10, false);
+      hudScene.textContent = 'Cảnh 5 hoàn tất! Đã nhận Pikachu và bị điện giật chuột điện.';
+    });
+
+    document.getElementById('btnReset').addEventListener('click', () => {
+      eventManager.reset();
+      interior.exitCurrentRoom();
+      follower.visible = false;
+      player.snapTo(12, 13, 3);
+      player.spriteKey = 'char_ash_pajamas';
+      player.activeEmote = null;
+      hudScene.textContent = 'Đã đặt lại trạng thái ban đầu.';
+    });
+
+    init();
+  </script>
+</body>
+</html>

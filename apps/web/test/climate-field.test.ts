@@ -49,4 +49,39 @@ describe('deterministic climate field', () => {
     expect(isBiomeClimateCompatible('snow', cold)).toBe(true);
     expect(isBiomeClimateCompatible('desert', hot)).toBe(true);
   });
+
+  it('applies soft climate anchors smoothly via distance-based lerp without hard jumps', () => {
+    const base = sampleClimate(0, 0, 101);
+    const anchoredCenter = sampleClimate(0, 0, 101, {
+      anchors: [
+        {
+          kind: 'snow',
+          sourceGX: 0,
+          sourceGY: 0,
+          targetTemperature: 0.1,
+          targetMoisture: 0.55,
+          radius: 500,
+          maxInfluence: 0.78,
+        },
+      ],
+    });
+    const anchoredMid = sampleClimate(250, 0, 101, {
+      anchors: [
+        {
+          kind: 'snow',
+          sourceGX: 250,
+          sourceGY: 250,
+          targetTemperature: 0.1,
+          targetMoisture: 0.55,
+          radius: 500,
+          maxInfluence: 0.78,
+        },
+      ],
+    });
+
+    expect(anchoredCenter.temperature).toBeLessThan(base.temperature);
+    expect(anchoredCenter.temperature).toBeLessThanOrEqual(0.22);
+    expect(anchoredMid.temperature).toBeGreaterThan(0.1);
+  });
 });
+

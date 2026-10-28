@@ -408,10 +408,10 @@ Một thay đổi chỉ hoàn tất khi:
 
 ## 16. Tài liệu liên quan
 
-- plans/02-architecture.md
-- plans/03-repository-structure.md
-- plans/04-frontend-plan.md
-- plans/05-backend-plan.md
-- plans/10-testing-and-quality.md
-- plans/BIOME_DISTRIBUTION_DEV_SPEC.md
+- 02-architecture.md
+- 03-repository-structure.md
+- 04-frontend-plan.md
+- 05-lan-multiplayer-plan.md
+- archive/10-testing-and-quality.md
+- archive/BIOME_DISTRIBUTION_DEV_SPEC.md
 - PROGRESS.md

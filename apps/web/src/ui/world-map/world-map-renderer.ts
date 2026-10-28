@@ -1,4 +1,14 @@
-import { CHUNK_SIZE, isAutumnTile, isDarkLandTile, isSnowTile, TERRAIN, TILE_IDS, TILE_SIZE } from '@pokemon/game-data';
+import {
+  CHUNK_SIZE,
+  isAutumnTile,
+  isDarkLandTile,
+  isFreshwaterTile,
+  isRockyHighlandTile,
+  isSnowTile,
+  TERRAIN,
+  TILE_IDS,
+  TILE_SIZE,
+} from '@pokemon/game-data';
 import { seededHash } from '../../maps/noise';
 import type { WorldChunk } from '../../maps/chunk';
 import { generateChunkTerrain } from '../../maps/chunk-terrain';
@@ -115,7 +125,15 @@ export class WorldMapRenderer {
       case TERRAIN.DESERT:
         return 'sand';
       case TERRAIN.HILL:
-        return isSnowTile(tileId) ? 'snow' : isDarkLandTile(tileId) ? 'dark_land' : 'hill';
+        return isSnowTile(tileId)
+          ? 'snow'
+          : isDarkLandTile(tileId)
+            ? 'dark_land'
+            : isRockyHighlandTile(tileId) && !isFreshwaterTile(tileId)
+              ? 'rocky_highland'
+              : 'hill';
+      case TERRAIN.ROCKY_HIGHLAND:
+        return 'rocky_highland';
       case TERRAIN.ROAD:
         return 'road';
       case TERRAIN.DARK_LAND:
@@ -133,7 +151,8 @@ export class WorldMapRenderer {
     if (isSnowTile(tileId)) return 'snow';
     if (isAutumnTile(tileId)) return 'autumn';
     if (isDarkLandTile(tileId)) return 'dark_land';
-    if (tileId >= 700 && tileId <= 742) return 'water';
+    if (isFreshwaterTile(tileId) || (tileId >= 730 && tileId <= 742)) return 'water';
+    if (isRockyHighlandTile(tileId)) return 'rocky_highland';
     if (tileId >= 400 && tileId < 500) return 'hill';
     if (tileId >= 300 && tileId < 400) return 'sand';
     if (tileId >= 200 && tileId < 300) return 'road';
@@ -154,6 +173,7 @@ export class WorldMapRenderer {
       sand: WORLD_MAP_PALETTE.sandPixels,
       water: WORLD_MAP_PALETTE.waterPixels,
       hill: WORLD_MAP_PALETTE.hillPixels,
+      rocky_highland: WORLD_MAP_PALETTE.rockyPixels,
       road: WORLD_MAP_PALETTE.roadPixels,
       dark_land: WORLD_MAP_PALETTE.darkPixels,
       autumn: WORLD_MAP_PALETTE.autumnPixels,
@@ -177,7 +197,7 @@ export class WorldMapRenderer {
         ctx.fillRect(x + 5, y + 9, 10, 2);
         if (pixelRoll > 0.76) ctx.fillRect(x + 16, y + 18, 7, 2);
       }
-    } else if (terrainClass === 'hill') {
+    } else if (terrainClass === 'hill' || terrainClass === 'rocky_highland') {
       if (pixelRoll > 0.62) {
         ctx.fillStyle = accent;
         ctx.fillRect(x + 4, y + 4, 3, 3);

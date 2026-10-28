@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import {
   InventoryService,
   createDefaultInventoryState,
+  createDebugStarterInventoryState,
   PlayerService,
   createDefaultPlayerProfile,
   PartyService,
@@ -32,10 +33,15 @@ describe('Domain Layer: InventoryService', () => {
   let inventory: InventoryService;
 
   beforeEach(() => {
-    inventory = new InventoryService(createDefaultInventoryState());
+    inventory = new InventoryService(createDebugStarterInventoryState());
   });
 
-  it('initializes with default starter items', () => {
+  it('initializes with clean empty inventory by default', () => {
+    const clean = new InventoryService(createDefaultInventoryState());
+    expect(clean.getAllItems()).toEqual({});
+  });
+
+  it('initializes with default starter items when debug state is provided', () => {
     expect(inventory.getItemCount('POKEBALL')).toBe(20);
     expect(inventory.getItemCount('POTION')).toBe(10);
     expect(inventory.hasItem('BICYCLE', 1)).toBe(true);
@@ -116,6 +122,32 @@ describe('Domain Layer: PlayerService & Delegation', () => {
     const hasUltra = player.hasItem('ULTRABALL', 2);
     expect(hasUltra).toBe(true);
   });
+
+  it('tracks seen and caught Pokédex species accurately without duplicates', () => {
+    expect(player.getProfile().pokedexSeenCount).toBe(0);
+    expect(player.getProfile().pokedexCaughtCount).toBe(0);
+    expect(player.hasSeenSpecies('BULBASAUR')).toBe(false);
+    expect(player.hasCaughtSpecies('BULBASAUR')).toBe(false);
+
+    // Seen encounter
+    const newlySeen = player.registerSeenSpecies('BULBASAUR');
+    expect(newlySeen).toBe(true);
+    expect(player.hasSeenSpecies('BULBASAUR')).toBe(true);
+    expect(player.hasCaughtSpecies('BULBASAUR')).toBe(false);
+    expect(player.getProfile().pokedexSeenCount).toBe(1);
+
+    // Repeated seen encounter does not inflate counter
+    expect(player.registerSeenSpecies('BULBASAUR')).toBe(false);
+    expect(player.getProfile().pokedexSeenCount).toBe(1);
+
+    // Caught species automatically ensures seen status
+    const newlyCaught = player.registerCaughtSpecies('CHARMANDER');
+    expect(newlyCaught).toBe(true);
+    expect(player.hasSeenSpecies('CHARMANDER')).toBe(true);
+    expect(player.hasCaughtSpecies('CHARMANDER')).toBe(true);
+    expect(player.getProfile().pokedexSeenCount).toBe(2);
+    expect(player.getProfile().pokedexCaughtCount).toBe(1);
+  });
 });
 
 describe('Domain Layer: PartyService', () => {
@@ -166,7 +198,7 @@ describe('Domain Layer: SaveGameRepository Unified Persistence', () => {
     mockAdapter = new MockStorageAdapter();
     player = new PlayerService(createDefaultPlayerProfile('Red'));
     party = new PartyService(createDefaultParty());
-    inventory = new InventoryService(createDefaultInventoryState());
+    inventory = new InventoryService(createDebugStarterInventoryState());
     repo = new SaveGameRepository({
       adapter: mockAdapter,
       player,
@@ -201,7 +233,7 @@ describe('Domain Layer: SaveGameRepository Unified Persistence', () => {
     // 2. Modify active services (mutate/reset)
     player.reset();
     party.reset();
-    inventory.reset();
+    inventory.reset(createDebugStarterInventoryState().items);
 
     expect(player.getProfile().money).toBe(3000);
     expect(party.getPartySize()).toBe(1);

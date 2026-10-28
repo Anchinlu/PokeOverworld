@@ -1,6 +1,6 @@
 """
 Automated Unit & Integration Tests for Pokemon Procedural Map Generator
-Verifies requirements from docs/plans/08-map-generator-migration.md:
+Verifies requirements from docs/archive/08-map-generator-migration.md:
 1. Terrain ID conservation.
 2. Ecosystem strict rules (NO trees on roads or beach sand).
 3. Determinism under identical seed.

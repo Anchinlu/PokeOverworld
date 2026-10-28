@@ -22,6 +22,9 @@ import type { AmbientLightProfile } from '@pokemon/shared-types';
 import type { TimeBand } from '../wildlife/ports/world-query';
 import type { OverworldWeather } from '../world/overworld-weather';
 import { partyService } from '../domain/party/party-service';
+import { InteriorManager } from '../interior';
+import { palletPrologueEventManager } from '../npc';
+import { route1SpearowEventManager } from '../story/acts/act-2-route1';
 
 export * from './types';
 export * from './ground-renderer';
@@ -48,6 +51,7 @@ export class GameRenderer {
   private darkFogLayer: DarkFogLayer;
   private sandstormSystem: SandstormSystem;
   private snowParticleSystem: SnowParticleSystem;
+  private loader: AssetLoader;
   private lastRenderMs = 0;
   private lastRenderItems = 0;
   private lastVisibleChunks = 0;
@@ -58,6 +62,7 @@ export class GameRenderer {
   constructor(canvas: HTMLCanvasElement, loader: AssetLoader) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d')!;
+    this.loader = loader;
 
     this.groundRenderer = new GroundRenderer(loader);
     this.objectRenderer = new ObjectRenderer(loader);
@@ -161,6 +166,16 @@ export class GameRenderer {
     const now = renderStart;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const interior = InteriorManager.getInstance();
+    if (interior.isInInterior()) {
+      ctx.save();
+      camera.applyTransform(ctx, canvas.width, canvas.height);
+      ctx.imageSmoothingEnabled = false;
+      interior.render(ctx, camera, player, follower, this.loader, canvas.width, canvas.height);
+      ctx.restore();
+      return;
+    }
 
     ctx.save();
     camera.applyTransform(ctx, canvas.width, canvas.height);
@@ -305,6 +320,13 @@ export class GameRenderer {
     // Village Buildings
     if (this.options.showVillages) {
       this.objectRenderer.collectBuildings(bounds, chunkManager, renderList);
+      this.characterRenderer.collectVillageNPCs(bounds, chunkManager, renderList);
+    }
+
+    // Cutscene Actors (Gary Oak, cheer squad, Professor Oak)
+    const cutsceneActors = palletPrologueEventManager.getActors();
+    if (cutsceneActors.length > 0) {
+      this.characterRenderer.collectCutsceneActors(cutsceneActors, renderList);
     }
 
     // Shadows
@@ -376,6 +398,9 @@ export class GameRenderer {
 
     // 5.68. Render Falling Snowflakes & Blizzard Flurries (Layer 1.68 - Overhead Snow)
     this.snowParticleSystem.render(ctx, bounds, now, chunkManager.field);
+
+    // 5.69. Render Route 1 Spearow & Flock AI (Layer 1.69 - Air & Ground)
+    route1SpearowEventManager.render(ctx, camera);
 
     // 5.7. Render World-Space Dark Fog Wisps (Layer 1.7 - Ethereal Ground/Overhead Mist in Dark Land)
     if (this.options.showDarkFog) {

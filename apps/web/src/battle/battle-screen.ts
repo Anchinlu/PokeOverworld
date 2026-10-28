@@ -35,6 +35,7 @@ export interface BattleScreenResult {
   caughtPokemon?: BattlerPokemon;
   activePlayerPokemon?: BattlerPokemon;
   expGained?: number;
+  expAppliedToParty?: boolean;
 }
 
 export class BattleScreen {
@@ -78,6 +79,12 @@ export class BattleScreen {
     this.state.playerHpPct = playerPokemon.currentHp / playerPokemon.maxHp;
     this.state.targetPlayerHpPct = this.state.playerHpPct;
     this.state.ghostPlayerHpPct = this.state.playerHpPct;
+    const initialExpPct =
+      playerPokemon.maxExp && playerPokemon.maxExp > 0
+        ? Math.max(0, Math.min(1, playerPokemon.exp / playerPokemon.maxExp))
+        : 0;
+    this.state.playerExpPct = initialExpPct;
+    this.state.targetPlayerExpPct = initialExpPct;
 
     // 3. Assets
     const assets = createBattleAssets(

@@ -2,7 +2,7 @@
 
 ## Trạng thái
 
-Đã cập nhật theo định hướng trong [DEV_ARCHITECTURE_GUIDE.md](../DEV_ARCHITECTURE_GUIDE.md): **ứng dụng desktop (Tauri)**, phân tầng theo domain, chơi online theo kiểu **host qua LAN/VPN** (không có máy chủ riêng).
+Đã cập nhật theo định hướng trong [DEV_ARCHITECTURE_GUIDE.md](DEV_ARCHITECTURE_GUIDE.md): **ứng dụng desktop (Tauri)**, phân tầng theo domain, chơi online theo kiểu **host qua LAN/VPN** (không có máy chủ riêng).
 
 ## Sơ đồ phân tầng
 
@@ -49,7 +49,7 @@ src-tauri/ (Rust): máy chủ WebSocket cho host, cầu nối với webview, đ�
 - **Mở thế giới:** `HostSession` chạy trong webview của host; lớp Rust mở cổng và chuyển message.
 - **Vào thế giới người khác:** `RemoteSession` mở WebSocket từ webview tới `IP:cổng` của host.
 
-Chi tiết xem mục 2.5 của [DEV_ARCHITECTURE_GUIDE.md](../DEV_ARCHITECTURE_GUIDE.md) và [05-lan-multiplayer-plan.md](05-lan-multiplayer-plan.md).
+Chi tiết xem mục 2.5 của [DEV_ARCHITECTURE_GUIDE.md](DEV_ARCHITECTURE_GUIDE.md) và [05-lan-multiplayer-plan.md](05-lan-multiplayer-plan.md).
 
 ## Ranh giới trách nhiệm
 
@@ -65,3 +65,10 @@ Chi tiết xem mục 2.5 của [DEV_ARCHITECTURE_GUIDE.md](../DEV_ARCHITECTURE_G
 - Thay đổi trạng thái thế giới chung đi qua `SessionPort`.
 - Mọi message mạng đi qua schema và bị giới hạn kích thước, tần suất.
 - Dữ liệu game tĩnh định nghĩa tập trung tại `packages/game-data`.
+
+## Ghi chú kiến trúc overworld hiện hành
+
+Các quyết định chi tiết về biome/entity registry, bounded cache, preload asset
+hai giai đoạn và giới hạn semantic của `TERRAIN.OCEAN_WATER` được ghi tại
+[ARCHITECTURE_REVIEW.md](ARCHITECTURE_REVIEW.md). Đọc tài liệu này trước khi
+thêm biome hoặc logic gameplay liên quan đến nước.

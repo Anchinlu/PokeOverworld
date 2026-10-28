@@ -179,8 +179,8 @@ export class InventoryService {
     this.notify();
   }
 
-  public reset(): void {
-    this.state = { items: this.canonicalizeItems(createDefaultInventoryState().items) };
+  public reset(customItems?: Record<string, number>): void {
+    this.state = { items: this.canonicalizeItems(customItems ?? createDefaultInventoryState().items) };
     this.notify();
   }
 

@@ -2,17 +2,30 @@ import { CHUNK_SIZE } from '@pokemon/game-data';
 import type { WildEntity } from '../model';
 import type { WorldQuery } from '../ports/world-query';
 import type { PlayerQuery } from '../ports/player-query';
-import { decideNextAction } from './brain/utility-brain';
+import { decideNextAction, getDirectionTowards } from './brain/utility-brain';
 import { startWildStep, updateGridMovement } from './movement/grid-mover';
 import { chooseAvoidanceMove } from './movement/obstacle-avoidance';
 import { AlarmNetwork } from './social/alarm';
-import { getBehaviorProfileForSpecies } from './profiles/profile-registry';
+import {
+  getBehaviorProfileForSpecies,
+  getBehaviorProfile,
+} from './profiles/profile-registry';
 import { getWeatherBehaviorModifiers } from './schedule/weather-response';
 
 /** Keep the complete AI behavior active across the desktop's two-chunk view. */
 export const WILDLIFE_FULL_SIMULATION_DISTANCE_TILES = CHUNK_SIZE * 2;
 /** A small boundary beyond the full view prevents edge entities from thrashing. */
 export const WILDLIFE_FREEZE_DISTANCE_TILES = WILDLIFE_FULL_SIMULATION_DISTANCE_TILES + 3;
+const REACTIVE_STATE_HOLD_MS = 900;
+/**
+ * Wildlife uses the same 32px grid as the player, so a legacy 0.8px/frame
+ * base made normal creatures visibly sluggish (and even slower after the
+ * profile multiplier was applied). Existing entities are normalized to this
+ * floor at runtime so already-loaded chunks also recover without respawning.
+ */
+const WILDLIFE_MIN_BASE_MOVE_SPEED = 1.35;
+const WILDLIFE_MIN_MOVE_SPEED = 0.75;
+const MIN_AI_INSPECTIONS_PER_FRAME = 6;
 
 export class SpatialHash {
   private cellSize: number;
@@ -146,9 +159,18 @@ export class WildlifeSimulator {
       const i = (startEntityIndex + offset) % this.entities.length;
       // Check performance budget
       if (startTime > 0 && typeof performance !== 'undefined') {
-        if (performance.now() - startTime > this.frameBudgetMs) {
-          budgetExceeded = true;
-          break;
+        // Keep already-started grid steps smooth even when the idle/decision
+        // pass reaches its frame budget. Movement is cheap; perception and
+        // utility scoring are the expensive part that should be time-sliced.
+        const entityIsMoving = this.entities[i]?.isMoving === true;
+        if (
+          performance.now() - startTime > this.frameBudgetMs &&
+          inspectedCount >= MIN_AI_INSPECTIONS_PER_FRAME
+        ) {
+          if (!entityIsMoving) {
+            budgetExceeded = true;
+            break;
+          }
         }
       }
       inspectedCount++;
@@ -156,13 +178,22 @@ export class WildlifeSimulator {
       const ent = this.entities[i];
       const entId = ent.id ?? `${ent.gx},${ent.gy}`;
 
+      const distToPlayer = Math.hypot(ent.gx - pPos.gx, ent.gy - pPos.gy);
       const isActive = !ent.activeTime || ent.activeTime.includes(world.timeBand());
       if (!isActive) {
         ent.state = 'rest_sleep';
         ent.isMoving = false;
         ent.frame = 0;
-        ent.bobY = 0;
-        ent.emote = { type: 'dots', timer: 1200, maxTime: 1200 };
+        if (distToPlayer <= 1.5) {
+          const dirToPlayer = getDirectionTowards(ent.gx, ent.gy, pPos.gx, pPos.gy);
+          ent.dir = dirToPlayer;
+          ent.currentDir = dirToPlayer;
+          ent.bobY = -3;
+          ent.emote = { type: '!', timer: 900, maxTime: 900 };
+        } else {
+          ent.bobY = -Math.abs(Math.sin(this.tickCount * 0.05 + i)) * 1.2;
+          ent.emote = { type: 'dots', timer: 1200, maxTime: 1200 };
+        }
         continue;
       }
       const justWoke = ent.state === 'rest_sleep';
@@ -173,9 +204,45 @@ export class WildlifeSimulator {
       }
 
       const weather = getWeatherBehaviorModifiers(ent.speciesKey, world.weather());
-      const baseMoveSpeed = ent.baseMoveSpeed ?? ent.moveSpeed;
+      let profile = getBehaviorProfileForSpecies(ent.speciesKey);
+      const isApricornPlain =
+        typeof world.biomeAt === 'function' &&
+        world.biomeAt(ent.gx, ent.gy) === 'apricorn_plain';
+      if (isApricornPlain) {
+        // Apricorn Plains are a calm sanctuary. Keep the species' presence and
+        // herd movement, but remove the aggressive/territorial response to the
+        // player that was previously forced on every Pokémon in this biome.
+        profile = getBehaviorProfile('herd_grazer');
+      } else if (ent.behavior === 'aggressive_bug') {
+        const aggressiveBase = getBehaviorProfile('aggressive_bug');
+        profile = {
+          ...profile,
+          ...aggressiveBase,
+          temperament: 'aggressive',
+        };
+      }
+      const baseMoveSpeed = Math.max(
+        ent.baseMoveSpeed ?? ent.moveSpeed,
+        WILDLIFE_MIN_BASE_MOVE_SPEED
+      );
       ent.baseMoveSpeed = baseMoveSpeed;
-      ent.moveSpeed = Math.max(0.1, baseMoveSpeed * weather.moveSpeedMultiplier);
+
+      // Apply state-specific locomotion speed from archetype profile
+      const baseArchetypeSpeed = profile.locomotion?.wanderSpeed ?? profile.moveSpeed ?? 1.0;
+      let stateSpeedMult = baseArchetypeSpeed;
+      if (ent.state === 'flee' || ent.state === 'fleeing') {
+        stateSpeedMult = profile.locomotion?.fleeSpeed ?? Math.max(1.35, baseArchetypeSpeed * 1.45);
+      } else if (ent.state === 'chase') {
+        stateSpeedMult = profile.locomotion?.chaseSpeed ?? Math.max(1.45, baseArchetypeSpeed * 1.55);
+      } else if (ent.state === 'curious' || ent.state === 'groom_play') {
+        stateSpeedMult = baseArchetypeSpeed * 0.85;
+      } else if (ent.state === 'return_home') {
+        stateSpeedMult = Math.max(1.0, baseArchetypeSpeed * 1.1);
+      }
+      ent.moveSpeed = Math.max(
+        WILDLIFE_MIN_MOVE_SPEED,
+        baseMoveSpeed * stateSpeedMult * weather.moveSpeedMultiplier
+      );
 
       // Update emote timer
       if (ent.emote) {
@@ -186,7 +253,6 @@ export class WildlifeSimulator {
       }
 
       // LOD check (Section 7)
-      const distToPlayer = Math.hypot(ent.gx - pPos.gx, ent.gy - pPos.gy);
       if (distToPlayer > WILDLIFE_FREEZE_DISTANCE_TILES) {
         // LOD Tier 3: Frozen outside active zone
         continue;
@@ -199,6 +265,7 @@ export class WildlifeSimulator {
       // React to received herd alarm
       if (alarmedIds.has(entId)) {
         ent.state = 'alert';
+        ent.isPecking = false;
         ent.emote = { type: '!', timer: 1200, maxTime: 1200 };
       }
 
@@ -212,6 +279,79 @@ export class WildlifeSimulator {
             ent.isSwimming = world.contextAt(ent.gx, ent.gy) === 'water_surface';
           }
           ent.idleAnimTimer = (ent.frame ?? 0) * 180;
+
+          // Natural Walk-and-Pause / Grazing / Social Herd Interaction cycle:
+          // Calm states take 2-4 steps, then pause to graze, interact with a herd mate, or look around.
+          if (
+            ent.state === 'wander' ||
+            ent.state === 'forage' ||
+            ent.state === 'groom_play' ||
+            ent.state === 'curious'
+          ) {
+            ent.stepsRemaining = Math.max(0, (ent.stepsRemaining ?? 1) - 1);
+            if (ent.stepsRemaining <= 0) {
+              const prevState = ent.state;
+              const roll = Math.abs(Math.floor(ent.seed + this.tickCount * 31 + i)) % 100;
+
+              // Check for a nearby herd mate to socialize with (face each other + heart/music emote)
+              const nearbyMate = ent.herdId
+                ? this.spatialHash
+                    .queryNear(ent.gx, ent.gy, 2)
+                    .find(
+                      (other) =>
+                        other !== ent &&
+                        other.herdId === ent.herdId &&
+                        !other.isMoving &&
+                        Math.hypot(other.gx - ent.gx, other.gy - ent.gy) <= 2.2
+                    )
+                : undefined;
+
+              ent.state = 'idle';
+              this.entityTimers.set(entId, 0);
+
+              if (nearbyMate && roll < 45) {
+                const dirToMate = getDirectionTowards(ent.gx, ent.gy, nearbyMate.gx, nearbyMate.gy);
+                const dirToMe = getDirectionTowards(nearbyMate.gx, nearbyMate.gy, ent.gx, ent.gy);
+                ent.dir = dirToMate;
+                ent.currentDir = dirToMate;
+                ent.isPecking = true;
+                ent.idleTimer = 700 + (roll % 4) * 100;
+                const socialEmote = roll % 2 === 0 ? 'heart' : 'music';
+                ent.emote = { type: socialEmote, timer: 1350, maxTime: 1350 };
+                if (!nearbyMate.emote) {
+                  nearbyMate.dir = dirToMe;
+                  nearbyMate.currentDir = dirToMe;
+                  nearbyMate.emote = {
+                    type: socialEmote === 'heart' ? 'happy' : 'music',
+                    timer: 1350,
+                    maxTime: 1350,
+                  };
+                }
+              } else if (prevState === 'forage' || world.contextAt(ent.gx, ent.gy) === 'tall_grass') {
+                // Pause to graze / peck food on the ground or in tall grass
+                ent.isPecking = true;
+                ent.idleTimer = 600 + (roll % 4) * 100;
+                if (roll < 65 && !ent.emote) {
+                  ent.emote = {
+                    type: roll < 45 ? 'eat' : 'happy',
+                    timer: 1300,
+                    maxTime: 1300,
+                  };
+                }
+              } else {
+                // Calm pause & look around
+                ent.isPecking = false;
+                ent.idleTimer = 500 + (roll % 4) * 100;
+                if (roll < 25 && !ent.emote) {
+                  ent.emote = {
+                    type: weather.moveSpeedMultiplier > 1.05 ? 'happy' : 'music',
+                    timer: 1250,
+                    maxTime: 1250,
+                  };
+                }
+              }
+            }
+          }
         }
       } else {
         if (ent.isWaterDweller) {
@@ -239,15 +379,27 @@ export class WildlifeSimulator {
         const elapsed = (this.entityTimers.get(timerKey) ?? 0) + dtMs;
 
         // Preserve the entity's deterministic idle pause before selecting a
-        // new goal. The creature can still animate while it is resting.
+        // new goal. While resting/grazing, animate pecking hops or head turns.
         if (ent.state === 'idle' && elapsed < ent.idleTimer) {
+          if (ent.isPecking) {
+            ent.bobY = -Math.abs(Math.sin(elapsed * 0.012)) * 3.2;
+          } else {
+            ent.bobY = 0;
+            // Turn head once midway through the idle pause to scan surroundings
+            const halfIdle = ent.idleTimer * 0.5;
+            if (elapsed >= halfIdle && elapsed - dtMs < halfIdle) {
+              const turnDelta = (Math.abs(Math.floor(ent.seed + this.tickCount)) % 2) === 0 ? 1 : 2;
+              ent.dir = (ent.dir + turnDelta) % 4;
+              ent.currentDir = ent.dir;
+            }
+          }
           this.entityTimers.set(timerKey, elapsed);
           continue;
         }
+        ent.isPecking = false;
+        ent.bobY = 0;
 
         // Idle / Behavior Decision
-        const profile = getBehaviorProfileForSpecies(ent.speciesKey);
-
         const leader = ent.herdId ? leadersByHerd.get(ent.herdId) : undefined;
         const decision = decideNextAction(ent, profile, world, player, elapsed, leader);
 
@@ -257,7 +409,23 @@ export class WildlifeSimulator {
           this.entityTimers.set(timerKey, 0);
 
           if (decision.triggerEmote && !ent.emote) {
-            ent.emote = { type: decision.triggerEmote, timer: 1200, maxTime: 1200 };
+            const emoteType =
+              decision.nextState === 'territorial' ||
+              (decision.nextState === 'chase' && (ent.role === 'leader' || ent.role === 'apex'))
+                ? 'anger'
+                : decision.triggerEmote;
+            ent.emote = { type: emoteType, timer: 1300, maxTime: 1300 };
+          }
+
+          // Assign step burst when entering a calm movement state
+          if (
+            decision.nextState === 'wander' ||
+            decision.nextState === 'forage' ||
+            decision.nextState === 'groom_play' ||
+            decision.nextState === 'curious'
+          ) {
+            ent.stepsRemaining =
+              2 + (Math.abs(Math.floor(ent.seed + this.tickCount + i)) % 3);
           }
 
           // A newly detected threat alerts the same herd once. Keeping this
@@ -280,6 +448,46 @@ export class WildlifeSimulator {
           this.entityTimers.set(timerKey, elapsed);
         }
 
+        // Reactive states briefly face the player before resuming their actual
+        // locomotion. Previously alert/territorial always continued here, so
+        // aggressive Pokémon could become permanently frozen after detecting
+        // the player.
+        let reactiveMovementDir: number | undefined;
+        if (ent.state === 'alert' || ent.state === 'territorial') {
+          if (decision.suggestedDir !== undefined) {
+            ent.dir = decision.suggestedDir;
+            ent.currentDir = decision.suggestedDir;
+          }
+          if (ent.state === 'territorial' || ent.role === 'leader' || ent.role === 'apex') {
+            ent.bobY = -Math.abs(Math.sin(elapsed * 0.016)) * 3.5;
+            if (!ent.emote && elapsed > 800) {
+              ent.emote = { type: 'anger', timer: 1200, maxTime: 1200 };
+            }
+          }
+          if (elapsed < REACTIVE_STATE_HOLD_MS) continue;
+
+          const shouldChase =
+            ent.state === 'territorial' &&
+            (profile.temperament === 'aggressive' || profile.temperament === 'territorial');
+          ent.state = shouldChase ? 'chase' : 'wander';
+          this.entityTimers.set(timerKey, 0);
+          ent.stepsRemaining = 2 + (Math.abs(Math.floor(ent.seed + this.tickCount + i)) % 3);
+          reactiveMovementDir = shouldChase ? decision.suggestedDir : undefined;
+        }
+
+        // Curious creatures approach to 2 tiles, then stop and tilt/watch the player with '?'
+        if (ent.state === 'curious' && distToPlayer <= 2.2) {
+          if (decision.suggestedDir !== undefined) {
+            ent.dir = decision.suggestedDir;
+            ent.currentDir = decision.suggestedDir;
+          }
+          ent.bobY = -Math.abs(Math.sin(elapsed * 0.01)) * 2.5;
+          if (!ent.emote) {
+            ent.emote = { type: '?', timer: 1200, maxTime: 1200 };
+          }
+          continue;
+        }
+
         // Attempt movement step based on state
         if (
           ent.state === 'wander' ||
@@ -290,7 +498,11 @@ export class WildlifeSimulator {
           ent.state === 'return_home' ||
           ent.state === 'curious'
         ) {
-          let chosenDir = decision.suggestedDir;
+          if ((ent.stepsRemaining ?? 0) <= 0) {
+            ent.stepsRemaining =
+              2 + (Math.abs(Math.floor(ent.seed + this.tickCount + i)) % 3);
+          }
+          let chosenDir = reactiveMovementDir ?? decision.suggestedDir;
           if (chosenDir === undefined) {
             // Random direction wander
             // Stable per-entity fallback direction; simulation never depends on
@@ -299,6 +511,11 @@ export class WildlifeSimulator {
           }
 
           const isDweller = ent.isWaterDweller ?? ent.isSwimming ?? false;
+          const ownTileKey = `${ent.gx},${ent.gy}`;
+          // The entity's current tile must not block its own reverse/turn
+          // candidates. Other entities and their reserved destinations remain
+          // protected in the shared reservation set.
+          occupiedTiles.delete(ownTileKey);
           const moveChoice = chooseAvoidanceMove(
             ent,
             chosenDir,
@@ -317,6 +534,7 @@ export class WildlifeSimulator {
             occupiedTiles.add(`${moveChoice.targetGX},${moveChoice.targetGY}`);
             startWildStep(ent, moveChoice.dir, moveChoice.jumpType);
           }
+          occupiedTiles.add(ownTileKey);
         }
       }
     }

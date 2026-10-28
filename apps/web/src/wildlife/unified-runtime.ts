@@ -8,6 +8,7 @@ import type { PlayerQuery } from './ports/player-query';
 import type { TimeBand, WeatherType, WorldQuery } from './ports/world-query';
 import { resolveWorldBiome } from '../maps/ecology';
 import { resolveWorldTileContext } from './ports/world-context';
+import { isVillageArea } from '../maps/village-rules';
 
 interface RuntimeState {
   system: WildlifeSystem;
@@ -80,6 +81,7 @@ function getRuntime(chunkManager: ChunkManager, player: Player): RuntimeState {
         : typeof chunkManager.isLoadedWalkable !== 'function' ||
           chunkManager.isLoadedWalkable(gx, gy),
     isElevated: (gx, gy) => chunkManager.getLoadedTileData?.(gx, gy)?.terrain === TERRAIN.HILL,
+    isWildlifeRestricted: (gx, gy) => isVillageArea(gx, gy, chunkManager.field, 0),
     contextAt: (gx, gy) => getContextAt(chunkManager, gx, gy),
     biomeAt: (gx, gy) => getBiomeAt(chunkManager, gx, gy),
     difficultyAt: (gx, gy) => Math.min(1, Math.max(0, Math.hypot(gx, gy) / 500)),

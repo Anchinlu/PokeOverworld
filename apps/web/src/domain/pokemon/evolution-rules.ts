@@ -164,6 +164,13 @@ export const GEN1_EVOLUTIONS: Record<string, EvolutionRequirement[]> = {
       requiredItemNameVi: 'Đá Sét (Thunder Stone)',
       descriptionVi: 'Dùng Đá Sét',
     },
+    {
+      targetSpeciesKey: 'RAICHU_ALOLAN',
+      method: 'stone',
+      requiredItem: 'shiny-stone',
+      requiredItemNameVi: 'Đá Ánh Sáng (Shiny Stone)',
+      descriptionVi: 'Dùng Đá Ánh Sáng (Alolan Form)',
+    },
   ],
   SANDSHREW: [
     {
@@ -242,6 +249,15 @@ export const GEN1_EVOLUTIONS: Record<string, EvolutionRequirement[]> = {
       descriptionVi: 'Đạt Cấp độ 22',
     },
   ],
+  GOLBAT: [
+    {
+      targetSpeciesKey: 'CROBAT',
+      method: 'item',
+      requiredItem: 'soothe-bell',
+      requiredItemNameVi: 'Chuông Tịnh Tâm (Soothe Bell)',
+      descriptionVi: 'Giữ Chuông Tịnh Tâm (Soothe Bell) để tiến hóa',
+    },
+  ],
   ODDISH: [
     {
       targetSpeciesKey: 'GLOOM',
@@ -314,6 +330,14 @@ export const GEN1_EVOLUTIONS: Record<string, EvolutionRequirement[]> = {
       descriptionVi: 'Đạt Cấp độ 28',
     },
   ],
+  PRIMEAPE: [
+    {
+      targetSpeciesKey: 'ANNIHILAPE',
+      method: 'level',
+      requiredLevel: 35,
+      descriptionVi: 'Đạt Cấp độ 35',
+    },
+  ],
   GROWLITHE: [
     {
       targetSpeciesKey: 'ARCANINE',
@@ -338,6 +362,13 @@ export const GEN1_EVOLUTIONS: Record<string, EvolutionRequirement[]> = {
       requiredItem: 'water-stone',
       requiredItemNameVi: 'Đá Nước (Water Stone)',
       descriptionVi: 'Dùng Đá Nước',
+    },
+    {
+      targetSpeciesKey: 'POLITOED',
+      method: 'item',
+      requiredItem: 'kings-rock',
+      requiredItemNameVi: "Đá Vương Giả (King's Rock)",
+      descriptionVi: "Giữ King's Rock để tiến hóa",
     },
   ],
   ABRA: [
@@ -428,6 +459,13 @@ export const GEN1_EVOLUTIONS: Record<string, EvolutionRequirement[]> = {
       requiredLevel: 37,
       descriptionVi: 'Đạt Cấp độ 37',
     },
+    {
+      targetSpeciesKey: 'SLOWKING',
+      method: 'item',
+      requiredItem: 'kings-rock',
+      requiredItemNameVi: "Đá Vương Giả (King's Rock)",
+      descriptionVi: "Giữ King's Rock để tiến hóa",
+    },
   ],
   MAGNEMITE: [
     {
@@ -513,6 +551,13 @@ export const GEN1_EVOLUTIONS: Record<string, EvolutionRequirement[]> = {
       requiredItemNameVi: 'Đá Lá (Leaf Stone)',
       descriptionVi: 'Dùng Đá Lá',
     },
+    {
+      targetSpeciesKey: 'EXEGGUTOR_ALOLAN',
+      method: 'stone',
+      requiredItem: 'sun-stone',
+      requiredItemNameVi: 'Đá Mặt Trời (Sun Stone)',
+      descriptionVi: 'Dùng Đá Mặt Trời (Alolan Form)',
+    },
   ],
   CUBONE: [
     {
@@ -521,6 +566,13 @@ export const GEN1_EVOLUTIONS: Record<string, EvolutionRequirement[]> = {
       requiredLevel: 28,
       descriptionVi: 'Đạt Cấp độ 28',
     },
+    {
+      targetSpeciesKey: 'MAROWAK_ALOLAN',
+      method: 'stone',
+      requiredItem: 'dusk-stone',
+      requiredItemNameVi: 'Đá Bóng Tối (Dusk Stone)',
+      descriptionVi: 'Dùng Đá Bóng Tối (Alolan Form)',
+    },
   ],
   KOFFING: [
     {
@@ -528,6 +580,13 @@ export const GEN1_EVOLUTIONS: Record<string, EvolutionRequirement[]> = {
       method: 'level',
       requiredLevel: 35,
       descriptionVi: 'Đạt Cấp độ 35',
+    },
+    {
+      targetSpeciesKey: 'WEEZING_GALARIAN',
+      method: 'stone',
+      requiredItem: 'dusk-stone',
+      requiredItemNameVi: 'Đá Bóng Tối (Dusk Stone)',
+      descriptionVi: 'Dùng Đá Bóng Tối (Galarian Form)',
     },
   ],
   RHYHORN: [
@@ -538,12 +597,30 @@ export const GEN1_EVOLUTIONS: Record<string, EvolutionRequirement[]> = {
       descriptionVi: 'Đạt Cấp độ 42',
     },
   ],
+  RHYDON: [
+    {
+      targetSpeciesKey: 'RHYPERIOR',
+      method: 'item',
+      requiredItem: 'protector',
+      requiredItemNameVi: 'Giáp Bảo Hộ (Protector)',
+      descriptionVi: 'Giữ Giáp Bảo Hộ (Protector) để tiến hóa',
+    },
+  ],
   HORSEA: [
     {
       targetSpeciesKey: 'SEADRA',
       method: 'level',
       requiredLevel: 32,
       descriptionVi: 'Đạt Cấp độ 32',
+    },
+  ],
+  SEADRA: [
+    {
+      targetSpeciesKey: 'KINGDRA',
+      method: 'item',
+      requiredItem: 'dragon-scale',
+      requiredItemNameVi: 'Vảy Rồng (Dragon Scale)',
+      descriptionVi: 'Giữ Vảy Rồng (Dragon Scale) để tiến hóa',
     },
   ],
   GOLDEEN: [
@@ -593,6 +670,41 @@ export const GEN1_EVOLUTIONS: Record<string, EvolutionRequirement[]> = {
       requiredItemNameVi: 'Đá Lửa (Fire Stone)',
       descriptionVi: 'Dùng Đá Lửa',
     },
+    {
+      targetSpeciesKey: 'ESPEON',
+      method: 'stone',
+      requiredItem: 'sun-stone',
+      requiredItemNameVi: 'Đá Mặt Trời (Sun Stone)',
+      descriptionVi: 'Dùng Đá Mặt Trời',
+    },
+    {
+      targetSpeciesKey: 'UMBREON',
+      method: 'stone',
+      requiredItem: 'moon-stone',
+      requiredItemNameVi: 'Đá Mặt Trăng (Moon Stone)',
+      descriptionVi: 'Dùng Đá Mặt Trăng',
+    },
+    {
+      targetSpeciesKey: 'LEAFEON',
+      method: 'stone',
+      requiredItem: 'leaf-stone',
+      requiredItemNameVi: 'Đá Lá (Leaf Stone)',
+      descriptionVi: 'Dùng Đá Lá',
+    },
+    {
+      targetSpeciesKey: 'GLACEON',
+      method: 'stone',
+      requiredItem: 'ice-stone',
+      requiredItemNameVi: 'Đá Băng (Ice Stone)',
+      descriptionVi: 'Dùng Đá Băng',
+    },
+    {
+      targetSpeciesKey: 'SYLVEON',
+      method: 'stone',
+      requiredItem: 'shiny-stone',
+      requiredItemNameVi: 'Đá Ánh Sáng (Shiny Stone)',
+      descriptionVi: 'Dùng Đá Ánh Sáng',
+    },
   ],
   OMANYTE: [
     {
@@ -625,6 +737,185 @@ export const GEN1_EVOLUTIONS: Record<string, EvolutionRequirement[]> = {
       requiredLevel: 55,
       descriptionVi: 'Đạt Cấp độ 55',
     },
+  ],
+  CHANSEY: [
+    {
+      targetSpeciesKey: 'BLISSEY',
+      method: 'item',
+      requiredItem: 'soothe-bell',
+      requiredItemNameVi: 'Chuông Tịnh Tâm (Soothe Bell)',
+      descriptionVi: 'Giữ Chuông Tịnh Tâm (Soothe Bell) để tiến hóa',
+    },
+  ],
+  ONIX: [
+    {
+      targetSpeciesKey: 'STEELIX',
+      method: 'item',
+      requiredItem: 'metal-coat',
+      requiredItemNameVi: 'Áo Giáp Kim Loại (Metal Coat)',
+      descriptionVi: 'Giữ Áo Giáp Kim Loại (Metal Coat) để tiến hóa',
+    },
+  ],
+  SCYTHER: [
+    {
+      targetSpeciesKey: 'SCIZOR',
+      method: 'item',
+      requiredItem: 'metal-coat',
+      requiredItemNameVi: 'Áo Giáp Kim Loại (Metal Coat)',
+      descriptionVi: 'Giữ Áo Giáp Kim Loại (Metal Coat) để tiến hóa',
+    },
+    {
+      targetSpeciesKey: 'KLEAVOR',
+      method: 'item',
+      requiredItem: 'black-augurite',
+      requiredItemNameVi: 'Quặng Đen (Black Augurite)',
+      descriptionVi: 'Giữ Quặng Đen (Black Augurite) để tiến hóa',
+    },
+  ],
+  LICKITUNG: [
+    {
+      targetSpeciesKey: 'LICKILICKY',
+      method: 'level',
+      requiredLevel: 33,
+      descriptionVi: 'Đạt Cấp độ 33',
+    },
+  ],
+  TANGELA: [
+    {
+      targetSpeciesKey: 'TANGROWTH',
+      method: 'level',
+      requiredLevel: 36,
+      descriptionVi: 'Đạt Cấp độ 36',
+    },
+  ],
+  ELECTABUZZ: [
+    {
+      targetSpeciesKey: 'ELECTIVIRE',
+      method: 'item',
+      requiredItem: 'electirizer',
+      requiredItemNameVi: 'Lõi Tụ Điện (Electirizer)',
+      descriptionVi: 'Giữ Lõi Tụ Điện (Electirizer) để tiến hóa',
+    },
+  ],
+  MAGMAR: [
+    {
+      targetSpeciesKey: 'MAGMORTAR',
+      method: 'item',
+      requiredItem: 'magmarizer',
+      requiredItemNameVi: 'Lõi Nhiệt Hỏa (Magmarizer)',
+      descriptionVi: 'Giữ Lõi Nhiệt Hỏa (Magmarizer) để tiến hóa',
+    },
+  ],
+  PORYGON: [
+    {
+      targetSpeciesKey: 'PORYGON2',
+      method: 'item',
+      requiredItem: 'upgrade',
+      requiredItemNameVi: 'Bản Nâng Cấp (Up-Grade)',
+      descriptionVi: 'Giữ Bản Nâng Cấp (Up-Grade) để tiến hóa',
+    },
+  ],
+  PORYGON2: [
+    {
+      targetSpeciesKey: 'PORYGONZ',
+      method: 'item',
+      requiredItem: 'dubious-disc',
+      requiredItemNameVi: 'Đĩa Kỳ Lạ (Dubious Disc)',
+      descriptionVi: 'Giữ Đĩa Kỳ Lạ (Dubious Disc) để tiến hóa',
+    },
+  ],
+  // Regional Forms evolutions
+  MEOWTH_2: [
+    { targetSpeciesKey: 'PERRSERKER', method: 'level', requiredLevel: 28, descriptionVi: 'Đạt Cấp độ 28' },
+  ],
+  MEOWTH_GALARIAN: [
+    { targetSpeciesKey: 'PERRSERKER', method: 'level', requiredLevel: 28, descriptionVi: 'Đạt Cấp độ 28' },
+  ],
+  FARFETCHD_1: [
+    { targetSpeciesKey: 'SIRFETCHD', method: 'level', requiredLevel: 28, descriptionVi: 'Đạt Cấp độ 28' },
+  ],
+  FARFETCHD_GALARIAN: [
+    { targetSpeciesKey: 'SIRFETCHD', method: 'level', requiredLevel: 28, descriptionVi: 'Đạt Cấp độ 28' },
+  ],
+  MRMIME_1: [
+    { targetSpeciesKey: 'MRRIME', method: 'level', requiredLevel: 42, descriptionVi: 'Đạt Cấp độ 42' },
+  ],
+  MRMIME_GALARIAN: [
+    { targetSpeciesKey: 'MRRIME', method: 'level', requiredLevel: 42, descriptionVi: 'Đạt Cấp độ 42' },
+  ],
+  SLOWPOKE_1: [
+    { targetSpeciesKey: 'SLOWBRO_GALARIAN', method: 'level', requiredLevel: 37, descriptionVi: 'Đạt Cấp độ 37' },
+    { targetSpeciesKey: 'SLOWKING_GALARIAN', method: 'item', requiredItem: 'kings-rock', requiredItemNameVi: "Đá Vương Giả (King's Rock)", descriptionVi: "Giữ King's Rock để tiến hóa" },
+  ],
+  SLOWPOKE_GALARIAN: [
+    { targetSpeciesKey: 'SLOWBRO_GALARIAN', method: 'level', requiredLevel: 37, descriptionVi: 'Đạt Cấp độ 37' },
+    { targetSpeciesKey: 'SLOWKING_GALARIAN', method: 'item', requiredItem: 'kings-rock', requiredItemNameVi: "Đá Vương Giả (King's Rock)", descriptionVi: "Giữ King's Rock để tiến hóa" },
+  ],
+  PONYTA_1: [
+    { targetSpeciesKey: 'RAPIDASH_GALARIAN', method: 'level', requiredLevel: 40, descriptionVi: 'Đạt Cấp độ 40' },
+  ],
+  PONYTA_GALARIAN: [
+    { targetSpeciesKey: 'RAPIDASH_GALARIAN', method: 'level', requiredLevel: 40, descriptionVi: 'Đạt Cấp độ 40' },
+  ],
+  RATTATA_1: [
+    { targetSpeciesKey: 'RATICATE_ALOLAN', method: 'level', requiredLevel: 20, descriptionVi: 'Đạt Cấp độ 20' },
+  ],
+  RATTATA_ALOLAN: [
+    { targetSpeciesKey: 'RATICATE_ALOLAN', method: 'level', requiredLevel: 20, descriptionVi: 'Đạt Cấp độ 20' },
+  ],
+  SANDSHREW_1: [
+    { targetSpeciesKey: 'SANDSLASH_ALOLAN', method: 'stone', requiredItem: 'ice-stone', requiredItemNameVi: 'Đá Băng (Ice Stone)', descriptionVi: 'Dùng Đá Băng' },
+  ],
+  SANDSHREW_ALOLAN: [
+    { targetSpeciesKey: 'SANDSLASH_ALOLAN', method: 'stone', requiredItem: 'ice-stone', requiredItemNameVi: 'Đá Băng (Ice Stone)', descriptionVi: 'Dùng Đá Băng' },
+  ],
+  VULPIX_1: [
+    { targetSpeciesKey: 'NINETALES_ALOLAN', method: 'stone', requiredItem: 'ice-stone', requiredItemNameVi: 'Đá Băng (Ice Stone)', descriptionVi: 'Dùng Đá Băng' },
+  ],
+  VULPIX_ALOLAN: [
+    { targetSpeciesKey: 'NINETALES_ALOLAN', method: 'stone', requiredItem: 'ice-stone', requiredItemNameVi: 'Đá Băng (Ice Stone)', descriptionVi: 'Dùng Đá Băng' },
+  ],
+  DIGLETT_1: [
+    { targetSpeciesKey: 'DUGTRIO_ALOLAN', method: 'level', requiredLevel: 26, descriptionVi: 'Đạt Cấp độ 26' },
+  ],
+  DIGLETT_ALOLAN: [
+    { targetSpeciesKey: 'DUGTRIO_ALOLAN', method: 'level', requiredLevel: 26, descriptionVi: 'Đạt Cấp độ 26' },
+  ],
+  MEOWTH_1: [
+    { targetSpeciesKey: 'PERSIAN_ALOLAN', method: 'level', requiredLevel: 28, descriptionVi: 'Đạt Cấp độ 28' },
+  ],
+  MEOWTH_ALOLAN: [
+    { targetSpeciesKey: 'PERSIAN_ALOLAN', method: 'level', requiredLevel: 28, descriptionVi: 'Đạt Cấp độ 28' },
+  ],
+  GEODUDE_1: [
+    { targetSpeciesKey: 'GRAVELER_ALOLAN', method: 'level', requiredLevel: 25, descriptionVi: 'Đạt Cấp độ 25' },
+  ],
+  GEODUDE_ALOLAN: [
+    { targetSpeciesKey: 'GRAVELER_ALOLAN', method: 'level', requiredLevel: 25, descriptionVi: 'Đạt Cấp độ 25' },
+  ],
+  GRAVELER_1: [
+    { targetSpeciesKey: 'GOLEM_ALOLAN', method: 'level', requiredLevel: 36, descriptionVi: 'Đạt Cấp độ 36' },
+  ],
+  GRAVELER_ALOLAN: [
+    { targetSpeciesKey: 'GOLEM_ALOLAN', method: 'level', requiredLevel: 36, descriptionVi: 'Đạt Cấp độ 36' },
+  ],
+  GRIMER_1: [
+    { targetSpeciesKey: 'MUK_ALOLAN', method: 'level', requiredLevel: 38, descriptionVi: 'Đạt Cấp độ 38' },
+  ],
+  GRIMER_ALOLAN: [
+    { targetSpeciesKey: 'MUK_ALOLAN', method: 'level', requiredLevel: 38, descriptionVi: 'Đạt Cấp độ 38' },
+  ],
+  GROWLITHE_1: [
+    { targetSpeciesKey: 'ARCANINE_HISUIAN', method: 'stone', requiredItem: 'fire-stone', requiredItemNameVi: 'Đá Lửa (Fire Stone)', descriptionVi: 'Dùng Đá Lửa' },
+  ],
+  GROWLITHE_HISUIAN: [
+    { targetSpeciesKey: 'ARCANINE_HISUIAN', method: 'stone', requiredItem: 'fire-stone', requiredItemNameVi: 'Đá Lửa (Fire Stone)', descriptionVi: 'Dùng Đá Lửa' },
+  ],
+  VOLTORB_1: [
+    { targetSpeciesKey: 'ELECTRODE_HISUIAN', method: 'stone', requiredItem: 'leaf-stone', requiredItemNameVi: 'Đá Lá (Leaf Stone)', descriptionVi: 'Dùng Đá Lá' },
+  ],
+  VOLTORB_HISUIAN: [
+    { targetSpeciesKey: 'ELECTRODE_HISUIAN', method: 'stone', requiredItem: 'leaf-stone', requiredItemNameVi: 'Đá Lá (Leaf Stone)', descriptionVi: 'Dùng Đá Lá' },
   ],
 };
 
@@ -749,7 +1040,10 @@ export function applyEvolution(
     pokemon.name = pokemon.nickname!;
   }
   pokemon.types = [...targetSpecies.types];
-  if (targetSpecies.ability) {
+  if (targetSpecies.abilities) {
+    const slot = pokemon.abilitySlot ?? 'primary';
+    pokemon.ability = targetSpecies.abilities[slot] ?? targetSpecies.abilities.primary;
+  } else if (targetSpecies.ability) {
     pokemon.ability = targetSpecies.ability;
   }
 

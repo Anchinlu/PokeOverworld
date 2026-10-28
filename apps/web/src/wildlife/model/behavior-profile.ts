@@ -30,6 +30,12 @@ export interface StateWeights {
   [key: string]: number;
 }
 
+export interface LocomotionProfile {
+  wanderSpeed?: number;
+  fleeSpeed?: number;
+  chaseSpeed?: number;
+}
+
 export interface BehaviorProfile {
   id: string;
   temperament: Temperament;
@@ -40,6 +46,8 @@ export interface BehaviorProfile {
   anchors: string[];
   threat: ThreatProfile;
   weights: StateWeights;
+  moveSpeed?: number;
+  locomotion?: LocomotionProfile;
   /** Data-driven tags used by weather and habitat modifiers. */
   tags?: readonly string[];
   /** Optional spawn/AI affinity multipliers by normalized weather key. */

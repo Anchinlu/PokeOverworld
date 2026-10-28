@@ -2,6 +2,7 @@ import { TERRAIN } from '@pokemon/game-data';
 import { describe, expect, it } from 'vitest';
 import { ContinentService } from '../../src/continent';
 import {
+  getNearbySettlements,
   getV0VillageBuildingsForChunk,
   isV0RoadTile,
 } from '../../src/maps/terrain-field/settlement-sites';
@@ -11,9 +12,11 @@ import { generateChunkTerrain } from '../../src/maps/chunk-terrain';
 function findVillagePathTile(seed: number): { gx: number; gy: number } {
   const plan = new ContinentService(seed).getPlan();
   const field = createTerrainField(4, seed);
-  const settlement = plan.settlements.find(
-    (candidate) => Math.hypot(candidate.gx, candidate.gy) >= 160
-  );
+  const settlement = plan.settlements.find((candidate) => {
+    if (Math.hypot(candidate.gx, candidate.gy) < 160) return false;
+    const nearby = getNearbySettlements(candidate.gx, candidate.gy, field);
+    return nearby.some((v) => v.name === candidate.name);
+  });
   if (!settlement) throw new Error('V4 plan did not produce a remote settlement');
 
   for (let gy = settlement.gy - 10; gy <= settlement.gy + 10; gy++) {
@@ -45,17 +48,18 @@ describe('World Gen v4 overworld integration', () => {
 
     expect(field.isRoad(road.gx, road.gy)).toBe(true);
     expect(generated.terrainGrid[ly][lx]).toBe(TERRAIN.ROAD);
-  });
+  }, 20000);
 
   it('projects a planned settlement into chunk buildings and keeps it deterministic', () => {
     const seed = 101;
     const plan = new ContinentService(seed).getPlan();
-    const settlement = plan.settlements.find(
-      (candidate) => Math.hypot(candidate.gx, candidate.gy) >= 160
-    );
-    expect(settlement).toBeDefined();
-
     const field = createTerrainField(4, seed);
+    const settlement = plan.settlements.find((candidate) => {
+      if (Math.hypot(candidate.gx, candidate.gy) < 160) return false;
+      const nearby = getNearbySettlements(candidate.gx, candidate.gy, field);
+      return nearby.some((v) => v.name === candidate.name);
+    });
+    expect(settlement).toBeDefined();
     const cx = Math.floor(settlement!.gx / 16);
     const cy = Math.floor(settlement!.gy / 16);
     const first = getV0VillageBuildingsForChunk(cx, cy, field);

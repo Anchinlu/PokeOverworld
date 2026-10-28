@@ -1,5 +1,6 @@
 import type { Direction, PlayerState } from '@pokemon/shared-types';
 import { TILE_SIZE } from '@pokemon/game-data';
+import type { NPCEmoteType } from '../npc/npc-types';
 
 export type SpeedMode = 'classic' | 'brisk' | 'run';
 
@@ -28,6 +29,9 @@ export class Player {
   public direction: Direction = 0;
   public frame = 0;
   public stepCount = 0;
+  public spriteKey?: string;
+  public activeEmote: NPCEmoteType | null = null;
+  public emoteTimerMs = 0;
 
   public isMoving = false;
   public isBlocked = false;
@@ -204,11 +208,24 @@ export class Player {
     }
   }
 
+  public setEmote(emote: NPCEmoteType | null, durationMs = 1500): void {
+    this.activeEmote = emote;
+    this.emoteTimerMs = durationMs;
+  }
+
   /**
    * Updates player position interpolation with delta time.
    * Returns true if step was completed this tick.
    */
   public update(dtScale = 1.0, isRunning = false): boolean {
+    if (this.emoteTimerMs > 0) {
+      const dtMs = (1000 / 60) * dtScale;
+      this.emoteTimerMs = Math.max(0, this.emoteTimerMs - dtMs);
+      if (this.emoteTimerMs === 0) {
+        this.activeEmote = null;
+      }
+    }
+
     if (!this.isMoving) {
       if (this.landingSquashTimer > 0) {
         const dtSeconds = (1 / 60) * dtScale;

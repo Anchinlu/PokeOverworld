@@ -5,6 +5,7 @@
  */
 
 import { AssetLoader } from '../rendering/asset-loader';
+import { regionalFormsRegistry } from '../domain/pokemon/regional-forms';
 
 export type ManifestAssetKey =
   | 'pokedex_tab_pokemon'
@@ -129,19 +130,25 @@ export const POKEMON_ASSETS = {
     );
   },
   getFrontSprite: (speciesKey: string, isShiny = false): string => {
+    const reg = regionalFormsRegistry.getByFormKey(speciesKey) || regionalFormsRegistry.getByAssetKey(speciesKey);
+    const targetKey = reg ? reg.assetKey : speciesKey;
     const folder = isShiny ? 'Front shiny' : 'Front';
-    const key = isShiny ? `pokemon_front_shiny_${speciesKey}` : `pokemon_front_${speciesKey}`;
-    return resolveAsset(key, `/Graphics/Pokemon/${folder}/${speciesKey}.png`);
+    const key = isShiny ? `pokemon_front_shiny_${targetKey}` : `pokemon_front_${targetKey}`;
+    return resolveAsset(key, `/Graphics/Pokemon/${folder}/${targetKey}.png`);
   },
   getBackSprite: (speciesKey: string, isShiny = false): string => {
+    const reg = regionalFormsRegistry.getByFormKey(speciesKey) || regionalFormsRegistry.getByAssetKey(speciesKey);
+    const targetKey = reg ? reg.assetKey : speciesKey;
     const folder = isShiny ? 'Back shiny' : 'Back';
-    const key = isShiny ? `pokemon_back_shiny_${speciesKey}` : `pokemon_back_${speciesKey}`;
-    return resolveAsset(key, `/Graphics/Pokemon/${folder}/${speciesKey}.png`);
+    const key = isShiny ? `pokemon_back_shiny_${targetKey}` : `pokemon_back_${targetKey}`;
+    return resolveAsset(key, `/Graphics/Pokemon/${folder}/${targetKey}.png`);
   },
   getIconSprite: (speciesKey: string, isShiny = false): string => {
+    const reg = regionalFormsRegistry.getByFormKey(speciesKey) || regionalFormsRegistry.getByAssetKey(speciesKey);
+    const targetKey = reg ? reg.assetKey : speciesKey;
     const folder = isShiny ? 'Icons shiny' : 'Icons';
-    const key = isShiny ? `pokemon_icon_shiny_${speciesKey}` : `pokemon_icon_${speciesKey}`;
-    return resolveAsset(key, `/Graphics/Pokemon/${folder}/${speciesKey}.png`);
+    const key = isShiny ? `pokemon_icon_shiny_${targetKey}` : `pokemon_icon_${targetKey}`;
+    return resolveAsset(key, `/Graphics/Pokemon/${folder}/${targetKey}.png`);
   },
   get shinyIcon(): string {
     return resolveAsset('pokemon_shiny_icon', '/Graphics/Pokemon/shiny.png');
@@ -451,4 +458,110 @@ export const MAP_ASSETS = {
     return resolveAsset('map_player_head', '/assets/ui/map_player_head.png');
   },
 } as const;
+
+export const CHARACTER_ASSETS = {
+  get ashPajamas(): string {
+    return resolveAsset('char_ash_pajamas', '/assets/characters/ash_pajamas.png');
+  },
+} as const;
+
+export const INTRO_ASSETS = {
+  get openingVideo(): string {
+    return resolveAsset('intro_opening_video', '/assets/intro/intro_opening.mp4');
+  },
+  get storyPage1(): string {
+    return resolveAsset('intro_story_page_1', '/assets/intro/story_page_1.png');
+  },
+  get storyPage2(): string {
+    return resolveAsset('intro_story_page_2', '/assets/intro/story_page_2.png');
+  },
+  get storyPage3(): string {
+    return resolveAsset('intro_story_page_3', '/assets/intro/story_page_3.png');
+  },
+  get storyPage4(): string {
+    return resolveAsset('intro_story_page_4', '/assets/intro/story_page_4.png');
+  },
+  get storyPage5(): string {
+    return resolveAsset('intro_story_page_5', '/assets/intro/story_page_5.png');
+  },
+  get storyPage6(): string {
+    return resolveAsset('intro_story_page_6', '/assets/intro/story_page_6.png');
+  },
+  get storyPage7(): string {
+    return resolveAsset('intro_story_page_7', '/assets/intro/story_page_7.png');
+  },
+  get storyPage8(): string {
+    return resolveAsset('intro_story_page_8', '/assets/intro/story_page_8.png');
+  },
+} as const;
+
+export const ROUTE1_STORY_ASSETS = {
+  get mangaPage1(): string {
+    return resolveAsset('route1_manga_page_1', '/assets/intro/route1_manga_page_1.jpg');
+  },
+  get mangaPage2(): string {
+    return resolveAsset('route1_manga_page_2', '/assets/intro/route1_manga_page_2.jpg');
+  },
+} as const;
+
+export const STARTER_LAB_ASSETS = {
+  get pokeballClosed(): string {
+    return resolveAsset('pokeball_closed', '/assets/intro/pokeball_closed.png');
+  },
+  get pokeballOpenedEmpty(): string {
+    return resolveAsset('pokeball_opened_empty', '/assets/intro/pokeball_opened_empty.png');
+  },
+  get portraitOakLab(): string {
+    return resolveAsset('portrait_oak_lab', '/assets/characters/portrait_oak_lab.png');
+  },
+  get portraitAshEmptyBall(): string {
+    return resolveAsset('portrait_ash_empty_ball', '/assets/characters/portrait_ash_empty_ball.png');
+  },
+  get labRoomBg(): string {
+    return resolveAsset('oak_lab_room_bg', '/assets/intro/oak_lab_room_bg.png');
+  },
+  get pikachuFront(): string {
+    return resolveAsset('pikachu_front', '/assets/pokemon/pikachu_front.png');
+  },
+  get charPikachuOverworld(): string {
+    return resolveAsset('char_pikachu_overworld', '/assets/characters/char_pikachu_overworld.png');
+  },
+  get portraitAshHugPikachu(): string {
+    return resolveAsset('portrait_ash_hug_pikachu', '/assets/characters/portrait_ash_hug_pikachu.png');
+  },
+  get portraitAshReachPikachu(): string {
+    return resolveAsset('portrait_ash_reach_pikachu', '/assets/characters/portrait_ash_reach_pikachu.png');
+  },
+  get portraitAshShocked(): string {
+    return resolveAsset('portrait_ash_shocked', '/assets/characters/portrait_ash_shocked.png');
+  },
+  get portraitAshRunning(): string {
+    return resolveAsset('portrait_ash_running', '/assets/characters/portrait_ash_running.png');
+  },
+  get cutsceneAshOakShocked(): string {
+    return resolveAsset('cutscene_ash_oak_shocked', '/assets/characters/cutscene_ash_oak_shocked.png');
+  },
+  get portraitDeliaMom(): string {
+    return resolveAsset('portrait_delia_mom', '/assets/characters/portrait_delia_mom.png');
+  },
+  get portraitDeliaGiveBackpack(): string {
+    return resolveAsset('portrait_delia_give_backpack', '/assets/characters/portrait_delia_give_backpack.png');
+  },
+  get portraitDeliaTalk(): string {
+    return resolveAsset('portrait_delia_talk', '/assets/characters/portrait_delia_talk.png');
+  },
+  get cutscenePikachuShockCrowd(): string {
+    return resolveAsset('cutscene_pikachu_shock_crowd', '/assets/characters/cutscene_pikachu_shock_crowd.png');
+  },
+  get pikachuCry(): string {
+    return resolveAsset('audio_pikachu_cry', 'Audio/Cries/PIKACHU.mp3');
+  },
+} as const;
+
+export const EMOTE_ASSETS = {
+  get emotesSheet(): string {
+    return resolveAsset('emotes', '/assets/ui/emotes.png');
+  },
+} as const;
+
 

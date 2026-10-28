@@ -6,6 +6,8 @@
 
 import type { BattleState } from './battle-state';
 import type { BattleEngine } from './battle-engine';
+import type { LevelUpStatBoost } from './types';
+import { battleSePlayer } from '../audio';
 
 export class BattleTextOverlay {
   private root: HTMLDivElement;
@@ -41,6 +43,14 @@ export class BattleTextOverlay {
 
   private bagModeEl: HTMLDivElement;
   private bagTextEl: HTMLSpanElement;
+
+  // Level-Up Stat Boost Modal (GBA Window Skin, z-index 99)
+  private levelUpBackdropEl: HTMLDivElement;
+  private levelUpNameEl: HTMLSpanElement;
+  private levelUpOldLevelEl: HTMLSpanElement;
+  private levelUpNewLevelEl: HTMLSpanElement;
+  private levelUpRowsContainer: HTMLDivElement;
+  private currentBoost: LevelUpStatBoost | null = null;
 
   // Cache to skip redundant DOM updates
   private lastDisplayedText = '';
@@ -141,6 +151,75 @@ export class BattleTextOverlay {
     bottomPanel.appendChild(this.bagModeEl);
 
     this.root.appendChild(bottomPanel);
+
+    // 4. Level-Up Stat Boost Modal (DOM Layer, z-index 99)
+    this.levelUpBackdropEl = document.createElement('div');
+    this.levelUpBackdropEl.className = 'bho-levelup-backdrop';
+
+    const box = document.createElement('div');
+    box.className = 'bho-levelup-box';
+
+    // Header
+    const header = document.createElement('div');
+    header.className = 'bho-levelup-header';
+    header.textContent = '★ LÊN CẤP! (LEVEL UP!) ★';
+    box.appendChild(header);
+
+    // Subhead: Pokemon Name & Lv.old -> Lv.new
+    const subhead = document.createElement('div');
+    subhead.className = 'bho-levelup-subhead';
+
+    this.levelUpNameEl = document.createElement('span');
+    this.levelUpNameEl.className = 'bho-levelup-name';
+
+    const levelProgression = document.createElement('div');
+    levelProgression.className = 'bho-levelup-level';
+
+    this.levelUpOldLevelEl = document.createElement('span');
+    this.levelUpOldLevelEl.className = 'bho-levelup-level-old';
+
+    const arrow = document.createElement('span');
+    arrow.className = 'bho-levelup-level-arrow';
+    arrow.textContent = '➔';
+
+    this.levelUpNewLevelEl = document.createElement('span');
+    this.levelUpNewLevelEl.className = 'bho-levelup-level-new';
+
+    levelProgression.appendChild(this.levelUpOldLevelEl);
+    levelProgression.appendChild(arrow);
+    levelProgression.appendChild(this.levelUpNewLevelEl);
+
+    subhead.appendChild(this.levelUpNameEl);
+    subhead.appendChild(levelProgression);
+    box.appendChild(subhead);
+
+    // Stats list
+    this.levelUpRowsContainer = document.createElement('div');
+    this.levelUpRowsContainer.className = 'bho-levelup-stats-list';
+    box.appendChild(this.levelUpRowsContainer);
+
+    // Footer
+    const footer = document.createElement('div');
+    footer.className = 'bho-levelup-footer';
+    footer.textContent = '[ Nhấn Space hoặc Click để tiếp tục ]';
+    box.appendChild(footer);
+
+    this.levelUpBackdropEl.appendChild(box);
+
+    if (typeof this.levelUpBackdropEl.addEventListener === 'function') {
+      this.levelUpBackdropEl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (this.currentBoost?.onConfirm) {
+          battleSePlayer.playSound('Audio/SE/GUI sel decision.ogg', 0.65);
+          const onConfirm = this.currentBoost.onConfirm;
+          this.currentBoost = null;
+          this.levelUpBackdropEl.style.display = 'none';
+          onConfirm();
+        }
+      });
+    }
+
+    this.root.appendChild(this.levelUpBackdropEl);
     parent.appendChild(this.root);
   }
 
@@ -244,6 +323,100 @@ export class BattleTextOverlay {
       if (this.lastBallsCount !== engine.ballsCount) {
         this.lastBallsCount = engine.ballsCount;
         this.bagTextEl.textContent = `BÓNG POKÉ: x${engine.ballsCount}`;
+      }
+    }
+
+    // 4. Level-Up Stat Boost Modal Display (Topmost DOM layer)
+    if (state.levelUpStatBoost) {
+      const boost = state.levelUpStatBoost;
+      if (this.currentBoost !== boost) {
+        this.currentBoost = boost;
+        this.levelUpBackdropEl.style.display = 'flex';
+        this.levelUpNameEl.textContent = boost.pokemonName.toUpperCase();
+        this.levelUpOldLevelEl.textContent = `Lv.${boost.oldLevel}`;
+        this.levelUpNewLevelEl.textContent = `Lv.${boost.newLevel}`;
+
+        const statsList = [
+          {
+            label: 'HP (Máu)',
+            oldVal: boost.oldStats.hp,
+            newVal: boost.newStats.hp,
+            gain: boost.hpGained,
+          },
+          {
+            label: 'Tấn Công',
+            oldVal: boost.oldStats.attack,
+            newVal: boost.newStats.attack,
+            gain: boost.newStats.attack - boost.oldStats.attack,
+          },
+          {
+            label: 'Phòng Thủ',
+            oldVal: boost.oldStats.defense,
+            newVal: boost.newStats.defense,
+            gain: boost.newStats.defense - boost.oldStats.defense,
+          },
+          {
+            label: 'T.Công ĐB',
+            oldVal: boost.oldStats.spAtk,
+            newVal: boost.newStats.spAtk,
+            gain: boost.newStats.spAtk - boost.oldStats.spAtk,
+          },
+          {
+            label: 'P.Thủ ĐB',
+            oldVal: boost.oldStats.spDef,
+            newVal: boost.newStats.spDef,
+            gain: boost.newStats.spDef - boost.oldStats.spDef,
+          },
+          {
+            label: 'Tốc Độ',
+            oldVal: boost.oldStats.speed,
+            newVal: boost.newStats.speed,
+            gain: boost.newStats.speed - boost.oldStats.speed,
+          },
+        ];
+
+        this.levelUpRowsContainer.innerHTML = '';
+        for (const row of statsList) {
+          const rowEl = document.createElement('div');
+          rowEl.className = 'bho-levelup-stat-row';
+
+          const labelEl = document.createElement('span');
+          labelEl.className = 'bho-levelup-stat-label';
+          labelEl.textContent = row.label;
+
+          const valsEl = document.createElement('div');
+          valsEl.className = 'bho-levelup-stat-vals';
+
+          const oldEl = document.createElement('span');
+          oldEl.className = 'bho-levelup-val-old';
+          oldEl.textContent = String(row.oldVal);
+
+          const arrEl = document.createElement('span');
+          arrEl.className = 'bho-levelup-val-arrow';
+          arrEl.textContent = '➔';
+
+          const newEl = document.createElement('span');
+          newEl.className = 'bho-levelup-val-new';
+          newEl.textContent = String(row.newVal);
+
+          valsEl.appendChild(oldEl);
+          valsEl.appendChild(arrEl);
+          valsEl.appendChild(newEl);
+
+          const badgeEl = document.createElement('span');
+          badgeEl.className = `bho-levelup-badge ${row.gain > 0 ? 'gain' : 'zero'}`;
+          badgeEl.textContent = row.gain > 0 ? `▲ +${row.gain}` : '+0';
+
+          rowEl.appendChild(labelEl);
+          rowEl.appendChild(valsEl);
+          rowEl.appendChild(badgeEl);
+          this.levelUpRowsContainer.appendChild(rowEl);
+        }
+      }
+    } else {
+      if (this.currentBoost !== null) {
+        this.currentBoost = null;
+        this.levelUpBackdropEl.style.display = 'none';
       }
     }
   }

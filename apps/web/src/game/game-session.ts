@@ -3,7 +3,7 @@ import { Player, Follower } from '../entities';
 import { ChunkManager, createTerrainField, type TerrainField } from '../maps';
 import { resolveUnifiedWildlifeBattle, updateUnifiedWildlife } from '../wildlife/unified-runtime';
 import type { GameRenderer } from '../rendering';
-import type { BerryBushEntity, WildPokemonEntity, WorldChunk } from '../maps/chunk';
+import type { BerryBushEntity, WildPokemonEntity, WorldChunk, VillageNPCEntity } from '../maps/chunk';
 import { interactWithBerryBush } from '../ui/berry-panel';
 import { sampleEcology, getEcologyZone } from '../maps/ecology';
 import {
@@ -39,6 +39,29 @@ import { TILE_SIZE, TERRAIN } from '@pokemon/game-data';
 import { getDayPhase, getAmbientLightProfile, getOverworldWeather, type OverworldWeather } from '../world';
 import { checkAABB, getCharacterHitbox } from '../systems/collision';
 import { getWildSpriteAabb } from '../wildlife/behavior/movement/wild-hitbox';
+import {
+  InteriorManager,
+  InteriorRegistry,
+  DoorPromptModal,
+  playDoorTransition,
+  type OverworldReturnCoords,
+} from '../interior';
+import {
+  createNPCRuntimeState,
+  updateNPCBehavior,
+  triggerNPCEmote,
+  resolveNPCDialogueBranch,
+  executeNPCEventActions,
+  resolveActiveScheduleRule,
+  type NPCDialogueChoice,
+  type NPCEventAction,
+  type NPCTrainerProfile,
+  type NPCTimeBand,
+  type NPCEmoteType,
+  palletPrologueEventManager,
+} from '../npc';
+import { storyManager, type StoryGamePort, route1SpearowEventManager } from '../story';
+import { autoWalkNavigator } from '../ui/quest-tracker';
 
 export class GameSession {
   public seed: number;
@@ -50,8 +73,21 @@ export class GameSession {
   public follower: Follower;
   public readonly worldClock: WorldClock;
   public isBattling = false;
+  public isInputLocked = false;
   private lastBattleEndTime = 0;
+  /** Tracks whether loaded chunks were purged for `story_wild_spawns_suppressed`. */
+  private storyWildlifePurged = false;
   private partyUnsubscribe?: () => void;
+  public activeDialogue: {
+    npc: VillageNPCEntity;
+    lines: string[];
+    lineIndex: number;
+    choicesPrompt?: string;
+    choices?: NPCDialogueChoice[];
+    actionsOnComplete?: NPCEventAction[];
+    choiceResolved?: boolean;
+  } | null = null;
+  private dialogueEl: HTMLDivElement | null = null;
 
   public getWildlifeDebugStats(): {
     total: number;
@@ -161,7 +197,110 @@ export class GameSession {
               tier: 0,
             }
           : undefined,
+      interior: InteriorManager.getInstance().getSaveState() ?? undefined,
     }));
+
+    // Hook up interior room exit callback
+    InteriorManager.getInstance().onExitRoomCallback = (coords: OverworldReturnCoords) => {
+      this.exitInteriorToOverworld(coords);
+    };
+
+    // Bind GamePort to the central StoryManager
+    storyManager.setGamePort(this.createStoryGamePort());
+  }
+
+  public enterOakLab(): void {
+    playDoorTransition(() => {
+      battleSePlayer.playSound('Audio/SE/Enter Door.ogg', 0.8);
+      InteriorManager.getInstance().enterOakLab(
+        {
+          gx: this.player.gx,
+          gy: this.player.gy,
+          direction: this.player.direction,
+        },
+        this.follower
+      );
+    });
+  }
+
+  public enterInteriorRoom(roomId: string, _displayName?: string): void {
+    const config = InteriorRegistry.getInstance().getRoom(roomId);
+    if (!config) return;
+    playDoorTransition(() => {
+      battleSePlayer.playSound('Audio/SE/Enter Door.ogg', 0.8);
+      InteriorManager.getInstance().enterRoom(
+        config,
+        {
+          gx: this.player.gx,
+          gy: this.player.gy,
+          direction: this.player.direction,
+        },
+        this.follower
+      );
+    });
+  }
+
+  public exitInteriorToOverworld(coords: OverworldReturnCoords): void {
+    playDoorTransition(() => {
+      battleSePlayer.playSound('Audio/SE/Exit Door.ogg', 0.8);
+      this.player.snapTo(coords.gx, coords.gy);
+      this.player.direction = 0; // Facing south
+      this.follower.snapTo(coords.gx, coords.gy - 1);
+      this.camera.snapTo(this.player);
+
+      // Trigger Scene 8 (Mom farewell & cheering crowd outside Lab) if Pokédex has been received
+      if (
+        playerService.hasFlag('pallet_lab_pokedex_received') &&
+        !playerService.hasFlag('pallet_crowd_mom_farewell_done')
+      ) {
+        setTimeout(() => {
+          palletPrologueEventManager.runScene8_MomFarewellAndCrowd(this);
+        }, 400);
+      }
+    });
+  }
+
+  public checkNearbyDoors(): void {
+    const registry = InteriorRegistry.getInstance();
+    let nearbyMapping: { building: any; mapping: any } | null = null;
+
+    for (const chunk of this.chunkManager.activeChunks) {
+      if (!chunk.buildings) continue;
+      for (const b of chunk.buildings) {
+        const mapping = registry.getBuildingMapping(b.type);
+        if (mapping) {
+          const doorMinX = b.doorGX;
+          const doorMaxX = b.doorGX + (b.doorWidthTiles || 1) - 1;
+          const isAtDoorFront =
+            this.player.gy === b.doorGY + 1 &&
+            this.player.gx >= doorMinX &&
+            this.player.gx <= doorMaxX;
+          const isCloseToDoor =
+            Math.abs(this.player.gx - (b.doorGX + 0.5)) <= 1.5 &&
+            Math.abs(this.player.gy - (b.doorGY + 1)) <= 1.5;
+          if (isAtDoorFront || (isCloseToDoor && this.player.direction === 3)) {
+            nearbyMapping = { building: b, mapping };
+            break;
+          }
+        }
+      }
+      if (nearbyMapping) break;
+    }
+
+    const doorModal = DoorPromptModal.getInstance();
+    if (nearbyMapping) {
+      if (!doorModal.isPromptOpen()) {
+        const { mapping } = nearbyMapping;
+        doorModal.showIndicator(mapping.displayName, {
+          buildingName: mapping.displayName,
+          onEnter: () => {
+            this.enterInteriorRoom(mapping.roomId, mapping.displayName);
+          },
+        });
+      }
+    } else {
+      doorModal.hideIndicator();
+    }
   }
 
   /**
@@ -170,7 +309,10 @@ export class GameSession {
    */
   public syncFollowerFromParty(): void {
     const activeFollower = partyService.getActiveFollower() || partyService.getLeader();
-    if (!activeFollower) return;
+    if (!activeFollower) {
+      this.follower.visible = false;
+      return;
+    }
 
     const targetSpecies = activeFollower.speciesKey.toUpperCase();
     const targetShiny = !!activeFollower.isShiny;
@@ -196,6 +338,34 @@ export class GameSession {
     }
     this.worldClock.resume('battle');
 
+    // Story events need an empty map: purge already-loaded wildlife instead of
+    // merely freezing it, and repopulate once the event lifts the flag.
+    this.syncStoryWildlifeSuppression();
+
+    // Handle Interior Room update if inside
+    const interior = InteriorManager.getInstance();
+    if (interior.isInInterior()) {
+      DoorPromptModal.getInstance().hideIndicator();
+      const isCutsceneActive = palletPrologueEventManager.isActive() || storyManager.isRunning();
+      if (palletPrologueEventManager.isActive()) {
+        palletPrologueEventManager.update(dtScale);
+      }
+      const requestedDir =
+        isCutsceneActive || this.isInputLocked ? null : this.input.getRequestedDirection();
+      let dx = 0;
+      let dy = 0;
+      let isMoving = false;
+      if (requestedDir !== null) {
+        isMoving = true;
+        if (requestedDir === 0) dy = 1;
+        else if (requestedDir === 1) dx = -1;
+        else if (requestedDir === 2) dx = 1;
+        else if (requestedDir === 3) dy = -1;
+      }
+      interior.update({ dx, dy, isMoving }, dtScale, this.input.isRunning(), this.follower);
+      return { pChunkX: 0, pChunkY: 0 };
+    }
+
     // 0. Advance world time (1 dtScale ~ 16.666ms at 60 FPS)
     const dtMs = dtScale * (1000 / 60);
     this.worldClock.advance(dtMs);
@@ -207,10 +377,42 @@ export class GameSession {
       progressive: true,
     });
 
-    // 2. Process movement or cliff jumping if player is idle on grid
-    if (!this.player.isMoving) {
-      const requestedDir = this.input.getRequestedDirection();
+    // 1.5. Process Story System (StoryManager / Pallet Prologue Event)
+    if (storyManager.isRunning()) {
+      return { pChunkX, pChunkY };
+    }
+    if (palletPrologueEventManager.isActive()) {
+      palletPrologueEventManager.update(dtScale);
+      return { pChunkX, pChunkY };
+    } else if (palletPrologueEventManager.shouldTrigger(this)) {
+      palletPrologueEventManager.trigger(this);
+      return { pChunkX, pChunkY };
+    }
+
+    // Act 2: Route 1 Spearow Event
+    // During the chase phase the player must be able to run away, so input is
+    // only locked for the scripted phases. A step already in progress is
+    // allowed to finish so the player never freezes between two tiles.
+    route1SpearowEventManager.update(dtScale, this);
+    if (route1SpearowEventManager.isInputLocked() && !this.player.isMoving) {
+      this.camera.update(this.player, dtScale);
+      return { pChunkX, pChunkY };
+    }
+
+    // 2. Process movement or cliff jumping if player is idle on grid and no dialogue active
+    if (!this.player.isMoving && !this.activeDialogue && !this.isInputLocked) {
+      let requestedDir = this.input.getRequestedDirection();
       const jumpRequested = this.input.consumeJumpRequest() || this.input.isJumpPressed();
+
+      if (requestedDir !== null) {
+        // Player manual input cancels auto-walking
+        if (autoWalkNavigator.isAutoWalking()) {
+          autoWalkNavigator.cancel();
+        }
+      } else if (autoWalkNavigator.isAutoWalking()) {
+        // Auto-walk step evaluation toward event area
+        requestedDir = autoWalkNavigator.getNextStepDirection(this);
+      }
 
       if (requestedDir !== null) {
         let nextGX = this.player.gx;
@@ -220,6 +422,27 @@ export class GameSession {
         else if (requestedDir === 1) nextGX -= 1;
         else if (requestedDir === 2) nextGX += 1;
         else if (requestedDir === 3) nextGY -= 1;
+
+        // Physical collision check against solo Spearow: never step on the event Pokémon
+        const soloSpearow = route1SpearowEventManager.soloSpearowActor;
+        const isOccupiedBySpearow =
+          collisionEnabled &&
+          soloSpearow?.visible &&
+          !playerService.hasFlag('route1_flock_escaped') &&
+          soloSpearow.gx === nextGX &&
+          soloSpearow.gy === nextGY;
+
+        if (isOccupiedBySpearow) {
+          this.player.setBlocked(requestedDir);
+          this.player.direction = requestedDir;
+          if (autoWalkNavigator.isAutoWalking()) {
+            autoWalkNavigator.cancel(true);
+          }
+          route1SpearowEventManager.faceEntity(soloSpearow, this.player.gx, this.player.gy);
+          route1SpearowEventManager.faceEntity(this.player, soloSpearow.gx, soloSpearow.gy);
+          void route1SpearowEventManager.triggerEncounter(this);
+          return { pChunkX, pChunkY };
+        }
 
         const currentTile = this.chunkManager.getTileData(this.player.gx, this.player.gy);
         const targetTile = this.chunkManager.getTileData(nextGX, nextGY);
@@ -413,14 +636,29 @@ export class GameSession {
     this.camera.update(this.player, dtScale);
 
     // 5. Wild Pokémon AI
-    updateUnifiedWildlife(
-      this.chunkManager,
-      this.player,
-      dtScale,
-      this.getDayPhase(),
-      getOverworldWeather(this.seed, this.worldClock.getDay(), this.worldClock.getMinutes()),
-      getHighestOwnedPokemonLevel(partyService.getParty(), pcStorageService.getBoxes())
+    const currentDayPhase = this.getDayPhase();
+    const currentWeather = getOverworldWeather(
+      this.seed,
+      this.worldClock.getDay(),
+      this.worldClock.getMinutes()
     );
+    if (!playerService.hasFlag('story_wild_spawns_suppressed')) {
+      updateUnifiedWildlife(
+        this.chunkManager,
+        this.player,
+        dtScale,
+        currentDayPhase,
+        currentWeather,
+        getHighestOwnedPokemonLevel(partyService.getParty(), pcStorageService.getBoxes())
+      );
+      // 5b. Proactive wild encounter check (allows aggressive wildlife to initiate battle on contact)
+      if (Date.now() - this.lastBattleEndTime > 1500 && !this.isBattling) {
+        this.checkWildPokemonCollision();
+      }
+    }
+
+    // 5a. Overworld Village NPC AI (movement, obstacle avoidance, look-at-player, emotes)
+    this.updateOverworldNPCs(dtMs, currentDayPhase, currentWeather);
 
     // 6. Overworld Shiny Pokémon Spatial Audio (3x3 chunk detection & distance scaling)
     overworldShinyAudio.update(
@@ -432,13 +670,141 @@ export class GameSession {
       this.isBattling
     );
 
+    this.checkNearbyDoors();
+
     return { pChunkX, pChunkY };
+  }
+
+  private syncStoryWildlifeSuppression(): void {
+    const suppressed = playerService.hasFlag('story_wild_spawns_suppressed');
+    if (suppressed && !this.storyWildlifePurged) {
+      this.chunkManager.clearAllWildlife();
+      this.storyWildlifePurged = true;
+    } else if (!suppressed && this.storyWildlifePurged) {
+      this.chunkManager.restoreAllWildlife();
+      this.storyWildlifePurged = false;
+    }
+  }
+
+  private updateOverworldNPCs(
+    dtMs: number,
+    dayPhase: DayPhase,
+    weather: OverworldWeather
+  ): void {
+    const timeBand: NPCTimeBand =
+      dayPhase === 'dawn'
+        ? 'morning'
+        : dayPhase === 'dusk'
+          ? 'evening'
+          : dayPhase === 'night'
+            ? 'night'
+            : 'day';
+
+    // Collect all doorway front tiles so wandering NPCs never block building entrances
+    const doorFrontTiles = new Set<string>();
+    const occupiedNPCTiles = new Map<string, string>();
+    for (const chunk of this.chunkManager.activeChunks) {
+      if (chunk.buildings) {
+        for (const b of chunk.buildings) {
+          const w = b.doorWidthTiles || 1;
+          for (let dx = 0; dx < w; dx++) {
+            doorFrontTiles.add(`${b.doorGX + dx},${b.doorGY + 1}`);
+          }
+        }
+      }
+      if (chunk.npcs) {
+        for (const npc of chunk.npcs) {
+          occupiedNPCTiles.set(`${npc.gx},${npc.gy}`, npc.id);
+          if (npc.runtime?.isMoving) {
+            occupiedNPCTiles.set(`${npc.runtime.toGX},${npc.runtime.toGY}`, npc.id);
+          }
+        }
+      }
+    }
+
+    for (const chunk of this.chunkManager.activeChunks) {
+      if (!chunk.npcs || chunk.npcs.length === 0) continue;
+
+      for (const npc of chunk.npcs) {
+        if (!npc.runtime) {
+          npc.runtime = createNPCRuntimeState(npc, TILE_SIZE);
+        }
+        const state = npc.runtime;
+        const prevGX = state.gx;
+        const prevGY = state.gy;
+        const isTalkingToThis = Boolean(
+          this.activeDialogue && this.activeDialogue.npc.id === npc.id
+        );
+
+        updateNPCBehavior(
+          {
+            id: npc.id,
+            gx: npc.gx,
+            gy: npc.gy,
+            direction: npc.direction,
+            idleBehavior: npc.idleBehavior === 'stand' ? 'stationary' : npc.idleBehavior,
+            movementMode: npc.movementMode,
+            turnCycle: npc.turnCycle,
+            turnIntervalMs: npc.turnIntervalMs,
+            wanderRadius: npc.wanderRadius,
+            patrolPath: npc.patrolPath,
+            lookAtPlayerRadius: npc.lookAtPlayerRadius,
+            ambientEmotePool: npc.ambientEmotePool,
+            schedule: npc.schedule,
+          },
+          state,
+          {
+            dtMs,
+            playerGX: this.player.gx,
+            playerGY: this.player.gy,
+            followerGX: this.follower.visible ? this.follower.gx : undefined,
+            followerGY: this.follower.visible ? this.follower.gy : undefined,
+            isDialogueActiveWithThisNPC: isTalkingToThis,
+            timeBand,
+            weather,
+            isTileOccupiedByOtherNPC: (tx, ty, selfId) => {
+              const occ = occupiedNPCTiles.get(`${tx},${ty}`);
+              return occ !== undefined && occ !== selfId;
+            },
+            isTileWalkable: (tx, ty, fx, fy) => {
+              if (doorFrontTiles.has(`${tx},${ty}`)) return false;
+              return this.chunkManager.isWalkable(tx, ty, fx, fy);
+            },
+          },
+          TILE_SIZE
+        );
+
+        npc.direction = state.direction;
+        if (state.gx !== prevGX || state.gy !== prevGY) {
+          npc.gx = state.gx;
+          npc.gy = state.gy;
+          occupiedNPCTiles.delete(`${prevGX},${prevGY}`);
+          occupiedNPCTiles.set(`${state.gx},${state.gy}`, npc.id);
+
+          // Update dynamic NPC tile collider inside chunk.colliders
+          const col = chunk.colliders.find(
+            (c) =>
+              c.type === 'npc' &&
+              c.x === prevGX * TILE_SIZE &&
+              c.y === prevGY * TILE_SIZE
+          );
+          if (col) {
+            col.x = state.gx * TILE_SIZE;
+            col.y = state.gy * TILE_SIZE;
+          }
+        }
+      }
+    }
   }
 
   private checkWildPokemonCollision(): void {
     for (const chunk of this.getEncounterChunks()) {
       if (!chunk.wildPokemon) continue;
       for (const wp of chunk.wildPokemon) {
+        // Apricorn Plains are non-aggressive: wild Pokémon may still be
+        // approached and battled through explicit player interaction, but
+        // they must never initiate a battle merely by touching the player.
+        if (this.field.isApricornPlain?.(wp.gx, wp.gy)) continue;
         if (this.isPlayerTouchingWild(wp)) {
           this.startWildBattle(wp, chunk);
           return;
@@ -479,9 +845,18 @@ export class GameSession {
     envPresetOverride?: string
   ): void {
     if (this.isBattling) return;
+
+    if (partyService.getPartySize() === 0) {
+      showBerryToast('⚠️ Bạn chưa có Pokémon nào để tham gia chiến đấu!', '#ef4444');
+      return;
+    }
+
     this.isBattling = true;
     this.worldClock.pause('battle');
     autosaveCoordinator.lockBattle();
+
+    // Register wild Pokémon as seen in Pokédex immediately upon encounter
+    playerService.registerSeenSpecies(wp.speciesKey);
 
     // Freeze player movement immediately
     this.player.isMoving = false;
@@ -545,7 +920,10 @@ export class GameSession {
             // Sync battle HP, PP, and EXP back into party
             const finalBattler = result.activePlayerPokemon ?? playerBattler;
             const expGained = result.outcome === 'victory' ? (result.expGained ?? 0) : 0;
-            const syncResult = partyService.syncBattleResult(finalBattler, expGained);
+            const syncResult = partyService.syncBattleResult(
+              finalBattler,
+              result.expAppliedToParty ? 0 : expGained
+            );
             if (syncResult.leveledUp) {
               showBerryToast(
                 `🎉 ${finalBattler.name} đã lên cấp ${syncResult.newLevel}! Toàn bộ chỉ số chiến đấu đã tăng!`,
@@ -572,30 +950,52 @@ export class GameSession {
             }
 
             if (result.outcome === 'caught') {
-              const caughtPk = createPartyPokemon(wildBattler.speciesKey, wildBattler.level, {
-                isShiny: wildBattler.isShiny,
-                ivs: wildBattler.ivs,
-                nature: wildBattler.nature,
+              // Prefer the battler returned by BattleController. It is the
+              // authoritative capture snapshot after the ball animation and
+              // avoids saving a stale closure object when the battle swapped
+              // or mutated the enemy during capture.
+              const caughtBattler = result.caughtPokemon ?? wildBattler;
+              const caughtPk = createPartyPokemon(caughtBattler.speciesKey, caughtBattler.level, {
+                isShiny: caughtBattler.isShiny,
+                ivs: caughtBattler.ivs,
+                evs: caughtBattler.evs,
+                nature: caughtBattler.nature,
+                ability: caughtBattler.ability,
+                abilitySlot: caughtBattler.abilitySlot,
+                teraType: caughtBattler.teraType,
+                gender: caughtBattler.gender,
               });
-              caughtPk.currentHp = Math.max(1, wildBattler.currentHp);
-              playerService.incrementCaught();
+              caughtPk.currentHp = Math.max(1, caughtBattler.currentHp);
+              playerService.registerCaughtSpecies(caughtBattler.speciesKey);
 
               if (!partyService.isPartyFull()) {
-                partyService.addPokemon(caughtPk);
-                showBerryToast(
-                  `🎉 Đã thu phục thành công ${wildBattler.name} và thêm vào Đội hình (${partyService.getPartySize()}/6)!`,
-                  '#22c55e'
-                );
+                const addedToParty = partyService.addPokemon(caughtPk);
+                if (addedToParty) {
+                  showBerryToast(
+                    `🎉 Đã thu phục thành công ${caughtBattler.name} và thêm vào Đội hình (${partyService.getPartySize()}/6)!`,
+                    '#22c55e'
+                  );
+                } else {
+                  // Guard against a concurrent party update between the
+                  // fullness check and addPokemon(). Fall back to PC storage.
+                  const depositRes = pcStorageService.depositPokemon(caughtPk);
+                  showBerryToast(
+                    depositRes.success
+                      ? `🎉 Đã thu phục thành công ${caughtBattler.name}! Đã chuyển vào PC (${depositRes.boxName})!`
+                      : `⚠️ Không thể lưu ${caughtBattler.name} vì Đội hình và PC đã đầy!`,
+                    depositRes.success ? '#38bdf8' : '#ef4444'
+                  );
+                }
               } else {
                 const depositRes = pcStorageService.depositPokemon(caughtPk);
                 if (depositRes.success) {
                   showBerryToast(
-                    `🎉 Đã thu phục thành công ${wildBattler.name}! Đội hình đã đầy (6/6), đã chuyển vào PC (${depositRes.boxName})!`,
+                    `🎉 Đã thu phục thành công ${caughtBattler.name}! Đội hình đã đầy (6/6), đã chuyển vào PC (${depositRes.boxName})!`,
                     '#38bdf8'
                   );
                 } else {
                   showBerryToast(
-                    `⚠️ Đội hình và toàn bộ Hộp PC đều đã đầy! Không thể chứa thêm ${wildBattler.name}!`,
+                    `⚠️ Đội hình và toàn bộ Hộp PC đều đã đầy! Không thể chứa thêm ${caughtBattler.name}!`,
                     '#ef4444'
                   );
                 }
@@ -613,7 +1013,11 @@ export class GameSession {
                 );
               }
             } else if (result.outcome === 'defeated') {
-              showBerryToast(`💥 ${playerBattler.name} đã ngất xỉu!`, '#ef4444');
+              if (partyService.isWholePartyFainted()) {
+                this.handleBlackout();
+              } else {
+                showBerryToast(`💥 ${playerBattler.name} đã ngất xỉu!`, '#ef4444');
+              }
             }
 
             if (result.outcome === 'caught' || result.outcome === 'victory') {
@@ -685,9 +1089,18 @@ export class GameSession {
     envPresetOverride?: string
   ): void {
     if (this.isBattling) return;
+
+    if (partyService.getPartySize() === 0) {
+      showBerryToast('⚠️ Bạn chưa có Pokémon nào để tham gia chiến đấu!', '#ef4444');
+      return;
+    }
+
     this.isBattling = true;
     this.worldClock.pause('battle');
     autosaveCoordinator.lockBattle();
+
+    // Register custom battler as seen in Pokédex immediately upon encounter
+    playerService.registerSeenSpecies(customBattler.speciesKey);
 
     // Freeze player movement immediately
     this.player.isMoving = false;
@@ -742,7 +1155,10 @@ export class GameSession {
               // Sync battle HP, PP, and EXP back into party
               const finalBattler = result.activePlayerPokemon ?? playerBattler;
               const expGained = result.outcome === 'victory' ? (result.expGained ?? 0) : 0;
-              const syncResult = partyService.syncBattleResult(finalBattler, expGained);
+              const syncResult = partyService.syncBattleResult(
+                finalBattler,
+                result.expAppliedToParty ? 0 : expGained
+              );
               if (syncResult.leveledUp) {
                 showBerryToast(
                   `🎉 ${finalBattler.name} đã lên cấp ${syncResult.newLevel}! Toàn bộ chỉ số chiến đấu đã tăng!`,
@@ -769,30 +1185,46 @@ export class GameSession {
               }
 
               if (result.outcome === 'caught') {
-                const caughtPk = createPartyPokemon(customBattler.speciesKey, customBattler.level, {
-                  isShiny: customBattler.isShiny,
-                  ivs: customBattler.ivs,
-                  nature: customBattler.nature,
+                const caughtBattler = result.caughtPokemon ?? customBattler;
+                const caughtPk = createPartyPokemon(caughtBattler.speciesKey, caughtBattler.level, {
+                  isShiny: caughtBattler.isShiny,
+                  ivs: caughtBattler.ivs,
+                  evs: caughtBattler.evs,
+                  nature: caughtBattler.nature,
+                  ability: caughtBattler.ability,
+                  abilitySlot: caughtBattler.abilitySlot,
+                  teraType: caughtBattler.teraType,
+                  gender: caughtBattler.gender,
                 });
-                caughtPk.currentHp = Math.max(1, customBattler.currentHp);
-                playerService.incrementCaught();
+                caughtPk.currentHp = Math.max(1, caughtBattler.currentHp);
+                playerService.registerCaughtSpecies(caughtBattler.speciesKey);
 
                 if (!partyService.isPartyFull()) {
-                  partyService.addPokemon(caughtPk);
-                  showBerryToast(
-                    `🎉 Đã thu phục thành công ${customBattler.name} và thêm vào Đội hình (${partyService.getPartySize()}/6)!`,
-                    '#22c55e'
-                  );
+                  const addedToParty = partyService.addPokemon(caughtPk);
+                  if (addedToParty) {
+                    showBerryToast(
+                      `🎉 Đã thu phục thành công ${caughtBattler.name} và thêm vào Đội hình (${partyService.getPartySize()}/6)!`,
+                      '#22c55e'
+                    );
+                  } else {
+                    const depositRes = pcStorageService.depositPokemon(caughtPk);
+                    showBerryToast(
+                      depositRes.success
+                        ? `🎉 Đã thu phục thành công ${caughtBattler.name}! Đã chuyển vào PC (${depositRes.boxName})!`
+                        : `⚠️ Không thể lưu ${caughtBattler.name} vì Đội hình và PC đã đầy!`,
+                      depositRes.success ? '#38bdf8' : '#ef4444'
+                    );
+                  }
                 } else {
                   const depositRes = pcStorageService.depositPokemon(caughtPk);
                   if (depositRes.success) {
                     showBerryToast(
-                      `🎉 Đã thu phục thành công ${customBattler.name}! Đã chuyển vào PC (${depositRes.boxName})!`,
+                      `🎉 Đã thu phục thành công ${caughtBattler.name}! Đã chuyển vào PC (${depositRes.boxName})!`,
                       '#38bdf8'
                     );
                   } else {
                     showBerryToast(
-                      `⚠️ Không thể lưu ${customBattler.name} vì PC đã đầy!`,
+                      `⚠️ Không thể lưu ${caughtBattler.name} vì PC đã đầy!`,
                       '#ef4444'
                     );
                   }
@@ -803,7 +1235,11 @@ export class GameSession {
                   '#38bdf8'
                 );
               } else if (result.outcome === 'defeated') {
-                showBerryToast(`💥 ${playerBattler.name} đã ngất xỉu!`, '#ef4444');
+                if (partyService.isWholePartyFainted()) {
+                  this.handleBlackout();
+                } else {
+                  showBerryToast(`💥 ${playerBattler.name} đã ngất xỉu!`, '#ef4444');
+                }
               }
             } catch (err) {
               console.error('[GameSession] Error finalizing custom battle outcome:', err);
@@ -914,11 +1350,36 @@ export class GameSession {
     this.chunkManager.update(this.player.x, this.player.y);
   }
 
-  /** Releases long-lived subscriptions when the overworld session is closed. */
+  public handleBlackout(): void {
+    const profile = playerService.getProfile();
+    const penalty = Math.min(Math.floor(profile.money * 0.1), 1000);
+    if (penalty > 0) {
+      playerService.spendMoney(penalty);
+    }
+    partyService.healAll();
+    this.resetPlayer();
+    showBerryToast(
+      penalty > 0
+        ? `💫 Toàn bộ Pokémon đã ngất xỉu! Bạn đã ngất đi và được đưa về nơi an toàn (mất $${penalty}).`
+        : `💫 Toàn bộ Pokémon đã ngất xỉu! Bạn đã ngất đi và được đưa về nơi an toàn.`,
+      '#ef4444'
+    );
+  }
+
+  /** Releases long-lived subscriptions and resets story when the overworld session is closed. */
   public destroy(): void {
+    storyManager.dispose();
+    palletPrologueEventManager.reset();
+    route1SpearowEventManager.reset();
+    this.closeVillageNPCDialogue();
     this.partyUnsubscribe?.();
     this.partyUnsubscribe = undefined;
     this.input.destroy();
+    this.worldClock.pause('session_destroy');
+  }
+
+  public dispose(): void {
+    this.destroy();
   }
 
   public getAmbientLight(): AmbientLightProfile {
@@ -978,12 +1439,96 @@ export class GameSession {
   public interactInFront(renderer: GameRenderer): void {
     if (this.isBattling) return;
 
+    // 0. If in Interior Room, handle interior room interaction
+    const interior = InteriorManager.getInstance();
+    if (interior.isInInterior()) {
+      interior.handleInteract(this.follower);
+      return;
+    }
+
+    // Advance active overworld dialogue
+    if (this.activeDialogue) {
+      this.advanceOverworldDialogue();
+      return;
+    }
+
+    // Check if in front of building door to open door prompt modal
+    const registry = InteriorRegistry.getInstance();
+    for (const chunk of this.chunkManager.activeChunks) {
+      if (!chunk.buildings) continue;
+      for (const b of chunk.buildings) {
+        const mapping = registry.getBuildingMapping(b.type);
+        if (mapping) {
+          const doorMinX = b.doorGX;
+          const doorMaxX = b.doorGX + (b.doorWidthTiles || 1) - 1;
+          const isFacingDoor =
+            this.player.direction === 3 &&
+            this.player.gy === b.doorGY + 1 &&
+            this.player.gx >= doorMinX &&
+            this.player.gx <= doorMaxX;
+          const isNearDoor =
+            Math.abs(this.player.gx - (b.doorGX + 0.5)) <= 1.5 &&
+            Math.abs(this.player.gy - (b.doorGY + 1)) <= 1.5;
+          if (isFacingDoor || isNearDoor) {
+            DoorPromptModal.getInstance().open({
+              buildingName: mapping.displayName,
+              onEnter: () => {
+                this.enterInteriorRoom(mapping.roomId, mapping.displayName);
+              },
+            });
+            return;
+          }
+        }
+      }
+    }
+
     let targetGX = this.player.gx;
     let targetGY = this.player.gy;
     if (this.player.direction === 0) targetGY += 1;
     else if (this.player.direction === 1) targetGX -= 1;
     else if (this.player.direction === 2) targetGX += 1;
     else if (this.player.direction === 3) targetGY -= 1;
+
+    // 0.4. Check Cutscene Actors (e.g. Professor Oak outside after gate encounter)
+    for (const actor of palletPrologueEventManager.getActors()) {
+      if (!actor.visible) continue;
+      if (actor.gx === targetGX && actor.gy === targetGY) {
+        if (this.player.direction === 0) actor.direction = 3;
+        else if (this.player.direction === 1) actor.direction = 2;
+        else if (this.player.direction === 2) actor.direction = 1;
+        else if (this.player.direction === 3) actor.direction = 0;
+
+        if (actor.id === 'oak') {
+          palletPrologueEventManager.showDialogue('Giáo Sư Oak', [
+            'Vào trong phòng nghiên cứu đi Ash! Ta cần nói chuyện với cháu về Pokémon khởi đầu!',
+          ]);
+          return;
+        }
+      }
+    }
+
+    // 0.5. Check Village NPC in front
+    for (const chunk of this.chunkManager.activeChunks) {
+      if (!chunk.npcs) continue;
+      for (const npc of chunk.npcs) {
+        if (npc.runtime && !npc.runtime.visible) continue;
+        if (npc.gx === targetGX && npc.gy === targetGY) {
+          // Turn NPC to face player
+          if (this.player.direction === 0) npc.direction = 3;
+          else if (this.player.direction === 1) npc.direction = 2;
+          else if (this.player.direction === 2) npc.direction = 1;
+          else if (this.player.direction === 3) npc.direction = 0;
+
+          if (npc.runtime) {
+            npc.runtime.direction = npc.direction;
+            npc.runtime.frame = 0;
+          }
+
+          this.openVillageNPCDialogue(npc);
+          return;
+        }
+      }
+    }
 
     // 1. Check Wild Pokémon in front
     for (const chunk of this.getEncounterChunks()) {
@@ -1019,5 +1564,315 @@ export class GameSession {
     if (foundBush) {
       interactWithBerryBush(foundBush, renderer);
     }
+  }
+
+  private initDialogueDom(): void {
+    if (typeof document === 'undefined') return;
+    const existing = document.getElementById('overworldDialogueBox') as HTMLDivElement | null;
+    if (existing) {
+      this.dialogueEl = existing;
+      return;
+    }
+    this.dialogueEl = document.createElement('div');
+    this.dialogueEl.id = 'overworldDialogueBox';
+    this.dialogueEl.className = 'interior-dialogue-box';
+    this.dialogueEl.style.display = 'none';
+    this.dialogueEl.innerHTML = `
+      <div class="interior-dialogue-speaker" id="overworldSpeakerName"></div>
+      <div class="interior-dialogue-content" id="overworldDialogueContent"></div>
+      <div id="overworldChoicesContainer" style="display:none;flex-direction:column;gap:6px;margin-top:8px;"></div>
+      <div class="interior-dialogue-footer" id="overworldDialogueFooter">[Space tiếp tục]</div>
+    `;
+    this.dialogueEl.addEventListener('click', () => {
+      if (this.activeDialogue) {
+        this.advanceOverworldDialogue();
+      }
+    });
+    document.body.appendChild(this.dialogueEl);
+  }
+
+  public advanceOverworldDialogue(): void {
+    if (!this.activeDialogue) return;
+
+    if (this.activeDialogue.lineIndex + 1 < this.activeDialogue.lines.length) {
+      this.activeDialogue.lineIndex++;
+      this.updateDialogueDom();
+      return;
+    }
+
+    if (
+      !this.activeDialogue.choiceResolved &&
+      this.activeDialogue.choices &&
+      this.activeDialogue.choices.length > 0
+    ) {
+      this.selectOverworldDialogueChoice(0, true);
+      return;
+    }
+
+    if (this.activeDialogue.actionsOnComplete) {
+      const actions = this.activeDialogue.actionsOnComplete;
+      const npcState = this.activeDialogue.npc.runtime;
+      this.activeDialogue.actionsOnComplete = undefined;
+      executeNPCEventActions(actions, {
+        npcRuntimeState: npcState,
+        onStartTrainerBattle: (trainer) => this.startTrainerBattle(trainer),
+      });
+    }
+
+    this.closeVillageNPCDialogue();
+  }
+
+  public selectOverworldDialogueChoice(choiceIndex: number, closeImmediately = false): void {
+    if (!this.activeDialogue || !this.activeDialogue.choices) return;
+    const choice = this.activeDialogue.choices[choiceIndex] ?? this.activeDialogue.choices[0];
+    if (!choice) return;
+
+    this.activeDialogue.choiceResolved = true;
+    const npcState = this.activeDialogue.npc.runtime;
+
+    if (this.activeDialogue.actionsOnComplete) {
+      executeNPCEventActions(this.activeDialogue.actionsOnComplete, {
+        npcRuntimeState: npcState,
+        onStartTrainerBattle: (trainer) => this.startTrainerBattle(trainer),
+      });
+      this.activeDialogue.actionsOnComplete = undefined;
+    }
+
+    if (choice.actions) {
+      executeNPCEventActions(choice.actions, {
+        npcRuntimeState: npcState,
+        onStartTrainerBattle: (trainer) => this.startTrainerBattle(trainer),
+      });
+    }
+
+    if (!closeImmediately && choice.responseLines && choice.responseLines.length > 0) {
+      this.activeDialogue.lines = [...choice.responseLines];
+      this.activeDialogue.lineIndex = 0;
+      this.activeDialogue.choices = undefined;
+      this.updateDialogueDom();
+    } else {
+      this.closeVillageNPCDialogue();
+    }
+  }
+
+  public startTrainerBattle(trainer: NPCTrainerProfile): void {
+    const firstSpec = trainer.party[0];
+    if (!firstSpec) return;
+    const enemyBattler = createBattler(
+      firstSpec.speciesKey,
+      firstSpec.level,
+      false,
+      undefined,
+      firstSpec.isShiny ?? false
+    );
+    enemyBattler.name = `${trainer.trainerClass} ${trainer.name} (${enemyBattler.name})`;
+    this.startCustomBattle(enemyBattler);
+    playerService.markTrainerDefeated(trainer.trainerId);
+    if (trainer.prizeMoney > 0) {
+      playerService.addMoney(trainer.prizeMoney);
+    }
+    if (trainer.rewardItem) {
+      playerService.addItem(trainer.rewardItem.itemId, trainer.rewardItem.count);
+    }
+    if (trainer.flagOnWin) {
+      playerService.setFlag(trainer.flagOnWin, true);
+    }
+    if (trainer.questAdvanceOnWin) {
+      playerService.advanceQuest(
+        trainer.questAdvanceOnWin.questId,
+        trainer.questAdvanceOnWin.stage,
+        trainer.questAdvanceOnWin.completed ?? false
+      );
+    }
+  }
+
+  private updateDialogueDom(): void {
+    if (!this.dialogueEl && typeof document !== 'undefined') {
+      this.initDialogueDom();
+    }
+    if (!this.dialogueEl) return;
+
+    if (!this.activeDialogue) {
+      this.dialogueEl.style.display = 'none';
+      return;
+    }
+
+    const speakerEl = this.dialogueEl.querySelector<HTMLElement>('#overworldSpeakerName');
+    const contentEl = this.dialogueEl.querySelector<HTMLElement>('#overworldDialogueContent');
+    const choicesEl = this.dialogueEl.querySelector<HTMLElement>('#overworldChoicesContainer');
+    const footerEl = this.dialogueEl.querySelector<HTMLElement>('#overworldDialogueFooter');
+
+    if (speakerEl) {
+      speakerEl.textContent = this.activeDialogue.npc.name;
+    }
+    if (contentEl) {
+      contentEl.textContent = this.activeDialogue.lines[this.activeDialogue.lineIndex] || '';
+    }
+
+    const isLastLine = this.activeDialogue.lineIndex >= this.activeDialogue.lines.length - 1;
+    const hasPendingChoices =
+      isLastLine &&
+      !this.activeDialogue.choiceResolved &&
+      Array.isArray(this.activeDialogue.choices) &&
+      this.activeDialogue.choices.length > 0;
+
+    if (choicesEl) {
+      if (hasPendingChoices && this.activeDialogue.choices) {
+        choicesEl.innerHTML = '';
+        if (this.activeDialogue.choicesPrompt) {
+          const promptDiv = document.createElement('div');
+          promptDiv.style.cssText = 'font-size:13px;color:#fbbf24;font-weight:600;margin-bottom:2px;';
+          promptDiv.textContent = this.activeDialogue.choicesPrompt;
+          choicesEl.appendChild(promptDiv);
+        }
+        this.activeDialogue.choices.forEach((choice, idx) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.textContent = choice.label;
+          btn.style.cssText =
+            'text-align:left;padding:6px 12px;border-radius:6px;border:1px solid rgba(56,189,248,0.55);background:rgba(15,23,42,0.9);color:#f8fafc;font-size:14px;cursor:pointer;transition:background 0.15s;';
+          btn.addEventListener('mouseenter', () => {
+            btn.style.background = 'rgba(56,189,248,0.25)';
+          });
+          btn.addEventListener('mouseleave', () => {
+            btn.style.background = 'rgba(15,23,42,0.9)';
+          });
+          btn.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            this.selectOverworldDialogueChoice(idx, false);
+          });
+          choicesEl.appendChild(btn);
+        });
+        choicesEl.style.display = 'flex';
+      } else {
+        choicesEl.style.display = 'none';
+        choicesEl.innerHTML = '';
+      }
+    }
+
+    if (footerEl) {
+      footerEl.textContent = hasPendingChoices ? '[Chọn phương án hoặc nhấn Space]' : '[Space tiếp tục]';
+    }
+
+    this.dialogueEl.style.display = 'flex';
+  }
+
+  public openVillageNPCDialogue(npc: VillageNPCEntity): void {
+    const dayPhase = this.getDayPhase();
+    const timeBand: NPCTimeBand =
+      dayPhase === 'dawn'
+        ? 'morning'
+        : dayPhase === 'dusk'
+          ? 'evening'
+          : dayPhase === 'night'
+            ? 'night'
+            : 'day';
+    const weather = this.getWeather();
+    const scheduleRule = resolveActiveScheduleRule(npc.schedule, timeBand, weather);
+    const fallbackLines = scheduleRule?.overrideDialogue ?? npc.dialogue;
+
+    const branch = resolveNPCDialogueBranch(
+      npc.scriptId,
+      fallbackLines,
+      npc.actionsOnComplete
+    );
+
+    if (branch.emoteOnOpen && npc.runtime) {
+      triggerNPCEmote(npc.runtime, branch.emoteOnOpen, 2200);
+    }
+
+    this.activeDialogue = {
+      npc,
+      lines: [...branch.lines],
+      lineIndex: 0,
+      choicesPrompt: branch.choicesPrompt,
+      choices: branch.choices,
+      actionsOnComplete: branch.actionsOnComplete,
+      choiceResolved: false,
+    };
+    this.updateDialogueDom();
+  }
+
+  public closeVillageNPCDialogue(): void {
+    if (this.activeDialogue) {
+      const npc = this.activeDialogue.npc;
+      npc.direction = npc.initialDirection;
+      if (npc.runtime) {
+        npc.runtime.direction = npc.initialDirection;
+      }
+      this.activeDialogue = null;
+    }
+    this.updateDialogueDom();
+  }
+
+  public createStoryGamePort(): StoryGamePort {
+    return {
+      getPlayerPosition: () => ({
+        gx: this.player.gx,
+        gy: this.player.gy,
+        dir: this.player.direction,
+      }),
+      snapPlayer: (gx: number, gy: number, dir?: Direction) => {
+        this.player.snapTo(gx, gy, dir ?? this.player.direction);
+      },
+      setPlayerDirection: (dir: Direction) => {
+        this.player.direction = dir;
+      },
+      lockInput: () => {
+        this.isInputLocked = true;
+      },
+      unlockInput: () => {
+        this.isInputLocked = false;
+      },
+      isInputLocked: () => this.isInputLocked,
+      setPlayerEmote: (emote: NPCEmoteType | null, durationMs?: number) => {
+        this.player.setEmote(emote, durationMs ?? 2000);
+      },
+      setActorEmote: (actorId: string, emote: NPCEmoteType, durationMs?: number) => {
+        const actor = palletPrologueEventManager.getActors().find((a) => a.id === actorId);
+        if (actor) {
+          actor.activeEmote = emote;
+          actor.emoteTimerMs = durationMs ?? 2000;
+        }
+      },
+      setActorDirection: (actorId: string, dir: Direction) => {
+        const actor = palletPrologueEventManager.getActors().find((a) => a.id === actorId);
+        if (actor) {
+          actor.direction = dir;
+        }
+      },
+      setActorVisible: (actorId: string, visible: boolean) => {
+        const actor = palletPrologueEventManager.getActors().find((a) => a.id === actorId);
+        if (actor) {
+          actor.visible = visible;
+        }
+      },
+      snapActor: (actorId: string, gx: number, gy: number, dir?: Direction) => {
+        const actor = palletPrologueEventManager.getActors().find((a) => a.id === actorId);
+        if (actor) {
+          actor.gx = gx;
+          actor.gy = gy;
+          actor.x = gx * TILE_SIZE - 16;
+          actor.y = gy * TILE_SIZE - 32;
+          if (dir !== undefined) actor.direction = dir;
+        }
+      },
+      moveActor: async (_actorId: string, _steps: Direction[], _speed?: number) => {
+        // Will be wired to future NPC movement orchestrator
+      },
+      giveItem: (itemId: string, count: number) => {
+        playerService.addItem(itemId, count);
+      },
+      giveStarterPokemon: (species: string | number, level: number) => {
+        const p = createPartyPokemon(String(species), level, { ivs: 'perfect' });
+        return partyService.addPokemon(p);
+      },
+      setFollowerVisible: (visible: boolean) => {
+        this.follower.visible = visible;
+      },
+      snapFollower: (gx: number, gy: number, dir?: Direction) => {
+        this.follower.snapTo(gx, gy, dir);
+      },
+    };
   }
 }

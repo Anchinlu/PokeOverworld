@@ -38,6 +38,8 @@ export const STONE_EVOLUTIONS: Record<string, Record<string, string>> = {
   'fire-stone': {
     VULPIX: 'NINETALES',
     GROWLITHE: 'ARCANINE',
+    GROWLITHE_1: 'ARCANINE_HISUIAN',
+    GROWLITHE_HISUIAN: 'ARCANINE_HISUIAN',
     EEVEE: 'FLAREON',
   },
   'water-stone': {
@@ -54,25 +56,39 @@ export const STONE_EVOLUTIONS: Record<string, Record<string, string>> = {
     GLOOM: 'VILEPLUME',
     WEEPINBELL: 'VICTREEBEL',
     EXEGGCUTE: 'EXEGGUTOR',
+    VOLTORB_1: 'ELECTRODE_HISUIAN',
+    VOLTORB_HISUIAN: 'ELECTRODE_HISUIAN',
+    EEVEE: 'LEAFEON',
   },
   'moon-stone': {
     NIDORINA: 'NIDOQUEEN',
     NIDORINO: 'NIDOKING',
     CLEFAIRY: 'CLEFABLE',
     JIGGLYPUFF: 'WIGGLYTUFF',
+    EEVEE: 'UMBREON',
   },
   'sun-stone': {
     GLOOM: 'VILEPLUME',
+    EXEGGCUTE: 'EXEGGUTOR_ALOLAN',
+    EEVEE: 'ESPEON',
   },
   'ice-stone': {
     VULPIX: 'NINETALES',
+    VULPIX_1: 'NINETALES_ALOLAN',
+    VULPIX_ALOLAN: 'NINETALES_ALOLAN',
     SANDSHREW: 'SANDSLASH',
+    SANDSHREW_1: 'SANDSLASH_ALOLAN',
+    SANDSHREW_ALOLAN: 'SANDSLASH_ALOLAN',
+    EEVEE: 'GLACEON',
   },
   'shiny-stone': {
-    PIKACHU: 'RAICHU',
+    PIKACHU: 'RAICHU_ALOLAN',
+    EEVEE: 'SYLVEON',
   },
   'dusk-stone': {
     SHELLDER: 'CLOYSTER',
+    CUBONE: 'MAROWAK_ALOLAN',
+    KOFFING: 'WEEZING_GALARIAN',
   },
   'dawn-stone': {
     POLIWHIRL: 'POLIWRATH',

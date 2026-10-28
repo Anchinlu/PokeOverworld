@@ -117,7 +117,18 @@ export function createSettlementNetwork(
     const regionCells = getRegionCells(plan, region.id);
     if (regionCells.length === 0) continue;
 
-    const hubCell = findCellNear(regionCells, region.centerGX, region.centerGY);
+    let hubCell: MacroCell;
+    if (region.id === 0) {
+      const northCandidates = regionCells.filter(
+        (c) => c.my < 0 && Math.hypot(c.mx * plan.cellSize, c.my * plan.cellSize) >= 96
+      );
+      hubCell =
+        northCandidates.length > 0
+          ? findCellNear(northCandidates, 0, -112)
+          : findCellNear(regionCells, 0, -112);
+    } else {
+      hubCell = findCellNear(regionCells, region.centerGX, region.centerGY);
+    }
     settlements.push({
       id: settlements.length,
       name: HUB_NAMES[region.id] ?? `Region ${region.id + 1} Hub`,

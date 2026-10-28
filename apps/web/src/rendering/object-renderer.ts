@@ -2,6 +2,10 @@ import type { ViewportBounds } from '../core/camera';
 import type { Player } from '../entities/player';
 import type { Follower } from '../entities/follower';
 import type { ChunkManager } from '../maps/chunk-manager';
+import {
+  getPlantVisualSpec,
+  getTreeVisualSpec,
+} from '../maps/biome-entity-registry';
 import type { AssetLoader } from './asset-loader';
 import type { RenderItem } from './types';
 
@@ -20,100 +24,43 @@ export class ObjectRenderer {
   ): void {
     for (const chunk of chunkManager.renderChunks) {
       for (const plant of chunk.plants) {
-        const isLog = plant.type === 'nature_fallen_log';
-        const isWhiteBush = plant.type === 'bush_flowering_white';
-        const isStump = plant.type === 'nature_tree_stump';
-        const isCactusSmall = plant.type === 'cactus_small';
-        const isRockSpires = plant.type === 'rock_dark_spires';
-        const isDarkBush = plant.type.startsWith('bush_dark_');
-        const isDarkSprout = plant.type === 'dark_sprout' || plant.type.startsWith('dark_sprout_');
+        const spec = getPlantVisualSpec(plant.type);
         // Ground decals and leaf piles belong to ground layer (Layer 0), never entity layer unless solid
-        if (
-          plant.type === 'leaf_pile_red_big' ||
-          (plant.type.startsWith('decor_') &&
-            plant.type !== 'decor_stump_autumn' &&
-            !plant.type.startsWith('decor_snow_rock_') &&
-            !plant.type.startsWith('decor_snow_stump_') &&
-            plant.type !== 'decor_snow_log')
-        ) {
+        if (spec.layer === 'ground') {
           continue;
         }
 
-        const isAutumnBushBig = plant.type.startsWith('bush_spiky_big_');
-        const isAutumnBush = plant.type.startsWith('bush_spiky_');
-        const isAutumnDecal =
-          plant.type.startsWith('flower_vine_') || plant.type.startsWith('rocks_');
-        const isSnowBushBig = plant.type.startsWith('bush_snow_');
-        const isSnowTall =
-          plant.type.startsWith('tree_snow_cone_') ||
-          plant.type.startsWith('crystal_snow_');
-        const isSnowLog = plant.type === 'log_snow_fallen' || plant.type === 'rock_snow_boulder';
-        const isSnowDecal =
-          plant.type.startsWith('decor_snow_') ||
-          plant.type === 'rock_snow_pointed' ||
-          plant.type === 'rock_snow_pebbles' ||
-          plant.type === 'stump_snow';
-
-        const isTall =
-          isWhiteBush ||
-          isDarkBush ||
-          isAutumnBush ||
-          isAutumnBushBig ||
-          isSnowBushBig ||
-          isSnowTall ||
-          plant.type === 'bush_cone_autumn' ||
-          plant.type === 'bush_cone_forest' ||
-          plant.type === 'flower_purple_bell' ||
-          plant.type === 'desert_dry_bush' ||
-          plant.type === 'desert_succulent' ||
-          plant.type === 'cactus_medium';
-        const isVeryTall = isRockSpires || isDarkSprout;
-        const isStaticNatural =
-          isTall ||
-          isVeryTall ||
-          isLog ||
-          isStump ||
-          isCactusSmall ||
-          isAutumnDecal ||
-          isSnowDecal ||
-          isSnowLog;
-
-        const w =
-          isRockSpires || isAutumnBushBig || isSnowBushBig || isSnowLog
-            ? 64
-            : isWhiteBush || isDarkBush || isLog
-            ? 64
-            : 32;
-        const h = isVeryTall ? 96 : isTall ? 64 : 32;
-
         if (
-          plant.x + w >= bounds.minX &&
+          plant.x + spec.width >= bounds.minX &&
           plant.x <= bounds.maxX &&
-          plant.y + h >= bounds.minY &&
+          plant.y + spec.height >= bounds.minY &&
           plant.y <= bounds.maxY
         ) {
           const img = this.loader.getImage(plant.type);
           if (img && img.complete) {
-            if (isStaticNatural) {
-              const ySort = isVeryTall
-                ? plant.y + 90
-                : isWhiteBush || isDarkBush || isAutumnBush || isAutumnBushBig || isSnowBushBig
-                ? plant.y + 56
-                : isTall
-                ? plant.y + 58
-                : plant.y + 26;
+            if (!spec.animatedFrames) {
               list.push({
-                ySort,
+                ySort: plant.y + spec.ySortOffset,
                 draw: (ctx) => {
                   ctx.drawImage(img, plant.x, plant.y);
                 },
               });
             } else {
-              const frame = Math.floor((now / 180 + plant.phase) % 5);
+              const frame = Math.floor((now / 180 + plant.phase) % spec.animatedFrames);
               list.push({
-                ySort: plant.y + 16,
+                ySort: plant.y + spec.ySortOffset,
                 draw: (ctx) => {
-                  ctx.drawImage(img, frame * 32, 0, 32, 32, plant.x, plant.y, 32, 32);
+                  ctx.drawImage(
+                    img,
+                    frame * spec.width,
+                    0,
+                    spec.width,
+                    spec.height,
+                    plant.x,
+                    plant.y,
+                    spec.width,
+                    spec.height
+                  );
                 },
               });
             }
@@ -260,66 +207,38 @@ export class ObjectRenderer {
   ): void {
     for (const chunk of chunkManager.renderChunks) {
       for (const tree of chunk.trees) {
-        const isPalm = tree.type === 'palm';
-        const isDead = tree.type === 'dead_1' || tree.type === 'dead_2';
-        const isCactusLarge = tree.type === 'cactus_large';
-        const isBoulder = tree.type === 'desert_boulder';
-        const isDarkLarge =
-          tree.type === 'dark_large_1' ||
-          tree.type === 'dark_large_2' ||
-          tree.type === 'dark_dead';
-        const isDarkForest = tree.type === 'dark_forest';
-        const isAutumnTree =
-          tree.type.startsWith('maple_') ||
-          tree.type.startsWith('larch_') ||
-          tree.type.startsWith('tree_maple_') ||
-          tree.type.startsWith('tree_larch_');
-        const isSnowTree =
-          tree.type.startsWith('snow_pine_') || tree.type.startsWith('tree_snow_');
-
-        const w = isPalm || isDarkLarge ? 128 : isDarkForest ? 96 : 64;
-        const h = isPalm
-          ? 200
-          : isDarkLarge
-          ? 128
-          : isDarkForest
-          ? 96
-          : isCactusLarge
-          ? 96
-          : isDead || isBoulder
-          ? 64
-          : isAutumnTree || isSnowTree
-          ? 128
-          : 120;
-        const ySort = isPalm
-          ? tree.y + 151
-          : isDarkLarge
-          ? tree.y + 118
-          : isDarkForest
-          ? tree.y + 88
-          : isCactusLarge
-          ? tree.y + 88
-          : isDead || isBoulder
-          ? tree.y + 58
-          : isAutumnTree || isSnowTree
-          ? tree.y + 120
-          : tree.y + 112;
+        const spec = getTreeVisualSpec(tree.type);
 
         if (
-          tree.x + w >= bounds.minX &&
+          tree.x + spec.width >= bounds.minX &&
           tree.x <= bounds.maxX &&
-          tree.y + h >= bounds.minY &&
+          tree.y + spec.height >= bounds.minY &&
           tree.y <= bounds.maxY
         ) {
-          let imgKey = tree.type.startsWith('tree_') ? tree.type : `tree_${tree.type}`;
-          if (isCactusLarge) imgKey = 'cactus_large';
-          else if (isBoulder) imgKey = 'rock_desert_boulder';
-          const img = this.loader.getImage(imgKey);
+          const img = this.loader.getImage(spec.assetKey);
           if (img && img.complete) {
+            const isApricornAnim = spec.assetKey.startsWith('tree_apricorn_');
             list.push({
-              ySort,
+              ySort: tree.y + spec.ySortOffset,
               draw: (ctx) => {
-                ctx.drawImage(img, tree.x, tree.y);
+                if (isApricornAnim && img.width > 300) {
+                  const frameWidth = Math.floor(img.width / 16);
+                  const frameHeight = img.height;
+                  const frame = Math.floor((performance.now() / 85) % 16);
+                  ctx.drawImage(
+                    img,
+                    frame * frameWidth,
+                    0,
+                    frameWidth,
+                    frameHeight,
+                    tree.x,
+                    tree.y,
+                    spec.width,
+                    spec.height
+                  );
+                } else {
+                  ctx.drawImage(img, tree.x, tree.y, spec.width, spec.height);
+                }
               },
             });
           }

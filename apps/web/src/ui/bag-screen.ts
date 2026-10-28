@@ -613,7 +613,11 @@ export class BagScreen {
         if (result.success) {
           // Trừ 1 số lượng vật phẩm khỏi túi đồ
           inventoryService.removeItem(selected.rawId, 1);
-          battleSePlayer.playSound('Audio/SE/Battle catch click.ogg', 0.85);
+          if (result.message.includes('thăng cấp')) {
+            battleSePlayer.playSound('Audio/SE/Pkmn level up.ogg', 0.85);
+          } else {
+            battleSePlayer.playSound('Audio/SE/Battle catch click.ogg', 0.85);
+          }
           showBerryToast(result.message, '#22c55e');
           partyService.notify();
 

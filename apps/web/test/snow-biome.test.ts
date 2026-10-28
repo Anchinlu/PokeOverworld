@@ -379,4 +379,17 @@ describe('Snow & Ice Biome integration', () => {
     expect(archFiles.length).toBeGreaterThan(0);
     expect(roadFiles.length).toBeGreaterThan(0);
   });
+
+  it('prevents snow ground decals from overlapping or clipping snow cliff walls', () => {
+    const hillBorderField: TerrainField = {
+      ...createSnowField(),
+      isHill: (gx) => gx <= 5,
+      isNearCliffEdge: (gx) => gx >= 4 && gx <= 6,
+    };
+    const terrain = generateChunkTerrain(0, 0, hillBorderField);
+    // Column 5 is cliff_snow_right, Column 6 is ground_snow_pure right next to cliff
+    expect(terrain.tileIdGrid[5][5]).toBe(TILE_IDS.cliff_snow_right);
+    expect(terrain.tileIdGrid[5][6]).toBe(TILE_IDS.ground_snow_pure);
+    expect(hillBorderField.isNearCliffEdge(6, 5)).toBe(true);
+  });
 });

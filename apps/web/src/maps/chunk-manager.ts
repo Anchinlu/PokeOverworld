@@ -1,6 +1,6 @@
-import { CHUNK_SIZE, TILE_SIZE, TERRAIN } from '@pokemon/game-data';
+import { CHUNK_SIZE, TILE_SIZE, TERRAIN, TILE_IDS, isHighCliffTile } from '@pokemon/game-data';
 import type { TerrainId } from '@pokemon/shared-types';
-import { WorldChunk } from './chunk';
+import { WorldChunk, clearChunkObjectsCache } from './chunk';
 import type { PlantEntity, TallGrassEntity, BerryBushEntity } from './chunk';
 import { rescaleWildEntityLevel } from '../wildlife/spawn/level-model';
 import type { ViewportBounds } from '../core/camera';
@@ -32,7 +32,7 @@ export interface TileData {
   berryBush?: BerryBushEntity;
 }
 
-import { createTerrainField, type TerrainField } from './terrain-field';
+import { createTerrainField, type TerrainField, isRoute1ClearingArea } from './terrain-field';
 
 export class ChunkManager {
   public cache = new Map<string, WorldChunk>();
@@ -91,6 +91,7 @@ export class ChunkManager {
       this.currentSeed = seedOrField.seed;
     }
     this.cache.clear();
+    clearChunkObjectsCache();
     this.activeChunks = [];
     this.simulationChunks = [];
     this.renderChunks = [];
@@ -324,6 +325,41 @@ export class ChunkManager {
     }
   }
 
+  /**
+   * Story suppression: removes every wild Pokémon from all loaded chunks so
+   * nothing is rendered or simulated while a story event owns the map.
+   */
+  public clearAllWildlife(): void {
+    for (const chunk of this.cache.values()) {
+      chunk.wildPokemon = [];
+    }
+  }
+
+  /**
+   * Clears trees in the Route 1 clearing around the Onisuzume story encounter.
+   */
+  public clearRoute1ClearingTrees(): void {
+    for (const chunk of this.cache.values()) {
+      chunk.removeTreesInArea((t) => isRoute1ClearingArea(t.gx, t.gy, this.field));
+    }
+  }
+
+  /**
+   * Ends story suppression: repopulates the simulation neighborhood now and
+   * marks every other cached chunk as stale so it repopulates as soon as it
+   * re-enters the simulation radius.
+   */
+  public restoreAllWildlife(): void {
+    for (const key of this.cache.keys()) {
+      this.lastSimulationAt.set(key, 0);
+    }
+    const playerMaxOwnedLevel = this.getPlayerMaxOwnedLevel();
+    for (const chunk of this.simulationChunks) {
+      chunk.refreshWildlife(playerMaxOwnedLevel, this.resolvedWildlifeIds);
+      this.lastSimulationAt.set(`${chunk.cx},${chunk.cy}`, Date.now());
+    }
+  }
+
   /** Persists a caught/defeated wildlife identity across chunk refreshes. */
   public resolveWildlifeEntity(entityId: string): void {
     this.resolvedWildlifeIds.add(entityId);
@@ -423,12 +459,52 @@ export class ChunkManager {
   }
 
   /**
+   * Returns true when (gx, gy) belongs to a 2-tier High Cliff (`vách đá cao`).
+   * High Cliffs host normal plateau ecosystems on top, but players cannot jump
+   * or walk onto them without a flying mount (`canFlyMount`).
+   */
+  public isHighCliffTile(gx: number, gy: number): boolean {
+    if (this.field.isHighCliff?.(gx, gy)) {
+      return true;
+    }
+    const tileData = this.getLoadedTileData(gx, gy) ?? this.getTileData(gx, gy);
+    return isHighCliffTile(tileData.tileId);
+  }
+
+  /**
+   * Returns true when (gx, gy) is on the 2-tile vertical southern cliff wall
+   * face of a High Cliff (`vách đá cao`) rather than its walkable top plateau.
+   */
+  public isHighCliffWallFace(gx: number, gy: number): boolean {
+    if (this.field.isHighCliff?.(gx, gy)) {
+      if (this.field.isHighCliffPlateau) {
+        return !this.field.isHighCliffPlateau(gx, gy);
+      }
+      return !this.field.isHighCliff(gx, gy + 1) || !this.field.isHighCliff(gx, gy + 2);
+    }
+    const tileData = this.getLoadedTileData(gx, gy) ?? this.getTileData(gx, gy);
+    return (
+      tileData.tileId === TILE_IDS.high_cliff_rock_bot ||
+      tileData.tileId === TILE_IDS.high_cliff_rock_bl ||
+      tileData.tileId === TILE_IDS.high_cliff_rock_br ||
+      tileData.tileId === TILE_IDS.high_cliff_rock_bot_upper ||
+      tileData.tileId === TILE_IDS.high_cliff_rock_bl_upper ||
+      tileData.tileId === TILE_IDS.high_cliff_rock_br_upper ||
+      tileData.tileId === TILE_IDS.high_cliff_rock_in_bl ||
+      tileData.tileId === TILE_IDS.high_cliff_rock_in_br ||
+      tileData.tileId === TILE_IDS.high_cliff_rock_in_bl_upper ||
+      tileData.tileId === TILE_IDS.high_cliff_rock_in_br_upper
+    );
+  }
+
+  /**
    * AI-safe wildlife walkability check limited to already loaded chunks.
    *
-   * Wild Pokémon can inhabit elevated plateaus. This intentionally differs
-   * from player movement: players still need the jump/elevation rules in
-   * isWalkable(), while wildlife treats a loaded HILL tile as valid ground
-   * unless water, void, or a collider blocks it.
+   * Wild Pokémon can inhabit elevated plateaus (including 2-tier High Cliff
+   * plateaus). This intentionally differs from player movement: players still
+   * need the jump/elevation rules in isWalkable(), while wildlife treats a
+   * loaded HILL plateau tile as valid ground unless water, void, a sheer
+   * 2-tier cliff wall face, or a collider blocks it.
    */
   public isLoadedWildlifeWalkable(
     gx: number,
@@ -443,10 +519,17 @@ export class ChunkManager {
       return false;
     }
     if (this.field.isWater(gx, gy) || this.field.isOcean(gx, gy)) return false;
+    if (this.isHighCliffWallFace(gx, gy)) return false;
 
     if (fromGX !== undefined && fromGY !== undefined) {
       const fromTileData = this.getLoadedTileData(fromGX, fromGY);
       if (!fromTileData) return false;
+      const fromHighCliff =
+        Boolean(this.field.isHighCliff?.(fromGX, fromGY)) || isHighCliffTile(fromTileData.tileId);
+      const toHighCliff =
+        Boolean(this.field.isHighCliff?.(gx, gy)) || isHighCliffTile(tileData.tileId);
+      if (fromHighCliff !== toHighCliff) return false;
+
       const fromHill = fromTileData.terrain === TERRAIN.HILL;
       const toHill = tileData.terrain === TERRAIN.HILL;
       if (!fromHill && toHill && !canJumpHills) return false;
@@ -470,31 +553,50 @@ export class ChunkManager {
   /**
    * Checks whether global tile (gx, gy) is physically walkable by character feet.
    * If (fromGX, fromGY) is supplied, handles elevation differences:
-   * - Flat to Hill: requires jump (isWalkable returns false for standard walking)
-   * - Hill to Hill: walkable on the plateau
-   * - Hill to Flat: walkable as a cliff drop
+   * - Flat to 1-tier Hill: requires jump (isWalkable returns false for standard walking)
+   * - 1-tier Hill to 1-tier Hill: walkable on the plateau
+   * - 1-tier Hill to Flat: walkable as a cliff drop
+   * - 2-tier High Cliff (`vách đá cao`): blocked from lower ground/1-tier hills
+   *   unless `canFlyMount` is true (future Flying Pokémon Ride feature).
    */
-  public isWalkable(gx: number, gy: number, fromGX?: number, fromGY?: number): boolean {
+  public isWalkable(
+    gx: number,
+    gy: number,
+    fromGX?: number,
+    fromGY?: number,
+    canFlyMount = false
+  ): boolean {
     const tileData = this.getTileData(gx, gy);
     // Empty voids and water bodies are impassable for feet
     if (tileData.terrain === TERRAIN.EMPTY || tileData.terrain === TERRAIN.OCEAN_WATER) {
       return false;
     }
 
+    if (this.isHighCliffWallFace(gx, gy) && !canFlyMount) {
+      return false;
+    }
+
     if (fromGX !== undefined && fromGY !== undefined) {
       const fromTile = this.getTileData(fromGX, fromGY);
+      const fromHighCliff = this.isHighCliffTile(fromGX, fromGY);
+      const toHighCliff = this.isHighCliffTile(gx, gy);
+
+      if (fromHighCliff !== toHighCliff && !canFlyMount) {
+        return false;
+      }
+
       const fromHill = fromTile.terrain === TERRAIN.HILL;
       const toHill = tileData.terrain === TERRAIN.HILL;
 
-      if (!fromHill && toHill) {
+      if (!fromHill && toHill && !canFlyMount) {
         // Flat ground to hill: blocked for standard walk (must jump with Space)
         return false;
       }
-      // If fromHill && toHill: allowed on plateau
-      // If fromHill && !toHill: allowed to drop down off cliff
+      // If fromHill && toHill (same tier): allowed on plateau
+      // If fromHill && !toHill (1-tier hill): allowed to drop down off cliff
     } else {
-      // If no origin specified, default behavior: hills are impassable
-      if (tileData.terrain === TERRAIN.HILL) {
+      // If no origin specified, default behavior: hills are impassable unless flying
+      if (tileData.terrain === TERRAIN.HILL && !canFlyMount) {
         return false;
       }
     }
@@ -520,10 +622,15 @@ export class ChunkManager {
   /**
    * Checks whether global tile (gx, gy) is an elevated cliff/hill tile
    * that can be jumped onto with the Space key (not blocked by trees, ruins, or boulders).
+   * Note: 2-tier High Cliffs (`vách đá cao`) CANNOT be jumped onto with Space;
+   * they require `canFlyMount = true` (future Flying Pokémon Ride).
    */
-  public canJumpOntoCliff(gx: number, gy: number): boolean {
+  public canJumpOntoCliff(gx: number, gy: number, canFlyMount = false): boolean {
     const tileData = this.getTileData(gx, gy);
     if (tileData.terrain !== TERRAIN.HILL) {
+      return false;
+    }
+    if (this.isHighCliffTile(gx, gy) && !canFlyMount) {
       return false;
     }
 

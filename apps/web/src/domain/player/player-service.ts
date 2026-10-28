@@ -80,6 +80,121 @@ export class PlayerService {
     this.notify();
   }
 
+  public registerSeenSpecies(speciesKey: string): boolean {
+    if (!speciesKey) return false;
+    const norm = speciesKey.toUpperCase();
+    if (!this.profile.pokedexSeenSpecies) {
+      this.profile.pokedexSeenSpecies = [];
+    }
+    if (this.profile.pokedexSeenSpecies.includes(norm)) {
+      return false;
+    }
+    this.profile.pokedexSeenSpecies.push(norm);
+    this.profile.pokedexSeenCount = this.profile.pokedexSeenSpecies.length;
+    this.notify();
+    return true;
+  }
+
+  public registerCaughtSpecies(speciesKey: string): boolean {
+    if (!speciesKey) return false;
+    const norm = speciesKey.toUpperCase();
+    // A caught species is always also seen
+    this.registerSeenSpecies(norm);
+
+    if (!this.profile.pokedexCaughtSpecies) {
+      this.profile.pokedexCaughtSpecies = [];
+    }
+    if (this.profile.pokedexCaughtSpecies.includes(norm)) {
+      return false;
+    }
+    this.profile.pokedexCaughtSpecies.push(norm);
+    this.profile.pokedexCaughtCount = this.profile.pokedexCaughtSpecies.length;
+    this.notify();
+    return true;
+  }
+
+  public hasSeenSpecies(speciesKey: string): boolean {
+    if (!speciesKey) return false;
+    const norm = speciesKey.toUpperCase();
+    return (
+      (this.profile.pokedexSeenSpecies?.includes(norm) ?? false) ||
+      (this.profile.pokedexCaughtSpecies?.includes(norm) ?? false)
+    );
+  }
+
+  public hasCaughtSpecies(speciesKey: string): boolean {
+    if (!speciesKey) return false;
+    const norm = speciesKey.toUpperCase();
+    return this.profile.pokedexCaughtSpecies?.includes(norm) ?? false;
+  }
+
+  public getSeenSpeciesList(): string[] {
+    return [...(this.profile.pokedexSeenSpecies ?? [])];
+  }
+
+  public getCaughtSpeciesList(): string[] {
+    return [...(this.profile.pokedexCaughtSpecies ?? [])];
+  }
+
+  // --- Story Flags, Quests & Defeated Trainers ---
+
+  public getFlag(key: string): boolean | number | string | undefined {
+    return this.profile.storyFlags?.[key];
+  }
+
+  public hasFlag(key: string, expectedValue?: boolean | number | string): boolean {
+    const val = this.profile.storyFlags?.[key];
+    if (expectedValue !== undefined) {
+      return val === expectedValue;
+    }
+    return Boolean(val);
+  }
+
+  public setFlag(key: string, value: boolean | number | string = true): void {
+    if (!this.profile.storyFlags) {
+      this.profile.storyFlags = {};
+    }
+    this.profile.storyFlags[key] = value;
+    this.notify();
+  }
+
+  public getQuestStage(questId: string): number {
+    return this.profile.quests?.[questId]?.stage ?? 0;
+  }
+
+  public isQuestCompleted(questId: string): boolean {
+    return Boolean(this.profile.quests?.[questId]?.completed);
+  }
+
+  public advanceQuest(questId: string, stage: number, completed = false): void {
+    if (!this.profile.quests) {
+      this.profile.quests = {};
+    }
+    this.profile.quests[questId] = {
+      questId,
+      stage,
+      completed,
+      updatedAt: Date.now(),
+    };
+    this.notify();
+  }
+
+  public isTrainerDefeated(trainerId: string): boolean {
+    return Boolean(this.profile.defeatedTrainers?.includes(trainerId));
+  }
+
+  public markTrainerDefeated(trainerId: string): boolean {
+    if (!this.profile.defeatedTrainers) {
+      this.profile.defeatedTrainers = [];
+    }
+    if (this.profile.defeatedTrainers.includes(trainerId)) {
+      return false;
+    }
+    this.profile.defeatedTrainers.push(trainerId);
+    this.notify();
+    return true;
+  }
+
   // --- Inventory Operations (Delegated to inventoryService) ---
 
   public getItemCount(itemId: string): number {
@@ -148,9 +263,9 @@ export class PlayerService {
     this.notify();
   }
 
-  public reset(): void {
-    this.profile = createDefaultPlayerProfile();
-    inventoryService.reset();
+  public reset(customProfile?: PlayerProfile): void {
+    this.profile = customProfile ? { ...customProfile } : createDefaultPlayerProfile();
+    inventoryService.loadState(this.profile.inventory ?? {});
     this.notify();
   }
 }

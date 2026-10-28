@@ -12,6 +12,9 @@ import {
   getCliffTileKey,
   getSnowGroundTileKey,
   getSnowCliffTileKey,
+  getRockyGroundTileKey,
+  getRockyCliffTileKey,
+  getHighCliffRockTileKey,
   getWaterTileKey,
   getGrassTileId,
 } from './autotile';
@@ -53,6 +56,8 @@ export function generateChunkTerrain(
       const isDarkLand = Boolean(field.isDarkLand && field.isDarkLand(gx, gy));
       const isAutumn = Boolean(field.isAutumn && field.isAutumn(gx, gy));
       const isSnow = Boolean(field.isSnow && field.isSnow(gx, gy));
+      const isRockyHighland = Boolean(field.isRockyHighland && field.isRockyHighland(gx, gy));
+      const isHighCliff = Boolean(field.isHighCliff && field.isHighCliff(gx, gy));
       const isRoad = hasRoad && field.isRoad(gx, gy, hasRoad, hasBeach);
 
       // V4 roads are rasterized from the continent graph. Let them cross
@@ -69,13 +74,17 @@ export function generateChunkTerrain(
         tileId = getRoadTileKey(gx, gy, field, hasRoad, hasBeach).tileId;
       } else if (field.isHill(gx, gy, hasHills, hasRoad, hasBeach)) {
         terrain = TERRAIN.HILL;
-        tileId = isSnow
-          ? getSnowCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId
-          : isDesert
-            ? getDuneCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId
-            : isDarkLand
-              ? getDarkCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId
-              : getCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId;
+        tileId = isHighCliff
+          ? getHighCliffRockTileKey(gx, gy, field).tileId
+          : isRockyHighland
+            ? getRockyCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId
+            : isSnow
+              ? getSnowCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId
+              : isDesert
+                ? getDuneCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId
+                : isDarkLand
+                  ? getDarkCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId
+                  : getCliffTileKey(gx, gy, field, hasHills, hasRoad, hasBeach).tileId;
       } else if (isDesert) {
         terrain = TERRAIN.DESERT;
         tileId = getDesertTileKey(gx, gy, field).tileId;
@@ -94,6 +103,9 @@ export function generateChunkTerrain(
       } else if (isSnow) {
         terrain = TERRAIN.SNOW;
         tileId = getSnowGroundTileKey(gx, gy, field).tileId;
+      } else if (isRockyHighland) {
+        terrain = TERRAIN.ROCKY_HIGHLAND;
+        tileId = getRockyGroundTileKey(gx, gy, field).tileId;
       } else if (isAutumn) {
         terrain = TERRAIN.AUTUMN;
         tileId = getAutumnGroundTileKey(gx, gy, field).tileId;

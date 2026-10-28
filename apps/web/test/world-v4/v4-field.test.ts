@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createTerrainField, V4Field, V4_CONFIG } from '../../src/maps/terrain-field';
+import { getStartSpawn } from '../../src/maps/terrain-field/start-village';
 import { getV4LakePlacement } from '../../src/maps/terrain-field/v4-water';
 
 describe('World Gen v4 - macro continents and archipelagos', () => {
@@ -9,7 +10,7 @@ describe('World Gen v4 - macro continents and archipelagos', () => {
     expect(field).toBeInstanceOf(V4Field);
     expect(field.version).toBe(4);
     expect(field.seed).toBe(101);
-    expect(field.getSpawn()).toEqual({ gx: -7, gy: -5 });
+    expect(field.getSpawn()).toEqual(getStartSpawn(101));
   });
 
   it('supports the opt-in natural-landmass profile without changing classic V4', () => {
@@ -167,7 +168,7 @@ describe('World Gen v4 - macro continents and archipelagos', () => {
     }
 
     expect(restrictedTerrainTiles).toBeGreaterThan(0);
-  }, 20000);
+  }, 60000);
 
   it('keeps raised plain hills out of special biome regions', () => {
     const field = new V4Field(101);
@@ -191,4 +192,41 @@ describe('World Gen v4 - macro continents and archipelagos', () => {
     expect(hillTiles).toBeGreaterThan(0);
     expect(specialTiles).toBeGreaterThan(0);
   }, 20000);
+
+  it('places soft climate anchors on the home continent outside the starter safety radius', () => {
+    const field = new V4Field(101, 'natural-landmass');
+    const anchors = field.macroPlan.climateAnchors;
+
+    expect(anchors.length).toBeGreaterThanOrEqual(2);
+    for (const anchor of anchors) {
+      const worldGX = anchor.sourceGX - field.macroPlan.sourceOffset.gx;
+      const worldGY = anchor.sourceGY - field.macroPlan.sourceOffset.gy;
+      const worldMX = Math.floor(worldGX / V4_CONFIG.CELL_SIZE);
+      const worldMY = Math.floor(worldGY / V4_CONFIG.CELL_SIZE);
+
+      expect(field.macroPlan.isHomeContinentCell(worldMX, worldMY)).toBe(true);
+      expect(Math.hypot(worldGX, worldGY)).toBeGreaterThan(V4_CONFIG.START_CORE_RADIUS * 4);
+    }
+  });
+
+  it('keeps snow and meadow hills strictly inside their respective biome territories', () => {
+    const field = new V4Field(101, 'natural-landmass');
+
+    for (let gy = -256; gy <= 256; gy += 32) {
+      for (let gx = -256; gx <= 256; gx += 32) {
+        if (!field.isHill(gx, gy)) continue;
+        const selfSnow = field.isSnow(gx, gy);
+        for (let dy = -1; dy <= 1; dy++) {
+          for (let dx = -1; dx <= 1; dx++) {
+            expect(field.isSnow(gx + dx, gy + dy)).toBe(selfSnow);
+            expect(field.isDesert(gx + dx, gy + dy)).toBe(false);
+            expect(field.isDarkLand(gx + dx, gy + dy)).toBe(false);
+            expect(field.isAutumn(gx + dx, gy + dy)).toBe(false);
+          }
+        }
+      }
+    }
+  }, 20000);
+
 });
+

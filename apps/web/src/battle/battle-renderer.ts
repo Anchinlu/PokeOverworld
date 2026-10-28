@@ -245,6 +245,25 @@ export class BattleRenderer {
     }
   }
 
+  /**
+   * Calculates an adaptive tick divisor for battler sprite idle animations.
+   * At 60 FPS:
+   * - Divisor 8 = ~7.5 FPS (ideal for <= 12 frames, e.g. 10-frame Alolan Vulpix completes in ~1.33s)
+   * - Divisor 7 = ~8.6 FPS (ideal for 13-24 frames, e.g. 16-frame Alolan Ninetales completes in ~1.86s)
+   * - Divisor 6 = 10 FPS (ideal for 25-40 frames, e.g. 33-frame Alolan Sandshrew completes in ~3.3s)
+   * - Divisor 5 = 12 FPS (ideal for normal high-frame sprites, e.g. 71-frame Vulpix completes in ~5.9s, 112-frame Pikachu completes in ~9.3s)
+   * - Decimated shiny sprites (half frames ~56 frames) use divisor 8 (~7.5s) to match full normal cycle.
+   */
+  public static getBattlerDivisor(totalFrames: number, isShiny = false): number {
+    const shiny = !!isShiny;
+    if (totalFrames <= 12) return 8;
+    if (totalFrames <= 24) return 7;
+    if (totalFrames <= 40) return 6;
+    if (totalFrames <= 65) return shiny ? 8 : 5;
+    if (totalFrames <= 90) return shiny ? 7 : 5;
+    return shiny ? 6 : 5;
+  }
+
   /** Prepares an offscreen frame with a solid color fill (or tint overlay) without any glow */
   private prepareSilhouetteCanvas(
     img: HTMLImageElement,
@@ -597,8 +616,8 @@ export class BattleRenderer {
     const pokemon =
       attackerSide === 'player' ? this.engine.playerPokemon : this.engine.enemyPokemon;
     const isShiny = pokemon.isShiny;
-    const divisor = isShiny ? 8 : 4;
     const totalFrames = Math.max(1, Math.floor((sprite.naturalWidth || sprite.width) / frameWidth));
+    const divisor = BattleRenderer.getBattlerDivisor(totalFrames, isShiny);
     const frameIndex = Math.floor(state.tick / divisor) % totalFrames;
 
     const isFainting =
@@ -1183,7 +1202,7 @@ export class BattleRenderer {
       const frameW = frameH;
       const totalFrames = Math.max(1, Math.floor(img.width / frameH));
       const isShiny = this.engine.enemyPokemon.isShiny;
-      const divisor = isShiny ? 8 : 4;
+      const divisor = BattleRenderer.getBattlerDivisor(totalFrames, isShiny);
       // Freeze sprite animation completely when dead/fainting
       const frameIdx = isEnemyFainting
         ? state.enemyFrozenFrame !== null
@@ -1493,7 +1512,7 @@ export class BattleRenderer {
       const frameW = frameH;
       const totalFrames = Math.max(1, Math.floor(img.width / frameH));
       const isShiny = this.engine.playerPokemon.isShiny;
-      const divisor = isShiny ? 8 : 4;
+      const divisor = BattleRenderer.getBattlerDivisor(totalFrames, isShiny);
       // Freeze sprite animation completely when dead/fainting
       const frameIdx = isPlayerFainting
         ? state.playerFrozenFrame !== null
@@ -2145,8 +2164,8 @@ export class BattleRenderer {
     );
     ctx.textAlign = 'left';
 
-    // EXP Bar
-    const expPct = Math.max(0, Math.min(1, player.exp / Math.max(1, player.maxExp)));
+    // EXP Bar (reads smooth progress from state.playerExpPct)
+    const expPct = Math.max(0, Math.min(1, state.playerExpPct));
     const fillExpW = Math.round(192 * expPct);
     if (isLoaded(this.assets.overlayExp) && fillExpW > 0) {
       ctx.drawImage(this.assets.overlayExp, 0, 0, fillExpW, 4, dx + 40, dy + 74, fillExpW, 4);
@@ -3115,3 +3134,4 @@ export class BattleRenderer {
     ctx.restore();
   }
 }
+

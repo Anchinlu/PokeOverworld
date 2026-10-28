@@ -15,7 +15,13 @@ export interface TerrainField {
   isDesert?(gx: number, gy: number): boolean;
   isDarkLand?(gx: number, gy: number): boolean;
   isAutumn?(gx: number, gy: number): boolean;
+  isApricornPlain?(gx: number, gy: number): boolean;
   isSnow?(gx: number, gy: number): boolean;
+  isRockyHighland?(gx: number, gy: number): boolean;
+  /** Freshwater tile inside a Rocky Highland region; kept separate from land. */
+  isRockyWater?(gx: number, gy: number): boolean;
+  isHighCliff?(gx: number, gy: number): boolean;
+  isHighCliffPlateau?(gx: number, gy: number): boolean;
   isHill(
     gx: number,
     gy: number,

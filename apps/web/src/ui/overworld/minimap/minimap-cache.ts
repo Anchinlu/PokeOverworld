@@ -1,5 +1,12 @@
 import { seededHash } from '../../../maps/noise';
-import { TERRAIN, isDarkLandTile, isAutumnTile, isSnowTile } from '@pokemon/game-data';
+import {
+  TERRAIN,
+  isAutumnTile,
+  isDarkLandTile,
+  isFreshwaterTile,
+  isRockyHighlandTile,
+  isSnowTile,
+} from '@pokemon/game-data';
 import type { TerrainField } from '../../../maps/terrain-field';
 import { resolveWorldBiome } from '../../../maps/ecology';
 import { isVillageArea } from '../../../maps/village-rules';
@@ -79,7 +86,11 @@ export function getMinimapTerrainClass(
           ? 'snow'
           : tileId && isDarkLandTile(tileId)
             ? 'dark_land'
-            : 'hill';
+            : tileId && isRockyHighlandTile(tileId) && !isFreshwaterTile(tileId)
+              ? 'rocky_highland'
+              : 'hill';
+      case TERRAIN.ROCKY_HIGHLAND:
+        return 'rocky_highland';
       case TERRAIN.ROAD:
         return 'road';
       case TERRAIN.DARK_LAND:
@@ -100,7 +111,8 @@ export function getMinimapTerrainClass(
     if (isSnowTile(tileId)) return 'snow';
     if (isAutumnTile(tileId)) return 'autumn';
     if (isDarkLandTile(tileId)) return 'dark_land';
-    if (tileId >= 700 && tileId <= 763) return 'water';
+    if (isFreshwaterTile(tileId) || (tileId >= 730 && tileId <= 742)) return 'water';
+    if (isRockyHighlandTile(tileId)) return 'rocky_highland';
     if (tileId >= 400 && tileId < 500) return 'hill';
     if (tileId >= 300 && tileId < 400) return 'sand';
     if (tileId >= 200 && tileId < 300) return 'road';
@@ -113,6 +125,7 @@ export function getMinimapTerrainClass(
   if (field.isDarkLand?.(gx, gy)) return 'dark_land';
   if (field.isAutumn?.(gx, gy)) return 'autumn';
   if (field.isSnow?.(gx, gy)) return 'snow';
+  if (field.isRockyHighland?.(gx, gy)) return 'rocky_highland';
   if (field.isDesert?.(gx, gy) || field.isSand(gx, gy)) return 'sand';
   if (field.isHill(gx, gy)) return 'hill';
 
@@ -133,6 +146,7 @@ export function getMinimapTileColour(
     sand: WORLD_MAP_PALETTE.sandPixels,
     water: WORLD_MAP_PALETTE.waterPixels,
     hill: WORLD_MAP_PALETTE.hillPixels,
+    rocky_highland: WORLD_MAP_PALETTE.rockyPixels,
     road: WORLD_MAP_PALETTE.roadPixels,
     dark_land: WORLD_MAP_PALETTE.darkPixels,
     autumn: WORLD_MAP_PALETTE.autumnPixels,

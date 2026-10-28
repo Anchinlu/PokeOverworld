@@ -177,6 +177,23 @@ function emitLegacyGraphicsPlugin(): Plugin {
         }
       }
 
+      // Regional forms are stored separately from pokemon-db.json. Include
+      // their battle, follower, swimming and shiny assets in production too;
+      // the dev middleware can read them directly from the repository, but a
+      // built app otherwise returns 404 for keys such as EXEGGUTOR_1.
+      const regionalFormsPath = path.resolve(projectRoot, 'packages/game-data/regional-forms.json');
+      if (fs.existsSync(regionalFormsPath)) {
+        const regionalForms = JSON.parse(fs.readFileSync(regionalFormsPath, 'utf8')) as {
+          forms?: Record<string, { sprites?: Record<string, string> }>;
+        };
+        for (const form of Object.values(regionalForms.forms ?? {})) {
+          for (const spritePath of Object.values(form.sprites ?? {})) {
+            if (spritePath.startsWith('Graphics/')) files.add(spritePath);
+            if (spritePath.startsWith('Audio/')) files.add(spritePath);
+          }
+        }
+      }
+
       // Add battle music, SE, and Misic backgound files
       for (const audioSub of ['Battle', 'SE', 'Misic backgound']) {
         const audioDir = path.resolve(projectRoot, 'Audio', audioSub);

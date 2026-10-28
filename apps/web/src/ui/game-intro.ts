@@ -8,7 +8,7 @@
  * - Glowing white outline logo (logo2.png) overlaying on top of the type ring
  * - Full color iconic Pokémon logo (logo1.png) reveal with radiant glow
  * - Glowing prompt: "✨ BẤM ĐỂ BƯỚC VÀO THẾ GIỚI ✨"
- * - Automatic transition into title screen at the 8th second (8000ms)
+ * - Automatic transition into title screen at the 11th second (11000ms)
  * - Or click / key press to skip & enter early anytime
  * - Smooth fade-out transition with automatic Title BGM handover
  */

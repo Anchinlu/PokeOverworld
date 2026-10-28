@@ -28,10 +28,20 @@ function resolveMove(id: string): BattleMove | undefined {
   return move ? { ...move, id: canonicalId } : undefined;
 }
 
+import regionalFormsRaw from '@pokemon/game-data/regional-forms.json';
+
 const speciesMovesMap = new Map<string, PokemonLearnMove[]>();
 for (const p of Object.values(rawPokemonData.pokemon as Record<string, PokemonSpeciesData>)) {
   if (p.speciesKey && p.moves) {
     speciesMovesMap.set(p.speciesKey.toUpperCase(), p.moves);
+  }
+}
+for (const form of Object.values(((regionalFormsRaw as any).forms || {}) as Record<string, any>)) {
+  if (form.formKey && form.moves) {
+    speciesMovesMap.set(form.formKey.toUpperCase(), form.moves);
+  }
+  if (form.assetKey && form.moves) {
+    speciesMovesMap.set(form.assetKey.toUpperCase(), form.moves);
   }
 }
 
@@ -50,12 +60,16 @@ export const SPECIES_MOVESETS: Record<string, string[]> = {
 };
 
 export function getMovesForSpecies(
-  speciesKey: string,
-  types: PokemonType[],
+  speciesKey?: string,
+  types: PokemonType[] = ['Normal'],
   level: number = 50
 ): BattleMove[] {
-  const normKey = speciesKey.replace(/^wild_/i, '').toUpperCase();
-  const learnset = speciesMovesMap.get(normKey);
+  const normKey = (speciesKey || 'PIKACHU').replace(/^wild_/i, '').toUpperCase();
+  let learnset = speciesMovesMap.get(normKey);
+  if (!learnset) {
+    const baseKey = normKey.split('_')[0];
+    learnset = speciesMovesMap.get(baseKey);
+  }
 
   if (learnset && learnset.length > 0) {
     const eligible = learnset.filter((m) => m.level <= level);

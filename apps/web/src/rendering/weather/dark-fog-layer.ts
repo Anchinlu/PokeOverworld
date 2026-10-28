@@ -149,8 +149,8 @@ export class DarkFogLayer {
       const ly = center + lobe.offsetY;
       const grad = ctx.createRadialGradient(lx, ly, 0, lx, ly, lobe.radius);
       grad.addColorStop(0, lobe.color);
-      grad.addColorStop(0.45, lobe.color.replace(/[\d\.]+\)$/, '0.40)'));
-      grad.addColorStop(0.8, lobe.color.replace(/[\d\.]+\)$/, '0.14)'));
+      grad.addColorStop(0.45, lobe.color.replace(/[\d.]+\)$/, '0.40)'));
+      grad.addColorStop(0.8, lobe.color.replace(/[\d.]+\)$/, '0.14)'));
       grad.addColorStop(1, 'rgba(12, 1, 20, 0)');
 
       ctx.fillStyle = grad;

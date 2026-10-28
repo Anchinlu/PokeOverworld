@@ -2,7 +2,7 @@
 
 ## Trạng thái
 
-**Kế hoạch, chưa triển khai.** Thay thế `09-api-contract.md` (REST/server). Chi tiết thiết kế ở mục 2.5.4 của [DEV_ARCHITECTURE_GUIDE.md](../DEV_ARCHITECTURE_GUIDE.md).
+**Kế hoạch, chưa triển khai.** Thay thế `09-api-contract.md` (REST/server). Chi tiết thiết kế ở mục 2.5.4 của [DEV_ARCHITECTURE_GUIDE.md](DEV_ARCHITECTURE_GUIDE.md).
 
 ## Truyền tải
 

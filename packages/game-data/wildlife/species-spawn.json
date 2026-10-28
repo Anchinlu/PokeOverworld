@@ -132,14 +132,34 @@
     "social": "herd",
     "habitats": [
       {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.85
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.72
+      },
+      {
         "biome": "dense_forest",
         "context": "forest_floor",
         "affinity": 1
       },
       {
-        "biome": "light_forest",
+        "biome": "dense_forest",
         "context": "tall_grass",
-        "affinity": 0.8
+        "affinity": 0.95
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "tall_grass",
+        "affinity": 0.95
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "walkable_ground",
+        "affinity": 0.85
       }
     ],
     "activeTime": [
@@ -156,14 +176,34 @@
     "social": "solitary",
     "habitats": [
       {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.6
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.51
+      },
+      {
         "biome": "dense_forest",
         "context": "forest_floor",
         "affinity": 0.9
       },
       {
-        "biome": "light_forest",
+        "biome": "dense_forest",
         "context": "tall_grass",
-        "affinity": 0.6
+        "affinity": 0.85
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "tall_grass",
+        "affinity": 0.8
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "walkable_ground",
+        "affinity": 0.7
       }
     ],
     "activeTime": [
@@ -180,14 +220,39 @@
     "social": "pair",
     "habitats": [
       {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.55
+      },
+      {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.55
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.47
+      },
+      {
         "biome": "dense_forest",
         "context": "forest_floor",
         "affinity": 0.7
       },
       {
-        "biome": "meadow",
+        "biome": "dense_forest",
         "context": "tall_grass",
-        "affinity": 0.5
+        "affinity": 0.66
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "tall_grass",
+        "affinity": 0.85
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "walkable_ground",
+        "affinity": 0.75
       }
     ],
     "activeTime": [
@@ -203,14 +268,34 @@
     "social": "herd",
     "habitats": [
       {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.85
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.72
+      },
+      {
         "biome": "dense_forest",
         "context": "forest_floor",
         "affinity": 1
       },
       {
-        "biome": "light_forest",
+        "biome": "dense_forest",
         "context": "tall_grass",
-        "affinity": 0.8
+        "affinity": 0.95
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "tall_grass",
+        "affinity": 0.95
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "walkable_ground",
+        "affinity": 0.85
       }
     ],
     "activeTime": [
@@ -227,14 +312,34 @@
     "social": "solitary",
     "habitats": [
       {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.6
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.51
+      },
+      {
         "biome": "dense_forest",
         "context": "forest_floor",
         "affinity": 0.9
       },
       {
-        "biome": "light_forest",
+        "biome": "dense_forest",
         "context": "tall_grass",
-        "affinity": 0.6
+        "affinity": 0.85
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "tall_grass",
+        "affinity": 0.8
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "walkable_ground",
+        "affinity": 0.7
       }
     ],
     "activeTime": [
@@ -251,14 +356,34 @@
     "social": "flock",
     "habitats": [
       {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.5
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.42
+      },
+      {
         "biome": "dense_forest",
         "context": "forest_floor",
         "affinity": 0.7
       },
       {
-        "biome": "light_forest",
+        "biome": "dense_forest",
         "context": "tall_grass",
-        "affinity": 0.5
+        "affinity": 0.66
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "tall_grass",
+        "affinity": 0.9
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "walkable_ground",
+        "affinity": 0.8
       }
     ],
     "activeTime": [
@@ -279,14 +404,29 @@
         "affinity": 1
       },
       {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.85
+      },
+      {
         "biome": "light_forest",
         "context": "tall_grass",
-        "affinity": 0.8
+        "affinity": 0.85
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.72
       },
       {
         "biome": "autumn",
         "context": "walkable_ground",
-        "affinity": 0.95
+        "affinity": 0.9
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.85
       }
     ],
     "activeTime": [
@@ -308,14 +448,29 @@
         "affinity": 0.8
       },
       {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.68
+      },
+      {
         "biome": "light_forest",
         "context": "tall_grass",
         "affinity": 0.6
       },
       {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.51
+      },
+      {
         "biome": "autumn",
         "context": "walkable_ground",
-        "affinity": 0.85
+        "affinity": 0.75
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.71
       }
     ],
     "activeTime": [
@@ -355,8 +510,53 @@
         "affinity": 1
       },
       {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.85
+      },
+      {
         "biome": "light_forest",
         "context": "tall_grass",
+        "affinity": 0.75
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.64
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.75
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.71
+      },
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.7
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.7
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.9
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
+        "affinity": 0.9
+      },
+      {
+        "biome": "coast",
+        "context": "shore",
         "affinity": 0.7
       }
     ],
@@ -376,6 +576,31 @@
         "biome": "meadow",
         "context": "tall_grass",
         "affinity": 0.7
+      },
+      {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.59
+      },
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.5
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.5
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.7
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
+        "affinity": 0.7
       }
     ],
     "activeTime": [
@@ -392,12 +617,37 @@
       {
         "biome": "meadow",
         "context": "tall_grass",
-        "affinity": 0.9
+        "affinity": 0.85
+      },
+      {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.72
+      },
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.8
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.72
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.68
+      },
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.8
       },
       {
         "biome": "dryland",
         "context": "walkable_ground",
-        "affinity": 0.6
+        "affinity": 0.8
       }
     ],
     "activeTime": [
@@ -416,12 +666,37 @@
       {
         "biome": "meadow",
         "context": "tall_grass",
+        "affinity": 0.55
+      },
+      {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.47
+      },
+      {
+        "biome": "hill_edge",
+        "context": "rock",
         "affinity": 0.6
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.54
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.51
+      },
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.55
       },
       {
         "biome": "dryland",
         "context": "walkable_ground",
-        "affinity": 0.5
+        "affinity": 0.55
       }
     ],
     "activeTime": [
@@ -438,13 +713,23 @@
     "habitats": [
       {
         "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.9
+      },
+      {
+        "biome": "dryland",
         "context": "walkable_ground",
         "affinity": 0.9
       },
       {
-        "biome": "meadow",
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.85
+      },
+      {
+        "biome": "dark_land",
         "context": "tall_grass",
-        "affinity": 0.6
+        "affinity": 0.85
       }
     ],
     "activeTime": [
@@ -462,7 +747,22 @@
     "habitats": [
       {
         "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.65
+      },
+      {
+        "biome": "dryland",
         "context": "walkable_ground",
+        "affinity": 0.65
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.6
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
         "affinity": 0.6
       }
     ],
@@ -479,30 +779,70 @@
     "social": "pair",
     "habitats": [
       {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.75
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.64
+      },
+      {
         "biome": "dense_forest",
         "context": "forest_floor",
         "affinity": 1
       },
       {
-        "biome": "light_forest",
+        "biome": "dense_forest",
         "context": "tall_grass",
-        "affinity": 0.7
+        "affinity": 0.95
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "RAICHU"
   },
   "RAICHU": {
     "stage": 2,
-    "flags": [
-      "no_wild"
-    ],
-    "rarityDelta": 0,
+    "flags": [],
+    "rarityDelta": 1,
     "social": "solitary",
-    "habitats": [],
+    "habitats": [
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.22
+      },
+      {
+        "biome": "dense_forest",
+        "context": "tall_grass",
+        "affinity": 0.21
+      },
+      {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.2
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.18
+      },
+      {
+        "biome": "coast",
+        "context": "shore",
+        "affinity": 0.25
+      },
+      {
+        "biome": "coast",
+        "context": "walkable_ground",
+        "affinity": 0.22
+      }
+    ],
     "activeTime": [
       "dawn",
       "day",
@@ -523,7 +863,22 @@
       {
         "biome": "dryland",
         "context": "walkable_ground",
-        "affinity": 0.8
+        "affinity": 1
+      },
+      {
+        "biome": "snow",
+        "context": "walkable_ground",
+        "affinity": 0.95
+      },
+      {
+        "biome": "snow",
+        "context": "tall_grass",
+        "affinity": 0.9
+      },
+      {
+        "biome": "snow",
+        "context": "rock",
+        "affinity": 0.85
       }
     ],
     "activeTime": [
@@ -542,7 +897,27 @@
       {
         "biome": "dryland",
         "context": "sand",
+        "affinity": 0.75
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.75
+      },
+      {
+        "biome": "snow",
+        "context": "walkable_ground",
         "affinity": 0.7
+      },
+      {
+        "biome": "snow",
+        "context": "tall_grass",
+        "affinity": 0.66
+      },
+      {
+        "biome": "snow",
+        "context": "rock",
+        "affinity": 0.63
       }
     ],
     "activeTime": [
@@ -566,6 +941,11 @@
         "biome": "light_forest",
         "context": "tall_grass",
         "affinity": 0.6
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.51
       }
     ],
     "activeTime": [
@@ -590,16 +970,41 @@
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "NIDOQUEEN"
   },
   "NIDOQUEEN": {
     "stage": 3,
-    "flags": [
-      "no_wild"
-    ],
-    "rarityDelta": 0,
+    "flags": [],
+    "rarityDelta": 1,
     "social": "solitary",
-    "habitats": [],
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.22
+      },
+      {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.2
+      },
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.25
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.23
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.21
+      }
+    ],
     "activeTime": [
       "dawn",
       "day",
@@ -621,6 +1026,11 @@
         "biome": "light_forest",
         "context": "tall_grass",
         "affinity": 0.6
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.51
       }
     ],
     "activeTime": [
@@ -645,16 +1055,41 @@
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "NIDOKING"
   },
   "NIDOKING": {
-    "stage": 2,
-    "flags": [
-      "no_wild"
-    ],
-    "rarityDelta": 0,
+    "stage": 3,
+    "flags": [],
+    "rarityDelta": 1,
     "social": "solitary",
-    "habitats": [],
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.22
+      },
+      {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.2
+      },
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.25
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.23
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.21
+      }
+    ],
     "activeTime": [
       "dawn",
       "day",
@@ -669,32 +1104,76 @@
     "habitats": [
       {
         "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.8
+      },
+      {
+        "biome": "hill_edge",
         "context": "walkable_ground",
-        "affinity": 0.7
+        "affinity": 0.72
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.68
       },
       {
         "biome": "snow",
         "context": "walkable_ground",
-        "affinity": 0.6
+        "affinity": 0.8
+      },
+      {
+        "biome": "snow",
+        "context": "tall_grass",
+        "affinity": 0.76
+      },
+      {
+        "biome": "snow",
+        "context": "rock",
+        "affinity": 0.72
       }
     ],
     "activeTime": [
       "dusk",
       "night"
-    ]
+    ],
+    "apexSpecies": "CLEFABLE"
   },
   "CLEFABLE": {
-    "stage": 1,
-    "flags": [
-      "no_wild"
-    ],
-    "rarityDelta": 0,
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": -1,
     "social": "solitary",
-    "habitats": [],
+    "habitats": [
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.22
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.2
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.19
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.2
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.18
+      }
+    ],
     "activeTime": [
-      "dawn",
-      "day",
-      "dusk"
+      "dusk",
+      "night"
     ]
   },
   "VULPIX": {
@@ -704,33 +1183,28 @@
     "social": "solitary",
     "habitats": [
       {
-        "biome": "meadow",
-        "context": "tall_grass",
-        "affinity": 0.7
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 1
       },
       {
         "biome": "autumn",
-        "context": "walkable_ground",
-        "affinity": 1.0
-      }
-    ],
-    "activeTime": [
-      "dawn",
-      "day",
-      "dusk"
-    ]
-  },
-  "NINETALES": {
-    "stage": 1,
-    "flags": [
-      "no_wild"
-    ],
-    "rarityDelta": 0,
-    "social": "solitary",
-    "habitats": [
+        "context": "tall_grass",
+        "affinity": 0.95
+      },
       {
-        "biome": "autumn",
+        "biome": "snow",
         "context": "walkable_ground",
+        "affinity": 0.95
+      },
+      {
+        "biome": "snow",
+        "context": "tall_grass",
+        "affinity": 0.9
+      },
+      {
+        "biome": "snow",
+        "context": "rock",
         "affinity": 0.85
       }
     ],
@@ -738,6 +1212,56 @@
       "dawn",
       "day",
       "dusk"
+    ],
+    "apexSpecies": "NINETALES"
+  },
+  "NINETALES": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 1,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.25
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.25
+      },
+      {
+        "biome": "snow",
+        "context": "walkable_ground",
+        "affinity": 0.25
+      },
+      {
+        "biome": "snow",
+        "context": "tall_grass",
+        "affinity": 0.24
+      },
+      {
+        "biome": "snow",
+        "context": "rock",
+        "affinity": 0.23
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.2
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.18
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
     ]
   },
   "JIGGLYPUFF": {
@@ -783,23 +1307,93 @@
     "social": "flock",
     "habitats": [
       {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.65
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.55
+      },
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.75
+      },
+      {
+        "biome": "dense_forest",
+        "context": "tall_grass",
+        "affinity": 0.71
+      },
+      {
         "biome": "hill_edge",
         "context": "rock",
         "affinity": 1
       },
       {
-        "biome": "dense_forest",
-        "context": "forest_floor",
-        "affinity": 0.6
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.9
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.85
+      },
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.75
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.75
+      },
+      {
+        "biome": "snow",
+        "context": "walkable_ground",
+        "affinity": 0.8
+      },
+      {
+        "biome": "snow",
+        "context": "tall_grass",
+        "affinity": 0.76
+      },
+      {
+        "biome": "snow",
+        "context": "rock",
+        "affinity": 0.72
       },
       {
         "biome": "dark_land",
         "context": "walkable_ground",
-        "affinity": 0.7
+        "affinity": 0.95
       },
       {
         "biome": "dark_land",
         "context": "tall_grass",
+        "affinity": 0.95
+      },
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
+        "affinity": 0.75
+      },
+      {
+        "biome": "wetland",
+        "context": "walkable_ground",
+        "affinity": 0.64
+      },
+      {
+        "biome": "wetland",
+        "context": "shore",
+        "affinity": 0.64
+      },
+      {
+        "biome": "coast",
+        "context": "shore",
         "affinity": 0.7
       }
     ],
@@ -816,25 +1410,71 @@
     "social": "flock",
     "habitats": [
       {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.55
+      },
+      {
+        "biome": "dense_forest",
+        "context": "tall_grass",
+        "affinity": 0.52
+      },
+      {
         "biome": "hill_edge",
         "context": "rock",
-        "affinity": 0.7
+        "affinity": 0.75
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.68
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.64
+      },
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.55
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.55
+      },
+      {
+        "biome": "snow",
+        "context": "walkable_ground",
+        "affinity": 0.6
+      },
+      {
+        "biome": "snow",
+        "context": "tall_grass",
+        "affinity": 0.57
+      },
+      {
+        "biome": "snow",
+        "context": "rock",
+        "affinity": 0.54
       },
       {
         "biome": "dark_land",
         "context": "walkable_ground",
-        "affinity": 0.5
+        "affinity": 0.75
       },
       {
         "biome": "dark_land",
         "context": "tall_grass",
-        "affinity": 0.5
+        "affinity": 0.75
       }
     ],
     "activeTime": [
       "dusk",
       "night"
-    ]
+    ],
+    "apexSpecies": "CROBAT"
   },
   "ODDISH": {
     "stage": 1,
@@ -843,21 +1483,52 @@
     "social": "pair",
     "habitats": [
       {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.7
+      },
+      {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.8
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.68
+      },
+      {
         "biome": "dense_forest",
         "context": "forest_floor",
         "affinity": 0.9
       },
       {
-        "biome": "meadow",
+        "biome": "dense_forest",
         "context": "tall_grass",
-        "affinity": 0.7
+        "affinity": 0.85
+      },
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
+        "affinity": 0.75
+      },
+      {
+        "biome": "wetland",
+        "context": "walkable_ground",
+        "affinity": 0.64
+      },
+      {
+        "biome": "wetland",
+        "context": "shore",
+        "affinity": 0.64
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "GLOOM"
   },
   "GLOOM": {
     "stage": 2,
@@ -871,29 +1542,63 @@
         "affinity": 0.8
       },
       {
+        "biome": "dense_forest",
+        "context": "tall_grass",
+        "affinity": 0.76
+      },
+      {
         "biome": "wetland",
         "context": "tall_grass",
-        "affinity": 0.6
+        "affinity": 0.65
+      },
+      {
+        "biome": "wetland",
+        "context": "walkable_ground",
+        "affinity": 0.55
+      },
+      {
+        "biome": "wetland",
+        "context": "shore",
+        "affinity": 0.55
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "VILEPLUME"
   },
   "VILEPLUME": {
     "stage": 3,
-    "flags": [
-      "no_wild"
-    ],
-    "rarityDelta": 0,
+    "flags": [],
+    "rarityDelta": -2,
     "social": "solitary",
-    "habitats": [],
+    "habitats": [
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.25
+      },
+      {
+        "biome": "dense_forest",
+        "context": "tall_grass",
+        "affinity": 0.24
+      },
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
+        "affinity": 0.22
+      },
+      {
+        "biome": "wetland",
+        "context": "walkable_ground",
+        "affinity": 0.2
+      }
+    ],
     "activeTime": [
-      "dawn",
-      "day",
-      "dusk"
+      "dusk",
+      "night"
     ]
   },
   "PARAS": {
@@ -903,26 +1608,52 @@
     "social": "solitary",
     "habitats": [
       {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.7
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.59
+      },
+      {
         "biome": "dense_forest",
         "context": "forest_floor",
         "affinity": 1
       },
       {
-        "biome": "light_forest",
-        "context": "forest_floor",
-        "affinity": 0.7
+        "biome": "dense_forest",
+        "context": "tall_grass",
+        "affinity": 0.95
       },
       {
         "biome": "autumn",
         "context": "walkable_ground",
-        "affinity": 1.0
+        "affinity": 0.95
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.9
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "tall_grass",
+        "affinity": 0.85
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "walkable_ground",
+        "affinity": 0.75
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "PARASECT"
   },
   "PARASECT": {
     "stage": 1,
@@ -933,12 +1664,42 @@
       {
         "biome": "dense_forest",
         "context": "forest_floor",
-        "affinity": 0.8
+        "affinity": 0.85
+      },
+      {
+        "biome": "dense_forest",
+        "context": "tall_grass",
+        "affinity": 0.81
       },
       {
         "biome": "autumn",
         "context": "walkable_ground",
-        "affinity": 0.9
+        "affinity": 0.85
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.81
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.65
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
+        "affinity": 0.65
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "tall_grass",
+        "affinity": 0.75
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "walkable_ground",
+        "affinity": 0.65
       }
     ],
     "activeTime": [
@@ -954,26 +1715,62 @@
     "social": "solitary",
     "habitats": [
       {
-        "biome": "dense_forest",
-        "context": "forest_floor",
-        "affinity": 0.9
-      },
-      {
         "biome": "light_forest",
         "context": "tall_grass",
         "affinity": 0.7
       },
       {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.59
+      },
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.9
+      },
+      {
+        "biome": "dense_forest",
+        "context": "tall_grass",
+        "affinity": 0.85
+      },
+      {
         "biome": "autumn",
         "context": "walkable_ground",
-        "affinity": 0.9
+        "affinity": 0.85
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.81
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.75
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
+        "affinity": 0.75
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "tall_grass",
+        "affinity": 0.85
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "walkable_ground",
+        "affinity": 0.75
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "VENOMOTH"
   },
   "VENOMOTH": {
     "stage": 2,
@@ -984,12 +1781,42 @@
       {
         "biome": "dense_forest",
         "context": "forest_floor",
-        "affinity": 0.6
+        "affinity": 0.65
+      },
+      {
+        "biome": "dense_forest",
+        "context": "tall_grass",
+        "affinity": 0.62
       },
       {
         "biome": "autumn",
         "context": "walkable_ground",
-        "affinity": 0.8
+        "affinity": 0.7
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.66
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.6
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
+        "affinity": 0.6
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "tall_grass",
+        "affinity": 0.75
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "walkable_ground",
+        "affinity": 0.65
       }
     ],
     "activeTime": [
@@ -1005,21 +1832,37 @@
     "social": "pair",
     "habitats": [
       {
-        "biome": "dryland",
-        "context": "sand",
-        "affinity": 0.9
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.75
       },
       {
         "biome": "hill_edge",
         "context": "walkable_ground",
-        "affinity": 0.7
+        "affinity": 0.68
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.64
+      },
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.95
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.95
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "DUGTRIO"
   },
   "DUGTRIO": {
     "stage": 2,
@@ -1030,7 +1873,12 @@
       {
         "biome": "dryland",
         "context": "sand",
-        "affinity": 0.6
+        "affinity": 0.65
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.65
       }
     ],
     "activeTime": [
@@ -1051,15 +1899,81 @@
         "affinity": 0.8
       },
       {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.68
+      },
+      {
         "biome": "light_forest",
         "context": "tall_grass",
-        "affinity": 0.6
+        "affinity": 0.65
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.55
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.75
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.71
+      },
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.7
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.63
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.59
+      },
+      {
+        "biome": "snow",
+        "context": "walkable_ground",
+        "affinity": 0.8
+      },
+      {
+        "biome": "snow",
+        "context": "tall_grass",
+        "affinity": 0.76
+      },
+      {
+        "biome": "snow",
+        "context": "rock",
+        "affinity": 0.72
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.85
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
+        "affinity": 0.85
+      },
+      {
+        "biome": "coast",
+        "context": "shore",
+        "affinity": 0.65
       }
     ],
     "activeTime": [
       "dusk",
       "night"
-    ]
+    ],
+    "apexSpecies": "PERSIAN"
   },
   "PERSIAN": {
     "stage": 2,
@@ -1071,6 +1985,21 @@
         "biome": "meadow",
         "context": "tall_grass",
         "affinity": 0.5
+      },
+      {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.42
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.6
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
+        "affinity": 0.6
       }
     ],
     "activeTime": [
@@ -1087,19 +2016,30 @@
       {
         "biome": "wetland",
         "context": "water_surface",
-        "affinity": 0.9
+        "affinity": 0.95
       },
       {
         "biome": "wetland",
         "context": "tall_grass",
-        "affinity": 0.7
+        "affinity": 0.85
+      },
+      {
+        "biome": "wetland",
+        "context": "walkable_ground",
+        "affinity": 0.72
+      },
+      {
+        "biome": "wetland",
+        "context": "shore",
+        "affinity": 0.72
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "GOLDUCK"
   },
   "GOLDUCK": {
     "stage": 2,
@@ -1110,7 +2050,22 @@
       {
         "biome": "wetland",
         "context": "water_surface",
-        "affinity": 0.6
+        "affinity": 0.65
+      },
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
+        "affinity": 0.55
+      },
+      {
+        "biome": "wetland",
+        "context": "walkable_ground",
+        "affinity": 0.47
+      },
+      {
+        "biome": "wetland",
+        "context": "shore",
+        "affinity": 0.47
       }
     ],
     "activeTime": [
@@ -1126,26 +2081,37 @@
     "social": "herd",
     "habitats": [
       {
-        "biome": "meadow",
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.8
+      },
+      {
+        "biome": "autumn",
         "context": "tall_grass",
+        "affinity": 0.76
+      },
+      {
+        "biome": "hill_edge",
+        "context": "rock",
         "affinity": 0.8
       },
       {
         "biome": "hill_edge",
         "context": "walkable_ground",
-        "affinity": 0.7
+        "affinity": 0.72
       },
       {
-        "biome": "autumn",
-        "context": "walkable_ground",
-        "affinity": 0.85
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.68
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "PRIMEAPE"
   },
   "PRIMEAPE": {
     "stage": 2,
@@ -1154,21 +2120,37 @@
     "social": "pair",
     "habitats": [
       {
-        "biome": "meadow",
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.55
+      },
+      {
+        "biome": "autumn",
         "context": "tall_grass",
-        "affinity": 0.5
+        "affinity": 0.52
+      },
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.6
       },
       {
         "biome": "hill_edge",
         "context": "walkable_ground",
-        "affinity": 0.6
+        "affinity": 0.54
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.51
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "ANNIHILAPE"
   },
   "GROWLITHE": {
     "stage": 1,
@@ -1177,30 +2159,70 @@
     "social": "solitary",
     "habitats": [
       {
-        "biome": "meadow",
-        "context": "tall_grass",
-        "affinity": 0.8
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.95
       },
       {
         "biome": "autumn",
-        "context": "walkable_ground",
+        "context": "tall_grass",
         "affinity": 0.9
+      },
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.8
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.72
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.68
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "ARCANINE"
   },
   "ARCANINE": {
     "stage": 2,
-    "flags": [
-      "no_wild"
-    ],
-    "rarityDelta": 0,
+    "flags": [],
+    "rarityDelta": 1,
     "social": "solitary",
-    "habitats": [],
+    "habitats": [
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.24
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.24
+      },
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.25
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.23
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.21
+      }
+    ],
     "activeTime": [
       "dawn",
       "day",
@@ -1215,20 +2237,31 @@
     "habitats": [
       {
         "biome": "wetland",
+        "context": "water_surface",
+        "affinity": 0.95
+      },
+      {
+        "biome": "wetland",
         "context": "tall_grass",
         "affinity": 1
       },
       {
         "biome": "wetland",
-        "context": "water_surface",
-        "affinity": 0.8
+        "context": "walkable_ground",
+        "affinity": 0.85
+      },
+      {
+        "biome": "wetland",
+        "context": "shore",
+        "affinity": 0.85
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "POLIWHIRL"
   },
   "POLIWHIRL": {
     "stage": 1,
@@ -1238,29 +2271,59 @@
     "habitats": [
       {
         "biome": "wetland",
+        "context": "water_surface",
+        "affinity": 0.7
+      },
+      {
+        "biome": "wetland",
         "context": "tall_grass",
         "affinity": 0.7
       },
       {
         "biome": "wetland",
-        "context": "water_surface",
-        "affinity": 0.7
+        "context": "walkable_ground",
+        "affinity": 0.59
+      },
+      {
+        "biome": "wetland",
+        "context": "shore",
+        "affinity": 0.59
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "POLITOED"
   },
   "POLIWRATH": {
-    "stage": 2,
-    "flags": [
-      "no_wild"
-    ],
-    "rarityDelta": 0,
+    "stage": 3,
+    "flags": [],
+    "rarityDelta": -2,
     "social": "solitary",
-    "habitats": [],
+    "habitats": [
+      {
+        "biome": "wetland",
+        "context": "water_surface",
+        "affinity": 0.25
+      },
+      {
+        "biome": "wetland",
+        "context": "shore",
+        "affinity": 0.23
+      },
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
+        "affinity": 0.2
+      },
+      {
+        "biome": "wetland",
+        "context": "walkable_ground",
+        "affinity": 0.18
+      }
+    ],
     "activeTime": [
       "dawn",
       "day",
@@ -1281,19 +2344,20 @@
       {
         "biome": "dark_land",
         "context": "walkable_ground",
-        "affinity": 0.85
+        "affinity": 0.8
       },
       {
         "biome": "dark_land",
         "context": "tall_grass",
-        "affinity": 0.85
+        "affinity": 0.8
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "KADABRA"
   },
   "KADABRA": {
     "stage": 1,
@@ -1309,28 +2373,48 @@
       {
         "biome": "dark_land",
         "context": "walkable_ground",
-        "affinity": 0.6
+        "affinity": 0.55
       },
       {
         "biome": "dark_land",
         "context": "tall_grass",
-        "affinity": 0.6
+        "affinity": 0.55
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "ALAKAZAM"
   },
   "ALAKAZAM": {
-    "stage": 2,
-    "flags": [
-      "no_wild"
-    ],
-    "rarityDelta": 0,
+    "stage": 3,
+    "flags": [],
+    "rarityDelta": 1,
     "social": "solitary",
-    "habitats": [],
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.2
+      },
+      {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.18
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.22
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.2
+      }
+    ],
     "activeTime": [
       "dawn",
       "day",
@@ -1345,18 +2429,18 @@
     "habitats": [
       {
         "biome": "hill_edge",
-        "context": "walkable_ground",
-        "affinity": 0.9
+        "context": "rock",
+        "affinity": 0.95
       },
       {
         "biome": "hill_edge",
-        "context": "rock",
-        "affinity": 0.7
+        "context": "walkable_ground",
+        "affinity": 0.85
       },
       {
-        "biome": "snow",
-        "context": "walkable_ground",
-        "affinity": 0.7
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.81
       }
     ],
     "activeTime": [
@@ -1374,24 +2458,59 @@
     "habitats": [
       {
         "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.65
+      },
+      {
+        "biome": "hill_edge",
         "context": "walkable_ground",
-        "affinity": 0.6
+        "affinity": 0.59
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.55
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "MACHAMP"
   },
   "MACHAMP": {
     "stage": 3,
-    "flags": [
-      "no_wild"
-    ],
-    "rarityDelta": 0,
+    "flags": [],
+    "rarityDelta": 1,
     "social": "solitary",
-    "habitats": [],
+    "habitats": [
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.25
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.23
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.21
+      },
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.2
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.2
+      }
+    ],
     "activeTime": [
       "dawn",
       "day",
@@ -1405,26 +2524,47 @@
     "social": "pair",
     "habitats": [
       {
-        "biome": "dense_forest",
+        "biome": "meadow",
         "context": "tall_grass",
-        "affinity": 0.9
+        "affinity": 0.75
       },
       {
-        "biome": "meadow",
+        "biome": "light_forest",
         "context": "tall_grass",
         "affinity": 0.8
       },
       {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.68
+      },
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.9
+      },
+      {
+        "biome": "dense_forest",
+        "context": "tall_grass",
+        "affinity": 0.85
+      },
+      {
         "biome": "autumn",
         "context": "walkable_ground",
-        "affinity": 0.95
+        "affinity": 0.85
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.81
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "WEEPINBELL"
   },
   "WEEPINBELL": {
     "stage": 2,
@@ -1434,29 +2574,59 @@
     "habitats": [
       {
         "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.75
+      },
+      {
+        "biome": "dense_forest",
         "context": "tall_grass",
-        "affinity": 0.7
+        "affinity": 0.71
       },
       {
         "biome": "autumn",
         "context": "walkable_ground",
-        "affinity": 0.85
+        "affinity": 0.7
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.66
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "VICTREEBEL"
   },
   "VICTREEBEL": {
     "stage": 3,
-    "flags": [
-      "no_wild"
-    ],
-    "rarityDelta": 0,
+    "flags": [],
+    "rarityDelta": -2,
     "social": "solitary",
-    "habitats": [],
+    "habitats": [
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.25
+      },
+      {
+        "biome": "dense_forest",
+        "context": "tall_grass",
+        "affinity": 0.24
+      },
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
+        "affinity": 0.22
+      },
+      {
+        "biome": "wetland",
+        "context": "walkable_ground",
+        "affinity": 0.2
+      }
+    ],
     "activeTime": [
       "dawn",
       "day",
@@ -1484,7 +2654,8 @@
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "TENTACRUEL"
   },
   "TENTACRUEL": {
     "stage": 1,
@@ -1518,12 +2689,12 @@
       {
         "biome": "hill_edge",
         "context": "walkable_ground",
-        "affinity": 0.8
+        "affinity": 0.9
       },
       {
-        "biome": "snow",
-        "context": "rock",
-        "affinity": 0.8
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.85
       }
     ],
     "activeTime": [
@@ -1547,23 +2718,53 @@
       {
         "biome": "hill_edge",
         "context": "walkable_ground",
-        "affinity": 0.6
+        "affinity": 0.72
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.68
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "GOLEM"
   },
   "GOLEM": {
     "stage": 3,
-    "flags": [
-      "no_wild"
-    ],
-    "rarityDelta": 0,
+    "flags": [],
+    "rarityDelta": 1,
     "social": "solitary",
-    "habitats": [],
+    "habitats": [
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.25
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.23
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.21
+      },
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.22
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.22
+      }
+    ],
     "activeTime": [
       "dawn",
       "day",
@@ -1579,12 +2780,52 @@
       {
         "biome": "meadow",
         "context": "tall_grass",
-        "affinity": 0.9
+        "affinity": 0.85
+      },
+      {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.72
+      },
+      {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.55
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.47
+      },
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.6
+      },
+      {
+        "biome": "dense_forest",
+        "context": "tall_grass",
+        "affinity": 0.57
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.85
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.81
+      },
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.75
       },
       {
         "biome": "dryland",
         "context": "walkable_ground",
-        "affinity": 0.7
+        "affinity": 0.75
       }
     ],
     "activeTime": [
@@ -1604,6 +2845,31 @@
         "biome": "meadow",
         "context": "tall_grass",
         "affinity": 0.5
+      },
+      {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.42
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.55
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.52
+      },
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.45
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.45
       }
     ],
     "activeTime": [
@@ -1621,19 +2887,35 @@
       {
         "biome": "wetland",
         "context": "water_surface",
+        "affinity": 0.85
+      },
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
         "affinity": 0.8
+      },
+      {
+        "biome": "wetland",
+        "context": "walkable_ground",
+        "affinity": 0.68
+      },
+      {
+        "biome": "wetland",
+        "context": "shore",
+        "affinity": 0.68
       },
       {
         "biome": "coast",
         "context": "shore",
-        "affinity": 0.7
+        "affinity": 0.75
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "SLOWBRO"
   },
   "SLOWBRO": {
     "stage": 2,
@@ -1644,7 +2926,22 @@
       {
         "biome": "wetland",
         "context": "water_surface",
+        "affinity": 0.55
+      },
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
         "affinity": 0.5
+      },
+      {
+        "biome": "wetland",
+        "context": "walkable_ground",
+        "affinity": 0.42
+      },
+      {
+        "biome": "wetland",
+        "context": "shore",
+        "affinity": 0.42
       },
       {
         "biome": "coast",
@@ -1656,7 +2953,8 @@
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "SLOWKING"
   },
   "MAGNEMITE": {
     "stage": 1,
@@ -1665,14 +2963,29 @@
     "social": "solitary",
     "habitats": [
       {
-        "biome": "dryland",
-        "context": "walkable_ground",
+        "biome": "hill_edge",
+        "context": "rock",
         "affinity": 0.8
       },
       {
         "biome": "hill_edge",
-        "context": "rock",
-        "affinity": 0.6
+        "context": "walkable_ground",
+        "affinity": 0.72
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.68
+      },
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.75
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.75
       }
     ],
     "activeTime": [
@@ -1689,9 +3002,29 @@
     "social": "solitary",
     "habitats": [
       {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.5
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.45
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.42
+      },
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.45
+      },
+      {
         "biome": "dryland",
         "context": "walkable_ground",
-        "affinity": 0.5
+        "affinity": 0.45
       }
     ],
     "activeTime": [
@@ -1712,16 +3045,37 @@
         "affinity": 0.6
       },
       {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.51
+      },
+      {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.65
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.55
+      },
+      {
         "biome": "autumn",
         "context": "walkable_ground",
         "affinity": 0.95
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.9
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "SIRFETCHD"
   },
   "DODUO": {
     "stage": 1,
@@ -1735,14 +3089,19 @@
         "affinity": 0.9
       },
       {
-        "biome": "dryland",
+        "biome": "meadow",
         "context": "walkable_ground",
-        "affinity": 0.6
+        "affinity": 0.77
       },
       {
-        "biome": "autumn",
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.8
+      },
+      {
+        "biome": "dryland",
         "context": "walkable_ground",
-        "affinity": 0.9
+        "affinity": 0.8
       }
     ],
     "activeTime": [
@@ -1762,6 +3121,21 @@
         "biome": "meadow",
         "context": "tall_grass",
         "affinity": 0.5
+      },
+      {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.42
+      },
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.5
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.5
       }
     ],
     "activeTime": [
@@ -1777,9 +3151,14 @@
     "social": "herd",
     "habitats": [
       {
-        "biome": "coast",
+        "biome": "snow",
+        "context": "water_surface",
+        "affinity": 1
+      },
+      {
+        "biome": "snow",
         "context": "shore",
-        "affinity": 0.8
+        "affinity": 0.9
       },
       {
         "biome": "coast",
@@ -1787,13 +3166,8 @@
         "affinity": 0.8
       },
       {
-        "biome": "snow",
+        "biome": "coast",
         "context": "shore",
-        "affinity": 0.8
-      },
-      {
-        "biome": "snow",
-        "context": "water_surface",
         "affinity": 0.8
       }
     ],
@@ -1801,7 +3175,8 @@
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "DEWGONG"
   },
   "DEWGONG": {
     "stage": 2,
@@ -1810,14 +3185,19 @@
     "social": "solitary",
     "habitats": [
       {
-        "biome": "coast",
+        "biome": "snow",
         "context": "water_surface",
-        "affinity": 0.5
+        "affinity": 0.75
       },
       {
         "biome": "snow",
+        "context": "shore",
+        "affinity": 0.68
+      },
+      {
+        "biome": "coast",
         "context": "water_surface",
-        "affinity": 0.7
+        "affinity": 0.5
       }
     ],
     "activeTime": [
@@ -1833,9 +3213,29 @@
     "social": "solitary",
     "habitats": [
       {
-        "biome": "wetland",
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.9
+      },
+      {
+        "biome": "dark_land",
         "context": "tall_grass",
         "affinity": 0.9
+      },
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
+        "affinity": 0.85
+      },
+      {
+        "biome": "wetland",
+        "context": "walkable_ground",
+        "affinity": 0.72
+      },
+      {
+        "biome": "wetland",
+        "context": "shore",
+        "affinity": 0.72
       }
     ],
     "activeTime": [
@@ -1852,9 +3252,29 @@
     "social": "solitary",
     "habitats": [
       {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.65
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
+        "affinity": 0.65
+      },
+      {
         "biome": "wetland",
         "context": "tall_grass",
-        "affinity": 0.6
+        "affinity": 0.55
+      },
+      {
+        "biome": "wetland",
+        "context": "walkable_ground",
+        "affinity": 0.47
+      },
+      {
+        "biome": "wetland",
+        "context": "shore",
+        "affinity": 0.47
       }
     ],
     "activeTime": [
@@ -1870,39 +3290,65 @@
     "social": "pair",
     "habitats": [
       {
-        "biome": "coast",
-        "context": "shore",
+        "biome": "snow",
+        "context": "water_surface",
         "affinity": 0.9
-      },
-      {
-        "biome": "coast",
-        "context": "sand",
-        "affinity": 0.8
       },
       {
         "biome": "snow",
         "context": "shore",
-        "affinity": 0.8
+        "affinity": 0.81
+      },
+      {
+        "biome": "coast",
+        "context": "sand",
+        "affinity": 0.85
+      },
+      {
+        "biome": "coast",
+        "context": "shore",
+        "affinity": 0.9
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "CLOYSTER"
   },
   "CLOYSTER": {
     "stage": 2,
-    "flags": [
-      "no_wild"
-    ],
+    "flags": [],
     "rarityDelta": 0,
     "social": "solitary",
-    "habitats": [],
+    "habitats": [
+      {
+        "biome": "snow",
+        "context": "water_surface",
+        "affinity": 0.28
+      },
+      {
+        "biome": "snow",
+        "context": "shore",
+        "affinity": 0.25
+      },
+      {
+        "biome": "coast",
+        "context": "water_surface",
+        "affinity": 0.22
+      },
+      {
+        "biome": "coast",
+        "context": "shore",
+        "affinity": 0.2
+      }
+    ],
     "activeTime": [
       "dawn",
       "day",
-      "dusk"
+      "dusk",
+      "night"
     ]
   },
   "GASTLY": {
@@ -1912,29 +3358,49 @@
     "social": "solitary",
     "habitats": [
       {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.75
+      },
+      {
+        "biome": "dense_forest",
+        "context": "tall_grass",
+        "affinity": 0.71
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.8
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.76
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 1
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
+        "affinity": 1
+      },
+      {
         "biome": "wetland",
         "context": "tall_grass",
         "affinity": 0.8
       },
       {
-        "biome": "dense_forest",
-        "context": "forest_floor",
-        "affinity": 0.7
-      },
-      {
-        "biome": "dark_land",
+        "biome": "wetland",
         "context": "walkable_ground",
-        "affinity": 0.95
+        "affinity": 0.68
       },
       {
-        "biome": "dark_land",
-        "context": "tall_grass",
-        "affinity": 0.95
-      },
-      {
-        "biome": "autumn",
-        "context": "walkable_ground",
-        "affinity": 0.85
+        "biome": "wetland",
+        "context": "shore",
+        "affinity": 0.68
       }
     ],
     "activeTime": [
@@ -1950,19 +3416,39 @@
     "social": "solitary",
     "habitats": [
       {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.55
+      },
+      {
+        "biome": "dense_forest",
+        "context": "tall_grass",
+        "affinity": 0.52
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.8
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
+        "affinity": 0.8
+      },
+      {
         "biome": "wetland",
         "context": "tall_grass",
         "affinity": 0.6
       },
       {
-        "biome": "dark_land",
+        "biome": "wetland",
         "context": "walkable_ground",
-        "affinity": 0.75
+        "affinity": 0.51
       },
       {
-        "biome": "dark_land",
-        "context": "tall_grass",
-        "affinity": 0.75
+        "biome": "wetland",
+        "context": "shore",
+        "affinity": 0.51
       }
     ],
     "activeTime": [
@@ -1972,17 +3458,25 @@
     "apexSpecies": "GENGAR"
   },
   "GENGAR": {
-    "stage": 2,
-    "flags": [
-      "no_wild"
-    ],
-    "rarityDelta": 0,
+    "stage": 3,
+    "flags": [],
+    "rarityDelta": 1,
     "social": "solitary",
-    "habitats": [],
+    "habitats": [
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
+        "affinity": 0.28
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.25
+      }
+    ],
     "activeTime": [
-      "dawn",
-      "day",
-      "dusk"
+      "dusk",
+      "night"
     ]
   },
   "ONIX": {
@@ -1994,14 +3488,25 @@
       {
         "biome": "hill_edge",
         "context": "rock",
-        "affinity": 0.8
+        "affinity": 0.9
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.81
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.77
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "STEELIX"
   },
   "DROWZEE": {
     "stage": 1,
@@ -2010,16 +3515,31 @@
     "social": "pair",
     "habitats": [
       {
-        "biome": "wetland",
-        "context": "tall_grass",
-        "affinity": 0.8
-      },
-      {
         "biome": "meadow",
         "context": "tall_grass",
         "affinity": 0.6
       },
       {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.6
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.51
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.8
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.76
+      },
+      {
         "biome": "dark_land",
         "context": "walkable_ground",
         "affinity": 0.9
@@ -2030,15 +3550,26 @@
         "affinity": 0.9
       },
       {
-        "biome": "autumn",
+        "biome": "wetland",
+        "context": "tall_grass",
+        "affinity": 0.75
+      },
+      {
+        "biome": "wetland",
         "context": "walkable_ground",
-        "affinity": 0.85
+        "affinity": 0.64
+      },
+      {
+        "biome": "wetland",
+        "context": "shore",
+        "affinity": 0.64
       }
     ],
     "activeTime": [
       "dusk",
       "night"
-    ]
+    ],
+    "apexSpecies": "HYPNO"
   },
   "HYPNO": {
     "stage": 2,
@@ -2047,11 +3578,6 @@
     "social": "solitary",
     "habitats": [
       {
-        "biome": "wetland",
-        "context": "tall_grass",
-        "affinity": 0.5
-      },
-      {
         "biome": "dark_land",
         "context": "walkable_ground",
         "affinity": 0.7
@@ -2060,6 +3586,21 @@
         "biome": "dark_land",
         "context": "tall_grass",
         "affinity": 0.7
+      },
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
+        "affinity": 0.5
+      },
+      {
+        "biome": "wetland",
+        "context": "walkable_ground",
+        "affinity": 0.42
+      },
+      {
+        "biome": "wetland",
+        "context": "shore",
+        "affinity": 0.42
       }
     ],
     "activeTime": [
@@ -2075,20 +3616,21 @@
     "habitats": [
       {
         "biome": "coast",
-        "context": "shore",
-        "affinity": 1
+        "context": "sand",
+        "affinity": 0.95
       },
       {
         "biome": "coast",
-        "context": "sand",
-        "affinity": 0.9
+        "context": "shore",
+        "affinity": 1
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "KINGLER"
   },
   "KINGLER": {
     "stage": 2,
@@ -2115,16 +3657,52 @@
     "social": "solitary",
     "habitats": [
       {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.55
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.47
+      },
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.6
+      },
+      {
+        "biome": "dense_forest",
+        "context": "tall_grass",
+        "affinity": 0.57
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.85
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.81
+      },
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.75
+      },
+      {
         "biome": "dryland",
         "context": "walkable_ground",
-        "affinity": 0.8
+        "affinity": 0.75
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "ELECTRODE"
   },
   "ELECTRODE": {
     "stage": 2,
@@ -2133,9 +3711,24 @@
     "social": "solitary",
     "habitats": [
       {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.55
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.52
+      },
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.45
+      },
+      {
         "biome": "dryland",
         "context": "walkable_ground",
-        "affinity": 0.5
+        "affinity": 0.45
       }
     ],
     "activeTime": [
@@ -2151,30 +3744,70 @@
     "social": "solitary",
     "habitats": [
       {
-        "biome": "dense_forest",
-        "context": "forest_floor",
-        "affinity": 0.8
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.7
       },
       {
         "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.59
+      },
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.85
+      },
+      {
+        "biome": "dense_forest",
         "context": "tall_grass",
-        "affinity": 0.6
+        "affinity": 0.81
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "EXEGGUTOR"
   },
   "EXEGGUTOR": {
     "stage": 2,
-    "flags": [
-      "no_wild"
-    ],
-    "rarityDelta": 0,
+    "flags": [],
+    "rarityDelta": -1,
     "social": "solitary",
-    "habitats": [],
+    "habitats": [
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.22
+      },
+      {
+        "biome": "dense_forest",
+        "context": "tall_grass",
+        "affinity": 0.21
+      },
+      {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.22
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.2
+      },
+      {
+        "biome": "coast",
+        "context": "shore",
+        "affinity": 0.28
+      },
+      {
+        "biome": "coast",
+        "context": "walkable_ground",
+        "affinity": 0.25
+      }
+    ],
     "activeTime": [
       "dawn",
       "day",
@@ -2188,26 +3821,47 @@
     "social": "solitary",
     "habitats": [
       {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.75
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.68
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.64
+      },
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.9
+      },
+      {
         "biome": "dryland",
         "context": "walkable_ground",
-        "affinity": 0.8
+        "affinity": 0.9
       },
       {
         "biome": "dark_land",
         "context": "walkable_ground",
-        "affinity": 0.8
+        "affinity": 0.85
       },
       {
         "biome": "dark_land",
         "context": "tall_grass",
-        "affinity": 0.8
+        "affinity": 0.85
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "MAROWAK"
   },
   "MAROWAK": {
     "stage": 1,
@@ -2217,18 +3871,23 @@
     "habitats": [
       {
         "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.6
+      },
+      {
+        "biome": "dryland",
         "context": "walkable_ground",
-        "affinity": 0.5
+        "affinity": 0.6
       },
       {
         "biome": "dark_land",
         "context": "walkable_ground",
-        "affinity": 0.6
+        "affinity": 0.65
       },
       {
         "biome": "dark_land",
         "context": "tall_grass",
-        "affinity": 0.6
+        "affinity": 0.65
       }
     ],
     "activeTime": [
@@ -2245,8 +3904,18 @@
     "habitats": [
       {
         "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.55
+      },
+      {
+        "biome": "hill_edge",
         "context": "walkable_ground",
         "affinity": 0.5
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.47
       }
     ],
     "activeTime": [
@@ -2263,8 +3932,18 @@
     "habitats": [
       {
         "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.55
+      },
+      {
+        "biome": "hill_edge",
         "context": "walkable_ground",
         "affinity": 0.5
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.47
       }
     ],
     "activeTime": [
@@ -2283,13 +3962,19 @@
         "biome": "meadow",
         "context": "tall_grass",
         "affinity": 0.6
+      },
+      {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.51
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "LICKILICKY"
   },
   "KOFFING": {
     "stage": 1,
@@ -2298,9 +3983,29 @@
     "social": "solitary",
     "habitats": [
       {
-        "biome": "wetland",
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.9
+      },
+      {
+        "biome": "dark_land",
         "context": "tall_grass",
         "affinity": 0.9
+      },
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
+        "affinity": 0.85
+      },
+      {
+        "biome": "wetland",
+        "context": "walkable_ground",
+        "affinity": 0.72
+      },
+      {
+        "biome": "wetland",
+        "context": "shore",
+        "affinity": 0.72
       }
     ],
     "activeTime": [
@@ -2317,9 +4022,29 @@
     "social": "solitary",
     "habitats": [
       {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.65
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
+        "affinity": 0.65
+      },
+      {
         "biome": "wetland",
         "context": "tall_grass",
-        "affinity": 0.6
+        "affinity": 0.55
+      },
+      {
+        "biome": "wetland",
+        "context": "walkable_ground",
+        "affinity": 0.47
+      },
+      {
+        "biome": "wetland",
+        "context": "shore",
+        "affinity": 0.47
       }
     ],
     "activeTime": [
@@ -2337,12 +4062,27 @@
       {
         "biome": "hill_edge",
         "context": "rock",
+        "affinity": 0.85
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.77
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.72
+      },
+      {
+        "biome": "dryland",
+        "context": "sand",
         "affinity": 0.8
       },
       {
         "biome": "dryland",
         "context": "walkable_ground",
-        "affinity": 0.7
+        "affinity": 0.8
       }
     ],
     "activeTime": [
@@ -2361,6 +4101,26 @@
       {
         "biome": "hill_edge",
         "context": "rock",
+        "affinity": 0.55
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.5
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.47
+      },
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.5
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
         "affinity": 0.5
       }
     ],
@@ -2368,7 +4128,8 @@
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "RHYPERIOR"
   },
   "CHANSEY": {
     "stage": 1,
@@ -2380,13 +4141,19 @@
         "biome": "meadow",
         "context": "tall_grass",
         "affinity": 0.4
+      },
+      {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.34
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "BLISSEY"
   },
   "TANGELA": {
     "stage": 1,
@@ -2400,16 +4167,47 @@
         "affinity": 0.6
       },
       {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.6
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.51
+      },
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.75
+      },
+      {
+        "biome": "dense_forest",
+        "context": "tall_grass",
+        "affinity": 0.71
+      },
+      {
         "biome": "wetland",
         "context": "tall_grass",
-        "affinity": 0.7
+        "affinity": 0.75
+      },
+      {
+        "biome": "wetland",
+        "context": "walkable_ground",
+        "affinity": 0.64
+      },
+      {
+        "biome": "wetland",
+        "context": "shore",
+        "affinity": 0.64
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "TANGROWTH"
   },
   "KANGASKHAN": {
     "stage": 1,
@@ -2420,6 +4218,21 @@
       {
         "biome": "meadow",
         "context": "tall_grass",
+        "affinity": 0.5
+      },
+      {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.42
+      },
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.5
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
         "affinity": 0.5
       }
     ],
@@ -2445,7 +4258,8 @@
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "SEADRA"
   },
   "SEADRA": {
     "stage": 2,
@@ -2463,7 +4277,8 @@
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "KINGDRA"
   },
   "GOLDEEN": {
     "stage": 1,
@@ -2474,7 +4289,7 @@
       {
         "biome": "wetland",
         "context": "water_surface",
-        "affinity": 0.9
+        "affinity": 0.95
       }
     ],
     "activeTime": [
@@ -2493,7 +4308,7 @@
       {
         "biome": "wetland",
         "context": "water_surface",
-        "affinity": 0.6
+        "affinity": 0.65
       }
     ],
     "activeTime": [
@@ -2510,33 +4325,42 @@
     "habitats": [
       {
         "biome": "coast",
-        "context": "shore",
-        "affinity": 0.9
+        "context": "water_surface",
+        "affinity": 0.85
       },
       {
         "biome": "coast",
-        "context": "water_surface",
-        "affinity": 0.8
+        "context": "shore",
+        "affinity": 0.9
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "STARMIE"
   },
   "STARMIE": {
     "stage": 2,
-    "flags": [
-      "no_wild"
-    ],
+    "flags": [],
     "rarityDelta": 0,
     "social": "solitary",
-    "habitats": [],
+    "habitats": [
+      {
+        "biome": "coast",
+        "context": "water_surface",
+        "affinity": 0.25
+      },
+      {
+        "biome": "coast",
+        "context": "shore",
+        "affinity": 0.23
+      }
+    ],
     "activeTime": [
-      "dawn",
-      "day",
-      "dusk"
+      "dusk",
+      "night"
     ]
   },
   "MRMIME": {
@@ -2551,21 +4375,37 @@
         "affinity": 0.5
       },
       {
+        "biome": "snow",
+        "context": "walkable_ground",
+        "affinity": 0.8
+      },
+      {
+        "biome": "snow",
+        "context": "tall_grass",
+        "affinity": 0.76
+      },
+      {
+        "biome": "snow",
+        "context": "rock",
+        "affinity": 0.72
+      },
+      {
         "biome": "dark_land",
         "context": "walkable_ground",
-        "affinity": 0.85
+        "affinity": 0.75
       },
       {
         "biome": "dark_land",
         "context": "tall_grass",
-        "affinity": 0.85
+        "affinity": 0.75
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "MRRIME"
   },
   "SCYTHER": {
     "stage": 1,
@@ -2574,26 +4414,52 @@
     "social": "solitary",
     "habitats": [
       {
-        "biome": "dense_forest",
+        "biome": "light_forest",
         "context": "tall_grass",
-        "affinity": 0.7
+        "affinity": 0.55
       },
       {
         "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.47
+      },
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.7
+      },
+      {
+        "biome": "dense_forest",
         "context": "tall_grass",
-        "affinity": 0.5
+        "affinity": 0.66
       },
       {
         "biome": "autumn",
         "context": "walkable_ground",
+        "affinity": 0.8
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.76
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "tall_grass",
         "affinity": 0.85
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "walkable_ground",
+        "affinity": 0.75
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "SCIZOR"
   },
   "JYNX": {
     "stage": 1,
@@ -2602,19 +4468,19 @@
     "social": "solitary",
     "habitats": [
       {
-        "biome": "hill_edge",
+        "biome": "snow",
         "context": "walkable_ground",
-        "affinity": 0.5
+        "affinity": 0.95
       },
       {
         "biome": "snow",
-        "context": "walkable_ground",
-        "affinity": 0.8
+        "context": "tall_grass",
+        "affinity": 0.9
       },
       {
         "biome": "snow",
-        "context": "forest_floor",
-        "affinity": 0.8
+        "context": "rock",
+        "affinity": 0.85
       }
     ],
     "activeTime": [
@@ -2639,7 +4505,8 @@
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "ELECTIVIRE"
   },
   "MAGMAR": {
     "stage": 1,
@@ -2650,14 +4517,25 @@
       {
         "biome": "hill_edge",
         "context": "rock",
-        "affinity": 0.5
+        "affinity": 0.6
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.54
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.51
       }
     ],
     "activeTime": [
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "MAGMORTAR"
   },
   "PINSIR": {
     "stage": 1,
@@ -2666,14 +4544,44 @@
     "social": "solitary",
     "habitats": [
       {
-        "biome": "dense_forest",
-        "context": "forest_floor",
-        "affinity": 0.7
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.55
       },
       {
         "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.47
+      },
+      {
+        "biome": "dense_forest",
         "context": "forest_floor",
-        "affinity": 0.5
+        "affinity": 0.75
+      },
+      {
+        "biome": "dense_forest",
+        "context": "tall_grass",
+        "affinity": 0.71
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.7
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.66
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "tall_grass",
+        "affinity": 0.85
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "walkable_ground",
+        "affinity": 0.75
       }
     ],
     "activeTime": [
@@ -2691,7 +4599,52 @@
       {
         "biome": "meadow",
         "context": "tall_grass",
-        "affinity": 0.8
+        "affinity": 0.85
+      },
+      {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.72
+      },
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.7
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.63
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.59
+      },
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.65
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.65
+      },
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
+        "affinity": 0.6
+      },
+      {
+        "biome": "wetland",
+        "context": "walkable_ground",
+        "affinity": 0.51
+      },
+      {
+        "biome": "wetland",
+        "context": "shore",
+        "affinity": 0.51
       }
     ],
     "activeTime": [
@@ -2754,14 +4707,19 @@
     "social": "solitary",
     "habitats": [
       {
-        "biome": "coast",
+        "biome": "snow",
         "context": "water_surface",
-        "affinity": 0.4
+        "affinity": 0.65
       },
       {
         "biome": "snow",
+        "context": "shore",
+        "affinity": 0.59
+      },
+      {
+        "biome": "coast",
         "context": "water_surface",
-        "affinity": 0.6
+        "affinity": 0.4
       }
     ],
     "activeTime": [
@@ -2800,9 +4758,44 @@
         "affinity": 0.6
       },
       {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.51
+      },
+      {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.55
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.47
+      },
+      {
         "biome": "autumn",
         "context": "walkable_ground",
+        "affinity": 0.95
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
         "affinity": 0.9
+      },
+      {
+        "biome": "snow",
+        "context": "walkable_ground",
+        "affinity": 0.65
+      },
+      {
+        "biome": "snow",
+        "context": "tall_grass",
+        "affinity": 0.62
+      },
+      {
+        "biome": "snow",
+        "context": "rock",
+        "affinity": 0.59
       }
     ],
     "activeTime": [
@@ -2813,12 +4806,31 @@
   },
   "VAPOREON": {
     "stage": 2,
-    "flags": [
-      "no_wild"
-    ],
-    "rarityDelta": 0,
+    "flags": [],
+    "rarityDelta": 1,
     "social": "solitary",
-    "habitats": [],
+    "habitats": [
+      {
+        "biome": "wetland",
+        "context": "water_surface",
+        "affinity": 0.22
+      },
+      {
+        "biome": "wetland",
+        "context": "shore",
+        "affinity": 0.2
+      },
+      {
+        "biome": "coast",
+        "context": "water_surface",
+        "affinity": 0.22
+      },
+      {
+        "biome": "coast",
+        "context": "shore",
+        "affinity": 0.2
+      }
+    ],
     "activeTime": [
       "dawn",
       "day",
@@ -2826,13 +4838,37 @@
     ]
   },
   "JOLTEON": {
-    "stage": 1,
-    "flags": [
-      "no_wild"
-    ],
-    "rarityDelta": 0,
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 1,
     "social": "solitary",
-    "habitats": [],
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.2
+      },
+      {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.18
+      },
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.22
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.2
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.19
+      }
+    ],
     "activeTime": [
       "dawn",
       "day",
@@ -2840,13 +4876,32 @@
     ]
   },
   "FLAREON": {
-    "stage": 1,
-    "flags": [
-      "no_wild"
-    ],
-    "rarityDelta": 0,
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 1,
     "social": "solitary",
-    "habitats": [],
+    "habitats": [
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.25
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.25
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.2
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.18
+      }
+    ],
     "activeTime": [
       "dawn",
       "day",
@@ -2869,7 +4924,8 @@
       "dawn",
       "day",
       "dusk"
-    ]
+    ],
+    "apexSpecies": "PORYGON2"
   },
   "OMANYTE": {
     "stage": 1,
@@ -3084,6 +5140,883 @@
       "dawn",
       "day",
       "dusk"
+    ]
+  },
+  "CROBAT": {
+    "stage": 3,
+    "flags": [],
+    "rarityDelta": 1,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
+        "affinity": 0.28
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.25
+      },
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.22
+      },
+      {
+        "biome": "dense_forest",
+        "context": "tall_grass",
+        "affinity": 0.21
+      },
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.22
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.2
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.19
+      }
+    ],
+    "activeTime": [
+      "dusk",
+      "night"
+    ]
+  },
+  "BLISSEY": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 1,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.18
+      },
+      {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.16
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.2
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.18
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk"
+    ]
+  },
+  "STEELIX": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 1,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.25
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.23
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.21
+      },
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.22
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.22
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "SCIZOR": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 1,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.25
+      },
+      {
+        "biome": "dense_forest",
+        "context": "tall_grass",
+        "affinity": 0.24
+      },
+      {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.22
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.2
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.22
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.2
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "tall_grass",
+        "affinity": 0.45
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "walkable_ground",
+        "affinity": 0.4
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk"
+    ]
+  },
+  "KLEAVOR": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 1,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.28
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.25
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.24
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.2
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.18
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "tall_grass",
+        "affinity": 0.4
+      },
+      {
+        "biome": "apricorn_plain",
+        "context": "walkable_ground",
+        "affinity": 0.35
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk"
+    ]
+  },
+  "KINGDRA": {
+    "stage": 3,
+    "flags": [],
+    "rarityDelta": 1,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "coast",
+        "context": "water_surface",
+        "affinity": 0.22
+      },
+      {
+        "biome": "wetland",
+        "context": "water_surface",
+        "affinity": 0.18
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk"
+    ]
+  },
+  "PORYGON2": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": -1,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.18
+      },
+      {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.16
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
+        "affinity": 0.2
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.18
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ],
+    "apexSpecies": "PORYGONZ"
+  },
+  "PORYGONZ": {
+    "stage": 3,
+    "flags": [],
+    "rarityDelta": 1,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
+        "affinity": 0.18
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.16
+      }
+    ],
+    "activeTime": [
+      "dusk",
+      "night"
+    ]
+  },
+  "RHYPERIOR": {
+    "stage": 3,
+    "flags": [],
+    "rarityDelta": 1,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.22
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.2
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.19
+      },
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.25
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.25
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk"
+    ]
+  },
+  "MAGMORTAR": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 1,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dryland",
+        "context": "sand",
+        "affinity": 0.25
+      },
+      {
+        "biome": "dryland",
+        "context": "walkable_ground",
+        "affinity": 0.25
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
+        "affinity": 0.22
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.2
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk"
+    ]
+  },
+  "ELECTIVIRE": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 1,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.25
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.23
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.21
+      },
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.2
+      },
+      {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.18
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk"
+    ]
+  },
+  "TANGROWTH": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": -1,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.28
+      },
+      {
+        "biome": "dense_forest",
+        "context": "tall_grass",
+        "affinity": 0.27
+      },
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
+        "affinity": 0.25
+      },
+      {
+        "biome": "wetland",
+        "context": "walkable_ground",
+        "affinity": 0.23
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk"
+    ]
+  },
+  "LICKILICKY": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": -1,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.22
+      },
+      {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.2
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.22
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.2
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk"
+    ]
+  },
+  "POLITOED": {
+    "stage": 3,
+    "flags": [],
+    "rarityDelta": -2,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "wetland",
+        "context": "water_surface",
+        "affinity": 0.25
+      },
+      {
+        "biome": "wetland",
+        "context": "shore",
+        "affinity": 0.23
+      },
+      {
+        "biome": "wetland",
+        "context": "tall_grass",
+        "affinity": 0.22
+      },
+      {
+        "biome": "wetland",
+        "context": "walkable_ground",
+        "affinity": 0.2
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "SLOWKING": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "wetland",
+        "context": "water_surface",
+        "affinity": 0.22
+      },
+      {
+        "biome": "wetland",
+        "context": "shore",
+        "affinity": 0.2
+      },
+      {
+        "biome": "coast",
+        "context": "water_surface",
+        "affinity": 0.25
+      },
+      {
+        "biome": "coast",
+        "context": "shore",
+        "affinity": 0.23
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
+        "affinity": 0.22
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.2
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "ESPEON": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 1,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.22
+      },
+      {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.2
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.25
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.23
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day"
+    ]
+  },
+  "UMBREON": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 1,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
+        "affinity": 0.28
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.25
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.22
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.2
+      }
+    ],
+    "activeTime": [
+      "dusk",
+      "night"
+    ]
+  },
+  "LEAFEON": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 1,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "dense_forest",
+        "context": "forest_floor",
+        "affinity": 0.28
+      },
+      {
+        "biome": "dense_forest",
+        "context": "tall_grass",
+        "affinity": 0.27
+      },
+      {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.24
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.22
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk"
+    ]
+  },
+  "GLACEON": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 1,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "snow",
+        "context": "walkable_ground",
+        "affinity": 0.28
+      },
+      {
+        "biome": "snow",
+        "context": "tall_grass",
+        "affinity": 0.27
+      },
+      {
+        "biome": "snow",
+        "context": "rock",
+        "affinity": 0.25
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "SYLVEON": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 1,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.22
+      },
+      {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.2
+      },
+      {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.22
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.2
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.25
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.23
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk"
+    ]
+  },
+  "ANNIHILAPE": {
+    "stage": 3,
+    "flags": [],
+    "rarityDelta": 1,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.24
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.22
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.2
+      },
+      {
+        "biome": "dark_land",
+        "context": "tall_grass",
+        "affinity": 0.26
+      },
+      {
+        "biome": "dark_land",
+        "context": "walkable_ground",
+        "affinity": 0.23
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "SIRFETCHD": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": -1,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "light_forest",
+        "context": "tall_grass",
+        "affinity": 0.25
+      },
+      {
+        "biome": "light_forest",
+        "context": "walkable_ground",
+        "affinity": 0.23
+      },
+      {
+        "biome": "autumn",
+        "context": "tall_grass",
+        "affinity": 0.25
+      },
+      {
+        "biome": "autumn",
+        "context": "walkable_ground",
+        "affinity": 0.23
+      },
+      {
+        "biome": "meadow",
+        "context": "tall_grass",
+        "affinity": 0.2
+      },
+      {
+        "biome": "meadow",
+        "context": "walkable_ground",
+        "affinity": 0.18
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk"
+    ]
+  },
+  "PERRSERKER": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": 0,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "hill_edge",
+        "context": "rock",
+        "affinity": 0.25
+      },
+      {
+        "biome": "hill_edge",
+        "context": "walkable_ground",
+        "affinity": 0.23
+      },
+      {
+        "biome": "hill_edge",
+        "context": "tall_grass",
+        "affinity": 0.21
+      },
+      {
+        "biome": "snow",
+        "context": "walkable_ground",
+        "affinity": 0.25
+      },
+      {
+        "biome": "snow",
+        "context": "tall_grass",
+        "affinity": 0.24
+      },
+      {
+        "biome": "snow",
+        "context": "rock",
+        "affinity": 0.23
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
+    ]
+  },
+  "MRRIME": {
+    "stage": 2,
+    "flags": [],
+    "rarityDelta": -1,
+    "social": "solitary",
+    "habitats": [
+      {
+        "biome": "snow",
+        "context": "walkable_ground",
+        "affinity": 0.25
+      },
+      {
+        "biome": "snow",
+        "context": "tall_grass",
+        "affinity": 0.24
+      },
+      {
+        "biome": "snow",
+        "context": "rock",
+        "affinity": 0.23
+      }
+    ],
+    "activeTime": [
+      "dawn",
+      "day",
+      "dusk",
+      "night"
     ]
   }
 }

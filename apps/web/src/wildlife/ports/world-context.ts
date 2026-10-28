@@ -46,6 +46,24 @@ export function resolveWorldTileContext(
   }
 
   if (field.isSnow?.(gx, gy)) {
+    if (
+      field.isHill(gx, gy) ||
+      field.isHighCliff?.(gx, gy) ||
+      field.isNearCliffEdge(gx, gy)
+    ) {
+      return 'rock';
+    }
+    return 'walkable_ground';
+  }
+
+  if (field.isRockyHighland?.(gx, gy)) {
+    if (
+      field.isHill(gx, gy) ||
+      field.isHighCliff?.(gx, gy) ||
+      field.isNearCliffEdge(gx, gy)
+    ) {
+      return 'rock';
+    }
     return 'walkable_ground';
   }
 

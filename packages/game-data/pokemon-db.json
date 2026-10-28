@@ -1,6 +1,6 @@
 {
   "generation": 1,
-  "count": 151,
+  "count": 175,
   "source": "https://pokemondb.net/pokedex/all",
   "pokemon": {
     "1": {
@@ -31164,6 +31164,6913 @@
         "primary": "synchronize"
       },
       "teraType": "Psychic"
+    },
+    "169": {
+      "id": 169,
+      "name": "Crobat",
+      "speciesKey": "CROBAT",
+      "types": [
+        "Poison",
+        "Flying"
+      ],
+      "stats": {
+        "hp": 85,
+        "attack": 90,
+        "defense": 80,
+        "spAtk": 70,
+        "spDef": 80,
+        "speed": 130,
+        "total": 535
+      },
+      "sprites": {
+        "follower": "Graphics/Characters/Followers/CROBAT.png",
+        "front": "Graphics/Pokemon/Front/CROBAT.png",
+        "back": "Graphics/Pokemon/Back/CROBAT.png",
+        "icon": "Graphics/Pokemon/Icons/CROBAT.png",
+        "cry": "Audio/Cries/CROBAT.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/CROBAT.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/CROBAT.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/CROBAT.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Levitates/CROBAT.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/CROBAT.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Levitates/CROBAT.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Levitates Shiny/CROBAT.png"
+      },
+      "species": "Bat Pokémon",
+      "height": 1.8,
+      "weight": 75.0,
+      "ability": "Inner Focus",
+      "catchRate": 90,
+      "baseFriendship": 70,
+      "growthRate": "Medium Fast",
+      "evYield": "3 Speed",
+      "eggGroups": "Flying",
+      "genderRatio": "♂50% ♀50%",
+      "moves": [
+        {
+          "level": 1,
+          "moveId": "absorb",
+          "nameEn": "Absorb",
+          "nameVi": "Hấp Thụ",
+          "type": "Grass"
+        },
+        {
+          "level": 1,
+          "moveId": "gust",
+          "nameEn": "Gust",
+          "nameVi": "Gió Xoáy",
+          "type": "Flying"
+        },
+        {
+          "level": 1,
+          "moveId": "screech",
+          "nameEn": "Screech",
+          "nameVi": "Thét Chói Tai",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "tailwind",
+          "nameEn": "Tailwind",
+          "nameVi": "Thuận Gió",
+          "type": "Flying"
+        },
+        {
+          "level": 1,
+          "moveId": "toxic",
+          "nameEn": "Toxic",
+          "nameVi": "Kịch Độc",
+          "type": "Poison"
+        },
+        {
+          "level": 6,
+          "moveId": "hypnosis",
+          "nameEn": "Hypnosis",
+          "nameVi": "Thôi Miên",
+          "type": "Psychic"
+        },
+        {
+          "level": 11,
+          "moveId": "astonish",
+          "nameEn": "Astonish",
+          "nameVi": "Làm Kinh Hãi",
+          "type": "Ghost"
+        },
+        {
+          "level": 11,
+          "moveId": "supersonic",
+          "nameEn": "Supersonic",
+          "nameVi": "Siêu Âm",
+          "type": "Normal"
+        },
+        {
+          "level": 24,
+          "moveId": "swift",
+          "nameEn": "Swift",
+          "nameVi": "Sao Tốc Độ",
+          "type": "Normal"
+        },
+        {
+          "level": 25,
+          "moveId": "cross_poison",
+          "nameEn": "Cross Poison",
+          "nameVi": "Chữ Thập Độc",
+          "type": "Poison"
+        },
+        {
+          "level": 30,
+          "moveId": "wing_attack",
+          "nameEn": "Wing Attack",
+          "nameVi": "Tấn Công Bằng Cánh",
+          "type": "Flying"
+        },
+        {
+          "level": 34,
+          "moveId": "bite",
+          "nameEn": "Bite",
+          "nameVi": "Cắn Xé",
+          "type": "Dark"
+        },
+        {
+          "level": 35,
+          "moveId": "air_cutter",
+          "nameEn": "Air Cutter",
+          "nameVi": "Gió Cắt",
+          "type": "Flying"
+        },
+        {
+          "level": 39,
+          "moveId": "acrobatics",
+          "nameEn": "Acrobatics",
+          "nameVi": "Nhào Lộn",
+          "type": "Flying"
+        },
+        {
+          "level": 42,
+          "moveId": "mean_look",
+          "nameEn": "Mean Look",
+          "nameVi": "Ánh Mắt Ác Ý",
+          "type": "Normal"
+        },
+        {
+          "level": 48,
+          "moveId": "venoshock",
+          "nameEn": "Venoshock",
+          "nameVi": "Sốc Độc Tố",
+          "type": "Poison"
+        },
+        {
+          "level": 49,
+          "moveId": "poison_fang",
+          "nameEn": "Poison Fang",
+          "nameVi": "Nanh Độc",
+          "type": "Poison"
+        },
+        {
+          "level": 51,
+          "moveId": "quick_guard",
+          "nameEn": "Quick Guard",
+          "nameVi": "Bảo Vệ Đòn Nhanh",
+          "type": "Fighting"
+        },
+        {
+          "level": 55,
+          "moveId": "confuse_ray",
+          "nameEn": "Confuse Ray",
+          "nameVi": "Tia Rối Loạn",
+          "type": "Ghost"
+        },
+        {
+          "level": 56,
+          "moveId": "haze",
+          "nameEn": "Haze",
+          "nameVi": "Khói Đen",
+          "type": "Ice"
+        },
+        {
+          "level": 62,
+          "moveId": "air_slash",
+          "nameEn": "Air Slash",
+          "nameVi": "Trảm Phong",
+          "type": "Flying"
+        },
+        {
+          "level": 69,
+          "moveId": "leech_life",
+          "nameEn": "Leech Life",
+          "nameVi": "Hút Sự Sống",
+          "type": "Bug"
+        }
+      ],
+      "tmMoves": [
+        "acrobatics",
+        "aerial_ace",
+        "agility",
+        "air_slash",
+        "assurance",
+        "attract",
+        "brave_bird",
+        "captivate",
+        "confide",
+        "cross_poison",
+        "crunch",
+        "curse",
+        "dark_pulse",
+        "defog",
+        "detect",
+        "double_team",
+        "endure",
+        "facade",
+        "fly",
+        "frustration",
+        "giga_drain",
+        "giga_impact",
+        "heat_wave",
+        "hex",
+        "hidden_power",
+        "hurricane",
+        "hyper_beam",
+        "leech_life",
+        "nasty_plot",
+        "natural_gift",
+        "payback",
+        "pluck",
+        "protect",
+        "rain_dance",
+        "rest",
+        "return",
+        "roost",
+        "round",
+        "screech",
+        "secret_power",
+        "shadow_ball",
+        "sleep_talk",
+        "sludge_bomb",
+        "snatch",
+        "snore",
+        "steel_wing",
+        "substitute",
+        "sunny_day",
+        "swagger",
+        "swift",
+        "taunt",
+        "thief",
+        "torment",
+        "toxic",
+        "u_turn",
+        "uproar",
+        "venom_drench",
+        "venoshock",
+        "x_scissor",
+        "zen_headbutt"
+      ],
+      "abilities": {
+        "primary": "inner-focus",
+        "hidden": "infiltrator"
+      },
+      "teraType": "Poison"
+    },
+    "242": {
+      "id": 242,
+      "name": "Blissey",
+      "speciesKey": "BLISSEY",
+      "types": [
+        "Normal"
+      ],
+      "stats": {
+        "hp": 255,
+        "attack": 10,
+        "defense": 10,
+        "spAtk": 75,
+        "spDef": 135,
+        "speed": 55,
+        "total": 540
+      },
+      "sprites": {
+        "follower": "Graphics/Characters/Followers/BLISSEY.png",
+        "front": "Graphics/Pokemon/Front/BLISSEY.png",
+        "back": "Graphics/Pokemon/Back/BLISSEY.png",
+        "icon": "Graphics/Pokemon/Icons/BLISSEY.png",
+        "cry": "Audio/Cries/BLISSEY.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/BLISSEY.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/BLISSEY.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/BLISSEY.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/BLISSEY.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/BLISSEY.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/BLISSEY.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/BLISSEY.png"
+      },
+      "species": "Happiness Pokémon",
+      "height": 1.5,
+      "weight": 46.8,
+      "ability": "Natural Cure",
+      "catchRate": 30,
+      "baseFriendship": 140,
+      "growthRate": "Fast",
+      "evYield": "3 HP",
+      "eggGroups": "Fairy",
+      "genderRatio": "♂0% ♀100%",
+      "moves": [
+        {
+          "level": 1,
+          "moveId": "charm",
+          "nameEn": "Charm",
+          "nameVi": "Quyến Rũ",
+          "type": "Fairy"
+        },
+        {
+          "level": 1,
+          "moveId": "copycat",
+          "nameEn": "Copycat",
+          "nameVi": "Bắt Chước",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "covet",
+          "nameEn": "Covet",
+          "nameVi": "Thèm Muốn",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "disarming_voice",
+          "nameEn": "Disarming Voice",
+          "nameVi": "Giọng Hát Mê Hoặc",
+          "type": "Fairy"
+        },
+        {
+          "level": 1,
+          "moveId": "pound",
+          "nameEn": "Pound",
+          "nameVi": "Đập",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "sweet_kiss",
+          "nameEn": "Sweet Kiss",
+          "nameVi": "Ngọt Ngào Kiss",
+          "type": "Fairy"
+        },
+        {
+          "level": 1,
+          "moveId": "tackle",
+          "nameEn": "Tackle",
+          "nameVi": "Va Chạm",
+          "type": "Normal"
+        },
+        {
+          "level": 4,
+          "moveId": "growl",
+          "nameEn": "Growl",
+          "nameVi": "Gầm Gừ",
+          "type": "Normal"
+        },
+        {
+          "level": 6,
+          "moveId": "fairy_wind",
+          "nameEn": "Fairy Wind",
+          "nameVi": "Tiên Gió",
+          "type": "Fairy"
+        },
+        {
+          "level": 7,
+          "moveId": "tail_whip",
+          "nameEn": "Tail Whip",
+          "nameVi": "Vẫy Đuôi",
+          "type": "Normal"
+        },
+        {
+          "level": 8,
+          "moveId": "echoed_voice",
+          "nameEn": "Echoed Voice",
+          "nameVi": "Tiếng Hát Vang Vọng",
+          "type": "Normal"
+        },
+        {
+          "level": 9,
+          "moveId": "refresh",
+          "nameEn": "Refresh",
+          "nameVi": "Làm Mới",
+          "type": "Normal"
+        },
+        {
+          "level": 11,
+          "moveId": "baby_doll_eyes",
+          "nameEn": "Baby-Doll Eyes",
+          "nameVi": "Đôi Mắt Trẻ Thơ",
+          "type": "Fairy"
+        },
+        {
+          "level": 12,
+          "moveId": "life_dew",
+          "nameEn": "Life Dew",
+          "nameVi": "Giọt Sương Sự Sống",
+          "type": "Water"
+        },
+        {
+          "level": 16,
+          "moveId": "doubleslap",
+          "nameEn": "Double Slap",
+          "nameVi": "Song Tát",
+          "type": "Normal"
+        },
+        {
+          "level": 18,
+          "moveId": "draining_kiss",
+          "nameEn": "Draining Kiss",
+          "nameVi": "Nụ Hôn Hút Năng Lượng",
+          "type": "Fairy"
+        },
+        {
+          "level": 20,
+          "moveId": "bestow",
+          "nameEn": "Bestow",
+          "nameVi": "Ban Tặng",
+          "type": "Normal"
+        },
+        {
+          "level": 23,
+          "moveId": "minimize",
+          "nameEn": "Minimize",
+          "nameVi": "Thu Nhỏ",
+          "type": "Normal"
+        },
+        {
+          "level": 25,
+          "moveId": "calm_mind",
+          "nameEn": "Calm Mind",
+          "nameVi": "Tịnh Tâm",
+          "type": "Psychic"
+        },
+        {
+          "level": 27,
+          "moveId": "take_down",
+          "nameEn": "Take Down",
+          "nameVi": "Lao Đầu",
+          "type": "Normal"
+        },
+        {
+          "level": 31,
+          "moveId": "sing",
+          "nameEn": "Sing",
+          "nameVi": "Hát Ru",
+          "type": "Normal"
+        },
+        {
+          "level": 32,
+          "moveId": "helping_hand",
+          "nameEn": "Helping Hand",
+          "nameVi": "Giúp Đỡ Đồng Đội",
+          "type": "Normal"
+        },
+        {
+          "level": 33,
+          "moveId": "defense_curl",
+          "nameEn": "Defense Curl",
+          "nameVi": "Cuộn Tròn Phòng Thủ",
+          "type": "Normal"
+        },
+        {
+          "level": 34,
+          "moveId": "fling",
+          "nameEn": "Fling",
+          "nameVi": "Ném Đồ",
+          "type": "Dark"
+        },
+        {
+          "level": 39,
+          "moveId": "heal_pulse",
+          "nameEn": "Heal Pulse",
+          "nameVi": "Sóng Trị Liệu",
+          "type": "Psychic"
+        },
+        {
+          "level": 44,
+          "moveId": "egg_bomb",
+          "nameEn": "Egg Bomb",
+          "nameVi": "Bom Trứng",
+          "type": "Normal"
+        },
+        {
+          "level": 44,
+          "moveId": "softboiled",
+          "nameEn": "Soft-Boiled",
+          "nameVi": "Trứng Hồi Sinh",
+          "type": "Normal"
+        },
+        {
+          "level": 48,
+          "moveId": "last_resort",
+          "nameEn": "Last Resort",
+          "nameVi": "Nước Cờ Cùng",
+          "type": "Normal"
+        },
+        {
+          "level": 50,
+          "moveId": "light_screen",
+          "nameEn": "Light Screen",
+          "nameVi": "Màn Chắn Ánh Sáng",
+          "type": "Psychic"
+        },
+        {
+          "level": 57,
+          "moveId": "healing_wish",
+          "nameEn": "Healing Wish",
+          "nameVi": "Ước Nguyện Trị Liệu",
+          "type": "Psychic"
+        },
+        {
+          "level": 65,
+          "moveId": "double_edge",
+          "nameEn": "Double-Edge",
+          "nameVi": "Đòn Liều Mạng",
+          "type": "Normal"
+        }
+      ],
+      "tmMoves": [
+        "alluring_voice",
+        "ally_switch",
+        "attract",
+        "avalanche",
+        "blizzard",
+        "body_slam",
+        "brick_break",
+        "bulldoze",
+        "calm_mind",
+        "captivate",
+        "charge_beam",
+        "charm",
+        "chilling_water",
+        "confide",
+        "curse",
+        "dazzling_gleam",
+        "defense_curl",
+        "disarming_voice",
+        "double_edge",
+        "double_team",
+        "drain_punch",
+        "dream_eater",
+        "dynamic_punch",
+        "earthquake",
+        "echoed_voice",
+        "electric_terrain",
+        "endeavor",
+        "endure",
+        "facade",
+        "fire_blast",
+        "fire_punch",
+        "flamethrower",
+        "flash",
+        "fling",
+        "focus_blast",
+        "focus_punch",
+        "frustration",
+        "giga_impact",
+        "grass_knot",
+        "gravity",
+        "hail",
+        "headbutt",
+        "helping_hand",
+        "hidden_power",
+        "hyper_beam",
+        "hyper_voice",
+        "ice_beam",
+        "ice_punch",
+        "icy_wind",
+        "incinerate",
+        "iron_tail",
+        "light_screen",
+        "mega_kick",
+        "mega_punch",
+        "metronome",
+        "mudslap",
+        "natural_gift",
+        "power_up_punch",
+        "protect",
+        "psych_up",
+        "psychic",
+        "rain_dance",
+        "recycle",
+        "rest",
+        "retaliate",
+        "return",
+        "rock_climb",
+        "rock_slide",
+        "rock_smash",
+        "rock_tomb",
+        "rollout",
+        "round",
+        "safeguard",
+        "sandstorm",
+        "secret_power",
+        "shadow_ball",
+        "shock_wave",
+        "skill_swap",
+        "sleep_talk",
+        "snatch",
+        "snore",
+        "snowscape",
+        "solarbeam",
+        "stealth_rock",
+        "stomping_tantrum",
+        "stored_power",
+        "strength",
+        "substitute",
+        "sunny_day",
+        "swagger",
+        "swift",
+        "take_down",
+        "tera_blast",
+        "thief",
+        "thunder",
+        "thunder_punch",
+        "thunder_wave",
+        "thunderbolt",
+        "toxic",
+        "trailblaze",
+        "tri_attack",
+        "trick",
+        "uproar",
+        "water_pulse",
+        "wild_charge",
+        "work_up",
+        "zap_cannon",
+        "zen_headbutt"
+      ],
+      "abilities": {
+        "primary": "natural-cure",
+        "secondary": "serene-grace",
+        "hidden": "healer"
+      },
+      "teraType": "Normal"
+    },
+    "208": {
+      "id": 208,
+      "name": "Steelix",
+      "speciesKey": "STEELIX",
+      "types": [
+        "Steel",
+        "Ground"
+      ],
+      "stats": {
+        "hp": 75,
+        "attack": 85,
+        "defense": 200,
+        "spAtk": 55,
+        "spDef": 65,
+        "speed": 30,
+        "total": 510
+      },
+      "sprites": {
+        "follower": "Graphics/Characters/Followers/STEELIX.png",
+        "front": "Graphics/Pokemon/Front/STEELIX.png",
+        "back": "Graphics/Pokemon/Back/STEELIX.png",
+        "icon": "Graphics/Pokemon/Icons/STEELIX.png",
+        "cry": "Audio/Cries/STEELIX.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/STEELIX.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/STEELIX.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/STEELIX.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/STEELIX.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/STEELIX.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/STEELIX.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/STEELIX.png"
+      },
+      "species": "Iron Snake Pokémon",
+      "height": 9.2,
+      "weight": 400.0,
+      "ability": "Rock Head",
+      "catchRate": 25,
+      "baseFriendship": 70,
+      "growthRate": "Medium Fast",
+      "evYield": "2 Defense",
+      "eggGroups": "Mineral",
+      "genderRatio": "♂50% ♀50%",
+      "moves": [
+        {
+          "level": 1,
+          "moveId": "fire_fang",
+          "nameEn": "Fire Fang",
+          "nameVi": "Nanh Lửa",
+          "type": "Fire"
+        },
+        {
+          "level": 1,
+          "moveId": "ice_fang",
+          "nameEn": "Ice Fang",
+          "nameVi": "Nanh Băng",
+          "type": "Ice"
+        },
+        {
+          "level": 1,
+          "moveId": "mud_sport",
+          "nameEn": "Mud Sport",
+          "nameVi": "Bùn Sport",
+          "type": "Ground"
+        },
+        {
+          "level": 1,
+          "moveId": "rollout",
+          "nameEn": "Rollout",
+          "nameVi": "Lăn Bánh",
+          "type": "Rock"
+        },
+        {
+          "level": 1,
+          "moveId": "thunder_fang",
+          "nameEn": "Thunder Fang",
+          "nameVi": "Nanh Sấm Sét",
+          "type": "Electric"
+        },
+        {
+          "level": 6,
+          "moveId": "tackle",
+          "nameEn": "Tackle",
+          "nameVi": "Va Chạm",
+          "type": "Normal"
+        },
+        {
+          "level": 10,
+          "moveId": "bind",
+          "nameEn": "Bind",
+          "nameVi": "Trói Buộc",
+          "type": "Normal"
+        },
+        {
+          "level": 11,
+          "moveId": "bulldoze",
+          "nameEn": "Bulldoze",
+          "nameVi": "San Phẳng",
+          "type": "Ground"
+        },
+        {
+          "level": 14,
+          "moveId": "rock_throw",
+          "nameEn": "Rock Throw",
+          "nameVi": "Ném Đá",
+          "type": "Rock"
+        },
+        {
+          "level": 17,
+          "moveId": "rock_tomb",
+          "nameEn": "Rock Tomb",
+          "nameVi": "Mộ Đá Giam Cầm",
+          "type": "Rock"
+        },
+        {
+          "level": 20,
+          "moveId": "gyro_ball",
+          "nameEn": "Gyro Ball",
+          "nameVi": "Quả Cầu Con Quay",
+          "type": "Steel"
+        },
+        {
+          "level": 22,
+          "moveId": "smack_down",
+          "nameEn": "Smack Down",
+          "nameVi": "Tát Mạnh Down",
+          "type": "Rock"
+        },
+        {
+          "level": 23,
+          "moveId": "harden",
+          "nameEn": "Harden",
+          "nameVi": "Hóa Cứng",
+          "type": "Normal"
+        },
+        {
+          "level": 27,
+          "moveId": "rage",
+          "nameEn": "Rage",
+          "nameVi": "Thịnh Nộ",
+          "type": "Normal"
+        },
+        {
+          "level": 28,
+          "moveId": "sand_tomb",
+          "nameEn": "Sand Tomb",
+          "nameVi": "Hố Cát Lún",
+          "type": "Ground"
+        },
+        {
+          "level": 30,
+          "moveId": "autotomize",
+          "nameEn": "Autotomize",
+          "nameVi": "Tự Cắt Rời Thân",
+          "type": "Steel"
+        },
+        {
+          "level": 30,
+          "moveId": "rock_polish",
+          "nameEn": "Rock Polish",
+          "nameVi": "Mài Đá Tăng Tốc",
+          "type": "Rock"
+        },
+        {
+          "level": 31,
+          "moveId": "screech",
+          "nameEn": "Screech",
+          "nameVi": "Thét Chói Tai",
+          "type": "Normal"
+        },
+        {
+          "level": 34,
+          "moveId": "high_horsepower",
+          "nameEn": "High Horsepower",
+          "nameVi": "Mã Lực Siêu Đẳng",
+          "type": "Ground"
+        },
+        {
+          "level": 34,
+          "moveId": "rock_slide",
+          "nameEn": "Rock Slide",
+          "nameVi": "Lở Đá",
+          "type": "Rock"
+        },
+        {
+          "level": 38,
+          "moveId": "stealth_rock",
+          "nameEn": "Stealth Rock",
+          "nameVi": "Đá Tàng Hình",
+          "type": "Rock"
+        },
+        {
+          "level": 41,
+          "moveId": "dragonbreath",
+          "nameEn": "Dragon Breath",
+          "nameVi": "Hơi Thở Rồng",
+          "type": "Dragon"
+        },
+        {
+          "level": 41,
+          "moveId": "slam",
+          "nameEn": "Slam",
+          "nameVi": "Quật Ngã",
+          "type": "Normal"
+        },
+        {
+          "level": 44,
+          "moveId": "dig",
+          "nameEn": "Dig",
+          "nameVi": "Đào Đất",
+          "type": "Ground"
+        },
+        {
+          "level": 46,
+          "moveId": "curse",
+          "nameEn": "Curse",
+          "nameVi": "Lời Nguyền",
+          "type": "Ghost"
+        },
+        {
+          "level": 49,
+          "moveId": "iron_tail",
+          "nameEn": "Iron Tail",
+          "nameVi": "Đuôi Thép",
+          "type": "Steel"
+        },
+        {
+          "level": 52,
+          "moveId": "sandstorm",
+          "nameEn": "Sandstorm",
+          "nameVi": "Bão Cát",
+          "type": "Rock"
+        },
+        {
+          "level": 54,
+          "moveId": "crunch",
+          "nameEn": "Crunch",
+          "nameVi": "Cắn Nghiền",
+          "type": "Dark"
+        },
+        {
+          "level": 57,
+          "moveId": "double_edge",
+          "nameEn": "Double-Edge",
+          "nameVi": "Đòn Liều Mạng",
+          "type": "Normal"
+        },
+        {
+          "level": 60,
+          "moveId": "magnet_rise",
+          "nameEn": "Magnet Rise",
+          "nameVi": "Từ Trường Bay Lên",
+          "type": "Electric"
+        },
+        {
+          "level": 62,
+          "moveId": "stone_edge",
+          "nameEn": "Stone Edge",
+          "nameVi": "Cạnh Đá Sắc Lẹm",
+          "type": "Rock"
+        }
+      ],
+      "tmMoves": [
+        "attract",
+        "body_press",
+        "body_slam",
+        "breaking_swipe",
+        "brutal_swing",
+        "bulldoze",
+        "captivate",
+        "confide",
+        "crunch",
+        "curse",
+        "cut",
+        "dark_pulse",
+        "defense_curl",
+        "dig",
+        "double_team",
+        "dragon_dance",
+        "dragon_pulse",
+        "dragon_tail",
+        "dragonbreath",
+        "drill_run",
+        "earth_power",
+        "earthquake",
+        "endure",
+        "explosion",
+        "facade",
+        "fire_fang",
+        "flash_cannon",
+        "frustration",
+        "giga_impact",
+        "gyro_ball",
+        "headbutt",
+        "heavy_slam",
+        "hidden_power",
+        "high_horsepower",
+        "hyper_beam",
+        "ice_fang",
+        "iron_defense",
+        "iron_head",
+        "iron_tail",
+        "mudslap",
+        "natural_gift",
+        "nature_power",
+        "payback",
+        "protect",
+        "psych_up",
+        "psychic_fangs",
+        "rest",
+        "return",
+        "roar",
+        "rock_blast",
+        "rock_climb",
+        "rock_polish",
+        "rock_slide",
+        "rock_smash",
+        "rock_tomb",
+        "rollout",
+        "round",
+        "sand_tomb",
+        "sandstorm",
+        "scary_face",
+        "screech",
+        "secret_power",
+        "selfdestruct",
+        "sleep_talk",
+        "smack_down",
+        "snore",
+        "stealth_rock",
+        "stomping_tantrum",
+        "stone_edge",
+        "strength",
+        "substitute",
+        "sunny_day",
+        "swagger",
+        "taunt",
+        "thunder_fang",
+        "torment",
+        "toxic"
+      ],
+      "abilities": {
+        "primary": "rock-head",
+        "secondary": "sturdy",
+        "hidden": "sheer-force"
+      },
+      "teraType": "Steel"
+    },
+    "212": {
+      "id": 212,
+      "name": "Scizor",
+      "speciesKey": "SCIZOR",
+      "types": [
+        "Bug",
+        "Steel"
+      ],
+      "stats": {
+        "hp": 70,
+        "attack": 130,
+        "defense": 100,
+        "spAtk": 55,
+        "spDef": 80,
+        "speed": 65,
+        "total": 500
+      },
+      "sprites": {
+        "follower": "Graphics/Characters/Followers/SCIZOR.png",
+        "front": "Graphics/Pokemon/Front/SCIZOR.png",
+        "back": "Graphics/Pokemon/Back/SCIZOR.png",
+        "icon": "Graphics/Pokemon/Icons/SCIZOR.png",
+        "cry": "Audio/Cries/SCIZOR.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/SCIZOR.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/SCIZOR.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SCIZOR.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SCIZOR.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SCIZOR.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SCIZOR.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SCIZOR.png"
+      },
+      "species": "Pincer Pokémon",
+      "height": 1.8,
+      "weight": 118.0,
+      "ability": "Swarm",
+      "catchRate": 25,
+      "baseFriendship": 70,
+      "growthRate": "Medium Fast",
+      "evYield": "2 Attack",
+      "eggGroups": "Bug",
+      "genderRatio": "♂50% ♀50%",
+      "moves": [
+        {
+          "level": 1,
+          "moveId": "leer",
+          "nameEn": "Leer",
+          "nameVi": "Trừng Mắt",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "quick_attack",
+          "nameEn": "Quick Attack",
+          "nameVi": "Tấn Công Chớp Nhoáng",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "wing_attack",
+          "nameEn": "Wing Attack",
+          "nameVi": "Tấn Công Bằng Cánh",
+          "type": "Flying"
+        },
+        {
+          "level": 6,
+          "moveId": "silver_wind",
+          "nameEn": "Silver Wind",
+          "nameVi": "Ngọn Gió Bạc",
+          "type": "Bug"
+        },
+        {
+          "level": 11,
+          "moveId": "aerial_ace",
+          "nameEn": "Aerial Ace",
+          "nameVi": "Nhạn Én Tốc Độ",
+          "type": "Flying"
+        },
+        {
+          "level": 12,
+          "moveId": "pursuit",
+          "nameEn": "Pursuit",
+          "nameVi": "Đuổi Bắt",
+          "type": "Dark"
+        },
+        {
+          "level": 18,
+          "moveId": "air_slash",
+          "nameEn": "Air Slash",
+          "nameVi": "Trảm Phong",
+          "type": "Flying"
+        },
+        {
+          "level": 18,
+          "moveId": "false_swipe",
+          "nameEn": "False Swipe",
+          "nameVi": "Đòn Đánh Nương Tay",
+          "type": "Normal"
+        },
+        {
+          "level": 24,
+          "moveId": "agility",
+          "nameEn": "Agility",
+          "nameVi": "Khinh Công",
+          "type": "Psychic"
+        },
+        {
+          "level": 28,
+          "moveId": "focus_energy",
+          "nameEn": "Focus Energy",
+          "nameVi": "Tụ Năng Lượng",
+          "type": "Normal"
+        },
+        {
+          "level": 29,
+          "moveId": "bullet_punch",
+          "nameEn": "Bullet Punch",
+          "nameVi": "Cú Đấm Đạn Thép",
+          "type": "Steel"
+        },
+        {
+          "level": 30,
+          "moveId": "metal_claw",
+          "nameEn": "Metal Claw",
+          "nameVi": "Vuốt Kim Loại",
+          "type": "Steel"
+        },
+        {
+          "level": 33,
+          "moveId": "razor_wind",
+          "nameEn": "Razor Wind",
+          "nameVi": "Gió Dao Cạo",
+          "type": "Normal"
+        },
+        {
+          "level": 36,
+          "moveId": "slash",
+          "nameEn": "Slash",
+          "nameVi": "Nhát Chém",
+          "type": "Normal"
+        },
+        {
+          "level": 41,
+          "moveId": "iron_defense",
+          "nameEn": "Iron Defense",
+          "nameVi": "Giáp Sắt Phòng Thủ",
+          "type": "Steel"
+        },
+        {
+          "level": 41,
+          "moveId": "x_scissor",
+          "nameEn": "X-Scissor",
+          "nameVi": "Kéo Cắt Chữ X",
+          "type": "Bug"
+        },
+        {
+          "level": 43,
+          "moveId": "close_combat",
+          "nameEn": "Close Combat",
+          "nameVi": "Giáp Lá Cà",
+          "type": "Fighting"
+        },
+        {
+          "level": 44,
+          "moveId": "laser_focus",
+          "nameEn": "Laser Focus",
+          "nameVi": "Tập Trung Cao Độ",
+          "type": "Normal"
+        },
+        {
+          "level": 45,
+          "moveId": "night_slash",
+          "nameEn": "Night Slash",
+          "nameVi": "Trảm Kích Đêm Tối",
+          "type": "Dark"
+        },
+        {
+          "level": 46,
+          "moveId": "fury_cutter",
+          "nameEn": "Fury Cutter",
+          "nameVi": "Cuồng Nộ Cutter",
+          "type": "Bug"
+        },
+        {
+          "level": 48,
+          "moveId": "double_team",
+          "nameEn": "Double Team",
+          "nameVi": "Phân Thân",
+          "type": "Normal"
+        },
+        {
+          "level": 49,
+          "moveId": "double_hit",
+          "nameEn": "Double Hit",
+          "nameVi": "Đòn Đánh Kép",
+          "type": "Normal"
+        },
+        {
+          "level": 53,
+          "moveId": "iron_head",
+          "nameEn": "Iron Head",
+          "nameVi": "Đầu Sắt",
+          "type": "Steel"
+        },
+        {
+          "level": 57,
+          "moveId": "swords_dance",
+          "nameEn": "Swords Dance",
+          "nameVi": "Vũ Điệu Kiếm",
+          "type": "Normal"
+        },
+        {
+          "level": 61,
+          "moveId": "feint",
+          "nameEn": "Feint",
+          "nameVi": "Đòn Đánh Đánh Lừa",
+          "type": "Normal"
+        }
+      ],
+      "tmMoves": [
+        "acrobatics",
+        "aerial_ace",
+        "agility",
+        "air_cutter",
+        "air_slash",
+        "assurance",
+        "attract",
+        "baton_pass",
+        "brick_break",
+        "brutal_swing",
+        "bug_bite",
+        "bug_buzz",
+        "captivate",
+        "close_combat",
+        "confide",
+        "cross_poison",
+        "curse",
+        "cut",
+        "defog",
+        "detect",
+        "double_edge",
+        "double_team",
+        "dual_wingbeat",
+        "endure",
+        "facade",
+        "false_swipe",
+        "flash_cannon",
+        "fling",
+        "focus_energy",
+        "frustration",
+        "fury_cutter",
+        "giga_impact",
+        "hard_press",
+        "headbutt",
+        "helping_hand",
+        "hidden_power",
+        "hyper_beam",
+        "iron_defense",
+        "iron_head",
+        "knock_off",
+        "light_screen",
+        "lunge",
+        "metal_claw",
+        "natural_gift",
+        "pounce",
+        "protect",
+        "psycho_cut",
+        "rain_dance",
+        "rest",
+        "return",
+        "reversal",
+        "rock_smash",
+        "roost",
+        "round",
+        "safeguard",
+        "sand_tomb",
+        "sandstorm",
+        "scary_face",
+        "secret_power",
+        "silver_wind",
+        "skitter_smack",
+        "sleep_talk",
+        "snore",
+        "steel_beam",
+        "steel_wing",
+        "strength",
+        "struggle_bug",
+        "substitute",
+        "sunny_day",
+        "superpower",
+        "swagger",
+        "swift",
+        "swords_dance",
+        "tailwind",
+        "take_down",
+        "tera_blast",
+        "thief",
+        "toxic",
+        "trailblaze",
+        "u_turn",
+        "vacuum_wave",
+        "venoshock",
+        "x_scissor"
+      ],
+      "abilities": {
+        "primary": "swarm",
+        "secondary": "technician",
+        "hidden": "light-metal"
+      },
+      "teraType": "Bug"
+    },
+    "900": {
+      "id": 900,
+      "name": "Kleavor",
+      "speciesKey": "KLEAVOR",
+      "types": [
+        "Bug",
+        "Rock"
+      ],
+      "stats": {
+        "hp": 70,
+        "attack": 135,
+        "defense": 95,
+        "spAtk": 45,
+        "spDef": 70,
+        "speed": 85,
+        "total": 500
+      },
+      "sprites": {
+        "follower": "Graphics/Characters/Followers/KLEAVOR.png",
+        "front": "Graphics/Pokemon/Front/KLEAVOR.png",
+        "back": "Graphics/Pokemon/Back/KLEAVOR.png",
+        "icon": "Graphics/Pokemon/Icons/KLEAVOR.png",
+        "cry": "Audio/Cries/KLEAVOR.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/KLEAVOR.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/KLEAVOR.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/KLEAVOR.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/KLEAVOR.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/KLEAVOR.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/KLEAVOR.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/KLEAVOR.png"
+      },
+      "species": "Axe Pokémon",
+      "height": 1.8,
+      "weight": 89.0,
+      "ability": "Swarm",
+      "catchRate": 115,
+      "baseFriendship": 50,
+      "growthRate": "Medium Fast",
+      "evYield": "3 Attack",
+      "eggGroups": "Bug",
+      "genderRatio": "♂50% ♀50%",
+      "moves": [
+        {
+          "level": 1,
+          "moveId": "leer",
+          "nameEn": "Leer",
+          "nameVi": "Trừng Mắt",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "quick_attack",
+          "nameEn": "Quick Attack",
+          "nameVi": "Tấn Công Chớp Nhoáng",
+          "type": "Normal"
+        },
+        {
+          "level": 4,
+          "moveId": "fury_cutter",
+          "nameEn": "Fury Cutter",
+          "nameVi": "Cuồng Nộ Cutter",
+          "type": "Bug"
+        },
+        {
+          "level": 6,
+          "moveId": "silver_wind",
+          "nameEn": "Silver Wind",
+          "nameVi": "Ngọn Gió Bạc",
+          "type": "Bug"
+        },
+        {
+          "level": 8,
+          "moveId": "false_swipe",
+          "nameEn": "False Swipe",
+          "nameVi": "Đòn Đánh Nương Tay",
+          "type": "Normal"
+        },
+        {
+          "level": 11,
+          "moveId": "aerial_ace",
+          "nameEn": "Aerial Ace",
+          "nameVi": "Nhạn Én Tốc Độ",
+          "type": "Flying"
+        },
+        {
+          "level": 12,
+          "moveId": "smack_down",
+          "nameEn": "Smack Down",
+          "nameVi": "Tát Mạnh Down",
+          "type": "Rock"
+        },
+        {
+          "level": 14,
+          "moveId": "stealth_rock",
+          "nameEn": "Stealth Rock",
+          "nameVi": "Đá Tàng Hình",
+          "type": "Rock"
+        },
+        {
+          "level": 16,
+          "moveId": "double_team",
+          "nameEn": "Double Team",
+          "nameVi": "Phân Thân",
+          "type": "Normal"
+        },
+        {
+          "level": 18,
+          "moveId": "air_slash",
+          "nameEn": "Air Slash",
+          "nameVi": "Trảm Phong",
+          "type": "Flying"
+        },
+        {
+          "level": 20,
+          "moveId": "double_hit",
+          "nameEn": "Double Hit",
+          "nameVi": "Đòn Đánh Kép",
+          "type": "Normal"
+        },
+        {
+          "level": 24,
+          "moveId": "slash",
+          "nameEn": "Slash",
+          "nameVi": "Nhát Chém",
+          "type": "Normal"
+        },
+        {
+          "level": 28,
+          "moveId": "focus_energy",
+          "nameEn": "Focus Energy",
+          "nameVi": "Tụ Năng Lượng",
+          "type": "Normal"
+        },
+        {
+          "level": 29,
+          "moveId": "stone_axe",
+          "nameEn": "Stone Axe",
+          "nameVi": "Đá Rìu",
+          "type": "Rock"
+        },
+        {
+          "level": 32,
+          "moveId": "agility",
+          "nameEn": "Agility",
+          "nameVi": "Khinh Công",
+          "type": "Psychic"
+        },
+        {
+          "level": 36,
+          "moveId": "rock_slide",
+          "nameEn": "Rock Slide",
+          "nameVi": "Lở Đá",
+          "type": "Rock"
+        },
+        {
+          "level": 40,
+          "moveId": "x_scissor",
+          "nameEn": "X-Scissor",
+          "nameVi": "Kéo Cắt Chữ X",
+          "type": "Bug"
+        },
+        {
+          "level": 43,
+          "moveId": "close_combat",
+          "nameEn": "Close Combat",
+          "nameVi": "Giáp Lá Cà",
+          "type": "Fighting"
+        },
+        {
+          "level": 44,
+          "moveId": "swords_dance",
+          "nameEn": "Swords Dance",
+          "nameVi": "Vũ Điệu Kiếm",
+          "type": "Normal"
+        }
+      ],
+      "tmMoves": [
+        "acrobatics",
+        "aerial_ace",
+        "agility",
+        "air_cutter",
+        "air_slash",
+        "baton_pass",
+        "brick_break",
+        "bug_bite",
+        "bug_buzz",
+        "close_combat",
+        "double_edge",
+        "dual_wingbeat",
+        "endure",
+        "facade",
+        "false_swipe",
+        "giga_impact",
+        "helping_hand",
+        "hyper_beam",
+        "light_screen",
+        "lunge",
+        "pounce",
+        "protect",
+        "rest",
+        "reversal",
+        "rock_blast",
+        "rock_slide",
+        "rock_tomb",
+        "sandstorm",
+        "scary_face",
+        "skitter_smack",
+        "sleep_talk",
+        "smack_down",
+        "stealth_rock",
+        "stone_edge",
+        "struggle_bug",
+        "substitute",
+        "sunny_day",
+        "swift",
+        "swords_dance",
+        "tailwind",
+        "take_down",
+        "tera_blast",
+        "thief",
+        "trailblaze",
+        "u_turn",
+        "vacuum_wave",
+        "x_scissor"
+      ],
+      "abilities": {
+        "primary": "swarm",
+        "secondary": "sheer-force",
+        "hidden": "sharpness"
+      },
+      "teraType": "Bug"
+    },
+    "230": {
+      "id": 230,
+      "name": "Kingdra",
+      "speciesKey": "KINGDRA",
+      "types": [
+        "Water",
+        "Dragon"
+      ],
+      "stats": {
+        "hp": 75,
+        "attack": 95,
+        "defense": 95,
+        "spAtk": 95,
+        "spDef": 95,
+        "speed": 85,
+        "total": 540
+      },
+      "sprites": {
+        "follower": "Graphics/Characters/Followers/KINGDRA.png",
+        "front": "Graphics/Pokemon/Front/KINGDRA.png",
+        "back": "Graphics/Pokemon/Back/KINGDRA.png",
+        "icon": "Graphics/Pokemon/Icons/KINGDRA.png",
+        "cry": "Audio/Cries/KINGDRA.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/KINGDRA.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/KINGDRA.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/KINGDRA.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/KINGDRA.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/KINGDRA.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/KINGDRA.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/KINGDRA.png"
+      },
+      "species": "Dragon Pokémon",
+      "height": 1.8,
+      "weight": 152.0,
+      "ability": "Swift Swim",
+      "catchRate": 45,
+      "baseFriendship": 70,
+      "growthRate": "Medium Fast",
+      "evYield": "1 Attack, 1 Sp. Atk, 1 Sp. Def",
+      "eggGroups": "Water1, Dragon",
+      "genderRatio": "♂50% ♀50%",
+      "moves": [
+        {
+          "level": 1,
+          "moveId": "whirlpool",
+          "nameEn": "Whirlpool",
+          "nameVi": "Xoáy Nước",
+          "type": "Water"
+        },
+        {
+          "level": 1,
+          "moveId": "yawn",
+          "nameEn": "Yawn",
+          "nameVi": "Ngáp Ngủ",
+          "type": "Normal"
+        },
+        {
+          "level": 8,
+          "moveId": "smokescreen",
+          "nameEn": "Smokescreen",
+          "nameVi": "Màn Khói",
+          "type": "Normal"
+        },
+        {
+          "level": 11,
+          "moveId": "bubble",
+          "nameEn": "Bubble",
+          "nameVi": "Bong Bóng",
+          "type": "Water"
+        },
+        {
+          "level": 15,
+          "moveId": "leer",
+          "nameEn": "Leer",
+          "nameVi": "Trừng Mắt",
+          "type": "Normal"
+        },
+        {
+          "level": 20,
+          "moveId": "dragonbreath",
+          "nameEn": "Dragon Breath",
+          "nameVi": "Hơi Thở Rồng",
+          "type": "Dragon"
+        },
+        {
+          "level": 22,
+          "moveId": "water_gun",
+          "nameEn": "Water Gun",
+          "nameVi": "Súng Nước",
+          "type": "Water"
+        },
+        {
+          "level": 25,
+          "moveId": "bubblebeam",
+          "nameEn": "Bubble Beam",
+          "nameVi": "Tia Bong Bóng",
+          "type": "Water"
+        },
+        {
+          "level": 26,
+          "moveId": "focus_energy",
+          "nameEn": "Focus Energy",
+          "nameVi": "Tụ Năng Lượng",
+          "type": "Normal"
+        },
+        {
+          "level": 29,
+          "moveId": "twister",
+          "nameEn": "Twister",
+          "nameVi": "Lốc Xoáy",
+          "type": "Dragon"
+        },
+        {
+          "level": 31,
+          "moveId": "brine",
+          "nameEn": "Brine",
+          "nameVi": "Nước Muối Mặn",
+          "type": "Water"
+        },
+        {
+          "level": 37,
+          "moveId": "laser_focus",
+          "nameEn": "Laser Focus",
+          "nameVi": "Tập Trung Cao Độ",
+          "type": "Normal"
+        },
+        {
+          "level": 37,
+          "moveId": "water_pulse",
+          "nameEn": "Water Pulse",
+          "nameVi": "Dao Động Sóng Nước",
+          "type": "Water"
+        },
+        {
+          "level": 40,
+          "moveId": "agility",
+          "nameEn": "Agility",
+          "nameVi": "Khinh Công",
+          "type": "Psychic"
+        },
+        {
+          "level": 57,
+          "moveId": "dragon_pulse",
+          "nameEn": "Dragon Pulse",
+          "nameVi": "Dao Động Rồng",
+          "type": "Dragon"
+        },
+        {
+          "level": 60,
+          "moveId": "hydro_pump",
+          "nameEn": "Hydro Pump",
+          "nameVi": "Thủy Pháo",
+          "type": "Water"
+        },
+        {
+          "level": 62,
+          "moveId": "dragon_dance",
+          "nameEn": "Dragon Dance",
+          "nameVi": "Vũ Điệu Rồng",
+          "type": "Dragon"
+        },
+        {
+          "level": 65,
+          "moveId": "rain_dance",
+          "nameEn": "Rain Dance",
+          "nameVi": "Vũ Điệu Gọi Mưa",
+          "type": "Water"
+        },
+        {
+          "level": 72,
+          "moveId": "wave_crash",
+          "nameEn": "Wave Crash",
+          "nameVi": "Cú Va Chạm Sóng",
+          "type": "Water"
+        }
+      ],
+      "tmMoves": [
+        "agility",
+        "attract",
+        "blizzard",
+        "body_slam",
+        "bounce",
+        "breaking_swipe",
+        "brine",
+        "captivate",
+        "chilling_water",
+        "confide",
+        "curse",
+        "dive",
+        "double_edge",
+        "double_team",
+        "draco_meteor",
+        "dragon_dance",
+        "dragon_pulse",
+        "dragonbreath",
+        "endure",
+        "facade",
+        "flash_cannon",
+        "flip_turn",
+        "focus_energy",
+        "frustration",
+        "giga_impact",
+        "hail",
+        "headbutt",
+        "hidden_power",
+        "hurricane",
+        "hydro_pump",
+        "hyper_beam",
+        "ice_beam",
+        "icy_wind",
+        "iron_head",
+        "liquidation",
+        "muddy_water",
+        "natural_gift",
+        "outrage",
+        "protect",
+        "quash",
+        "rain_dance",
+        "rest",
+        "return",
+        "round",
+        "scald",
+        "scale_shot",
+        "scary_face",
+        "secret_power",
+        "sleep_talk",
+        "snore",
+        "snowscape",
+        "substitute",
+        "surf",
+        "swagger",
+        "swift",
+        "take_down",
+        "tera_blast",
+        "toxic",
+        "water_pulse",
+        "waterfall",
+        "weather_ball",
+        "whirlpool"
+      ],
+      "abilities": {
+        "primary": "swift-swim",
+        "secondary": "sniper",
+        "hidden": "damp"
+      },
+      "teraType": "Water"
+    },
+    "233": {
+      "id": 233,
+      "name": "Porygon2",
+      "speciesKey": "PORYGON2",
+      "types": [
+        "Normal"
+      ],
+      "stats": {
+        "hp": 85,
+        "attack": 80,
+        "defense": 90,
+        "spAtk": 105,
+        "spDef": 95,
+        "speed": 60,
+        "total": 515
+      },
+      "sprites": {
+        "follower": "Graphics/Characters/Followers/PORYGON2.png",
+        "front": "Graphics/Pokemon/Front/PORYGON2.png",
+        "back": "Graphics/Pokemon/Back/PORYGON2.png",
+        "icon": "Graphics/Pokemon/Icons/PORYGON2.png",
+        "cry": "Audio/Cries/PORYGON2.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/PORYGON2.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/PORYGON2.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PORYGON2.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/PORYGON2.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/PORYGON2.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/PORYGON2.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/PORYGON2.png"
+      },
+      "species": "Virtual Pokémon",
+      "height": 0.6,
+      "weight": 32.5,
+      "ability": "Trace",
+      "catchRate": 45,
+      "baseFriendship": 70,
+      "growthRate": "Medium Fast",
+      "evYield": "2 Sp. Atk",
+      "eggGroups": "Mineral",
+      "genderRatio": "Genderless",
+      "moves": [
+        {
+          "level": 1,
+          "moveId": "conversion",
+          "nameEn": "Conversion",
+          "nameVi": "Chuyển Đổi Thuộc Tính",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "tackle",
+          "nameEn": "Tackle",
+          "nameVi": "Va Chạm",
+          "type": "Normal"
+        },
+        {
+          "level": 15,
+          "moveId": "thundershock",
+          "nameEn": "Thunder Shock",
+          "nameVi": "Giật Điện",
+          "type": "Electric"
+        },
+        {
+          "level": 20,
+          "moveId": "psybeam",
+          "nameEn": "Psybeam",
+          "nameVi": "Tia Tâm Linh",
+          "type": "Psychic"
+        },
+        {
+          "level": 23,
+          "moveId": "magnet_rise",
+          "nameEn": "Magnet Rise",
+          "nameVi": "Từ Trường Bay Lên",
+          "type": "Electric"
+        },
+        {
+          "level": 24,
+          "moveId": "defense_curl",
+          "nameEn": "Defense Curl",
+          "nameVi": "Cuộn Tròn Phòng Thủ",
+          "type": "Normal"
+        },
+        {
+          "level": 25,
+          "moveId": "conversion_2",
+          "nameEn": "Conversion 2",
+          "nameVi": "Chuyển Hệ 2",
+          "type": "Normal"
+        },
+        {
+          "level": 29,
+          "moveId": "signal_beam",
+          "nameEn": "Signal Beam",
+          "nameVi": "Tia Signal",
+          "type": "Bug"
+        },
+        {
+          "level": 30,
+          "moveId": "agility",
+          "nameEn": "Agility",
+          "nameVi": "Khinh Công",
+          "type": "Psychic"
+        },
+        {
+          "level": 35,
+          "moveId": "recover",
+          "nameEn": "Recover",
+          "nameVi": "Phục Hồi",
+          "type": "Normal"
+        },
+        {
+          "level": 40,
+          "moveId": "discharge",
+          "nameEn": "Discharge",
+          "nameVi": "Phóng Điện Phân Tán",
+          "type": "Electric"
+        },
+        {
+          "level": 44,
+          "moveId": "recycle",
+          "nameEn": "Recycle",
+          "nameVi": "Tái Chế",
+          "type": "Normal"
+        },
+        {
+          "level": 51,
+          "moveId": "tri_attack",
+          "nameEn": "Tri Attack",
+          "nameVi": "Tam Tinh Kích",
+          "type": "Normal"
+        },
+        {
+          "level": 55,
+          "moveId": "lock_on",
+          "nameEn": "Lock-On",
+          "nameVi": "Khóa Mục Tiêu",
+          "type": "Normal"
+        },
+        {
+          "level": 56,
+          "moveId": "magic_coat",
+          "nameEn": "Magic Coat",
+          "nameVi": "Áo Choàng Phép Thuật",
+          "type": "Psychic"
+        },
+        {
+          "level": 62,
+          "moveId": "zap_cannon",
+          "nameEn": "Zap Cannon",
+          "nameVi": "Đại Bác Sấm Sét",
+          "type": "Electric"
+        },
+        {
+          "level": 67,
+          "moveId": "hyper_beam",
+          "nameEn": "Hyper Beam",
+          "nameVi": "Tia Hủy Diệt",
+          "type": "Normal"
+        }
+      ],
+      "tmMoves": [
+        "aerial_ace",
+        "agility",
+        "ally_switch",
+        "blizzard",
+        "charge",
+        "charge_beam",
+        "confide",
+        "curse",
+        "defense_curl",
+        "double_edge",
+        "double_team",
+        "dream_eater",
+        "eerie_impulse",
+        "electroweb",
+        "endure",
+        "facade",
+        "flash",
+        "foul_play",
+        "frustration",
+        "giga_impact",
+        "gravity",
+        "guard_swap",
+        "hidden_power",
+        "hyper_beam",
+        "ice_beam",
+        "icy_wind",
+        "iron_tail",
+        "natural_gift",
+        "nightmare",
+        "power_swap",
+        "protect",
+        "psybeam",
+        "psych_up",
+        "psychic",
+        "psyshock",
+        "rain_dance",
+        "recycle",
+        "rest",
+        "return",
+        "round",
+        "secret_power",
+        "shadow_ball",
+        "shock_wave",
+        "sleep_talk",
+        "snore",
+        "solarbeam",
+        "speed_swap",
+        "substitute",
+        "sunny_day",
+        "swagger",
+        "swift",
+        "take_down",
+        "tera_blast",
+        "thief",
+        "thunder",
+        "thunder_wave",
+        "thunderbolt",
+        "toxic",
+        "tri_attack",
+        "trick",
+        "trick_room",
+        "wonder_room",
+        "zap_cannon",
+        "zen_headbutt"
+      ],
+      "abilities": {
+        "primary": "trace",
+        "secondary": "download",
+        "hidden": "analytic"
+      },
+      "teraType": "Normal"
+    },
+    "474": {
+      "id": 474,
+      "name": "Porygon-Z",
+      "speciesKey": "PORYGONZ",
+      "types": [
+        "Normal"
+      ],
+      "stats": {
+        "hp": 85,
+        "attack": 80,
+        "defense": 70,
+        "spAtk": 135,
+        "spDef": 75,
+        "speed": 90,
+        "total": 535
+      },
+      "sprites": {
+        "follower": "Graphics/Characters/Followers/PORYGONZ.png",
+        "front": "Graphics/Pokemon/Front/PORYGONZ.png",
+        "back": "Graphics/Pokemon/Back/PORYGONZ.png",
+        "icon": "Graphics/Pokemon/Icons/PORYGONZ.png",
+        "cry": "Audio/Cries/PORYGONZ.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/PORYGONZ.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/PORYGONZ.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PORYGONZ.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/PORYGONZ.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/PORYGONZ.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/PORYGONZ.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/PORYGONZ.png"
+      },
+      "species": "Virtual Pokémon",
+      "height": 0.9,
+      "weight": 34.0,
+      "ability": "Adaptability",
+      "catchRate": 30,
+      "baseFriendship": 70,
+      "growthRate": "Medium Fast",
+      "evYield": "3 Sp. Atk",
+      "eggGroups": "Mineral",
+      "genderRatio": "Genderless",
+      "moves": [
+        {
+          "level": 1,
+          "moveId": "conversion",
+          "nameEn": "Conversion",
+          "nameVi": "Chuyển Đổi Thuộc Tính",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "defense_curl",
+          "nameEn": "Defense Curl",
+          "nameVi": "Cuộn Tròn Phòng Thủ",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "nasty_plot",
+          "nameEn": "Nasty Plot",
+          "nameVi": "Mưu Kế Độc Ác",
+          "type": "Dark"
+        },
+        {
+          "level": 1,
+          "moveId": "recycle",
+          "nameEn": "Recycle",
+          "nameVi": "Tái Chế",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "tackle",
+          "nameEn": "Tackle",
+          "nameVi": "Va Chạm",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "trick_room",
+          "nameEn": "Trick Room",
+          "nameVi": "Không Gian Kì Lạ",
+          "type": "Psychic"
+        },
+        {
+          "level": 9,
+          "moveId": "thunder_wave",
+          "nameEn": "Thunder Wave",
+          "nameVi": "Sóng Điện Từ",
+          "type": "Electric"
+        },
+        {
+          "level": 15,
+          "moveId": "spark",
+          "nameEn": "Spark",
+          "nameVi": "Tia Lửa Điện",
+          "type": "Electric"
+        },
+        {
+          "level": 15,
+          "moveId": "thundershock",
+          "nameEn": "Thunder Shock",
+          "nameVi": "Giật Điện",
+          "type": "Electric"
+        },
+        {
+          "level": 20,
+          "moveId": "psybeam",
+          "nameEn": "Psybeam",
+          "nameVi": "Tia Tâm Linh",
+          "type": "Psychic"
+        },
+        {
+          "level": 23,
+          "moveId": "magnet_rise",
+          "nameEn": "Magnet Rise",
+          "nameVi": "Từ Trường Bay Lên",
+          "type": "Electric"
+        },
+        {
+          "level": 25,
+          "moveId": "conversion_2",
+          "nameEn": "Conversion 2",
+          "nameVi": "Chuyển Hệ 2",
+          "type": "Normal"
+        },
+        {
+          "level": 29,
+          "moveId": "signal_beam",
+          "nameEn": "Signal Beam",
+          "nameVi": "Tia Signal",
+          "type": "Bug"
+        },
+        {
+          "level": 29,
+          "moveId": "thunderbolt",
+          "nameEn": "Thunderbolt",
+          "nameVi": "Phóng Điện",
+          "type": "Electric"
+        },
+        {
+          "level": 30,
+          "moveId": "agility",
+          "nameEn": "Agility",
+          "nameVi": "Khinh Công",
+          "type": "Psychic"
+        },
+        {
+          "level": 34,
+          "moveId": "embargo",
+          "nameEn": "Embargo",
+          "nameVi": "Cấm Vận",
+          "type": "Dark"
+        },
+        {
+          "level": 37,
+          "moveId": "recover",
+          "nameEn": "Recover",
+          "nameVi": "Phục Hồi",
+          "type": "Normal"
+        },
+        {
+          "level": 40,
+          "moveId": "discharge",
+          "nameEn": "Discharge",
+          "nameVi": "Phóng Điện Phân Tán",
+          "type": "Electric"
+        },
+        {
+          "level": 50,
+          "moveId": "double_edge",
+          "nameEn": "Double-Edge",
+          "nameVi": "Đòn Liều Mạng",
+          "type": "Normal"
+        },
+        {
+          "level": 51,
+          "moveId": "tri_attack",
+          "nameEn": "Tri Attack",
+          "nameVi": "Tam Tinh Kích",
+          "type": "Normal"
+        },
+        {
+          "level": 55,
+          "moveId": "lock_on",
+          "nameEn": "Lock-On",
+          "nameVi": "Khóa Mục Tiêu",
+          "type": "Normal"
+        },
+        {
+          "level": 56,
+          "moveId": "magic_coat",
+          "nameEn": "Magic Coat",
+          "nameVi": "Áo Choàng Phép Thuật",
+          "type": "Psychic"
+        },
+        {
+          "level": 62,
+          "moveId": "zap_cannon",
+          "nameEn": "Zap Cannon",
+          "nameVi": "Đại Bác Sấm Sét",
+          "type": "Electric"
+        },
+        {
+          "level": 67,
+          "moveId": "hyper_beam",
+          "nameEn": "Hyper Beam",
+          "nameVi": "Tia Hủy Diệt",
+          "type": "Normal"
+        }
+      ],
+      "tmMoves": [
+        "aerial_ace",
+        "agility",
+        "ally_switch",
+        "blizzard",
+        "charge",
+        "charge_beam",
+        "confide",
+        "dark_pulse",
+        "double_edge",
+        "double_team",
+        "dream_eater",
+        "eerie_impulse",
+        "electroweb",
+        "embargo",
+        "endure",
+        "facade",
+        "flash",
+        "foul_play",
+        "frustration",
+        "giga_impact",
+        "gravity",
+        "guard_swap",
+        "hidden_power",
+        "hyper_beam",
+        "ice_beam",
+        "icy_wind",
+        "iron_tail",
+        "nasty_plot",
+        "natural_gift",
+        "power_swap",
+        "protect",
+        "psybeam",
+        "psych_up",
+        "psychic",
+        "psyshock",
+        "rain_dance",
+        "recycle",
+        "rest",
+        "return",
+        "round",
+        "secret_power",
+        "shadow_ball",
+        "shock_wave",
+        "sleep_talk",
+        "snore",
+        "solarbeam",
+        "speed_swap",
+        "substitute",
+        "sunny_day",
+        "swagger",
+        "swift",
+        "take_down",
+        "tera_blast",
+        "thief",
+        "thunder",
+        "thunder_wave",
+        "thunderbolt",
+        "toxic",
+        "tri_attack",
+        "trick",
+        "trick_room",
+        "uproar",
+        "wonder_room",
+        "zen_headbutt"
+      ],
+      "abilities": {
+        "primary": "adaptability",
+        "secondary": "download",
+        "hidden": "analytic"
+      },
+      "teraType": "Normal"
+    },
+    "464": {
+      "id": 464,
+      "name": "Rhyperior",
+      "speciesKey": "RHYPERIOR",
+      "types": [
+        "Ground",
+        "Rock"
+      ],
+      "stats": {
+        "hp": 115,
+        "attack": 140,
+        "defense": 130,
+        "spAtk": 55,
+        "spDef": 55,
+        "speed": 40,
+        "total": 535
+      },
+      "sprites": {
+        "follower": "Graphics/Characters/Followers/RHYPERIOR.png",
+        "front": "Graphics/Pokemon/Front/RHYPERIOR.png",
+        "back": "Graphics/Pokemon/Back/RHYPERIOR.png",
+        "icon": "Graphics/Pokemon/Icons/RHYPERIOR.png",
+        "cry": "Audio/Cries/RHYPERIOR.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/RHYPERIOR.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/RHYPERIOR.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/RHYPERIOR.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/RHYPERIOR.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/RHYPERIOR.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/RHYPERIOR.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/RHYPERIOR.png"
+      },
+      "species": "Drill Pokémon",
+      "height": 2.4,
+      "weight": 282.8,
+      "ability": "Lightning Rod",
+      "catchRate": 30,
+      "baseFriendship": 70,
+      "growthRate": "Slow",
+      "evYield": "3 Attack",
+      "eggGroups": "Monster, Ground",
+      "genderRatio": "♂50% ♀50%",
+      "moves": [
+        {
+          "level": 1,
+          "moveId": "poison_jab",
+          "nameEn": "Poison Jab",
+          "nameVi": "Đấm Độc",
+          "type": "Poison"
+        },
+        {
+          "level": 1,
+          "moveId": "tackle",
+          "nameEn": "Tackle",
+          "nameVi": "Va Chạm",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "tail_whip",
+          "nameEn": "Tail Whip",
+          "nameVi": "Vẫy Đuôi",
+          "type": "Normal"
+        },
+        {
+          "level": 11,
+          "moveId": "rock_smash",
+          "nameEn": "Rock Smash",
+          "nameVi": "Đập Đá",
+          "type": "Fighting"
+        },
+        {
+          "level": 13,
+          "moveId": "smack_down",
+          "nameEn": "Smack Down",
+          "nameVi": "Tát Mạnh Down",
+          "type": "Rock"
+        },
+        {
+          "level": 15,
+          "moveId": "horn_attack",
+          "nameEn": "Horn Attack",
+          "nameVi": "Tấn Công Bằng Sừng",
+          "type": "Normal"
+        },
+        {
+          "level": 18,
+          "moveId": "stealth_rock",
+          "nameEn": "Stealth Rock",
+          "nameVi": "Đá Tàng Hình",
+          "type": "Rock"
+        },
+        {
+          "level": 19,
+          "moveId": "fury_attack",
+          "nameEn": "Fury Attack",
+          "nameVi": "Tấn Công Điên Cuồng",
+          "type": "Normal"
+        },
+        {
+          "level": 21,
+          "moveId": "bulldoze",
+          "nameEn": "Bulldoze",
+          "nameVi": "San Phẳng",
+          "type": "Ground"
+        },
+        {
+          "level": 21,
+          "moveId": "scary_face",
+          "nameEn": "Scary Face",
+          "nameVi": "Khuôn Mặt Đáng Sợ",
+          "type": "Normal"
+        },
+        {
+          "level": 25,
+          "moveId": "rock_slide",
+          "nameEn": "Rock Slide",
+          "nameVi": "Lở Đá",
+          "type": "Rock"
+        },
+        {
+          "level": 25,
+          "moveId": "stomp",
+          "nameEn": "Stomp",
+          "nameVi": "Giẫm Đạp",
+          "type": "Normal"
+        },
+        {
+          "level": 30,
+          "moveId": "chip_away",
+          "nameEn": "Chip Away",
+          "nameVi": "Tỉa Bào",
+          "type": "Normal"
+        },
+        {
+          "level": 30,
+          "moveId": "rock_blast",
+          "nameEn": "Rock Blast",
+          "nameVi": "Đạn Đá",
+          "type": "Rock"
+        },
+        {
+          "level": 34,
+          "moveId": "high_horsepower",
+          "nameEn": "High Horsepower",
+          "nameVi": "Mã Lực Siêu Đẳng",
+          "type": "Ground"
+        },
+        {
+          "level": 41,
+          "moveId": "take_down",
+          "nameEn": "Take Down",
+          "nameVi": "Lao Đầu",
+          "type": "Normal"
+        },
+        {
+          "level": 42,
+          "moveId": "hammer_arm",
+          "nameEn": "Hammer Arm",
+          "nameVi": "Cánh Tay Búa",
+          "type": "Fighting"
+        },
+        {
+          "level": 43,
+          "moveId": "double_edge",
+          "nameEn": "Double-Edge",
+          "nameVi": "Đòn Liều Mạng",
+          "type": "Normal"
+        },
+        {
+          "level": 47,
+          "moveId": "drill_run",
+          "nameEn": "Drill Run",
+          "nameVi": "Khoan Xoáy Đất",
+          "type": "Ground"
+        },
+        {
+          "level": 52,
+          "moveId": "giga_impact",
+          "nameEn": "Giga Impact",
+          "nameVi": "Cú Va Chạm Giga",
+          "type": "Normal"
+        },
+        {
+          "level": 56,
+          "moveId": "stone_edge",
+          "nameEn": "Stone Edge",
+          "nameVi": "Cạnh Đá Sắc Lẹm",
+          "type": "Rock"
+        },
+        {
+          "level": 62,
+          "moveId": "earthquake",
+          "nameEn": "Earthquake",
+          "nameVi": "Động Đất",
+          "type": "Ground"
+        },
+        {
+          "level": 71,
+          "moveId": "horn_drill",
+          "nameEn": "Horn Drill",
+          "nameVi": "Khoan Sừng",
+          "type": "Normal"
+        },
+        {
+          "level": 77,
+          "moveId": "megahorn",
+          "nameEn": "Megahorn",
+          "nameVi": "Đại Giác Kích",
+          "type": "Bug"
+        },
+        {
+          "level": 86,
+          "moveId": "rock_wrecker",
+          "nameEn": "Rock Wrecker",
+          "nameVi": "Phá Hủy Đá Khổng Lồ",
+          "type": "Rock"
+        }
+      ],
+      "tmMoves": [
+        "attract",
+        "avalanche",
+        "blizzard",
+        "body_press",
+        "body_slam",
+        "breaking_swipe",
+        "brick_break",
+        "brutal_swing",
+        "bulldoze",
+        "captivate",
+        "confide",
+        "crunch",
+        "curse",
+        "cut",
+        "dig",
+        "double_edge",
+        "double_team",
+        "dragon_pulse",
+        "dragon_tail",
+        "drill_run",
+        "earth_power",
+        "earthquake",
+        "endeavor",
+        "endure",
+        "facade",
+        "fire_blast",
+        "fire_fang",
+        "fire_punch",
+        "flamethrower",
+        "flash_cannon",
+        "fling",
+        "focus_blast",
+        "focus_punch",
+        "frustration",
+        "giga_impact",
+        "heat_crash",
+        "heavy_slam",
+        "helping_hand",
+        "hidden_power",
+        "high_horsepower",
+        "hydro_pump",
+        "hyper_beam",
+        "ice_beam",
+        "ice_fang",
+        "ice_punch",
+        "icy_wind",
+        "incinerate",
+        "iron_defense",
+        "iron_head",
+        "iron_tail",
+        "mega_kick",
+        "mega_punch",
+        "megahorn",
+        "metal_claw",
+        "meteor_beam",
+        "mud_shot",
+        "mudslap",
+        "natural_gift",
+        "outrage",
+        "pay_day",
+        "payback",
+        "poison_jab",
+        "power_up_punch",
+        "protect",
+        "rain_dance",
+        "rest",
+        "return",
+        "reversal",
+        "roar",
+        "rock_blast",
+        "rock_climb",
+        "rock_polish",
+        "rock_slide",
+        "rock_smash",
+        "rock_tomb",
+        "round",
+        "sandstorm",
+        "scary_face",
+        "scorching_sands",
+        "secret_power",
+        "shadow_claw",
+        "shock_wave",
+        "sleep_talk",
+        "smack_down",
+        "smart_strike",
+        "snore",
+        "stealth_rock",
+        "stomping_tantrum",
+        "stone_edge",
+        "strength",
+        "substitute",
+        "sunny_day",
+        "supercell_slam",
+        "superpower",
+        "surf",
+        "swagger",
+        "swords_dance",
+        "take_down",
+        "temper_flare",
+        "tera_blast",
+        "thief",
+        "thunder",
+        "thunder_fang",
+        "thunder_punch",
+        "thunderbolt",
+        "toxic",
+        "uproar",
+        "whirlpool"
+      ],
+      "abilities": {
+        "primary": "lightning-rod",
+        "secondary": "solid-rock",
+        "hidden": "reckless"
+      },
+      "teraType": "Ground"
+    },
+    "467": {
+      "id": 467,
+      "name": "Magmortar",
+      "speciesKey": "MAGMORTAR",
+      "types": [
+        "Fire"
+      ],
+      "stats": {
+        "hp": 75,
+        "attack": 95,
+        "defense": 67,
+        "spAtk": 125,
+        "spDef": 95,
+        "speed": 83,
+        "total": 540
+      },
+      "sprites": {
+        "follower": "Graphics/Characters/Followers/MAGMORTAR.png",
+        "front": "Graphics/Pokemon/Front/MAGMORTAR.png",
+        "back": "Graphics/Pokemon/Back/MAGMORTAR.png",
+        "icon": "Graphics/Pokemon/Icons/MAGMORTAR.png",
+        "cry": "Audio/Cries/MAGMORTAR.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/MAGMORTAR.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/MAGMORTAR.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MAGMORTAR.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MAGMORTAR.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MAGMORTAR.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MAGMORTAR.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MAGMORTAR.png"
+      },
+      "species": "Blast Pokémon",
+      "height": 1.6,
+      "weight": 68.0,
+      "ability": "Flame Body",
+      "catchRate": 30,
+      "baseFriendship": 70,
+      "growthRate": "Medium Fast",
+      "evYield": "3 Sp. Atk",
+      "eggGroups": "Humanshape",
+      "genderRatio": "♂75% ♀25%",
+      "moves": [
+        {
+          "level": 1,
+          "moveId": "leer",
+          "nameEn": "Leer",
+          "nameVi": "Trừng Mắt",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "smog",
+          "nameEn": "Smog",
+          "nameVi": "Khói Ô Nhiễm",
+          "type": "Poison"
+        },
+        {
+          "level": 1,
+          "moveId": "thunder_punch",
+          "nameEn": "Thunder Punch",
+          "nameVi": "Cú Đấm Sấm Sét",
+          "type": "Electric"
+        },
+        {
+          "level": 6,
+          "moveId": "tackle",
+          "nameEn": "Tackle",
+          "nameVi": "Va Chạm",
+          "type": "Normal"
+        },
+        {
+          "level": 7,
+          "moveId": "ember",
+          "nameEn": "Ember",
+          "nameVi": "Đốm Lửa",
+          "type": "Fire"
+        },
+        {
+          "level": 11,
+          "moveId": "smokescreen",
+          "nameEn": "Smokescreen",
+          "nameVi": "Màn Khói",
+          "type": "Normal"
+        },
+        {
+          "level": 16,
+          "moveId": "feint_attack",
+          "nameEn": "Feint Attack",
+          "nameVi": "Đòn Đánh Lén",
+          "type": "Dark"
+        },
+        {
+          "level": 16,
+          "moveId": "flame_wheel",
+          "nameEn": "Flame Wheel",
+          "nameVi": "Bánh Xe Lửa",
+          "type": "Fire"
+        },
+        {
+          "level": 18,
+          "moveId": "poison_gas",
+          "nameEn": "Poison Gas",
+          "nameVi": "Khí Độc",
+          "type": "Poison"
+        },
+        {
+          "level": 19,
+          "moveId": "clear_smog",
+          "nameEn": "Clear Smog",
+          "nameVi": "Khói Trong Lọc Sạch",
+          "type": "Poison"
+        },
+        {
+          "level": 21,
+          "moveId": "fire_spin",
+          "nameEn": "Fire Spin",
+          "nameVi": "Xoáy Lửa",
+          "type": "Fire"
+        },
+        {
+          "level": 24,
+          "moveId": "scary_face",
+          "nameEn": "Scary Face",
+          "nameVi": "Khuôn Mặt Đáng Sợ",
+          "type": "Normal"
+        },
+        {
+          "level": 26,
+          "moveId": "confuse_ray",
+          "nameEn": "Confuse Ray",
+          "nameVi": "Tia Rối Loạn",
+          "type": "Ghost"
+        },
+        {
+          "level": 32,
+          "moveId": "flame_burst",
+          "nameEn": "Flame Burst",
+          "nameVi": "Lửa Bùng Nổ",
+          "type": "Fire"
+        },
+        {
+          "level": 38,
+          "moveId": "fire_punch",
+          "nameEn": "Fire Punch",
+          "nameVi": "Cú Đấm Lửa",
+          "type": "Fire"
+        },
+        {
+          "level": 40,
+          "moveId": "low_kick",
+          "nameEn": "Low Kick",
+          "nameVi": "Quét Chân",
+          "type": "Fighting"
+        },
+        {
+          "level": 44,
+          "moveId": "lava_plume",
+          "nameEn": "Lava Plume",
+          "nameVi": "Cột Khói Dung Nham",
+          "type": "Fire"
+        },
+        {
+          "level": 50,
+          "moveId": "flamethrower",
+          "nameEn": "Flamethrower",
+          "nameVi": "Phun Lửa",
+          "type": "Fire"
+        },
+        {
+          "level": 56,
+          "moveId": "sunny_day",
+          "nameEn": "Sunny Day",
+          "nameVi": "Gọi Nắng Chói Chang",
+          "type": "Fire"
+        },
+        {
+          "level": 62,
+          "moveId": "fire_blast",
+          "nameEn": "Fire Blast",
+          "nameVi": "Đại Bác Lửa (Chữ Hỏa)",
+          "type": "Fire"
+        },
+        {
+          "level": 68,
+          "moveId": "hyper_beam",
+          "nameEn": "Hyper Beam",
+          "nameVi": "Tia Hủy Diệt",
+          "type": "Normal"
+        }
+      ],
+      "tmMoves": [
+        "acid_spray",
+        "attract",
+        "body_slam",
+        "brick_break",
+        "bulldoze",
+        "burning_jealousy",
+        "captivate",
+        "confide",
+        "confuse_ray",
+        "curse",
+        "double_edge",
+        "double_team",
+        "earthquake",
+        "endure",
+        "facade",
+        "fire_blast",
+        "fire_punch",
+        "fire_spin",
+        "flame_charge",
+        "flamethrower",
+        "flare_blitz",
+        "fling",
+        "focus_blast",
+        "focus_energy",
+        "focus_punch",
+        "frustration",
+        "giga_impact",
+        "heat_crash",
+        "heat_wave",
+        "helping_hand",
+        "hidden_power",
+        "hyper_beam",
+        "hyper_voice",
+        "incinerate",
+        "iron_tail",
+        "knock_off",
+        "low_kick",
+        "low_sweep",
+        "mega_kick",
+        "mega_punch",
+        "metronome",
+        "mystical_fire",
+        "natural_gift",
+        "overheat",
+        "poison_jab",
+        "power_swap",
+        "power_up_punch",
+        "protect",
+        "psychic",
+        "rest",
+        "return",
+        "roar",
+        "rock_climb",
+        "rock_slide",
+        "rock_smash",
+        "rock_tomb",
+        "round",
+        "scary_face",
+        "scorching_sands",
+        "screech",
+        "secret_power",
+        "sleep_talk",
+        "snore",
+        "solarbeam",
+        "stomping_tantrum",
+        "strength",
+        "substitute",
+        "sunny_day",
+        "swagger",
+        "take_down",
+        "taunt",
+        "temper_flare",
+        "tera_blast",
+        "thief",
+        "thunder_punch",
+        "thunderbolt",
+        "torment",
+        "toxic",
+        "uproar",
+        "weather_ball",
+        "will_o_wisp"
+      ],
+      "abilities": {
+        "primary": "flame-body",
+        "hidden": "vital-spirit"
+      },
+      "teraType": "Fire"
+    },
+    "466": {
+      "id": 466,
+      "name": "Electivire",
+      "speciesKey": "ELECTIVIRE",
+      "types": [
+        "Electric"
+      ],
+      "stats": {
+        "hp": 75,
+        "attack": 123,
+        "defense": 67,
+        "spAtk": 95,
+        "spDef": 85,
+        "speed": 95,
+        "total": 540
+      },
+      "sprites": {
+        "follower": "Graphics/Characters/Followers/ELECTIVIRE.png",
+        "front": "Graphics/Pokemon/Front/ELECTIVIRE.png",
+        "back": "Graphics/Pokemon/Back/ELECTIVIRE.png",
+        "icon": "Graphics/Pokemon/Icons/ELECTIVIRE.png",
+        "cry": "Audio/Cries/ELECTIVIRE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/ELECTIVIRE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/ELECTIVIRE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/ELECTIVIRE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/ELECTIVIRE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/ELECTIVIRE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/ELECTIVIRE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/ELECTIVIRE.png"
+      },
+      "species": "Thunderbolt Pokémon",
+      "height": 1.8,
+      "weight": 138.6,
+      "ability": "Motor Drive",
+      "catchRate": 30,
+      "baseFriendship": 70,
+      "growthRate": "Medium Fast",
+      "evYield": "3 Attack",
+      "eggGroups": "Humanshape",
+      "genderRatio": "♂75% ♀25%",
+      "moves": [
+        {
+          "level": 1,
+          "moveId": "charge",
+          "nameEn": "Charge",
+          "nameVi": "Nạp Điện",
+          "type": "Electric"
+        },
+        {
+          "level": 1,
+          "moveId": "fire_punch",
+          "nameEn": "Fire Punch",
+          "nameVi": "Cú Đấm Lửa",
+          "type": "Fire"
+        },
+        {
+          "level": 1,
+          "moveId": "ion_deluge",
+          "nameEn": "Ion Deluge",
+          "nameVi": "Mưa Ion",
+          "type": "Electric"
+        },
+        {
+          "level": 1,
+          "moveId": "leer",
+          "nameEn": "Leer",
+          "nameVi": "Trừng Mắt",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "wild_charge",
+          "nameEn": "Wild Charge",
+          "nameVi": "Xung Kích Hoang Dã",
+          "type": "Electric"
+        },
+        {
+          "level": 6,
+          "moveId": "quick_attack",
+          "nameEn": "Quick Attack",
+          "nameVi": "Tấn Công Chớp Nhoáng",
+          "type": "Normal"
+        },
+        {
+          "level": 7,
+          "moveId": "thundershock",
+          "nameEn": "Thunder Shock",
+          "nameVi": "Giật Điện",
+          "type": "Electric"
+        },
+        {
+          "level": 11,
+          "moveId": "spark",
+          "nameEn": "Spark",
+          "nameVi": "Tia Lửa Điện",
+          "type": "Electric"
+        },
+        {
+          "level": 16,
+          "moveId": "swift",
+          "nameEn": "Swift",
+          "nameVi": "Sao Tốc Độ",
+          "type": "Normal"
+        },
+        {
+          "level": 20,
+          "moveId": "thunder_wave",
+          "nameEn": "Thunder Wave",
+          "nameVi": "Sóng Điện Từ",
+          "type": "Electric"
+        },
+        {
+          "level": 21,
+          "moveId": "shock_wave",
+          "nameEn": "Shock Wave",
+          "nameVi": "Sóng Xung Kích Điện",
+          "type": "Electric"
+        },
+        {
+          "level": 32,
+          "moveId": "electro_ball",
+          "nameEn": "Electro Ball",
+          "nameVi": "Quả Cầu Điện",
+          "type": "Electric"
+        },
+        {
+          "level": 38,
+          "moveId": "thunder_punch",
+          "nameEn": "Thunder Punch",
+          "nameVi": "Cú Đấm Sấm Sét",
+          "type": "Electric"
+        },
+        {
+          "level": 40,
+          "moveId": "low_kick",
+          "nameEn": "Low Kick",
+          "nameVi": "Quét Chân",
+          "type": "Fighting"
+        },
+        {
+          "level": 44,
+          "moveId": "discharge",
+          "nameEn": "Discharge",
+          "nameVi": "Phóng Điện Phân Tán",
+          "type": "Electric"
+        },
+        {
+          "level": 50,
+          "moveId": "thunderbolt",
+          "nameEn": "Thunderbolt",
+          "nameVi": "Phóng Điện",
+          "type": "Electric"
+        },
+        {
+          "level": 52,
+          "moveId": "light_screen",
+          "nameEn": "Light Screen",
+          "nameVi": "Màn Chắn Ánh Sáng",
+          "type": "Psychic"
+        },
+        {
+          "level": 56,
+          "moveId": "screech",
+          "nameEn": "Screech",
+          "nameVi": "Thét Chói Tai",
+          "type": "Normal"
+        },
+        {
+          "level": 62,
+          "moveId": "thunder",
+          "nameEn": "Thunder",
+          "nameVi": "Sấm Sét",
+          "type": "Electric"
+        },
+        {
+          "level": 65,
+          "moveId": "electric_terrain",
+          "nameEn": "Electric Terrain",
+          "nameVi": "Địa Hình Điện",
+          "type": "Electric"
+        },
+        {
+          "level": 68,
+          "moveId": "giga_impact",
+          "nameEn": "Giga Impact",
+          "nameVi": "Cú Va Chạm Giga",
+          "type": "Normal"
+        }
+      ],
+      "tmMoves": [
+        "attract",
+        "body_slam",
+        "brick_break",
+        "bulk_up",
+        "bulldoze",
+        "captivate",
+        "charge",
+        "charge_beam",
+        "confide",
+        "darkest_lariat",
+        "dig",
+        "double_edge",
+        "double_team",
+        "earthquake",
+        "eerie_impulse",
+        "electric_terrain",
+        "electro_ball",
+        "electroweb",
+        "endure",
+        "facade",
+        "fire_punch",
+        "flamethrower",
+        "flash",
+        "fling",
+        "focus_blast",
+        "focus_punch",
+        "frustration",
+        "giga_impact",
+        "helping_hand",
+        "hidden_power",
+        "hyper_beam",
+        "ice_punch",
+        "iron_tail",
+        "knock_off",
+        "light_screen",
+        "low_kick",
+        "low_sweep",
+        "mega_kick",
+        "mega_punch",
+        "metal_sound",
+        "metronome",
+        "natural_gift",
+        "power_up_punch",
+        "protect",
+        "psychic",
+        "rain_dance",
+        "reflect",
+        "rest",
+        "return",
+        "rock_climb",
+        "rock_slide",
+        "rock_smash",
+        "rock_tomb",
+        "round",
+        "screech",
+        "secret_power",
+        "shock_wave",
+        "sleep_talk",
+        "snore",
+        "stomping_tantrum",
+        "strength",
+        "substitute",
+        "supercell_slam",
+        "swagger",
+        "swift",
+        "take_down",
+        "taunt",
+        "tera_blast",
+        "thief",
+        "thunder",
+        "thunder_punch",
+        "thunder_wave",
+        "thunderbolt",
+        "torment",
+        "toxic",
+        "trailblaze",
+        "uproar",
+        "volt_switch",
+        "weather_ball",
+        "wild_charge"
+      ],
+      "abilities": {
+        "primary": "motor-drive",
+        "hidden": "vital-spirit"
+      },
+      "teraType": "Electric"
+    },
+    "465": {
+      "id": 465,
+      "name": "Tangrowth",
+      "speciesKey": "TANGROWTH",
+      "types": [
+        "Grass"
+      ],
+      "stats": {
+        "hp": 100,
+        "attack": 100,
+        "defense": 125,
+        "spAtk": 110,
+        "spDef": 50,
+        "speed": 50,
+        "total": 535
+      },
+      "sprites": {
+        "follower": "Graphics/Characters/Followers/TANGROWTH.png",
+        "front": "Graphics/Pokemon/Front/TANGROWTH.png",
+        "back": "Graphics/Pokemon/Back/TANGROWTH.png",
+        "icon": "Graphics/Pokemon/Icons/TANGROWTH.png",
+        "cry": "Audio/Cries/TANGROWTH.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/TANGROWTH.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/TANGROWTH.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/TANGROWTH.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/TANGROWTH.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/TANGROWTH.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/TANGROWTH.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/TANGROWTH.png"
+      },
+      "species": "Vine Pokémon",
+      "height": 2.0,
+      "weight": 128.6,
+      "ability": "Chlorophyll",
+      "catchRate": 30,
+      "baseFriendship": 70,
+      "growthRate": "Medium Fast",
+      "evYield": "2 Defense",
+      "eggGroups": "Plant",
+      "genderRatio": "♂50% ♀50%",
+      "moves": [
+        {
+          "level": 1,
+          "moveId": "constrict",
+          "nameEn": "Constrict",
+          "nameVi": "Xiết Chặt",
+          "type": "Normal"
+        },
+        {
+          "level": 10,
+          "moveId": "absorb",
+          "nameEn": "Absorb",
+          "nameVi": "Hấp Thụ",
+          "type": "Grass"
+        },
+        {
+          "level": 15,
+          "moveId": "acid_spray",
+          "nameEn": "Acid Spray",
+          "nameVi": "Axit Spray",
+          "type": "Poison"
+        },
+        {
+          "level": 18,
+          "moveId": "double_hit",
+          "nameEn": "Double Hit",
+          "nameVi": "Đòn Đánh Kép",
+          "type": "Normal"
+        },
+        {
+          "level": 19,
+          "moveId": "vine_whip",
+          "nameEn": "Vine Whip",
+          "nameVi": "Roi Mây",
+          "type": "Grass"
+        },
+        {
+          "level": 20,
+          "moveId": "growth",
+          "nameEn": "Growth",
+          "nameVi": "Phát Triển",
+          "type": "Normal"
+        },
+        {
+          "level": 20,
+          "moveId": "poisonpowder",
+          "nameEn": "Poison Powder",
+          "nameVi": "Phấn Độc",
+          "type": "Poison"
+        },
+        {
+          "level": 22,
+          "moveId": "bind",
+          "nameEn": "Bind",
+          "nameVi": "Trói Buộc",
+          "type": "Normal"
+        },
+        {
+          "level": 25,
+          "moveId": "energy_ball",
+          "nameEn": "Energy Ball",
+          "nameVi": "Quả Cầu Năng Lượng",
+          "type": "Grass"
+        },
+        {
+          "level": 26,
+          "moveId": "mega_drain",
+          "nameEn": "Mega Drain",
+          "nameVi": "Siêu Hút Năng Lượng",
+          "type": "Grass"
+        },
+        {
+          "level": 30,
+          "moveId": "stunspore",
+          "nameEn": "Stun Spore",
+          "nameVi": "Bào Tử Tê Liệt",
+          "type": "Grass"
+        },
+        {
+          "level": 36,
+          "moveId": "giga_drain",
+          "nameEn": "Giga Drain",
+          "nameVi": "Đại Hút Năng Lượng",
+          "type": "Grass"
+        },
+        {
+          "level": 36,
+          "moveId": "knock_off",
+          "nameEn": "Knock Off",
+          "nameVi": "Đánh Rơi Vật Phẩm",
+          "type": "Dark"
+        },
+        {
+          "level": 40,
+          "moveId": "ancient_power",
+          "nameEn": "Ancient Power",
+          "nameVi": "Sức Mạnh Cổ Đại",
+          "type": "Rock"
+        },
+        {
+          "level": 40,
+          "moveId": "natural_gift",
+          "nameEn": "Natural Gift",
+          "nameVi": "Món Quà Tự Nhiên",
+          "type": "Normal"
+        },
+        {
+          "level": 43,
+          "moveId": "slam",
+          "nameEn": "Slam",
+          "nameVi": "Quật Ngã",
+          "type": "Normal"
+        },
+        {
+          "level": 43,
+          "moveId": "sleeppowder",
+          "nameEn": "Sleep Powder",
+          "nameVi": "Phấn Ngủ",
+          "type": "Grass"
+        },
+        {
+          "level": 47,
+          "moveId": "tickle",
+          "nameEn": "Tickle",
+          "nameVi": "Thọc Lét",
+          "type": "Normal"
+        },
+        {
+          "level": 50,
+          "moveId": "wring_out",
+          "nameEn": "Wring Out",
+          "nameVi": "Vắt Kiệt",
+          "type": "Normal"
+        },
+        {
+          "level": 52,
+          "moveId": "ingrain",
+          "nameEn": "Ingrain",
+          "nameVi": "Cắm Rễ",
+          "type": "Grass"
+        },
+        {
+          "level": 52,
+          "moveId": "sludge_bomb",
+          "nameEn": "Sludge Bomb",
+          "nameVi": "Bom Bùn Độc",
+          "type": "Poison"
+        },
+        {
+          "level": 54,
+          "moveId": "power_whip",
+          "nameEn": "Power Whip",
+          "nameVi": "Roi Sức Mạnh",
+          "type": "Grass"
+        },
+        {
+          "level": 56,
+          "moveId": "grassy_terrain",
+          "nameEn": "Grassy Terrain",
+          "nameVi": "Địa Hình Thảm Cỏ",
+          "type": "Grass"
+        },
+        {
+          "level": 57,
+          "moveId": "block",
+          "nameEn": "Block",
+          "nameVi": "Chặn Đường",
+          "type": "Normal"
+        }
+      ],
+      "tmMoves": [
+        "aerial_ace",
+        "amnesia",
+        "attract",
+        "body_slam",
+        "brick_break",
+        "brutal_swing",
+        "bulldoze",
+        "bullet_seed",
+        "captivate",
+        "confide",
+        "cut",
+        "double_team",
+        "earthquake",
+        "endure",
+        "energy_ball",
+        "facade",
+        "flash",
+        "fling",
+        "focus_blast",
+        "frustration",
+        "giga_drain",
+        "giga_impact",
+        "grass_knot",
+        "grassy_terrain",
+        "hidden_power",
+        "hyper_beam",
+        "infestation",
+        "leaf_storm",
+        "natural_gift",
+        "nature_power",
+        "payback",
+        "poison_jab",
+        "power_swap",
+        "power_whip",
+        "protect",
+        "psych_up",
+        "reflect",
+        "rest",
+        "return",
+        "rock_slide",
+        "rock_smash",
+        "rock_tomb",
+        "round",
+        "secret_power",
+        "seed_bomb",
+        "shock_wave",
+        "sleep_talk",
+        "sludge_bomb",
+        "snore",
+        "solar_blade",
+        "solarbeam",
+        "stomping_tantrum",
+        "strength",
+        "substitute",
+        "sunny_day",
+        "swagger",
+        "swords_dance",
+        "thief",
+        "toxic"
+      ],
+      "abilities": {
+        "primary": "chlorophyll",
+        "secondary": "leaf-guard",
+        "hidden": "regenerator"
+      },
+      "teraType": "Grass"
+    },
+    "463": {
+      "id": 463,
+      "name": "Lickilicky",
+      "speciesKey": "LICKILICKY",
+      "types": [
+        "Normal"
+      ],
+      "stats": {
+        "hp": 110,
+        "attack": 85,
+        "defense": 95,
+        "spAtk": 80,
+        "spDef": 95,
+        "speed": 50,
+        "total": 515
+      },
+      "sprites": {
+        "follower": "Graphics/Characters/Followers/LICKILICKY.png",
+        "front": "Graphics/Pokemon/Front/LICKILICKY.png",
+        "back": "Graphics/Pokemon/Back/LICKILICKY.png",
+        "icon": "Graphics/Pokemon/Icons/LICKILICKY.png",
+        "cry": "Audio/Cries/LICKILICKY.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/LICKILICKY.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/LICKILICKY.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/LICKILICKY.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/LICKILICKY.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/LICKILICKY.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/LICKILICKY.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/LICKILICKY.png"
+      },
+      "species": "Licking Pokémon",
+      "height": 1.7,
+      "weight": 140.0,
+      "ability": "Own Tempo",
+      "catchRate": 30,
+      "baseFriendship": 70,
+      "growthRate": "Medium Fast",
+      "evYield": "3 HP",
+      "eggGroups": "Monster",
+      "genderRatio": "♂50% ♀50%",
+      "moves": [
+        {
+          "level": 1,
+          "moveId": "lick",
+          "nameEn": "Lick",
+          "nameVi": "Liếm",
+          "type": "Ghost"
+        },
+        {
+          "level": 1,
+          "moveId": "tackle",
+          "nameEn": "Tackle",
+          "nameVi": "Va Chạm",
+          "type": "Normal"
+        },
+        {
+          "level": 5,
+          "moveId": "supersonic",
+          "nameEn": "Supersonic",
+          "nameVi": "Siêu Âm",
+          "type": "Normal"
+        },
+        {
+          "level": 6,
+          "moveId": "rest",
+          "nameEn": "Rest",
+          "nameVi": "Nghỉ Ngơi",
+          "type": "Psychic"
+        },
+        {
+          "level": 9,
+          "moveId": "defense_curl",
+          "nameEn": "Defense Curl",
+          "nameVi": "Cuộn Tròn Phòng Thủ",
+          "type": "Normal"
+        },
+        {
+          "level": 11,
+          "moveId": "bulldoze",
+          "nameEn": "Bulldoze",
+          "nameVi": "San Phẳng",
+          "type": "Ground"
+        },
+        {
+          "level": 18,
+          "moveId": "wrap",
+          "nameEn": "Wrap",
+          "nameVi": "Quấn Chặt",
+          "type": "Normal"
+        },
+        {
+          "level": 18,
+          "moveId": "zen_headbutt",
+          "nameEn": "Zen Headbutt",
+          "nameVi": "Thiết Đầu Công Zen",
+          "type": "Psychic"
+        },
+        {
+          "level": 25,
+          "moveId": "disable",
+          "nameEn": "Disable",
+          "nameVi": "Vô Hiệu Hóa",
+          "type": "Normal"
+        },
+        {
+          "level": 25,
+          "moveId": "double_edge",
+          "nameEn": "Double-Edge",
+          "nameVi": "Đòn Liều Mạng",
+          "type": "Normal"
+        },
+        {
+          "level": 30,
+          "moveId": "stomp",
+          "nameEn": "Stomp",
+          "nameVi": "Giẫm Đạp",
+          "type": "Normal"
+        },
+        {
+          "level": 34,
+          "moveId": "rollout",
+          "nameEn": "Rollout",
+          "nameVi": "Lăn Bánh",
+          "type": "Rock"
+        },
+        {
+          "level": 36,
+          "moveId": "knock_off",
+          "nameEn": "Knock Off",
+          "nameVi": "Đánh Rơi Vật Phẩm",
+          "type": "Dark"
+        },
+        {
+          "level": 37,
+          "moveId": "chip_away",
+          "nameEn": "Chip Away",
+          "nameVi": "Tỉa Bào",
+          "type": "Normal"
+        },
+        {
+          "level": 41,
+          "moveId": "me_first",
+          "nameEn": "Me First",
+          "nameVi": "Ta Trước",
+          "type": "Normal"
+        },
+        {
+          "level": 43,
+          "moveId": "giga_impact",
+          "nameEn": "Giga Impact",
+          "nameVi": "Cú Va Chạm Giga",
+          "type": "Normal"
+        },
+        {
+          "level": 45,
+          "moveId": "refresh",
+          "nameEn": "Refresh",
+          "nameVi": "Làm Mới",
+          "type": "Normal"
+        },
+        {
+          "level": 48,
+          "moveId": "slam",
+          "nameEn": "Slam",
+          "nameVi": "Quật Ngã",
+          "type": "Normal"
+        },
+        {
+          "level": 49,
+          "moveId": "screech",
+          "nameEn": "Screech",
+          "nameVi": "Thét Chói Tai",
+          "type": "Normal"
+        },
+        {
+          "level": 54,
+          "moveId": "power_whip",
+          "nameEn": "Power Whip",
+          "nameVi": "Roi Sức Mạnh",
+          "type": "Grass"
+        },
+        {
+          "level": 57,
+          "moveId": "wring_out",
+          "nameEn": "Wring Out",
+          "nameVi": "Vắt Kiệt",
+          "type": "Normal"
+        },
+        {
+          "level": 60,
+          "moveId": "belly_drum",
+          "nameEn": "Belly Drum",
+          "nameVi": "Trống Bụng Bộc Phát",
+          "type": "Normal"
+        },
+        {
+          "level": 61,
+          "moveId": "gyro_ball",
+          "nameEn": "Gyro Ball",
+          "nameVi": "Quả Cầu Con Quay",
+          "type": "Steel"
+        }
+      ],
+      "tmMoves": [
+        "amnesia",
+        "attract",
+        "blizzard",
+        "body_press",
+        "body_slam",
+        "brick_break",
+        "brutal_swing",
+        "bulldoze",
+        "captivate",
+        "confide",
+        "cut",
+        "dig",
+        "double_team",
+        "dragon_tail",
+        "dream_eater",
+        "earthquake",
+        "endure",
+        "explosion",
+        "facade",
+        "fire_blast",
+        "fire_punch",
+        "flamethrower",
+        "fling",
+        "focus_blast",
+        "focus_punch",
+        "frustration",
+        "giga_impact",
+        "gyro_ball",
+        "helping_hand",
+        "hidden_power",
+        "hydro_pump",
+        "hyper_beam",
+        "ice_beam",
+        "ice_punch",
+        "icy_wind",
+        "incinerate",
+        "iron_tail",
+        "mega_kick",
+        "mega_punch",
+        "muddy_water",
+        "natural_gift",
+        "power_up_punch",
+        "power_whip",
+        "protect",
+        "psych_up",
+        "rain_dance",
+        "rest",
+        "retaliate",
+        "return",
+        "rock_climb",
+        "rock_slide",
+        "rock_smash",
+        "rock_tomb",
+        "round",
+        "sandstorm",
+        "screech",
+        "secret_power",
+        "selfdestruct",
+        "shadow_ball",
+        "shock_wave",
+        "sleep_talk",
+        "snore",
+        "solarbeam",
+        "stomping_tantrum",
+        "strength",
+        "substitute",
+        "sunny_day",
+        "surf",
+        "swagger",
+        "swords_dance",
+        "thief",
+        "thunder",
+        "thunder_punch",
+        "thunderbolt",
+        "toxic",
+        "water_pulse",
+        "whirlpool",
+        "work_up",
+        "zen_headbutt"
+      ],
+      "abilities": {
+        "primary": "own-tempo",
+        "secondary": "oblivious",
+        "hidden": "cloud-nine"
+      },
+      "teraType": "Normal"
+    },
+    "186": {
+      "id": 186,
+      "name": "Politoed",
+      "speciesKey": "POLITOED",
+      "types": [
+        "Water"
+      ],
+      "stats": {
+        "hp": 90,
+        "attack": 75,
+        "defense": 75,
+        "spAtk": 90,
+        "spDef": 100,
+        "speed": 70,
+        "total": 500
+      },
+      "sprites": {
+        "follower": "Graphics/Characters/Followers/POLITOED.png",
+        "front": "Graphics/Pokemon/Front/POLITOED.png",
+        "back": "Graphics/Pokemon/Back/POLITOED.png",
+        "icon": "Graphics/Pokemon/Icons/POLITOED.png",
+        "cry": "Audio/Cries/POLITOED.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/POLITOED.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/POLITOED.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/POLITOED.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/POLITOED.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/POLITOED.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/POLITOED.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/POLITOED.png"
+      },
+      "species": "Frog Pokémon",
+      "height": 1.1,
+      "weight": 33.9,
+      "ability": "Water Absorb",
+      "catchRate": 45,
+      "baseFriendship": 70,
+      "growthRate": "Medium Slow",
+      "evYield": "3 Sp. Def",
+      "eggGroups": "Water1",
+      "genderRatio": "♂50% ♀50%",
+      "moves": [
+        {
+          "level": 1,
+          "moveId": "belly_drum",
+          "nameEn": "Belly Drum",
+          "nameVi": "Trống Bụng Bộc Phát",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "body_slam",
+          "nameEn": "Body Slam",
+          "nameVi": "Đè Người",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "bubblebeam",
+          "nameEn": "Bubble Beam",
+          "nameVi": "Tia Bong Bóng",
+          "type": "Water"
+        },
+        {
+          "level": 1,
+          "moveId": "doubleslap",
+          "nameEn": "Double Slap",
+          "nameVi": "Song Tát",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "double_edge",
+          "nameEn": "Double-Edge",
+          "nameVi": "Đòn Liều Mạng",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "earth_power",
+          "nameEn": "Earth Power",
+          "nameVi": "Sức Mạnh Đất Mẹ",
+          "type": "Ground"
+        },
+        {
+          "level": 1,
+          "moveId": "hydro_pump",
+          "nameEn": "Hydro Pump",
+          "nameVi": "Thủy Pháo",
+          "type": "Water"
+        },
+        {
+          "level": 1,
+          "moveId": "hypnosis",
+          "nameEn": "Hypnosis",
+          "nameVi": "Thôi Miên",
+          "type": "Psychic"
+        },
+        {
+          "level": 1,
+          "moveId": "mud_shot",
+          "nameEn": "Mud Shot",
+          "nameVi": "Bắn Bùn",
+          "type": "Ground"
+        },
+        {
+          "level": 1,
+          "moveId": "pound",
+          "nameEn": "Pound",
+          "nameVi": "Đập",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "rain_dance",
+          "nameEn": "Rain Dance",
+          "nameVi": "Vũ Điệu Gọi Mưa",
+          "type": "Water"
+        },
+        {
+          "level": 1,
+          "moveId": "water_gun",
+          "nameEn": "Water Gun",
+          "nameVi": "Súng Nước",
+          "type": "Water"
+        },
+        {
+          "level": 35,
+          "moveId": "perish_song",
+          "nameEn": "Perish Song",
+          "nameVi": "Khúc Ca Diệt Vong",
+          "type": "Normal"
+        },
+        {
+          "level": 43,
+          "moveId": "bounce",
+          "nameEn": "Bounce",
+          "nameVi": "Nhảy Bật",
+          "type": "Flying"
+        },
+        {
+          "level": 48,
+          "moveId": "hyper_voice",
+          "nameEn": "Hyper Voice",
+          "nameVi": "Sóng Âm Cực Đại",
+          "type": "Normal"
+        },
+        {
+          "level": 53,
+          "moveId": "swagger",
+          "nameEn": "Swagger",
+          "nameVi": "Tự Đắc",
+          "type": "Normal"
+        }
+      ],
+      "tmMoves": [
+        "amnesia",
+        "attract",
+        "blizzard",
+        "body_slam",
+        "bounce",
+        "brick_break",
+        "bulldoze",
+        "captivate",
+        "chilling_water",
+        "confide",
+        "curse",
+        "defense_curl",
+        "detect",
+        "dig",
+        "dive",
+        "double_edge",
+        "double_team",
+        "dynamic_punch",
+        "earth_power",
+        "earthquake",
+        "echoed_voice",
+        "encore",
+        "endeavor",
+        "endure",
+        "facade",
+        "fling",
+        "focus_blast",
+        "focus_punch",
+        "frustration",
+        "giga_impact",
+        "hail",
+        "haze",
+        "headbutt",
+        "helping_hand",
+        "hidden_power",
+        "hydro_pump",
+        "hyper_beam",
+        "hyper_voice",
+        "ice_beam",
+        "ice_punch",
+        "icy_wind",
+        "liquidation",
+        "low_kick",
+        "low_sweep",
+        "mega_kick",
+        "mega_punch",
+        "metronome",
+        "mud_shot",
+        "muddy_water",
+        "mudslap",
+        "natural_gift",
+        "payback",
+        "power_up_punch",
+        "protect",
+        "psych_up",
+        "psychic",
+        "rain_dance",
+        "rest",
+        "return",
+        "rock_smash",
+        "round",
+        "scald",
+        "screech",
+        "secret_power",
+        "sleep_talk",
+        "snore",
+        "strength",
+        "substitute",
+        "surf",
+        "swagger",
+        "swift",
+        "take_down",
+        "tera_blast",
+        "thief",
+        "toxic",
+        "uproar",
+        "water_pulse",
+        "waterfall",
+        "weather_ball",
+        "whirlpool"
+      ],
+      "abilities": {
+        "primary": "water-absorb",
+        "secondary": "damp",
+        "hidden": "drizzle"
+      },
+      "teraType": "Water"
+    },
+    "199": {
+      "id": 199,
+      "name": "Slowking",
+      "speciesKey": "SLOWKING",
+      "types": [
+        "Water",
+        "Psychic"
+      ],
+      "stats": {
+        "hp": 95,
+        "attack": 75,
+        "defense": 80,
+        "spAtk": 100,
+        "spDef": 110,
+        "speed": 30,
+        "total": 490
+      },
+      "sprites": {
+        "follower": "Graphics/Characters/Followers/SLOWKING.png",
+        "front": "Graphics/Pokemon/Front/SLOWKING.png",
+        "back": "Graphics/Pokemon/Back/SLOWKING.png",
+        "icon": "Graphics/Pokemon/Icons/SLOWKING.png",
+        "cry": "Audio/Cries/SLOWKING.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/SLOWKING.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/SLOWKING.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SLOWKING.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SLOWKING.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SLOWKING.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SLOWKING.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SLOWKING.png"
+      },
+      "species": "Royal Pokémon",
+      "height": 2.0,
+      "weight": 79.5,
+      "ability": "Oblivious",
+      "catchRate": 70,
+      "baseFriendship": 70,
+      "growthRate": "Medium Fast",
+      "evYield": "2 Sp. Def",
+      "eggGroups": "Monster, Water1",
+      "genderRatio": "♂50% ♀50%",
+      "moves": [
+        {
+          "level": 1,
+          "moveId": "curse",
+          "nameEn": "Curse",
+          "nameVi": "Lời Nguyền",
+          "type": "Ghost"
+        },
+        {
+          "level": 1,
+          "moveId": "hidden_power",
+          "nameEn": "Hidden Power",
+          "nameVi": "Sức Mạnh Ẩn Giấu",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "power_gem",
+          "nameEn": "Power Gem",
+          "nameVi": "Ngọc Năng Lượng",
+          "type": "Rock"
+        },
+        {
+          "level": 1,
+          "moveId": "tackle",
+          "nameEn": "Tackle",
+          "nameVi": "Va Chạm",
+          "type": "Normal"
+        },
+        {
+          "level": 6,
+          "moveId": "growl",
+          "nameEn": "Growl",
+          "nameVi": "Gầm Gừ",
+          "type": "Normal"
+        },
+        {
+          "level": 9,
+          "moveId": "yawn",
+          "nameEn": "Yawn",
+          "nameVi": "Ngáp Ngủ",
+          "type": "Normal"
+        },
+        {
+          "level": 15,
+          "moveId": "water_gun",
+          "nameEn": "Water Gun",
+          "nameVi": "Súng Nước",
+          "type": "Water"
+        },
+        {
+          "level": 20,
+          "moveId": "confusion",
+          "nameEn": "Confusion",
+          "nameVi": "Niệm Lực",
+          "type": "Psychic"
+        },
+        {
+          "level": 27,
+          "moveId": "amnesia",
+          "nameEn": "Amnesia",
+          "nameVi": "Quên Lãng",
+          "type": "Psychic"
+        },
+        {
+          "level": 29,
+          "moveId": "disable",
+          "nameEn": "Disable",
+          "nameVi": "Vô Hiệu Hóa",
+          "type": "Normal"
+        },
+        {
+          "level": 29,
+          "moveId": "water_pulse",
+          "nameEn": "Water Pulse",
+          "nameVi": "Dao Động Sóng Nước",
+          "type": "Water"
+        },
+        {
+          "level": 30,
+          "moveId": "surf",
+          "nameEn": "Surf",
+          "nameVi": "Lướt Sóng",
+          "type": "Water"
+        },
+        {
+          "level": 33,
+          "moveId": "slack_off",
+          "nameEn": "Slack Off",
+          "nameVi": "Thư Giãn Hồi Máu",
+          "type": "Normal"
+        },
+        {
+          "level": 34,
+          "moveId": "headbutt",
+          "nameEn": "Headbutt",
+          "nameVi": "Húc Đầu",
+          "type": "Normal"
+        },
+        {
+          "level": 34,
+          "moveId": "zen_headbutt",
+          "nameEn": "Zen Headbutt",
+          "nameVi": "Thiết Đầu Công Zen",
+          "type": "Psychic"
+        },
+        {
+          "level": 39,
+          "moveId": "nasty_plot",
+          "nameEn": "Nasty Plot",
+          "nameVi": "Mưu Kế Độc Ác",
+          "type": "Dark"
+        },
+        {
+          "level": 42,
+          "moveId": "rain_dance",
+          "nameEn": "Rain Dance",
+          "nameVi": "Vũ Điệu Gọi Mưa",
+          "type": "Water"
+        },
+        {
+          "level": 43,
+          "moveId": "swagger",
+          "nameEn": "Swagger",
+          "nameVi": "Tự Đắc",
+          "type": "Normal"
+        },
+        {
+          "level": 48,
+          "moveId": "psychic",
+          "nameEn": "Psychic",
+          "nameVi": "Tâm Linh",
+          "type": "Psychic"
+        },
+        {
+          "level": 53,
+          "moveId": "trump_card",
+          "nameEn": "Trump Card",
+          "nameVi": "Quân Bài Tẩy",
+          "type": "Normal"
+        },
+        {
+          "level": 57,
+          "moveId": "psych_up",
+          "nameEn": "Psych Up",
+          "nameVi": "Khích Lệ Tâm Trí",
+          "type": "Normal"
+        },
+        {
+          "level": 58,
+          "moveId": "heal_pulse",
+          "nameEn": "Heal Pulse",
+          "nameVi": "Sóng Trị Liệu",
+          "type": "Psychic"
+        }
+      ],
+      "tmMoves": [
+        "amnesia",
+        "attract",
+        "avalanche",
+        "blizzard",
+        "body_slam",
+        "brick_break",
+        "brine",
+        "bulldoze",
+        "calm_mind",
+        "captivate",
+        "chilling_water",
+        "confide",
+        "curse",
+        "dig",
+        "dive",
+        "double_team",
+        "dragon_tail",
+        "drain_punch",
+        "dream_eater",
+        "dynamic_punch",
+        "earthquake",
+        "echoed_voice",
+        "endure",
+        "expanding_force",
+        "facade",
+        "fire_blast",
+        "fire_punch",
+        "flamethrower",
+        "flash",
+        "fling",
+        "focus_blast",
+        "focus_punch",
+        "foul_play",
+        "frustration",
+        "fury_cutter",
+        "future_sight",
+        "giga_impact",
+        "grass_knot",
+        "hail",
+        "headbutt",
+        "hidden_power",
+        "hydro_pump",
+        "hyper_beam",
+        "ice_beam",
+        "ice_punch",
+        "icy_wind",
+        "imprison",
+        "incinerate",
+        "iron_defense",
+        "iron_tail",
+        "light_screen",
+        "liquidation",
+        "mega_kick",
+        "mega_punch",
+        "metronome",
+        "mud_shot",
+        "muddy_water",
+        "mudslap",
+        "nasty_plot",
+        "natural_gift",
+        "nightmare",
+        "pay_day",
+        "power_gem",
+        "power_up_punch",
+        "protect",
+        "psybeam",
+        "psych_up",
+        "psychic",
+        "psychic_noise",
+        "psychic_terrain",
+        "psyshock",
+        "quash",
+        "rain_dance",
+        "razor_shell",
+        "recycle",
+        "reflect",
+        "rest",
+        "return",
+        "rock_slide",
+        "rock_smash",
+        "rock_tomb",
+        "round",
+        "safeguard",
+        "scald",
+        "secret_power",
+        "shadow_ball",
+        "skill_swap",
+        "sleep_talk",
+        "snore",
+        "snowscape",
+        "stored_power",
+        "strength",
+        "substitute",
+        "sunny_day",
+        "surf",
+        "swagger",
+        "swift",
+        "take_down",
+        "telekinesis",
+        "tera_blast",
+        "thunder_punch",
+        "thunder_wave",
+        "toxic",
+        "tri_attack",
+        "trick",
+        "trick_room",
+        "water_pulse",
+        "waterfall",
+        "weather_ball",
+        "whirlpool",
+        "wonder_room",
+        "zap_cannon",
+        "zen_headbutt"
+      ],
+      "abilities": {
+        "primary": "oblivious",
+        "secondary": "own-tempo",
+        "hidden": "regenerator"
+      },
+      "teraType": "Water"
+    },
+    "196": {
+      "id": 196,
+      "name": "Espeon",
+      "speciesKey": "ESPEON",
+      "types": [
+        "Psychic"
+      ],
+      "stats": {
+        "hp": 65,
+        "attack": 65,
+        "defense": 60,
+        "spAtk": 130,
+        "spDef": 95,
+        "speed": 110,
+        "total": 525
+      },
+      "sprites": {
+        "follower": "Graphics/Characters/Followers/ESPEON.png",
+        "front": "Graphics/Pokemon/Front/ESPEON.png",
+        "back": "Graphics/Pokemon/Back/ESPEON.png",
+        "icon": "Graphics/Pokemon/Icons/ESPEON.png",
+        "cry": "Audio/Cries/ESPEON.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/ESPEON.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/ESPEON.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/ESPEON.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/ESPEON.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/ESPEON.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/ESPEON.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/ESPEON.png"
+      },
+      "species": "Sun Pokémon",
+      "height": 0.9,
+      "weight": 26.5,
+      "ability": "Synchronize",
+      "catchRate": 45,
+      "baseFriendship": 70,
+      "growthRate": "Medium Fast",
+      "evYield": "2 Sp. Atk",
+      "eggGroups": "Ground",
+      "genderRatio": "♂87.5% ♀12.5%",
+      "moves": [
+        {
+          "level": 1,
+          "moveId": "baton_pass",
+          "nameEn": "Baton Pass",
+          "nameVi": "Chuyền Gậy",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "bite",
+          "nameEn": "Bite",
+          "nameVi": "Cắn Xé",
+          "type": "Dark"
+        },
+        {
+          "level": 1,
+          "moveId": "charm",
+          "nameEn": "Charm",
+          "nameVi": "Quyến Rũ",
+          "type": "Fairy"
+        },
+        {
+          "level": 1,
+          "moveId": "copycat",
+          "nameEn": "Copycat",
+          "nameVi": "Bắt Chước",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "covet",
+          "nameEn": "Covet",
+          "nameVi": "Thèm Muốn",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "growl",
+          "nameEn": "Growl",
+          "nameVi": "Gầm Gừ",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "helping_hand",
+          "nameEn": "Helping Hand",
+          "nameVi": "Giúp Đỡ Đồng Đội",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "tackle",
+          "nameEn": "Tackle",
+          "nameVi": "Va Chạm",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "tail_whip",
+          "nameEn": "Tail Whip",
+          "nameVi": "Vẫy Đuôi",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "take_down",
+          "nameEn": "Take Down",
+          "nameVi": "Lao Đầu",
+          "type": "Normal"
+        },
+        {
+          "level": 8,
+          "moveId": "sandattack",
+          "nameEn": "Sand Attack",
+          "nameVi": "Tạt Cát",
+          "type": "Ground"
+        },
+        {
+          "level": 16,
+          "moveId": "confusion",
+          "nameEn": "Confusion",
+          "nameVi": "Niệm Lực",
+          "type": "Psychic"
+        },
+        {
+          "level": 18,
+          "moveId": "baby_doll_eyes",
+          "nameEn": "Baby-Doll Eyes",
+          "nameVi": "Đôi Mắt Trẻ Thơ",
+          "type": "Fairy"
+        },
+        {
+          "level": 23,
+          "moveId": "quick_attack",
+          "nameEn": "Quick Attack",
+          "nameVi": "Tấn Công Chớp Nhoáng",
+          "type": "Normal"
+        },
+        {
+          "level": 25,
+          "moveId": "mimic",
+          "nameEn": "Mimic",
+          "nameVi": "Bắt Chước",
+          "type": "Normal"
+        },
+        {
+          "level": 30,
+          "moveId": "swift",
+          "nameEn": "Swift",
+          "nameVi": "Sao Tốc Độ",
+          "type": "Normal"
+        },
+        {
+          "level": 34,
+          "moveId": "calm_mind",
+          "nameEn": "Calm Mind",
+          "nameVi": "Tịnh Tâm",
+          "type": "Psychic"
+        },
+        {
+          "level": 36,
+          "moveId": "psybeam",
+          "nameEn": "Psybeam",
+          "nameVi": "Tia Tâm Linh",
+          "type": "Psychic"
+        },
+        {
+          "level": 43,
+          "moveId": "double_edge",
+          "nameEn": "Double-Edge",
+          "nameVi": "Đòn Liều Mạng",
+          "type": "Normal"
+        },
+        {
+          "level": 50,
+          "moveId": "future_sight",
+          "nameEn": "Future Sight",
+          "nameVi": "Tầm Nhìn Tương Lai",
+          "type": "Psychic"
+        },
+        {
+          "level": 55,
+          "moveId": "last_resort",
+          "nameEn": "Last Resort",
+          "nameVi": "Nước Cờ Cùng",
+          "type": "Normal"
+        },
+        {
+          "level": 57,
+          "moveId": "psych_up",
+          "nameEn": "Psych Up",
+          "nameVi": "Khích Lệ Tâm Trí",
+          "type": "Normal"
+        },
+        {
+          "level": 64,
+          "moveId": "psychic",
+          "nameEn": "Psychic",
+          "nameVi": "Tâm Linh",
+          "type": "Psychic"
+        },
+        {
+          "level": 71,
+          "moveId": "morning_sun",
+          "nameEn": "Morning Sun",
+          "nameVi": "Ánh Nắng Ban Mai",
+          "type": "Normal"
+        },
+        {
+          "level": 78,
+          "moveId": "power_swap",
+          "nameEn": "Power Swap",
+          "nameVi": "Tráo Đổi Sức Mạnh",
+          "type": "Psychic"
+        }
+      ],
+      "tmMoves": [
+        "alluring_voice",
+        "ally_switch",
+        "attract",
+        "baton_pass",
+        "body_slam",
+        "calm_mind",
+        "captivate",
+        "charm",
+        "confide",
+        "confuse_ray",
+        "curse",
+        "cut",
+        "dazzling_gleam",
+        "detect",
+        "dig",
+        "double_edge",
+        "double_team",
+        "draining_kiss",
+        "dream_eater",
+        "echoed_voice",
+        "endure",
+        "expanding_force",
+        "facade",
+        "fake_tears",
+        "flash",
+        "focus_energy",
+        "frustration",
+        "future_sight",
+        "giga_impact",
+        "grass_knot",
+        "gravity",
+        "headbutt",
+        "helping_hand",
+        "hidden_power",
+        "hyper_beam",
+        "hyper_voice",
+        "imprison",
+        "iron_tail",
+        "light_screen",
+        "magic_room",
+        "magical_leaf",
+        "mudslap",
+        "natural_gift",
+        "nightmare",
+        "pay_day",
+        "power_gem",
+        "power_swap",
+        "protect",
+        "psybeam",
+        "psych_up",
+        "psychic",
+        "psychic_fangs",
+        "psychic_noise",
+        "psychic_terrain",
+        "psyshock",
+        "rain_dance",
+        "reflect",
+        "rest",
+        "retaliate",
+        "return",
+        "roar",
+        "round",
+        "secret_power",
+        "shadow_ball",
+        "skill_swap",
+        "sleep_talk",
+        "snore",
+        "stored_power",
+        "substitute",
+        "sunny_day",
+        "swagger",
+        "swift",
+        "take_down",
+        "telekinesis",
+        "tera_blast",
+        "thunder_wave",
+        "toxic",
+        "trailblaze",
+        "trick",
+        "trick_room",
+        "weather_ball",
+        "work_up",
+        "zap_cannon",
+        "zen_headbutt"
+      ],
+      "abilities": {
+        "primary": "synchronize",
+        "hidden": "magic-bounce"
+      },
+      "teraType": "Psychic"
+    },
+    "197": {
+      "id": 197,
+      "name": "Umbreon",
+      "speciesKey": "UMBREON",
+      "types": [
+        "Dark"
+      ],
+      "stats": {
+        "hp": 95,
+        "attack": 65,
+        "defense": 110,
+        "spAtk": 60,
+        "spDef": 130,
+        "speed": 65,
+        "total": 525
+      },
+      "sprites": {
+        "follower": "Graphics/Characters/Followers/UMBREON.png",
+        "front": "Graphics/Pokemon/Front/UMBREON.png",
+        "back": "Graphics/Pokemon/Back/UMBREON.png",
+        "icon": "Graphics/Pokemon/Icons/UMBREON.png",
+        "cry": "Audio/Cries/UMBREON.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/UMBREON.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/UMBREON.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/UMBREON.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/UMBREON.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/UMBREON.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/UMBREON.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/UMBREON.png"
+      },
+      "species": "Moonlight Pokémon",
+      "height": 1.0,
+      "weight": 27.0,
+      "ability": "Synchronize",
+      "catchRate": 45,
+      "baseFriendship": 35,
+      "growthRate": "Medium Fast",
+      "evYield": "2 Sp. Def",
+      "eggGroups": "Ground",
+      "genderRatio": "♂87.5% ♀12.5%",
+      "moves": [
+        {
+          "level": 1,
+          "moveId": "baton_pass",
+          "nameEn": "Baton Pass",
+          "nameVi": "Chuyền Gậy",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "bite",
+          "nameEn": "Bite",
+          "nameVi": "Cắn Xé",
+          "type": "Dark"
+        },
+        {
+          "level": 1,
+          "moveId": "charm",
+          "nameEn": "Charm",
+          "nameVi": "Quyến Rũ",
+          "type": "Fairy"
+        },
+        {
+          "level": 1,
+          "moveId": "copycat",
+          "nameEn": "Copycat",
+          "nameVi": "Bắt Chước",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "covet",
+          "nameEn": "Covet",
+          "nameVi": "Thèm Muốn",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "foul_play",
+          "nameEn": "Foul Play",
+          "nameVi": "Đòn Chơi Xấu",
+          "type": "Dark"
+        },
+        {
+          "level": 1,
+          "moveId": "growl",
+          "nameEn": "Growl",
+          "nameVi": "Gầm Gừ",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "helping_hand",
+          "nameEn": "Helping Hand",
+          "nameVi": "Giúp Đỡ Đồng Đội",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "snarl",
+          "nameEn": "Snarl",
+          "nameVi": "Tiếng Gầm Gừ Gắt Gỏng",
+          "type": "Dark"
+        },
+        {
+          "level": 1,
+          "moveId": "tackle",
+          "nameEn": "Tackle",
+          "nameVi": "Va Chạm",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "tail_whip",
+          "nameEn": "Tail Whip",
+          "nameVi": "Vẫy Đuôi",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "take_down",
+          "nameEn": "Take Down",
+          "nameVi": "Lao Đầu",
+          "type": "Normal"
+        },
+        {
+          "level": 8,
+          "moveId": "sandattack",
+          "nameEn": "Sand Attack",
+          "nameVi": "Tạt Cát",
+          "type": "Ground"
+        },
+        {
+          "level": 11,
+          "moveId": "swift",
+          "nameEn": "Swift",
+          "nameVi": "Sao Tốc Độ",
+          "type": "Normal"
+        },
+        {
+          "level": 16,
+          "moveId": "pursuit",
+          "nameEn": "Pursuit",
+          "nameVi": "Đuổi Bắt",
+          "type": "Dark"
+        },
+        {
+          "level": 18,
+          "moveId": "baby_doll_eyes",
+          "nameEn": "Baby-Doll Eyes",
+          "nameVi": "Đôi Mắt Trẻ Thơ",
+          "type": "Fairy"
+        },
+        {
+          "level": 23,
+          "moveId": "quick_attack",
+          "nameEn": "Quick Attack",
+          "nameVi": "Tấn Công Chớp Nhoáng",
+          "type": "Normal"
+        },
+        {
+          "level": 25,
+          "moveId": "mimic",
+          "nameEn": "Mimic",
+          "nameVi": "Bắt Chước",
+          "type": "Normal"
+        },
+        {
+          "level": 30,
+          "moveId": "confuse_ray",
+          "nameEn": "Confuse Ray",
+          "nameVi": "Tia Rối Loạn",
+          "type": "Ghost"
+        },
+        {
+          "level": 34,
+          "moveId": "calm_mind",
+          "nameEn": "Calm Mind",
+          "nameVi": "Tịnh Tâm",
+          "type": "Psychic"
+        },
+        {
+          "level": 36,
+          "moveId": "feint_attack",
+          "nameEn": "Feint Attack",
+          "nameVi": "Đòn Đánh Lén",
+          "type": "Dark"
+        },
+        {
+          "level": 40,
+          "moveId": "dark_pulse",
+          "nameEn": "Dark Pulse",
+          "nameVi": "Dao Động Bóng Tối",
+          "type": "Dark"
+        },
+        {
+          "level": 43,
+          "moveId": "assurance",
+          "nameEn": "Assurance",
+          "nameVi": "Đòn Chắc Chắn",
+          "type": "Dark"
+        },
+        {
+          "level": 43,
+          "moveId": "double_edge",
+          "nameEn": "Double-Edge",
+          "nameVi": "Đòn Liều Mạng",
+          "type": "Normal"
+        },
+        {
+          "level": 55,
+          "moveId": "last_resort",
+          "nameEn": "Last Resort",
+          "nameVi": "Nước Cờ Cùng",
+          "type": "Normal"
+        },
+        {
+          "level": 57,
+          "moveId": "mean_look",
+          "nameEn": "Mean Look",
+          "nameVi": "Ánh Mắt Ác Ý",
+          "type": "Normal"
+        },
+        {
+          "level": 64,
+          "moveId": "screech",
+          "nameEn": "Screech",
+          "nameVi": "Thét Chói Tai",
+          "type": "Normal"
+        },
+        {
+          "level": 71,
+          "moveId": "moonlight",
+          "nameEn": "Moonlight",
+          "nameVi": "Ánh Trăng",
+          "type": "Fairy"
+        },
+        {
+          "level": 78,
+          "moveId": "guard_swap",
+          "nameEn": "Guard Swap",
+          "nameVi": "Tráo Đổi Phòng Thủ",
+          "type": "Psychic"
+        }
+      ],
+      "tmMoves": [
+        "alluring_voice",
+        "assurance",
+        "attract",
+        "baton_pass",
+        "body_slam",
+        "calm_mind",
+        "captivate",
+        "charm",
+        "confide",
+        "confuse_ray",
+        "crunch",
+        "curse",
+        "cut",
+        "dark_pulse",
+        "detect",
+        "dig",
+        "double_edge",
+        "double_team",
+        "dream_eater",
+        "echoed_voice",
+        "endure",
+        "facade",
+        "fake_tears",
+        "flash",
+        "focus_energy",
+        "foul_play",
+        "frustration",
+        "giga_impact",
+        "guard_swap",
+        "headbutt",
+        "helping_hand",
+        "hidden_power",
+        "hyper_beam",
+        "hyper_voice",
+        "iron_tail",
+        "lash_out",
+        "light_screen",
+        "mudslap",
+        "natural_gift",
+        "nightmare",
+        "pay_day",
+        "payback",
+        "protect",
+        "psych_up",
+        "psychic",
+        "rain_dance",
+        "reflect",
+        "rest",
+        "retaliate",
+        "return",
+        "roar",
+        "round",
+        "scary_face",
+        "screech",
+        "secret_power",
+        "shadow_ball",
+        "skill_swap",
+        "sleep_talk",
+        "snarl",
+        "snatch",
+        "snore",
+        "spite",
+        "stored_power",
+        "substitute",
+        "sunny_day",
+        "swagger",
+        "swift",
+        "take_down",
+        "taunt",
+        "tera_blast",
+        "thief",
+        "throat_chop",
+        "thunder_wave",
+        "torment",
+        "toxic",
+        "trailblaze",
+        "weather_ball",
+        "wonder_room",
+        "work_up",
+        "zap_cannon"
+      ],
+      "abilities": {
+        "primary": "synchronize",
+        "hidden": "inner-focus"
+      },
+      "teraType": "Dark"
+    },
+    "470": {
+      "id": 470,
+      "name": "Leafeon",
+      "speciesKey": "LEAFEON",
+      "types": [
+        "Grass"
+      ],
+      "stats": {
+        "hp": 65,
+        "attack": 110,
+        "defense": 130,
+        "spAtk": 60,
+        "spDef": 65,
+        "speed": 95,
+        "total": 525
+      },
+      "sprites": {
+        "follower": "Graphics/Characters/Followers/LEAFEON.png",
+        "front": "Graphics/Pokemon/Front/LEAFEON.png",
+        "back": "Graphics/Pokemon/Back/LEAFEON.png",
+        "icon": "Graphics/Pokemon/Icons/LEAFEON.png",
+        "cry": "Audio/Cries/LEAFEON.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/LEAFEON.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/LEAFEON.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/LEAFEON.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/LEAFEON.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/LEAFEON.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/LEAFEON.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/LEAFEON.png"
+      },
+      "species": "Verdant Pokémon",
+      "height": 1.0,
+      "weight": 25.5,
+      "ability": "Leaf Guard",
+      "catchRate": 45,
+      "baseFriendship": 35,
+      "growthRate": "Medium Fast",
+      "evYield": "2 Defense",
+      "eggGroups": "Ground",
+      "genderRatio": "♂87.5% ♀12.5%",
+      "moves": [
+        {
+          "level": 1,
+          "moveId": "baton_pass",
+          "nameEn": "Baton Pass",
+          "nameVi": "Chuyền Gậy",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "bite",
+          "nameEn": "Bite",
+          "nameVi": "Cắn Xé",
+          "type": "Dark"
+        },
+        {
+          "level": 1,
+          "moveId": "charm",
+          "nameEn": "Charm",
+          "nameVi": "Quyến Rũ",
+          "type": "Fairy"
+        },
+        {
+          "level": 1,
+          "moveId": "copycat",
+          "nameEn": "Copycat",
+          "nameVi": "Bắt Chước",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "covet",
+          "nameEn": "Covet",
+          "nameVi": "Thèm Muốn",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "growl",
+          "nameEn": "Growl",
+          "nameVi": "Gầm Gừ",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "helping_hand",
+          "nameEn": "Helping Hand",
+          "nameVi": "Giúp Đỡ Đồng Đội",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "leafage",
+          "nameEn": "Leafage",
+          "nameVi": "Tán Lá Nhỏ",
+          "type": "Grass"
+        },
+        {
+          "level": 1,
+          "moveId": "tackle",
+          "nameEn": "Tackle",
+          "nameVi": "Va Chạm",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "tail_whip",
+          "nameEn": "Tail Whip",
+          "nameVi": "Vẫy Đuôi",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "take_down",
+          "nameEn": "Take Down",
+          "nameVi": "Lao Đầu",
+          "type": "Normal"
+        },
+        {
+          "level": 8,
+          "moveId": "sandattack",
+          "nameEn": "Sand Attack",
+          "nameVi": "Tạt Cát",
+          "type": "Ground"
+        },
+        {
+          "level": 11,
+          "moveId": "swift",
+          "nameEn": "Swift",
+          "nameVi": "Sao Tốc Độ",
+          "type": "Normal"
+        },
+        {
+          "level": 15,
+          "moveId": "razor_leaf",
+          "nameEn": "Razor Leaf",
+          "nameVi": "Lá Dao Cạo",
+          "type": "Grass"
+        },
+        {
+          "level": 18,
+          "moveId": "baby_doll_eyes",
+          "nameEn": "Baby-Doll Eyes",
+          "nameVi": "Đôi Mắt Trẻ Thơ",
+          "type": "Fairy"
+        },
+        {
+          "level": 20,
+          "moveId": "leechseed",
+          "nameEn": "Leech Seed",
+          "nameVi": "Hạt Ký Sinh",
+          "type": "Grass"
+        },
+        {
+          "level": 22,
+          "moveId": "quick_attack",
+          "nameEn": "Quick Attack",
+          "nameVi": "Tấn Công Chớp Nhoáng",
+          "type": "Normal"
+        },
+        {
+          "level": 25,
+          "moveId": "mimic",
+          "nameEn": "Mimic",
+          "nameVi": "Bắt Chước",
+          "type": "Normal"
+        },
+        {
+          "level": 33,
+          "moveId": "synthesis",
+          "nameEn": "Synthesis",
+          "nameVi": "Quang Hợp",
+          "type": "Grass"
+        },
+        {
+          "level": 34,
+          "moveId": "calm_mind",
+          "nameEn": "Calm Mind",
+          "nameVi": "Tịnh Tâm",
+          "type": "Psychic"
+        },
+        {
+          "level": 36,
+          "moveId": "magical_leaf",
+          "nameEn": "Magical Leaf",
+          "nameVi": "Lá Phép Thuật",
+          "type": "Grass"
+        },
+        {
+          "level": 43,
+          "moveId": "double_edge",
+          "nameEn": "Double-Edge",
+          "nameVi": "Đòn Liều Mạng",
+          "type": "Normal"
+        },
+        {
+          "level": 43,
+          "moveId": "giga_drain",
+          "nameEn": "Giga Drain",
+          "nameVi": "Đại Hút Năng Lượng",
+          "type": "Grass"
+        },
+        {
+          "level": 55,
+          "moveId": "last_resort",
+          "nameEn": "Last Resort",
+          "nameVi": "Nước Cờ Cùng",
+          "type": "Normal"
+        },
+        {
+          "level": 57,
+          "moveId": "grasswhistle",
+          "nameEn": "Grass Whistle",
+          "nameVi": "Cỏ Whistle",
+          "type": "Grass"
+        },
+        {
+          "level": 64,
+          "moveId": "sunny_day",
+          "nameEn": "Sunny Day",
+          "nameVi": "Gọi Nắng Chói Chang",
+          "type": "Fire"
+        },
+        {
+          "level": 71,
+          "moveId": "leaf_blade",
+          "nameEn": "Leaf Blade",
+          "nameVi": "Lưỡi Kiếm Lá",
+          "type": "Grass"
+        },
+        {
+          "level": 78,
+          "moveId": "swords_dance",
+          "nameEn": "Swords Dance",
+          "nameVi": "Vũ Điệu Kiếm",
+          "type": "Normal"
+        }
+      ],
+      "tmMoves": [
+        "aerial_ace",
+        "alluring_voice",
+        "attract",
+        "baton_pass",
+        "body_slam",
+        "bullet_seed",
+        "calm_mind",
+        "captivate",
+        "charm",
+        "confide",
+        "curse",
+        "dig",
+        "double_edge",
+        "double_team",
+        "echoed_voice",
+        "endure",
+        "energy_ball",
+        "facade",
+        "fake_tears",
+        "flash",
+        "focus_energy",
+        "frustration",
+        "giga_drain",
+        "giga_impact",
+        "grass_knot",
+        "grassy_glide",
+        "helping_hand",
+        "hidden_power",
+        "hyper_beam",
+        "hyper_voice",
+        "iron_tail",
+        "knock_off",
+        "leaf_blade",
+        "leaf_storm",
+        "magical_leaf",
+        "mud_shot",
+        "mudslap",
+        "natural_gift",
+        "nature_power",
+        "pay_day",
+        "protect",
+        "rain_dance",
+        "rest",
+        "retaliate",
+        "return",
+        "roar",
+        "rock_smash",
+        "round",
+        "secret_power",
+        "seed_bomb",
+        "shadow_ball",
+        "sleep_talk",
+        "snore",
+        "solar_blade",
+        "solarbeam",
+        "stored_power",
+        "strength",
+        "substitute",
+        "sunny_day",
+        "swagger",
+        "swift",
+        "swords_dance",
+        "take_down",
+        "tera_blast",
+        "toxic",
+        "trailblaze",
+        "weather_ball",
+        "work_up",
+        "x_scissor"
+      ],
+      "abilities": {
+        "primary": "leaf-guard",
+        "hidden": "chlorophyll"
+      },
+      "teraType": "Grass"
+    },
+    "471": {
+      "id": 471,
+      "name": "Glaceon",
+      "speciesKey": "GLACEON",
+      "types": [
+        "Ice"
+      ],
+      "stats": {
+        "hp": 65,
+        "attack": 60,
+        "defense": 110,
+        "spAtk": 130,
+        "spDef": 95,
+        "speed": 65,
+        "total": 525
+      },
+      "sprites": {
+        "follower": "Graphics/Characters/Followers/GLACEON.png",
+        "front": "Graphics/Pokemon/Front/GLACEON.png",
+        "back": "Graphics/Pokemon/Back/GLACEON.png",
+        "icon": "Graphics/Pokemon/Icons/GLACEON.png",
+        "cry": "Audio/Cries/GLACEON.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/GLACEON.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/GLACEON.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/GLACEON.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/GLACEON.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/GLACEON.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/GLACEON.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/GLACEON.png"
+      },
+      "species": "Fresh Snow Pokémon",
+      "height": 0.8,
+      "weight": 25.9,
+      "ability": "Snow Cloak",
+      "catchRate": 45,
+      "baseFriendship": 35,
+      "growthRate": "Medium Fast",
+      "evYield": "2 Sp. Atk",
+      "eggGroups": "Ground",
+      "genderRatio": "♂87.5% ♀12.5%",
+      "moves": [
+        {
+          "level": 1,
+          "moveId": "baton_pass",
+          "nameEn": "Baton Pass",
+          "nameVi": "Chuyền Gậy",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "charm",
+          "nameEn": "Charm",
+          "nameVi": "Quyến Rũ",
+          "type": "Fairy"
+        },
+        {
+          "level": 1,
+          "moveId": "copycat",
+          "nameEn": "Copycat",
+          "nameVi": "Bắt Chước",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "covet",
+          "nameEn": "Covet",
+          "nameVi": "Thèm Muốn",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "growl",
+          "nameEn": "Growl",
+          "nameVi": "Gầm Gừ",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "helping_hand",
+          "nameEn": "Helping Hand",
+          "nameVi": "Giúp Đỡ Đồng Đội",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "powder_snow",
+          "nameEn": "Powder Snow",
+          "nameVi": "Powder Tuyết",
+          "type": "Ice"
+        },
+        {
+          "level": 1,
+          "moveId": "tackle",
+          "nameEn": "Tackle",
+          "nameVi": "Va Chạm",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "tail_whip",
+          "nameEn": "Tail Whip",
+          "nameVi": "Vẫy Đuôi",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "take_down",
+          "nameEn": "Take Down",
+          "nameVi": "Lao Đầu",
+          "type": "Normal"
+        },
+        {
+          "level": 8,
+          "moveId": "sandattack",
+          "nameEn": "Sand Attack",
+          "nameVi": "Tạt Cát",
+          "type": "Ground"
+        },
+        {
+          "level": 11,
+          "moveId": "swift",
+          "nameEn": "Swift",
+          "nameVi": "Sao Tốc Độ",
+          "type": "Normal"
+        },
+        {
+          "level": 15,
+          "moveId": "icy_wind",
+          "nameEn": "Icy Wind",
+          "nameVi": "Gió Băng",
+          "type": "Ice"
+        },
+        {
+          "level": 18,
+          "moveId": "baby_doll_eyes",
+          "nameEn": "Baby-Doll Eyes",
+          "nameVi": "Đôi Mắt Trẻ Thơ",
+          "type": "Fairy"
+        },
+        {
+          "level": 22,
+          "moveId": "quick_attack",
+          "nameEn": "Quick Attack",
+          "nameVi": "Tấn Công Chớp Nhoáng",
+          "type": "Normal"
+        },
+        {
+          "level": 25,
+          "moveId": "ice_beam",
+          "nameEn": "Ice Beam",
+          "nameVi": "Tia Băng Giá",
+          "type": "Ice"
+        },
+        {
+          "level": 25,
+          "moveId": "mimic",
+          "nameEn": "Mimic",
+          "nameVi": "Bắt Chước",
+          "type": "Normal"
+        },
+        {
+          "level": 29,
+          "moveId": "bite",
+          "nameEn": "Bite",
+          "nameVi": "Cắn Xé",
+          "type": "Dark"
+        },
+        {
+          "level": 34,
+          "moveId": "calm_mind",
+          "nameEn": "Calm Mind",
+          "nameVi": "Tịnh Tâm",
+          "type": "Psychic"
+        },
+        {
+          "level": 35,
+          "moveId": "snowscape",
+          "nameEn": "Snowscape",
+          "nameVi": "Cảnh Tuyết Rơi",
+          "type": "Ice"
+        },
+        {
+          "level": 36,
+          "moveId": "ice_shard",
+          "nameEn": "Ice Shard",
+          "nameVi": "Mảnh Băng Sắc",
+          "type": "Ice"
+        },
+        {
+          "level": 40,
+          "moveId": "freeze_dry",
+          "nameEn": "Freeze-Dry",
+          "nameVi": "Đóng Băng Khô",
+          "type": "Ice"
+        },
+        {
+          "level": 43,
+          "moveId": "double_edge",
+          "nameEn": "Double-Edge",
+          "nameVi": "Đòn Liều Mạng",
+          "type": "Normal"
+        },
+        {
+          "level": 43,
+          "moveId": "ice_fang",
+          "nameEn": "Ice Fang",
+          "nameVi": "Nanh Băng",
+          "type": "Ice"
+        },
+        {
+          "level": 55,
+          "moveId": "last_resort",
+          "nameEn": "Last Resort",
+          "nameVi": "Nước Cờ Cùng",
+          "type": "Normal"
+        },
+        {
+          "level": 57,
+          "moveId": "mirror_coat",
+          "nameEn": "Mirror Coat",
+          "nameVi": "Áo Choàng Phản Chiếu",
+          "type": "Psychic"
+        },
+        {
+          "level": 64,
+          "moveId": "hail",
+          "nameEn": "Hail",
+          "nameVi": "Mưa Đá",
+          "type": "Ice"
+        },
+        {
+          "level": 71,
+          "moveId": "blizzard",
+          "nameEn": "Blizzard",
+          "nameVi": "Bão Tuyết",
+          "type": "Ice"
+        },
+        {
+          "level": 78,
+          "moveId": "barrier",
+          "nameEn": "Barrier",
+          "nameVi": "Rào Chắn",
+          "type": "Psychic"
+        }
+      ],
+      "tmMoves": [
+        "alluring_voice",
+        "attract",
+        "aurora_veil",
+        "avalanche",
+        "baton_pass",
+        "blizzard",
+        "body_slam",
+        "calm_mind",
+        "captivate",
+        "charm",
+        "chilling_water",
+        "confide",
+        "curse",
+        "dig",
+        "double_edge",
+        "double_team",
+        "echoed_voice",
+        "endure",
+        "facade",
+        "fake_tears",
+        "focus_energy",
+        "frost_breath",
+        "frustration",
+        "giga_impact",
+        "gravity",
+        "hail",
+        "haze",
+        "helping_hand",
+        "hidden_power",
+        "hyper_beam",
+        "hyper_voice",
+        "ice_beam",
+        "ice_fang",
+        "icicle_spear",
+        "icy_wind",
+        "iron_tail",
+        "mud_shot",
+        "mudslap",
+        "natural_gift",
+        "pay_day",
+        "protect",
+        "rain_dance",
+        "rest",
+        "retaliate",
+        "return",
+        "roar",
+        "rock_smash",
+        "round",
+        "secret_power",
+        "shadow_ball",
+        "sleep_talk",
+        "snore",
+        "snowscape",
+        "stored_power",
+        "strength",
+        "substitute",
+        "sunny_day",
+        "swagger",
+        "swift",
+        "take_down",
+        "tera_blast",
+        "toxic",
+        "triple_axel",
+        "water_pulse",
+        "weather_ball",
+        "work_up"
+      ],
+      "abilities": {
+        "primary": "snow-cloak",
+        "hidden": "ice-body"
+      },
+      "teraType": "Ice"
+    },
+    "700": {
+      "id": 700,
+      "name": "Sylveon",
+      "speciesKey": "SYLVEON",
+      "types": [
+        "Fairy"
+      ],
+      "stats": {
+        "hp": 95,
+        "attack": 65,
+        "defense": 65,
+        "spAtk": 110,
+        "spDef": 130,
+        "speed": 60,
+        "total": 525
+      },
+      "sprites": {
+        "follower": "Graphics/Characters/Followers/SYLVEON.png",
+        "front": "Graphics/Pokemon/Front/SYLVEON.png",
+        "back": "Graphics/Pokemon/Back/SYLVEON.png",
+        "icon": "Graphics/Pokemon/Icons/SYLVEON.png",
+        "cry": "Audio/Cries/SYLVEON.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/SYLVEON.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/SYLVEON.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SYLVEON.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SYLVEON.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SYLVEON.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SYLVEON.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SYLVEON.png"
+      },
+      "species": "Intertwining Pokémon",
+      "height": 1.0,
+      "weight": 23.5,
+      "ability": "Cute Charm",
+      "catchRate": 45,
+      "baseFriendship": 70,
+      "growthRate": "Medium Fast",
+      "evYield": "2 Sp. Def",
+      "eggGroups": "Ground",
+      "genderRatio": "♂87.5% ♀12.5%",
+      "moves": [
+        {
+          "level": 1,
+          "moveId": "baton_pass",
+          "nameEn": "Baton Pass",
+          "nameVi": "Chuyền Gậy",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "bite",
+          "nameEn": "Bite",
+          "nameVi": "Cắn Xé",
+          "type": "Dark"
+        },
+        {
+          "level": 1,
+          "moveId": "charm",
+          "nameEn": "Charm",
+          "nameVi": "Quyến Rũ",
+          "type": "Fairy"
+        },
+        {
+          "level": 1,
+          "moveId": "copycat",
+          "nameEn": "Copycat",
+          "nameVi": "Bắt Chước",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "covet",
+          "nameEn": "Covet",
+          "nameVi": "Thèm Muốn",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "disarming_voice",
+          "nameEn": "Disarming Voice",
+          "nameVi": "Giọng Hát Mê Hoặc",
+          "type": "Fairy"
+        },
+        {
+          "level": 1,
+          "moveId": "growl",
+          "nameEn": "Growl",
+          "nameVi": "Gầm Gừ",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "helping_hand",
+          "nameEn": "Helping Hand",
+          "nameVi": "Giúp Đỡ Đồng Đội",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "tackle",
+          "nameEn": "Tackle",
+          "nameVi": "Va Chạm",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "tail_whip",
+          "nameEn": "Tail Whip",
+          "nameVi": "Vẫy Đuôi",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "take_down",
+          "nameEn": "Take Down",
+          "nameVi": "Lao Đầu",
+          "type": "Normal"
+        },
+        {
+          "level": 5,
+          "moveId": "sandattack",
+          "nameEn": "Sand Attack",
+          "nameVi": "Tạt Cát",
+          "type": "Ground"
+        },
+        {
+          "level": 9,
+          "moveId": "fairy_wind",
+          "nameEn": "Fairy Wind",
+          "nameVi": "Tiên Gió",
+          "type": "Fairy"
+        },
+        {
+          "level": 13,
+          "moveId": "quick_attack",
+          "nameEn": "Quick Attack",
+          "nameVi": "Tấn Công Chớp Nhoáng",
+          "type": "Normal"
+        },
+        {
+          "level": 18,
+          "moveId": "baby_doll_eyes",
+          "nameEn": "Baby-Doll Eyes",
+          "nameVi": "Đôi Mắt Trẻ Thơ",
+          "type": "Fairy"
+        },
+        {
+          "level": 20,
+          "moveId": "swift",
+          "nameEn": "Swift",
+          "nameVi": "Sao Tốc Độ",
+          "type": "Normal"
+        },
+        {
+          "level": 25,
+          "moveId": "mimic",
+          "nameEn": "Mimic",
+          "nameVi": "Bắt Chước",
+          "type": "Normal"
+        },
+        {
+          "level": 25,
+          "moveId": "play_rough",
+          "nameEn": "Play Rough",
+          "nameVi": "Đùa Giỡn Thô Bạo",
+          "type": "Fairy"
+        },
+        {
+          "level": 30,
+          "moveId": "draining_kiss",
+          "nameEn": "Draining Kiss",
+          "nameVi": "Nụ Hôn Hút Năng Lượng",
+          "type": "Fairy"
+        },
+        {
+          "level": 33,
+          "moveId": "light_screen",
+          "nameEn": "Light Screen",
+          "nameVi": "Màn Chắn Ánh Sáng",
+          "type": "Psychic"
+        },
+        {
+          "level": 34,
+          "moveId": "calm_mind",
+          "nameEn": "Calm Mind",
+          "nameVi": "Tịnh Tâm",
+          "type": "Psychic"
+        },
+        {
+          "level": 35,
+          "moveId": "misty_terrain",
+          "nameEn": "Misty Terrain",
+          "nameVi": "Địa Hình Sương Mù",
+          "type": "Fairy"
+        },
+        {
+          "level": 40,
+          "moveId": "skill_swap",
+          "nameEn": "Skill Swap",
+          "nameVi": "Hoán Đổi Kỹ Năng",
+          "type": "Psychic"
+        },
+        {
+          "level": 43,
+          "moveId": "double_edge",
+          "nameEn": "Double-Edge",
+          "nameVi": "Đòn Liều Mạng",
+          "type": "Normal"
+        },
+        {
+          "level": 45,
+          "moveId": "psych_up",
+          "nameEn": "Psych Up",
+          "nameVi": "Khích Lệ Tâm Trí",
+          "type": "Normal"
+        },
+        {
+          "level": 50,
+          "moveId": "moonblast",
+          "nameEn": "Moonblast",
+          "nameVi": "Vụ Nổ Mặt Trăng",
+          "type": "Fairy"
+        },
+        {
+          "level": 55,
+          "moveId": "last_resort",
+          "nameEn": "Last Resort",
+          "nameVi": "Nước Cờ Cùng",
+          "type": "Normal"
+        }
+      ],
+      "tmMoves": [
+        "alluring_voice",
+        "attract",
+        "baton_pass",
+        "body_slam",
+        "calm_mind",
+        "charm",
+        "confide",
+        "curse",
+        "cut",
+        "dazzling_gleam",
+        "dig",
+        "disarming_voice",
+        "double_edge",
+        "double_team",
+        "draining_kiss",
+        "echoed_voice",
+        "endure",
+        "facade",
+        "fake_tears",
+        "flash",
+        "focus_energy",
+        "frustration",
+        "giga_impact",
+        "helping_hand",
+        "hidden_power",
+        "hyper_beam",
+        "hyper_voice",
+        "iron_tail",
+        "light_screen",
+        "magical_leaf",
+        "misty_explosion",
+        "misty_terrain",
+        "mystical_fire",
+        "pay_day",
+        "play_rough",
+        "protect",
+        "psych_up",
+        "psychic",
+        "psyshock",
+        "rain_dance",
+        "reflect",
+        "rest",
+        "retaliate",
+        "return",
+        "roar",
+        "round",
+        "safeguard",
+        "secret_power",
+        "shadow_ball",
+        "skill_swap",
+        "sleep_talk",
+        "snore",
+        "stored_power",
+        "substitute",
+        "sunny_day",
+        "swagger",
+        "swift",
+        "take_down",
+        "tera_blast",
+        "toxic",
+        "trailblaze",
+        "weather_ball",
+        "work_up"
+      ],
+      "abilities": {
+        "primary": "cute-charm",
+        "hidden": "pixilate"
+      },
+      "teraType": "Fairy"
+    },
+    "979": {
+      "id": 979,
+      "name": "Annihilape",
+      "speciesKey": "ANNIHILAPE",
+      "types": [
+        "Fighting",
+        "Ghost"
+      ],
+      "stats": {
+        "hp": 110,
+        "attack": 115,
+        "defense": 80,
+        "spAtk": 50,
+        "spDef": 90,
+        "speed": 90,
+        "total": 535
+      },
+      "sprites": {
+        "follower": "Graphics/Characters/Followers/ANNIHILAPE.png",
+        "front": "Graphics/Pokemon/Front/ANNIHILAPE.png",
+        "back": "Graphics/Pokemon/Back/ANNIHILAPE.png",
+        "icon": "Graphics/Pokemon/Icons/ANNIHILAPE.png",
+        "cry": "Audio/Cries/ANNIHILAPE.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/ANNIHILAPE.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/ANNIHILAPE.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/ANNIHILAPE.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/ANNIHILAPE.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/ANNIHILAPE.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/ANNIHILAPE.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/ANNIHILAPE.png"
+      },
+      "species": "Rage Monkey Pokémon",
+      "height": 1.2,
+      "weight": 56.0,
+      "ability": "Vital Spirit",
+      "catchRate": 45,
+      "baseFriendship": 50,
+      "growthRate": "Medium Fast",
+      "evYield": "3 Attack",
+      "eggGroups": "Ground",
+      "genderRatio": "♂50% ♀50%",
+      "moves": [
+        {
+          "level": 1,
+          "moveId": "counter",
+          "nameEn": "Counter",
+          "nameVi": "Phản Đòn",
+          "type": "Fighting"
+        },
+        {
+          "level": 1,
+          "moveId": "fling",
+          "nameEn": "Fling",
+          "nameVi": "Ném Đồ",
+          "type": "Dark"
+        },
+        {
+          "level": 1,
+          "moveId": "focus_energy",
+          "nameEn": "Focus Energy",
+          "nameVi": "Tụ Năng Lượng",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "leer",
+          "nameEn": "Leer",
+          "nameVi": "Trừng Mắt",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "scratch",
+          "nameEn": "Scratch",
+          "nameVi": "Cào",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "shadow_punch",
+          "nameEn": "Shadow Punch",
+          "nameVi": "Cú Đấm Bóng Ma",
+          "type": "Ghost"
+        },
+        {
+          "level": 5,
+          "moveId": "fury_swipes",
+          "nameEn": "Fury Swipes",
+          "nameVi": "Cào Loạn Xạ",
+          "type": "Normal"
+        },
+        {
+          "level": 8,
+          "moveId": "low_kick",
+          "nameEn": "Low Kick",
+          "nameVi": "Quét Chân",
+          "type": "Fighting"
+        },
+        {
+          "level": 12,
+          "moveId": "seismic_toss",
+          "nameEn": "Seismic Toss",
+          "nameVi": "Ném Địa Chấn",
+          "type": "Fighting"
+        },
+        {
+          "level": 17,
+          "moveId": "swagger",
+          "nameEn": "Swagger",
+          "nameVi": "Tự Đắc",
+          "type": "Normal"
+        },
+        {
+          "level": 22,
+          "moveId": "cross_chop",
+          "nameEn": "Cross Chop",
+          "nameVi": "Nhát Chặt Chữ Thập",
+          "type": "Fighting"
+        },
+        {
+          "level": 26,
+          "moveId": "assurance",
+          "nameEn": "Assurance",
+          "nameVi": "Đòn Chắc Chắn",
+          "type": "Dark"
+        },
+        {
+          "level": 30,
+          "moveId": "thrash",
+          "nameEn": "Thrash",
+          "nameVi": "Quậy Phá",
+          "type": "Normal"
+        },
+        {
+          "level": 35,
+          "moveId": "rage_fist",
+          "nameEn": "Rage Fist",
+          "nameVi": "Nắm Đấm Căm Hờn",
+          "type": "Ghost"
+        },
+        {
+          "level": 39,
+          "moveId": "close_combat",
+          "nameEn": "Close Combat",
+          "nameVi": "Giáp Lá Cà",
+          "type": "Fighting"
+        },
+        {
+          "level": 44,
+          "moveId": "screech",
+          "nameEn": "Screech",
+          "nameVi": "Thét Chói Tai",
+          "type": "Normal"
+        },
+        {
+          "level": 48,
+          "moveId": "stomping_tantrum",
+          "nameEn": "Stomping Tantrum",
+          "nameVi": "Giẫm Chân Ăn Vạ",
+          "type": "Ground"
+        },
+        {
+          "level": 53,
+          "moveId": "outrage",
+          "nameEn": "Outrage",
+          "nameVi": "Long Thần Cuồng Nộ",
+          "type": "Dragon"
+        },
+        {
+          "level": 57,
+          "moveId": "final_gambit",
+          "nameEn": "Final Gambit",
+          "nameVi": "Nước Cờ Cuối Cùng",
+          "type": "Fighting"
+        }
+      ],
+      "tmMoves": [
+        "acrobatics",
+        "body_slam",
+        "brick_break",
+        "bulk_up",
+        "bulldoze",
+        "coaching",
+        "curse",
+        "dig",
+        "double_edge",
+        "drain_punch",
+        "earthquake",
+        "encore",
+        "endeavor",
+        "endure",
+        "facade",
+        "fire_punch",
+        "fling",
+        "focus_blast",
+        "focus_punch",
+        "giga_impact",
+        "gunk_shot",
+        "helping_hand",
+        "hyper_beam",
+        "ice_punch",
+        "lash_out",
+        "low_kick",
+        "low_sweep",
+        "metronome",
+        "night_shade",
+        "outrage",
+        "overheat",
+        "phantom_force",
+        "poison_jab",
+        "protect",
+        "rain_dance",
+        "rest",
+        "reversal",
+        "rock_slide",
+        "rock_tomb",
+        "scary_face",
+        "seed_bomb",
+        "shadow_ball",
+        "shadow_claw",
+        "sleep_talk",
+        "smack_down",
+        "spite",
+        "stealth_rock",
+        "stomping_tantrum",
+        "stone_edge",
+        "substitute",
+        "sunny_day",
+        "swift",
+        "take_down",
+        "taunt",
+        "thief",
+        "throat_chop",
+        "thunder",
+        "thunder_punch",
+        "thunderbolt",
+        "u_turn",
+        "uproar",
+        "vacuum_wave"
+      ],
+      "abilities": {
+        "primary": "vital-spirit",
+        "secondary": "inner-focus",
+        "hidden": "defiant"
+      },
+      "teraType": "Fighting"
+    },
+    "865": {
+      "id": 865,
+      "name": "Sirfetch'd",
+      "speciesKey": "SIRFETCHD",
+      "types": [
+        "Fighting"
+      ],
+      "stats": {
+        "hp": 62,
+        "attack": 135,
+        "defense": 95,
+        "spAtk": 68,
+        "spDef": 82,
+        "speed": 65,
+        "total": 507
+      },
+      "sprites": {
+        "follower": "Graphics/Characters/Followers/SIRFETCHD.png",
+        "front": "Graphics/Pokemon/Front/SIRFETCHD.png",
+        "back": "Graphics/Pokemon/Back/SIRFETCHD.png",
+        "icon": "Graphics/Pokemon/Icons/SIRFETCHD.png",
+        "cry": "Audio/Cries/SIRFETCHD.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/SIRFETCHD.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/SIRFETCHD.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/SIRFETCHD.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SIRFETCHD.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SIRFETCHD.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/SIRFETCHD.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/SIRFETCHD.png"
+      },
+      "species": "Wild Duck Pokémon",
+      "height": 0.8,
+      "weight": 117.0,
+      "ability": "Steadfast",
+      "catchRate": 45,
+      "baseFriendship": 50,
+      "growthRate": "Medium Fast",
+      "evYield": "2 Attack",
+      "eggGroups": "Flying, Ground",
+      "genderRatio": "♂50% ♀50%",
+      "moves": [
+        {
+          "level": 1,
+          "moveId": "first_impression",
+          "nameEn": "First Impression",
+          "nameVi": "Ấn Tượng Ban Đầu",
+          "type": "Bug"
+        },
+        {
+          "level": 1,
+          "moveId": "fury_cutter",
+          "nameEn": "Fury Cutter",
+          "nameVi": "Cuồng Nộ Cutter",
+          "type": "Bug"
+        },
+        {
+          "level": 1,
+          "moveId": "iron_defense",
+          "nameEn": "Iron Defense",
+          "nameVi": "Giáp Sắt Phòng Thủ",
+          "type": "Steel"
+        },
+        {
+          "level": 1,
+          "moveId": "leer",
+          "nameEn": "Leer",
+          "nameVi": "Trừng Mắt",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "peck",
+          "nameEn": "Peck",
+          "nameVi": "Mổ",
+          "type": "Flying"
+        },
+        {
+          "level": 1,
+          "moveId": "sandattack",
+          "nameEn": "Sand Attack",
+          "nameVi": "Tạt Cát",
+          "type": "Ground"
+        },
+        {
+          "level": 15,
+          "moveId": "rock_smash",
+          "nameEn": "Rock Smash",
+          "nameVi": "Đập Đá",
+          "type": "Fighting"
+        },
+        {
+          "level": 20,
+          "moveId": "brutal_swing",
+          "nameEn": "Brutal Swing",
+          "nameVi": "Tàn Bạo Swing",
+          "type": "Dark"
+        },
+        {
+          "level": 25,
+          "moveId": "detect",
+          "nameEn": "Detect",
+          "nameVi": "Thấu Thị",
+          "type": "Fighting"
+        },
+        {
+          "level": 30,
+          "moveId": "knock_off",
+          "nameEn": "Knock Off",
+          "nameVi": "Đánh Rơi Vật Phẩm",
+          "type": "Dark"
+        },
+        {
+          "level": 35,
+          "moveId": "defog",
+          "nameEn": "Defog",
+          "nameVi": "Xua Tan Sương Mù",
+          "type": "Flying"
+        },
+        {
+          "level": 40,
+          "moveId": "brick_break",
+          "nameEn": "Brick Break",
+          "nameVi": "Đập Vỡ Gạch",
+          "type": "Fighting"
+        },
+        {
+          "level": 45,
+          "moveId": "swords_dance",
+          "nameEn": "Swords Dance",
+          "nameVi": "Vũ Điệu Kiếm",
+          "type": "Normal"
+        },
+        {
+          "level": 50,
+          "moveId": "slam",
+          "nameEn": "Slam",
+          "nameVi": "Quật Ngã",
+          "type": "Normal"
+        },
+        {
+          "level": 55,
+          "moveId": "leaf_blade",
+          "nameEn": "Leaf Blade",
+          "nameVi": "Lưỡi Kiếm Lá",
+          "type": "Grass"
+        },
+        {
+          "level": 60,
+          "moveId": "final_gambit",
+          "nameEn": "Final Gambit",
+          "nameVi": "Nước Cờ Cuối Cùng",
+          "type": "Fighting"
+        },
+        {
+          "level": 65,
+          "moveId": "brave_bird",
+          "nameEn": "Brave Bird",
+          "nameVi": "Dũng Điểu",
+          "type": "Flying"
+        },
+        {
+          "level": 70,
+          "moveId": "meteor_assault",
+          "nameEn": "Meteor Assault",
+          "nameVi": "Sao Băng Tấn Công",
+          "type": "Fighting"
+        }
+      ],
+      "tmMoves": [
+        "assurance",
+        "attract",
+        "body_slam",
+        "brave_bird",
+        "brick_break",
+        "brutal_swing",
+        "close_combat",
+        "endure",
+        "facade",
+        "focus_energy",
+        "helping_hand",
+        "iron_defense",
+        "leaf_blade",
+        "poison_jab",
+        "protect",
+        "rest",
+        "retaliate",
+        "revenge",
+        "round",
+        "sleep_talk",
+        "snore",
+        "solar_blade",
+        "steel_wing",
+        "substitute",
+        "sunny_day",
+        "superpower",
+        "swords_dance",
+        "throat_chop",
+        "work_up"
+      ],
+      "abilities": {
+        "primary": "steadfast",
+        "hidden": "scrappy"
+      },
+      "teraType": "Fighting"
+    },
+    "863": {
+      "id": 863,
+      "name": "Perrserker",
+      "speciesKey": "PERRSERKER",
+      "types": [
+        "Steel"
+      ],
+      "stats": {
+        "hp": 70,
+        "attack": 110,
+        "defense": 100,
+        "spAtk": 50,
+        "spDef": 60,
+        "speed": 50,
+        "total": 440
+      },
+      "sprites": {
+        "follower": "Graphics/Characters/Followers/PERRSERKER.png",
+        "front": "Graphics/Pokemon/Front/PERRSERKER.png",
+        "back": "Graphics/Pokemon/Back/PERRSERKER.png",
+        "icon": "Graphics/Pokemon/Icons/PERRSERKER.png",
+        "cry": "Audio/Cries/PERRSERKER.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/PERRSERKER.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/PERRSERKER.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/PERRSERKER.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/PERRSERKER.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/PERRSERKER.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/PERRSERKER.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/PERRSERKER.png"
+      },
+      "species": "Viking Pokémon",
+      "height": 0.8,
+      "weight": 28.0,
+      "ability": "Battle Armor",
+      "catchRate": 90,
+      "baseFriendship": 50,
+      "growthRate": "Medium Fast",
+      "evYield": "2 Attack",
+      "eggGroups": "Ground",
+      "genderRatio": "♂50% ♀50%",
+      "moves": [
+        {
+          "level": 1,
+          "moveId": "fake_out",
+          "nameEn": "Fake Out",
+          "nameVi": "Vỗ Tay Giật Mình",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "growl",
+          "nameEn": "Growl",
+          "nameVi": "Gầm Gừ",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "hone_claws",
+          "nameEn": "Hone Claws",
+          "nameVi": "Mài Sắc Vuốt",
+          "type": "Dark"
+        },
+        {
+          "level": 1,
+          "moveId": "iron_defense",
+          "nameEn": "Iron Defense",
+          "nameVi": "Giáp Sắt Phòng Thủ",
+          "type": "Steel"
+        },
+        {
+          "level": 1,
+          "moveId": "iron_head",
+          "nameEn": "Iron Head",
+          "nameVi": "Đầu Sắt",
+          "type": "Steel"
+        },
+        {
+          "level": 1,
+          "moveId": "metal_burst",
+          "nameEn": "Metal Burst",
+          "nameVi": "Bộc Phá Kim Loại",
+          "type": "Steel"
+        },
+        {
+          "level": 1,
+          "moveId": "scratch",
+          "nameEn": "Scratch",
+          "nameVi": "Cào",
+          "type": "Normal"
+        },
+        {
+          "level": 12,
+          "moveId": "pay_day",
+          "nameEn": "Pay Day",
+          "nameVi": "Mưa Tiền Vàng",
+          "type": "Normal"
+        },
+        {
+          "level": 16,
+          "moveId": "metal_claw",
+          "nameEn": "Metal Claw",
+          "nameVi": "Vuốt Kim Loại",
+          "type": "Steel"
+        },
+        {
+          "level": 20,
+          "moveId": "taunt",
+          "nameEn": "Taunt",
+          "nameVi": "Khiêu Khích",
+          "type": "Dark"
+        },
+        {
+          "level": 24,
+          "moveId": "swagger",
+          "nameEn": "Swagger",
+          "nameVi": "Tự Đắc",
+          "type": "Normal"
+        },
+        {
+          "level": 31,
+          "moveId": "fury_swipes",
+          "nameEn": "Fury Swipes",
+          "nameVi": "Cào Loạn Xạ",
+          "type": "Normal"
+        },
+        {
+          "level": 36,
+          "moveId": "screech",
+          "nameEn": "Screech",
+          "nameVi": "Thét Chói Tai",
+          "type": "Normal"
+        },
+        {
+          "level": 42,
+          "moveId": "slash",
+          "nameEn": "Slash",
+          "nameVi": "Nhát Chém",
+          "type": "Normal"
+        },
+        {
+          "level": 48,
+          "moveId": "metal_sound",
+          "nameEn": "Metal Sound",
+          "nameVi": "Âm Thanh Kim Loại",
+          "type": "Steel"
+        },
+        {
+          "level": 54,
+          "moveId": "thrash",
+          "nameEn": "Thrash",
+          "nameVi": "Quậy Phá",
+          "type": "Normal"
+        }
+      ],
+      "tmMoves": [
+        "amnesia",
+        "assurance",
+        "attract",
+        "baton_pass",
+        "body_slam",
+        "brick_break",
+        "charm",
+        "chilling_water",
+        "close_combat",
+        "crunch",
+        "curse",
+        "dark_pulse",
+        "dig",
+        "double_edge",
+        "endeavor",
+        "endure",
+        "facade",
+        "fake_tears",
+        "false_swipe",
+        "fling",
+        "foul_play",
+        "giga_impact",
+        "gunk_shot",
+        "gyro_ball",
+        "heavy_slam",
+        "helping_hand",
+        "hyper_beam",
+        "hyper_voice",
+        "iron_defense",
+        "iron_head",
+        "iron_tail",
+        "knock_off",
+        "lash_out",
+        "metal_claw",
+        "metal_sound",
+        "metronome",
+        "nasty_plot",
+        "pay_day",
+        "payback",
+        "play_rough",
+        "protect",
+        "rain_dance",
+        "rest",
+        "retaliate",
+        "round",
+        "screech",
+        "seed_bomb",
+        "shadow_ball",
+        "shadow_claw",
+        "sleep_talk",
+        "snore",
+        "spite",
+        "stealth_rock",
+        "steel_beam",
+        "substitute",
+        "sunny_day",
+        "swords_dance",
+        "take_down",
+        "taunt",
+        "tera_blast",
+        "thief",
+        "throat_chop",
+        "thunder",
+        "thunderbolt",
+        "trailblaze",
+        "u_turn",
+        "uproar",
+        "work_up",
+        "x_scissor"
+      ],
+      "abilities": {
+        "primary": "battle-armor",
+        "secondary": "tough-claws",
+        "hidden": "steely-spirit"
+      },
+      "teraType": "Steel"
+    },
+    "866": {
+      "id": 866,
+      "name": "Mr. Rime",
+      "speciesKey": "MRRIME",
+      "types": [
+        "Ice",
+        "Psychic"
+      ],
+      "stats": {
+        "hp": 80,
+        "attack": 85,
+        "defense": 75,
+        "spAtk": 110,
+        "spDef": 100,
+        "speed": 70,
+        "total": 520
+      },
+      "sprites": {
+        "follower": "Graphics/Characters/Followers/MRRIME.png",
+        "front": "Graphics/Pokemon/Front/MRRIME.png",
+        "back": "Graphics/Pokemon/Back/MRRIME.png",
+        "icon": "Graphics/Pokemon/Icons/MRRIME.png",
+        "cry": "Audio/Cries/MRRIME.ogg",
+        "frontShiny": "Graphics/Pokemon/Front shiny/MRRIME.png",
+        "backShiny": "Graphics/Pokemon/Back shiny/MRRIME.png",
+        "iconShiny": "Graphics/Pokemon/Icons shiny/MRRIME.png",
+        "swimming": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MRRIME.png",
+        "swimmingShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MRRIME.png",
+        "followerWater": "Graphics/Characters/Swimming Overworld Sprites/Swimming/MRRIME.png",
+        "followerWaterShiny": "Graphics/Characters/Swimming Overworld Sprites/Swimming Shiny/MRRIME.png"
+      },
+      "species": "Comedian Pokémon",
+      "height": 1.5,
+      "weight": 58.2,
+      "ability": "Tangled Feet",
+      "catchRate": 45,
+      "baseFriendship": 50,
+      "growthRate": "Medium Fast",
+      "evYield": "3 Sp. Atk",
+      "eggGroups": "Humanshape",
+      "genderRatio": "♂50% ♀50%",
+      "moves": [
+        {
+          "level": 1,
+          "moveId": "after_you",
+          "nameEn": "After You",
+          "nameVi": "Nhường Lượt",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "baton_pass",
+          "nameEn": "Baton Pass",
+          "nameVi": "Chuyền Gậy",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "block",
+          "nameEn": "Block",
+          "nameVi": "Chặn Đường",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "copycat",
+          "nameEn": "Copycat",
+          "nameVi": "Bắt Chước",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "dazzling_gleam",
+          "nameEn": "Dazzling Gleam",
+          "nameVi": "Ánh Sáng Chói Lóa",
+          "type": "Fairy"
+        },
+        {
+          "level": 1,
+          "moveId": "encore",
+          "nameEn": "Encore",
+          "nameVi": "Diễn Lại",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "fake_tears",
+          "nameEn": "Fake Tears",
+          "nameVi": "Giả Tạo Nước Mắt",
+          "type": "Dark"
+        },
+        {
+          "level": 1,
+          "moveId": "ice_shard",
+          "nameEn": "Ice Shard",
+          "nameVi": "Mảnh Băng Sắc",
+          "type": "Ice"
+        },
+        {
+          "level": 1,
+          "moveId": "light_screen",
+          "nameEn": "Light Screen",
+          "nameVi": "Màn Chắn Ánh Sáng",
+          "type": "Psychic"
+        },
+        {
+          "level": 1,
+          "moveId": "mimic",
+          "nameEn": "Mimic",
+          "nameVi": "Bắt Chước",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "misty_terrain",
+          "nameEn": "Misty Terrain",
+          "nameVi": "Địa Hình Sương Mù",
+          "type": "Fairy"
+        },
+        {
+          "level": 1,
+          "moveId": "pound",
+          "nameEn": "Pound",
+          "nameVi": "Đập",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "protect",
+          "nameEn": "Protect",
+          "nameVi": "Khiên Bảo Vệ",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "rapid_spin",
+          "nameEn": "Rapid Spin",
+          "nameVi": "Xoay Tốc Độ",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "recycle",
+          "nameEn": "Recycle",
+          "nameVi": "Tái Chế",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "reflect",
+          "nameEn": "Reflect",
+          "nameVi": "Phản Chiếu",
+          "type": "Psychic"
+        },
+        {
+          "level": 1,
+          "moveId": "role_play",
+          "nameEn": "Role Play",
+          "nameVi": "Đóng Vai",
+          "type": "Psychic"
+        },
+        {
+          "level": 1,
+          "moveId": "safeguard",
+          "nameEn": "Safeguard",
+          "nameVi": "Hộ Thể",
+          "type": "Normal"
+        },
+        {
+          "level": 1,
+          "moveId": "slack_off",
+          "nameEn": "Slack Off",
+          "nameVi": "Thư Giãn Hồi Máu",
+          "type": "Normal"
+        },
+        {
+          "level": 12,
+          "moveId": "confusion",
+          "nameEn": "Confusion",
+          "nameVi": "Niệm Lực",
+          "type": "Psychic"
+        },
+        {
+          "level": 16,
+          "moveId": "ally_switch",
+          "nameEn": "Ally Switch",
+          "nameVi": "Đổi Chỗ Đồng Đội",
+          "type": "Psychic"
+        },
+        {
+          "level": 20,
+          "moveId": "icy_wind",
+          "nameEn": "Icy Wind",
+          "nameVi": "Gió Băng",
+          "type": "Ice"
+        },
+        {
+          "level": 24,
+          "moveId": "double_kick",
+          "nameEn": "Double Kick",
+          "nameVi": "Song Cước",
+          "type": "Fighting"
+        },
+        {
+          "level": 28,
+          "moveId": "psybeam",
+          "nameEn": "Psybeam",
+          "nameVi": "Tia Tâm Linh",
+          "type": "Psychic"
+        },
+        {
+          "level": 32,
+          "moveId": "hypnosis",
+          "nameEn": "Hypnosis",
+          "nameVi": "Thôi Miên",
+          "type": "Psychic"
+        },
+        {
+          "level": 36,
+          "moveId": "mirror_coat",
+          "nameEn": "Mirror Coat",
+          "nameVi": "Áo Choàng Phản Chiếu",
+          "type": "Psychic"
+        },
+        {
+          "level": 40,
+          "moveId": "sucker_punch",
+          "nameEn": "Sucker Punch",
+          "nameVi": "Đòn Đánh Bất Ngờ",
+          "type": "Dark"
+        },
+        {
+          "level": 44,
+          "moveId": "freeze_dry",
+          "nameEn": "Freeze-Dry",
+          "nameVi": "Đóng Băng Khô",
+          "type": "Ice"
+        },
+        {
+          "level": 48,
+          "moveId": "psychic",
+          "nameEn": "Psychic",
+          "nameVi": "Tâm Linh",
+          "type": "Psychic"
+        },
+        {
+          "level": 52,
+          "moveId": "teeter_dance",
+          "nameEn": "Teeter Dance",
+          "nameVi": "Vũ Điệu Lảo Đảo",
+          "type": "Normal"
+        }
+      ],
+      "tmMoves": [
+        "ally_switch",
+        "attract",
+        "avalanche",
+        "baton_pass",
+        "blizzard",
+        "body_slam",
+        "brick_break",
+        "calm_mind",
+        "charm",
+        "dazzling_gleam",
+        "drain_punch",
+        "encore",
+        "endure",
+        "energy_ball",
+        "facade",
+        "fake_tears",
+        "fling",
+        "focus_blast",
+        "foul_play",
+        "future_sight",
+        "giga_impact",
+        "grass_knot",
+        "guard_swap",
+        "hail",
+        "helping_hand",
+        "hyper_beam",
+        "ice_beam",
+        "ice_punch",
+        "icicle_spear",
+        "icy_wind",
+        "iron_defense",
+        "light_screen",
+        "magic_room",
+        "mega_kick",
+        "mega_punch",
+        "metronome",
+        "misty_terrain",
+        "nasty_plot",
+        "payback",
+        "power_swap",
+        "protect",
+        "psychic",
+        "psychic_terrain",
+        "psyshock",
+        "rain_dance",
+        "reflect",
+        "rest",
+        "round",
+        "safeguard",
+        "screech",
+        "shadow_ball",
+        "skill_swap",
+        "sleep_talk",
+        "snore",
+        "solarbeam",
+        "stomping_tantrum",
+        "stored_power",
+        "substitute",
+        "sunny_day",
+        "taunt",
+        "thief",
+        "thunder",
+        "thunder_wave",
+        "thunderbolt",
+        "trick",
+        "trick_room",
+        "uproar",
+        "wonder_room",
+        "zen_headbutt"
+      ],
+      "abilities": {
+        "primary": "tangled-feet",
+        "secondary": "screen-cleaner",
+        "hidden": "ice-body"
+      },
+      "teraType": "Ice"
     }
   }
 }

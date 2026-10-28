@@ -2,7 +2,7 @@
 
 ## Trạng thái
 
-**ĐÃ TRIỂN KHAI VÀ TIẾP TỤC HOÀN THIỆN.** Xem [DEV_ARCHITECTURE_GUIDE.md](../DEV_ARCHITECTURE_GUIDE.md).
+**ĐÃ TRIỂN KHAI VÀ TIẾP TỤC HOÀN THIỆN.** Xem [DEV_ARCHITECTURE_GUIDE.md](DEV_ARCHITECTURE_GUIDE.md).
 
 ## Công nghệ thực tế
 

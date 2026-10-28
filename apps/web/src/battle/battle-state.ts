@@ -7,6 +7,7 @@ import { type BattleRng, defaultBattleRng } from './battle-rng';
 import type { ActiveMoveVfxState } from './move-vfx';
 import type { CustomMoveAnimationInstance } from './custom-animations';
 import { battleAnimationPlayer } from './animation';
+import type { LevelUpStatBoost } from './types';
 
 export type BattleUIMode = 'message' | 'command' | 'moves' | 'bag';
 
@@ -53,6 +54,16 @@ export class BattleState {
   playerHpPct = 1.0;
   targetPlayerHpPct = 1.0;
   ghostPlayerHpPct = 1.0;
+
+  // EXP Bar & Level-Up State
+  playerExpPct = 0;
+  targetPlayerExpPct = 0;
+  isExpGainAnimating = false;
+  onExpGainStepComplete?: () => void;
+  levelUpStatBoost: LevelUpStatBoost | null = null;
+
+  /** Target fill speed expressed as a fraction of the EXP bar per second. */
+  private static readonly EXP_BAR_FILL_RATE = 0.96;
 
   // Hurt flash & hit knockback timers
   enemyHurtFlash = 0;
@@ -672,6 +683,21 @@ export class BattleState {
       this.ghostPlayerHpPct = Math.max(this.playerHpPct, this.ghostPlayerHpPct - 0.008);
     } else {
       this.ghostPlayerHpPct = this.playerHpPct;
+    }
+
+    // EXP Bar animation
+    const expStep =
+      (Math.max(0, dtMs) / 1000) * BattleState.EXP_BAR_FILL_RATE;
+    if (this.playerExpPct < this.targetPlayerExpPct) {
+      this.playerExpPct = Math.min(this.targetPlayerExpPct, this.playerExpPct + expStep);
+      if (this.playerExpPct >= this.targetPlayerExpPct) {
+        this.isExpGainAnimating = false;
+        const cb = this.onExpGainStepComplete;
+        this.onExpGainStepComplete = undefined;
+        cb?.();
+      }
+    } else if (this.targetPlayerExpPct === 0 && this.playerExpPct > 0) {
+      this.playerExpPct = 0;
     }
 
     // 6. Wild Pokémon Faint machine (Red tint -> solid white -> top-to-bottom dust dissolve)

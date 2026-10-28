@@ -22,7 +22,11 @@ export function getSandTileKey(
 ): AutotileResult {
   const field = toField(seedOrField);
   // A neighbor tile is considered connected (does NOT require meadow grass fringe)
-  // if it is Beach Sand, Ocean, Water, Desert, or Dark Land.
+  // if it is Beach Sand, Ocean, Water, Desert, Dark Land, Snow, or Rocky Highland.
+  // Rocky Highland is intentionally included here as well as in
+  // getRockyGroundTileKey: otherwise the sand side of a rocky coastline falls
+  // back to sand_* fringe tiles and exposes a strip of meadow-green grass
+  // between the beach and the stone terrain.
   const isConnected = (x: number, y: number) => {
     if (field.isSand(x, y, hasBeach) || field.isOcean(x, y, hasBeach)) return true;
     if (field.isWater && field.isWater(x, y)) return true;
@@ -30,6 +34,7 @@ export function getSandTileKey(
     if (field.isDesert && field.isDesert(x, y)) return true;
     if (field.isDarkLand && field.isDarkLand(x, y)) return true;
     if (field.isSnow && field.isSnow(x, y)) return true;
+    if (field.isRockyHighland && field.isRockyHighland(x, y)) return true;
     return false;
   };
 
@@ -277,7 +282,6 @@ export function getDarkGroundTileKey(
     if (field.isWaterOrBridge && field.isWaterOrBridge(x, y)) return true;
     if (field.isSand && field.isSand(x, y)) return true;
     if (field.isDesert && field.isDesert(x, y)) return true;
-    if (field.isSnow && field.isSnow(x, y)) return true;
     return false;
   };
 
@@ -363,7 +367,6 @@ export function getAutumnGroundTileKey(
     if (field.isWater && field.isWater(x, y)) return true;
     if (field.isAutumn && field.isAutumn(x, y)) return true;
     if (field.isDesert && field.isDesert(x, y)) return true;
-    if (field.isSnow && field.isSnow(x, y)) return true;
     return false;
   };
 
@@ -437,15 +440,13 @@ export function getSnowGroundTileKey(
   const field = toField(seedOrField);
 
   // A neighbor tile is considered connected if it is in the Snow biome,
-  // water, ocean, or another biome with hard boundaries.
+  // water, or ocean. Bordering any other land biome uses the snow boundary
+  // grass fringe (`ground_snow_top..br`) over the base grass layer.
   const isConnected = (x: number, y: number) => {
     if (field.isSnow && field.isSnow(x, y)) return true;
     if (field.isWater && field.isWater(x, y)) return true;
     if (field.isWaterOrBridge && field.isWaterOrBridge(x, y)) return true;
     if (field.isOcean && field.isOcean(x, y)) return true;
-    if (field.isDesert && field.isDesert(x, y)) return true;
-    if (field.isAutumn && field.isAutumn(x, y)) return true;
-    if (field.isDarkLand && field.isDarkLand(x, y)) return true;
     return false;
   };
 
@@ -571,15 +572,232 @@ export function getSnowCliffTileKey(
       key = 'in_tl';
       tileId = TILE_IDS.cliff_snow_in_tl;
     } else {
-      const res = getSnowGroundTileKey(gx, gy, field);
-      if (res.key === 'pure') {
-        return { key: 'pure', tileId: TILE_IDS.cliff_snow_pure };
-      }
-      return res;
+      key = 'pure';
+      tileId = TILE_IDS.cliff_snow_pure;
     }
   }
 
   return { key, tileId };
+}
+
+/**
+ * Resolves 3x3 autotile connectivity for Rocky Highland ground (570 series).
+ * Outer boundary tiles (tl, top, tr, left, right, bl, bot, br, in_tl..br)
+ * have alpha=0 outer margins so underlying meadow grass renders underneath.
+ */
+export function getRockyGroundTileKey(
+  gx: number,
+  gy: number,
+  seedOrField: number | TerrainField = 101
+): AutotileResult {
+  const field = toField(seedOrField);
+  // A neighbor tile is considered connected if it is Rocky Highland,
+  // or freshwater bodies within the rocky terrain. Beach Sand is intentionally
+  // NOT connected so Rocky Highland autotiles its boundary fringes (ground_rock_*)
+  // against the beach instead of hard-cutting as a raw ground_rock_pure block.
+  const isConnected = (x: number, y: number) => {
+    if (field.isRockyHighland && field.isRockyHighland(x, y)) return true;
+    if (field.isOcean && field.isOcean(x, y)) return true;
+    if (field.isWater && field.isWater(x, y)) return true;
+    if (field.isWaterOrBridge && field.isWaterOrBridge(x, y)) return true;
+    return false;
+  };
+
+  const n = isConnected(gx, gy - 1);
+  const s = isConnected(gx, gy + 1);
+  const w = isConnected(gx - 1, gy);
+  const e = isConnected(gx + 1, gy);
+  const nw = isConnected(gx - 1, gy - 1);
+  const ne = isConnected(gx + 1, gy - 1);
+  const sw = isConnected(gx - 1, gy + 1);
+  const se = isConnected(gx + 1, gy + 1);
+
+  let key = 'pure';
+  let tileId: number = TILE_IDS.ground_rock_pure;
+
+  if (!n && !w) {
+    key = 'tl';
+    tileId = TILE_IDS.ground_rock_tl;
+  } else if (!n && !e) {
+    key = 'tr';
+    tileId = TILE_IDS.ground_rock_tr;
+  } else if (!s && !w) {
+    key = 'bl';
+    tileId = TILE_IDS.ground_rock_bl;
+  } else if (!s && !e) {
+    key = 'br';
+    tileId = TILE_IDS.ground_rock_br;
+  } else if (!n) {
+    key = 'top';
+    tileId = TILE_IDS.ground_rock_top;
+  } else if (!s) {
+    key = 'bot';
+    tileId = TILE_IDS.ground_rock_bot;
+  } else if (!w) {
+    key = 'left';
+    tileId = TILE_IDS.ground_rock_left;
+  } else if (!e) {
+    key = 'right';
+    tileId = TILE_IDS.ground_rock_right;
+  } else if (n && s && w && e) {
+    if (!nw) {
+      key = 'in_tl';
+      tileId = TILE_IDS.ground_rock_in_tl;
+    } else if (!ne) {
+      key = 'in_tr';
+      tileId = TILE_IDS.ground_rock_in_tr;
+    } else if (!sw) {
+      key = 'in_bl';
+      tileId = TILE_IDS.ground_rock_in_bl;
+    } else if (!se) {
+      key = 'in_br';
+      tileId = TILE_IDS.ground_rock_in_br;
+    } else {
+      key = 'pure';
+      tileId = TILE_IDS.ground_rock_pure;
+    }
+  }
+
+  return { key, tileId };
+}
+
+/**
+ * Resolves 3x3 autotile connectivity for 1-tier Rocky Hills (585 series, đồi đá.png).
+ * Players CAN jump onto these 1-tier rocky hills using the Space key.
+ */
+export function getRockyCliffTileKey(
+  gx: number,
+  gy: number,
+  seedOrField: number | TerrainField = 101,
+  hasHills = true,
+  hasRoad = true,
+  hasBeach = true
+): AutotileResult {
+  const field = toField(seedOrField);
+  const isRH = (x: number, y: number) =>
+    field.isHill(x, y, hasHills, hasRoad, hasBeach) &&
+    Boolean(field.isRockyHighland && field.isRockyHighland(x, y)) &&
+    !(field.isHighCliff && field.isHighCliff(x, y));
+
+  const n = isRH(gx, gy - 1);
+  const s = isRH(gx, gy + 1);
+  const w = isRH(gx - 1, gy);
+  const e = isRH(gx + 1, gy);
+  const nw = isRH(gx - 1, gy - 1);
+  const ne = isRH(gx + 1, gy - 1);
+  const sw = isRH(gx - 1, gy + 1);
+  const se = isRH(gx + 1, gy + 1);
+
+  let key = 'pure';
+  let tileId: number = TILE_IDS.cliff_rock_pure;
+
+  if (!n && !w) {
+    key = 'tl';
+    tileId = TILE_IDS.cliff_rock_tl;
+  } else if (!n && !e) {
+    key = 'tr';
+    tileId = TILE_IDS.cliff_rock_tr;
+  } else if (!s && !w) {
+    key = 'bl';
+    tileId = TILE_IDS.cliff_rock_bl;
+  } else if (!s && !e) {
+    key = 'br';
+    tileId = TILE_IDS.cliff_rock_br;
+  } else if (!n) {
+    key = 'top';
+    tileId = TILE_IDS.cliff_rock_top;
+  } else if (!s) {
+    key = 'bot';
+    tileId = TILE_IDS.cliff_rock_bot;
+  } else if (!w) {
+    key = 'left';
+    tileId = TILE_IDS.cliff_rock_left;
+  } else if (!e) {
+    key = 'right';
+    tileId = TILE_IDS.cliff_rock_right;
+  } else if (n && s && w && e) {
+    if (!nw) {
+      key = 'in_bl';
+      tileId = TILE_IDS.cliff_rock_in_bl;
+    } else if (!ne) {
+      key = 'in_br';
+      tileId = TILE_IDS.cliff_rock_in_br;
+    } else if (!sw) {
+      key = 'in_tr';
+      tileId = TILE_IDS.cliff_rock_in_tr;
+    } else if (!se) {
+      key = 'in_tl';
+      tileId = TILE_IDS.cliff_rock_in_tl;
+    } else {
+      key = 'pure';
+      tileId = TILE_IDS.cliff_rock_pure;
+    }
+  }
+
+  return { key, tileId };
+}
+
+/**
+ * Resolves 3x4 autotile connectivity for 2-tier High Cliffs (620 series, vách đá cao.png).
+ * Features a 2-tile tall southern cliff wall (upper row + lower base row) and a flat
+ * plateau on top where wild Pokémon and rocks spawn, while blocking player climbing/jumping
+ * until Flying Pokémon mount is unlocked.
+ */
+export function getHighCliffRockTileKey(
+  gx: number,
+  gy: number,
+  seedOrField: number | TerrainField = 101
+): AutotileResult {
+  const field = toField(seedOrField);
+  const isHC = (x: number, y: number) =>
+    Boolean(field.isHighCliff ? field.isHighCliff(x, y) : field.isHill(x, y));
+
+  const n = isHC(gx, gy - 1);
+  const s = isHC(gx, gy + 1);
+  const ss = isHC(gx, gy + 2);
+  const w = isHC(gx - 1, gy);
+  const e = isHC(gx + 1, gy);
+  const nw = isHC(gx - 1, gy - 1);
+  const ne = isHC(gx + 1, gy - 1);
+  const sw = isHC(gx - 1, gy + 1);
+  const se = isHC(gx + 1, gy + 1);
+
+  // 1. Northern Rim (Row 0)
+  if (!n) {
+    if (!w) return { key: 'tl', tileId: TILE_IDS.high_cliff_rock_tl };
+    if (!e) return { key: 'tr', tileId: TILE_IDS.high_cliff_rock_tr };
+    return { key: 'top', tileId: TILE_IDS.high_cliff_rock_top };
+  }
+
+  // 2. Lower Wall Base (Row 3, where south is ground !s)
+  if (!s) {
+    if (!w) return { key: 'bl', tileId: TILE_IDS.high_cliff_rock_bl };
+    if (!e) return { key: 'br', tileId: TILE_IDS.high_cliff_rock_br };
+    if (!nw) return { key: 'in_bl', tileId: TILE_IDS.high_cliff_rock_in_bl };
+    if (!ne) return { key: 'in_br', tileId: TILE_IDS.high_cliff_rock_in_br };
+    return { key: 'bot', tileId: TILE_IDS.high_cliff_rock_bot };
+  }
+
+  // 3. Upper Wall Face (Row 2, where south is lower wall and 2 south is ground: s && !ss)
+  if (s && !ss) {
+    if (!w) return { key: 'bl_upper', tileId: TILE_IDS.high_cliff_rock_bl_upper };
+    if (!e) return { key: 'br_upper', tileId: TILE_IDS.high_cliff_rock_br_upper };
+    if (!sw) return { key: 'in_bl_upper', tileId: TILE_IDS.high_cliff_rock_in_bl_upper };
+    if (!se) return { key: 'in_br_upper', tileId: TILE_IDS.high_cliff_rock_in_br_upper };
+    return { key: 'bot_upper', tileId: TILE_IDS.high_cliff_rock_bot_upper };
+  }
+
+  // 4. Plateau Edges (Row 1, where n && s && ss are all cliff)
+  if (!w) return { key: 'left', tileId: TILE_IDS.high_cliff_rock_left };
+  if (!e) return { key: 'right', tileId: TILE_IDS.high_cliff_rock_right };
+
+  // 5. Plateau Interior & Inner Corners
+  if (!nw) return { key: 'in_bl', tileId: TILE_IDS.high_cliff_rock_in_bl };
+  if (!ne) return { key: 'in_br', tileId: TILE_IDS.high_cliff_rock_in_br };
+  if (!sw) return { key: 'in_tr', tileId: TILE_IDS.high_cliff_rock_in_tr };
+  if (!se) return { key: 'in_tl', tileId: TILE_IDS.high_cliff_rock_in_tl };
+
+  return { key: 'pure', tileId: TILE_IDS.high_cliff_rock_pure };
 }
 
 /**
@@ -832,91 +1050,162 @@ export function getWaterTileKey(
   const sw = field.isWaterOrBridge(gx - 1, gy + 1, hasWater, hasRoad, hasBeach, hasHills);
   const se = field.isWaterOrBridge(gx + 1, gy + 1, hasWater, hasRoad, hasBeach, hasHills);
 
-  const isAutumn = Boolean(
-    (field.isAutumn && field.isAutumn(gx, gy)) ||
-    (!n && field.isAutumn && field.isAutumn(gx, gy - 1)) ||
-    (!s && field.isAutumn && field.isAutumn(gx, gy + 1)) ||
-    (!w && field.isAutumn && field.isAutumn(gx - 1, gy)) ||
-    (!e && field.isAutumn && field.isAutumn(gx + 1, gy))
-  );
+  const isAutumnBankSafe =
+    (!n ? Boolean(field.isAutumn && field.isAutumn(gx, gy - 1)) : true) &&
+    (!s ? Boolean(field.isAutumn && field.isAutumn(gx, gy + 1)) : true) &&
+    (!w ? Boolean(field.isAutumn && field.isAutumn(gx - 1, gy)) : true) &&
+    (!e ? Boolean(field.isAutumn && field.isAutumn(gx + 1, gy)) : true);
+  const isAutumn = Boolean(field.isAutumn && field.isAutumn(gx, gy) && isAutumnBankSafe);
 
-  const isSnow = Boolean(
-    (field.isSnow && field.isSnow(gx, gy)) ||
-    (!n && field.isSnow && field.isSnow(gx, gy - 1)) ||
-    (!s && field.isSnow && field.isSnow(gx, gy + 1)) ||
-    (!w && field.isSnow && field.isSnow(gx - 1, gy)) ||
-    (!e && field.isSnow && field.isSnow(gx + 1, gy))
+  const isSnowBankSafe =
+    (!n ? Boolean(field.isSnow && field.isSnow(gx, gy - 1)) : true) &&
+    (!s ? Boolean(field.isSnow && field.isSnow(gx, gy + 1)) : true) &&
+    (!w ? Boolean(field.isSnow && field.isSnow(gx - 1, gy)) : true) &&
+    (!e ? Boolean(field.isSnow && field.isSnow(gx + 1, gy)) : true);
+  const isSnow = Boolean(field.isSnow && field.isSnow(gx, gy) && isSnowBankSafe);
+
+  const isRockyWater = Boolean(
+    field.isRockyWater?.(gx, gy) ?? (field.isRockyHighland?.(gx, gy) && field.isWater(gx, gy))
   );
+  const isRockyBankSafe =
+    (!n ? Boolean(field.isRockyHighland && field.isRockyHighland(gx, gy - 1)) : true) &&
+    (!s ? Boolean(field.isRockyHighland && field.isRockyHighland(gx, gy + 1)) : true) &&
+    (!w ? Boolean(field.isRockyHighland && field.isRockyHighland(gx - 1, gy)) : true) &&
+    (!e ? Boolean(field.isRockyHighland && field.isRockyHighland(gx + 1, gy)) : true);
+  const isRocky = Boolean(isRockyWater && isRockyBankSafe);
 
   let key = 'pure';
   let tileId: number = isSnow
     ? TILE_IDS.water_snow_pure
-    : isAutumn
-      ? TILE_IDS.water_autumn_pure
-      : TILE_IDS.water_pure;
+    : isRocky
+      ? TILE_IDS.water_rock_pure
+      : isAutumn
+        ? TILE_IDS.water_autumn_pure
+        : TILE_IDS.water_pure;
 
   if (!n && !w) {
     key = 'tl';
-    tileId = isSnow ? TILE_IDS.water_snow_tl : isAutumn ? TILE_IDS.water_autumn_tl : TILE_IDS.water_tl;
+    tileId = isSnow
+      ? TILE_IDS.water_snow_tl
+      : isRocky
+        ? TILE_IDS.water_rock_tl
+        : isAutumn
+          ? TILE_IDS.water_autumn_tl
+          : TILE_IDS.water_tl;
   } else if (!n && !e) {
     key = 'tr';
-    tileId = isSnow ? TILE_IDS.water_snow_tr : isAutumn ? TILE_IDS.water_autumn_tr : TILE_IDS.water_tr;
+    tileId = isSnow
+      ? TILE_IDS.water_snow_tr
+      : isRocky
+        ? TILE_IDS.water_rock_tr
+        : isAutumn
+          ? TILE_IDS.water_autumn_tr
+          : TILE_IDS.water_tr;
   } else if (!s && !w) {
     key = 'bl';
-    tileId = isSnow ? TILE_IDS.water_snow_bl : isAutumn ? TILE_IDS.water_autumn_bl : TILE_IDS.water_bl;
+    tileId = isSnow
+      ? TILE_IDS.water_snow_bl
+      : isRocky
+        ? TILE_IDS.water_rock_bl
+        : isAutumn
+          ? TILE_IDS.water_autumn_bl
+          : TILE_IDS.water_bl;
   } else if (!s && !e) {
     key = 'br';
-    tileId = isSnow ? TILE_IDS.water_snow_br : isAutumn ? TILE_IDS.water_autumn_br : TILE_IDS.water_br;
+    tileId = isSnow
+      ? TILE_IDS.water_snow_br
+      : isRocky
+        ? TILE_IDS.water_rock_br
+        : isAutumn
+          ? TILE_IDS.water_autumn_br
+          : TILE_IDS.water_br;
   } else if (!n) {
     key = 'top';
-    tileId = isSnow ? TILE_IDS.water_snow_top : isAutumn ? TILE_IDS.water_autumn_top : TILE_IDS.water_top;
+    tileId = isSnow
+      ? TILE_IDS.water_snow_top
+      : isRocky
+        ? TILE_IDS.water_rock_top
+        : isAutumn
+          ? TILE_IDS.water_autumn_top
+          : TILE_IDS.water_top;
   } else if (!s) {
     key = 'bot';
-    tileId = isSnow ? TILE_IDS.water_snow_bot : isAutumn ? TILE_IDS.water_autumn_bot : TILE_IDS.water_bot;
+    tileId = isSnow
+      ? TILE_IDS.water_snow_bot
+      : isRocky
+        ? TILE_IDS.water_rock_bot
+        : isAutumn
+          ? TILE_IDS.water_autumn_bot
+          : TILE_IDS.water_bot;
   } else if (!w) {
     key = 'left';
-    tileId = isSnow ? TILE_IDS.water_snow_left : isAutumn ? TILE_IDS.water_autumn_left : TILE_IDS.water_left;
+    tileId = isSnow
+      ? TILE_IDS.water_snow_left
+      : isRocky
+        ? TILE_IDS.water_rock_left
+        : isAutumn
+          ? TILE_IDS.water_autumn_left
+          : TILE_IDS.water_left;
   } else if (!e) {
     key = 'right';
-    tileId = isSnow ? TILE_IDS.water_snow_right : isAutumn ? TILE_IDS.water_autumn_right : TILE_IDS.water_right;
+    tileId = isSnow
+      ? TILE_IDS.water_snow_right
+      : isRocky
+        ? TILE_IDS.water_rock_right
+        : isAutumn
+          ? TILE_IDS.water_autumn_right
+          : TILE_IDS.water_right;
   } else if (n && s && w && e) {
     if (!nw) {
       key = 'in_tl';
       tileId = isSnow
         ? TILE_IDS.water_snow_in_tl
-        : isAutumn
-          ? TILE_IDS.water_autumn_in_tl
-          : TILE_IDS.water_in_tl;
+        : isRocky
+          ? TILE_IDS.water_rock_in_tl
+          : isAutumn
+            ? TILE_IDS.water_autumn_in_tl
+            : TILE_IDS.water_in_tl;
     } else if (!ne) {
       key = 'in_tr';
       tileId = isSnow
         ? TILE_IDS.water_snow_in_tr
-        : isAutumn
-          ? TILE_IDS.water_autumn_in_tr
-          : TILE_IDS.water_in_tr;
+        : isRocky
+          ? TILE_IDS.water_rock_in_tr
+          : isAutumn
+            ? TILE_IDS.water_autumn_in_tr
+            : TILE_IDS.water_in_tr;
     } else if (!sw) {
       key = 'in_bl';
       tileId = isSnow
         ? TILE_IDS.water_snow_in_bl
-        : isAutumn
-          ? TILE_IDS.water_autumn_in_bl
-          : TILE_IDS.water_in_bl;
+        : isRocky
+          ? TILE_IDS.water_rock_in_bl
+          : isAutumn
+            ? TILE_IDS.water_autumn_in_bl
+            : TILE_IDS.water_in_bl;
     } else if (!se) {
       key = 'in_br';
       tileId = isSnow
         ? TILE_IDS.water_snow_in_br
-        : isAutumn
-          ? TILE_IDS.water_autumn_in_br
-          : TILE_IDS.water_in_br;
+        : isRocky
+          ? TILE_IDS.water_rock_in_br
+          : isAutumn
+            ? TILE_IDS.water_autumn_in_br
+            : TILE_IDS.water_in_br;
     } else {
       key = 'pure';
       tileId = isSnow
         ? TILE_IDS.water_snow_pure
-        : isAutumn
-          ? TILE_IDS.water_autumn_pure
-          : TILE_IDS.water_pure;
+        : isRocky
+          ? TILE_IDS.water_rock_pure
+          : isAutumn
+            ? TILE_IDS.water_autumn_pure
+            : TILE_IDS.water_pure;
     }
   }
 
-  return { key: isSnow ? `snow_${key}` : isAutumn ? `autumn_${key}` : key, tileId };
+  return {
+    key: isSnow ? `snow_${key}` : isRocky ? `rock_${key}` : isAutumn ? `autumn_${key}` : key,
+    tileId,
+  };
 }

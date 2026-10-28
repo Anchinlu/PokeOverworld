@@ -6,11 +6,13 @@
  */
 export const RUNTIME_BIOME_IDS = [
   'meadow',
+  'apricorn_plain',
   'wetland',
   'coast',
   'dryland',
   'light_forest',
   'dense_forest',
+  'hill_edge',
   'dark_land',
   'autumn',
   'snow',

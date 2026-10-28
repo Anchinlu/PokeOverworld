@@ -707,7 +707,10 @@ export function applyItemToPartyPokemon(
           pokemon.name = targetSpecies.name;
         }
         pokemon.types = [...targetSpecies.types];
-        if (targetSpecies.ability) {
+        if (targetSpecies.abilities) {
+          const slot = pokemon.abilitySlot ?? 'primary';
+          pokemon.ability = targetSpecies.abilities[slot] ?? targetSpecies.abilities.primary;
+        } else if (targetSpecies.ability) {
           pokemon.ability = targetSpecies.ability;
         }
         const { hpGained } = recalculatePartyPokemonStats(pokemon, pokemon.level);

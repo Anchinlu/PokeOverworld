@@ -188,4 +188,62 @@ describe('Pokémon Evolution System (0.91)', () => {
       expect(session.follower.nickname).toBe('Raichu');
     });
   });
+
+  describe('Cross-Generation & Regional Evolutions', () => {
+    it('Scyther branches into Scizor (Metal Coat) or Kleavor (Black Augurite)', () => {
+      const scyther = createPartyPokemon('SCYTHER', 30);
+      expect(canPokemonEvolve(scyther).canEvolve).toBe(false);
+
+      // Holding Metal Coat
+      scyther.heldItem = 'metal-coat';
+      const evosMetal = getAvailableEvolutions(scyther);
+      expect(evosMetal.length).toBe(1);
+      expect(evosMetal[0].targetSpeciesKey).toBe('SCIZOR');
+
+      // Holding Black Augurite
+      scyther.heldItem = 'black-augurite';
+      const evosAug = getAvailableEvolutions(scyther);
+      expect(evosAug.length).toBe(1);
+      expect(evosAug[0].targetSpeciesKey).toBe('KLEAVOR');
+    });
+
+    it('Golbat evolves into Crobat when holding Soothe Bell', () => {
+      const golbat = createPartyPokemon('GOLBAT', 35);
+      expect(canPokemonEvolve(golbat).canEvolve).toBe(false);
+
+      golbat.heldItem = 'soothe-bell';
+      const check = canPokemonEvolve(golbat);
+      expect(check.canEvolve).toBe(true);
+      expect(check.evolution?.targetSpeciesKey).toBe('CROBAT');
+
+      applyEvolution(golbat, 'CROBAT');
+      expect(golbat.speciesKey).toBe('CROBAT');
+      expect(golbat.name).toBe('Crobat');
+    });
+
+    it('Galarian Meowth (MEOWTH_2) evolves into Perrserker at level 28', () => {
+      const gMeowth = createPartyPokemon('MEOWTH_2', 27);
+      expect(canPokemonEvolve(gMeowth).canEvolve).toBe(false);
+
+      const readyMeowth = createPartyPokemon('MEOWTH_2', 28);
+      const check = canPokemonEvolve(readyMeowth);
+      expect(check.canEvolve).toBe(true);
+      expect(check.evolution?.targetSpeciesKey).toBe('PERRSERKER');
+
+      applyEvolution(readyMeowth, 'PERRSERKER');
+      expect(readyMeowth.speciesKey).toBe('PERRSERKER');
+      expect(readyMeowth.name).toBe('Perrserker');
+    });
+
+    it('Alolan Vulpix (VULPIX_1) evolves into Alolan Ninetales using Ice Stone', () => {
+      const aVulpix = createPartyPokemon('VULPIX_1', 25);
+      expect(canPokemonEvolve(aVulpix).canEvolve).toBe(false);
+
+      aVulpix.heldItem = 'ice-stone';
+      const check = canPokemonEvolve(aVulpix);
+      expect(check.canEvolve).toBe(true);
+      expect(check.evolution?.targetSpeciesKey).toBe('NINETALES_ALOLAN');
+    });
+  });
 });
+

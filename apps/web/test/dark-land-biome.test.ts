@@ -428,20 +428,17 @@ describe('Dark Land Biome (Vùng Đất Tối) Integration', () => {
       for (let cy = 0; cy < 12; cy++) {
         for (const entity of populateChunkWildlife(cx, cy, dayWorld, { seed: 101 })) {
           daySpecies.add(entity.speciesKey);
+          expect(entity.activeTime.includes('day') || entity.activeTime.includes('dawn')).toBe(true);
         }
         for (const entity of populateChunkWildlife(cx, cy, nightWorld, { seed: 101 })) {
           nightSpecies.add(entity.speciesKey);
+          expect(entity.activeTime.includes('night') || entity.activeTime.includes('dusk')).toBe(true);
         }
       }
     }
 
     expect(daySpecies.size).toBeGreaterThan(0);
     expect(nightSpecies.size).toBeGreaterThan(0);
-
-    const dayEligible = new Set(['ABRA', 'KADABRA', 'MRMIME', 'CUBONE', 'MAROWAK']);
-    const nightEligible = new Set(['ZUBAT', 'GOLBAT', 'GASTLY', 'HAUNTER', 'DROWZEE', 'HYPNO']);
-    expect([...daySpecies].every((species) => dayEligible.has(species))).toBe(true);
-    expect([...nightSpecies].every((species) => nightEligible.has(species))).toBe(true);
   });
 
   it('10. Assets & Autotile Parity: validates 12 distinct dark_ground fringe tiles and complete 64x64 dark trees', async () => {

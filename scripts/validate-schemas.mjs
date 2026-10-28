@@ -292,12 +292,13 @@ try {
   const pokemonDbPath = path.join(ROOT, 'packages/game-data/pokemon-db.json');
   const pokemonDbData = JSON.parse(fs.readFileSync(pokemonDbPath, 'utf8'));
 
-  if (!pokemonDbData.pokemon || Object.keys(pokemonDbData.pokemon).length !== 151) {
+  const pokemonCount = Object.keys(pokemonDbData.pokemon || {}).length;
+  if (!pokemonDbData.pokemon || pokemonCount < 151) {
     logFail(
-      `pokemon-db.json must contain exactly 151 pokemons (found ${Object.keys(pokemonDbData.pokemon || {}).length})`
+      `pokemon-db.json must contain at least 151 pokemons (found ${pokemonCount})`
     );
   } else {
-    logPass(`pokemon-db.json validated successfully (all 151 Gen 1 Pokemons present)`);
+    logPass(`pokemon-db.json validated successfully (${pokemonCount} Pokemons present)`);
   }
 
   // 6. Verify Battle Animation Timelines & Atlas Integrity

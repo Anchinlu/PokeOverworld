@@ -1,4 +1,9 @@
-import { TILE_SIZE, TILE_IDS } from '@pokemon/game-data';
+import {
+  TILE_SIZE,
+  TILE_IDS,
+  isBridgeTile,
+  isFreshwaterTile,
+} from '@pokemon/game-data';
 import type { ViewportBounds } from '../core/camera';
 import type { Player } from '../entities/player';
 import type { Follower } from '../entities/follower';
@@ -6,6 +11,13 @@ import type { ChunkManager } from '../maps/chunk-manager';
 import type { WorldChunk } from '../maps/chunk';
 import type { AssetLoader } from './asset-loader';
 import { seededHash } from '../maps/noise';
+import {
+  BIOME_GROUND_DECAL_RULES,
+  classifyGroundTile,
+  getPlantVisualSpec,
+  getTreeVisualSpec,
+  resolveGroundOverlayAssetKey,
+} from '../maps/biome-entity-registry';
 import { TILE_KEY_BY_ID, type RenderOptions } from './types';
 
 export class GroundRenderer {
@@ -15,6 +27,11 @@ export class GroundRenderer {
 
   constructor(loader: AssetLoader) {
     this.loader = loader;
+    if (typeof loader.onBackgroundBatchComplete === 'function') {
+      loader.onBackgroundBatchComplete(() => {
+        this.clearCache();
+      });
+    }
   }
 
   public clearCache(): void {
@@ -86,32 +103,25 @@ export class GroundRenderer {
 
         // 2. OVERLAY TERRAIN (Sand, Road, Cliff, Water, Bridges) RESPECTING USER TOGGLE FLAGS
         const tileId = chunk.tileIdGrid[ly][lx];
-
-        const isSand = tileId >= 300 && tileId < 350;
-        const isDesert = tileId >= 350 && tileId < 400;
-        const isDarkGround =
-          (tileId >= 440 && tileId < 460) || tileId === TILE_IDS.tall_grass_dark;
-        const isDarkCliff = tileId >= 460 && tileId < 475;
-        const isDarkLand = isDarkGround || isDarkCliff;
-        const isAutumn =
-          (tileId >= 480 && tileId <= 492) || tileId === TILE_IDS.tall_grass_autumn;
-        const isSnowGround =
-          (tileId >= 510 && tileId <= 522) || tileId === TILE_IDS.tall_grass_snow;
-        const isSnowCliff = tileId >= 530 && tileId <= 542;
-        const isSnowIce = tileId >= 550 && tileId <= 558;
-        const isSnow = isSnowGround || isSnowCliff || isSnowIce;
-        const isRoad = tileId >= 200 && tileId < 300;
-        const isCliff = (tileId >= 400 && tileId < 435) || isDarkCliff || isSnowCliff;
-        const isWaterOrBridge =
-          (tileId >= 700 && tileId < 730) ||
-          (tileId >= 750 && tileId <= 763) ||
-          (tileId >= 770 && tileId <= 783);
-        const isOceanOrShore = tileId >= 730 && tileId <= 742;
+        const {
+          isSand,
+          isDesert,
+          isDarkLand,
+          isAutumn,
+          isSnow,
+          isRockyCliff,
+          isRockyHighland,
+          isRoad,
+          isCliff,
+          isWaterOrBridge,
+          isBridge,
+          isOceanOrShore,
+        } = classifyGroundTile(tileId);
 
         if (isWaterOrBridge && options.showWater) {
           // Clear ground grass: lake/river tiles (bank + water) are drawn animated underneath
           gCtx.clearRect(px, py, TILE_SIZE, TILE_SIZE);
-          if (tileId >= TILE_IDS.bridge_wood_h && tileId < 730) {
+          if (isBridge) {
             // Bridges stay a static overlay above the animated water
             const assetKey = TILE_KEY_BY_ID[tileId];
             if (assetKey) {
@@ -130,17 +140,40 @@ export class GroundRenderer {
           isDarkLand ||
           isAutumn ||
           isSnow ||
+          isRockyHighland ||
           (isRoad && options.showRoad) ||
           (isCliff && options.showHills)
         ) {
-          const assetKey =
-            tileId === TILE_IDS.tall_grass_dark
-              ? 'dark_ground_pure'
-              : tileId === TILE_IDS.tall_grass_autumn
-              ? 'ground_autumn_pure'
-              : tileId === TILE_IDS.tall_grass_snow
-              ? 'ground_snow_pure'
-              : TILE_KEY_BY_ID[tileId];
+          // Pre-draw pure rock ground for Rocky Highland cliff tiles to guarantee zero transparency leaks
+          if (isRockyCliff || tileId === TILE_IDS.ground_rock_pure) {
+            const rockGroundImg = this.loader.getImage('ground_rock_pure');
+            if (rockGroundImg && rockGroundImg.complete) {
+              gCtx.drawImage(rockGroundImg, px, py, TILE_SIZE, TILE_SIZE);
+            }
+          } else if (isRockyHighland && (options.showBeach ?? true)) {
+            // When a Rocky Highland ground boundary tile borders beach sand, pre-draw pure sand
+            // underneath instead of base grass so the outer transparent autotile fringe
+            // blends seamlessly into the beach with zero meadow-green leaks.
+            const touchesSand =
+              Boolean(chunk.field.isSand && (
+                chunk.field.isSand(gx - 1, gy) ||
+                chunk.field.isSand(gx + 1, gy) ||
+                chunk.field.isSand(gx, gy - 1) ||
+                chunk.field.isSand(gx, gy + 1) ||
+                chunk.field.isSand(gx - 1, gy - 1) ||
+                chunk.field.isSand(gx + 1, gy - 1) ||
+                chunk.field.isSand(gx - 1, gy + 1) ||
+                chunk.field.isSand(gx + 1, gy + 1)
+              ));
+            if (touchesSand) {
+              const sandImg = this.loader.getImage('sand_pure');
+              if (sandImg && sandImg.complete) {
+                gCtx.drawImage(sandImg, px, py, TILE_SIZE, TILE_SIZE);
+              }
+            }
+          }
+
+          const assetKey = resolveGroundOverlayAssetKey(tileId, TILE_KEY_BY_ID);
 
           if (assetKey) {
             const ovImg = this.loader.getImage(assetKey);
@@ -182,99 +215,73 @@ export class GroundRenderer {
               }
             }
           }
+        }
+      }
+    }
 
-          // Optional natural beach decorations on sand
-          if (tileId === TILE_IDS.sand_pure && seededHash(gx, gy, chunk.seed + 13) < 0.06) {
-            const sandDecos = ['sand_grass', 'sand_mound', 'sand_shell'];
-            const decoIdx = Math.floor(seededHash(gx, gy, chunk.seed + 17) * sandDecos.length);
-            const decoImg = this.loader.getImage(sandDecos[decoIdx]);
+    // 3. PASS 2: DATA-DRIVEN BIOME GROUND DECALS (Beach, Desert, Autumn, Snow, Rocky Highland)
+    // Executed after all 16x16 base ground and cliff tiles are drawn so multi-tile decals
+    // are never clipped by subsequent tile iterations and never overwrite adjacent cliff walls.
+    for (let ly = 0; ly < 16; ly++) {
+      for (let lx = 0; lx < 16; lx++) {
+        const gx = startGX + lx;
+        const gy = startGY + ly;
+        const px = lx * TILE_SIZE;
+        const py = ly * TILE_SIZE;
+        const tileId = chunk.tileIdGrid[ly][lx];
+
+        if (chunk.field.isNearCliffEdge(gx, gy)) continue;
+
+        for (const rule of BIOME_GROUND_DECAL_RULES) {
+          if (!rule.matchesTile(tileId)) continue;
+          const decorRoll = seededHash(gx, gy, chunk.seed + rule.rollSalt);
+          if (rule.largeDecal && decorRoll < rule.largeDecal.threshold) {
+            const minLX = Math.floor((px + rule.largeDecal.offsetX) / TILE_SIZE);
+            const maxLX = Math.floor(
+              (px + rule.largeDecal.offsetX + rule.largeDecal.width - 1) / TILE_SIZE
+            );
+            const minLY = Math.floor((py + rule.largeDecal.offsetY) / TILE_SIZE);
+            const maxLY = Math.floor(
+              (py + rule.largeDecal.offsetY + rule.largeDecal.height - 1) / TILE_SIZE
+            );
+
+            let footprintSafe = minLX >= 0 && maxLX < 16 && minLY >= 0 && maxLY < 16;
+            if (footprintSafe) {
+              for (let ty = minLY; ty <= maxLY && footprintSafe; ty++) {
+                for (let tx = minLX; tx <= maxLX; tx++) {
+                  const neighborTileId = chunk.tileIdGrid[ty]?.[tx];
+                  if (
+                    neighborTileId === undefined ||
+                    !rule.matchesTile(neighborTileId) ||
+                    chunk.field.isNearCliffEdge(startGX + tx, startGY + ty)
+                  ) {
+                    footprintSafe = false;
+                    break;
+                  }
+                }
+              }
+            }
+
+            if (footprintSafe) {
+              const largeImg = this.loader.getImage(rule.largeDecal.assetKey);
+              if (largeImg && largeImg.complete) {
+                gCtx.drawImage(
+                  largeImg,
+                  px + rule.largeDecal.offsetX,
+                  py + rule.largeDecal.offsetY,
+                  rule.largeDecal.width,
+                  rule.largeDecal.height
+                );
+              }
+            }
+          } else if (decorRoll < rule.smallDecal.threshold) {
+            const assets = rule.smallDecal.assets;
+            const decoIdx = Math.floor(
+              seededHash(gx, gy, chunk.seed + rule.smallDecal.pickSalt) * assets.length
+            );
+            const decoImg = this.loader.getImage(assets[decoIdx]);
             if (decoImg && decoImg.complete) {
               gCtx.drawImage(decoImg, px, py, TILE_SIZE, TILE_SIZE);
-            }
-          }
-
-          // Optional natural desert decorations on pure desert sand (small pebbles and rocks)
-          if (tileId === TILE_IDS.desert_pure && seededHash(gx, gy, chunk.seed + 47) < 0.08) {
-            const desertDecos = [
-              'rock_desert_small_orange',
-              'rock_desert_pebbles_orange',
-              'rock_desert_small_slate',
-              'rock_desert_pebbles_slate',
-            ];
-            const decoIdx = Math.floor(seededHash(gx, gy, chunk.seed + 59) * desertDecos.length);
-            const decoImg = this.loader.getImage(desertDecos[decoIdx]);
-            if (decoImg && decoImg.complete) {
-              gCtx.drawImage(decoImg, px, py, TILE_SIZE, TILE_SIZE);
-            }
-          }
-
-          // Optional natural autumn ground decorations on autumn ground tiles (Layer 0 - ground layer)
-          const isAutumnGround = (tileId >= 480 && tileId <= 492) || tileId === TILE_IDS.tall_grass_autumn;
-          if (isAutumnGround) {
-            const decorRoll = seededHash(gx, gy, chunk.seed + 31);
-            if (decorRoll < 0.035) {
-              // Big fallen leaf pile (64x64) as ground decoration (Layer 0, zero hitbox)
-              const bigLeafImg = this.loader.getImage('leaf_pile_red_big');
-              if (bigLeafImg && bigLeafImg.complete) {
-                gCtx.drawImage(bigLeafImg, px - 16, py - 16, 64, 64);
-              }
-            } else if (decorRoll < 0.15) {
-              const autumnDecos = [
-                'decor_mushroom_tan',
-                'decor_mushroom_red_cluster',
-                'decor_grass_red_tuft',
-                'decor_grass_dry',
-                'decor_flower_white_cluster',
-                'decor_flowerbed_red',
-                'decor_flowerbed_red_white',
-                'decor_mushroom_red_pair',
-                'decor_mushroom_red_single',
-                'decor_flower_orange_patch',
-                'decor_flowerbed_red_pink',
-                'decor_flowerbed_red_lilac',
-                'decor_grass_red_blue',
-                'decor_grass_red_white',
-                'decor_rock_mossy_pile',
-                'decor_leaf_fragments_red',
-                'decor_rock_brown',
-                'decor_leaf_pile_red',
-                'decor_roots_curved_1',
-                'decor_roots_curved_2',
-              ];
-              const decoIdx = Math.floor(seededHash(gx, gy, chunk.seed + 67) * autumnDecos.length);
-              const decoImg = this.loader.getImage(autumnDecos[decoIdx]);
-              if (decoImg && decoImg.complete) {
-                gCtx.drawImage(decoImg, px, py, TILE_SIZE, TILE_SIZE);
-              }
-            }
-          }
-
-          // Natural snow ground decorations must ONLY be placed inside pure interior snow ground (never on boundary fringe 511-522)
-          const isSnowGround = tileId === TILE_IDS.ground_snow_pure;
-          if (isSnowGround) {
-            const snowDecorRoll = seededHash(gx, gy, chunk.seed + 41);
-            if (snowDecorRoll < 0.03) {
-              // Medium ice patch / frozen mound (64x32) as ground decoration (Layer 0, zero hitbox)
-              const patchImg = this.loader.getImage('ice_snow_patch_medium');
-              if (patchImg && patchImg.complete) {
-                gCtx.drawImage(patchImg, px - 16, py, 64, 32);
-              }
-            } else if (snowDecorRoll < 0.16) {
-              const snowDecos = [
-                'decor_snow_drift',
-                'decor_snow_sparkle',
-                'decor_snow_crack',
-                'decor_snow_flower',
-                'decor_snow_mound',
-                'decor_snow_grass_1',
-                'decor_snow_grass_2',
-                'ice_snow_patch_small',
-              ];
-              const decoIdx = Math.floor(seededHash(gx, gy, chunk.seed + 83) * snowDecos.length);
-              const decoImg = this.loader.getImage(snowDecos[decoIdx]);
-              if (decoImg && decoImg.complete) {
-                gCtx.drawImage(decoImg, px, py, TILE_SIZE, TILE_SIZE);
-              }
             }
           }
         }
@@ -284,30 +291,22 @@ export class GroundRenderer {
     // Bake any ground-level decals/leaf piles directly onto the ground canvas (Layer 0)
     if (chunk.plants && chunk.plants.length > 0) {
       for (const plant of chunk.plants) {
-        if (
-          plant.type === 'leaf_pile_red_big' ||
-          plant.type === 'ice_snow_patch_medium' ||
-          plant.type === 'decor_snow_frost_grass' ||
-          (plant.type.startsWith('decor_') &&
-            plant.type !== 'decor_stump_autumn' &&
-            plant.type !== 'stump_snow' &&
-            plant.type !== 'log_snow_fallen' &&
-            !plant.type.startsWith('rock_snow_'))
-        ) {
-          const pImg = this.loader.getImage(plant.type);
-          if (pImg && pImg.complete) {
-            const lx = plant.gx - chunk.cx * 16;
-            const ly = plant.gy - chunk.cy * 16;
-            const px = lx * TILE_SIZE;
-            const py = ly * TILE_SIZE;
-            if (plant.type === 'leaf_pile_red_big') {
-              gCtx.drawImage(pImg, px - 16, py - 16, 64, 64);
-            } else if (plant.type === 'ice_snow_patch_medium' || plant.type === 'decor_snow_frost_grass') {
-              gCtx.drawImage(pImg, px, py, 64, 32);
-            } else {
-              gCtx.drawImage(pImg, px, py, TILE_SIZE, TILE_SIZE);
-            }
-          }
+        const spec = getPlantVisualSpec(plant.type);
+        if (spec.layer !== 'ground') continue;
+
+        const pImg = this.loader.getImage(plant.type);
+        if (pImg && pImg.complete) {
+          const lx = plant.gx - chunk.cx * 16;
+          const ly = plant.gy - chunk.cy * 16;
+          const px = lx * TILE_SIZE;
+          const py = ly * TILE_SIZE;
+          gCtx.drawImage(
+            pImg,
+            px + spec.groundRenderOffsetX,
+            py + spec.groundRenderOffsetY,
+            spec.width,
+            spec.height
+          );
         }
       }
     }
@@ -339,62 +338,36 @@ export class GroundRenderer {
   ): void {
     ctx.save();
     ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
-    const palmShadowImg = this.loader.getImage('tree_palm_shadow');
 
     for (const chunk of chunkManager.renderChunks) {
       for (const tree of chunk.trees) {
-        const isPalm = tree.type === 'palm';
-        const isDead = tree.type === 'dead_1' || tree.type === 'dead_2';
-        const isCactusLarge = tree.type === 'cactus_large';
-        const isBoulder = tree.type === 'desert_boulder';
-        const isDarkLarge =
-          tree.type === 'dark_large_1' || tree.type === 'dark_large_2' || tree.type === 'dark_dead';
-        const isDarkForest = tree.type === 'dark_forest';
-        const w = isPalm || isDarkLarge ? 128 : isDarkForest ? 96 : 64;
-        const h = isPalm
-          ? 200
-          : isDarkLarge
-            ? 128
-            : isDarkForest
-              ? 96
-              : isCactusLarge
-                ? 96
-                : isDead || isBoulder
-                  ? 64
-                  : 120;
+        const spec = getTreeVisualSpec(tree.type);
 
         if (
-          tree.x + w < bounds.minX ||
+          tree.x + spec.width < bounds.minX ||
           tree.x > bounds.maxX ||
-          tree.y + h < bounds.minY ||
+          tree.y + spec.height < bounds.minY ||
           tree.y > bounds.maxY
         ) {
           continue;
         }
 
-        if (isPalm) {
-          if (palmShadowImg && palmShadowImg.complete) {
-            ctx.drawImage(palmShadowImg, tree.x, tree.y);
+        if (spec.shadow.kind === 'image') {
+          const shadowImg = this.loader.getImage(spec.shadow.assetKey);
+          if (shadowImg && shadowImg.complete) {
+            ctx.drawImage(shadowImg, tree.x, tree.y);
           }
-        } else if (isDarkLarge) {
-          ctx.beginPath();
-          ctx.ellipse(tree.x + 64, tree.y + 118, 38, 12, 0, 0, Math.PI * 2);
-          ctx.fill();
-        } else if (isDarkForest) {
-          ctx.beginPath();
-          ctx.ellipse(tree.x + 48, tree.y + 88, 28, 9, 0, 0, Math.PI * 2);
-          ctx.fill();
-        } else if (isDead || isBoulder) {
-          ctx.beginPath();
-          ctx.ellipse(tree.x + 32, tree.y + 60, isBoulder ? 24 : 18, 7, 0, 0, Math.PI * 2);
-          ctx.fill();
-        } else if (isCactusLarge) {
-          ctx.beginPath();
-          ctx.ellipse(tree.x + 32, tree.y + 90, 18, 7, 0, 0, Math.PI * 2);
-          ctx.fill();
         } else {
           ctx.beginPath();
-          ctx.ellipse(tree.x + 32, tree.y + 112, 20, 8, 0, 0, Math.PI * 2);
+          ctx.ellipse(
+            tree.x + spec.shadow.cx,
+            tree.y + spec.shadow.cy,
+            spec.shadow.rx,
+            spec.shadow.ry,
+            0,
+            0,
+            Math.PI * 2
+          );
           ctx.fill();
         }
       }
@@ -543,16 +516,9 @@ export class GroundRenderer {
         const { gx, gy, tileId } = waterTile;
 
         // 1. Inland river / lake water (700..729, 750..763, 770..783): per-tile 4-frame strips (bank + water)
-        if (
-          (tileId >= 700 && tileId < 730) ||
-          (tileId >= 750 && tileId <= 763) ||
-          (tileId >= 770 && tileId <= 783)
-        ) {
+        if (isFreshwaterTile(tileId) || isBridgeTile(tileId)) {
           // Bridges (720/721) sit above plain animated water
-          const key =
-            tileId >= TILE_IDS.bridge_wood_h && tileId < 730
-              ? 'water_pure'
-              : TILE_KEY_BY_ID[tileId];
+          const key = isBridgeTile(tileId) ? 'water_pure' : TILE_KEY_BY_ID[tileId];
           const imgToUse = key ? this.loader.getImage(key) : undefined;
           if (!imgToUse || !imgToUse.complete) continue;
           const px = gx * TILE_SIZE;

@@ -19,6 +19,7 @@
     "./wildlife/species-spawn.json": "./wildlife/species-spawn.json",
     "./wildlife/spawn-config.json": "./wildlife/spawn-config.json",
     "./wildlife/behavior-archetypes.json": "./wildlife/behavior-archetypes.json",
-    "./wildlife/species-behavior.json": "./wildlife/species-behavior.json"
+    "./wildlife/species-behavior.json": "./wildlife/species-behavior.json",
+    "./regional-forms.json": "./regional-forms.json"
   }
 }

@@ -19,6 +19,7 @@ const TERRAIN_NAMES: Record<number, string> = {
   [TERRAIN.BEACH_SAND]: 'Bãi cát biển',
   [TERRAIN.HILL]: 'Vách núi / Đồi',
   [TERRAIN.OCEAN_WATER]: 'Sông hồ / Nước',
+  [TERRAIN.ROCKY_HIGHLAND]: 'Cao nguyên đá',
 };
 
 export class DebugOverlayController {

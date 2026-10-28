@@ -20,6 +20,9 @@ export const WORLD_MAP_PALETTE = {
   hillPixels: ['#6c9852', '#75a25a', '#608947'],
   hillFallback: '#77796f',
   hillHighlight: '#b3d06b',
+  rockyPixels: ['#8d806f', '#a4947e', '#756957'],
+  rockyFallback: '#877966',
+  rockyDetail: '#5d5144',
   roadPixels: ['#b98251', '#c58d59', '#ae7848'],
   roadFallback: '#b28b68',
   bridgeFallback: '#8b684e',
@@ -36,4 +39,5 @@ export const WORLD_MAP_PALETTE = {
   fogEdge: 'rgba(148, 163, 184, 0.08)',
 } as const;
 
-export type WorldMapTerrainClass = 'grass' | 'sand' | 'water' | 'hill' | 'road' | 'dark_land' | 'autumn' | 'snow';
+export type WorldMapTerrainClass =
+  'grass' | 'sand' | 'water' | 'hill' | 'rocky_highland' | 'road' | 'dark_land' | 'autumn' | 'snow';

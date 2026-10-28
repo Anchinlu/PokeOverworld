@@ -9,7 +9,10 @@
 import type { GameSession } from '../game/game-session';
 import type { TerrainField } from '../maps/terrain-field';
 import { CHUNK_SIZE } from '@pokemon/game-data';
-import { getSettlementForRegion } from '../maps/terrain-field/settlement-sites';
+import {
+  getNearbySettlements,
+  getSettlementForRegion,
+} from '../maps/terrain-field/settlement-sites';
 import { getStartVillagePlacement } from '../maps/terrain-field/start-village';
 import type { VillagePlacement } from '../maps/village-rules';
 import { V0_CONFIG } from '../maps/terrain-field/v0-config';
@@ -194,6 +197,12 @@ export class WorldMapScreen {
     minGY: number,
     maxGY: number
   ): VillagePlacement[] {
+    if (field.version >= 4) {
+      const centerGX = Math.round((minGX + maxGX) / 2);
+      const centerGY = Math.round((minGY + maxGY) / 2);
+      return getNearbySettlements(centerGX, centerGY, field);
+    }
+
     const regionSize = V0_CONFIG.REGION_TILES; // 96
     const minRX = Math.floor(minGX / regionSize) - 1;
     const maxRX = Math.floor(maxGX / regionSize) + 1;

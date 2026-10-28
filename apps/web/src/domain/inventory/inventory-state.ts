@@ -12,7 +12,13 @@ export interface InventoryState {
   items: Record<string, number>;
 }
 
-export function createDefaultInventoryState(): InventoryState {
+export function createDefaultInventoryState(initialItems?: Record<string, number>): InventoryState {
+  return {
+    items: initialItems ? { ...initialItems } : {},
+  };
+}
+
+export function createDebugStarterInventoryState(): InventoryState {
   return {
     items: {
       POKEBALL: 20,

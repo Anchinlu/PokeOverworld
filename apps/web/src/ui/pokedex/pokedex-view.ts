@@ -10,6 +10,35 @@ import { getItemPocketName } from './pokedex-items';
 import type { PokedexInfoSubTab, PokedexTab, PokedexViewMode } from './pokedex-state';
 import { POKEDEX_ASSETS, MOVE_ASSETS, ITEM_ASSETS, HABITAT_ASSETS } from '../../assets';
 import { getAbilityDisplay } from '../../battle/rules/ability-engine';
+import { pokemonCatalog } from '../../data';
+
+export function formatPokedexNumber(pokemon: PokemonSpeciesData): string {
+  const isRegional = Boolean((pokemon as any).region);
+  const baseKey = (pokemon as any).baseSpeciesKey;
+  const basePkmn = baseKey ? pokemonCatalog.getBySpeciesKey(baseKey) : undefined;
+  const baseId = basePkmn ? basePkmn.id : pokemon.id;
+  const regTag = (pokemon as any).region
+    ? `-${String((pokemon as any).region).charAt(0).toUpperCase()}`
+    : '';
+  return isRegional
+    ? `${String(baseId).padStart(3, '0')}${regTag}`
+    : String(pokemon.id).padStart(3, '0');
+}
+
+function formatPokemonRegionLabel(pokemon: PokemonSpeciesData): string {
+  const region = ((pokemon as any).region || '').toLowerCase();
+  if (region === 'alola') return 'Alola (Dạng Vùng)';
+  if (region === 'galar') return 'Galar (Dạng Vùng)';
+  if (region === 'hisui') return 'Hisui (Dạng Vùng)';
+  if (region === 'paldea') return 'Paldea (Dạng Vùng)';
+  if (pokemon.id <= 151) return 'Gen 1 (Kanto)';
+  if (pokemon.id <= 251) return 'Gen 2 (Johto)';
+  if (pokemon.id <= 493) return 'Gen 4 (Sinnoh)';
+  if (pokemon.id <= 721) return 'Gen 6 (Kalos)';
+  if (pokemon.id <= 898) return 'Gen 8 (Galar)';
+  if (pokemon.id <= 905) return 'Gen 8 (Hisui)';
+  return 'Gen 9 (Paldea)';
+}
 
 export interface PokedexViewElements {
   rootModal: HTMLElement;
@@ -261,7 +290,7 @@ export class PokedexView {
                 <div class="research-title">THÔNG TIN</div>
                 <div class="research-item">
                   <span class="research-label">Hệ Gen:</span>
-                  <span class="research-value">Gen 1 (Kanto)</span>
+                  <span class="research-value" id="infoGenRegion">Gen 1 (Kanto)</span>
                 </div>
                 <div class="research-item">
                   <span class="research-label">Loài:</span>
@@ -409,20 +438,24 @@ export class PokedexView {
   }
 
   // --- Render Pokemon Tab ---
-  public renderPokemonPreview(pokemon: PokemonSpeciesData | undefined, totalCount: number): void {
+  public renderPokemonPreview(
+    pokemon: PokemonSpeciesData | undefined,
+    seenCount?: number,
+    caughtCount?: number
+  ): void {
     if (!this.elements) return;
 
     const titleEl = this.elements.rootModal.querySelector<HTMLElement>('#listLeftTitle');
     if (titleEl) {
       titleEl.innerText = pokemon
-        ? `No. ${String(pokemon.id).padStart(3, '0')} ${pokemon.name}`
+        ? `No. ${formatPokedexNumber(pokemon)} ${pokemon.name}`
         : 'Không tìm thấy';
     }
 
     const countSeen = this.elements.rootModal.querySelector<HTMLElement>('#countSeen');
     const countCaught = this.elements.rootModal.querySelector<HTMLElement>('#countCaught');
-    if (countSeen) countSeen.innerText = String(totalCount);
-    if (countCaught) countCaught.innerText = String(totalCount);
+    if (countSeen) countSeen.innerText = String(seenCount ?? 0);
+    if (countCaught) countCaught.innerText = String(caughtCount ?? 0);
 
     const typesContainer = this.elements.rootModal.querySelector<HTMLElement>('#listPokemonTypes');
     if (typesContainer) {
@@ -446,7 +479,8 @@ export class PokedexView {
     scrollOffset: number,
     visibleCount: number,
     onSelect: (index: number) => void,
-    onOpenDetail: (index: number) => void
+    onOpenDetail: (index: number) => void,
+    hasCaughtFn?: (speciesKey: string) => boolean
   ): void {
     if (!this.elements) return;
     const container = this.elements.listItemsContainer;
@@ -457,15 +491,19 @@ export class PokedexView {
     visibleItems.forEach((pkmn, idx) => {
       const realIndex = scrollOffset + idx;
       const isSelected = realIndex === selectedIndex;
+      const isCaught = hasCaughtFn ? hasCaughtFn(pkmn.speciesKey) : false;
 
       const itemEl = document.createElement('div');
       itemEl.className = `pokedex-list-row ${isSelected ? 'selected' : ''}`;
       itemEl.dataset.index = String(realIndex);
 
-      const padId = String(pkmn.id).padStart(3, '0');
+      const padId = formatPokedexNumber(pkmn);
+      const pokeballHtml = isCaught
+        ? `<img src="${POKEDEX_ASSETS.iconOwn}" class="row-pokeball-icon" alt="Caught" />`
+        : `<span class="row-pokeball-icon row-pokeball-placeholder" style="display:inline-block;width:14px;height:14px;"></span>`;
 
       itemEl.innerHTML = `
-        <img src="${POKEDEX_ASSETS.iconOwn}" class="row-pokeball-icon" alt="Caught" />
+        ${pokeballHtml}
         <div class="row-pkmn-icon" style="background-image: url('/${pkmn.sprites.icon}');"></div>
         <span class="row-num">No. ${padId}</span>
         <span class="row-name">${pkmn.name}</span>
@@ -737,7 +775,7 @@ export class PokedexView {
   ): void {
     if (!this.elements) return;
 
-    const padId = String(pokemon.id).padStart(3, '0');
+    const padId = formatPokedexNumber(pokemon);
     const idEl = this.elements.rootModal.querySelector<HTMLElement>('#infoPkmnId');
     const nameEl = this.elements.rootModal.querySelector<HTMLElement>('#infoPkmnName');
     if (idEl) idEl.innerText = `No. ${padId}`;
@@ -765,7 +803,7 @@ export class PokedexView {
 
         const wrapper = document.createElement('div');
         wrapper.className = 'evo-stage-wrapper';
-        wrapper.title = `${stagePkmn.name} (No. ${String(stagePkmn.id).padStart(3, '0')})`;
+        wrapper.title = `${stagePkmn.name} (No. ${formatPokedexNumber(stagePkmn)})`;
 
         const isCurrent = stagePkmn.id === pokemon.id;
         if (isCurrent) {
@@ -833,6 +871,7 @@ export class PokedexView {
       const el = this.elements.rootModal.querySelector<HTMLElement>(`#${id}`);
       if (el) el.innerText = val;
     };
+    setResearch('infoGenRegion', formatPokemonRegionLabel(pokemon));
     setResearch('infoSpecies', pokemon.species ?? '—');
     const abilityDisplay = getAbilityDisplay(pokemon.ability);
     setResearch('infoAbility', abilityDisplay.fullName);

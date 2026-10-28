@@ -93,8 +93,12 @@ export function calculateUtilityScores(
       scores.alert = 0.85;
       if (profile.temperament === 'aggressive' || profile.temperament === 'territorial') {
         scores.territorial = 0.8;
-        if (perception.distanceTiles <= 3.0) {
-          scores.chase = 0.9;
+        const maxChaseDist =
+          profile.temperament === 'aggressive'
+            ? Math.max(5.5, profile.senses?.detectRadius ?? 5)
+            : 3.0;
+        if (perception.distanceTiles <= maxChaseDist) {
+          scores.chase = 0.95;
         }
       }
     } else if (reaction === 'curious') {

@@ -1,7 +1,16 @@
 export type WildRole = 'solo' | 'member' | 'leader' | 'apex';
 export type WildRarityTier = 0 | 1 | 2 | 3 | 4;
 
-export type WildEmoteType = '!' | '?' | 'sweat' | 'dots';
+export type WildEmoteType =
+  | '!'
+  | '?'
+  | 'sweat'
+  | 'dots'
+  | 'heart'
+  | 'music'
+  | 'anger'
+  | 'eat'
+  | 'happy';
 
 export interface WildEmote {
   type: WildEmoteType;

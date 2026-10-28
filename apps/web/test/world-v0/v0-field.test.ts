@@ -3,12 +3,14 @@ import { TILE_IDS } from '@pokemon/game-data';
 import { V0Field } from '../../src/maps/terrain-field/v0-field';
 import { createTerrainField } from '../../src/maps/terrain-field';
 
+import { getStartSpawn } from '../../src/maps/terrain-field/start-village';
+
 describe('V0Field Infinite 2D Procedural Terrain (worldGenVersion = 2)', () => {
   it('creates V0Field through createTerrainField factory', () => {
     const field = createTerrainField(2, 101);
     expect(field.version).toBe(2);
     expect(field.seed).toBe(101);
-    expect(field.getSpawn()).toEqual({ gx: -7, gy: -5 });
+    expect(field.getSpawn()).toEqual(getStartSpawn(101));
   });
 
   it('I1 Determinism: repeated queries yield identical results', () => {

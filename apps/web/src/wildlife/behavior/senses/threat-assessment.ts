@@ -18,6 +18,11 @@ export function assessThreat(
   const pLevel = Math.max(1, playerRefLevel);
   const ratio = entity.level / pLevel;
 
+  // Aggressive creatures always challenge the player and never flee
+  if (profile.temperament === 'aggressive') {
+    return { reaction: 'warn', ratio };
+  }
+
   // Weak creature flees
   if (ratio < profile.threat.fleeBelowRatio) {
     return { reaction: 'flee', ratio };
@@ -36,7 +41,7 @@ export function assessThreat(
   if (profile.temperament === 'skittish') {
     return { reaction: 'flee', ratio };
   }
-  if (profile.temperament === 'territorial' || profile.temperament === 'aggressive') {
+  if (profile.temperament === 'territorial') {
     return { reaction: 'warn', ratio };
   }
 

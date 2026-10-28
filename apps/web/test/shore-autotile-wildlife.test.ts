@@ -4,8 +4,7 @@ import { V0Field } from '../src/maps/terrain-field/v0-field';
 import { V3Field } from '../src/maps/terrain-field/v3-field';
 import { findGroupAnchors, placeHerdMembers } from '../src/wildlife/spawn/placement';
 import { canWildEntityEnter } from '../src/wildlife/behavior/movement/grid-mover';
-import { createWorldQueryAdapter } from '../src/wildlife/ports/world-query-adapter';
-import type { WorldQuery, TileContext } from '../src/wildlife/ports/world-query';
+import type { WorldQuery } from '../src/wildlife/ports/world-query';
 
 describe('Shore Autotiling & Wildlife Water Boundary Rules', () => {
   it('correctly autotiles all 4 inner corners and 4 outer diagonal corners', () => {

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PokeOverworld — Đồng Bằng Apricorn & Pokémon Côn Trùng Chủ Động Khiêu Chiến</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #080f0c;
+    color: #e2e8f0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    padding: 24px;
+    line-height: 1.6;
+  }
+  header {
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid rgba(16, 185, 129, 0.25);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  h1 {
+    color: #34d399;
+    font-size: 26px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+  }
+  .subtitle {
+    color: #94a3b8;
+    font-size: 14px;
+    margin-top: 6px;
+  }
+  .badges {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 700;
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.35);
+  }
+  .tag-red {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border-color: rgba(239, 68, 68, 0.35);
+  }
+
+  .grid-layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 24px;
+  }
+  @media (max-width: 1024px) {
+    .grid-layout { grid-template-columns: 1fr; }
+  }
+
+  .canvas-panel {
+    background: #0f172a;
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid #1e293b;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+  }
+  .canvas-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .canvas-title {
+    font-weight: 700;
+    font-size: 16px;
+    color: #f8fafc;
+  }
+  .canvas-sub {
+    font-size: 12px;
+    color: #64748b;
+  }
+
+  #viewport {
+    width: 100%;
+    height: 520px;
+    background: #567d46;
+    border-radius: 8px;
+    display: block;
+    image-rendering: pixelated;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.4);
+  }
+
+  .info-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .card {
+    background: #0f172a;
+    border-radius: 12px;
+    padding: 18px;
+    border: 1px solid #1e293b;
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #34d399;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tree-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .tree-item {
+    background: #1e293b;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .color-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .stat-label { color: #94a3b8; }
+  .stat-val { font-weight: 700; color: #f8fafc; }
+
+  .encounter-alert {
+    display: none;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.3));
+    border: 1px solid #ef4444;
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 12px;
+    text-align: center;
+    font-weight: 800;
+    color: #fca5a5;
+    animation: pulse 1s infinite alternate;
+  }
+  @keyframes pulse {
+    0% { transform: scale(0.99); opacity: 0.8; }
+    100% { transform: scale(1.01); opacity: 1; }
+  }
+
+  .instructions {
+    background: rgba(30, 41, 59, 0.5);
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    color: #cbd5e1;
+    margin-top: 12px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🌳 Biome Đồng Bằng Apricorn (`apricorn_plain`)</h1>
+    <div class="subtitle">Biến thể Thảo Nguyên Cổ Thụ 10 Loài Cây Apricorn 16-Frame & Hệ Sinh Thái Côn Trùng Chủ Động Khiêu Chiến</div>
+  </div>
+  <div class="badges">
+    <span class="tag">🌾 Plains Variant</span>
+    <span class="tag">🌀 16-Frame Seamless Anim</span>
+    <span class="tag-red">⚔️ Aggressive Wildlife AI</span>
+  </div>
+</header>
+
+<div class="grid-layout">
+  <div class="canvas-panel">
+    <div class="canvas-header">
+      <div>
+        <div class="canvas-title">Mô Phỏng Trực Tiếp (Live Canvas Simulation)</div>
+        <div class="canvas-sub">Điều khiển Ash: Phím Mũi Tên / WASD để tiến vào lãnh thổ Apricorn</div>
+      </div>
+      <div id="statusLabel" class="tag">🌿 Trạng thái: Yên bình</div>
+    </div>
+    <canvas id="viewport" width="800" height="520"></canvas>
+    <div id="battleAlert" class="encounter-alert">
+      ⚡ CÔN TRÙNG LAO VÀO KHIÊU CHIẾN PLAYER! (BATTLE INITIATED)
+    </div>
+  </div>
+
+  <div class="info-panel">
+    <div class="card">
+      <div class="card-title">🍎 10 Giống Cây Apricorn</div>
+      <div class="tree-list">
+        <div class="tree-item"><span class="color-dot" style="background:#3b82f6"></span>Blue (Lure)</div>
+        <div class="tree-item"><span class="color-dot" style="background:#ef4444"></span>Red (Level)</div>
+        <div class="tree-item"><span class="color-dot" style="background:#eab308"></span>Yellow (Moon)</div>
+        <div class="tree-item"><span class="color-dot" style="background:#1e293b; border: 1px solid #64748b;"></span>Black (Heavy)</div>
+        <div class="tree-item"><span class="color-dot" style="background:#f8fafc"></span>White (Fast)</div>
+        <div class="tree-item"><span class="color-dot" style="background:#22c55e"></span>Green (Friend)</div>
+        <div class="tree-item"><span class="color-dot" style="background:#ec4899"></span>Pink (Love)</div>
+        <div class="tree-item"><span class="color-dot" style="background:#f97316"></span>Orange (Sport)</div>
+        <div class="tree-item"><span class="color-dot" style="background:#06b6d4"></span>Cyan (Dive)</div>
+        <div class="tree-item"><span class="color-dot" style="background:#a855f7"></span>Purple (Dream)</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🐝 Hành Vi AI Côn Trùng</div>
+      <div class="stat-row">
+        <span class="stat-label">Loài cư ngụ</span>
+        <span class="stat-val">Beedrill, Scyther, Pinsir</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Tính khí (Temperament)</span>
+        <span class="stat-val" style="color: #f87171;">Aggressive (Hung hãn)</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Khoảng cách phát hiện</span>
+        <span class="stat-val">6 Ô Tile</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Phản ứng khi thấy Player</span>
+        <span class="stat-val" style="color: #fbbf24;">Hiển thị (!) & Đuổi bắt</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Tự động khiêu chiến</span>
+        <span class="stat-val" style="color: #34d399;">100% khi chạm người</span>
+      </div>
+    </div>
+
+    <div class="instructions">
+      <strong>🎮 Hướng dẫn thử nghiệm:</strong><br>
+      1. Nhấn phím mũi tên hoặc WASD để di chuyển Ash.<br>
+      2. Khi tiến gần Beedrill hoặc Scyther (khoảng cách &lt; 6 ô), Pokémon sẽ hiện dấu <strong>(!)</strong>, đổi hướng và chủ động lao thẳng vào Ash.<br>
+      3. Khi va chạm, trận chiến hoang dã sẽ được tự động kích hoạt lập tức kể cả khi bạn đứng yên!
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('viewport');
+const ctx = canvas.getContext('2d');
+const statusLabel = document.getElementById('statusLabel');
+const battleAlert = document.getElementById('battleAlert');
+
+// Ash character
+const player = {
+  x: 400,
+  y: 360,
+  speed: 2.8,
+  size: 24,
+  dir: 'down'
+};
+
+// Keys
+const keys = {};
+window.addEventListener('keydown', (e) => { keys[e.key.toLowerCase()] = true; });
+window.addEventListener('keyup', (e) => { keys[e.key.toLowerCase()] = false; });
+
+// 10 Apricorn Trees loaded
+const treeTypes = [
+  { name: 'Blue', color: '#3b82f6', fruit: '#2563eb', x: 120, y: 150 },
+  { name: 'Red', color: '#ef4444', fruit: '#dc2626', x: 280, y: 130 },
+  { name: 'Yellow', color: '#eab308', fruit: '#ca8a04', x: 500, y: 140 },
+  { name: 'Black', color: '#334155', fruit: '#0f172a', x: 680, y: 160 },
+  { name: 'White', color: '#f1f5f9', fruit: '#ffffff', x: 200, y: 350 },
+  { name: 'Green', color: '#22c55e', fruit: '#16a34a', x: 620, y: 370 },
+  { name: 'Pink', color: '#ec4899', fruit: '#db2777', x: 380, y: 220 },
+  { name: 'Orange', color: '#f97316', fruit: '#ea580c', x: 80, y: 380 },
+  { name: 'Cyan', color: '#06b6d4', fruit: '#0891b2', x: 720, y: 280 },
+  { name: 'Purple', color: '#a855f7', fruit: '#9333ea', x: 520, y: 320 }
+];
+
+// Load actual spritesheets
+const loadedSheets = {};
+const sheetNames = [
+  'tree01_blue_sheet', 'tree02_red_sheet', 'tree03_yellow_sheet', 'tree04_black_sheet', 'tree05_white_sheet',
+  'tree06_green_sheet', 'tree07_pink_sheet', 'tree08_orange_sheet', 'tree09_cyan_sheet', 'tree10_purple_sheet'
+];
+sheetNames.forEach((name, i) => {
+  const img = new Image();
+  img.src = `/assets/trees/apricorn/${name}.png`;
+  loadedSheets[i] = img;
+});
+
+// Bug Pokémon with aggressive AI
+const bugs = [
+  { name: 'BEEDRILL', x: 260, y: 240, homeX: 260, homeY: 240, speed: 2.1, state: 'patrol', color: '#eab308', emote: null, emoteTimer: 0 },
+  { name: 'SCYTHER', x: 440, y: 180, homeX: 440, homeY: 180, speed: 2.3, state: 'patrol', color: '#22c55e', emote: null, emoteTimer: 0 },
+  { name: 'PINSIR', x: 580, y: 260, homeX: 580, homeY: 260, speed: 1.9, state: 'patrol', color: '#b45309', emote: null, emoteTimer: 0 },
+  { name: 'VENOMOTH', x: 180, y: 280, homeX: 180, homeY: 280, speed: 1.8, state: 'patrol', color: '#a855f7', emote: null, emoteTimer: 0 }
+];
+
+let battleCooldown = 0;
+let lastTime = performance.now();
+
+function gameLoop(now) {
+  const dt = (now - lastTime) / 1000;
+  lastTime = now;
+
+  // 1. Player movement
+  if (keys['arrowup'] || keys['w']) { player.y -= player.speed; player.dir = 'up'; }
+  if (keys['arrowdown'] || keys['s']) { player.y += player.speed; player.dir = 'down'; }
+  if (keys['arrowleft'] || keys['a']) { player.x -= player.speed; player.dir = 'left'; }
+  if (keys['arrowright'] || keys['d']) { player.x += player.speed; player.dir = 'right'; }
+
+  // Clamp player to bounds
+  player.x = Math.max(30, Math.min(canvas.width - 30, player.x));
+  player.y = Math.max(40, Math.min(canvas.height - 30, player.y));
+
+  // 2. Bug AI logic (Aggressive / Proactive Chase)
+  let anyChasing = false;
+  bugs.forEach((bug, idx) => {
+    const dx = player.x - bug.x;
+    const dy = player.y - bug.y;
+    const dist = Math.hypot(dx, dy);
+
+    // Detection radius: 6 tiles (approx 192px)
+    if (dist <= 192) {
+      anyChasing = true;
+      if (bug.state !== 'chase') {
+        bug.state = 'chase';
+        bug.emote = '!';
+        bug.emoteTimer = 1.2;
+      }
+      // Direct sprint chase towards player
+      const angle = Math.atan2(dy, dx);
+      bug.x += Math.cos(angle) * (bug.speed * 1.35);
+      bug.y += Math.sin(angle) * (bug.speed * 1.35);
+    } else {
+      bug.state = 'patrol';
+      // Gentle patrol around home
+      const hdx = bug.homeX - bug.x;
+      const hdy = bug.homeY - bug.y;
+      if (Math.hypot(hdx, hdy) > 40) {
+        const hAngle = Math.atan2(hdy, hdx);
+        bug.x += Math.cos(hAngle) * (bug.speed * 0.4);
+        bug.y += Math.sin(hAngle) * (bug.speed * 0.4);
+      } else {
+        bug.x += Math.sin(now * 0.002 + idx) * 0.5;
+        bug.y += Math.cos(now * 0.002 + idx) * 0.5;
+      }
+    }
+
+    if (bug.emoteTimer > 0) {
+      bug.emoteTimer -= dt;
+      if (bug.emoteTimer <= 0) bug.emote = null;
+    }
+
+    // Touch collision -> Battle trigger
+    if (dist < (player.size + 14) && battleCooldown <= 0) {
+      triggerBattle(bug);
+    }
+  });
+
+  if (battleCooldown > 0) {
+    battleCooldown -= dt;
+    if (battleCooldown <= 0) {
+      battleAlert.style.display = 'none';
+      statusLabel.className = 'tag';
+      statusLabel.innerText = '🌿 Trạng thái: Yên bình';
+    }
+  } else if (anyChasing) {
+    statusLabel.className = 'tag tag-red';
+    statusLabel.innerText = '⚠️ BÁO ĐỘNG: Côn trùng đang chủ động tấn công!';
+  } else {
+    statusLabel.className = 'tag';
+    statusLabel.innerText = '🌿 Trạng thái: Yên bình';
+  }
+
+  // 3. Render
+  render(now);
+  requestAnimationFrame(gameLoop);
+}
+
+function triggerBattle(bug) {
+  battleCooldown = 3.0; // 3 second showcase alert
+  battleAlert.style.display = 'block';
+  battleAlert.innerHTML = `⚔️ <strong>${bug.name}</strong> đã chủ động lao tới khiêu chiến với bạn! (Phát hiện & Tự động vào Battle Screen)`;
+  statusLabel.className = 'tag tag-red';
+  statusLabel.innerText = `⚔️ Đang giao chiến với ${bug.name}!`;
+
+  // Push bug back slightly
+  bug.x += (bug.x > player.x ? 25 : -25);
+  bug.y += (bug.y > player.y ? 25 : -25);
+}
+
+function render(now) {
+  // Clear with grass green
+  ctx.fillStyle = '#689f38';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Background grass grid texture
+  ctx.fillStyle = '#558b2f';
+  for (let x = 0; x < canvas.width; x += 32) {
+    for (let y = 0; y < canvas.height; y += 32) {
+      if ((x + y) % 64 === 0) {
+        ctx.fillRect(x, y, 32, 32);
+      }
+    }
+  }
+
+  // Draw Apricorn flower tufts
+  ctx.fillStyle = '#e8f5e9';
+  for (let i = 0; i < 20; i++) {
+    const fx = (i * 97) % canvas.width;
+    const fy = (i * 73) % canvas.height;
+    ctx.beginPath();
+    ctx.arc(fx, fy, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Y-sort rendering array
+  const renderQueue = [];
+
+  // 1. Trees
+  treeTypes.forEach((t, i) => {
+    renderQueue.push({
+      ySort: t.y,
+      draw: () => {
+        // Shadow
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
+        ctx.beginPath();
+        ctx.ellipse(t.x, t.y, 24, 8, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        const img = loadedSheets[i];
+        if (img && img.complete && img.width > 300) {
+          const frameWidth = Math.floor(img.width / 16);
+          const frameHeight = img.height;
+          const frame = Math.floor((now / 85) % 16);
+          // Proportional tree size matching in-game spec (w=76, h=140)
+          ctx.drawImage(
+            img,
+            frame * frameWidth, 0, frameWidth, frameHeight,
+            t.x - 38, t.y - 132, 76, 140
+          );
+        } else {
+          // Fallback procedural tree
+          ctx.fillStyle = '#4a2810';
+          ctx.fillRect(t.x - 10, t.y - 45, 20, 45);
+          ctx.fillStyle = '#2e7d32';
+          ctx.beginPath();
+          ctx.arc(t.x, t.y - 75, 32, 0, Math.PI * 2);
+          ctx.fill();
+          // Apricorn fruits
+          ctx.fillStyle = t.fruit;
+          for (let f = 0; f < 5; f++) {
+            ctx.beginPath();
+            ctx.arc(t.x - 18 + f * 9, t.y - 80 + (f % 2) * 10, 4.5, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+
+        // Label
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '10px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(`${t.name} Apricorn`, t.x, t.y + 18);
+      }
+    });
+  });
+
+  // 2. Player Ash
+  renderQueue.push({
+    ySort: player.y,
+    draw: () => {
+      // Player shadow
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+      ctx.beginPath();
+      ctx.ellipse(player.x, player.y, 14, 6, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Body (Red shirt, blue pants, cap)
+      ctx.fillStyle = '#2563eb'; // Jeans
+      ctx.fillRect(player.x - 7, player.y - 10, 14, 10);
+      ctx.fillStyle = '#ef4444'; // Red vest
+      ctx.fillRect(player.x - 8, player.y - 24, 16, 14);
+      ctx.fillStyle = '#fde047'; // Skin
+      ctx.beginPath();
+      ctx.arc(player.x, player.y - 30, 8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#dc2626'; // Cap
+      ctx.beginPath();
+      ctx.arc(player.x, player.y - 34, 8, Math.PI, 0);
+      ctx.fill();
+
+      // Name tag
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Ash', player.x, player.y - 42);
+    }
+  });
+
+  // 3. Bug Pokémon
+  bugs.forEach((b) => {
+    renderQueue.push({
+      ySort: b.y,
+      draw: () => {
+        // Shadow
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
+        ctx.beginPath();
+        ctx.ellipse(b.x, b.y, 12, 5, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Sprite proxy
+        ctx.fillStyle = b.color;
+        ctx.beginPath();
+        ctx.arc(b.x, b.y - 14, 12, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Wings vibrating
+        const wingOffset = Math.sin(now * 0.05) * 6;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+        ctx.beginPath();
+        ctx.ellipse(b.x - 10, b.y - 20 + wingOffset, 8, 4, -0.4, 0, Math.PI * 2);
+        ctx.ellipse(b.x + 10, b.y - 20 - wingOffset, 8, 4, 0.4, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Emote
+        if (b.emote) {
+          ctx.fillStyle = '#ef4444';
+          ctx.font = 'bold 16px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(b.emote, b.x, b.y - 34);
+        }
+
+        // Species Name
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = 'bold 10px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(b.name, b.x, b.y + 12);
+      }
+    });
+  });
+
+  // Sort and draw by Y
+  renderQueue.sort((a, b) => a.ySort - b.ySort);
+  renderQueue.forEach(item => item.draw());
+}
+
+// Start animation loop
+requestAnimationFrame(gameLoop);
+</script>
+
+</body>
+</html>

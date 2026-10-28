@@ -155,6 +155,10 @@ function getHighlandPatch(cellX: number, cellY: number, field: TerrainField): Hi
  * object generator because it owns the concrete tile and collider grids.
  */
 export function isTallGrassTile(gx: number, gy: number, field: TerrainField): boolean {
+  if (field.isRockyHighland?.(gx, gy) || field.isHighCliff?.(gx, gy)) {
+    return false;
+  }
+
   const cellX = Math.floor(gx / TALL_GRASS_PATCH_CELL_SIZE);
   const cellY = Math.floor(gy / TALL_GRASS_PATCH_CELL_SIZE);
 
@@ -203,7 +207,9 @@ export function isHighlandTallGrassTile(gx: number, gy: number, field: TerrainFi
   if (
     !field.isHill(gx, gy) ||
     field.isNearCliffEdge(gx, gy) ||
-    field.isDesert?.(gx, gy)
+    field.isDesert?.(gx, gy) ||
+    field.isRockyHighland?.(gx, gy) ||
+    field.isHighCliff?.(gx, gy)
   ) {
     return false;
   }

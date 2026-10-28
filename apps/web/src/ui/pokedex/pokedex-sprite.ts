@@ -69,6 +69,7 @@ export interface AnimatorOptions {
   fixedWidth?: number;
   fixedHeight?: number;
   groundY?: number;
+  frameDuration?: number;
 }
 
 // Canvas Animated Sprite Manager for EBS Generation 5 horizontal strip sprites
@@ -82,7 +83,7 @@ export class PokemonSpriteAnimator {
   private frameWidth = 0;
   private frameHeight = 0;
   private lastTime = 0;
-  private frameDuration = 45; // ~22 FPS
+  private frameDuration = 45; // Default initial duration
   private options?: AnimatorOptions;
   private destX = 0;
   private destY = 0;
@@ -100,6 +101,26 @@ export class PokemonSpriteAnimator {
     return this.frameDuration;
   }
 
+  /**
+   * Calculates an adaptive, calm, and natural frame duration (in ms) based on sprite strip length.
+   * Prevents short-strip sprites (like Alolan Vulpix with 10 frames) from playing hyperactively,
+   * while giving high-frame rips a calm, canonical Gen 5 idle pacing.
+   */
+  public static calculateFrameDuration(totalFrames: number, isShiny = false): number {
+    if (totalFrames <= 1) return 100;
+    // Low frame-count strips (10-16 frames, e.g. Alolan Vulpix, Alolan Ninetales, Galarian Mr. Mime):
+    // Play at ~7.5 - 8.5 FPS so a 10-frame idle takes ~1.3s instead of 0.45s.
+    if (totalFrames <= 12) return 130;
+    if (totalFrames <= 20) return 110;
+    if (totalFrames <= 36) return 95;
+    if (totalFrames <= 65) {
+      // 56 frames (decimated shiny strips) or 40-65 frames
+      return isShiny ? 95 : 80;
+    }
+    if (totalFrames <= 90) return 70;
+    return 60; // For 90+ frames (e.g. 112-frame Pikachu), 60ms (~16.6 FPS) gives a steady 6-7s loop
+  }
+
   load(src: string, isShiny?: boolean): void {
     this.stop();
     const shiny = isShiny ?? /shiny/i.test(src);
@@ -114,6 +135,9 @@ export class PokemonSpriteAnimator {
       this.frameHeight = img.height;
       this.frameWidth = img.height; // Square frame
       this.totalFrames = Math.max(1, Math.floor(img.width / img.height));
+      this.frameDuration =
+        this.options?.frameDuration ??
+        PokemonSpriteAnimator.calculateFrameDuration(this.totalFrames, shiny);
       this.currentFrame = 0;
 
       if (this.options?.fixedWidth && this.options?.fixedHeight) {

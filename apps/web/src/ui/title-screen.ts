@@ -35,9 +35,14 @@ import { saveGameRepository, SaveGameRepository } from '../domain/save/save-repo
 
 export type TitleScreenTheme = 'day' | 'sunset' | 'night';
 
+export interface PlayerSetupOptions {
+  name?: string;
+  gender?: 'male' | 'female';
+}
+
 export interface TitleScreenOptions {
   onStart?: () => void;
-  onNewWorld?: (seed: number, slotId: string) => void;
+  onNewWorld?: (seed: number, slotId: string, playerSetup?: PlayerSetupOptions) => void;
   onLoadWorld?: (slotId: string) => void;
   initialTheme?: TitleScreenTheme;
   saveRepository?: SaveGameRepository;
@@ -102,7 +107,10 @@ const SKY_DAY_PATH = '/Graphics/Intro/Intro_moning/01_sky_moning.png';
 const SEA_DAY_PATH = '/Graphics/Intro/Intro_moning/03_sea_moning.png';
 const SUN_DAY_PATH = '/Graphics/Intro/Intro_moning/04_sun_reflection_cropped_moning.png';
 const BACK_GRASS_DAY_PATH = '/Graphics/Intro/Intro_moning/05_grass.png';
-const GYARADOS_PATH = '/Graphics/Intro/Intro_moning/gyarados_red.png';
+// Keep this path aligned with the tracked source asset. A normalized copy in
+// apps/web/public can exist locally, but it is ignored and is not guaranteed
+// to be present in a clean production checkout.
+const GYARADOS_PATH = '/Graphics/Intro/Intro_moning/0000- Gyarados red.png';
 const PELIPPER_PATH = '/Graphics/Intro/Intro_moning/PELIPPER.png';
 const WINGULL_PATH = '/Graphics/Intro/Intro_moning/WINGULL.png';
 
@@ -286,6 +294,19 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
           </div>
           <div class="title-pixel-modal-body">
             <div class="title-pixel-setting-row">
+              <label class="title-pixel-setting-label" for="inputPlayerName">Tên Nhà Huấn Luyện (Trainer Name):</label>
+              <input type="text" class="title-pixel-text-input" id="inputPlayerName" maxlength="12" value="Red" placeholder="Nhập tên..." />
+            </div>
+
+            <div class="title-pixel-setting-row">
+              <label class="title-pixel-setting-label" for="selectPlayerGender">Giới Tính (Gender):</label>
+              <select class="title-pixel-select" id="selectPlayerGender">
+                <option value="male">Nam ♂ (Male)</option>
+                <option value="female">Nữ ♀ (Female)</option>
+              </select>
+            </div>
+
+            <div class="title-pixel-setting-row">
               <label class="title-pixel-setting-label" for="inputWorldSeed">Mã Sinh Thế Giới (World Seed):</label>
               <div class="title-pixel-seed-input-row">
                 <input type="number" class="title-pixel-text-input" id="inputWorldSeed" min="1" max="999999999" value="101" />
@@ -310,8 +331,8 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
             </div>
 
             <div class="title-pixel-version-banner">
-              <div class="version-banner-badge">World Gen v3</div>
-              <div class="version-banner-desc">Địa hình Thung Lũng Bất Đối Xứng, Hành Lang Tự Nhiên &amp; Bản Đồ Vùng (V3 Valley)</div>
+              <div class="version-banner-badge">World Gen V5</div>
+              <div class="version-banner-desc">Lục Địa Tự Nhiên, Quần Xã Sinh Thái Đa Dạng &amp; Đô Thị Ven Biển</div>
             </div>
           </div>
           <div class="title-pixel-modal-footer">
@@ -389,6 +410,8 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
   const btnConfirmCreateWorld = overlay.querySelector(
     '#btnConfirmCreateWorld'
   ) as HTMLButtonElement | null;
+  const inputPlayerName = overlay.querySelector('#inputPlayerName') as HTMLInputElement | null;
+  const selectPlayerGender = overlay.querySelector('#selectPlayerGender') as HTMLSelectElement | null;
   const inputWorldSeed = overlay.querySelector('#inputWorldSeed') as HTMLInputElement | null;
   const btnRerollSeed = overlay.querySelector('#btnRerollSeed') as HTMLButtonElement | null;
   const selectSaveSlot = overlay.querySelector('#selectSaveSlot') as HTMLSelectElement | null;
@@ -1357,7 +1380,7 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
     }, 450);
   };
 
-  const triggerNewWorld = (seed: number, slotId: string) => {
+  const triggerNewWorld = (seed: number, slotId: string, playerSetup?: PlayerSetupOptions) => {
     if (hasTriggeredStart) return;
     hasTriggeredStart = true;
 
@@ -1366,7 +1389,7 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
     window.setTimeout(() => {
       destroy();
       if (options?.onNewWorld) {
-        options.onNewWorld(seed, slotId);
+        options.onNewWorld(seed, slotId, playerSetup);
       } else if (options?.onStart) {
         options.onStart();
       }
@@ -1630,8 +1653,15 @@ export function showTitleScreen(options?: TitleScreenOptions): TitleScreenContro
       seed = generateRandomSeed();
     }
     const slotId = selectSaveSlot?.value || 'slot_1';
+    const rawName = inputPlayerName?.value?.trim() || 'Red';
+    const name = rawName.slice(0, 12);
+    const gender = (selectPlayerGender?.value === 'female' ? 'female' : 'male') as 'male' | 'female';
+
     closeNewWorldModal();
-    triggerNewWorld(seed, slotId);
+    triggerNewWorld(seed, slotId, {
+      name,
+      gender,
+    });
   });
 
   newWorldModal?.addEventListener('click', (e) => {

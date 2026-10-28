@@ -2,7 +2,7 @@
 
 ## Trạng thái
 
-Đã cập nhật theo cấu trúc thực tế và định hướng desktop + LAN trong [DEV_ARCHITECTURE_GUIDE.md](../DEV_ARCHITECTURE_GUIDE.md). Các mục đánh dấu *(đề xuất)* chưa tồn tại trong code.
+Đã cập nhật theo cấu trúc thực tế và định hướng desktop + LAN trong [DEV_ARCHITECTURE_GUIDE.md](DEV_ARCHITECTURE_GUIDE.md). Các mục đánh dấu *(đề xuất)* chưa tồn tại trong code.
 
 ## Cấu trúc thư mục
 

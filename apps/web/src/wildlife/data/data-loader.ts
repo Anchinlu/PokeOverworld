@@ -64,8 +64,10 @@ export const spawnConfigData: SpawnConfigDefinition =
 export const pokemonDbData = (pokemonDbJson as { pokemon: Record<string, SpeciesDbEntry> }).pokemon;
 
 export function getSpeciesCatchRate(speciesKey: string): number {
+  const norm = speciesKey.replace(/^wild_/i, '').toUpperCase();
+  const baseKey = norm.split('_')[0];
   for (const entry of Object.values(pokemonDbData)) {
-    if (entry.speciesKey === speciesKey) {
+    if (entry.speciesKey === norm || entry.speciesKey === baseKey) {
       return entry.catchRate;
     }
   }

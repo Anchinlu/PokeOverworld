@@ -2,13 +2,14 @@ import { describe, it, expect } from 'vitest';
 import { V3Field } from '../../src/maps/terrain-field/v3-field';
 import { createTerrainField } from '../../src/maps/terrain-field';
 import { V3_CONFIG } from '../../src/maps/terrain-field/v3-config';
+import { getStartSpawn } from '../../src/maps/terrain-field/start-village';
 
 describe('World Gen v3 - Asymmetric Valley & Organic Opening Corridors (worldGenVersion = 3)', () => {
   it('creates V3Field through createTerrainField factory with version = 3', () => {
     const field = createTerrainField(3, 101);
     expect(field.version).toBe(3);
     expect(field.seed).toBe(101);
-    expect(field.getSpawn()).toEqual({ gx: -7, gy: -5 });
+    expect(field.getSpawn()).toEqual(getStartSpawn(101));
   });
 
   it('1. Safe Village Core: guarantees 100% solid flat land within SAFE_CORE_R = 36', () => {

@@ -54,6 +54,18 @@
       "hasBeach": false,
       "hasRoad": false,
       "defaultTree": "snow_pine"
+    },
+    "rocky_highland": {
+      "name": "Rocky Highland Crags",
+      "hasBeach": false,
+      "hasRoad": false,
+      "defaultTree": "rock_highland_boulder"
+    },
+    "apricorn_plain": {
+      "name": "Apricorn Blossom Plains",
+      "hasBeach": false,
+      "hasRoad": true,
+      "defaultTree": "tree_apricorn_green"
     }
   }
 }

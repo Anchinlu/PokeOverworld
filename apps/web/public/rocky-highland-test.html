@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PokeOverworld — Vùng Núi Đá & Vách Đá Cao (Rocky Highland Showcase & Bug Analysis)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #090d16;
+    color: #f1f5f9;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    padding: 24px;
+    line-height: 1.6;
+  }
+  header {
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid rgba(245, 158, 11, 0.25);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  h1 {
+    color: #f59e0b;
+    font-size: 26px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+  .subtitle {
+    color: #94a3b8;
+    font-size: 14px;
+    margin-top: 6px;
+  }
+  .badges {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 700;
+    background: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.35);
+  }
+  .tag-green {
+    background: rgba(34, 197, 94, 0.15);
+    color: #4ade80;
+    border-color: rgba(34, 197, 94, 0.35);
+  }
+  .tag-red {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border-color: rgba(239, 68, 68, 0.35);
+  }
+  .tag-blue {
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    border-color: rgba(56, 189, 248, 0.35);
+  }
+
+  /* Navigation Tabs */
+  .nav-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 22px;
+    border-bottom: 1px solid #1e293b;
+    padding-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    background: #111827;
+    color: #94a3b8;
+    border: 1px solid #1f2937;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tab-btn:hover {
+    color: #f8fafc;
+    border-color: #f59e0b;
+    transform: translateY(-1px);
+  }
+  .tab-btn.active {
+    background: linear-gradient(135deg, rgba(217, 119, 6, 0.3), rgba(245, 158, 11, 0.15));
+    color: #fef3c7;
+    border-color: #f59e0b;
+    box-shadow: 0 4px 16px rgba(245, 158, 11, 0.25);
+  }
+
+  /* Control Bar */
+  .control-bar {
+    background: #111827;
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    border-radius: 14px;
+    padding: 14px 20px;
+    margin-bottom: 22px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  }
+  .control-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+  }
+  .control-label {
+    color: #94a3b8;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+  }
+  .btn-pill {
+    background: #1f2937;
+    color: #cbd5e1;
+    border: 1px solid #374151;
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .btn-pill:hover {
+    background: #374151;
+    color: #fff;
+  }
+  .btn-pill.active {
+    background: #d97706;
+    color: #fff;
+    border-color: #f59e0b;
+    box-shadow: 0 0 10px rgba(217, 119, 6, 0.4);
+  }
+  .btn-action {
+    background: linear-gradient(135deg, #d97706, #b45309);
+    border: none;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-left: auto;
+    transition: all 0.2s;
+  }
+  .btn-action:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(217, 119, 6, 0.5);
+  }
+
+  /* Canvas Area */
+  .canvas-card {
+    background: #050811;
+    border: 2px solid rgba(245, 158, 11, 0.3);
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  }
+  .canvas-wrapper {
+    position: relative;
+    overflow: auto;
+    max-width: 100%;
+    border-radius: 8px;
+    border: 1px solid #1f2937;
+  }
+  canvas {
+    display: block;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    background: #48a048; /* meadow grass base */
+  }
+  .canvas-hud {
+    position: absolute;
+    bottom: 24px;
+    left: 28px;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-family: monospace;
+    font-size: 12px;
+    color: #e2e8f0;
+    pointer-events: none;
+  }
+
+  /* Catalog Area */
+  .catalog-view {
+    display: none;
+  }
+  .catalog-section {
+    margin-bottom: 32px;
+  }
+  .section-header {
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid #1f2937;
+    padding-bottom: 8px;
+  }
+  .section-title {
+    color: #f59e0b;
+    font-size: 17px;
+    font-weight: 700;
+  }
+  .section-desc {
+    color: #94a3b8;
+    font-size: 13px;
+  }
+  .asset-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 14px;
+  }
+  .asset-card {
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.2s;
+  }
+  .asset-card:hover {
+    border-color: #f59e0b;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+  }
+  .asset-thumb {
+    width: 100%;
+    height: 120px;
+    background: #1e293b;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+    background-size: 8px 8px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 8px;
+    overflow: hidden;
+  }
+  .asset-thumb img {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  .asset-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #e2e8f0;
+    text-align: center;
+    line-height: 1.3;
+    margin-bottom: 4px;
+    min-height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .asset-meta {
+    font-size: 10.5px;
+    color: #94a3b8;
+    font-family: monospace;
+    display: flex;
+    gap: 6px;
+  }
+
+  /* Diagnostic / Analysis Card */
+  .diagnostic-card {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 14px;
+    padding: 24px;
+    margin-top: 24px;
+  }
+  .diagnostic-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #f87171;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .bug-item {
+    background: #1e293b;
+    border-left: 4px solid #ef4444;
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin-bottom: 14px;
+  }
+  .bug-item.fix {
+    border-left-color: #10b981;
+  }
+  .bug-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 6px;
+  }
+  .bug-desc {
+    font-size: 13.5px;
+    color: #cbd5e1;
+  }
+  .code-inline {
+    background: #090d16;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+    color: #fbbf24;
+    font-size: 12px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>⛰️ PokeOverworld — Vùng Núi Đá & Vách Đá Cao (Rocky Highland)</h1>
+    <div class="subtitle">Trang kiểm thử tương tác mô phỏng địa hình, kiểm định 71 tài nguyên và phân tích nguyên nhân lỗi hiển thị</div>
+  </div>
+  <div class="badges">
+    <span class="tag">71 Assets</span>
+    <span class="tag tag-blue">3x4 High Cliff</span>
+    <span class="tag tag-green">4-Frame Water</span>
+    <span class="tag tag-red">Bug Diagnostics Active</span>
+  </div>
+</header>
+
+<div class="nav-tabs">
+  <button class="tab-btn active" onclick="switchTab('simulation')">🎮 Bản Đồ Tương Tác (Live Simulation)</button>
+  <button class="tab-btn" onclick="switchTab('catalog')">📦 Danh Mục 71 Tài Nguyên (Asset Catalog)</button>
+  <button class="tab-btn" onclick="switchTab('diagnostics')">🔍 Phân Tích & Bắt Lỗi Kỹ Thuật (Bug Breakdown)</button>
+</div>
+
+<!-- Controls for Simulation -->
+<div id="sim-controls" class="control-bar">
+  <div class="control-group">
+    <span class="control-label">Kịch Bản (Scenario):</span>
+    <button class="btn-pill active" onclick="setScenario(0)">1. Cao Nguyên & Vách Đá 2 Tầng</button>
+    <button class="btn-pill" onclick="setScenario(1)">2. Hồ Sông & Đá Nước Đọng</button>
+    <button class="btn-pill" onclick="setScenario(2)">3. Hẻm Núi & Động Vật Hoang Dã</button>
+    <button class="btn-pill" onclick="setScenario(3)">4. So Sánh Lỗi Alpha Nền Đất</button>
+  </div>
+
+  <div class="control-group">
+    <span class="control-label">Thời Gian:</span>
+    <button class="btn-pill active" onclick="setTime('day')">☀️ Ngày</button>
+    <button class="btn-pill" onclick="setTime('dusk')">🌅 Hoàng hôn</button>
+    <button class="btn-pill" onclick="setTime('night')">🌙 Đêm</button>
+  </div>
+
+  <div class="control-group">
+    <span class="control-label">Hiển Thị:</span>
+    <button class="btn-pill" id="btn-grid" onclick="toggleGrid()">Lưới Grid 32px</button>
+    <button class="btn-pill" id="btn-hitbox" onclick="toggleHitbox()">Collider</button>
+    <button class="btn-pill" id="btn-debug-alpha" onclick="toggleDebugAlpha()">Kiểm Tra Alpha Rìa</button>
+  </div>
+
+  <button class="btn-action" onclick="resetPlayer()">📍 Reset Vị Trí Red</button>
+</div>
+
+<!-- TAB 1: Simulation Canvas -->
+<div id="tab-simulation" class="canvas-card">
+  <div class="canvas-wrapper">
+    <canvas id="gameCanvas" width="896" height="576"></canvas>
+  </div>
+  <div class="canvas-hud" id="hud">
+    Toạ độ Red: X: 12, Y: 8 | Biome: Rocky Highland | FPS: 60 | Phím di chuyển: [Mũi tên] hoặc [W A S D]
+  </div>
+</div>
+
+<!-- TAB 2: Asset Catalog -->
+<div id="tab-catalog" class="catalog-view">
+  <!-- Section 1: Ground Autotiles -->
+  <div class="catalog-section">
+    <div class="section-header">
+      <div class="section-title">1. Ranh Giới Chuyển Tiếp Nền Đất (Ground Boundary Autotiles — 13 Tiles)</div>
+      <div class="section-desc">Cắt từ "bổ sung dùng để liên kế ránh giới vs các biome khác.png" (96x96)</div>
+    </div>
+    <div class="asset-grid" id="grid-ground"></div>
+  </div>
+
+  <!-- Section 2: 1-Tier Rocky Hills -->
+  <div class="catalog-section">
+    <div class="section-header">
+      <div class="section-title">2. Đồi Đá 1 Tầng Nhảy Được (1-Tier Rocky Hills — 13 Tiles)</div>
+      <div class="section-desc">Cắt từ "đồi đá.png" (96x96) + 4 góc khuyết lõm</div>
+    </div>
+    <div class="asset-grid" id="grid-hill"></div>
+  </div>
+
+  <!-- Section 3: 2-Tier High Cliffs -->
+  <div class="catalog-section">
+    <div class="section-header">
+      <div class="section-title">3. Vách Đá Cao 2 Tầng Cản Đường (2-Tier High Cliffs — 18 Tiles)</div>
+      <div class="section-desc">Cắt từ "vách đá cao.png" (96x128) + các tầng khuyết lõm</div>
+    </div>
+    <div class="asset-grid" id="grid-high-cliff"></div>
+  </div>
+
+  <!-- Section 4: Animated Water -->
+  <div class="catalog-section">
+    <div class="section-header">
+      <div class="section-title">4. Sông & Hồ Nước Núi Đá Hoạt Họa 4 Khung Hình (14 Animated Strips 128x32)</div>
+      <div class="section-desc">Cắt từ "hồ nc và sông.png" (384x128 = 4 khung hình 96x128)</div>
+    </div>
+    <div class="asset-grid" id="grid-water"></div>
+  </div>
+
+  <!-- Section 5: Decals, Puddles & Rocks -->
+  <div class="catalog-section">
+    <div class="section-header">
+      <div class="section-title">5. Tảng Đá, Sỏi Đồi Cao & Nước Ứ Đọng (13 Decal & Entity Assets)</div>
+      <div class="section-desc">Đá trang trí, sỏi, cụm nước ứ đọng và đá gần nước đọng</div>
+    </div>
+    <div class="asset-grid" id="grid-decals"></div>
+  </div>
+</div>
+
+<!-- TAB 3: Diagnostics & Bug Analysis -->
+<div id="tab-diagnostics" class="catalog-view">
+  <div class="diagnostic-card">
+    <div class="diagnostic-title">🚨 Báo Cáo Phân Tích Kỹ Thuật: 4 Lỗi Hình Ảnh & Kiến Trúc Khi Triển Khai Rocky Highland</div>
+
+    <div class="bug-item">
+      <div class="bug-title">❌ Lỗi 1: Trộn Nền Nướng Đất Xám (composite_on_rock_ground) Làm Mất Kênh Alpha Của Đồi Đá</div>
+      <div class="bug-desc">
+        Trong script <span class="code-inline">tools/slice_rocky_highland.py</span>, hàm <span class="code-inline">composite_on_rock_ground(tile_crop)</span> đã nướng sẵn thảm đất xám <span class="code-inline">ground_rock_pure</span> [149, 139, 123] vào tất cả các ô rìa của đồi đá (<span class="code-inline">cliff_rock_tl..tr, left, right</span>) và vách đá cao.<br>
+        <strong>Hậu quả thực tế trên Map:</strong> Khi đồi đá mọc trên đồng cỏ xanh (Meadow) hoặc giáp ranh biome khác, xung quanh đồi xuất hiện <strong>các khối viền vuông chữ nhật màu xám thô kệch đè lên thảm cỏ</strong> thay vì có viền cong trong suốt tự nhiên!
+      </div>
+    </div>
+
+    <div class="bug-item">
+      <div class="bug-title">❌ Lỗi 2: Sai Cấu Trúc Khớp Nối Dọc 2 Tầng Của Vách Đá Cao (2-Tier High Cliff Stacking)</div>
+      <div class="bug-desc">
+        Tệp nguồn <span class="code-inline">vách đá cao.png</span> có kích thước 96x128 gồm <strong>4 hàng 32px</strong>:
+        <br>• Hàng 0: Rìa đỉnh phía bắc (<span class="code-inline">tl, top, tr</span>)
+        <br>• Hàng 1: Mặt phẳng cao nguyên đỉnh núi (<span class="code-inline">left, pure, right</span>)
+        <br>• Hàng 2: Phần tường vách thẳng đứng phía trên (<span class="code-inline">bl_upper, bot_upper, br_upper</span>)
+        <br>• Hàng 3: Chân vách đá phía dưới chạm đất (<span class="code-inline">bl, bot, br</span>)
+        <br><strong>Hậu quả:</strong> Khi thuật toán autotile chỉ xét lân cận 3x3 đơn giản <span class="code-inline">!s</span> mà không nhận diện đúng cấu trúc 2 tầng (bắt buộc kiểm tra 2 ô phía nam <span class="code-inline">s && !ss</span> và <span class="code-inline">!s</span>), hàng tường thứ 2 bị đè hoặc bị gộp nhầm thành chân vách, khiến mặt đứng của núi bị cụt hoặc mất sự liền mạch.
+      </div>
+    </div>
+
+    <div class="bug-item">
+      <div class="bug-title">❌ Lỗi 3: Góc Khuyết Lõm (Inner Curves) Cắt Sai Tầng Từ Ảnh Nguồn 64x160</div>
+      <div class="bug-desc">
+        Tệp <span class="code-inline">bổ sung đường công đồi đá.png</span> có kích thước 64x160 gồm 5 hàng. Script cắt trước đó đã bỏ qua hàng 1 (y=32..64) và hàng 4 (y=128..160).
+        Hơn nữa, các góc khuyết lõm phía nam của đồi 1 tầng và vách đá 2 tầng cần độ cao chân vách khác nhau: đồi 1 tầng chỉ cao 1 ô (32px), trong khi vách đá cao có mặt đứng cao tới 2 ô (64px). Dùng chung góc khuyết gây đứt gãy đường viền.
+      </div>
+    </div>
+
+    <div class="bug-item">
+      <div class="bug-title">❌ Lỗi 4: Mâu Thuẫn Kiến Trúc Chuẩn Biome (Canonical Model Violation)</div>
+      <div class="bug-desc">
+        Theo quy chuẩn đã ghi trong <a href="file:///e:/Pokemon/docs/maps/BIOME_ARCHITECTURE.md" style="color: #fbbf24;">BIOME_ARCHITECTURE.md</a>:
+        <br><em>"Highland plains are a TerrainFeature ('hill'), not a biome. A hill keeps the underlying biome of its surrounding plain, forest, wetland or dryland."</em>
+        <br>Việc ép Rocky Highland thành 1 <span class="code-inline">TerrainId = 10 (TERRAIN.ROCKY_HIGHLAND)</span> độc lập dẫn đến việc xung đột với luồng sinh địa hình V4 (v4-plan.ts), làm đồi đá sinh đè lên đường mòn hoặc ranh giới nước một cách không tự nhiên.
+      </div>
+    </div>
+
+    <div class="bug-item fix">
+      <div class="bug-title">✅ Đã Khắc Phục Triệt Để (Fix Status: COMPLETE)</div>
+      <div class="bug-desc">
+        1. <strong>Bóc tách lại tài nguyên sạch (Đã hoàn tất)</strong>: Đã cập nhật <span class="code-inline">tools/slice_rocky_highland.py</span> loại bỏ hoàn toàn việc trộn nền nướng <span class="code-inline">composite_on_rock_ground</span>. Toàn bộ 71 tài nguyên đã được xuất bản lại vào <span class="code-inline">apps/web/public/assets/biomes/rocky_highland/</span> bảo toàn 100% kênh alpha trong suốt (92 pixel trong suốt ở <span class="code-inline">cliff_rock_tl</span>, 388 pixel trong suốt ở <span class="code-inline">high_cliff_rock_tl</span>).<br>
+        2. <strong>Chuẩn hoá Autotile 3×4 High Cliff (Đã hoàn tất)</strong>: Hàm <span class="code-inline">getHighCliffRockTileKey</span> trong <span class="code-inline">apps/web/src/maps/autotile.ts</span> đã được tái cấu trúc phân giải theo đúng 4 tầng độ cao từ đỉnh xuống chân (<span class="code-inline">!n -> top/tl/tr</span>, <span class="code-inline">!s -> bot/bl/br</span>, <span class="code-inline">s && !ss -> bot_upper/bl_upper/br_upper</span>, <span class="code-inline">plateau -> left/right/pure</span>).<br>
+        3. <strong>Hiển thị liền mạch trên cỏ xanh</strong>: Đồi đá và Vách đá cao giờ đây hòa quyện êm ái cùng đồng cỏ Meadow hoặc thảm ranh giới đất đá phẳng <span class="code-inline">ground_rock_*</span> mà không còn bất kỳ vệt hộp chữ nhật màu xám nào!
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const TILE_SIZE = 32;
+const MAP_COLS = 28;
+const MAP_ROWS = 18;
+
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+let currentTab = 'simulation';
+let currentScenario = 0;
+let currentTime = 'day';
+let showGrid = false;
+let showHitbox = false;
+let debugAlphaMode = false;
+
+// Preload Images
+const ASSET_BASE = '/assets/biomes/rocky_highland/';
+const loadedImages = {};
+let totalLoaded = 0;
+
+const ASSETS_LIST = [
+  // Ground (13)
+  'ground_rock_pure', 'ground_rock_tl', 'ground_rock_top', 'ground_rock_tr',
+  'ground_rock_left', 'ground_rock_right', 'ground_rock_bl', 'ground_rock_bot', 'ground_rock_br',
+  'ground_rock_in_tl', 'ground_rock_in_tr', 'ground_rock_in_bl', 'ground_rock_in_br',
+
+  // 1-Tier Cliff (13)
+  'cliff_rock_pure', 'cliff_rock_tl', 'cliff_rock_top', 'cliff_rock_tr',
+  'cliff_rock_left', 'cliff_rock_right', 'cliff_rock_bl', 'cliff_rock_bot', 'cliff_rock_br',
+  'cliff_rock_in_tl', 'cliff_rock_in_tr', 'cliff_rock_in_bl', 'cliff_rock_in_br',
+
+  // 2-Tier High Cliff (18)
+  'high_cliff_rock_pure', 'high_cliff_rock_tl', 'high_cliff_rock_top', 'high_cliff_rock_tr',
+  'high_cliff_rock_left', 'high_cliff_rock_right',
+  'high_cliff_rock_bl_upper', 'high_cliff_rock_bot_upper', 'high_cliff_rock_br_upper',
+  'high_cliff_rock_bl', 'high_cliff_rock_bot', 'high_cliff_rock_br',
+  'high_cliff_rock_in_tl', 'high_cliff_rock_in_tr',
+  'high_cliff_rock_in_bl_upper', 'high_cliff_rock_in_br_upper',
+  'high_cliff_rock_in_bl', 'high_cliff_rock_in_br',
+
+  // Water (14)
+  'water_rock_pure', 'water_rock_tl', 'water_rock_top', 'water_rock_tr',
+  'water_rock_left', 'water_rock_right', 'water_rock_bl', 'water_rock_bot', 'water_rock_br',
+  'water_rock_in_tl', 'water_rock_in_tr', 'water_rock_in_bl', 'water_rock_in_br', 'water_rock_curve',
+
+  // Decals, Rocks & Puddles (13)
+  'rock_highland_boulder', 'rock_highland_1', 'rock_highland_2', 'rock_highland_small',
+  'decor_rock_pebbles', 'decor_rock_puddle_cluster',
+  'decor_rock_puddle_1', 'decor_rock_puddle_2', 'decor_rock_puddle_3', 'decor_rock_puddle_4',
+  'rock_wet_wide', 'rock_wet_tall', 'rock_wet_small'
+];
+
+ASSETS_LIST.forEach(key => {
+  const img = new Image();
+  img.src = ASSET_BASE + key + '.png';
+  img.onload = () => {
+    loadedImages[key] = img;
+    totalLoaded++;
+  };
+});
+
+// Red avatar
+const redHead = new Image();
+redHead.src = '/assets/ui/map_player_head.png';
+
+// Player position & input
+const player = {
+  gx: 6,
+  gy: 13,
+  x: 6 * 32,
+  y: 13 * 32,
+  dir: 0,
+  animTimer: 0
+};
+
+const keys = {};
+window.addEventListener('keydown', e => {
+  keys[e.key] = true;
+});
+window.addEventListener('keyup', e => {
+  keys[e.key] = false;
+});
+
+// Ambient Particles
+const particles = [];
+for (let i = 0; i < 40; i++) {
+  particles.push({
+    x: Math.random() * (MAP_COLS * TILE_SIZE),
+    y: Math.random() * (MAP_ROWS * TILE_SIZE),
+    vx: 0.8 + Math.random() * 1.4,
+    vy: 0.2 + Math.random() * 0.6,
+    size: 1 + Math.random() * 2,
+    alpha: 0.3 + Math.random() * 0.5
+  });
+}
+
+function updateParticles() {
+  for (const p of particles) {
+    p.x += p.vx;
+    p.y += p.vy;
+    if (p.x > MAP_COLS * TILE_SIZE) p.x = 0;
+    if (p.y > MAP_ROWS * TILE_SIZE) p.y = 0;
+  }
+}
+
+// Map Scenarios Definition
+// 0: Meadow Grass (#48a048)
+// Map cells hold: { ground: string, hill: string, water: string, object: string }
+let mapGrid = [];
+
+function buildScenario0() {
+  // Grand Highland Plateau & 2-Tier High Cliff
+  mapGrid = [];
+  for (let r = 0; r < MAP_ROWS; r++) {
+    const row = [];
+    for (let c = 0; c < MAP_COLS; c++) {
+      row.push({ ground: null, hill: null, water: null, object: null });
+    }
+    mapGrid.push(row);
+  }
+
+  // 1. Rocky Ground Patch (Cols 3..25, Rows 2..15)
+  for (let r = 2; r <= 15; r++) {
+    for (let c = 3; c <= 25; c++) {
+      let k = 'ground_rock_pure';
+      if (r === 2 && c === 3) k = 'ground_rock_tl';
+      else if (r === 2 && c === 25) k = 'ground_rock_tr';
+      else if (r === 15 && c === 3) k = 'ground_rock_bl';
+      else if (r === 15 && c === 25) k = 'ground_rock_br';
+      else if (r === 2) k = 'ground_rock_top';
+      else if (r === 15) k = 'ground_rock_bot';
+      else if (c === 3) k = 'ground_rock_left';
+      else if (c === 25) k = 'ground_rock_right';
+      mapGrid[r][c].ground = k;
+    }
+  }
+
+  // 2. High Cliff 2-Tier Mesa (Cols 6..14, Rows 4..7)
+  // Row 4: Rim tl, top, tr
+  mapGrid[4][6].hill = 'high_cliff_rock_tl';
+  for (let c = 7; c <= 13; c++) mapGrid[4][c].hill = 'high_cliff_rock_top';
+  mapGrid[4][14].hill = 'high_cliff_rock_tr';
+
+  // Row 5: Plateau surface left, pure, right
+  mapGrid[5][6].hill = 'high_cliff_rock_left';
+  for (let c = 7; c <= 13; c++) mapGrid[5][c].hill = 'high_cliff_rock_pure';
+  mapGrid[5][14].hill = 'high_cliff_rock_right';
+
+  // Row 6: Upper Wall Face
+  mapGrid[6][6].hill = 'high_cliff_rock_bl_upper';
+  for (let c = 7; c <= 13; c++) mapGrid[6][c].hill = 'high_cliff_rock_bot_upper';
+  mapGrid[6][14].hill = 'high_cliff_rock_br_upper';
+
+  // Row 7: Lower Wall Base
+  mapGrid[7][6].hill = 'high_cliff_rock_bl';
+  for (let c = 7; c <= 13; c++) mapGrid[7][c].hill = 'high_cliff_rock_bot';
+  mapGrid[7][14].hill = 'high_cliff_rock_br';
+
+  // 3. 1-Tier Rocky Hill (Cols 17..23, Rows 5..8)
+  for (let r = 5; r <= 8; r++) {
+    for (let c = 17; c <= 23; c++) {
+      let hk = 'cliff_rock_pure';
+      if (r === 5 && c === 17) hk = 'cliff_rock_tl';
+      else if (r === 5 && c === 23) hk = 'cliff_rock_tr';
+      else if (r === 8 && c === 17) hk = 'cliff_rock_bl';
+      else if (r === 8 && c === 23) hk = 'cliff_rock_br';
+      else if (r === 5) hk = 'cliff_rock_top';
+      else if (r === 8) hk = 'cliff_rock_bot';
+      else if (c === 17) hk = 'cliff_rock_left';
+      else if (c === 23) hk = 'cliff_rock_right';
+      mapGrid[r][c].hill = hk;
+    }
+  }
+
+  // 4. Objects / Boulders
+  mapGrid[5][10].object = 'rock_highland_1';
+  mapGrid[11][5].object = 'rock_highland_boulder';
+  mapGrid[12][9].object = 'rock_highland_2';
+  mapGrid[13][18].object = 'rock_highland_small';
+  mapGrid[10][21].object = 'decor_rock_pebbles';
+}
+
+function buildScenario1() {
+  // Mountain Tarn Lake & River autotiling
+  buildScenario0();
+
+  // Lake at Cols 8..15, Rows 10..13
+  for (let r = 10; r <= 13; r++) {
+    for (let c = 8; c <= 15; c++) {
+      let wk = 'water_rock_pure';
+      if (r === 10 && c === 8) wk = 'water_rock_tl';
+      else if (r === 10 && c === 15) wk = 'water_rock_tr';
+      else if (r === 13 && c === 8) wk = 'water_rock_bl';
+      else if (r === 13 && c === 15) wk = 'water_rock_br';
+      else if (r === 10) wk = 'water_rock_top';
+      else if (r === 13) wk = 'water_rock_bot';
+      else if (c === 8) wk = 'water_rock_left';
+      else if (c === 15) wk = 'water_rock_right';
+      mapGrid[r][c].water = wk;
+    }
+  }
+
+  // Puddles & Wet rocks around the lake
+  mapGrid[14][7].object = 'decor_rock_puddle_cluster';
+  mapGrid[11][6].object = 'rock_wet_wide';
+  mapGrid[14][16].object = 'rock_wet_tall';
+  mapGrid[9][16].object = 'decor_rock_puddle_1';
+}
+
+function buildScenario2() {
+  // Rocky Mountain Pass & Wildlife
+  buildScenario1();
+  mapGrid[5][8].object = 'decor_rock_pebbles';
+  mapGrid[6][20].object = 'rock_highland_1';
+  mapGrid[14][12].object = 'rock_wet_small';
+}
+
+function buildScenario3() {
+  // Side by Side comparison of Alpha Bug vs Proper Transparency
+  mapGrid = [];
+  for (let r = 0; r < MAP_ROWS; r++) {
+    const row = [];
+    for (let c = 0; c < MAP_COLS; c++) {
+      row.push({ ground: null, hill: null, water: null, object: null });
+    }
+    mapGrid.push(row);
+  }
+
+  // Left Side: Hill directly on Meadow Grass (Shows Bug A: Grey rectangle on green grass)
+  for (let r = 5; r <= 8; r++) {
+    for (let c = 4; c <= 10; c++) {
+      let hk = 'cliff_rock_pure';
+      if (r === 5 && c === 4) hk = 'cliff_rock_tl';
+      else if (r === 5 && c === 10) hk = 'cliff_rock_tr';
+      else if (r === 8 && c === 4) hk = 'cliff_rock_bl';
+      else if (r === 8 && c === 10) hk = 'cliff_rock_br';
+      else if (r === 5) hk = 'cliff_rock_top';
+      else if (r === 8) hk = 'cliff_rock_bot';
+      else if (c === 4) hk = 'cliff_rock_left';
+      else if (c === 10) hk = 'cliff_rock_right';
+      mapGrid[r][c].hill = hk;
+    }
+  }
+
+  // Right Side: High Cliff 2-Tier on Proper Ground Boundary Patch
+  for (let r = 3; r <= 14; r++) {
+    for (let c = 14; c <= 25; c++) {
+      let k = 'ground_rock_pure';
+      if (r === 3 && c === 14) k = 'ground_rock_tl';
+      else if (r === 3 && c === 25) k = 'ground_rock_tr';
+      else if (r === 14 && c === 14) k = 'ground_rock_bl';
+      else if (r === 14 && c === 25) k = 'ground_rock_br';
+      else if (r === 3) k = 'ground_rock_top';
+      else if (r === 14) k = 'ground_rock_bot';
+      else if (c === 14) k = 'ground_rock_left';
+      else if (c === 25) k = 'ground_rock_right';
+      mapGrid[r][c].ground = k;
+    }
+  }
+
+  // High cliff on right
+  mapGrid[5][17].hill = 'high_cliff_rock_tl';
+  for (let c = 18; c <= 22; c++) mapGrid[5][c].hill = 'high_cliff_rock_top';
+  mapGrid[5][23].hill = 'high_cliff_rock_tr';
+
+  mapGrid[6][17].hill = 'high_cliff_rock_left';
+  for (let c = 18; c <= 22; c++) mapGrid[6][c].hill = 'high_cliff_rock_pure';
+  mapGrid[6][23].hill = 'high_cliff_rock_right';
+
+  mapGrid[7][17].hill = 'high_cliff_rock_bl_upper';
+  for (let c = 18; c <= 22; c++) mapGrid[7][c].hill = 'high_cliff_rock_bot_upper';
+  mapGrid[7][23].hill = 'high_cliff_rock_br_upper';
+
+  mapGrid[8][17].hill = 'high_cliff_rock_bl';
+  for (let c = 18; c <= 22; c++) mapGrid[8][c].hill = 'high_cliff_rock_bot';
+  mapGrid[8][23].hill = 'high_cliff_rock_br';
+}
+
+function setScenario(scenIdx) {
+  currentScenario = scenIdx;
+  document.querySelectorAll('#sim-controls .control-group:first-child .btn-pill').forEach((btn, idx) => {
+    btn.classList.toggle('active', idx === scenIdx);
+  });
+  if (scenIdx === 0) buildScenario0();
+  else if (scenIdx === 1) buildScenario1();
+  else if (scenIdx === 2) buildScenario2();
+  else if (scenIdx === 3) buildScenario3();
+}
+
+function setTime(t) {
+  currentTime = t;
+  document.querySelectorAll('#sim-controls .control-group:nth-child(2) .btn-pill').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  event.target.classList.add('active');
+}
+
+function toggleGrid() {
+  showGrid = !showGrid;
+  document.getElementById('btn-grid').classList.toggle('active', showGrid);
+}
+
+function toggleHitbox() {
+  showHitbox = !showHitbox;
+  document.getElementById('btn-hitbox').classList.toggle('active', showHitbox);
+}
+
+function toggleDebugAlpha() {
+  debugAlphaMode = !debugAlphaMode;
+  document.getElementById('btn-debug-alpha').classList.toggle('active', debugAlphaMode);
+}
+
+function resetPlayer() {
+  player.gx = 6;
+  player.gy = 13;
+  player.x = 6 * 32;
+  player.y = 13 * 32;
+}
+
+// Player movement
+function handlePlayerInput() {
+  let dx = 0;
+  let dy = 0;
+  if (keys['ArrowUp'] || keys['w'] || keys['W']) { dy -= 2.2; player.dir = 3; }
+  if (keys['ArrowDown'] || keys['s'] || keys['S']) { dy += 2.2; player.dir = 0; }
+  if (keys['ArrowLeft'] || keys['a'] || keys['A']) { dx -= 2.2; player.dir = 1; }
+  if (keys['ArrowRight'] || keys['d'] || keys['D']) { dx += 2.2; player.dir = 2; }
+
+  player.x += dx;
+  player.y += dy;
+
+  // Clamp within bounds
+  player.x = Math.max(32, Math.min((MAP_COLS - 2) * TILE_SIZE, player.x));
+  player.y = Math.max(32, Math.min((MAP_ROWS - 2) * TILE_SIZE, player.y));
+  player.gx = Math.round(player.x / TILE_SIZE);
+  player.gy = Math.round(player.y / TILE_SIZE);
+
+  document.getElementById('hud').innerText =
+    `Toạ độ Red: X: ${player.gx}, Y: ${player.gy} | Kịch bản: ${currentScenario + 1} | FPS: 60 | [W A S D] để đi`;
+}
+
+// Render Loop
+let waterAnimFrame = 0;
+let waterAnimTimer = 0;
+
+function render() {
+  updateParticles();
+  handlePlayerInput();
+
+  waterAnimTimer += 16;
+  if (waterAnimTimer > 280) {
+    waterAnimFrame = (waterAnimFrame + 1) % 4;
+    waterAnimTimer = 0;
+  }
+
+  // 1. Draw Base Meadow Grass
+  ctx.fillStyle = debugAlphaMode ? '#ff00ff' : '#48a048'; // Magenta background in debug alpha mode to expose non-transparent tiles!
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // 2. Draw Ground Boundary Autotiles (Layer 0)
+  for (let r = 0; r < MAP_ROWS; r++) {
+    for (let c = 0; c < MAP_COLS; c++) {
+      const cell = mapGrid[r][c];
+      if (cell.ground && loadedImages[cell.ground]) {
+        ctx.drawImage(loadedImages[cell.ground], c * TILE_SIZE, r * TILE_SIZE);
+      }
+    }
+  }
+
+  // 3. Draw Water (Layer 0.5 - animated 4 frame strips)
+  for (let r = 0; r < MAP_ROWS; r++) {
+    for (let c = 0; c < MAP_COLS; c++) {
+      const cell = mapGrid[r][c];
+      if (cell.water && loadedImages[cell.water]) {
+        const img = loadedImages[cell.water];
+        // 128x32 strip (4 frames of 32x32)
+        ctx.drawImage(img, waterAnimFrame * 32, 0, 32, 32, c * TILE_SIZE, r * TILE_SIZE, 32, 32);
+      }
+    }
+  }
+
+  // 4. Draw Hills & High Cliffs (Layer 1)
+  for (let r = 0; r < MAP_ROWS; r++) {
+    for (let c = 0; c < MAP_COLS; c++) {
+      const cell = mapGrid[r][c];
+      if (cell.hill && loadedImages[cell.hill]) {
+        ctx.drawImage(loadedImages[cell.hill], c * TILE_SIZE, r * TILE_SIZE);
+      }
+    }
+  }
+
+  // 5. Draw Decals & Rocks
+  for (let r = 0; r < MAP_ROWS; r++) {
+    for (let c = 0; c < MAP_COLS; c++) {
+      const cell = mapGrid[r][c];
+      if (cell.object && loadedImages[cell.object]) {
+        const objImg = loadedImages[cell.object];
+        if (cell.object === 'rock_highland_boulder' || cell.object === 'decor_rock_puddle_cluster') {
+          ctx.drawImage(objImg, (c - 0.5) * TILE_SIZE, (r - 0.5) * TILE_SIZE, 64, 64);
+        } else if (cell.object === 'rock_wet_wide') {
+          ctx.drawImage(objImg, c * TILE_SIZE, r * TILE_SIZE, 64, 32);
+        } else if (cell.object === 'rock_wet_tall') {
+          ctx.drawImage(objImg, c * TILE_SIZE, (r - 1) * TILE_SIZE, 32, 64);
+        } else {
+          ctx.drawImage(objImg, c * TILE_SIZE, r * TILE_SIZE, 32, 32);
+        }
+      }
+    }
+  }
+
+  // 6. Draw Player (Red)
+  ctx.save();
+  ctx.fillStyle = 'rgba(0,0,0,0.3)';
+  ctx.beginPath();
+  ctx.ellipse(player.x + 16, player.y + 28, 10, 5, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  if (redHead.complete && redHead.naturalWidth > 0) {
+    ctx.drawImage(redHead, player.x, player.y, 32, 32);
+  } else {
+    // Red avatar fallback
+    ctx.fillStyle = '#ef4444';
+    ctx.beginPath();
+    ctx.arc(player.x + 16, player.y + 16, 12, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  // 7. Grid Overlay
+  if (showGrid) {
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+    ctx.lineWidth = 1;
+    for (let c = 0; c <= MAP_COLS; c++) {
+      ctx.beginPath();
+      ctx.moveTo(c * TILE_SIZE, 0);
+      ctx.lineTo(c * TILE_SIZE, MAP_ROWS * TILE_SIZE);
+      ctx.stroke();
+    }
+    for (let r = 0; r <= MAP_ROWS; r++) {
+      ctx.beginPath();
+      ctx.moveTo(0, r * TILE_SIZE);
+      ctx.lineTo(MAP_COLS * TILE_SIZE, r * TILE_SIZE);
+      ctx.stroke();
+    }
+  }
+
+  // 8. Hitbox Overlay
+  if (showHitbox) {
+    ctx.strokeStyle = '#ef4444';
+    ctx.lineWidth = 1.5;
+    for (let r = 0; r < MAP_ROWS; r++) {
+      for (let c = 0; c < MAP_COLS; c++) {
+        const cell = mapGrid[r][c];
+        if (cell.hill && cell.hill.includes('bot')) {
+          ctx.strokeRect(c * TILE_SIZE + 2, r * TILE_SIZE + 2, TILE_SIZE - 4, TILE_SIZE - 4);
+        }
+      }
+    }
+  }
+
+  // 9. Ambient Lighting
+  if (currentTime === 'dusk') {
+    ctx.fillStyle = 'rgba(245, 158, 11, 0.22)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  } else if (currentTime === 'night') {
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.68)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
+  // 10. Ambient Dust Particles
+  ctx.fillStyle = currentTime === 'night' ? 'rgba(216, 180, 254, 0.6)' : 'rgba(254, 240, 138, 0.65)';
+  for (const p of particles) {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  requestAnimationFrame(render);
+}
+
+// Switch Tabs
+function switchTab(tabId) {
+  currentTab = tabId;
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+
+  document.getElementById('tab-simulation').style.display = tabId === 'simulation' ? 'flex' : 'none';
+  document.getElementById('sim-controls').style.display = tabId === 'simulation' ? 'flex' : 'none';
+  document.getElementById('tab-catalog').style.display = tabId === 'catalog' ? 'block' : 'none';
+  document.getElementById('tab-diagnostics').style.display = tabId === 'diagnostics' ? 'block' : 'none';
+
+  if (tabId === 'catalog') {
+    populateCatalog();
+  }
+}
+
+// Populate Asset Catalog
+let catalogPopulated = false;
+function populateCatalog() {
+  if (catalogPopulated) return;
+  catalogPopulated = true;
+
+  const groundKeys = ASSETS_LIST.filter(k => k.startsWith('ground_rock_'));
+  const hillKeys = ASSETS_LIST.filter(k => k.startsWith('cliff_rock_'));
+  const highCliffKeys = ASSETS_LIST.filter(k => k.startsWith('high_cliff_rock_'));
+  const waterKeys = ASSETS_LIST.filter(k => k.startsWith('water_rock_'));
+  const decalKeys = ASSETS_LIST.filter(k => !k.startsWith('ground_') && !k.startsWith('cliff_') && !k.startsWith('high_cliff_') && !k.startsWith('water_'));
+
+  function fillGrid(gridId, keys) {
+    const el = document.getElementById(gridId);
+    el.innerHTML = keys.map(k => `
+      <div class="asset-card">
+        <div class="asset-thumb">
+          <img src="${ASSET_BASE}${k}.png" alt="${k}">
+        </div>
+        <div class="asset-title">${k}</div>
+        <div class="asset-meta">
+          <span>32×32</span>
+          <span>PNG RGBA</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  fillGrid('grid-ground', groundKeys);
+  fillGrid('grid-hill', hillKeys);
+  fillGrid('grid-high-cliff', highCliffKeys);
+  fillGrid('grid-water', waterKeys);
+  fillGrid('grid-decals', decalKeys);
+}
+
+// Initialize
+setScenario(0);
+requestAnimationFrame(render);
+</script>
+
+</body>
+</html>

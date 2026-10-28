@@ -323,8 +323,9 @@ describe('Item Effects Engine & Inventory Deduction', () => {
     const leafStone = findItem('leaf-stone') as ItemData;
     expect(waterStone).toBeDefined();
 
-    // Eevee + Leaf Stone -> Incompatible
-    expect(canUseItemOnPartyPokemon(leafStone, eevee).canUse).toBe(false);
+    // Pikachu + Leaf Stone -> Incompatible (Eevee evolves into Leafeon via Leaf Stone)
+    const pikachu = createPartyPokemon('PIKACHU', 10);
+    expect(canUseItemOnPartyPokemon(leafStone, pikachu).canUse).toBe(false);
 
     // Eevee + Water Stone -> Evolves into Vaporeon (#134)
     expect(canUseItemOnPartyPokemon(waterStone, eevee).canUse).toBe(true);

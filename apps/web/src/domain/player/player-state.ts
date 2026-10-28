@@ -11,6 +11,13 @@ export interface PlayerInventoryItem {
   count: number;
 }
 
+export interface QuestState {
+  questId: string;
+  stage: number;
+  completed: boolean;
+  updatedAt: number;
+}
+
 export interface PlayerProfile {
   id: string;
   name: string;
@@ -20,8 +27,13 @@ export interface PlayerProfile {
   playTimeSeconds: number;
   pokedexSeenCount: number;
   pokedexCaughtCount: number;
+  pokedexSeenSpecies?: string[];
+  pokedexCaughtSpecies?: string[];
   inventory: Record<string, number>;
   position: PlayerPosition;
+  storyFlags?: Record<string, boolean | number | string>;
+  quests?: Record<string, QuestState>;
+  defeatedTrainers?: string[];
 }
 
 export function createDefaultPlayerProfile(
@@ -36,28 +48,18 @@ export function createDefaultPlayerProfile(
     money: 3000,
     badges: [],
     playTimeSeconds: 0,
-    pokedexSeenCount: 1,
-    pokedexCaughtCount: 1,
-    inventory: {
-      POKEBALL: 20,
-      GREATBALL: 5,
-      ULTRABALL: 2,
-      MASTERBALL: 1,
-      POTION: 10,
-      SUPERPOTION: 5,
-      REVIVE: 3,
-      RARECANDY: 3,
-      ORANBERRY: 10,
-      SITRUSBERRY: 5,
-      BICYCLE: 1,
-      TOWNMAP: 1,
-      TM01: 1,
-      XATTACK: 3,
-    },
+    pokedexSeenCount: 0,
+    pokedexCaughtCount: 0,
+    pokedexSeenSpecies: [],
+    pokedexCaughtSpecies: [],
+    inventory: {},
     position: {
       gx: 0,
       gy: 0,
       direction: 0,
     },
+    storyFlags: {},
+    quests: {},
+    defeatedTrainers: [],
   };
 }

@@ -14,6 +14,7 @@ import { BattleController } from '../src/battle/battle-controller';
 import { createBattler } from '../src/battle/battle-factory';
 import { getBattleEnvironment } from '../src/battle';
 import { PokemonSpriteAnimator } from '../src/ui/pokedex/pokedex-sprite';
+import { BattleRenderer } from '../src/battle/battle-renderer';
 import type { BattleMove } from '../src/battle/types';
 
 function defMove(move: Omit<BattleMove, 'description'> & { description?: string }): BattleMove {
@@ -614,6 +615,48 @@ describe('Move Visual FX (VFX) & Animation Engine', () => {
       // Normal explicitly provided as false
       animator.load('Graphics/Pokemon/Front shiny/025.png', false);
       expect(animator.getFrameDuration()).toBe(45);
+    });
+
+    it('PokemonSpriteAnimator.calculateFrameDuration adaptively scales short and long strips', () => {
+      // 10 frames (e.g. Alolan Vulpix) -> 130ms (calm ~7.7 FPS, loop = 1.3s)
+      expect(PokemonSpriteAnimator.calculateFrameDuration(10, false)).toBe(130);
+      expect(PokemonSpriteAnimator.calculateFrameDuration(10, true)).toBe(130);
+
+      // 16 frames (e.g. Alolan Ninetales) -> 110ms (loop = 1.76s)
+      expect(PokemonSpriteAnimator.calculateFrameDuration(16, false)).toBe(110);
+
+      // 33 frames (e.g. Alolan Sandshrew) -> 95ms (loop = 3.13s)
+      expect(PokemonSpriteAnimator.calculateFrameDuration(33, false)).toBe(95);
+
+      // 56 frames (decimated shiny strips) -> 95ms
+      expect(PokemonSpriteAnimator.calculateFrameDuration(56, true)).toBe(95);
+
+      // 71 frames (e.g. normal Vulpix) -> 70ms (loop = 4.97s)
+      expect(PokemonSpriteAnimator.calculateFrameDuration(71, false)).toBe(70);
+
+      // 112 frames (e.g. Pikachu) -> 60ms (loop = 6.72s)
+      expect(PokemonSpriteAnimator.calculateFrameDuration(112, false)).toBe(60);
+    });
+
+    it('BattleRenderer.getBattlerDivisor calculates calm, canonical idle divisors', () => {
+      // 10 frames (e.g. Alolan Vulpix) -> divisor 8 (~1.33s loop)
+      expect(BattleRenderer.getBattlerDivisor(10, false)).toBe(8);
+      expect(BattleRenderer.getBattlerDivisor(10, true)).toBe(8);
+
+      // 16 frames (e.g. Alolan Ninetales) -> divisor 7 (~1.86s loop)
+      expect(BattleRenderer.getBattlerDivisor(16, false)).toBe(7);
+
+      // 33 frames (e.g. Alolan Sandshrew) -> divisor 6 (~3.30s loop)
+      expect(BattleRenderer.getBattlerDivisor(33, false)).toBe(6);
+
+      // 56 frames (decimated shiny strips) -> divisor 8 (~7.46s loop)
+      expect(BattleRenderer.getBattlerDivisor(56, true)).toBe(8);
+
+      // 71 frames (e.g. normal Vulpix) -> divisor 5 (~5.9s loop)
+      expect(BattleRenderer.getBattlerDivisor(71, false)).toBe(5);
+
+      // 112 frames (e.g. normal Pikachu) -> divisor 5 (~9.3s loop)
+      expect(BattleRenderer.getBattlerDivisor(112, false)).toBe(5);
     });
   });
 

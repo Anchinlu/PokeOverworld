@@ -76,12 +76,7 @@ interface ClimateSample {
   climateBand: ClimateBand;
 }
 
-type ClimateBand =
-  | 'arctic'
-  | 'cold'
-  | 'temperate'
-  | 'warm'
-  | 'hot';
+type ClimateBand = 'arctic' | 'cold' | 'temperate' | 'warm' | 'hot';
 ```
 
 Nhiệt độ nên được tạo từ hai thành phần:
@@ -98,13 +93,13 @@ Trong đó:
 
 ## Dải nhiệt độ chuẩn
 
-| Khoảng | Climate band | Đặc trưng |
-|---:|---|---|
-| `0.00–0.20` | `arctic` | Băng, tuyết dày, thực vật thưa |
-| `0.20–0.38` | `cold` | Snow forest, tundra, rừng lạnh |
-| `0.38–0.55` | `temperate` | Meadow, forest, autumn transition |
-| `0.55–0.72` | `warm` | Đồng bằng ấm, rừng khô, scrubland |
-| `0.72–1.00` | `hot` | Desert, savanna, đất khô |
+|      Khoảng | Climate band | Đặc trưng                         |
+| ----------: | ------------ | --------------------------------- |
+| `0.00–0.20` | `arctic`     | Băng, tuyết dày, thực vật thưa    |
+| `0.20–0.44` | `cold`       | Snow forest, tundra, rừng lạnh    |
+| `0.44–0.55` | `temperate`  | Meadow, forest, autumn transition |
+| `0.55–0.72` | `warm`       | Đồng bằng ấm, rừng khô, scrubland |
+| `0.72–1.00` | `hot`        | Desert, savanna, đất khô          |
 
 Các ngưỡng này là cấu hình, không hard-code trong nhiều module.
 
@@ -128,7 +123,7 @@ Desert không được xuất hiện trong `cold` hoặc `arctic`.
 Điều kiện đề xuất:
 
 ```text
-temperature <= 0.32
+temperature <= 0.42
 ```
 
 Snow có thể có nhiều độ ẩm khác nhau:
@@ -234,7 +229,6 @@ apps/web/src/maps/climate/
 ├── climate-types.ts
 ├── climate-config.ts
 ├── climate-field.ts
-├── climate-resolver.ts
 ├── climate-transition.ts
 └── index.ts
 ```
@@ -349,10 +343,14 @@ Hệ thống được xem là đạt khi:
 - Bổ sung kiểm thử tính ổn định theo seed, khoảng giá trị và luật tương thích biome.
 - Phase 2 bước đầu: thêm debug overlay `Climate: Nhiệt độ nền` trong Debug Panel.
 - Overlay hiển thị gradient nhiệt độ từ lạnh đến nóng mà chưa thay đổi terrain/biome runtime.
+- Phase 3: bật climate gating cho profile `natural-landmass` của World Gen v5. Desert, Snow,
+  Autumn và Dark Land chỉ được giữ lại khi climate nền tương thích; profile classic v4 được
+  giữ nguyên để tương thích các world/test cũ.
+- Phase 4 bước đầu: thêm resolver `core / transition / blocked`. Các ô transition không gắn
+  biome đặc thù, dùng nền meadow/dryland hiện có làm vùng đệm giữa các biome đối lập.
 
 ### Chưa thay đổi
 
-- World Gen v5 vẫn là pipeline sản xuất hiện tại.
 - Các biome hiện tại chưa bị thay thế bằng Climate Resolver.
-- Chưa bật transition biome trong bản đồ thực tế.
+- Chưa có atlas riêng cho transition biome; hiện dùng nền terrain cơ sở.
 - Chưa thay đổi save format hoặc world generation version.

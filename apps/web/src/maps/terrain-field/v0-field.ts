@@ -140,7 +140,7 @@ export class V0Field implements TerrainField {
   }
 
   public getSpawn(): { gx: number; gy: number } {
-    return getStartSpawn();
+    return getStartSpawn(this.seed);
   }
 
   public getRoadCenterX(_gy: number): number {

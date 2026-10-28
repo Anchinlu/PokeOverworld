@@ -1,5 +1,5 @@
 import { CHUNK_SIZE, TILE_SIZE } from '@pokemon/game-data';
-import type { TerrainField } from '../terrain-field';
+import { type TerrainField, isRoute1ClearingArea } from '../terrain-field';
 import { seededHash } from '../noise';
 import { sampleEcology } from './ecology-field';
 
@@ -44,6 +44,8 @@ function getCandidate(
       seededHash(cellX + 31, cellY - 17, field.seed + TREE_FIELD_SALT) *
         (TREE_CANDIDATE_CELL_SIZE - 2)
     );
+  if (isRoute1ClearingArea(anchorGX, anchorGY, field)) return null;
+
   const ecology = sampleEcology(anchorGX, anchorGY, field);
 
   // The chance rises smoothly with the ecological density field. This keeps

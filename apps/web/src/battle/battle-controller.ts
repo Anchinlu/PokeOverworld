@@ -33,7 +33,7 @@ import type { BagItemEntry } from '../ui/bag-screen';
 import { normalizeBallKey } from '../assets';
 import { moveAnimationManager } from './move-animation-manager';
 import { resolveMoveVfx, moveVfxCache, isSelfTargetMove } from './move-vfx';
-import { MOVES_DB, normalizeMoveId } from './moves-db';
+import { MOVES_DB, normalizeMoveId, getAvailableLevelUpMoves } from './moves-db';
 import { createCustomMoveAnimation } from './custom-animations';
 import {
   battleAnimationPlayer,
@@ -45,7 +45,16 @@ import {
 import { getPokeballData, getBaseCatchRate } from './pokeball-db';
 import { battleSePlayer, battleBgmPlayer } from '../audio';
 import { pokemonCatalog } from '../data';
-import { calculateExpYield as calculateCanonicalExpYield } from '../domain/pokemon/pokemon-exp';
+import {
+  normalizeGrowthRate,
+  getExpToNextLevel,
+  calculateExpYield as calculateCanonicalExpYield,
+} from '../domain/pokemon/pokemon-exp';
+import {
+  createDefaultIvs,
+  createDefaultEvs,
+  calculatePokemonStats,
+} from '../domain/party/pokemon-stats';
 import { HeldItemEngine } from './rules/held-item-engine';
 
 /** Calculates unified official EXP yield */
@@ -61,6 +70,8 @@ export type BattleEndCallback = (result: {
   caughtPokemon?: BattlerPokemon;
   activePlayerPokemon?: BattlerPokemon;
   expGained?: number;
+  /** True when the battle animation already synchronized the EXP to PartyService. */
+  expAppliedToParty?: boolean;
 }) => void;
 
 export class BattleController {
@@ -74,7 +85,10 @@ export class BattleController {
   // Bound event handlers (for cleanup)
   private boundClick: (e: MouseEvent) => void;
   private boundMouseMove: (e: MouseEvent) => void;
+  private boundKeyDown: (e: KeyboardEvent) => void;
   private partyUnsubscribe?: () => void;
+  private expGainAudio: HTMLAudioElement | null = null;
+  private expAppliedToParty = false;
 
   constructor(
     state: BattleState,
@@ -91,9 +105,13 @@ export class BattleController {
 
     this.boundClick = (e) => this.handleClick(e);
     this.boundMouseMove = (e) => this.handleMouseMove(e);
+    this.boundKeyDown = (e) => this.handleKeyDown(e);
 
     canvas.addEventListener('click', this.boundClick);
     canvas.addEventListener('mousemove', this.boundMouseMove);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('keydown', this.boundKeyDown);
+    }
 
     // Two-way synchronization: if PartyScreen or external service updates party HP/status, reflect immediately in battle
     this.partyUnsubscribe = partyService.subscribe(() => {
@@ -123,6 +141,9 @@ export class BattleController {
   destroy(): void {
     this.canvas.removeEventListener('click', this.boundClick);
     this.canvas.removeEventListener('mousemove', this.boundMouseMove);
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('keydown', this.boundKeyDown);
+    }
     if (this.typingTimer) {
       clearInterval(this.typingTimer);
       this.typingTimer = null;
@@ -130,6 +151,15 @@ export class BattleController {
     if (this.partyUnsubscribe) {
       this.partyUnsubscribe();
       this.partyUnsubscribe = undefined;
+    }
+    if (this.expGainAudio) {
+      try {
+        this.expGainAudio.pause();
+        this.expGainAudio.currentTime = 0;
+      } catch {
+        // ignore
+      }
+      this.expGainAudio = null;
     }
     this.state.onBallHit = undefined;
     this.state.onBallCapture = undefined;
@@ -198,6 +228,7 @@ export class BattleController {
       }
       const evt = abilityEvents[idx++];
       const disp = getAbilityDisplay(evt.ability);
+      battleSePlayer.playSound('Audio/SE/Battle ability.ogg', 0.65);
       this.state.triggerAbilityBanner(
         evt.targetSide,
         evt.targetName,
@@ -310,6 +341,23 @@ export class BattleController {
   }
 
   private handleClick(e: MouseEvent): void {
+    if (this.state.levelUpStatBoost) {
+      battleSePlayer.playSound('Audio/SE/GUI sel decision.ogg', 0.65);
+      const onConfirm = this.state.levelUpStatBoost.onConfirm;
+      this.state.levelUpStatBoost = null;
+      onConfirm?.();
+      return;
+    }
+
+    if (this.state.isExpGainAnimating) {
+      this.state.playerExpPct = this.state.targetPlayerExpPct;
+      this.state.isExpGainAnimating = false;
+      const cb = this.state.onExpGainStepComplete;
+      this.state.onExpGainStepComplete = undefined;
+      cb?.();
+      return;
+    }
+
     const { x, y } = this.getCanvasCoords(e);
 
     if (this.state.uiMode === 'message') {
@@ -661,21 +709,244 @@ export class BattleController {
     );
   }
 
+  private handleKeyDown(e: KeyboardEvent): void {
+    if (e.code === 'Space' || e.code === 'Enter' || e.code === 'KeyZ') {
+      if (this.state.levelUpStatBoost) {
+        e.preventDefault();
+        battleSePlayer.playSound('Audio/SE/GUI sel decision.ogg', 0.65);
+        const onConfirm = this.state.levelUpStatBoost.onConfirm;
+        this.state.levelUpStatBoost = null;
+        onConfirm?.();
+        return;
+      }
+      if (this.state.isExpGainAnimating) {
+        e.preventDefault();
+        this.state.playerExpPct = this.state.targetPlayerExpPct;
+        this.state.isExpGainAnimating = false;
+        const cb = this.state.onExpGainStepComplete;
+        this.state.onExpGainStepComplete = undefined;
+        cb?.();
+        return;
+      }
+      if (this.state.uiMode === 'message') {
+        e.preventDefault();
+        this.state.skipToEnd();
+        return;
+      }
+    }
+  }
+
   private handleEnemyFainted(enemy: BattlerPokemon, player: BattlerPokemon): void {
+    battleSePlayer.playSound('Audio/SE/Pkmn faint.ogg', 0.75);
     this.state.startEnemyFaint(() => {
       const baseExp = calculateExpYield(enemy.speciesKey, enemy.level);
       const expMultiplier = HeldItemEngine.getExpMultiplier(player);
       const expGained = Math.floor(baseExp * expMultiplier);
       const luckyText = expMultiplier > 1 ? ' (Tăng cường bởi Lucky Egg!)' : '';
-      this.queueMessage(`${enemy.name} hoang dã đã ngất xỉu!`, 'message', () => {
-        this.queueMessage(`${player.name} nhận được ${expGained} EXP!${luckyText}`, 'end', () => {
+      const faintMsg = this.engine.isWild
+        ? `${enemy.name} hoang dã đã ngất xỉu!`
+        : `${enemy.name} đã ngất xỉu!`;
+
+      this.queueMessage(faintMsg, 'message', () => {
+        if (player.isFainted || player.currentHp <= 0 || expGained <= 0) {
           this.endBattle('victory', undefined, expGained);
+          return;
+        }
+
+        this.queueMessage(`${player.name} nhận được ${expGained} EXP!${luckyText}`, 'message', () => {
+          this.processExpGain(player, expGained, () => {
+            this.endBattle('victory', undefined, expGained);
+          });
         });
       });
     }, enemy.isShiny);
   }
 
+  /**
+   * Processes authentic in-battle EXP accumulation, smooth bar filling animation,
+   * audio looping feedback, level-up stat calculation, and the Stat Boost Modal.
+   */
+  private processExpGain(
+    player: BattlerPokemon,
+    totalExp: number,
+    onComplete: () => void
+  ): void {
+    const species =
+      pokemonCatalog.getBySpeciesKey(player.speciesKey) ??
+      pokemonCatalog.getBySpeciesKey('PIKACHU')!;
+    const growthRate = normalizeGrowthRate(species.growthRate);
+
+    const playExpAudio = () => {
+      if (!this.expGainAudio) {
+        this.expGainAudio = battleSePlayer.playSound('Audio/SE/Pkmn exp gain.ogg', 0.65);
+        if (this.expGainAudio) {
+          this.expGainAudio.loop = true;
+        }
+      }
+    };
+
+    const stopExpAudio = () => {
+      if (this.expGainAudio) {
+        try {
+          this.expGainAudio.pause();
+          this.expGainAudio.currentTime = 0;
+        } catch {
+          // ignore
+        }
+        this.expGainAudio = null;
+      }
+    };
+
+    const runStep = (remainingExp: number) => {
+      if (player.level >= 100) {
+        stopExpAudio();
+        this.queueMessage(`${player.name} đã đạt cấp tối đa (Lv.100)!`, 'message', () => {
+          onComplete();
+        });
+        return;
+      }
+
+      if (!player.maxExp || player.maxExp <= 0) {
+        player.maxExp = getExpToNextLevel(growthRate, player.level);
+      }
+
+      const neededToLevel = Math.max(1, player.maxExp - player.exp);
+
+      if (remainingExp < neededToLevel) {
+        // Does not level up in this step
+        const targetExp = player.exp + remainingExp;
+        const targetPct = Math.min(0.999, targetExp / player.maxExp);
+
+        playExpAudio();
+        this.state.isExpGainAnimating = true;
+        this.state.targetPlayerExpPct = targetPct;
+        this.state.onExpGainStepComplete = () => {
+          stopExpAudio();
+          player.exp = targetExp;
+          this.syncActiveBattlerToParty();
+          this.expAppliedToParty = true;
+          setTimeout(() => {
+            onComplete();
+          }, 350);
+        };
+      } else {
+        // Fills to 100% and triggers Level Up!
+        playExpAudio();
+        this.state.isExpGainAnimating = true;
+        this.state.targetPlayerExpPct = 1.0;
+        this.state.onExpGainStepComplete = () => {
+          stopExpAudio();
+          // Authentic audio cue when EXP bar fills completely to 100%
+          battleSePlayer.playSound('Audio/SE/Pkmn exp full.ogg', 0.75);
+
+          const oldLevel = player.level;
+          const newLevel = oldLevel + 1;
+          const oldStats = { ...player.stats };
+          const oldMaxHp = player.maxHp;
+
+          // Ensure IVs/EVs/Nature exist
+          if (!player.ivs) player.ivs = createDefaultIvs(31);
+          if (!player.evs) player.evs = createDefaultEvs();
+          if (!player.nature) player.nature = 'Hardy';
+
+          const newStats = calculatePokemonStats(
+            species.stats,
+            newLevel,
+            player.ivs,
+            player.evs,
+            player.nature
+          );
+
+          const hpGained = Math.max(0, newStats.hp - oldMaxHp);
+          player.level = newLevel;
+          player.stats = newStats;
+          player.maxHp = newStats.hp;
+          player.currentHp = Math.min(newStats.hp, player.currentHp + hpGained);
+          this.state.targetPlayerHpPct = player.currentHp / player.maxHp;
+
+          // Play authentic Level-Up fanfare
+          battleSePlayer.playSound('Audio/SE/Pkmn level up.ogg', 0.8);
+
+          // Configure Stat Boost Modal
+          this.state.levelUpStatBoost = {
+            pokemonName: player.name,
+            pokemonSpeciesKey: player.speciesKey,
+            oldLevel,
+            newLevel,
+            oldStats,
+            newStats,
+            hpGained,
+            onConfirm: () => {
+              battleSePlayer.playSound('Audio/SE/GUI sel decision.ogg', 0.65);
+              // Reset EXP bar to 0 for the new level
+              player.exp = 0;
+              this.state.playerExpPct = 0;
+              this.state.targetPlayerExpPct = 0;
+              player.maxExp = getExpToNextLevel(growthRate, newLevel);
+              this.syncActiveBattlerToParty();
+              this.expAppliedToParty = true;
+
+              const leftoverExp = remainingExp - neededToLevel;
+
+              // Check for newly learned moves at newLevel
+              const availableMoves = getAvailableLevelUpMoves(player.speciesKey, newLevel);
+              const newlyUnlockedMove = availableMoves.find(
+                (m) =>
+                  m.level === newLevel &&
+                  !player.moves.some((pm) => pm.id.toLowerCase() === m.move.id.toLowerCase())
+              );
+
+              const continueExp = () => {
+                if (leftoverExp > 0 && newLevel < 100) {
+                  runStep(leftoverExp);
+                } else {
+                  setTimeout(() => {
+                    onComplete();
+                  }, 300);
+                }
+              };
+
+              if (newlyUnlockedMove && player.moves.length < 4) {
+                player.moves.push({ ...newlyUnlockedMove.move });
+                // Play move learnt fanfare cue!
+                battleSePlayer.playSound('Audio/SE/Pkmn move learnt.ogg', 0.75);
+                const moveName = newlyUnlockedMove.move.nameVi || newlyUnlockedMove.move.name;
+                this.queueMessage(
+                  `✨ ${player.name} đã học được chiêu thức mới: ${moveName}!`,
+                  'message',
+                  () => {
+                    continueExp();
+                  }
+                );
+              } else if (newlyUnlockedMove && player.moves.length >= 4) {
+                const moveName = newlyUnlockedMove.move.nameVi || newlyUnlockedMove.move.name;
+                this.queueMessage(
+                  `💡 ${player.name} muốn học ${moveName}, nhưng đã có 4 chiêu!`,
+                  'message',
+                  () => {
+                    continueExp();
+                  }
+                );
+              } else {
+                continueExp();
+              }
+            },
+          };
+
+          // Display level-up announcement in the bottom panel
+          this.queueMessage(
+            `🎉 ${player.name} đã thăng cấp lên Lv.${newLevel}!`,
+            'message'
+          );
+        };
+      }
+    };
+
+    runStep(totalExp);
+  }
+
   private handlePlayerFainted(player: BattlerPokemon): void {
+    battleSePlayer.playSound('Audio/SE/Pkmn faint.ogg', 0.75);
     this.state.startPlayerFaint(() => {
       partyService.syncBattleResult(this.engine.playerPokemon, 0);
       const hasAlive = partyService.getParty().some((p) => p.currentHp > 0 && !p.isFainted);
@@ -751,6 +1022,7 @@ export class BattleController {
         this.playMoveVfx(visualMove, 'player', () => {
           if (animPlan.defenderTakesHit) {
             this.state.startEnemyHit();
+            this.playDamageHitSe(result);
           }
           this.state.targetEnemyHpPct = enemy.currentHp / enemy.maxHp;
           this.state.targetPlayerHpPct = player.currentHp / player.maxHp;
@@ -850,6 +1122,7 @@ export class BattleController {
         this.playMoveVfx(visualMove, 'enemy', () => {
           if (animPlan.defenderTakesHit) {
             this.state.startPlayerHit();
+            this.playDamageHitSe(result);
           }
           this.state.targetPlayerHpPct = player.currentHp / player.maxHp;
           this.state.targetEnemyHpPct = enemy.currentHp / enemy.maxHp;
@@ -1364,6 +1637,9 @@ export class BattleController {
           }
           this.state.playerHpPct = newBattler.currentHp / newBattler.maxHp;
           this.state.targetPlayerHpPct = this.state.playerHpPct;
+          const expP = newBattler.maxExp && newBattler.maxExp > 0 ? newBattler.exp / newBattler.maxExp : 0;
+          this.state.playerExpPct = Math.max(0, Math.min(1, expP));
+          this.state.targetPlayerExpPct = this.state.playerExpPct;
           this.state.playerHurtFlash = 0;
           this.state.startPlayerSendOut();
 
@@ -1444,6 +1720,9 @@ export class BattleController {
           }
           this.state.playerHpPct = newBattler.currentHp / newBattler.maxHp;
           this.state.targetPlayerHpPct = this.state.playerHpPct;
+          const expP2 = newBattler.maxExp && newBattler.maxExp > 0 ? newBattler.exp / newBattler.maxExp : 0;
+          this.state.playerExpPct = Math.max(0, Math.min(1, expP2));
+          this.state.targetPlayerExpPct = this.state.playerExpPct;
           this.state.playerHurtFlash = 0;
           this.state.startPlayerSendOut();
 
@@ -1522,6 +1801,15 @@ export class BattleController {
       (rawId && inventoryService.getItemCount(rawId)) ||
       inventoryService.getItemCount(ballId) ||
       inventoryService.getItemCount(canonicalKey);
+
+    if (this.engine.enemyPokemon?.isUncatchable) {
+      battleSePlayer.playSound('Audio/SE/GUI sel buzzer.ogg', 0.8);
+      this.state.uiMode = 'message';
+      this.queueMessage('Nó đã gạt văng quả bóng! Không thể thu phục Pokémon sự kiện này!', 'message', () => {
+        this.state.uiMode = 'command';
+      });
+      return;
+    }
 
     if (available <= 0) {
       this.state.uiMode = 'message';
@@ -1615,6 +1903,7 @@ export class BattleController {
     this.state.uiMode = 'message';
     const escaped = this.engine.tryFlee();
     if (escaped) {
+      battleSePlayer.playSound('Audio/SE/Battle flee.ogg', 0.7);
       this.queueMessage('Đã chạy trốn an toàn!', 'end', () => {
         this.endBattle('fled');
       });
@@ -1622,6 +1911,17 @@ export class BattleController {
       this.queueMessage('Không thể chạy trốn!', 'message', () => {
         this.handleEnemyTurn();
       });
+    }
+  }
+
+  private playDamageHitSe(result: TurnResult): void {
+    if (result.damage <= 0) return;
+    if (result.typeEffectiveness > 1) {
+      battleSePlayer.playSound('Audio/SE/Battle damage super.ogg', 0.85);
+    } else if (result.typeEffectiveness > 0 && result.typeEffectiveness < 1) {
+      battleSePlayer.playSound('Audio/SE/Battle damage weak.ogg', 0.7);
+    } else {
+      battleSePlayer.playSound('Audio/SE/Battle damage normal.ogg', 0.75);
     }
   }
 
@@ -1664,6 +1964,9 @@ export class BattleController {
       }
       this.state.playerHpPct = newBattler.currentHp / newBattler.maxHp;
       this.state.targetPlayerHpPct = this.state.playerHpPct;
+      const expP3 = newBattler.maxExp && newBattler.maxExp > 0 ? newBattler.exp / newBattler.maxExp : 0;
+      this.state.playerExpPct = Math.max(0, Math.min(1, expP3));
+      this.state.targetPlayerExpPct = this.state.playerExpPct;
       this.state.playerHurtFlash = 0;
       this.state.startPlayerSendOut();
 
@@ -1706,6 +2009,9 @@ export class BattleController {
         }
         this.state.playerHpPct = newBattler.currentHp / newBattler.maxHp;
         this.state.targetPlayerHpPct = this.state.playerHpPct;
+        const expP4 = newBattler.maxExp && newBattler.maxExp > 0 ? newBattler.exp / newBattler.maxExp : 0;
+        this.state.playerExpPct = Math.max(0, Math.min(1, expP4));
+        this.state.targetPlayerExpPct = this.state.playerExpPct;
         this.state.playerHurtFlash = 0;
         this.state.startPlayerSendOut();
 
@@ -1750,6 +2056,7 @@ export class BattleController {
       caughtPokemon,
       activePlayerPokemon: this.engine.playerPokemon,
       expGained,
+      expAppliedToParty: this.expAppliedToParty,
     });
   }
 }

@@ -6,6 +6,7 @@ import {
   isVillageBuildingTile,
   WorldChunk,
 } from '../src/maps';
+import { createWorldQueryAdapter } from '../src/wildlife/ports/world-query-adapter';
 
 describe('Village Generation & Organic Layout System', () => {
   const seed = 101;
@@ -104,6 +105,29 @@ describe('Village Generation & Organic Layout System', () => {
         }
       }
     }
+  });
+
+  it('never spawns wild Pokémon inside the village boundary', () => {
+    for (let cy = -1; cy <= 1; cy++) {
+      for (let cx = 0; cx <= 2; cx++) {
+        const chunk = new WorldChunk(cx, cy, seed);
+        for (const wild of chunk.wildPokemon) {
+          expect(isVillageArea(wild.gx, wild.gy, seed, 0)).toBe(false);
+        }
+      }
+    }
+  });
+
+  it('prevents wildlife movement into the village boundary', () => {
+    const village = getVillagePlacement(0, seed);
+    expect(village).not.toBeNull();
+    if (!village) return;
+
+    const world = createWorldQueryAdapter(new WorldChunk(0, 0, seed).field);
+    const insideGX = Math.floor((village.bounds.minGX + village.bounds.maxGX) / 2);
+    const insideGY = Math.floor((village.bounds.minGY + village.bounds.maxGY) / 2);
+
+    expect(world.isWildlifeRestricted?.(insideGX, insideGY)).toBe(true);
   });
 
   it('ensures organic village streets connect seamlessly to highway', () => {

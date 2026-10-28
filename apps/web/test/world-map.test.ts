@@ -220,7 +220,7 @@ describe('World Map Screen (Overview Map / Town Map)', () => {
     const startTileInfo = worldMapScreen.inspectTile(0, 0, field);
     expect(startTileInfo.gx).toBe(0);
     expect(startTileInfo.gy).toBe(0);
-    expect(startTileInfo.villageName).toBe('Twinleaf Hamlet');
+    expect(startTileInfo.villageName).toBe('Pallet Town');
 
     // Sample deep ocean
     const oceanGX = 0;

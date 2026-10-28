@@ -22,6 +22,10 @@ export function canWildEntityEnter(
   fromGY?: number,
   canJumpHills = false
 ): boolean {
+  if (world.isWildlifeRestricted?.(targetGX, targetGY)) {
+    return false;
+  }
+
   if (isWaterDweller) {
     const ctx = world.contextAt(targetGX, targetGY);
     if (ctx !== 'water_surface' && ctx !== 'shore') {

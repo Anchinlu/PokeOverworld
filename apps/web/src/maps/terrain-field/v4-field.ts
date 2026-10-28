@@ -52,7 +52,11 @@ export class V4Field implements TerrainField {
     isDesert: boolean;
     isDarkLand: boolean;
     isAutumn: boolean;
+    isApricornPlain: boolean;
     isSnow: boolean;
+    isRockyHighland: boolean;
+    isRockyWater: boolean;
+    isHighCliff: boolean;
   } {
     const cx = Math.floor(gx / 16);
     const cy = Math.floor(gy / 16);
@@ -69,7 +73,11 @@ export class V4Field implements TerrainField {
       isDesert: plan.isDesert?.[index] === 1,
       isDarkLand: plan.isDarkLand?.[index] === 1,
       isAutumn: plan.isAutumn?.[index] === 1,
+      isApricornPlain: plan.isApricornPlain?.[index] === 1,
       isSnow: plan.isSnow?.[index] === 1,
+      isRockyHighland: plan.isRockyHighland?.[index] === 1,
+      isRockyWater: plan.isRockyWater?.[index] === 1,
+      isHighCliff: plan.isHighCliff?.[index] === 1,
     };
   }
 
@@ -91,11 +99,29 @@ export class V4Field implements TerrainField {
 
   public isAutumn = (gx: number, gy: number): boolean => this.getCell(gx, gy).isAutumn;
 
+  public isApricornPlain = (gx: number, gy: number): boolean =>
+    this.getCell(gx, gy).isApricornPlain;
+
   public isSnow = (gx: number, gy: number): boolean => this.getCell(gx, gy).isSnow;
+
+  public isRockyHighland = (gx: number, gy: number): boolean =>
+    this.getCell(gx, gy).isRockyHighland;
+
+  public isRockyWater = (gx: number, gy: number): boolean => this.getCell(gx, gy).isRockyWater;
+
+  public isHighCliff = (gx: number, gy: number): boolean => this.getCell(gx, gy).isHighCliff;
+
+  public isHighCliffPlateau = (gx: number, gy: number): boolean =>
+    this.isHighCliff(gx, gy) &&
+    this.isHighCliff(gx, gy + 1) &&
+    // A plateau is the top two rows of a High Cliff. Requiring the two tiles
+    // above the current row to be outside the cliff prevents a large noise
+    // blob from incorrectly making its middle rows walkable plateau.
+    (!this.isHighCliff(gx, gy - 1) || !this.isHighCliff(gx, gy - 2));
 
   public isRoad(gx: number, gy: number): boolean {
     // Roads are local village paths only and never occupy elevated terrain.
-    if (this.isHill(gx, gy) || this.isSnow(gx, gy)) return false;
+    if (this.isHill(gx, gy) || this.isSnow(gx, gy) || this.isRockyHighland(gx, gy)) return false;
     if (this.isContinentRoadTile(gx, gy)) return true;
 
     // Village paths are relevant only near a settlement. Avoid scanning every
@@ -103,7 +129,8 @@ export class V4Field implements TerrainField {
     const mx = Math.floor(gx / this.continentPlan.cellSize);
     const my = Math.floor(gy / this.continentPlan.cellSize);
     const nearStarter = Math.abs(gx) <= 160 && Math.abs(gy) <= 160;
-    if (!nearStarter && !this.settlementRoadNeighborhood.has(`${mx},${my}`)) return false;
+    const nearHighway = Math.abs(gx) <= 80;
+    if (!nearStarter && !nearHighway && !this.settlementRoadNeighborhood.has(`${mx},${my}`)) return false;
     return isV0RoadTile(gx, gy, this);
   }
 
@@ -181,7 +208,7 @@ export class V4Field implements TerrainField {
   }
 
   public getSpawn(): { gx: number; gy: number } {
-    const preferred = getStartSpawn();
+    const preferred = getStartSpawn(this.seed);
     if (this.isStartPlain(preferred.gx, preferred.gy)) return preferred;
 
     // The village door is normally inside the forced starter core. Keep a
@@ -208,7 +235,8 @@ export class V4Field implements TerrainField {
       !this.isDesert(gx, gy) &&
       !this.isDarkLand(gx, gy) &&
       !this.isAutumn(gx, gy) &&
-      !this.isSnow(gx, gy)
+      !this.isSnow(gx, gy) &&
+      !this.isRockyHighland(gx, gy)
     );
   }
 

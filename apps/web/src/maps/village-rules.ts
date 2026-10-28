@@ -7,7 +7,44 @@ import {
 } from './terrain-field';
 
 export type BuildingType =
-  'house_red' | 'pokecenter' | 'house_cottage' | 'house_flowers' | 'pokemart' | 'signpost';
+  | 'house_red'
+  | 'pokecenter'
+  | 'house_cottage'
+  | 'house_flowers'
+  | 'pokemart'
+  | 'signpost'
+  | 'lab_okido'
+  | 'house_player'
+  | 'house_rival'
+  | 'house_villager_3'
+  | 'house_villager_4'
+  | 'ranch_barn'
+  | 'feed_crops'
+  | 'hay_bale'
+  | 'hay_stack_1'
+  | 'hay_stack_2'
+  | 'water_trough'
+  | 'fence_horizontal'
+  | 'fence_vertical'
+  | 'bench_stone_large'
+  | 'bench_stone_small'
+  | 'plant_potted_tall'
+  | 'plant_potted_low'
+  | 'city_pokecenter'
+  | 'city_pokemart'
+  | 'city_police_station'
+  | 'city_house_default'
+  | 'city_house_1'
+  | 'city_house_2'
+  | 'city_house_3'
+  | 'city_house_4'
+  | 'city_house_5'
+  | 'city_house_6'
+  | 'city_house_7'
+  | 'city_house_8'
+  | 'city_utility_pole'
+  | 'city_guide_sign'
+  | 'city_hill_stairs';
 
 export interface BuildingSpec {
   widthTiles: number;
@@ -19,6 +56,7 @@ export interface BuildingSpec {
   doorRelX: number;
   doorRelY: number;
   doorWidthTiles?: number;
+  isSolid?: boolean;
 }
 
 export const BUILDING_SPECS: Record<BuildingType, BuildingSpec> = {
@@ -83,6 +121,360 @@ export const BUILDING_SPECS: Record<BuildingType, BuildingSpec> = {
     doorRelX: -1,
     doorRelY: -1,
   },
+  lab_okido: {
+    widthTiles: 7,
+    heightTiles: 4,
+    spriteWidth: 256,
+    spriteHeight: 256,
+    renderOffsetX: 0,
+    renderOffsetY: 128,
+    doorRelX: 3,
+    doorRelY: 3,
+    doorWidthTiles: 2,
+  },
+  house_player: {
+    widthTiles: 5,
+    heightTiles: 3,
+    spriteWidth: 160,
+    spriteHeight: 192,
+    renderOffsetX: 0,
+    renderOffsetY: 96,
+    doorRelX: 2,
+    doorRelY: 2,
+    doorWidthTiles: 1,
+  },
+  house_rival: {
+    widthTiles: 5,
+    heightTiles: 3,
+    spriteWidth: 160,
+    spriteHeight: 192,
+    renderOffsetX: 0,
+    renderOffsetY: 96,
+    doorRelX: 2,
+    doorRelY: 2,
+    doorWidthTiles: 1,
+  },
+  house_villager_3: {
+    widthTiles: 4,
+    heightTiles: 2,
+    spriteWidth: 128,
+    spriteHeight: 160,
+    renderOffsetX: 0,
+    renderOffsetY: 96,
+    doorRelX: 1,
+    doorRelY: 1,
+    doorWidthTiles: 1,
+  },
+  house_villager_4: {
+    widthTiles: 4,
+    heightTiles: 2,
+    spriteWidth: 128,
+    spriteHeight: 160,
+    renderOffsetX: 0,
+    renderOffsetY: 96,
+    doorRelX: 1,
+    doorRelY: 1,
+    doorWidthTiles: 1,
+  },
+  ranch_barn: {
+    widthTiles: 7,
+    heightTiles: 3,
+    spriteWidth: 256,
+    spriteHeight: 288,
+    renderOffsetX: 0,
+    renderOffsetY: 96,
+    doorRelX: 2,
+    doorRelY: 2,
+    doorWidthTiles: 2,
+  },
+  feed_crops: {
+    widthTiles: 3,
+    heightTiles: 4,
+    spriteWidth: 96,
+    spriteHeight: 128,
+    renderOffsetX: 0,
+    renderOffsetY: 0,
+    doorRelX: -1,
+    doorRelY: -1,
+    isSolid: false,
+  },
+  hay_bale: {
+    widthTiles: 3,
+    heightTiles: 2,
+    spriteWidth: 96,
+    spriteHeight: 96,
+    renderOffsetX: 0,
+    renderOffsetY: 32,
+    doorRelX: -1,
+    doorRelY: -1,
+  },
+  hay_stack_1: {
+    widthTiles: 2,
+    heightTiles: 1,
+    spriteWidth: 64,
+    spriteHeight: 64,
+    renderOffsetX: 0,
+    renderOffsetY: 32,
+    doorRelX: -1,
+    doorRelY: -1,
+  },
+  hay_stack_2: {
+    widthTiles: 2,
+    heightTiles: 1,
+    spriteWidth: 64,
+    spriteHeight: 64,
+    renderOffsetX: 0,
+    renderOffsetY: 32,
+    doorRelX: -1,
+    doorRelY: -1,
+  },
+  water_trough: {
+    widthTiles: 1,
+    heightTiles: 2,
+    spriteWidth: 32,
+    spriteHeight: 96,
+    renderOffsetX: 0,
+    renderOffsetY: 32,
+    doorRelX: -1,
+    doorRelY: -1,
+  },
+  fence_horizontal: {
+    widthTiles: 3,
+    heightTiles: 1,
+    spriteWidth: 96,
+    spriteHeight: 64,
+    renderOffsetX: 0,
+    renderOffsetY: 32,
+    doorRelX: -1,
+    doorRelY: -1,
+  },
+  fence_vertical: {
+    widthTiles: 1,
+    heightTiles: 5,
+    spriteWidth: 32,
+    spriteHeight: 160,
+    renderOffsetX: 0,
+    renderOffsetY: 0,
+    doorRelX: -1,
+    doorRelY: -1,
+  },
+  bench_stone_large: {
+    widthTiles: 3,
+    heightTiles: 1,
+    spriteWidth: 96,
+    spriteHeight: 64,
+    renderOffsetX: 0,
+    renderOffsetY: 32,
+    doorRelX: -1,
+    doorRelY: -1,
+  },
+  bench_stone_small: {
+    widthTiles: 2,
+    heightTiles: 1,
+    spriteWidth: 64,
+    spriteHeight: 64,
+    renderOffsetX: 0,
+    renderOffsetY: 32,
+    doorRelX: -1,
+    doorRelY: -1,
+  },
+  plant_potted_tall: {
+    widthTiles: 1,
+    heightTiles: 1,
+    spriteWidth: 32,
+    spriteHeight: 64,
+    renderOffsetX: 0,
+    renderOffsetY: 32,
+    doorRelX: -1,
+    doorRelY: -1,
+  },
+  plant_potted_low: {
+    widthTiles: 2,
+    heightTiles: 1,
+    spriteWidth: 64,
+    spriteHeight: 64,
+    renderOffsetX: 0,
+    renderOffsetY: 32,
+    doorRelX: -1,
+    doorRelY: -1,
+  },
+  city_pokecenter: {
+    widthTiles: 8,
+    heightTiles: 4,
+    spriteWidth: 256,
+    spriteHeight: 256,
+    renderOffsetX: 0,
+    renderOffsetY: 128,
+    doorRelX: 3,
+    doorRelY: 3,
+    doorWidthTiles: 2,
+    isSolid: true,
+  },
+  city_pokemart: {
+    widthTiles: 4,
+    heightTiles: 2,
+    spriteWidth: 128,
+    spriteHeight: 128,
+    renderOffsetX: 0,
+    renderOffsetY: 64,
+    doorRelX: 1,
+    doorRelY: 1,
+    doorWidthTiles: 1,
+    isSolid: true,
+  },
+  city_police_station: {
+    widthTiles: 5,
+    heightTiles: 3,
+    spriteWidth: 160,
+    spriteHeight: 224,
+    renderOffsetX: 0,
+    renderOffsetY: 128,
+    doorRelX: 2,
+    doorRelY: 2,
+    doorWidthTiles: 1,
+    isSolid: true,
+  },
+  city_house_default: {
+    widthTiles: 7,
+    heightTiles: 3,
+    spriteWidth: 224,
+    spriteHeight: 256,
+    renderOffsetX: 0,
+    renderOffsetY: 160,
+    doorRelX: 3,
+    doorRelY: 2,
+    doorWidthTiles: 1,
+    isSolid: true,
+  },
+  city_house_1: {
+    widthTiles: 4,
+    heightTiles: 3,
+    spriteWidth: 128,
+    spriteHeight: 224,
+    renderOffsetX: 0,
+    renderOffsetY: 128,
+    doorRelX: 1,
+    doorRelY: 2,
+    doorWidthTiles: 1,
+    isSolid: true,
+  },
+  city_house_2: {
+    widthTiles: 4,
+    heightTiles: 3,
+    spriteWidth: 128,
+    spriteHeight: 224,
+    renderOffsetX: 0,
+    renderOffsetY: 128,
+    doorRelX: 1,
+    doorRelY: 2,
+    doorWidthTiles: 1,
+    isSolid: true,
+  },
+  city_house_3: {
+    widthTiles: 5,
+    heightTiles: 3,
+    spriteWidth: 160,
+    spriteHeight: 224,
+    renderOffsetX: 0,
+    renderOffsetY: 128,
+    doorRelX: 2,
+    doorRelY: 2,
+    doorWidthTiles: 1,
+    isSolid: true,
+  },
+  city_house_4: {
+    widthTiles: 4,
+    heightTiles: 3,
+    spriteWidth: 128,
+    spriteHeight: 224,
+    renderOffsetX: 0,
+    renderOffsetY: 128,
+    doorRelX: 1,
+    doorRelY: 2,
+    doorWidthTiles: 1,
+    isSolid: true,
+  },
+  city_house_5: {
+    widthTiles: 5,
+    heightTiles: 3,
+    spriteWidth: 160,
+    spriteHeight: 224,
+    renderOffsetX: 0,
+    renderOffsetY: 128,
+    doorRelX: 2,
+    doorRelY: 2,
+    doorWidthTiles: 1,
+    isSolid: true,
+  },
+  city_house_6: {
+    widthTiles: 7,
+    heightTiles: 3,
+    spriteWidth: 224,
+    spriteHeight: 224,
+    renderOffsetX: 0,
+    renderOffsetY: 128,
+    doorRelX: 3,
+    doorRelY: 2,
+    doorWidthTiles: 1,
+    isSolid: true,
+  },
+  city_house_7: {
+    widthTiles: 7,
+    heightTiles: 3,
+    spriteWidth: 224,
+    spriteHeight: 224,
+    renderOffsetX: 0,
+    renderOffsetY: 128,
+    doorRelX: 3,
+    doorRelY: 2,
+    doorWidthTiles: 1,
+    isSolid: true,
+  },
+  city_house_8: {
+    widthTiles: 5,
+    heightTiles: 3,
+    spriteWidth: 160,
+    spriteHeight: 224,
+    renderOffsetX: 0,
+    renderOffsetY: 128,
+    doorRelX: 2,
+    doorRelY: 2,
+    doorWidthTiles: 1,
+    isSolid: true,
+  },
+  city_utility_pole: {
+    widthTiles: 2,
+    heightTiles: 1,
+    spriteWidth: 64,
+    spriteHeight: 96,
+    renderOffsetX: 0,
+    renderOffsetY: 64,
+    doorRelX: -1,
+    doorRelY: -1,
+    isSolid: true,
+  },
+  city_guide_sign: {
+    widthTiles: 1,
+    heightTiles: 1,
+    spriteWidth: 32,
+    spriteHeight: 64,
+    renderOffsetX: 0,
+    renderOffsetY: 32,
+    doorRelX: -1,
+    doorRelY: -1,
+    isSolid: true,
+  },
+  city_hill_stairs: {
+    widthTiles: 3,
+    heightTiles: 3,
+    spriteWidth: 96,
+    spriteHeight: 96,
+    renderOffsetX: 0,
+    renderOffsetY: 0,
+    doorRelX: -1,
+    doorRelY: -1,
+    isSolid: false,
+  },
 };
 
 export interface BuildingPlacement {
@@ -100,12 +492,45 @@ export interface BuildingPlacement {
   doorGX: number;
   doorGY: number;
   doorWidthTiles: number;
+  isSolid?: boolean;
 }
 
 export interface VillagePlantPlacement {
   gx: number;
   gy: number;
   type: string;
+}
+
+import type {
+  NPCEmoteType,
+  NPCEventAction,
+  NPCMovementMode,
+  NPCRuntimeState,
+  NPCScheduleRule,
+} from '../npc/npc-types';
+
+export interface VillageNPCEntity {
+  id: string;
+  name: string;
+  spriteKey: string;
+  gx: number;
+  gy: number;
+  direction: 0 | 1 | 2 | 3; // 0=down, 1=left, 2=right, 3=up
+  initialDirection: 0 | 1 | 2 | 3;
+  idleBehavior?: 'stand' | 'turn_random' | 'turn_cycle';
+  movementMode?: NPCMovementMode;
+  turnCycle?: Array<0 | 1 | 2 | 3>;
+  turnIntervalMs?: number;
+  wanderRadius?: number;
+  patrolPath?: Array<{ gx: number; gy: number }>;
+  lookAtPlayerRadius?: number;
+  ambientEmotePool?: NPCEmoteType[];
+  schedule?: NPCScheduleRule[];
+  scriptId?: string;
+  trainerId?: string;
+  actionsOnComplete?: NPCEventAction[];
+  runtime?: NPCRuntimeState;
+  dialogue: string[];
 }
 
 export interface VillagePlacement {
@@ -123,6 +548,9 @@ export interface VillagePlacement {
   buildings: BuildingPlacement[];
   pathTileKeys: Set<string>;
   gardenPlants: VillagePlantPlacement[];
+  npcs?: VillageNPCEntity[];
+  entranceGX?: number;
+  entranceGY?: number;
 }
 
 export const VILLAGE_CYCLE_HEIGHT = 96;
@@ -200,6 +628,7 @@ export function createBuildingPlacement(
     doorGX: gx + spec.doorRelX,
     doorGY: gy + spec.doorRelY,
     doorWidthTiles: spec.doorWidthTiles ?? 1,
+    isSolid: spec.isSolid !== false,
   };
 }
 
@@ -229,14 +658,11 @@ function computeVillagePlacement(
   seed: number,
   cacheKey: string
 ): VillagePlacement | null {
-  // Midpoint between rivers (rivers are at k * 96 + 48)
-  const baseY = k * VILLAGE_CYCLE_HEIGHT;
   const field = createTerrainField(1, seed);
-  const roadX = field.getRoadCenterX(baseY);
 
   // Cycle 0 always spawns (Starter Village: Twinleaf Town)
-  // For other cycles, roll deterministic chance (approx 75% spawn rate)
-  if (k !== 0) {
+  // Cycle -1 always spawns (First Milestone: Verdant Town / Viridian City)
+  if (k !== 0 && k !== -1) {
     const roll = seededHash(k, 888, seed);
     if (roll > 0.78) {
       villageCache.set(cacheKey, null);
@@ -251,289 +677,304 @@ function computeVillagePlacement(
 
   // Try East side first, then West side
   const sides: Array<'east' | 'west'> = k % 2 === 0 ? ['east', 'west'] : ['west', 'east'];
+  const yOffsets = [0, 8, 12, 16, 20, 24, -8, -12, -16];
 
-  for (const side of sides) {
-    const buildings: BuildingPlacement[] = [];
-    const pathKeys = new Set<string>();
-    const gardenPlants: VillagePlantPlacement[] = [];
+  for (const yOffset of yOffsets) {
+    const baseY = k * VILLAGE_CYCLE_HEIGHT + yOffset;
+    const roadX = field.getRoadCenterX(baseY);
 
-    let minGX = 9999;
-    let maxGX = -9999;
-    let minGY = 9999;
-    let maxGY = -9999;
+    for (const side of sides) {
+      const buildings: BuildingPlacement[] = [];
+      const pathKeys = new Set<string>();
+      const gardenPlants: VillagePlantPlacement[] = [];
 
-    const addPath = (gx: number, gy: number) => {
-      pathKeys.add(`${gx},${gy}`);
-      if (gx < minGX) minGX = gx;
-      if (gx > maxGX) maxGX = gx;
-      if (gy < minGY) minGY = gy;
-      if (gy > maxGY) maxGY = gy;
-    };
+      let minGX = 9999;
+      let maxGX = -9999;
+      let minGY = 9999;
+      let maxGY = -9999;
 
-    const addPlant = (gx: number, gy: number, type: string) => {
-      // Only plant on grass, not on road or building
-      if (!pathKeys.has(`${gx},${gy}`)) {
-        gardenPlants.push({ gx, gy, type });
-      }
-    };
+      const addPath = (gx: number, gy: number) => {
+        pathKeys.add(`${gx},${gy}`);
+        if (gx < minGX) minGX = gx;
+        if (gx > maxGX) maxGX = gx;
+        if (gy < minGY) minGY = gy;
+        if (gy > maxGY) maxGY = gy;
+      };
 
-    if (side === 'east') {
-      const startX = roadX + 3;
-
-      // Every town ALWAYS has PokéCenter + PokéMart + PokéShop Signpost!
-      // Layout Strategy:
-      // - North Residential: Houses arranged horizontally with garden courtyards (NO vertical stacking!)
-      // - South Commercial: PokéMart + Signpost + PokéCenter facing the street
-      // - Main Boulevard: Wide street from highway through town center
-      // - Every single building door connects directly to a walkable path tile
-      const bMart = createBuildingPlacement('b_mart', 'pokemart', startX + 2, baseY + 2);
-      // Signpost beside PokéMart (Asset 5 beside Asset 4)
-      const bSign = createBuildingPlacement('b_sign', 'signpost', startX + 6, baseY + 3);
-      const bCen = createBuildingPlacement('b_cen', 'pokecenter', startX + 9, baseY + 1);
-      const bRed = createBuildingPlacement('b_red', 'house_red', startX + 1, baseY - 8);
-      const bCot = createBuildingPlacement('b_cot', 'house_cottage', startX + 10, baseY - 7);
-
-      const candidates: BuildingPlacement[] = [bMart, bSign, bCen, bRed, bCot];
-
-      if (tier >= 1) {
-        // Medium Town: Add House Flowers to the East
-        const bFlow = createBuildingPlacement('b_flow', 'house_flowers', startX + 18, baseY - 7);
-        candidates.push(bFlow);
-      }
-      if (tier >= 2) {
-        // Grand City: Add Cottage 2 to the South-East
-        const bCot2 = createBuildingPlacement('b_cot2', 'house_cottage', startX + 18, baseY + 2);
-        candidates.push(bCot2);
-      }
-
-      let allFit = true;
-      for (const b of candidates) {
-        if (!canPlaceBuilding(b.gx, b.gy, b.widthTiles, b.heightTiles, field, buildings)) {
-          allFit = false;
-          break;
+      const addPlant = (gx: number, gy: number, type: string) => {
+        // Only plant on grass, not on road or building
+        if (!pathKeys.has(`${gx},${gy}`)) {
+          gardenPlants.push({ gx, gy, type });
         }
-        buildings.push(b);
-      }
-      if (!allFit) continue;
+      };
 
-      const maxStreetX = tier === 0 ? startX + 16 : startX + 24;
+      if (side === 'east') {
+        const startX = roadX + 3;
 
-      // 1. Highway Avenue connecting into town (2 tiles wide)
-      for (let gx = roadX + 1; gx <= startX + 2; gx++) {
-        addPath(gx, baseY - 1);
-        addPath(gx, baseY);
-      }
-
-      // 2. Main Central Boulevard (East-West thoroughfare)
-      for (let gx = startX + 1; gx <= maxStreetX; gx++) {
-        addPath(gx, baseY - 1);
-        addPath(gx, baseY);
-      }
-
-      // 3. Residential North Lane & Door Connections
-      const maxResX = tier >= 1 ? startX + 22 : startX + 14;
-      for (let gx = startX + 4; gx <= maxResX; gx++) {
-        addPath(gx, baseY - 5);
-        addPath(gx, baseY - 4);
-      }
-      // Vertical street connecting Boulevard to Residential Lane
-      for (let gy = baseY - 3; gy <= baseY - 2; gy++) {
-        addPath(startX + 7, gy);
-        addPath(startX + 8, gy);
-      }
-      // Direct path into House Red door (2 tiles wide)
-      addPath(startX + 4, baseY - 6);
-      addPath(startX + 5, baseY - 6);
-      // Direct path into Cottage door
-      addPath(startX + 11, baseY - 6);
-      // Direct path into House Flowers door (if tier >= 1)
-      if (tier >= 1) {
-        addPath(startX + 21, baseY - 6);
-      }
-
-      // 4. Commercial South Esplanade & Door Connections
-      const maxComX = tier >= 2 ? startX + 22 : startX + 16;
-      for (let gx = startX + 1; gx <= maxComX; gx++) {
-        addPath(gx, baseY + 4);
-        addPath(gx, baseY + 5);
-      }
-      // Vertical connector from Boulevard to Commercial Esplanade
-      for (let gy = baseY + 1; gy <= baseY + 3; gy++) {
-        addPath(startX + 6, gy);
-        addPath(startX + 7, gy);
-      }
-      // Paved entrance into PokéMart door
-      addPath(startX + 3, baseY + 3);
-      for (let gy = baseY + 1; gy <= baseY + 2; gy++) {
-        addPath(startX + 2, gy);
-        addPath(startX + 3, gy);
-      }
-      // Paved path in front of Signpost
-      addPath(startX + 6, baseY + 4);
-      // Direct path into PokéCenter sliding doors
-      addPath(startX + 12, baseY + 3);
-      // Direct path into Cottage 2 door (if tier >= 2)
-      if (tier >= 2) {
-        addPath(startX + 19, baseY + 3);
-      }
-
-      // 5. Town Landscaping & Garden Flowerbeds
-      // Center Grass Island feature in town square
-      addPlant(startX + 9, baseY - 3, 'flower_purple_bell');
-      addPlant(startX + 10, baseY - 3, 'flower_blue');
-
-      // Flowerbeds under House Red
-      addPlant(startX + 1, baseY - 5, 'flower_red');
-      addPlant(startX + 2, baseY - 5, 'flower_white');
-      addPlant(startX + 3, baseY - 5, 'flower_red');
-
-      // Courtyard garden between House Red and Cottage
-      addPlant(startX + 7, baseY - 7, 'flower_purple_bell');
-      addPlant(startX + 8, baseY - 7, 'flower_blue');
-      addPlant(startX + 8, baseY - 6, 'flower_purple_bell');
-
-      // Flowerbeds flanking Cottage
-      addPlant(startX + 15, baseY - 5, 'flower_purple');
-      addPlant(startX + 16, baseY - 5, 'flower_blue');
-
-      // Flanking PokéCenter entrance
-      addPlant(startX + 8, baseY + 4, 'flower_blue');
-      addPlant(startX + 16, baseY + 4, 'flower_blue');
-
-      // Corner flower beside PokéMart signpost
-      addPlant(startX + 7, baseY + 4, 'flower_red');
-
-      if (tier >= 1) {
-        // Gardens around House Flowers
-        addPlant(startX + 17, baseY - 7, 'flower_purple_bell');
-        addPlant(startX + 23, baseY - 5, 'flower_blue');
-      }
-    } else {
-      // West Side Layout (Organic mirrored layout)
-      const startX = roadX - (tier === 0 ? 19 : 27);
-
-      const bMart = createBuildingPlacement('b_mart', 'pokemart', startX + 13, baseY + 2);
-      // Signpost beside PokéMart on the West side
-      const bSign = createBuildingPlacement('b_sign', 'signpost', startX + 17, baseY + 3);
-      const bCen = createBuildingPlacement('b_cen', 'pokecenter', startX + 5, baseY + 1);
-      const bRed = createBuildingPlacement('b_red', 'house_red', startX + 11, baseY - 8);
-      const bCot = createBuildingPlacement('b_cot', 'house_cottage', startX + 3, baseY - 7);
-
-      const candidates: BuildingPlacement[] = [bMart, bSign, bCen, bRed, bCot];
-
-      if (tier >= 1) {
-        const bFlow = createBuildingPlacement('b_flow', 'house_flowers', startX - 4, baseY - 7);
-        candidates.push(bFlow);
-      }
-      if (tier >= 2) {
-        const bCot2 = createBuildingPlacement('b_cot2', 'house_cottage', startX - 4, baseY + 2);
-        candidates.push(bCot2);
-      }
-
-      let allFit = true;
-      for (const b of candidates) {
-        if (!canPlaceBuilding(b.gx, b.gy, b.widthTiles, b.heightTiles, field, buildings)) {
-          allFit = false;
-          break;
+        // 1. Highway Avenue connecting into town (2 tiles wide)
+        for (let gx = roadX + 1; gx <= startX + 2; gx++) {
+          addPath(gx, baseY - 1);
+          addPath(gx, baseY);
         }
-        buildings.push(b);
-      }
-      if (!allFit) continue;
 
-      const minStreetX = tier === 0 ? startX + 2 : startX - 4;
+        if (tier >= 1) {
+          // ==========================================
+          // CITY LAYOUT (Tier >= 1: Verdant City / Floaroma City)
+          // ==========================================
+          const bCen = createBuildingPlacement('b_cen', 'city_pokecenter', startX + 1, baseY + 1);
+          const bSign = createBuildingPlacement('b_sign', 'city_guide_sign', startX + 10, baseY + 3);
+          const bMart = createBuildingPlacement('b_mart', 'city_pokemart', startX + 12, baseY + 2);
 
-      // 1. Highway Avenue connecting into West town
-      for (let gx = startX + 18; gx <= roadX - 1; gx++) {
-        addPath(gx, baseY - 1);
-        addPath(gx, baseY);
+          const coreCandidates = [bCen, bSign, bMart];
+          let allFit = true;
+          for (const b of coreCandidates) {
+            if (!canPlaceBuilding(b.gx, b.gy, b.widthTiles, b.heightTiles, field, buildings)) {
+              allFit = false;
+              break;
+            }
+            buildings.push(b);
+          }
+          if (!allFit) continue;
+
+          // Optional City Public & Residential Extensions
+          const cityOptionals = [
+            createBuildingPlacement('b_pol', 'city_police_station', startX + 17, baseY + 1),
+            createBuildingPlacement('b_h1', 'city_house_1', startX + 1, baseY - 8),
+            createBuildingPlacement('b_h2', 'city_house_3', startX + 6, baseY - 8),
+            createBuildingPlacement('b_h3', 'city_house_6', startX + 12, baseY - 8),
+            createBuildingPlacement('b_pole1', 'city_utility_pole', startX + 1, baseY - 2),
+            createBuildingPlacement('b_pole2', 'city_utility_pole', startX + 10, baseY - 2),
+          ];
+
+          for (const opt of cityOptionals) {
+            if (canPlaceBuilding(opt.gx, opt.gy, opt.widthTiles, opt.heightTiles, field, buildings)) {
+              buildings.push(opt);
+            }
+          }
+
+          const maxStreetX = startX + 22;
+          // Main Boulevard
+          for (let gx = startX + 1; gx <= maxStreetX; gx++) {
+            addPath(gx, baseY - 1);
+            addPath(gx, baseY);
+          }
+
+          // Residential North Lane & Door Connections
+          for (let gx = startX + 1; gx <= maxStreetX - 2; gx++) {
+            addPath(gx, baseY - 5);
+            addPath(gx, baseY - 4);
+          }
+          for (let gy = baseY - 3; gy <= baseY - 2; gy++) {
+            addPath(startX + 6, gy);
+            addPath(startX + 7, gy);
+          }
+
+          // Direct path into each placed building door
+          for (const b of buildings) {
+            if (b.doorGX >= 0 && b.doorGY >= 0) {
+              addPath(b.doorGX, b.doorGY);
+              addPath(b.doorGX, b.doorGY + 1);
+              if (b.doorWidthTiles && b.doorWidthTiles > 1) {
+                addPath(b.doorGX + 1, b.doorGY);
+                addPath(b.doorGX + 1, b.doorGY + 1);
+              }
+            }
+          }
+
+          // Urban Landscaping
+          addPlant(startX + 9, baseY - 3, 'flower_purple_bell');
+          addPlant(startX + 10, baseY - 3, 'flower_blue');
+          addPlant(startX + 11, baseY + 4, 'flower_blue');
+        } else {
+          // ==========================================
+          // RURAL VILLAGE LAYOUT (Tier 0: Hamlet)
+          // ==========================================
+          const bMart = createBuildingPlacement('b_mart', 'pokemart', startX + 2, baseY + 2);
+          const bSign = createBuildingPlacement('b_sign', 'signpost', startX + 6, baseY + 3);
+          const bCen = createBuildingPlacement('b_cen', 'pokecenter', startX + 9, baseY + 1);
+          const bRed = createBuildingPlacement('b_red', 'house_red', startX + 1, baseY - 8);
+          const bCot = createBuildingPlacement('b_cot', 'house_cottage', startX + 10, baseY - 7);
+
+          const coreCandidates = [bMart, bSign, bCen, bRed, bCot];
+          let allFit = true;
+          for (const b of coreCandidates) {
+            if (!canPlaceBuilding(b.gx, b.gy, b.widthTiles, b.heightTiles, field, buildings)) {
+              allFit = false;
+              break;
+            }
+            buildings.push(b);
+          }
+          if (!allFit) continue;
+
+          const maxStreetX = startX + 16;
+          for (let gx = startX + 1; gx <= maxStreetX; gx++) {
+            addPath(gx, baseY - 1);
+            addPath(gx, baseY);
+          }
+          for (let gx = startX + 4; gx <= startX + 14; gx++) {
+            addPath(gx, baseY - 5);
+            addPath(gx, baseY - 4);
+          }
+          for (let gy = baseY - 3; gy <= baseY - 2; gy++) {
+            addPath(startX + 7, gy);
+            addPath(startX + 8, gy);
+          }
+          addPath(startX + 4, baseY - 6);
+          addPath(startX + 5, baseY - 6);
+          addPath(startX + 11, baseY - 6);
+
+          for (let gx = startX + 1; gx <= startX + 16; gx++) {
+            addPath(gx, baseY + 4);
+            addPath(gx, baseY + 5);
+          }
+          for (let gy = baseY + 1; gy <= baseY + 3; gy++) {
+            addPath(startX + 6, gy);
+            addPath(startX + 7, gy);
+          }
+          addPath(startX + 3, baseY + 3);
+          addPath(startX + 6, baseY + 4);
+          addPath(startX + 12, baseY + 3);
+
+          addPlant(startX + 9, baseY - 3, 'flower_purple_bell');
+          addPlant(startX + 10, baseY - 3, 'flower_blue');
+          addPlant(startX + 1, baseY - 5, 'flower_red');
+        }
+      } else {
+        // West Side Layout (Organic mirrored layout)
+        const startX = roadX - (tier === 0 ? 19 : 25);
+
+        // 1. Highway Avenue connecting into West town
+        for (let gx = startX + 18; gx <= roadX - 1; gx++) {
+          addPath(gx, baseY - 1);
+          addPath(gx, baseY);
+        }
+
+        if (tier >= 1) {
+          // ==========================================
+          // CITY LAYOUT (West Side)
+          // ==========================================
+          const bCen = createBuildingPlacement('b_cen', 'city_pokecenter', startX + 1, baseY + 1);
+          const bSign = createBuildingPlacement('b_sign', 'city_guide_sign', startX + 10, baseY + 3);
+          const bMart = createBuildingPlacement('b_mart', 'city_pokemart', startX + 12, baseY + 2);
+
+          const coreCandidates = [bCen, bSign, bMart];
+          let allFit = true;
+          for (const b of coreCandidates) {
+            if (!canPlaceBuilding(b.gx, b.gy, b.widthTiles, b.heightTiles, field, buildings)) {
+              allFit = false;
+              break;
+            }
+            buildings.push(b);
+          }
+          if (!allFit) continue;
+
+          const cityOptionals = [
+            createBuildingPlacement('b_pol', 'city_police_station', startX + 17, baseY + 1),
+            createBuildingPlacement('b_h1', 'city_house_1', startX + 1, baseY - 8),
+            createBuildingPlacement('b_h2', 'city_house_3', startX + 6, baseY - 8),
+            createBuildingPlacement('b_h3', 'city_house_6', startX + 12, baseY - 8),
+            createBuildingPlacement('b_pole1', 'city_utility_pole', startX + 1, baseY - 2),
+          ];
+          for (const opt of cityOptionals) {
+            if (canPlaceBuilding(opt.gx, opt.gy, opt.widthTiles, opt.heightTiles, field, buildings)) {
+              buildings.push(opt);
+            }
+          }
+
+          const minStreetX = startX + 1;
+          for (let gx = minStreetX; gx <= startX + 18; gx++) {
+            addPath(gx, baseY - 1);
+            addPath(gx, baseY);
+          }
+
+          for (const b of buildings) {
+            if (b.doorGX >= 0 && b.doorGY >= 0) {
+              addPath(b.doorGX, b.doorGY);
+              addPath(b.doorGX, b.doorGY + 1);
+              if (b.doorWidthTiles && b.doorWidthTiles > 1) {
+                addPath(b.doorGX + 1, b.doorGY);
+                addPath(b.doorGX + 1, b.doorGY + 1);
+              }
+            }
+          }
+        } else {
+          // Rural West Layout
+          const bMart = createBuildingPlacement('b_mart', 'pokemart', startX + 13, baseY + 2);
+          const bSign = createBuildingPlacement('b_sign', 'signpost', startX + 17, baseY + 3);
+          const bCen = createBuildingPlacement('b_cen', 'pokecenter', startX + 5, baseY + 1);
+          const bRed = createBuildingPlacement('b_red', 'house_red', startX + 11, baseY - 8);
+          const bCot = createBuildingPlacement('b_cot', 'house_cottage', startX + 3, baseY - 7);
+
+          const coreCandidates = [bMart, bSign, bCen, bRed, bCot];
+          let allFit = true;
+          for (const b of coreCandidates) {
+            if (!canPlaceBuilding(b.gx, b.gy, b.widthTiles, b.heightTiles, field, buildings)) {
+              allFit = false;
+              break;
+            }
+            buildings.push(b);
+          }
+          if (!allFit) continue;
+
+          const minStreetX = startX + 2;
+          for (let gx = minStreetX; gx <= startX + 18; gx++) {
+            addPath(gx, baseY - 1);
+            addPath(gx, baseY);
+          }
+          for (let gx = startX + 3; gx <= startX + 16; gx++) {
+            addPath(gx, baseY - 5);
+            addPath(gx, baseY - 4);
+          }
+          for (let gy = baseY - 3; gy <= baseY - 2; gy++) {
+            addPath(startX + 10, gy);
+            addPath(startX + 11, gy);
+          }
+          addPath(startX + 14, baseY - 6);
+          addPath(startX + 15, baseY - 6);
+          addPath(startX + 4, baseY - 6);
+
+          for (let gx = startX + 4; gx <= startX + 18; gx++) {
+            addPath(gx, baseY + 4);
+            addPath(gx, baseY + 5);
+          }
+          for (let gy = baseY + 1; gy <= baseY + 3; gy++) {
+            addPath(startX + 11, gy);
+            addPath(startX + 12, gy);
+          }
+          addPath(startX + 14, baseY + 3);
+          addPath(startX + 17, baseY + 4);
+          addPath(startX + 8, baseY + 3);
+
+          addPlant(startX + 9, baseY - 3, 'flower_purple_bell');
+          addPlant(startX + 8, baseY - 3, 'flower_blue');
+        }
       }
 
-      // 2. Main Central Boulevard
-      for (let gx = minStreetX; gx <= startX + 18; gx++) {
-        addPath(gx, baseY - 1);
-        addPath(gx, baseY);
+      // Expand bounding box with all building footprints and paths
+      for (const b of buildings) {
+        if (b.gx < minGX) minGX = b.gx;
+        if (b.gx + b.widthTiles > maxGX) maxGX = b.gx + b.widthTiles;
+        if (b.gy < minGY) minGY = b.gy;
+        if (b.gy + b.heightTiles > maxGY) maxGY = b.gy + b.heightTiles;
       }
 
-      // 3. Residential North Lane & Door Connections
-      const minResX = tier >= 1 ? startX - 3 : startX + 3;
-      for (let gx = minResX; gx <= startX + 16; gx++) {
-        addPath(gx, baseY - 5);
-        addPath(gx, baseY - 4);
-      }
-      // Vertical street connecting Boulevard to Residential Lane
-      for (let gy = baseY - 3; gy <= baseY - 2; gy++) {
-        addPath(startX + 10, gy);
-        addPath(startX + 11, gy);
-      }
-      // Direct path into House Red door (2 tiles wide)
-      addPath(startX + 14, baseY - 6);
-      addPath(startX + 15, baseY - 6);
-      // Direct path into Cottage door
-      addPath(startX + 4, baseY - 6);
-      if (tier >= 1) {
-        addPath(startX - 1, baseY - 6);
-      }
+      const placement: VillagePlacement = {
+        k,
+        name,
+        tier,
+        centerGX: Math.round((minGX + maxGX) / 2),
+        centerGY: baseY,
+        bounds: { minGX, maxGX, minGY, maxGY },
+        buildings,
+        pathTileKeys: pathKeys,
+        gardenPlants,
+        entranceGX: side === 'east' ? roadX + 2 : roadX - 2,
+        entranceGY: baseY,
+      };
 
-      // 4. Commercial South Esplanade & Door Connections
-      const minComX = tier >= 2 ? startX - 3 : startX + 4;
-      for (let gx = minComX; gx <= startX + 18; gx++) {
-        addPath(gx, baseY + 4);
-        addPath(gx, baseY + 5);
-      }
-      // Vertical connector from Boulevard to Commercial Esplanade
-      for (let gy = baseY + 1; gy <= baseY + 3; gy++) {
-        addPath(startX + 11, gy);
-        addPath(startX + 12, gy);
-      }
-      // Direct path into PokéMart door
-      addPath(startX + 14, baseY + 3);
-      for (let gy = baseY + 1; gy <= baseY + 2; gy++) {
-        addPath(startX + 14, gy);
-        addPath(startX + 15, gy);
-      }
-      // In front of Signpost
-      addPath(startX + 17, baseY + 4);
-      // Direct path into PokéCenter sliding doors
-      addPath(startX + 8, baseY + 3);
-      if (tier >= 2) {
-        addPath(startX - 3, baseY + 3);
-      }
-
-      // 5. Landscaping
-      addPlant(startX + 9, baseY - 3, 'flower_purple_bell');
-      addPlant(startX + 8, baseY - 3, 'flower_blue');
-      addPlant(startX + 11, baseY - 5, 'flower_red');
-      addPlant(startX + 12, baseY - 5, 'flower_white');
-      addPlant(startX + 13, baseY - 5, 'flower_red');
-      addPlant(startX + 9, baseY - 7, 'flower_purple_bell');
-      addPlant(startX + 2, baseY - 5, 'flower_purple');
-      addPlant(startX + 4, baseY + 4, 'flower_blue');
-      addPlant(startX + 12, baseY + 4, 'flower_blue');
-      addPlant(startX + 18, baseY + 4, 'flower_red');
+      villageCache.set(cacheKey, placement);
+      return placement;
     }
-
-    // Expand bounding box with all building footprints and paths
-    for (const b of buildings) {
-      if (b.gx < minGX) minGX = b.gx;
-      if (b.gx + b.widthTiles > maxGX) maxGX = b.gx + b.widthTiles;
-      if (b.gy < minGY) minGY = b.gy;
-      if (b.gy + b.heightTiles > maxGY) maxGY = b.gy + b.heightTiles;
-    }
-
-    const placement: VillagePlacement = {
-      k,
-      name,
-      tier,
-      centerGX: Math.round((minGX + maxGX) / 2),
-      centerGY: baseY,
-      bounds: { minGX, maxGX, minGY, maxGY },
-      buildings,
-      pathTileKeys: pathKeys,
-      gardenPlants,
-    };
-
-    villageCache.set(cacheKey, placement);
-    return placement;
   }
 
   villageCache.set(cacheKey, null);

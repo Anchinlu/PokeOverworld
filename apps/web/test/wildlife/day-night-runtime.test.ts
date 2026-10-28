@@ -58,18 +58,26 @@ describe('Wildlife day/night runtime', () => {
       'RATTATA',
       'RATICATE',
       'CLEFAIRY',
+      'CLEFABLE',
       'ZUBAT',
       'GOLBAT',
+      'VILEPLUME',
       'MEOWTH',
       'PERSIAN',
       'GASTLY',
       'HAUNTER',
+      'GENGAR',
       'DROWZEE',
       'HYPNO',
+      'STARMIE',
+      'CROBAT',
+      'PORYGONZ',
+      'ESPEON',
+      'UMBREON',
     ]);
     expect(
       Object.entries(speciesSpawnData)
-        .filter(([speciesKey]) => !nocturnal.includes(speciesKey))
+        .filter(([speciesKey, definition]) => !nocturnal.includes(speciesKey) && definition.activeTime.length !== 4)
         .every(([, definition]) => !definition.activeTime.includes('night'))
     ).toBe(true);
   });

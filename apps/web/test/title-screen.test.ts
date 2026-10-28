@@ -81,6 +81,8 @@ describe('Game Title Screen / Màn Hình Chờ', () => {
         'titleNewWorldModal',
         'newWorldModalTitle',
         'btnNewWorldModalCloseX',
+        'inputPlayerName',
+        'selectPlayerGender',
         'inputWorldSeed',
         'btnRerollSeed',
         'selectSaveSlot',
@@ -106,6 +108,9 @@ describe('Game Title Screen / Màn Hình Chờ', () => {
                   : 'div'
           );
           child.id = id;
+          if (id === 'inputPlayerName') child._value = 'Red';
+          if (id === 'inputWorldSeed') child._value = '101';
+          if (id === 'selectPlayerGender') child._value = 'male';
           child.parentNode = this;
           this.children.push(child);
         }
@@ -437,7 +442,11 @@ describe('Game Title Screen / Màn Hình Chờ', () => {
     vi.advanceTimersByTime(500);
 
     expect(onNewWorld).toHaveBeenCalledTimes(1);
-    expect(onNewWorld).toHaveBeenCalledWith(rerolledSeed, 'slot_1');
+    expect(onNewWorld).toHaveBeenCalledWith(
+      rerolledSeed,
+      'slot_1',
+      expect.objectContaining({ name: 'Red', gender: 'male' })
+    );
 
     controller.destroy();
   });

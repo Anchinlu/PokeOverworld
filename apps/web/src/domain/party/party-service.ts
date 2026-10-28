@@ -14,6 +14,7 @@ import { normalizeGrowthRate, getExpToNextLevel } from '../pokemon/pokemon-exp';
 import type { BattleMove, BattlerPokemon } from '../../battle/types';
 import { pokemonCatalog } from '../../data';
 import { inventoryService } from '../inventory/inventory-service';
+import { playerService } from '../player/player-service';
 
 export interface BattleExpShareEntry {
   pokemon: PartyPokemon;
@@ -172,6 +173,11 @@ export class PartyService {
       return false;
     }
     this.state.pokemon.push(pokemon);
+    try {
+      playerService.registerCaughtSpecies(pokemon.speciesKey);
+    } catch {
+      // playerService optional sync guard
+    }
     this.notify();
     return true;
   }
@@ -363,7 +369,27 @@ export class PartyService {
     }
 
     let leveledUp = false;
-    if (expGained > 0 && !partyMember.isFainted) {
+
+    // Check if battler already leveled up or gained EXP during in-battle animations
+    if (
+      battler.level > partyMember.level ||
+      (battler.level === partyMember.level && battler.exp !== partyMember.exp)
+    ) {
+      leveledUp = battler.level > partyMember.level;
+      partyMember.level = battler.level;
+      partyMember.exp = battler.exp;
+      partyMember.maxExp = battler.maxExp;
+      partyMember.stats = { ...battler.stats };
+      partyMember.maxHp = battler.maxHp;
+      partyMember.currentHp = Math.max(0, battler.currentHp);
+
+      // Sync moves learned during in-battle level up
+      for (const bMove of battler.moves) {
+        if (!partyMember.moves.some((m) => m.id === bMove.id)) {
+          partyMember.moves.push({ ...bMove });
+        }
+      }
+    } else if (expGained > 0 && !partyMember.isFainted) {
       partyMember.exp += expGained;
       const speciesData = pokemonCatalog.getBySpeciesKey(partyMember.speciesKey);
       const growthRate = normalizeGrowthRate(speciesData?.growthRate);
@@ -513,8 +539,8 @@ export class PartyService {
     this.notify();
   }
 
-  public reset(): void {
-    this.state.pokemon = createDefaultParty();
+  public reset(initialParty?: PartyPokemon[]): void {
+    this.state.pokemon = initialParty ? [...initialParty] : createDefaultParty();
     this.state.selectedIndex = 0;
     this.state.swapSourceIndex = null;
     this.activeFollowerUid = this.state.pokemon[0]?.uid ?? null;

@@ -28,6 +28,7 @@ export class DebugRenderer {
           else if (tid === TERRAIN.BEACH_SAND) ctx.fillStyle = 'rgba(249, 115, 22, 0.45)';
           else if (tid === TERRAIN.HILL) ctx.fillStyle = 'rgba(239, 68, 68, 0.5)';
           else if (tid === TERRAIN.OCEAN_WATER) ctx.fillStyle = 'rgba(59, 130, 246, 0.5)';
+          else if (tid === TERRAIN.ROCKY_HIGHLAND) ctx.fillStyle = 'rgba(148, 120, 86, 0.55)';
 
           ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
         }

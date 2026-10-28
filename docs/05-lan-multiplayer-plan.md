@@ -2,7 +2,7 @@
 
 ## Trạng thái
 
-**CHƯA TRIỂN KHAI.** Thay thế `05-backend-plan.md` (đã bỏ hướng FastAPI/PostgreSQL/Redis). Căn cứ: [DEV_ARCHITECTURE_GUIDE.md](../DEV_ARCHITECTURE_GUIDE.md), mục 1.2 (D2, D4, D7–D9) và mục 2.5.
+**CHƯA TRIỂN KHAI.** Thay thế `05-backend-plan.md` (đã bỏ hướng FastAPI/PostgreSQL/Redis). Căn cứ: [DEV_ARCHITECTURE_GUIDE.md](DEV_ARCHITECTURE_GUIDE.md), mục 1.2 (D2, D4, D7–D9) và mục 2.5.
 
 ## Mục tiêu
 

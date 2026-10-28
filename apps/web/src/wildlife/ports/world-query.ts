@@ -16,6 +16,8 @@ export interface WorldQuery {
     canJumpHills?: boolean
   ): boolean;
   isElevated?(gx: number, gy: number): boolean;
+  /** Returns true for tiles where wild Pokémon are not allowed to roam. */
+  isWildlifeRestricted?(gx: number, gy: number): boolean;
   contextAt(gx: number, gy: number): TileContext;
   biomeAt(gx: number, gy: number): RuntimeBiomeId;
   difficultyAt(gx: number, gy: number): number;

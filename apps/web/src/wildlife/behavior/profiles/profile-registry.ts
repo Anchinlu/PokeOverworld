@@ -34,9 +34,17 @@ export function getBehaviorProfile(id: string): BehaviorProfile {
   return archetypes[id] ?? DEFAULT_BEHAVIOR_PROFILE;
 }
 
+function resolveSpeciesBehaviorGroup(speciesKey: string): SpeciesBehaviorGroup | undefined {
+  const norm = speciesKey.replace(/^wild_/i, '').toUpperCase();
+  const direct = speciesBehaviorIndex.get(norm);
+  if (direct) return direct;
+  const baseKey = norm.split('_')[0];
+  return speciesBehaviorIndex.get(baseKey);
+}
+
 /** Resolves the complete runtime profile for one species. */
 export function getBehaviorProfileForSpecies(speciesKey: string): BehaviorProfile {
-  const group = speciesBehaviorIndex.get(speciesKey.toUpperCase());
+  const group = resolveSpeciesBehaviorGroup(speciesKey);
   const base = getBehaviorProfile(group?.profile ?? defaultProfileId);
 
   return {
@@ -50,11 +58,11 @@ export function getBehaviorProfileForSpecies(speciesKey: string): BehaviorProfil
 }
 
 export function getSpeciesBehaviorId(speciesKey: string): string {
-  return speciesBehaviorIndex.get(speciesKey.toUpperCase())?.profile ?? defaultProfileId;
+  return resolveSpeciesBehaviorGroup(speciesKey)?.profile ?? defaultProfileId;
 }
 
 export function getSpeciesBehaviorDefinition(speciesKey: string): SpeciesBehaviorGroup | undefined {
-  return speciesBehaviorIndex.get(speciesKey.toUpperCase());
+  return resolveSpeciesBehaviorGroup(speciesKey);
 }
 
 export function getSpeciesBehaviorCoverage(): readonly string[] {

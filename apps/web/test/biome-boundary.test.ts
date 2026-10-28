@@ -1,7 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import { TILE_IDS } from '@pokemon/game-data';
 import type { TerrainField } from '../src/maps/terrain-field';
-import { getAutumnGroundTileKey, getDesertTileKey } from '../src/maps/autotile';
+import {
+  getAutumnGroundTileKey,
+  getDarkGroundTileKey,
+  getDesertTileKey,
+  getRockyGroundTileKey,
+  getSandTileKey,
+  getSnowGroundTileKey,
+} from '../src/maps/autotile';
+
 
 function createBoundaryField(
   isAutumn: (gx: number, gy: number) => boolean,
@@ -64,4 +72,45 @@ describe('Autumn and Desert biome boundary', () => {
     expect(result.key).toBe('tl');
     expect(result.tileId).toBe(TILE_IDS.ground_autumn_tl);
   });
+
+  it('preserves boundary grass fringes when Snow or Dark Land borders another biome', () => {
+    const baseField = createBoundaryField(
+      () => false,
+      () => false
+    );
+    const snowDarkField: TerrainField = {
+      ...baseField,
+      isSnow: (gx) => gx <= 9,
+      isDarkLand: (gx) => gx >= 10,
+    };
+
+    const snowBorder = getSnowGroundTileKey(9, 10, snowDarkField);
+    const darkBorder = getDarkGroundTileKey(10, 10, snowDarkField);
+
+    expect(snowBorder.key).toBe('right');
+    expect(snowBorder.tileId).toBe(TILE_IDS.ground_snow_right);
+    expect(darkBorder.key).toBe('left');
+    expect(darkBorder.tileId).toBe(TILE_IDS.dark_ground_left);
+  });
+
+  it('does not insert meadow grass between coastal sand and Rocky Highland and autotiles rock boundary', () => {
+    const field: TerrainField = {
+      ...createBoundaryField(
+        () => false,
+        () => false
+      ),
+      isSand: (gx) => gx <= 9,
+      isRockyHighland: (gx) => gx >= 10,
+    };
+
+    const sandBorder = getSandTileKey(9, 10, field);
+    const rockBorder = getRockyGroundTileKey(10, 10, field);
+
+    expect(sandBorder.key).toBe('pure');
+    expect(sandBorder.tileId).toBe(TILE_IDS.sand_pure);
+
+    expect(rockBorder.key).toBe('left');
+    expect(rockBorder.tileId).toBe(TILE_IDS.ground_rock_left);
+  });
 });
+

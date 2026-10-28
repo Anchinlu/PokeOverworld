@@ -49,12 +49,12 @@ describe('Wildlife Rarity & Special Exclusions (Section 2.2 & 11.1)', () => {
     // Static blocker
     expect(calculateSpeciesTier('SNORLAX')).toBeNull();
 
-    // Trade & stone evolutions
-    expect(calculateSpeciesTier('RAICHU')).toBeNull();
-    expect(calculateSpeciesTier('ALAKAZAM')).toBeNull();
-    expect(calculateSpeciesTier('GENGAR')).toBeNull();
-    expect(calculateSpeciesTier('MACHAMP')).toBeNull();
-    expect(calculateSpeciesTier('GOLEM')).toBeNull();
+    // Trade & stone evolutions (Apex or high tier)
+    expect(calculateSpeciesTier('RAICHU')).toBeGreaterThanOrEqual(3);
+    expect(calculateSpeciesTier('ALAKAZAM')).toBeGreaterThanOrEqual(3);
+    expect(calculateSpeciesTier('GENGAR')).toBeGreaterThanOrEqual(3);
+    expect(calculateSpeciesTier('MACHAMP')).toBeGreaterThanOrEqual(3);
+    expect(calculateSpeciesTier('GOLEM')).toBeGreaterThanOrEqual(3);
   });
 
   it('verifies that no species with an excluded flag can have a valid rarity tier', () => {

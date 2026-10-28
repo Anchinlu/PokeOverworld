@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Thử Nghiệm Intro Mở Đầu Tạo Thế Giới (Pokemon Overworld)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/src/style.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #020617;
+      color: #f8fafc;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+      align-items: center;
+      justify-content: center;
+    }
+    .demo-dashboard {
+      background: #0f172a;
+      border: 3px solid #38bdf8;
+      border-radius: 8px;
+      padding: 30px 40px;
+      max-width: 620px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 24px rgba(56, 189, 248, 0.25);
+    }
+    h1 {
+      margin: 0 0 10px 0;
+      color: #facc15;
+      font-size: 24px;
+      letter-spacing: 1px;
+    }
+    p {
+      color: #94a3b8;
+      font-size: 15px;
+      line-height: 1.5;
+      margin: 0 0 25px 0;
+    }
+    .features-list {
+      text-align: left;
+      background: #1e293b;
+      padding: 16px 20px;
+      border-radius: 6px;
+      margin-bottom: 25px;
+      font-size: 14px;
+      line-height: 1.8;
+      color: #cbd5e1;
+    }
+    .features-list strong {
+      color: #38bdf8;
+    }
+    .btn-launch {
+      background: linear-gradient(180deg, #0284c7 0%, #0369a1 100%);
+      border: 2px solid #38bdf8;
+      color: #ffffff;
+      padding: 12px 28px;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(2, 132, 199, 0.5);
+      transition: all 0.2s ease;
+      letter-spacing: 0.5px;
+    }
+    .btn-launch:hover {
+      filter: brightness(1.2);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 22px rgba(2, 132, 199, 0.7);
+    }
+    .status-badge {
+      display: inline-block;
+      margin-top: 20px;
+      font-size: 13px;
+      color: #10b981;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid #10b981;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-dashboard">
+    <h1>Thử Nghiệm Intro Mở Đầu Tạo Thế Giới</h1>
+    <p>Kiểm tra hoạt ảnh chuyển cảnh mượt từ Video Anime mở đầu sang Bộ 6 Trang Truyện Tranh Dẫn Chuyện và Chuyển Cảnh tại Pallet Town.</p>
+    
+    <div class="features-list">
+      <div>- <strong>Phần 1: Video Cinematic (10.3s)</strong>: Trận chiến Gengar vs Nidorino tại Đấu trường Pokémon League.</div>
+      <div>- <strong>Chuyển Cảnh Mượt Mà (Smooth Crossfade)</strong>: Giảm dần âm lượng video, hiệu ứng chớp sáng Anime, thu nhỏ mượt mà.</div>
+      <div>- <strong>Phần 2: 6 Trang Truyện Tranh</strong>: Trận chiến League -> Red xem TV đêm -> Mẹ nhắc nhở đi ngủ -> Giáo sư Oak giới thiệu Starter -> Dodrio gáy sáng & nắng sớm -> Red cuống cuồng chạy đến Viện Okido.</div>
+      <div>- <strong>Hộp Thoại Retro GBA</strong>: Hiệu ứng chữ gõ máy (typewriter), nút chuyển trang, âm thanh cổ điển.</div>
+      <div>- <strong>Phần 3: Sau Lúc Đó...</strong>: Màn hình tối dần chuyển sang "Sau lúc đó... Tại Thị Trấn Pallet" và đưa Player vào thế giới.</div>
+    </div>
+
+    <button id="btnLaunchIntro" class="btn-launch">Bắt Đầu Intro Tạo Thế Giới</button>
+    <div id="statusText" class="status-badge">Sẵn sàng thử nghiệm</div>
+  </div>
+
+  <script type="module">
+    import { playWorldIntro } from '/src/ui/world-intro-screen.ts';
+
+    const btnLaunch = document.getElementById('btnLaunchIntro');
+    const statusText = document.getElementById('statusText');
+
+    btnLaunch.addEventListener('click', () => {
+      statusText.textContent = 'Đang phát Intro Mở Đầu...';
+      statusText.style.color = '#38bdf8';
+      statusText.style.borderColor = '#38bdf8';
+
+      playWorldIntro({
+        onComplete: () => {
+          statusText.textContent = 'Đã hoàn thành Intro và chuyển cảnh vào game!';
+          statusText.style.color = '#10b981';
+          statusText.style.borderColor = '#10b981';
+        },
+        onSkip: () => {
+          statusText.textContent = 'Đã bấm Bỏ qua (Skip)!';
+          statusText.style.color = '#f59e0b';
+          statusText.style.borderColor = '#f59e0b';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

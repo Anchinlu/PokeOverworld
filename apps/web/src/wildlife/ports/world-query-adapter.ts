@@ -5,6 +5,7 @@ import { resolveWorldBiome } from '../../maps/ecology';
 import type { RuntimeBiomeId } from '../../maps/ecology';
 import type { WorldQuery, TileContext, TimeBand } from './world-query';
 import { resolveWorldTileContext } from './world-context';
+import { isVillageArea } from '../../maps/village-rules';
 
 /**
  * Creates a WorldQuery port adapter wrapping a TerrainField and local chunk entities.
@@ -43,22 +44,36 @@ export function createWorldQueryAdapter(
       if (field.isOcean(gx, gy) || field.isWater(gx, gy) || field.isLake?.(gx, gy)) {
         return false;
       }
-      if (
-        fromGX !== undefined &&
-        fromGY !== undefined &&
-        !field.isHill(fromGX, fromGY) &&
-        field.isHill(gx, gy) &&
-        !canJumpHills
-      ) {
-        // Wildlife has no jump animation yet. It may descend from a plateau,
-        // but cannot climb from flat ground onto an elevated tile.
-        return false;
+      // 2-tier High Cliffs (`vách đá cao`): wildlife can spawn and roam on the
+      // flat top plateau (`isHighCliffPlateau`), but never on the 2-tile vertical
+      // southern cliff wall face.
+      if (field.isHighCliff?.(gx, gy)) {
+        const onPlateau = field.isHighCliffPlateau
+          ? field.isHighCliffPlateau(gx, gy)
+          : field.isHighCliff(gx, gy + 1) && field.isHighCliff(gx, gy + 2);
+        if (!onPlateau) return false;
+      }
+      if (fromGX !== undefined && fromGY !== undefined) {
+        const fromHighCliff = Boolean(field.isHighCliff?.(fromGX, fromGY));
+        const toHighCliff = Boolean(field.isHighCliff?.(gx, gy));
+        if (fromHighCliff !== toHighCliff) {
+          return false;
+        }
+        if (!field.isHill(fromGX, fromGY) && field.isHill(gx, gy) && !canJumpHills) {
+          // Wildlife has no jump animation yet. It may descend from a 1-tier plateau,
+          // but cannot climb from flat ground onto an elevated tile.
+          return false;
+        }
       }
       return true;
     },
 
     isElevated(gx: number, gy: number): boolean {
       return field.isHill(gx, gy);
+    },
+
+    isWildlifeRestricted(gx: number, gy: number): boolean {
+      return isVillageArea(gx, gy, field, 0);
     },
 
     contextAt(gx: number, gy: number): TileContext {

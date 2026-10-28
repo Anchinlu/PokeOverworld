@@ -28,6 +28,8 @@ export interface SaveGameMetadata {
   worldGenVersion?: number;
 }
 
+import type { SavedInteriorState } from '../../interior/interior-types';
+
 export interface StartTownData {
   name: string;
   gx: number;
@@ -44,6 +46,7 @@ export interface SaveWorldData {
   worldTimeMinutes?: number;
   worldDay?: number;
   lastWorldTimestamp?: number;
+  interior?: SavedInteriorState;
 }
 
 

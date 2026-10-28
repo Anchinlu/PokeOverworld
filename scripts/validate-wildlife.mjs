@@ -30,6 +30,7 @@ const VALID_BIOMES = new Set([
   'dense_forest',
   'light_forest',
   'meadow',
+  'apricorn_plain',
   'dryland',
   'wetland',
   'coast',
@@ -38,16 +39,16 @@ const VALID_BIOMES = new Set([
   'autumn',
   'snow',
 ]);
-// These are the only biome IDs returned by the V4 runtime resolver. The
-// legacy hill_edge habitat remains accepted for old data, but hills are now a
-// terrain feature layered over the underlying ecology rather than a biome.
+// These are the biome IDs returned by the V4/V5 runtime resolver.
 const RUNTIME_BIOMES = [
   'meadow',
+  'apricorn_plain',
   'light_forest',
   'dense_forest',
   'dryland',
   'wetland',
   'coast',
+  'hill_edge',
   'dark_land',
   'autumn',
   'snow',
@@ -63,11 +64,10 @@ const VALID_CONTEXTS = new Set([
 ]);
 const VALID_FLAGS = new Set(['legendary', 'mythical', 'starter', 'fossil', 'static', 'no_wild']);
 
-// 3. Check every Gen 1 species exists
+// 3. Check every species in database exists
 const allSpeciesKeys = new Set();
-for (let id = 1; id <= 151; id++) {
-  const pk = pokemonDb.pokemon[id.toString()];
-  if (pk) {
+for (const pk of Object.values(pokemonDb.pokemon)) {
+  if (pk && pk.speciesKey) {
     allSpeciesKeys.add(pk.speciesKey);
   }
 }
@@ -177,6 +177,6 @@ if (errors.length > 0) {
   process.exit(1);
 } else {
   console.log(
-    `✅ Wildlife data validation passed cleanly! 151 Gen 1 species verified against ecology rules.`
+    `✅ Wildlife data validation passed cleanly! ${allSpeciesKeys.size} species verified against ecology rules.`
   );
 }

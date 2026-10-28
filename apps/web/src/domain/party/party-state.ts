@@ -283,5 +283,5 @@ export function partyPokemonToBattler(pokemon: PartyPokemon): BattlerPokemon {
  * Creates default initial starter party (Pikachu Lv 5).
  */
 export function createDefaultParty(): PartyPokemon[] {
-  return [createPartyPokemon('PIKACHU', 5)];
+  return [createPartyPokemon('PIKACHU', 5, { ivs: 'perfect' })];
 }

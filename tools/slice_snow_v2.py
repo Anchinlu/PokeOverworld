@@ -260,8 +260,8 @@ for cname, (west, north) in [("tl", (True, True)), ("tr", (False, True)), ("bl",
                 in_arr[y, x] = pure_arr[y, x]
     save(Image.fromarray(in_arr), f"ice_snow_in_{cname}")
 
-save(ice_im.crop((0, 0, 64, 32)), "ice_snow_patch_medium")
-save(ice_im.crop((64, 0, 96, 32)), "ice_snow_patch_small")
+save(remove_snow_ground_bottom(ice_im.crop((0, 0, 64, 32)), start_y=0), "ice_snow_patch_medium")
+save(remove_snow_ground_bottom(ice_im.crop((64, 0, 96, 32)), start_y=0), "ice_snow_patch_small")
 
 
 # =========================================================================

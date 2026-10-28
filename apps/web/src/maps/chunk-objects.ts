@@ -6,6 +6,8 @@ import {
   type TerrainField,
   getV0VillageBuildingsForChunk,
   getV0VillageGardenPlantsForChunk,
+  getV0VillageNPCsForChunk,
+  isRoute1ClearingArea,
 } from './terrain-field';
 import {
   isVillageArea,
@@ -13,6 +15,7 @@ import {
   isBuildingRoofOrFootprint,
   getVillageBuildingsForChunk,
   getVillageGardenPlantsForChunk,
+  type VillageNPCEntity,
 } from './village-rules';
 import { pickBerryForEcology } from './berry-data';
 import {
@@ -25,6 +28,29 @@ import {
 } from './ecology';
 import { isHighlandTallGrassTile, isTallGrassTile } from './ecology/tall-grass-field';
 import { getForestTreeCandidates } from './ecology/tree-field';
+import { getPlantVisualSpec } from './biome-entity-registry';
+
+// Apricorn trees are much larger than ordinary overworld trees. Keep the
+// grove readable and leave walking corridors between canopies while retaining
+// the biome mask itself for wildlife and future tall-grass rules.
+const APRICORN_TREE_KEEP_CHANCE = 0.48;
+
+function isApricornGroveInterior(field: TerrainField, gx: number, gy: number): boolean {
+  if (!field.isApricornPlain?.(gx, gy)) return false;
+
+  let apricornNeighbors = 0;
+  for (let dy = -1; dy <= 1; dy++) {
+    for (let dx = -1; dx <= 1; dx++) {
+      if (dx === 0 && dy === 0) continue;
+      if (field.isApricornPlain?.(gx + dx, gy + dy)) apricornNeighbors += 1;
+    }
+  }
+
+  // Leave a natural one-tile meadow buffer around the grove boundary. This
+  // is intentionally a tree-placement rule, not a second terrain mask, so
+  // tall grass and wildlife can be added later without changing the biome.
+  return apricornNeighbors >= 4;
+}
 
 function toField(seedOrField: number | TerrainField = 101): TerrainField {
   return typeof seedOrField === 'number' ? createTerrainField(1, seedOrField) : seedOrField;
@@ -121,7 +147,12 @@ export function isTreeOverlappingTree(t1x: number, t1y: number, t2x: number, t2y
   return (dx === 0 && dy < 120) || (dx < 70 && dy < 100);
 }
 
+const CHUNK_TREE_LOCS_CACHE_LIMIT = 512;
 const chunkTreeLocsCache = new Map<string, Array<{ x: number; y: number }>>();
+
+export function clearChunkObjectsCache(): void {
+  chunkTreeLocsCache.clear();
+}
 
 export function getChunkTreeLocations(
   cx: number,
@@ -132,13 +163,18 @@ export function getChunkTreeLocations(
   const seed = field.seed;
   const key = `${cx},${cy},${seed},${field.version}`;
   const cached = chunkTreeLocsCache.get(key);
-  if (cached) return cached;
+  if (cached) {
+    chunkTreeLocsCache.delete(key);
+    chunkTreeLocsCache.set(key, cached);
+    return cached;
+  }
 
   const startGX = cx * CHUNK_SIZE;
   const startGY = cy * CHUNK_SIZE;
   const list: Array<{ x: number; y: number }> = [];
 
   for (const candidate of getForestTreeCandidates(cx, cy, field)) {
+    if (isRoute1ClearingArea(candidate.gx, candidate.gy, field)) continue;
     const overlaps = list.some((tree) =>
       isTreeOverlappingTree(candidate.x, candidate.y, tree.x, tree.y)
     );
@@ -167,6 +203,10 @@ export function getChunkTreeLocations(
     }
   }
 
+  if (chunkTreeLocsCache.size >= CHUNK_TREE_LOCS_CACHE_LIMIT) {
+    const oldestKey = chunkTreeLocsCache.keys().next().value;
+    if (oldestKey !== undefined) chunkTreeLocsCache.delete(oldestKey);
+  }
   chunkTreeLocsCache.set(key, list);
   return list;
 }
@@ -186,6 +226,7 @@ export function generateChunkTrees(
   // 1. Inland Forest, Meadow & Mountain Trees
   for (const candidate of getForestTreeCandidates(cx, cy, field)) {
     const { gx, gy, x: tx, y: ty } = candidate;
+    if (isRoute1ClearingArea(gx, gy, field)) continue;
     if (field.isWater(gx, gy)) continue;
     // Prevent overlap with already placed trees in THIS chunk
     const overlapsInChunk = trees.some((t) => isTreeOverlappingTree(tx, ty, t.x, t.y));
@@ -211,7 +252,21 @@ export function generateChunkTrees(
     const isDark = Boolean(field.isDarkLand && field.isDarkLand(gx, gy));
     const isAutumn = Boolean(field.isAutumn && field.isAutumn(gx, gy));
     const isSnow = Boolean(field.isSnow && field.isSnow(gx, gy));
-    if (isDesert) {
+    const isRocky = Boolean(field.isRockyHighland && field.isRockyHighland(gx, gy));
+    const isApricorn = Boolean(field.isApricornPlain && field.isApricornPlain(gx, gy));
+    if (field.isHighCliff?.(gx, gy) && !field.isHighCliffPlateau?.(gx, gy)) {
+      continue;
+    }
+    if (isRocky) {
+      if (
+        field.isNearCliffEdge(gx, gy) ||
+        (field.isHighCliff?.(gx, gy) && !field.isHighCliffPlateau?.(gx, gy))
+      ) {
+        continue;
+      }
+      trees.push({ gx, gy, x: tx, y: ty + 56, type: 'rock_highland_boulder' });
+      colliders.push({ x: tx + 8, y: ty + 84, w: 48, h: 26, type: 'tree' });
+    } else if (isDesert) {
       const roll = seededHash(gx, gy, seed + 919);
       if (roll < 0.35) {
         trees.push({ gx, gy, x: tx, y: ty + 56, type: 'dead_1' });
@@ -278,6 +333,31 @@ export function generateChunkTrees(
       const tType = snowTrees[baseIdx];
       trees.push({ gx, gy, x: tx, y: ty, type: tType });
       colliders.push({ x: tx + 14, y: ty + 90, w: 36, h: 26, type: 'tree' });
+    } else if (isApricorn) {
+      if (
+        !isApricornGroveInterior(field, gx, gy) ||
+        seededHash(gx, gy, seed + 1923) >= APRICORN_TREE_KEEP_CHANCE
+      ) {
+        continue;
+      }
+      const apricornTrees = [
+        'tree_apricorn_blue',
+        'tree_apricorn_red',
+        'tree_apricorn_yellow',
+        'tree_apricorn_black',
+        'tree_apricorn_white',
+        'tree_apricorn_green',
+        'tree_apricorn_pink',
+        'tree_apricorn_orange',
+        'tree_apricorn_cyan',
+        'tree_apricorn_purple',
+      ];
+      const baseIdx = Math.floor(seededHash(gx, gy, seed + 919) * apricornTrees.length);
+      const tType = apricornTrees[baseIdx];
+      const atx = gx * TILE_SIZE - 22;
+      const aty = (gy + 1) * TILE_SIZE - 136;
+      trees.push({ gx, gy, x: atx, y: aty, type: tType });
+      colliders.push({ x: atx + 22, y: aty + 118, w: 32, h: 20, type: 'tree' });
     } else {
       const sample = sampleEcology(gx, gy, field);
       const zone = getEcologyZone(sample);
@@ -297,7 +377,7 @@ export function generateChunkTrees(
     const pgx = startGX + plx;
     const pgy = startGY + ply;
 
-    if (field.isValidPalmTreePos(pgx, pgy)) {
+    if (field.isValidPalmTreePos(pgx, pgy) && !isRoute1ClearingArea(pgx, pgy, field)) {
       const ptx = pgx * TILE_SIZE - 48;
       const pty = pgy * TILE_SIZE - 119;
 
@@ -363,23 +443,19 @@ export function generateChunkBuildings(
       doorWidthTiles: b.doorWidthTiles ?? 1,
     });
 
-    const doorWidth = b.doorWidthTiles ?? 1;
-
     // Add solid colliders for building footprint tiles belonging to this chunk
     for (let dy = 0; dy < b.heightTiles; dy++) {
       for (let dx = 0; dx < b.widthTiles; dx++) {
         const tx = b.gx + dx;
         const ty = b.gy + dy;
 
-        // Leave door tile(s) open for smooth player approach (signposts have no door)
-        if (
-          b.type !== 'signpost' &&
-          ty === b.doorGY &&
-          tx >= b.doorGX &&
-          tx < b.doorGX + doorWidth
-        ) {
+        // Feed crops (livestock wheat) or any non-solid structures are walkable without solid collision
+        if (b.type === 'feed_crops' || b.isSolid === false) {
           continue;
         }
+
+        // All building footprint tiles are fully solid (including door threshold)
+        // to prevent player from walking into the building graphic; player interacts in front of door via modal prompt
 
         if (tx >= chunkStartGX && tx < chunkEndGX && ty >= chunkStartGY && ty < chunkEndGY) {
           if (b.type === 'signpost') {
@@ -785,6 +861,28 @@ export function generateChunkBuildings(
   return entities;
 }
 
+export function generateChunkVillageNPCs(
+  cx: number,
+  cy: number,
+  seedOrField: number | TerrainField = 101,
+  colliders: Collider[]
+): VillageNPCEntity[] {
+  const field = toField(seedOrField);
+  const npcs = getV0VillageNPCsForChunk(cx, cy, field);
+
+  for (const npc of npcs) {
+    colliders.push({
+      x: npc.gx * TILE_SIZE,
+      y: npc.gy * TILE_SIZE,
+      w: TILE_SIZE,
+      h: TILE_SIZE,
+      type: 'npc',
+    });
+  }
+
+  return npcs;
+}
+
 export function generateChunkFoliage(
   cx: number,
   cy: number,
@@ -975,7 +1073,10 @@ export function generateChunkFoliage(
         (tileIdGrid[ly]?.[lx] === TILE_IDS.cliff_pure ||
           tileIdGrid[ly]?.[lx] === TILE_IDS.dune_cliff_pure ||
           tileIdGrid[ly]?.[lx] === TILE_IDS.dark_cliff_pure ||
-          tileIdGrid[ly]?.[lx] === TILE_IDS.cliff_snow_pure);
+          tileIdGrid[ly]?.[lx] === TILE_IDS.cliff_snow_pure ||
+          tileIdGrid[ly]?.[lx] === TILE_IDS.cliff_rock_pure ||
+          (tileIdGrid[ly]?.[lx] === TILE_IDS.high_cliff_rock_pure &&
+            Boolean(field.isHighCliffPlateau?.(gx, gy))));
       const isDesert =
         terrainGrid[ly]?.[lx] === TERRAIN.DESERT ||
         (terrainGrid[ly]?.[lx] === TERRAIN.HILL &&
@@ -991,8 +1092,12 @@ export function generateChunkFoliage(
       const isSnow =
         terrainGrid[ly]?.[lx] === TERRAIN.SNOW ||
         (terrainGrid[ly]?.[lx] === TERRAIN.HILL && Boolean(field.isSnow && field.isSnow(gx, gy)));
+      const isRocky =
+        terrainGrid[ly]?.[lx] === TERRAIN.ROCKY_HIGHLAND ||
+        (terrainGrid[ly]?.[lx] === TERRAIN.HILL &&
+          Boolean(field.isRockyHighland && field.isRockyHighland(gx, gy)));
 
-      if (isGrass || isHillFlat || isDesert || isDark || isAutumn || isSnow) {
+      if (isGrass || isHillFlat || isDesert || isDark || isAutumn || isSnow || isRocky) {
         if (
           field.isNearCliffEdge(gx, gy) ||
           field.isNearWater(gx, gy, 1) ||
@@ -1060,10 +1165,10 @@ export function generateChunkFoliage(
                 : 'decor_stump_autumn';
           }
         } else if (isSnow) {
-          // Keep boundary fringe clean: only place snow foliage & decals inside pure snow ground (or hill flat)
+          // Keep boundary fringe and cliff walls clean: only place snow foliage & decals inside pure snow ground or flat cliff interior
           if (
             tileIdGrid[ly]?.[lx] !== TILE_IDS.ground_snow_pure &&
-            terrainGrid[ly]?.[lx] !== TERRAIN.HILL
+            tileIdGrid[ly]?.[lx] !== TILE_IDS.cliff_snow_pure
           ) {
             continue;
           }
@@ -1103,6 +1208,36 @@ export function generateChunkFoliage(
             const snowTufts = ['decor_snow_grass_1', 'decor_snow_grass_2'];
             type = snowTufts[Math.floor(seededHash(gx, gy, seed + 1513) * snowTufts.length)];
           }
+        } else if (isRocky) {
+          const tId = tileIdGrid[ly]?.[lx];
+          const isValidRockyInterior =
+            tId === TILE_IDS.ground_rock_pure ||
+            tId === TILE_IDS.cliff_rock_pure ||
+            (tId === TILE_IDS.high_cliff_rock_pure && Boolean(field.isHighCliffPlateau?.(gx, gy)));
+          if (!isValidRockyInterior) {
+            continue;
+          }
+          const nearWater2 = field.isNearWater(gx, gy, 2);
+          const rockyRoll = seededHash(gx, gy, seed + 1505);
+          if (nearWater2) {
+            const wetTypes = ['rock_wet_small', 'rock_wet_wide', 'rock_wet_tall'];
+            type = wetTypes[Math.floor(seededHash(gx, gy, seed + 1507) * wetTypes.length)];
+          } else if (rockyRoll < 0.35) {
+            type = seededHash(gx, gy, seed + 1507) < 0.5 ? 'rock_highland_1' : 'rock_highland_2';
+          } else if (rockyRoll < 0.62) {
+            type = 'rock_highland_small';
+          } else if (rockyRoll < 0.85) {
+            type = 'decor_rock_pebbles';
+          } else {
+            const puddles = [
+              'decor_rock_puddle_1',
+              'decor_rock_puddle_2',
+              'decor_rock_puddle_3',
+              'decor_rock_puddle_4',
+              'decor_rock_puddle_cluster',
+            ];
+            type = puddles[Math.floor(seededHash(gx, gy, seed + 1509) * puddles.length)];
+          }
         } else {
           const sample = sampleEcology(gx, gy, field);
           const zone = getEcologyZone(sample);
@@ -1115,60 +1250,20 @@ export function generateChunkFoliage(
           type = 'nature_tree_stump';
         }
 
-        const isWhiteBush = type === 'bush_flowering_white';
-        const isStump = type === 'nature_tree_stump';
-        const isLogNow = type === 'nature_fallen_log';
-        const isCactusSmall = type === 'cactus_small';
-        const isRockSpires = type === 'rock_dark_spires';
-        const isDarkBush = type.startsWith('bush_dark_');
-        const isDarkSprout = type === 'dark_sprout';
-        const isAutumnBushBig = type.startsWith('bush_spiky_big_');
-        const isAutumnBush = type.startsWith('bush_spiky_');
-        const isAutumnVine = type.startsWith('flower_vine_');
-        const isAutumnStump = type === 'decor_stump_autumn';
-        const isAutumnRocks = type.startsWith('rocks_');
-        const isSnowBushBig = type.startsWith('bush_snow_');
-        const isSnowTall = type.startsWith('tree_snow_cone_') || type.startsWith('crystal_snow_');
-        const isSnowLog = type === 'log_snow_fallen' || type === 'rock_snow_boulder';
-        const isSnowDecal =
-          type.startsWith('decor_snow_') ||
-          type === 'rock_snow_pointed' ||
-          type === 'rock_snow_pebbles' ||
-          type === 'stump_snow';
-
-        let px = gx * TILE_SIZE;
-        let py = gy * TILE_SIZE - 32;
-
-        if (isWhiteBush || isDarkBush || isAutumnBushBig || isSnowBushBig) {
-          px = gx * TILE_SIZE - 16;
-          py = gy * TILE_SIZE - 32;
-        } else if (isRockSpires || isDarkSprout) {
-          px = gx * TILE_SIZE;
-          py = gy * TILE_SIZE - 64;
-        } else if (isAutumnBush || isAutumnVine || isSnowTall) {
-          px = gx * TILE_SIZE;
-          py = gy * TILE_SIZE - 32;
-        } else if (
-          isStump ||
-          isLogNow ||
-          isCactusSmall ||
-          isAutumnStump ||
-          isAutumnRocks ||
-          isSnowLog ||
-          isSnowDecal ||
-          type.startsWith('decor_')
+        const spec = getPlantVisualSpec(type);
+        if (
+          field.version >= 4 &&
+          spec.width > TILE_SIZE &&
+          (field.isNearCliffEdge(gx + 1, gy) ||
+            (spec.placementOffsetX < 0 && field.isNearCliffEdge(gx - 1, gy)))
         ) {
-          px = gx * TILE_SIZE;
-          py = gy * TILE_SIZE;
+          continue;
         }
+        const px = gx * TILE_SIZE + spec.placementOffsetX;
+        const py = gy * TILE_SIZE + spec.placementOffsetY;
 
         // Check collision clearance with trees or other solids
-        const checkW =
-          isLogNow || isSnowLog
-            ? 60
-            : isWhiteBush || isDarkBush || isRockSpires || isAutumnBushBig || isSnowBushBig
-              ? 40
-              : 24;
+        const checkW = spec.clearanceWidth;
         const blocked = colliders.some(
           (c) => px + checkW > c.x && px + 4 < c.x + c.w && py + 28 > c.y && py + 4 < c.y + c.h
         );
@@ -1176,43 +1271,117 @@ export function generateChunkFoliage(
 
         plants.push({ gx, gy, x: px, y: py, type, phase: attempt });
 
-        // Add solid colliders / hitboxes
-        if (isWhiteBush) {
-          colliders.push({ x: px + 18, y: py + 40, w: 28, h: 20, type: 'tree' });
-        } else if (type === 'bush_cone_autumn' || type === 'bush_cone_forest') {
-          colliders.push({ x: px + 6, y: py + 44, w: 20, h: 18, type: 'tree' });
-        } else if (isStump) {
-          colliders.push({ x: px + 4, y: py + 8, w: 24, h: 22, type: 'tree' });
-        } else if (isLogNow) {
-          colliders.push({ x: px + 4, y: py + 8, w: 56, h: 22, type: 'tree' });
-        } else if (isCactusSmall) {
-          colliders.push({ x: px + 6, y: py + 8, w: 20, h: 20, type: 'tree' });
-        } else if (type === 'cactus_medium') {
-          colliders.push({ x: px + 6, y: py + 40, w: 20, h: 20, type: 'tree' });
-        } else if (type === 'desert_dry_bush' || type === 'desert_succulent') {
-          colliders.push({ x: px + 4, y: py + 40, w: 24, h: 18, type: 'tree' });
-        } else if (isRockSpires) {
-          colliders.push({ x: px + 12, y: py + 68, w: 40, h: 24, type: 'tree' });
-        } else if (isDarkSprout) {
-          colliders.push({ x: px + 6, y: py + 68, w: 20, h: 24, type: 'tree' });
-        } else if (isDarkBush) {
-          colliders.push({ x: px + 18, y: py + 40, w: 28, h: 20, type: 'tree' });
-        } else if (isAutumnBushBig) {
-          colliders.push({ x: px + 18, y: py + 40, w: 28, h: 20, type: 'tree' });
-        } else if (isAutumnBush) {
-          colliders.push({ x: px + 6, y: py + 40, w: 20, h: 20, type: 'tree' });
-        } else if (isAutumnStump) {
-          colliders.push({ x: px + 4, y: py + 8, w: 24, h: 22, type: 'tree' });
-        } else if (isAutumnRocks) {
-          colliders.push({ x: px + 4, y: py + 8, w: 24, h: 20, type: 'tree' });
-        } else if (isSnowBushBig) {
-          colliders.push({ x: px + 18, y: py + 40, w: 28, h: 20, type: 'tree' });
-        } else if (type.startsWith('decor_snow_rock_')) {
-          colliders.push({ x: px + 4, y: py + 8, w: 24, h: 20, type: 'tree' });
-        } else if (type.startsWith('decor_snow_stump_')) {
-          colliders.push({ x: px + 6, y: py + 8, w: 20, h: 20, type: 'tree' });
-        } else if (type === 'decor_snow_log') {
-          colliders.push({ x: px + 2, y: py + 8, w: 28, h: 20, type: 'tree' });
+        // Add solid colliders / hitboxes from declarative registry
+        if (spec.collider) {
+          colliders.push({
+            x: px + spec.collider.offsetX,
+            y: py + spec.collider.offsetY,
+            w: spec.collider.w,
+            h: spec.collider.h,
+            type: 'tree',
+          });
+        }
+      }
+    }
+  }
+
+  // 4. Rocky Highland Scatter (Pebbles, Small Rocks, Puddles & Wet Rocks near Water)
+  if (field.isRockyHighland) {
+    for (let qy = 0; qy < 2; qy++) {
+      for (let qx = 0; qx < 2; qx++) {
+        for (let attempt = 0; attempt < 2; attempt++) {
+          const roll = seededHash(
+            cx * 12 + qx * 3 + attempt,
+            cy * 12 + qy * 3 + attempt,
+            seed + 1905
+          );
+          if (roll >= 0.8) continue;
+
+          const lx =
+            qx * 8 +
+            1 +
+            Math.floor(seededHash(cx * 9 + qx * 2 + attempt, cy * 9 + qy * 2, seed + 1915) * 6);
+          const ly =
+            qy * 8 +
+            1 +
+            Math.floor(seededHash(cx * 9 + qy * 2, cy * 9 + qx * 2 + attempt, seed + 1925) * 6);
+          const gx = startGX + lx;
+          const gy = startGY + ly;
+
+          if (!field.isRockyHighland(gx, gy) || field.isWater(gx, gy) || field.isRoad(gx, gy)) {
+            continue;
+          }
+          if (
+            field.isNearCliffEdge(gx, gy) ||
+            isVillageBuildingTile(gx, gy, field, 1) ||
+            isBuildingRoofOrFootprint(gx, gy, field, 1) ||
+            isVillageArea(gx, gy, field, 0)
+          ) {
+            continue;
+          }
+
+          const tId = tileIdGrid[ly]?.[lx];
+          const isInteriorSurface =
+            tId === TILE_IDS.ground_rock_pure ||
+            tId === TILE_IDS.cliff_rock_pure ||
+            (tId === TILE_IDS.high_cliff_rock_pure && Boolean(field.isHighCliffPlateau?.(gx, gy)));
+          if (!isInteriorSurface) continue;
+
+          if (plants.some((p) => Math.abs(p.gx - gx) <= 1 && Math.abs(p.gy - gy) <= 1)) {
+            continue;
+          }
+
+          const nearWaterAdjacent = field.isNearWater(gx, gy, 1);
+          const nearWater2 = field.isNearWater(gx, gy, 2);
+          const typeRoll = seededHash(gx, gy, seed + 1935);
+          let type: string;
+          if (nearWaterAdjacent || nearWater2) {
+            if (typeRoll < 0.45) {
+              type = 'rock_wet_small';
+            } else if (typeRoll < 0.72) {
+              type = 'rock_wet_wide';
+            } else if (typeRoll < 0.88) {
+              type = 'rock_wet_tall';
+            } else {
+              type = 'decor_rock_puddle_1';
+            }
+          } else {
+            if (typeRoll < 0.36) {
+              type = 'decor_rock_pebbles';
+            } else if (typeRoll < 0.62) {
+              type = 'rock_highland_small';
+            } else if (typeRoll < 0.82) {
+              const puddles = [
+                'decor_rock_puddle_1',
+                'decor_rock_puddle_2',
+                'decor_rock_puddle_3',
+                'decor_rock_puddle_4',
+              ];
+              type = puddles[Math.floor(seededHash(gx, gy, seed + 1945) * puddles.length)];
+            } else {
+              type = seededHash(gx, gy, seed + 1955) < 0.5 ? 'rock_highland_1' : 'rock_highland_2';
+            }
+          }
+
+          const spec = getPlantVisualSpec(type);
+          const px = gx * TILE_SIZE + spec.placementOffsetX;
+          const py = gy * TILE_SIZE + spec.placementOffsetY;
+          const checkW = spec.clearanceWidth;
+          const blocked = colliders.some(
+            (c) => px + checkW > c.x && px + 4 < c.x + c.w && py + 28 > c.y && py + 4 < c.y + c.h
+          );
+          if (blocked) continue;
+
+          plants.push({ gx, gy, x: px, y: py, type, phase: attempt });
+          if (spec.collider) {
+            colliders.push({
+              x: px + spec.collider.offsetX,
+              y: py + spec.collider.offsetY,
+              w: spec.collider.w,
+              h: spec.collider.h,
+              type: 'tree',
+            });
+          }
         }
       }
     }
@@ -1302,6 +1471,8 @@ export function generateChunkWaterFlora(
       const gy = startGY + ly;
       if (
         !field.isSnow?.(gx, gy) &&
+        !field.isRockyHighland?.(gx, gy) &&
+        !field.isRockyWater?.(gx, gy) &&
         isInteriorFreshwater(gx, gy, field) &&
         !isNearBridgeStructure(gx, gy, field, 2)
       ) {
@@ -1701,7 +1872,7 @@ export function generateChunkBerryBushes(
         // borders and berry distribution disagree.
         const runtimeBiome = resolveWorldBiome(field, bgx, bgy);
         const zone =
-          runtimeBiome === 'autumn' || runtimeBiome === 'snow'
+          runtimeBiome === 'autumn' || runtimeBiome === 'snow' || runtimeBiome === 'apricorn_plain'
             ? getEcologyZone(sampleEcology(bgx, bgy, field))
             : runtimeBiome;
         const roll = seededHash(bgx, bgy, seed + 123);

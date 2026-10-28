@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { Player } from '../src/entities/player';
 import { Follower } from '../src/entities/follower';
 import { ChunkManager } from '../src/maps/chunk-manager';
-import { TERRAIN } from '@pokemon/game-data';
+import { TERRAIN, TILE_IDS } from '@pokemon/game-data';
 
 describe('Cliff Jump & Elevation Physics', () => {
   describe('Player Jump & Drop Physics', () => {
@@ -134,6 +134,62 @@ describe('Cliff Jump & Elevation Physics', () => {
       // 3. Stepping down off cliff: Hill (20,19) to Grass (20,20) is walkable as drop
       const dropOffCliff = chunkManager.isWalkable(20, 20, 20, 19);
       expect(dropOffCliff).toBe(true);
+    });
+
+    it('allows jumping onto 1-tier rocky hills (cliff_rock) but blocks 2-tier High Cliffs (high_cliff_rock) unless flying mount is active', () => {
+      const chunkManager = new ChunkManager(101);
+      const originalGetTileData = chunkManager.getTileData.bind(chunkManager);
+      chunkManager.getTileData = (gx: number, gy: number) => {
+        const base = originalGetTileData(gx, gy);
+        // Flat rocky highland ground at (20, 20)
+        if (gx === 20 && gy === 20) {
+          return {
+            ...base,
+            terrain: TERRAIN.ROCKY_HIGHLAND,
+            tileId: TILE_IDS.ground_rock_pure,
+          };
+        }
+        // 1-tier jumpable rocky cliff at (20, 19)
+        if (gx === 20 && gy === 19) {
+          return {
+            ...base,
+            terrain: TERRAIN.HILL,
+            tileId: TILE_IDS.cliff_rock_bot,
+          };
+        }
+        // 2-tier High Cliff plateau at (21, 19) and wall face at (21, 20)
+        if (gx === 21 && gy === 19) {
+          return {
+            ...base,
+            terrain: TERRAIN.HILL,
+            tileId: TILE_IDS.high_cliff_rock_pure,
+          };
+        }
+        if (gx === 21 && gy === 20) {
+          return {
+            ...base,
+            terrain: TERRAIN.HILL,
+            tileId: TILE_IDS.high_cliff_rock_bot,
+          };
+        }
+        return base;
+      };
+      chunkManager.getLoadedTileData = chunkManager.getTileData;
+
+      // 1-tier rocky hill (20, 19): player CAN jump onto it with Space, and drop off it
+      expect(chunkManager.isWalkable(20, 19, 20, 20)).toBe(false);
+      expect(chunkManager.canJumpOntoCliff(20, 19)).toBe(true);
+      expect(chunkManager.isWalkable(20, 20, 20, 19)).toBe(true);
+
+      // 2-tier High Cliff (21, 19 / 21, 20): player CANNOT walk or jump onto it on foot
+      expect(chunkManager.isWalkable(21, 19, 20, 20)).toBe(false);
+      expect(chunkManager.isWalkable(21, 19, 20, 19)).toBe(false);
+      expect(chunkManager.canJumpOntoCliff(21, 19)).toBe(false);
+      expect(chunkManager.canJumpOntoCliff(21, 20)).toBe(false);
+
+      // Future Flying Pokémon Ride (canFlyMount = true): unlocks High Cliff access
+      expect(chunkManager.canJumpOntoCliff(21, 19, true)).toBe(true);
+      expect(chunkManager.isWalkable(21, 19, 20, 20, true)).toBe(true);
     });
   });
 });

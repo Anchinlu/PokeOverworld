@@ -266,6 +266,7 @@ export interface PokemonSprites {
   swimmingShiny?: string;
   followerWater?: string;
   followerWaterShiny?: string;
+  footprint?: string;
 }
 
 export interface PokemonAbilities {
